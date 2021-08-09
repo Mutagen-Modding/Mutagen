@@ -1338,31 +1338,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ISoundOutputModelGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.FNAM.TryGet(out var FNAMItem))
+            if (item.FNAM is {} FNAMItem)
             {
                 hash.Add(FNAMItem);
             }
-            if (item.Type.TryGet(out var Typeitem))
+            if (item.Type is {} Typeitem)
             {
                 hash.Add(Typeitem);
             }
-            if (item.CNAM.TryGet(out var CNAMItem))
+            if (item.CNAM is {} CNAMItem)
             {
                 hash.Add(CNAMItem);
             }
-            if (item.SNAM.TryGet(out var SNAMItem))
+            if (item.SNAM is {} SNAMItem)
             {
                 hash.Add(SNAMItem);
             }
-            if (item.OutputChannels.TryGet(out var OutputChannelsitem))
+            if (item.OutputChannels is {} OutputChannelsitem)
             {
                 hash.Add(OutputChannelsitem);
             }
-            if (item.Attenuation.TryGet(out var Attenuationitem))
+            if (item.Attenuation is {} Attenuationitem)
             {
                 hash.Add(Attenuationitem);
             }
@@ -1474,7 +1474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SoundOutputModel_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1497,7 +1497,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.FNAM) ?? true))
             {
-                if(rhs.FNAM.TryGet(out var FNAMrhs))
+                if(rhs.FNAM is {} FNAMrhs)
                 {
                     item.FNAM = FNAMrhs.ToArray();
                 }
@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.CNAM) ?? true))
             {
-                if(rhs.CNAM.TryGet(out var CNAMrhs))
+                if(rhs.CNAM is {} CNAMrhs)
                 {
                     item.CNAM = CNAMrhs.ToArray();
                 }
@@ -1523,7 +1523,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.SNAM) ?? true))
             {
-                if(rhs.SNAM.TryGet(out var SNAMrhs))
+                if(rhs.SNAM is {} SNAMrhs)
                 {
                     item.SNAM = SNAMrhs.ToArray();
                 }
@@ -1537,7 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SoundOutputModel_FieldIndex.OutputChannels);
                 try
                 {
-                    if(rhs.OutputChannels.TryGet(out var rhsOutputChannels))
+                    if(rhs.OutputChannels is {} rhsOutputChannels)
                     {
                         item.OutputChannels = rhsOutputChannels.DeepCopy(
                             errorMask: errorMask,
@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SoundOutputModel_FieldIndex.Attenuation);
                 try
                 {
-                    if(rhs.Attenuation.TryGet(out var rhsAttenuation))
+                    if(rhs.Attenuation is {} rhsAttenuation)
                     {
                         item.Attenuation = rhsAttenuation.DeepCopy(
                             errorMask: errorMask,

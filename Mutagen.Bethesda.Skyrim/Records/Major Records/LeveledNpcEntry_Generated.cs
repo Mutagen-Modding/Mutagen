@@ -932,11 +932,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ILeveledNpcEntryGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.ExtraData.TryGet(out var ExtraDataitem))
+            if (item.ExtraData is {} ExtraDataitem)
             {
                 hash.Add(ExtraDataitem);
             }
@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)LeveledNpcEntry_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)LeveledNpcEntry_FieldIndex.ExtraData);
                 try
                 {
-                    if(rhs.ExtraData.TryGet(out var rhsExtraData))
+                    if(rhs.ExtraData is {} rhsExtraData)
                     {
                         item.ExtraData = rhsExtraData.DeepCopy(
                             errorMask: errorMask,

@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(DisplayTime, "DisplayTime");
                     }
                     if ((printMask?.MenuButtons?.Overall ?? true)
-                        && MenuButtons.TryGet(out var MenuButtonsItem))
+                        && MenuButtons is {} MenuButtonsItem)
                     {
                         fg.AppendLine("MenuButtons =>");
                         fg.AppendLine("[");
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Quest, "Quest");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(DisplayTime, "DisplayTime");
-                if (MenuButtons.TryGet(out var MenuButtonsItem))
+                if (MenuButtons is {} MenuButtonsItem)
                 {
                     fg.AppendLine("MenuButtons =>");
                     fg.AppendLine("[");
@@ -1418,14 +1418,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Description);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.INAM);
             hash.Add(item.Quest);
             hash.Add(item.Flags);
-            if (item.DisplayTime.TryGet(out var DisplayTimeitem))
+            if (item.DisplayTime is {} DisplayTimeitem)
             {
                 hash.Add(DisplayTimeitem);
             }

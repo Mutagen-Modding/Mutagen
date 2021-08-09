@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(PreviousSibling, "PreviousSibling");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Parent, "Parent");
                 fg.AppendItem(PreviousSibling, "PreviousSibling");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");

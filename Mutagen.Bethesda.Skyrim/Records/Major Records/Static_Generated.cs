@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Material);
             hash.Add(item.Flags);
             hash.Add(item.Unused);
-            if (item.Lod.TryGet(out var Loditem))
+            if (item.Lod is {} Loditem)
             {
                 hash.Add(Loditem);
             }
@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Static_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1636,7 +1636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Static_FieldIndex.Lod);
                 try
                 {
-                    if(rhs.Lod.TryGet(out var rhsLod))
+                    if(rhs.Lod is {} rhsLod)
                     {
                         item.Lod = rhsLod.DeepCopy(
                             errorMask: errorMask,

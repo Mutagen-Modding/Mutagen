@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Data);
-            if (item.ScriptEffect.TryGet(out var ScriptEffectitem))
+            if (item.ScriptEffect is {} ScriptEffectitem)
             {
                 hash.Add(ScriptEffectitem);
             }
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.ScriptEffect);
                 try
                 {
-                    if(rhs.ScriptEffect.TryGet(out var rhsScriptEffect))
+                    if(rhs.ScriptEffect is {} rhsScriptEffect)
                     {
                         item.ScriptEffect = rhsScriptEffect.DeepCopy(
                             errorMask: errorMask,

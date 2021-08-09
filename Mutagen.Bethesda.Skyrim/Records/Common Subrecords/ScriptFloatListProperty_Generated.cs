@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Data?.Overall ?? true)
-                        && Data.TryGet(out var DataItem))
+                        && Data is {} DataItem)
                     {
                         fg.AppendLine("Data =>");
                         fg.AppendLine("[");
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (Data.TryGet(out var DataItem))
+                if (Data is {} DataItem)
                 {
                     fg.AppendLine("Data =>");
                     fg.AppendLine("[");

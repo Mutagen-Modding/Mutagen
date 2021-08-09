@@ -1287,12 +1287,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.CraftingSound);
-            if (item.AutoCalcValue.TryGet(out var AutoCalcValueitem))
+            if (item.AutoCalcValue is {} AutoCalcValueitem)
             {
                 hash.Add(AutoCalcValueitem);
             }

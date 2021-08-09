@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Fallout4
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.ActorEffect?.Overall ?? true)
-                        && ActorEffect.TryGet(out var ActorEffectItem))
+                        && ActorEffect is {} ActorEffectItem)
                     {
                         fg.AppendLine("ActorEffect =>");
                         fg.AppendLine("[");
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Fallout4
                         BipedBodyTemplate?.ToString(fg);
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords.TryGet(out var KeywordsItem))
+                        && Keywords is {} KeywordsItem)
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Fallout4
                         Properties?.ToString(fg);
                     }
                     if ((printMask?.AttachParentSlots?.Overall ?? true)
-                        && AttachParentSlots.TryGet(out var AttachParentSlotsItem))
+                        && AttachParentSlots is {} AttachParentSlotsItem)
                     {
                         fg.AppendLine("AttachParentSlots =>");
                         fg.AppendLine("[");
@@ -1843,7 +1843,7 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendItem(AnimationSound, "AnimationSound");
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(Description, "Description");
-                if (ActorEffect.TryGet(out var ActorEffectItem))
+                if (ActorEffect is {} ActorEffectItem)
                 {
                     fg.AppendLine("ActorEffect =>");
                     fg.AppendLine("[");
@@ -1867,7 +1867,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 fg.AppendItem(Skin, "Skin");
                 BipedBodyTemplate?.ToString(fg);
-                if (Keywords.TryGet(out var KeywordsItem))
+                if (Keywords is {} KeywordsItem)
                 {
                     fg.AppendLine("Keywords =>");
                     fg.AppendLine("[");
@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Fallout4
                     fg.AppendLine("]");
                 }
                 Properties?.ToString(fg);
-                if (AttachParentSlots.TryGet(out var AttachParentSlotsItem))
+                if (AttachParentSlots is {} AttachParentSlotsItem)
                 {
                     fg.AppendLine("AttachParentSlots =>");
                     fg.AppendLine("[");
@@ -3547,19 +3547,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             var hash = new HashCode();
             hash.Add(item.AnimationSound);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.Description);
             hash.Add(item.ActorEffect);
             hash.Add(item.Skin);
-            if (item.BipedBodyTemplate.TryGet(out var BipedBodyTemplateitem))
+            if (item.BipedBodyTemplate is {} BipedBodyTemplateitem)
             {
                 hash.Add(BipedBodyTemplateitem);
             }
             hash.Add(item.Keywords);
-            if (item.Properties.TryGet(out var Propertiesitem))
+            if (item.Properties is {} Propertiesitem)
             {
                 hash.Add(Propertiesitem);
             }
@@ -3792,7 +3792,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.BipedBodyTemplate);
                 try
                 {
-                    if(rhs.BipedBodyTemplate.TryGet(out var rhsBipedBodyTemplate))
+                    if(rhs.BipedBodyTemplate is {} rhsBipedBodyTemplate)
                     {
                         item.BipedBodyTemplate = rhsBipedBodyTemplate.DeepCopy(
                             errorMask: errorMask,
@@ -3845,7 +3845,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Properties);
                 try
                 {
-                    if(rhs.Properties.TryGet(out var rhsProperties))
+                    if(rhs.Properties is {} rhsProperties)
                     {
                         item.Properties = rhsProperties.DeepCopy(
                             errorMask: errorMask,

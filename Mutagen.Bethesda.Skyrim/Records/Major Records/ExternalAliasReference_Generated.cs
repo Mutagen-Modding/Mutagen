@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Quest);
-            if (item.AliasIndex.TryGet(out var AliasIndexitem))
+            if (item.AliasIndex is {} AliasIndexitem)
             {
                 hash.Add(AliasIndexitem);
             }

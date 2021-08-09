@@ -1022,11 +1022,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.Level);
             hash.Add(item.Unknown);
             hash.Add(item.Reference);
-            if (item.Count.TryGet(out var Countitem))
+            if (item.Count is {} Countitem)
             {
                 hash.Add(Countitem);
             }
-            if (item.Unknown2.TryGet(out var Unknown2item))
+            if (item.Unknown2 is {} Unknown2item)
             {
                 hash.Add(Unknown2item);
             }

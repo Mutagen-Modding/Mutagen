@@ -1332,28 +1332,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ISoulGemGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
             hash.Add(item.Script);
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.ContainedSoul.TryGet(out var ContainedSoulitem))
+            if (item.ContainedSoul is {} ContainedSoulitem)
             {
                 hash.Add(ContainedSoulitem);
             }
-            if (item.MaximumCapacity.TryGet(out var MaximumCapacityitem))
+            if (item.MaximumCapacity is {} MaximumCapacityitem)
             {
                 hash.Add(MaximumCapacityitem);
             }
@@ -1473,7 +1473,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1507,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,

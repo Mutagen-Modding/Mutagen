@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(NumConnectionsFluffBytes, "NumConnectionsFluffBytes");
                     }
                     if ((printMask?.Connections?.Overall ?? true)
-                        && Connections.TryGet(out var ConnectionsItem))
+                        && Connections is {} ConnectionsItem)
                     {
                         fg.AppendLine("Connections =>");
                         fg.AppendLine("[");
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 fg.AppendItem(Point, "Point");
                 fg.AppendItem(NumConnectionsFluffBytes, "NumConnectionsFluffBytes");
-                if (Connections.TryGet(out var ConnectionsItem))
+                if (Connections is {} ConnectionsItem)
                 {
                     fg.AppendLine("Connections =>");
                     fg.AppendLine("[");

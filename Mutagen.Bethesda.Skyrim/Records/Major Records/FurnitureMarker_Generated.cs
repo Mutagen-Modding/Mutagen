@@ -1014,12 +1014,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Enabled);
-            if (item.DisabledEntryPoints.TryGet(out var DisabledEntryPointsitem))
+            if (item.DisabledEntryPoints is {} DisabledEntryPointsitem)
             {
                 hash.Add(DisabledEntryPointsitem);
             }
             hash.Add(item.MarkerKeyword);
-            if (item.EntryPoints.TryGet(out var EntryPointsitem))
+            if (item.EntryPoints is {} EntryPointsitem)
             {
                 hash.Add(EntryPointsitem);
             }
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FurnitureMarker_FieldIndex.DisabledEntryPoints);
                 try
                 {
-                    if(rhs.DisabledEntryPoints.TryGet(out var rhsDisabledEntryPoints))
+                    if(rhs.DisabledEntryPoints is {} rhsDisabledEntryPoints)
                     {
                         item.DisabledEntryPoints = rhsDisabledEntryPoints.DeepCopy(
                             errorMask: errorMask,
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FurnitureMarker_FieldIndex.EntryPoints);
                 try
                 {
-                    if(rhs.EntryPoints.TryGet(out var rhsEntryPoints))
+                    if(rhs.EntryPoints is {} rhsEntryPoints)
                     {
                         item.EntryPoints = rhsEntryPoints.DeepCopy(
                             errorMask: errorMask,

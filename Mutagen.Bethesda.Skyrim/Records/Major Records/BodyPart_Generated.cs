@@ -2336,7 +2336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Name);
-            if (item.PoseMatching.TryGet(out var PoseMatchingitem))
+            if (item.PoseMatching is {} PoseMatchingitem)
             {
                 hash.Add(PoseMatchingitem);
             }
@@ -2369,7 +2369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.LimbReplacementScale);
             hash.Add(item.LimbReplacementModel);
             hash.Add(item.GoreTargetBone);
-            if (item.TextureFilesHashes.TryGet(out var TextureFilesHashesItem))
+            if (item.TextureFilesHashes is {} TextureFilesHashesItem)
             {
                 hash.Add(TextureFilesHashesItem);
             }
@@ -2538,7 +2538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.TextureFilesHashes) ?? true))
             {
-                if(rhs.TextureFilesHashes.TryGet(out var TextureFilesHashesrhs))
+                if(rhs.TextureFilesHashes is {} TextureFilesHashesrhs)
                 {
                     item.TextureFilesHashes = TextureFilesHashesrhs.ToArray();
                 }

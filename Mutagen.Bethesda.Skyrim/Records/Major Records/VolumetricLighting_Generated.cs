@@ -1496,51 +1496,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IVolumetricLightingGetter item)
         {
             var hash = new HashCode();
-            if (item.Intensity.TryGet(out var Intensityitem))
+            if (item.Intensity is {} Intensityitem)
             {
                 hash.Add(Intensityitem);
             }
-            if (item.CustomColorContribution.TryGet(out var CustomColorContributionitem))
+            if (item.CustomColorContribution is {} CustomColorContributionitem)
             {
                 hash.Add(CustomColorContributionitem);
             }
-            if (item.ColorR.TryGet(out var ColorRitem))
+            if (item.ColorR is {} ColorRitem)
             {
                 hash.Add(ColorRitem);
             }
-            if (item.ColorG.TryGet(out var ColorGitem))
+            if (item.ColorG is {} ColorGitem)
             {
                 hash.Add(ColorGitem);
             }
-            if (item.ColorB.TryGet(out var ColorBitem))
+            if (item.ColorB is {} ColorBitem)
             {
                 hash.Add(ColorBitem);
             }
-            if (item.DensityContribution.TryGet(out var DensityContributionitem))
+            if (item.DensityContribution is {} DensityContributionitem)
             {
                 hash.Add(DensityContributionitem);
             }
-            if (item.DensitySize.TryGet(out var DensitySizeitem))
+            if (item.DensitySize is {} DensitySizeitem)
             {
                 hash.Add(DensitySizeitem);
             }
-            if (item.DensityWindSpeed.TryGet(out var DensityWindSpeeditem))
+            if (item.DensityWindSpeed is {} DensityWindSpeeditem)
             {
                 hash.Add(DensityWindSpeeditem);
             }
-            if (item.DensityFallingSpeed.TryGet(out var DensityFallingSpeeditem))
+            if (item.DensityFallingSpeed is {} DensityFallingSpeeditem)
             {
                 hash.Add(DensityFallingSpeeditem);
             }
-            if (item.PhaseFunctionContribution.TryGet(out var PhaseFunctionContributionitem))
+            if (item.PhaseFunctionContribution is {} PhaseFunctionContributionitem)
             {
                 hash.Add(PhaseFunctionContributionitem);
             }
-            if (item.PhaseFunctionScattering.TryGet(out var PhaseFunctionScatteringitem))
+            if (item.PhaseFunctionScattering is {} PhaseFunctionScatteringitem)
             {
                 hash.Add(PhaseFunctionScatteringitem);
             }
-            if (item.SamplingRepartitionRangeFactor.TryGet(out var SamplingRepartitionRangeFactoritem))
+            if (item.SamplingRepartitionRangeFactor is {} SamplingRepartitionRangeFactoritem)
             {
                 hash.Add(SamplingRepartitionRangeFactoritem);
             }

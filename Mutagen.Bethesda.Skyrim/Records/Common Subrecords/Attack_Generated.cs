@@ -910,11 +910,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IAttackGetter item)
         {
             var hash = new HashCode();
-            if (item.AttackData.TryGet(out var AttackDataitem))
+            if (item.AttackData is {} AttackDataitem)
             {
                 hash.Add(AttackDataitem);
             }
-            if (item.AttackEvent.TryGet(out var AttackEventitem))
+            if (item.AttackEvent is {} AttackEventitem)
             {
                 hash.Add(AttackEventitem);
             }
@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Attack_FieldIndex.AttackData);
                 try
                 {
-                    if(rhs.AttackData.TryGet(out var rhsAttackData))
+                    if(rhs.AttackData is {} rhsAttackData)
                     {
                         item.AttackData = rhsAttackData.DeepCopy(
                             errorMask: errorMask,

@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.Responses?.Overall ?? true)
-                        && Responses.TryGet(out var ResponsesItem))
+                        && Responses is {} ResponsesItem)
                     {
                         fg.AppendLine("Responses =>");
                         fg.AppendLine("[");
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(SubtypeName, "SubtypeName");
                 fg.AppendItem(Timestamp, "Timestamp");
                 fg.AppendItem(Unknown, "Unknown");
-                if (Responses.TryGet(out var ResponsesItem))
+                if (Responses is {} ResponsesItem)
                 {
                     fg.AppendLine("Responses =>");
                     fg.AppendLine("[");
@@ -1962,7 +1962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IDialogTopicGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }

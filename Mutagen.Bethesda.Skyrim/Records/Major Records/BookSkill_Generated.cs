@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IBookSkillGetter item)
         {
             var hash = new HashCode();
-            if (item.Skill.TryGet(out var Skillitem))
+            if (item.Skill is {} Skillitem)
             {
                 hash.Add(Skillitem);
             }

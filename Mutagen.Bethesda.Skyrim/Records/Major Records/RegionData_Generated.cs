@@ -925,11 +925,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IRegionDataGetter item)
         {
             var hash = new HashCode();
-            if (item.Header.TryGet(out var Headeritem))
+            if (item.Header is {} Headeritem)
             {
                 hash.Add(Headeritem);
             }
-            if (item.Icons.TryGet(out var Iconsitem))
+            if (item.Icons is {} Iconsitem)
             {
                 hash.Add(Iconsitem);
             }
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)RegionData_FieldIndex.Header);
                 try
                 {
-                    if(rhs.Header.TryGet(out var rhsHeader))
+                    if(rhs.Header is {} rhsHeader)
                     {
                         item.Header = rhsHeader.DeepCopy(
                             errorMask: errorMask,
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)RegionData_FieldIndex.Icons);
                 try
                 {
-                    if(rhs.Icons.TryGet(out var rhsIcons))
+                    if(rhs.Icons is {} rhsIcons)
                     {
                         item.Icons = rhsIcons.DeepCopy(
                             errorMask: errorMask,

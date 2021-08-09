@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine($"TextureSwapList => {TextureSwapList}");
                     }
                     if ((printMask?.AdditionalRaces?.Overall ?? true)
-                        && AdditionalRaces.TryGet(out var AdditionalRacesItem))
+                        && AdditionalRaces is {} AdditionalRacesItem)
                     {
                         fg.AppendLine("AdditionalRaces =>");
                         fg.AppendLine("[");
@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     fg.AppendLine($"TextureSwapList => {TextureSwapList}");
                 }
-                if (AdditionalRaces.TryGet(out var AdditionalRacesItem))
+                if (AdditionalRaces is {} AdditionalRacesItem)
                 {
                     fg.AppendLine("AdditionalRaces =>");
                     fg.AppendLine("[");
@@ -1909,7 +1909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IArmorAddonGetter item)
         {
             var hash = new HashCode();
-            if (item.BodyTemplate.TryGet(out var BodyTemplateitem))
+            if (item.BodyTemplate is {} BodyTemplateitem)
             {
                 hash.Add(BodyTemplateitem);
             }
@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ArmorAddon_FieldIndex.BodyTemplate);
                 try
                 {
-                    if(rhs.BodyTemplate.TryGet(out var rhsBodyTemplate))
+                    if(rhs.BodyTemplate is {} rhsBodyTemplate)
                     {
                         item.BodyTemplate = rhsBodyTemplate.DeepCopy(
                             errorMask: errorMask,

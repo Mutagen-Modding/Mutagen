@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Owner);
-            if (item.FactionRank.TryGet(out var FactionRankitem))
+            if (item.FactionRank is {} FactionRankitem)
             {
                 hash.Add(FactionRankitem);
             }

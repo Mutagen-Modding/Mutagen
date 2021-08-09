@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(MusicType, "MusicType");
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
-                        && Sounds.TryGet(out var SoundsItem))
+                        && Sounds is {} SoundsItem)
                     {
                         fg.AppendLine("Sounds =>");
                         fg.AppendLine("[");
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(MusicType, "MusicType");
-                if (Sounds.TryGet(out var SoundsItem))
+                if (Sounds is {} SoundsItem)
                 {
                     fg.AppendLine("Sounds =>");
                     fg.AppendLine("[");
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IRegionSoundsGetter item)
         {
             var hash = new HashCode();
-            if (item.MusicType.TryGet(out var MusicTypeitem))
+            if (item.MusicType is {} MusicTypeitem)
             {
                 hash.Add(MusicTypeitem);
             }

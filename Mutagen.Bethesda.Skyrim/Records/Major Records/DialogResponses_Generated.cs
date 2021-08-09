@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(FavorLevel, "FavorLevel");
                     }
                     if ((printMask?.LinkTo?.Overall ?? true)
-                        && LinkTo.TryGet(out var LinkToItem))
+                        && LinkTo is {} LinkToItem)
                     {
                         fg.AppendLine("LinkTo =>");
                         fg.AppendLine("[");
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(ResponseData, "ResponseData");
                     }
                     if ((printMask?.Responses?.Overall ?? true)
-                        && Responses.TryGet(out var ResponsesItem))
+                        && Responses is {} ResponsesItem)
                     {
                         fg.AppendLine("Responses =>");
                         fg.AppendLine("[");
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.UnknownData?.Overall ?? true)
-                        && UnknownData.TryGet(out var UnknownDataItem))
+                        && UnknownData is {} UnknownDataItem)
                     {
                         fg.AppendLine("UnknownData =>");
                         fg.AppendLine("[");
@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Topic, "Topic");
                 fg.AppendItem(PreviousDialog, "PreviousDialog");
                 fg.AppendItem(FavorLevel, "FavorLevel");
-                if (LinkTo.TryGet(out var LinkToItem))
+                if (LinkTo is {} LinkToItem)
                 {
                     fg.AppendLine("LinkTo =>");
                     fg.AppendLine("[");
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(ResponseData, "ResponseData");
-                if (Responses.TryGet(out var ResponsesItem))
+                if (Responses is {} ResponsesItem)
                 {
                     fg.AppendLine("Responses =>");
                     fg.AppendLine("[");
@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (UnknownData.TryGet(out var UnknownDataItem))
+                if (UnknownData is {} UnknownDataItem)
                 {
                     fg.AppendLine("UnknownData =>");
                     fg.AppendLine("[");
@@ -2135,21 +2135,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IDialogResponsesGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
-            if (item.DATA.TryGet(out var DATAItem))
+            if (item.DATA is {} DATAItem)
             {
                 hash.Add(DATAItem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
             hash.Add(item.Topic);
             hash.Add(item.PreviousDialog);
-            if (item.FavorLevel.TryGet(out var FavorLevelitem))
+            if (item.FavorLevel is {} FavorLevelitem)
             {
                 hash.Add(FavorLevelitem);
             }
@@ -2158,7 +2158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Responses);
             hash.Add(item.Conditions);
             hash.Add(item.UnknownData);
-            if (item.Prompt.TryGet(out var Promptitem))
+            if (item.Prompt is {} Promptitem)
             {
                 hash.Add(Promptitem);
             }
@@ -2321,7 +2321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)DialogResponses_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -2344,7 +2344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.DATA) ?? true))
             {
-                if(rhs.DATA.TryGet(out var DATArhs))
+                if(rhs.DATA is {} DATArhs)
                 {
                     item.DATA = DATArhs.ToArray();
                 }
@@ -2358,7 +2358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)DialogResponses_FieldIndex.Flags);
                 try
                 {
-                    if(rhs.Flags.TryGet(out var rhsFlags))
+                    if(rhs.Flags is {} rhsFlags)
                     {
                         item.Flags = rhsFlags.DeepCopy(
                             errorMask: errorMask,

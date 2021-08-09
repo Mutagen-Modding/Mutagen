@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IDialogResponsesUnknownDataGetter item)
         {
             var hash = new HashCode();
-            if (item.SCHR.TryGet(out var SCHRItem))
+            if (item.SCHR is {} SCHRItem)
             {
                 hash.Add(SCHRItem);
             }
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.SCHR) ?? true))
             {
-                if(rhs.SCHR.TryGet(out var SCHRrhs))
+                if(rhs.SCHR is {} SCHRrhs)
                 {
                     item.SCHR = SCHRrhs.ToArray();
                 }

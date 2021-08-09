@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ISubspaceGetter item)
         {
             var hash = new HashCode();
-            if (item.Point.TryGet(out var Pointitem))
+            if (item.Point is {} Pointitem)
             {
                 hash.Add(Pointitem);
             }

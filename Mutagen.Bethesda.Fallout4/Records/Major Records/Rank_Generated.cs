@@ -941,7 +941,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IRankGetter item)
         {
             var hash = new HashCode();
-            if (item.Number.TryGet(out var Numberitem))
+            if (item.Number is {} Numberitem)
             {
                 hash.Add(Numberitem);
             }
@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 hash.Add(HashCode.Combine(Titleitem.Male, Titleitem.Female));
             }
-            if (item.InsigniaUnused.TryGet(out var InsigniaUnuseditem))
+            if (item.InsigniaUnused is {} InsigniaUnuseditem)
             {
                 hash.Add(InsigniaUnuseditem);
             }

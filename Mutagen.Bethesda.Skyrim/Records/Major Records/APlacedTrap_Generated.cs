@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(FavorCost, "FavorCost");
                     }
                     if ((printMask?.Reflections?.Overall ?? true)
-                        && Reflections.TryGet(out var ReflectionsItem))
+                        && Reflections is {} ReflectionsItem)
                     {
                         fg.AppendLine("Reflections =>");
                         fg.AppendLine("[");
@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.LinkedReferences?.Overall ?? true)
-                        && LinkedReferences.TryGet(out var LinkedReferencesItem))
+                        && LinkedReferences is {} LinkedReferencesItem)
                     {
                         fg.AppendLine("LinkedReferences =>");
                         fg.AppendLine("[");
@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
                     }
                     if ((printMask?.LocationRefTypes?.Overall ?? true)
-                        && LocationRefTypes.TryGet(out var LocationRefTypesItem))
+                        && LocationRefTypes is {} LocationRefTypesItem)
                     {
                         fg.AppendLine("LocationRefTypes =>");
                         fg.AppendLine("[");
@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(LocationReference, "LocationReference");
                     }
                     if ((printMask?.DistantLodData?.Overall ?? true)
-                        && DistantLodData.TryGet(out var DistantLodDataItem))
+                        && DistantLodData is {} DistantLodDataItem)
                     {
                         fg.AppendLine("DistantLodData =>");
                         fg.AppendLine("[");
@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Ownership?.ToString(fg);
                 fg.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
                 fg.AppendItem(FavorCost, "FavorCost");
-                if (Reflections.TryGet(out var ReflectionsItem))
+                if (Reflections is {} ReflectionsItem)
                 {
                     fg.AppendLine("Reflections =>");
                     fg.AppendLine("[");
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (LinkedReferences.TryGet(out var LinkedReferencesItem))
+                if (LinkedReferences is {} LinkedReferencesItem)
                 {
                     fg.AppendLine("LinkedReferences =>");
                     fg.AppendLine("[");
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Emittance, "Emittance");
                 fg.AppendItem(MultiBoundReference, "MultiBoundReference");
                 fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
-                if (LocationRefTypes.TryGet(out var LocationRefTypesItem))
+                if (LocationRefTypes is {} LocationRefTypesItem)
                 {
                     fg.AppendLine("LocationRefTypes =>");
                     fg.AppendLine("[");
@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(LocationReference, "LocationReference");
-                if (DistantLodData.TryGet(out var DistantLodDataItem))
+                if (DistantLodData is {} DistantLodDataItem)
                 {
                     fg.AppendLine("DistantLodData =>");
                     fg.AppendLine("[");
@@ -2318,47 +2318,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IAPlacedTrapGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.EncounterZone);
-            if (item.Ownership.TryGet(out var Ownershipitem))
+            if (item.Ownership is {} Ownershipitem)
             {
                 hash.Add(Ownershipitem);
             }
-            if (item.HeadTrackingWeight.TryGet(out var HeadTrackingWeightitem))
+            if (item.HeadTrackingWeight is {} HeadTrackingWeightitem)
             {
                 hash.Add(HeadTrackingWeightitem);
             }
-            if (item.FavorCost.TryGet(out var FavorCostitem))
+            if (item.FavorCost is {} FavorCostitem)
             {
                 hash.Add(FavorCostitem);
             }
             hash.Add(item.Reflections);
             hash.Add(item.LinkedReferences);
-            if (item.ActivateParents.TryGet(out var ActivateParentsitem))
+            if (item.ActivateParents is {} ActivateParentsitem)
             {
                 hash.Add(ActivateParentsitem);
             }
-            if (item.EnableParent.TryGet(out var EnableParentitem))
+            if (item.EnableParent is {} EnableParentitem)
             {
                 hash.Add(EnableParentitem);
             }
             hash.Add(item.Emittance);
             hash.Add(item.MultiBoundReference);
-            if (item.IgnoredBySandbox.TryGet(out var IgnoredBySandboxItem))
+            if (item.IgnoredBySandbox is {} IgnoredBySandboxItem)
             {
                 hash.Add(IgnoredBySandboxItem);
             }
             hash.Add(item.LocationRefTypes);
             hash.Add(item.LocationReference);
             hash.Add(item.DistantLodData);
-            if (item.Scale.TryGet(out var Scaleitem))
+            if (item.Scale is {} Scaleitem)
             {
                 hash.Add(Scaleitem);
             }
-            if (item.Placement.TryGet(out var Placementitem))
+            if (item.Placement is {} Placementitem)
             {
                 hash.Add(Placementitem);
             }
@@ -2527,7 +2527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)APlacedTrap_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -2557,7 +2557,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)APlacedTrap_FieldIndex.Ownership);
                 try
                 {
-                    if(rhs.Ownership.TryGet(out var rhsOwnership))
+                    if(rhs.Ownership is {} rhsOwnership)
                     {
                         item.Ownership = rhsOwnership.DeepCopy(
                             errorMask: errorMask,
@@ -2639,7 +2639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)APlacedTrap_FieldIndex.ActivateParents);
                 try
                 {
-                    if(rhs.ActivateParents.TryGet(out var rhsActivateParents))
+                    if(rhs.ActivateParents is {} rhsActivateParents)
                     {
                         item.ActivateParents = rhsActivateParents.DeepCopy(
                             errorMask: errorMask,
@@ -2665,7 +2665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)APlacedTrap_FieldIndex.EnableParent);
                 try
                 {
-                    if(rhs.EnableParent.TryGet(out var rhsEnableParent))
+                    if(rhs.EnableParent is {} rhsEnableParent)
                     {
                         item.EnableParent = rhsEnableParent.DeepCopy(
                             errorMask: errorMask,
@@ -2696,7 +2696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.IgnoredBySandbox) ?? true))
             {
-                if(rhs.IgnoredBySandbox.TryGet(out var IgnoredBySandboxrhs))
+                if(rhs.IgnoredBySandbox is {} IgnoredBySandboxrhs)
                 {
                     item.IgnoredBySandbox = IgnoredBySandboxrhs.ToArray();
                 }
@@ -2771,7 +2771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)APlacedTrap_FieldIndex.Placement);
                 try
                 {
-                    if(rhs.Placement.TryGet(out var rhsPlacement))
+                    if(rhs.Placement is {} rhsPlacement)
                     {
                         item.Placement = rhsPlacement.DeepCopy(
                             errorMask: errorMask,

@@ -1612,7 +1612,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IMovementTypeGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
@@ -1627,7 +1627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.RotateInPlaceWalk);
             hash.Add(item.RotateInPlaceRun);
             hash.Add(item.RotateWhileMovingRun);
-            if (item.AnimationChangeThresholds.TryGet(out var AnimationChangeThresholdsitem))
+            if (item.AnimationChangeThresholds is {} AnimationChangeThresholdsitem)
             {
                 hash.Add(AnimationChangeThresholdsitem);
             }
@@ -1788,7 +1788,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)MovementType_FieldIndex.AnimationChangeThresholds);
                 try
                 {
-                    if(rhs.AnimationChangeThresholds.TryGet(out var rhsAnimationChangeThresholds))
+                    if(rhs.AnimationChangeThresholds is {} rhsAnimationChangeThresholds)
                     {
                         item.AnimationChangeThresholds = rhsAnimationChangeThresholds.DeepCopy(
                             errorMask: errorMask,

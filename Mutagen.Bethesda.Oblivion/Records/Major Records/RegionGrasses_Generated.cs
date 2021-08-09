@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Grasses?.Overall ?? true)
-                        && Grasses.TryGet(out var GrassesItem))
+                        && Grasses is {} GrassesItem)
                     {
                         fg.AppendLine("Grasses =>");
                         fg.AppendLine("[");
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (Grasses.TryGet(out var GrassesItem))
+                if (Grasses is {} GrassesItem)
                 {
                     fg.AppendLine("Grasses =>");
                     fg.AppendLine("[");

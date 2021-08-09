@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.UnusedNoisemaps?.Overall ?? true)
-                        && UnusedNoisemaps.TryGet(out var UnusedNoisemapsItem))
+                        && UnusedNoisemaps is {} UnusedNoisemapsItem)
                     {
                         fg.AppendLine("UnusedNoisemaps =>");
                         fg.AppendLine("[");
@@ -2224,7 +2224,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Name, "Name");
-                if (UnusedNoisemaps.TryGet(out var UnusedNoisemapsItem))
+                if (UnusedNoisemaps is {} UnusedNoisemapsItem)
                 {
                     fg.AppendLine("UnusedNoisemaps =>");
                     fg.AppendLine("[");
@@ -4192,17 +4192,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IWaterGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.UnusedNoisemaps);
             hash.Add(item.Opacity);
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.MNAM.TryGet(out var MNAMItem))
+            if (item.MNAM is {} MNAMItem)
             {
                 hash.Add(MNAMItem);
             }
@@ -4210,7 +4210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.OpenSound);
             hash.Add(item.Spell);
             hash.Add(item.ImageSpace);
-            if (item.DamagePerSecond.TryGet(out var DamagePerSeconditem))
+            if (item.DamagePerSecond is {} DamagePerSeconditem)
             {
                 hash.Add(DamagePerSeconditem);
             }
@@ -4264,31 +4264,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.DepthSpecularLighting);
             hash.Add(item.SpecularSunSparklePower);
             hash.Add(item.NoiseFlowmapScale);
-            if (item.GNAM.TryGet(out var GNAMItem))
+            if (item.GNAM is {} GNAMItem)
             {
                 hash.Add(GNAMItem);
             }
-            if (item.LinearVelocity.TryGet(out var LinearVelocityitem))
+            if (item.LinearVelocity is {} LinearVelocityitem)
             {
                 hash.Add(LinearVelocityitem);
             }
-            if (item.AngularVelocity.TryGet(out var AngularVelocityitem))
+            if (item.AngularVelocity is {} AngularVelocityitem)
             {
                 hash.Add(AngularVelocityitem);
             }
-            if (item.NoiseLayerOneTexture.TryGet(out var NoiseLayerOneTextureitem))
+            if (item.NoiseLayerOneTexture is {} NoiseLayerOneTextureitem)
             {
                 hash.Add(NoiseLayerOneTextureitem);
             }
-            if (item.NoiseLayerTwoTexture.TryGet(out var NoiseLayerTwoTextureitem))
+            if (item.NoiseLayerTwoTexture is {} NoiseLayerTwoTextureitem)
             {
                 hash.Add(NoiseLayerTwoTextureitem);
             }
-            if (item.NoiseLayerThreeTexture.TryGet(out var NoiseLayerThreeTextureitem))
+            if (item.NoiseLayerThreeTexture is {} NoiseLayerThreeTextureitem)
             {
                 hash.Add(NoiseLayerThreeTextureitem);
             }
-            if (item.FlowNormalsNoiseTexture.TryGet(out var FlowNormalsNoiseTextureitem))
+            if (item.FlowNormalsNoiseTexture is {} FlowNormalsNoiseTextureitem)
             {
                 hash.Add(FlowNormalsNoiseTextureitem);
             }
@@ -4443,7 +4443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.MNAM) ?? true))
             {
-                if(rhs.MNAM.TryGet(out var MNAMrhs))
+                if(rhs.MNAM is {} MNAMrhs)
                 {
                     item.MNAM = MNAMrhs.ToArray();
                 }
@@ -4674,7 +4674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
             {
-                if(rhs.GNAM.TryGet(out var GNAMrhs))
+                if(rhs.GNAM is {} GNAMrhs)
                 {
                     item.GNAM = GNAMrhs.ToArray();
                 }

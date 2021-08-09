@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendItem(OrderName, "OrderName");
                     }
                     if ((printMask?.Names?.Overall ?? true)
-                        && Names.TryGet(out var NamesItem))
+                        && Names is {} NamesItem)
                     {
                         fg.AppendLine("Names =>");
                         fg.AppendLine("[");
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Pex
             {
                 fg.AppendItem(ObjectName, "ObjectName");
                 fg.AppendItem(OrderName, "OrderName");
-                if (Names.TryGet(out var NamesItem))
+                if (Names is {} NamesItem)
                 {
                     fg.AppendLine("Names =>");
                     fg.AppendLine("[");

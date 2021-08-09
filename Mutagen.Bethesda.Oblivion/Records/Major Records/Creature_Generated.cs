@@ -912,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
                         Model?.ToString(fg);
                     }
                     if ((printMask?.Items?.Overall ?? true)
-                        && Items.TryGet(out var ItemsItem))
+                        && Items is {} ItemsItem)
                     {
                         fg.AppendLine("Items =>");
                         fg.AppendLine("[");
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Spells?.Overall ?? true)
-                        && Spells.TryGet(out var SpellsItem))
+                        && Spells is {} SpellsItem)
                     {
                         fg.AppendLine("Spells =>");
                         fg.AppendLine("[");
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Models?.Overall ?? true)
-                        && Models.TryGet(out var ModelsItem))
+                        && Models is {} ModelsItem)
                     {
                         fg.AppendLine("Models =>");
                         fg.AppendLine("[");
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion
                         Configuration?.ToString(fg);
                     }
                     if ((printMask?.Factions?.Overall ?? true)
-                        && Factions.TryGet(out var FactionsItem))
+                        && Factions is {} FactionsItem)
                     {
                         fg.AppendLine("Factions =>");
                         fg.AppendLine("[");
@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion
                         AIData?.ToString(fg);
                     }
                     if ((printMask?.AIPackages?.Overall ?? true)
-                        && AIPackages.TryGet(out var AIPackagesItem))
+                        && AIPackages is {} AIPackagesItem)
                     {
                         fg.AppendLine("AIPackages =>");
                         fg.AppendLine("[");
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Animations?.Overall ?? true)
-                        && Animations.TryGet(out var AnimationsItem))
+                        && Animations is {} AnimationsItem)
                     {
                         fg.AppendLine("Animations =>");
                         fg.AppendLine("[");
@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(InheritsSoundFrom, "InheritsSoundFrom");
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
-                        && Sounds.TryGet(out var SoundsItem))
+                        && Sounds is {} SoundsItem)
                     {
                         fg.AppendLine("Sounds =>");
                         fg.AppendLine("[");
@@ -1445,7 +1445,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Name, "Name");
                 Model?.ToString(fg);
-                if (Items.TryGet(out var ItemsItem))
+                if (Items is {} ItemsItem)
                 {
                     fg.AppendLine("Items =>");
                     fg.AppendLine("[");
@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (Spells.TryGet(out var SpellsItem))
+                if (Spells is {} SpellsItem)
                 {
                     fg.AppendLine("Spells =>");
                     fg.AppendLine("[");
@@ -1489,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (Models.TryGet(out var ModelsItem))
+                if (Models is {} ModelsItem)
                 {
                     fg.AppendLine("Models =>");
                     fg.AppendLine("[");
@@ -1513,7 +1513,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 fg.AppendItem(NIFT, "NIFT");
                 Configuration?.ToString(fg);
-                if (Factions.TryGet(out var FactionsItem))
+                if (Factions is {} FactionsItem)
                 {
                     fg.AppendLine("Factions =>");
                     fg.AppendLine("[");
@@ -1538,7 +1538,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(DeathItem, "DeathItem");
                 fg.AppendItem(Script, "Script");
                 AIData?.ToString(fg);
-                if (AIPackages.TryGet(out var AIPackagesItem))
+                if (AIPackages is {} AIPackagesItem)
                 {
                     fg.AppendLine("AIPackages =>");
                     fg.AppendLine("[");
@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (Animations.TryGet(out var AnimationsItem))
+                if (Animations is {} AnimationsItem)
                 {
                     fg.AppendLine("Animations =>");
                     fg.AppendLine("[");
@@ -1591,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(BloodSpray, "BloodSpray");
                 fg.AppendItem(BloodDecal, "BloodDecal");
                 fg.AppendItem(InheritsSoundFrom, "InheritsSoundFrom");
-                if (Sounds.TryGet(out var SoundsItem))
+                if (Sounds is {} SoundsItem)
                 {
                     fg.AppendLine("Sounds =>");
                     fg.AppendLine("[");
@@ -2848,60 +2848,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ICreatureGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
             hash.Add(item.Items);
             hash.Add(item.Spells);
             hash.Add(item.Models);
-            if (item.NIFT.TryGet(out var NIFTItem))
+            if (item.NIFT is {} NIFTItem)
             {
                 hash.Add(NIFTItem);
             }
-            if (item.Configuration.TryGet(out var Configurationitem))
+            if (item.Configuration is {} Configurationitem)
             {
                 hash.Add(Configurationitem);
             }
             hash.Add(item.Factions);
             hash.Add(item.DeathItem);
             hash.Add(item.Script);
-            if (item.AIData.TryGet(out var AIDataitem))
+            if (item.AIData is {} AIDataitem)
             {
                 hash.Add(AIDataitem);
             }
             hash.Add(item.AIPackages);
             hash.Add(item.Animations);
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.AttackReach.TryGet(out var AttackReachitem))
+            if (item.AttackReach is {} AttackReachitem)
             {
                 hash.Add(AttackReachitem);
             }
             hash.Add(item.CombatStyle);
-            if (item.TurningSpeed.TryGet(out var TurningSpeeditem))
+            if (item.TurningSpeed is {} TurningSpeeditem)
             {
                 hash.Add(TurningSpeeditem);
             }
-            if (item.BaseScale.TryGet(out var BaseScaleitem))
+            if (item.BaseScale is {} BaseScaleitem)
             {
                 hash.Add(BaseScaleitem);
             }
-            if (item.FootWeight.TryGet(out var FootWeightitem))
+            if (item.FootWeight is {} FootWeightitem)
             {
                 hash.Add(FootWeightitem);
             }
-            if (item.BloodSpray.TryGet(out var BloodSprayitem))
+            if (item.BloodSpray is {} BloodSprayitem)
             {
                 hash.Add(BloodSprayitem);
             }
-            if (item.BloodDecal.TryGet(out var BloodDecalitem))
+            if (item.BloodDecal is {} BloodDecalitem)
             {
                 hash.Add(BloodDecalitem);
             }
@@ -3055,7 +3055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -3147,7 +3147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.NIFT) ?? true))
             {
-                if(rhs.NIFT.TryGet(out var NIFTrhs))
+                if(rhs.NIFT is {} NIFTrhs)
                 {
                     item.NIFT = NIFTrhs.ToArray();
                 }
@@ -3161,7 +3161,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Configuration);
                 try
                 {
-                    if(rhs.Configuration.TryGet(out var rhsConfiguration))
+                    if(rhs.Configuration is {} rhsConfiguration)
                     {
                         item.Configuration = rhsConfiguration.DeepCopy(
                             errorMask: errorMask,
@@ -3219,7 +3219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.AIData);
                 try
                 {
-                    if(rhs.AIData.TryGet(out var rhsAIData))
+                    if(rhs.AIData is {} rhsAIData)
                     {
                         item.AIData = rhsAIData.DeepCopy(
                             errorMask: errorMask,
@@ -3290,7 +3290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,

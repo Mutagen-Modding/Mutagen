@@ -879,11 +879,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IFindMatchingRefNearAliasGetter item)
         {
             var hash = new HashCode();
-            if (item.AliasIndex.TryGet(out var AliasIndexitem))
+            if (item.AliasIndex is {} AliasIndexitem)
             {
                 hash.Add(AliasIndexitem);
             }
-            if (item.Type.TryGet(out var Typeitem))
+            if (item.Type is {} Typeitem)
             {
                 hash.Add(Typeitem);
             }

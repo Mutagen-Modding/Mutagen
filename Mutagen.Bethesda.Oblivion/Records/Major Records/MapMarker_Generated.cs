@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.Types?.Overall ?? true)
-                        && Types.TryGet(out var TypesItem))
+                        && Types is {} TypesItem)
                     {
                         fg.AppendLine("Types =>");
                         fg.AppendLine("[");
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Name, "Name");
-                if (Types.TryGet(out var TypesItem))
+                if (Types is {} TypesItem)
                 {
                     fg.AppendLine("Types =>");
                     fg.AppendLine("[");
@@ -1052,11 +1052,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IMapMarkerGetter item)
         {
             var hash = new HashCode();
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }

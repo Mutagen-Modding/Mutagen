@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(ScheduleDurationInMinutes, "ScheduleDurationInMinutes");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(XnamMarker, "XnamMarker");
                     }
                     if ((printMask?.ProcedureTree?.Overall ?? true)
-                        && ProcedureTree.TryGet(out var ProcedureTreeItem))
+                        && ProcedureTree is {} ProcedureTreeItem)
                     {
                         fg.AppendLine("ProcedureTree =>");
                         fg.AppendLine("[");
@@ -1389,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(ScheduleMinute, "ScheduleMinute");
                 fg.AppendItem(Unknown3, "Unknown3");
                 fg.AppendItem(ScheduleDurationInMinutes, "ScheduleDurationInMinutes");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1454,7 +1454,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendLine("]");
                 fg.AppendItem(XnamMarker, "XnamMarker");
-                if (ProcedureTree.TryGet(out var ProcedureTreeItem))
+                if (ProcedureTree is {} ProcedureTreeItem)
                 {
                     fg.AppendLine("ProcedureTree =>");
                     fg.AppendLine("[");
@@ -2772,7 +2772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IPackageGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
@@ -2791,11 +2791,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Unknown3);
             hash.Add(item.ScheduleDurationInMinutes);
             hash.Add(item.Conditions);
-            if (item.Unknown4.TryGet(out var Unknown4item))
+            if (item.Unknown4 is {} Unknown4item)
             {
                 hash.Add(Unknown4item);
             }
-            if (item.IdleAnimations.TryGet(out var IdleAnimationsitem))
+            if (item.IdleAnimations is {} IdleAnimationsitem)
             {
                 hash.Add(IdleAnimationsitem);
             }
@@ -2806,15 +2806,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Data);
             hash.Add(item.XnamMarker);
             hash.Add(item.ProcedureTree);
-            if (item.OnBegin.TryGet(out var OnBeginitem))
+            if (item.OnBegin is {} OnBeginitem)
             {
                 hash.Add(OnBeginitem);
             }
-            if (item.OnEnd.TryGet(out var OnEnditem))
+            if (item.OnEnd is {} OnEnditem)
             {
                 hash.Add(OnEnditem);
             }
-            if (item.OnChange.TryGet(out var OnChangeitem))
+            if (item.OnChange is {} OnChangeitem)
             {
                 hash.Add(OnChangeitem);
             }
@@ -2982,7 +2982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Package_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -3092,7 +3092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Package_FieldIndex.IdleAnimations);
                 try
                 {
-                    if(rhs.IdleAnimations.TryGet(out var rhsIdleAnimations))
+                    if(rhs.IdleAnimations is {} rhsIdleAnimations)
                     {
                         item.IdleAnimations = rhsIdleAnimations.DeepCopy(
                             errorMask: errorMask,
@@ -3174,7 +3174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Package_FieldIndex.OnBegin);
                 try
                 {
-                    if(rhs.OnBegin.TryGet(out var rhsOnBegin))
+                    if(rhs.OnBegin is {} rhsOnBegin)
                     {
                         item.OnBegin = rhsOnBegin.DeepCopy(
                             errorMask: errorMask,
@@ -3200,7 +3200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Package_FieldIndex.OnEnd);
                 try
                 {
-                    if(rhs.OnEnd.TryGet(out var rhsOnEnd))
+                    if(rhs.OnEnd is {} rhsOnEnd)
                     {
                         item.OnEnd = rhsOnEnd.DeepCopy(
                             errorMask: errorMask,
@@ -3226,7 +3226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Package_FieldIndex.OnChange);
                 try
                 {
-                    if(rhs.OnChange.TryGet(out var rhsOnChange))
+                    if(rhs.OnChange is {} rhsOnChange)
                     {
                         item.OnChange = rhsOnChange.DeepCopy(
                             errorMask: errorMask,

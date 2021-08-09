@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Race, "Race");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords.TryGet(out var KeywordsItem))
+                        && Keywords is {} KeywordsItem)
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Armature?.Overall ?? true)
-                        && Armature.TryGet(out var ArmatureItem))
+                        && Armature is {} ArmatureItem)
                     {
                         fg.AppendLine("Armature =>");
                         fg.AppendLine("[");
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(BashImpactDataSet, "BashImpactDataSet");
                 fg.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
                 fg.AppendItem(Race, "Race");
-                if (Keywords.TryGet(out var KeywordsItem))
+                if (Keywords is {} KeywordsItem)
                 {
                     fg.AppendLine("Keywords =>");
                     fg.AppendLine("[");
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(Description, "Description");
-                if (Armature.TryGet(out var ArmatureItem))
+                if (Armature is {} ArmatureItem)
                 {
                     fg.AppendLine("Armature =>");
                     fg.AppendLine("[");
@@ -2496,17 +2496,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IArmorGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.ObjectBounds);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.ObjectEffect);
-            if (item.EnchantmentAmount.TryGet(out var EnchantmentAmountitem))
+            if (item.EnchantmentAmount is {} EnchantmentAmountitem)
             {
                 hash.Add(EnchantmentAmountitem);
             }
@@ -2514,17 +2514,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(HashCode.Combine(WorldModelitem.Male, WorldModelitem.Female));
             }
-            if (item.BodyTemplate.TryGet(out var BodyTemplateitem))
+            if (item.BodyTemplate is {} BodyTemplateitem)
             {
                 hash.Add(BodyTemplateitem);
             }
-            if (item.Destructible.TryGet(out var Destructibleitem))
+            if (item.Destructible is {} Destructibleitem)
             {
                 hash.Add(Destructibleitem);
             }
             hash.Add(item.PickUpSound);
             hash.Add(item.PutDownSound);
-            if (item.RagdollConstraintTemplate.TryGet(out var RagdollConstraintTemplateitem))
+            if (item.RagdollConstraintTemplate is {} RagdollConstraintTemplateitem)
             {
                 hash.Add(RagdollConstraintTemplateitem);
             }
@@ -2533,7 +2533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.AlternateBlockMaterial);
             hash.Add(item.Race);
             hash.Add(item.Keywords);
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
@@ -2715,7 +2715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Armor_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -2789,7 +2789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Armor_FieldIndex.BodyTemplate);
                 try
                 {
-                    if(rhs.BodyTemplate.TryGet(out var rhsBodyTemplate))
+                    if(rhs.BodyTemplate is {} rhsBodyTemplate)
                     {
                         item.BodyTemplate = rhsBodyTemplate.DeepCopy(
                             errorMask: errorMask,
@@ -2815,7 +2815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Armor_FieldIndex.Destructible);
                 try
                 {
-                    if(rhs.Destructible.TryGet(out var rhsDestructible))
+                    if(rhs.Destructible is {} rhsDestructible)
                     {
                         item.Destructible = rhsDestructible.DeepCopy(
                             errorMask: errorMask,

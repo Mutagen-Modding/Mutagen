@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(AnimationEvent, "AnimationEvent");
                     }
                     if ((printMask?.RelatedIdles?.Overall ?? true)
-                        && RelatedIdles.TryGet(out var RelatedIdlesItem))
+                        && RelatedIdles is {} RelatedIdlesItem)
                     {
                         fg.AppendLine("RelatedIdles =>");
                         fg.AppendLine("[");
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendItem(Filename, "Filename");
                 fg.AppendItem(AnimationEvent, "AnimationEvent");
-                if (RelatedIdles.TryGet(out var RelatedIdlesItem))
+                if (RelatedIdles is {} RelatedIdlesItem)
                 {
                     fg.AppendLine("RelatedIdles =>");
                     fg.AppendLine("[");
@@ -1592,11 +1592,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Conditions);
-            if (item.Filename.TryGet(out var Filenameitem))
+            if (item.Filename is {} Filenameitem)
             {
                 hash.Add(Filenameitem);
             }
-            if (item.AnimationEvent.TryGet(out var AnimationEventitem))
+            if (item.AnimationEvent is {} AnimationEventitem)
             {
                 hash.Add(AnimationEventitem);
             }

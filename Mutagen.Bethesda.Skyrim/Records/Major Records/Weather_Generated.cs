@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.CloudTextures?.Overall ?? true)
-                        && CloudTextures.TryGet(out var CloudTexturesItem))
+                        && CloudTextures is {} CloudTexturesItem)
                     {
                         fg.AppendLine("CloudTextures =>");
                         fg.AppendLine("[");
@@ -1494,7 +1494,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(ONAM, "ONAM");
                     }
                     if ((printMask?.Clouds?.Overall ?? true)
-                        && Clouds.TryGet(out var CloudsItem))
+                        && Clouds is {} CloudsItem)
                     {
                         fg.AppendLine("Clouds =>");
                         fg.AppendLine("[");
@@ -1681,7 +1681,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(WindDirectionRange, "WindDirectionRange");
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
-                        && Sounds.TryGet(out var SoundsItem))
+                        && Sounds is {} SoundsItem)
                     {
                         fg.AppendLine("Sounds =>");
                         fg.AppendLine("[");
@@ -1704,7 +1704,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.SkyStatics?.Overall ?? true)
-                        && SkyStatics.TryGet(out var SkyStaticsItem))
+                        && SkyStatics is {} SkyStaticsItem)
                     {
                         fg.AppendLine("SkyStatics =>");
                         fg.AppendLine("[");
@@ -2481,7 +2481,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (CloudTextures.TryGet(out var CloudTexturesItem))
+                if (CloudTextures is {} CloudTexturesItem)
                 {
                     fg.AppendLine("CloudTextures =>");
                     fg.AppendLine("[");
@@ -2511,7 +2511,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Precipitation, "Precipitation");
                 fg.AppendItem(VisualEffect, "VisualEffect");
                 fg.AppendItem(ONAM, "ONAM");
-                if (Clouds.TryGet(out var CloudsItem))
+                if (Clouds is {} CloudsItem)
                 {
                     fg.AppendLine("Clouds =>");
                     fg.AppendLine("[");
@@ -2574,7 +2574,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(VisualEffectEnd, "VisualEffectEnd");
                 fg.AppendItem(WindDirection, "WindDirection");
                 fg.AppendItem(WindDirectionRange, "WindDirectionRange");
-                if (Sounds.TryGet(out var SoundsItem))
+                if (Sounds is {} SoundsItem)
                 {
                     fg.AppendLine("Sounds =>");
                     fg.AppendLine("[");
@@ -2596,7 +2596,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (SkyStatics.TryGet(out var SkyStaticsItem))
+                if (SkyStatics is {} SkyStaticsItem)
                 {
                     fg.AppendLine("SkyStatics =>");
                     fg.AppendLine("[");
@@ -4550,29 +4550,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.CloudTextures);
-            if (item.DNAM.TryGet(out var DNAMItem))
+            if (item.DNAM is {} DNAMItem)
             {
                 hash.Add(DNAMItem);
             }
-            if (item.CNAM.TryGet(out var CNAMItem))
+            if (item.CNAM is {} CNAMItem)
             {
                 hash.Add(CNAMItem);
             }
-            if (item.ANAM.TryGet(out var ANAMItem))
+            if (item.ANAM is {} ANAMItem)
             {
                 hash.Add(ANAMItem);
             }
-            if (item.BNAM.TryGet(out var BNAMItem))
+            if (item.BNAM is {} BNAMItem)
             {
                 hash.Add(BNAMItem);
             }
-            if (item.LNAM.TryGet(out var LNAMItem))
+            if (item.LNAM is {} LNAMItem)
             {
                 hash.Add(LNAMItem);
             }
             hash.Add(item.Precipitation);
             hash.Add(item.VisualEffect);
-            if (item.ONAM.TryGet(out var ONAMItem))
+            if (item.ONAM is {} ONAMItem)
             {
                 hash.Add(ONAMItem);
             }
@@ -4620,27 +4620,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.WindDirectionRange);
             hash.Add(item.Sounds);
             hash.Add(item.SkyStatics);
-            if (item.ImageSpaces.TryGet(out var ImageSpacesitem))
+            if (item.ImageSpaces is {} ImageSpacesitem)
             {
                 hash.Add(ImageSpacesitem);
             }
-            if (item.VolumetricLighting.TryGet(out var VolumetricLightingitem))
+            if (item.VolumetricLighting is {} VolumetricLightingitem)
             {
                 hash.Add(VolumetricLightingitem);
             }
-            if (item.DirectionalAmbientLightingColors.TryGet(out var DirectionalAmbientLightingColorsitem))
+            if (item.DirectionalAmbientLightingColors is {} DirectionalAmbientLightingColorsitem)
             {
                 hash.Add(DirectionalAmbientLightingColorsitem);
             }
-            if (item.NAM2.TryGet(out var NAM2Item))
+            if (item.NAM2 is {} NAM2Item)
             {
                 hash.Add(NAM2Item);
             }
-            if (item.NAM3.TryGet(out var NAM3Item))
+            if (item.NAM3 is {} NAM3Item)
             {
                 hash.Add(NAM3Item);
             }
-            if (item.Aurora.TryGet(out var Auroraitem))
+            if (item.Aurora is {} Auroraitem)
             {
                 hash.Add(Auroraitem);
             }
@@ -4795,7 +4795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
-                if(rhs.DNAM.TryGet(out var DNAMrhs))
+                if(rhs.DNAM is {} DNAMrhs)
                 {
                     item.DNAM = DNAMrhs.ToArray();
                 }
@@ -4806,7 +4806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CNAM) ?? true))
             {
-                if(rhs.CNAM.TryGet(out var CNAMrhs))
+                if(rhs.CNAM is {} CNAMrhs)
                 {
                     item.CNAM = CNAMrhs.ToArray();
                 }
@@ -4817,7 +4817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ANAM) ?? true))
             {
-                if(rhs.ANAM.TryGet(out var ANAMrhs))
+                if(rhs.ANAM is {} ANAMrhs)
                 {
                     item.ANAM = ANAMrhs.ToArray();
                 }
@@ -4828,7 +4828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.BNAM) ?? true))
             {
-                if(rhs.BNAM.TryGet(out var BNAMrhs))
+                if(rhs.BNAM is {} BNAMrhs)
                 {
                     item.BNAM = BNAMrhs.ToArray();
                 }
@@ -4839,7 +4839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
             {
-                if(rhs.LNAM.TryGet(out var LNAMrhs))
+                if(rhs.LNAM is {} LNAMrhs)
                 {
                     item.LNAM = LNAMrhs.ToArray();
                 }
@@ -4858,7 +4858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
-                if(rhs.ONAM.TryGet(out var ONAMrhs))
+                if(rhs.ONAM is {} ONAMrhs)
                 {
                     item.ONAM = ONAMrhs.ToArray();
                 }
@@ -5396,7 +5396,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.ImageSpaces);
                 try
                 {
-                    if(rhs.ImageSpaces.TryGet(out var rhsImageSpaces))
+                    if(rhs.ImageSpaces is {} rhsImageSpaces)
                     {
                         item.ImageSpaces = rhsImageSpaces.DeepCopy(
                             errorMask: errorMask,
@@ -5422,7 +5422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.VolumetricLighting);
                 try
                 {
-                    if(rhs.VolumetricLighting.TryGet(out var rhsVolumetricLighting))
+                    if(rhs.VolumetricLighting is {} rhsVolumetricLighting)
                     {
                         item.VolumetricLighting = rhsVolumetricLighting.DeepCopy(
                             errorMask: errorMask,
@@ -5448,7 +5448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
                 try
                 {
-                    if(rhs.DirectionalAmbientLightingColors.TryGet(out var rhsDirectionalAmbientLightingColors))
+                    if(rhs.DirectionalAmbientLightingColors is {} rhsDirectionalAmbientLightingColors)
                     {
                         item.DirectionalAmbientLightingColors = rhsDirectionalAmbientLightingColors.DeepCopy(
                             errorMask: errorMask,
@@ -5471,7 +5471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM2) ?? true))
             {
-                if(rhs.NAM2.TryGet(out var NAM2rhs))
+                if(rhs.NAM2 is {} NAM2rhs)
                 {
                     item.NAM2 = NAM2rhs.ToArray();
                 }
@@ -5482,7 +5482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM3) ?? true))
             {
-                if(rhs.NAM3.TryGet(out var NAM3rhs))
+                if(rhs.NAM3 is {} NAM3rhs)
                 {
                     item.NAM3 = NAM3rhs.ToArray();
                 }
@@ -5496,7 +5496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.Aurora);
                 try
                 {
-                    if(rhs.Aurora.TryGet(out var rhsAurora))
+                    if(rhs.Aurora is {} rhsAurora)
                     {
                         item.Aurora = rhsAurora.DeepCopy(
                             errorMask: errorMask,

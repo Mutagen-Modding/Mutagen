@@ -1507,43 +1507,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Diffuse.TryGet(out var Diffuseitem))
+            if (item.Diffuse is {} Diffuseitem)
             {
                 hash.Add(Diffuseitem);
             }
-            if (item.NormalOrGloss.TryGet(out var NormalOrGlossitem))
+            if (item.NormalOrGloss is {} NormalOrGlossitem)
             {
                 hash.Add(NormalOrGlossitem);
             }
-            if (item.EnvironmentMaskOrSubsurfaceTint.TryGet(out var EnvironmentMaskOrSubsurfaceTintitem))
+            if (item.EnvironmentMaskOrSubsurfaceTint is {} EnvironmentMaskOrSubsurfaceTintitem)
             {
                 hash.Add(EnvironmentMaskOrSubsurfaceTintitem);
             }
-            if (item.GlowOrDetailMap.TryGet(out var GlowOrDetailMapitem))
+            if (item.GlowOrDetailMap is {} GlowOrDetailMapitem)
             {
                 hash.Add(GlowOrDetailMapitem);
             }
-            if (item.Height.TryGet(out var Heightitem))
+            if (item.Height is {} Heightitem)
             {
                 hash.Add(Heightitem);
             }
-            if (item.Environment.TryGet(out var Environmentitem))
+            if (item.Environment is {} Environmentitem)
             {
                 hash.Add(Environmentitem);
             }
-            if (item.Multilayer.TryGet(out var Multilayeritem))
+            if (item.Multilayer is {} Multilayeritem)
             {
                 hash.Add(Multilayeritem);
             }
-            if (item.BacklightMaskOrSpecular.TryGet(out var BacklightMaskOrSpecularitem))
+            if (item.BacklightMaskOrSpecular is {} BacklightMaskOrSpecularitem)
             {
                 hash.Add(BacklightMaskOrSpecularitem);
             }
-            if (item.Decal.TryGet(out var Decalitem))
+            if (item.Decal is {} Decalitem)
             {
                 hash.Add(Decalitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
                 try
                 {
-                    if(rhs.Decal.TryGet(out var rhsDecal))
+                    if(rhs.Decal is {} rhsDecal)
                     {
                         item.Decal = rhsDecal.DeepCopy(
                             errorMask: errorMask,

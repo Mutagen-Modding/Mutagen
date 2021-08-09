@@ -1761,7 +1761,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.Records?.Overall ?? true)
-                        && Records.TryGet(out var RecordsItem))
+                        && Records is {} RecordsItem)
                     {
                         fg.AppendLine("Records =>");
                         fg.AppendLine("[");
@@ -1922,7 +1922,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Type, "Type");
                 fg.AppendItem(LastModified, "LastModified");
                 fg.AppendItem(Unknown, "Unknown");
-                if (Records.TryGet(out var RecordsItem))
+                if (Records is {} RecordsItem)
                 {
                     fg.AppendLine("Records =>");
                     fg.AppendLine("[");

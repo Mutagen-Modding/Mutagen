@@ -771,11 +771,11 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IPexObjectFunctionVariableGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.TypeName.TryGet(out var TypeNameitem))
+            if (item.TypeName is {} TypeNameitem)
             {
                 hash.Add(TypeNameitem);
             }

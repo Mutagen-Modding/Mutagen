@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Skyrim
                         Data?.ToString(fg);
                     }
                     if ((printMask?.Stages?.Overall ?? true)
-                        && Stages.TryGet(out var StagesItem))
+                        && Stages is {} StagesItem)
                     {
                         fg.AppendLine("Stages =>");
                         fg.AppendLine("[");
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 Data?.ToString(fg);
-                if (Stages.TryGet(out var StagesItem))
+                if (Stages is {} StagesItem)
                 {
                     fg.AppendLine("Stages =>");
                     fg.AppendLine("[");
@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IDestructibleGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -1057,7 +1057,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Destructible_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,

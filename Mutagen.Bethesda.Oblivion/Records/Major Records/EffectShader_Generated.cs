@@ -1068,15 +1068,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IEffectShaderGetter item)
         {
             var hash = new HashCode();
-            if (item.FillTexture.TryGet(out var FillTextureitem))
+            if (item.FillTexture is {} FillTextureitem)
             {
                 hash.Add(FillTextureitem);
             }
-            if (item.ParticleShaderTexture.TryGet(out var ParticleShaderTextureitem))
+            if (item.ParticleShaderTexture is {} ParticleShaderTextureitem)
             {
                 hash.Add(ParticleShaderTextureitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,

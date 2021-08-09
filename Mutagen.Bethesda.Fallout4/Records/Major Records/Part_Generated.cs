@@ -879,11 +879,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IPartGetter item)
         {
             var hash = new HashCode();
-            if (item.PartType.TryGet(out var PartTypeitem))
+            if (item.PartType is {} PartTypeitem)
             {
                 hash.Add(PartTypeitem);
             }
-            if (item.FileName.TryGet(out var FileNameitem))
+            if (item.FileName is {} FileNameitem)
             {
                 hash.Add(FileNameitem);
             }

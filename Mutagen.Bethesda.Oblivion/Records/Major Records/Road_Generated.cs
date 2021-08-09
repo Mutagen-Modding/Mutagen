@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Points?.Overall ?? true)
-                        && Points.TryGet(out var PointsItem))
+                        && Points is {} PointsItem)
                     {
                         fg.AppendLine("Points =>");
                         fg.AppendLine("[");
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (Points.TryGet(out var PointsItem))
+                if (Points is {} PointsItem)
                 {
                     fg.AppendLine("Points =>");
                     fg.AppendLine("[");

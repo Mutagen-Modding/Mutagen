@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Phases?.Overall ?? true)
-                        && Phases.TryGet(out var PhasesItem))
+                        && Phases is {} PhasesItem)
                     {
                         fg.AppendLine("Phases =>");
                         fg.AppendLine("[");
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Actors?.Overall ?? true)
-                        && Actors.TryGet(out var ActorsItem))
+                        && Actors is {} ActorsItem)
                     {
                         fg.AppendLine("Actors =>");
                         fg.AppendLine("[");
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Actions?.Overall ?? true)
-                        && Actions.TryGet(out var ActionsItem))
+                        && Actions is {} ActionsItem)
                     {
                         fg.AppendLine("Actions =>");
                         fg.AppendLine("[");
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(VNAM, "VNAM");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.ToString_FillInternal(fg);
                 VirtualMachineAdapter?.ToString(fg);
                 fg.AppendItem(Flags, "Flags");
-                if (Phases.TryGet(out var PhasesItem))
+                if (Phases is {} PhasesItem)
                 {
                     fg.AppendLine("Phases =>");
                     fg.AppendLine("[");
@@ -903,7 +903,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Actors.TryGet(out var ActorsItem))
+                if (Actors is {} ActorsItem)
                 {
                     fg.AppendLine("Actors =>");
                     fg.AppendLine("[");
@@ -925,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Actions.TryGet(out var ActionsItem))
+                if (Actions is {} ActionsItem)
                 {
                     fg.AppendLine("Actions =>");
                     fg.AppendLine("[");
@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Quest, "Quest");
                 fg.AppendItem(LastActionIndex, "LastActionIndex");
                 fg.AppendItem(VNAM, "VNAM");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1928,31 +1928,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ISceneGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
             hash.Add(item.Phases);
             hash.Add(item.Actors);
             hash.Add(item.Actions);
-            if (item.Unused.TryGet(out var Unuseditem))
+            if (item.Unused is {} Unuseditem)
             {
                 hash.Add(Unuseditem);
             }
-            if (item.Unused2.TryGet(out var Unused2item))
+            if (item.Unused2 is {} Unused2item)
             {
                 hash.Add(Unused2item);
             }
             hash.Add(item.Quest);
-            if (item.LastActionIndex.TryGet(out var LastActionIndexitem))
+            if (item.LastActionIndex is {} LastActionIndexitem)
             {
                 hash.Add(LastActionIndexitem);
             }
-            if (item.VNAM.TryGet(out var VNAMItem))
+            if (item.VNAM is {} VNAMItem)
             {
                 hash.Add(VNAMItem);
             }
@@ -2090,7 +2090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Scene_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -2192,7 +2192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Scene_FieldIndex.Unused);
                 try
                 {
-                    if(rhs.Unused.TryGet(out var rhsUnused))
+                    if(rhs.Unused is {} rhsUnused)
                     {
                         item.Unused = rhsUnused.DeepCopy(
                             errorMask: errorMask,
@@ -2218,7 +2218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Scene_FieldIndex.Unused2);
                 try
                 {
-                    if(rhs.Unused2.TryGet(out var rhsUnused2))
+                    if(rhs.Unused2 is {} rhsUnused2)
                     {
                         item.Unused2 = rhsUnused2.DeepCopy(
                             errorMask: errorMask,
@@ -2249,7 +2249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.VNAM) ?? true))
             {
-                if(rhs.VNAM.TryGet(out var VNAMrhs))
+                if(rhs.VNAM is {} VNAMrhs)
                 {
                     item.VNAM = VNAMrhs.ToArray();
                 }

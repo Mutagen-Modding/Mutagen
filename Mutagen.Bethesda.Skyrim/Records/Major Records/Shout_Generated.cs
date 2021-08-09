@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.WordsOfPower?.Overall ?? true)
-                        && WordsOfPower.TryGet(out var WordsOfPowerItem))
+                        && WordsOfPower is {} WordsOfPowerItem)
                     {
                         fg.AppendLine("WordsOfPower =>");
                         fg.AppendLine("[");
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(MenuDisplayObject, "MenuDisplayObject");
                 fg.AppendItem(Description, "Description");
-                if (WordsOfPower.TryGet(out var WordsOfPowerItem))
+                if (WordsOfPower is {} WordsOfPowerItem)
                 {
                     fg.AppendLine("WordsOfPower =>");
                     fg.AppendLine("[");
@@ -1293,12 +1293,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IShoutGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.MenuDisplayObject);
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }

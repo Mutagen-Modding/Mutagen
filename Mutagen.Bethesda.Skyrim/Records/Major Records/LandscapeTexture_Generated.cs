@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
                     }
                     if ((printMask?.Grasses?.Overall ?? true)
-                        && Grasses.TryGet(out var GrassesItem))
+                        && Grasses is {} GrassesItem)
                     {
                         fg.AppendLine("Grasses =>");
                         fg.AppendLine("[");
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(HavokFriction, "HavokFriction");
                 fg.AppendItem(HavokRestitution, "HavokRestitution");
                 fg.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
-                if (Grasses.TryGet(out var GrassesItem))
+                if (Grasses is {} GrassesItem)
                 {
                     fg.AppendLine("Grasses =>");
                     fg.AppendLine("[");
@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.HavokRestitution);
             hash.Add(item.TextureSpecularExponent);
             hash.Add(item.Grasses);
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }

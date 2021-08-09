@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.WeatherTypes?.Overall ?? true)
-                        && WeatherTypes.TryGet(out var WeatherTypesItem))
+                        && WeatherTypes is {} WeatherTypesItem)
                     {
                         fg.AppendLine("WeatherTypes =>");
                         fg.AppendLine("[");
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (WeatherTypes.TryGet(out var WeatherTypesItem))
+                if (WeatherTypes is {} WeatherTypesItem)
                 {
                     fg.AppendLine("WeatherTypes =>");
                     fg.AppendLine("[");
@@ -1621,15 +1621,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.WeatherTypes);
-            if (item.SunTexture.TryGet(out var SunTextureitem))
+            if (item.SunTexture is {} SunTextureitem)
             {
                 hash.Add(SunTextureitem);
             }
-            if (item.SunGlareTexture.TryGet(out var SunGlareTextureitem))
+            if (item.SunGlareTexture is {} SunGlareTextureitem)
             {
                 hash.Add(SunGlareTextureitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1803,7 +1803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Climate_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,

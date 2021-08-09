@@ -989,12 +989,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             var hash = new HashCode();
             hash.Add(item.File);
-            if (item.ColorRemappingIndex.TryGet(out var ColorRemappingIndexitem))
+            if (item.ColorRemappingIndex is {} ColorRemappingIndexitem)
             {
                 hash.Add(ColorRemappingIndexitem);
             }
             hash.Add(item.MaterialSwap);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 hash.Add(DataItem);
             }
@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
-                if(rhs.Data.TryGet(out var Datarhs))
+                if(rhs.Data is {} Datarhs)
                 {
                     item.Data = Datarhs.ToArray();
                 }

@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(LastModified, "LastModified");
                     }
                     if ((printMask?.SubBlocks?.Overall ?? true)
-                        && SubBlocks.TryGet(out var SubBlocksItem))
+                        && SubBlocks is {} SubBlocksItem)
                     {
                         fg.AppendLine("SubBlocks =>");
                         fg.AppendLine("[");
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(BlockNumber, "BlockNumber");
                 fg.AppendItem(GroupType, "GroupType");
                 fg.AppendItem(LastModified, "LastModified");
-                if (SubBlocks.TryGet(out var SubBlocksItem))
+                if (SubBlocks is {} SubBlocksItem)
                 {
                     fg.AppendLine("SubBlocks =>");
                     fg.AppendLine("[");

@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(MenuDisplayObject, "MenuDisplayObject");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords.TryGet(out var KeywordsItem))
+                        && Keywords is {} KeywordsItem)
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
                     }
                     if ((printMask?.CounterEffects?.Overall ?? true)
-                        && CounterEffects.TryGet(out var CounterEffectsItem))
+                        && CounterEffects is {} CounterEffectsItem)
                     {
                         fg.AppendLine("CounterEffects =>");
                         fg.AppendLine("[");
@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
-                        && Sounds.TryGet(out var SoundsItem))
+                        && Sounds is {} SoundsItem)
                     {
                         fg.AppendLine("Sounds =>");
                         fg.AppendLine("[");
@@ -1337,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -1911,7 +1911,7 @@ namespace Mutagen.Bethesda.Skyrim
                 VirtualMachineAdapter?.ToString(fg);
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(MenuDisplayObject, "MenuDisplayObject");
-                if (Keywords.TryGet(out var KeywordsItem))
+                if (Keywords is {} KeywordsItem)
                 {
                     fg.AppendLine("Keywords =>");
                     fg.AppendLine("[");
@@ -1970,7 +1970,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(CastingSoundLevel, "CastingSoundLevel");
                 fg.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
                 fg.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
-                if (CounterEffects.TryGet(out var CounterEffectsItem))
+                if (CounterEffects is {} CounterEffectsItem)
                 {
                     fg.AppendLine("CounterEffects =>");
                     fg.AppendLine("[");
@@ -1992,7 +1992,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Sounds.TryGet(out var SoundsItem))
+                if (Sounds is {} SoundsItem)
                 {
                     fg.AppendLine("Sounds =>");
                     fg.AppendLine("[");
@@ -2015,7 +2015,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(Description, "Description");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -3633,11 +3633,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IMagicEffectGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
@@ -3682,7 +3682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ScriptEffectAIDelayTime);
             hash.Add(item.CounterEffects);
             hash.Add(item.Sounds);
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
@@ -3845,7 +3845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,

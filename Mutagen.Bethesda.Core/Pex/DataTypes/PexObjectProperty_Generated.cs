@@ -1092,28 +1092,28 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IPexObjectPropertyGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.TypeName.TryGet(out var TypeNameitem))
+            if (item.TypeName is {} TypeNameitem)
             {
                 hash.Add(TypeNameitem);
             }
-            if (item.DocString.TryGet(out var DocStringitem))
+            if (item.DocString is {} DocStringitem)
             {
                 hash.Add(DocStringitem);
             }
             hash.Add(item.Flags);
-            if (item.AutoVarName.TryGet(out var AutoVarNameitem))
+            if (item.AutoVarName is {} AutoVarNameitem)
             {
                 hash.Add(AutoVarNameitem);
             }
-            if (item.ReadHandler.TryGet(out var ReadHandleritem))
+            if (item.ReadHandler is {} ReadHandleritem)
             {
                 hash.Add(ReadHandleritem);
             }
-            if (item.WriteHandler.TryGet(out var WriteHandleritem))
+            if (item.WriteHandler is {} WriteHandleritem)
             {
                 hash.Add(WriteHandleritem);
             }
@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 errorMask?.PushIndex((int)PexObjectProperty_FieldIndex.ReadHandler);
                 try
                 {
-                    if(rhs.ReadHandler.TryGet(out var rhsReadHandler))
+                    if(rhs.ReadHandler is {} rhsReadHandler)
                     {
                         item.ReadHandler = rhsReadHandler.DeepCopy(
                             errorMask: errorMask,
@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 errorMask?.PushIndex((int)PexObjectProperty_FieldIndex.WriteHandler);
                 try
                 {
-                    if(rhs.WriteHandler.TryGet(out var rhsWriteHandler))
+                    if(rhs.WriteHandler is {} rhsWriteHandler)
                     {
                         item.WriteHandler = rhsWriteHandler.DeepCopy(
                             errorMask: errorMask,

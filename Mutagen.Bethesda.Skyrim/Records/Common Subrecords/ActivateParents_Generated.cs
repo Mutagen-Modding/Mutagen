@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Parents?.Overall ?? true)
-                        && Parents.TryGet(out var ParentsItem))
+                        && Parents is {} ParentsItem)
                     {
                         fg.AppendLine("Parents =>");
                         fg.AppendLine("[");
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Flags, "Flags");
-                if (Parents.TryGet(out var ParentsItem))
+                if (Parents is {} ParentsItem)
                 {
                     fg.AppendLine("Parents =>");
                     fg.AppendLine("[");

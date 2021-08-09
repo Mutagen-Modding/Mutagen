@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Flags, "Flags");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1108,16 +1108,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ILogEntryGetter item)
         {
             var hash = new HashCode();
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
             hash.Add(item.Conditions);
-            if (item.Entry.TryGet(out var Entryitem))
+            if (item.Entry is {} Entryitem)
             {
                 hash.Add(Entryitem);
             }
-            if (item.ResultScript.TryGet(out var ResultScriptitem))
+            if (item.ResultScript is {} ResultScriptitem)
             {
                 hash.Add(ResultScriptitem);
             }
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.ResultScript);
                 try
                 {
-                    if(rhs.ResultScript.TryGet(out var rhsResultScript))
+                    if(rhs.ResultScript is {} rhsResultScript)
                     {
                         item.ResultScript = rhsResultScript.DeepCopy(
                             errorMask: errorMask,

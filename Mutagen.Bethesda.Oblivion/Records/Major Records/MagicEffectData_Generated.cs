@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.Light);
             hash.Add(item.ProjectileSpeed);
             hash.Add(item.EffectShader);
-            if (item.SubData.TryGet(out var SubDataitem))
+            if (item.SubData is {} SubDataitem)
             {
                 hash.Add(SubDataitem);
             }
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectData_FieldIndex.SubData);
                 try
                 {
-                    if(rhs.SubData.TryGet(out var rhsSubData))
+                    if(rhs.SubData is {} rhsSubData)
                     {
                         item.SubData = rhsSubData.DeepCopy(
                             errorMask: errorMask,

@@ -277,7 +277,7 @@ namespace Mutagen.Bethesda.Skyrim
                         Model?.ToString(fg);
                     }
                     if ((printMask?.Parts?.Overall ?? true)
-                        && Parts.TryGet(out var PartsItem))
+                        && Parts is {} PartsItem)
                     {
                         fg.AppendLine("Parts =>");
                         fg.AppendLine("[");
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.ToString_FillInternal(fg);
                 Model?.ToString(fg);
-                if (Parts.TryGet(out var PartsItem))
+                if (Parts is {} PartsItem)
                 {
                     fg.AppendLine("Parts =>");
                     fg.AppendLine("[");
@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IBodyPartDataGetter item)
         {
             var hash = new HashCode();
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)BodyPartData_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,

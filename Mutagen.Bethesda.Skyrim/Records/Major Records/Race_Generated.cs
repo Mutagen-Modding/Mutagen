@@ -1853,7 +1853,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.ActorEffect?.Overall ?? true)
-                        && ActorEffect.TryGet(out var ActorEffectItem))
+                        && ActorEffect is {} ActorEffectItem)
                     {
                         fg.AppendLine("ActorEffect =>");
                         fg.AppendLine("[");
@@ -1884,7 +1884,7 @@ namespace Mutagen.Bethesda.Skyrim
                         BodyTemplate?.ToString(fg);
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords.TryGet(out var KeywordsItem))
+                        && Keywords is {} KeywordsItem)
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
@@ -2102,7 +2102,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine($"SkeletalModel => {SkeletalModel}");
                     }
                     if ((printMask?.MovementTypeNames?.Overall ?? true)
-                        && MovementTypeNames.TryGet(out var MovementTypeNamesItem))
+                        && MovementTypeNames is {} MovementTypeNamesItem)
                     {
                         fg.AppendLine("MovementTypeNames =>");
                         fg.AppendLine("[");
@@ -2155,7 +2155,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(AttackRace, "AttackRace");
                     }
                     if ((printMask?.Attacks?.Overall ?? true)
-                        && Attacks.TryGet(out var AttacksItem))
+                        && Attacks is {} AttacksItem)
                     {
                         fg.AppendLine("Attacks =>");
                         fg.AppendLine("[");
@@ -2182,7 +2182,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine($"BodyData => {BodyData}");
                     }
                     if ((printMask?.Hairs?.Overall ?? true)
-                        && Hairs.TryGet(out var HairsItem))
+                        && Hairs is {} HairsItem)
                     {
                         fg.AppendLine("Hairs =>");
                         fg.AppendLine("[");
@@ -2205,7 +2205,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Eyes?.Overall ?? true)
-                        && Eyes.TryGet(out var EyesItem))
+                        && Eyes is {} EyesItem)
                     {
                         fg.AppendLine("Eyes =>");
                         fg.AppendLine("[");
@@ -2295,7 +2295,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.MovementTypes?.Overall ?? true)
-                        && MovementTypes.TryGet(out var MovementTypesItem))
+                        && MovementTypes is {} MovementTypesItem)
                     {
                         fg.AppendLine("MovementTypes =>");
                         fg.AppendLine("[");
@@ -2322,7 +2322,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(EquipmentFlags, "EquipmentFlags");
                     }
                     if ((printMask?.EquipmentSlots?.Overall ?? true)
-                        && EquipmentSlots.TryGet(out var EquipmentSlotsItem))
+                        && EquipmentSlots is {} EquipmentSlotsItem)
                     {
                         fg.AppendLine("EquipmentSlots =>");
                         fg.AppendLine("[");
@@ -3200,7 +3200,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(Description, "Description");
-                if (ActorEffect.TryGet(out var ActorEffectItem))
+                if (ActorEffect is {} ActorEffectItem)
                 {
                     fg.AppendLine("ActorEffect =>");
                     fg.AppendLine("[");
@@ -3224,7 +3224,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendItem(Skin, "Skin");
                 BodyTemplate?.ToString(fg);
-                if (Keywords.TryGet(out var KeywordsItem))
+                if (Keywords is {} KeywordsItem)
                 {
                     fg.AppendLine("Keywords =>");
                     fg.AppendLine("[");
@@ -3350,7 +3350,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     fg.AppendLine($"SkeletalModel => {SkeletalModel}");
                 }
-                if (MovementTypeNames.TryGet(out var MovementTypeNamesItem))
+                if (MovementTypeNames is {} MovementTypeNamesItem)
                 {
                     fg.AppendLine("MovementTypeNames =>");
                     fg.AppendLine("[");
@@ -3385,7 +3385,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(FacegenMainClamp, "FacegenMainClamp");
                 fg.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
                 fg.AppendItem(AttackRace, "AttackRace");
-                if (Attacks.TryGet(out var AttacksItem))
+                if (Attacks is {} AttacksItem)
                 {
                     fg.AppendLine("Attacks =>");
                     fg.AppendLine("[");
@@ -3408,7 +3408,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendLine($"BodyData => {BodyData}");
-                if (Hairs.TryGet(out var HairsItem))
+                if (Hairs is {} HairsItem)
                 {
                     fg.AppendLine("Hairs =>");
                     fg.AppendLine("[");
@@ -3430,7 +3430,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Eyes.TryGet(out var EyesItem))
+                if (Eyes is {} EyesItem)
                 {
                     fg.AppendLine("Eyes =>");
                     fg.AppendLine("[");
@@ -3495,7 +3495,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 fg.AppendLine("]");
-                if (MovementTypes.TryGet(out var MovementTypesItem))
+                if (MovementTypes is {} MovementTypesItem)
                 {
                     fg.AppendLine("MovementTypes =>");
                     fg.AppendLine("[");
@@ -3518,7 +3518,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(EquipmentFlags, "EquipmentFlags");
-                if (EquipmentSlots.TryGet(out var EquipmentSlotsItem))
+                if (EquipmentSlots is {} EquipmentSlotsItem)
                 {
                     fg.AppendLine("EquipmentSlots =>");
                     fg.AppendLine("[");
@@ -5817,14 +5817,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IRaceGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.Description);
             hash.Add(item.ActorEffect);
             hash.Add(item.Skin);
-            if (item.BodyTemplate.TryGet(out var BodyTemplateitem))
+            if (item.BodyTemplate is {} BodyTemplateitem)
             {
                 hash.Add(BodyTemplateitem);
             }
@@ -5873,7 +5873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(HashCode.Combine(DefaultHairColorsitem.Male, DefaultHairColorsitem.Female));
             }
-            if (item.NumberOfTintsInList.TryGet(out var NumberOfTintsInListitem))
+            if (item.NumberOfTintsInList is {} NumberOfTintsInListitem)
             {
                 hash.Add(NumberOfTintsInListitem);
             }
@@ -5893,7 +5893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.CloseLootSound);
             hash.Add(item.BipedObjectNames);
             hash.Add(item.MovementTypes);
-            if (item.EquipmentFlags.TryGet(out var EquipmentFlagsitem))
+            if (item.EquipmentFlags is {} EquipmentFlagsitem)
             {
                 hash.Add(EquipmentFlagsitem);
             }
@@ -6209,7 +6209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.BodyTemplate);
                 try
                 {
-                    if(rhs.BodyTemplate.TryGet(out var rhsBodyTemplate))
+                    if(rhs.BodyTemplate is {} rhsBodyTemplate)
                     {
                         item.BodyTemplate = rhsBodyTemplate.DeepCopy(
                             errorMask: errorMask,

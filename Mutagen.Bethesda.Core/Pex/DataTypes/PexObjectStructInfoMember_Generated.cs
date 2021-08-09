@@ -977,20 +977,20 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IPexObjectStructInfoMemberGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.TypeName.TryGet(out var TypeNameitem))
+            if (item.TypeName is {} TypeNameitem)
             {
                 hash.Add(TypeNameitem);
             }
-            if (item.Value.TryGet(out var Valueitem))
+            if (item.Value is {} Valueitem)
             {
                 hash.Add(Valueitem);
             }
             hash.Add(item.IsConst);
-            if (item.DocString.TryGet(out var DocStringitem))
+            if (item.DocString is {} DocStringitem)
             {
                 hash.Add(DocStringitem);
             }
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 errorMask?.PushIndex((int)PexObjectStructInfoMember_FieldIndex.Value);
                 try
                 {
-                    if(rhs.Value.TryGet(out var rhsValue))
+                    if(rhs.Value is {} rhsValue)
                     {
                         item.Value = rhsValue.DeepCopy(
                             errorMask: errorMask,

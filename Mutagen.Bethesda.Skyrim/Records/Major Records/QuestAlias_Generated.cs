@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim
                         FindMatchingRefFromEvent?.ToString(fg);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords.TryGet(out var KeywordsItem))
+                        && Keywords is {} KeywordsItem)
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Items?.Overall ?? true)
-                        && Items.TryGet(out var ItemsItem))
+                        && Items is {} ItemsItem)
                     {
                         fg.AppendLine("Items =>");
                         fg.AppendLine("[");
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(DisplayName, "DisplayName");
                     }
                     if ((printMask?.Spells?.Overall ?? true)
-                        && Spells.TryGet(out var SpellsItem))
+                        && Spells is {} SpellsItem)
                     {
                         fg.AppendLine("Spells =>");
                         fg.AppendLine("[");
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Factions?.Overall ?? true)
-                        && Factions.TryGet(out var FactionsItem))
+                        && Factions is {} FactionsItem)
                     {
                         fg.AppendLine("Factions =>");
                         fg.AppendLine("[");
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.PackageData?.Overall ?? true)
-                        && PackageData.TryGet(out var PackageDataItem))
+                        && PackageData is {} PackageDataItem)
                     {
                         fg.AppendLine("PackageData =>");
                         fg.AppendLine("[");
@@ -1483,7 +1483,7 @@ namespace Mutagen.Bethesda.Skyrim
                 CreateReferenceToObject?.ToString(fg);
                 FindMatchingRefNearAlias?.ToString(fg);
                 FindMatchingRefFromEvent?.ToString(fg);
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Keywords.TryGet(out var KeywordsItem))
+                if (Keywords is {} KeywordsItem)
                 {
                     fg.AppendLine("Keywords =>");
                     fg.AppendLine("[");
@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Items.TryGet(out var ItemsItem))
+                if (Items is {} ItemsItem)
                 {
                     fg.AppendLine("Items =>");
                     fg.AppendLine("[");
@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
                 fg.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
                 fg.AppendItem(DisplayName, "DisplayName");
-                if (Spells.TryGet(out var SpellsItem))
+                if (Spells is {} SpellsItem)
                 {
                     fg.AppendLine("Spells =>");
                     fg.AppendLine("[");
@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Factions.TryGet(out var FactionsItem))
+                if (Factions is {} FactionsItem)
                 {
                     fg.AppendLine("Factions =>");
                     fg.AppendLine("[");
@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (PackageData.TryGet(out var PackageDataItem))
+                if (PackageData is {} PackageDataItem)
                 {
                     fg.AppendLine("PackageData =>");
                     fg.AppendLine("[");
@@ -2761,38 +2761,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var hash = new HashCode();
             hash.Add(item.ID);
             hash.Add(item.Type);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.AliasIndexToForceIntoWhenFilled.TryGet(out var AliasIndexToForceIntoWhenFilleditem))
+            if (item.AliasIndexToForceIntoWhenFilled is {} AliasIndexToForceIntoWhenFilleditem)
             {
                 hash.Add(AliasIndexToForceIntoWhenFilleditem);
             }
             hash.Add(item.SpecificLocation);
             hash.Add(item.ForcedReference);
             hash.Add(item.UniqueActor);
-            if (item.Location.TryGet(out var Locationitem))
+            if (item.Location is {} Locationitem)
             {
                 hash.Add(Locationitem);
             }
-            if (item.External.TryGet(out var Externalitem))
+            if (item.External is {} Externalitem)
             {
                 hash.Add(Externalitem);
             }
-            if (item.CreateReferenceToObject.TryGet(out var CreateReferenceToObjectitem))
+            if (item.CreateReferenceToObject is {} CreateReferenceToObjectitem)
             {
                 hash.Add(CreateReferenceToObjectitem);
             }
-            if (item.FindMatchingRefNearAlias.TryGet(out var FindMatchingRefNearAliasitem))
+            if (item.FindMatchingRefNearAlias is {} FindMatchingRefNearAliasitem)
             {
                 hash.Add(FindMatchingRefNearAliasitem);
             }
-            if (item.FindMatchingRefFromEvent.TryGet(out var FindMatchingRefFromEventitem))
+            if (item.FindMatchingRefFromEvent is {} FindMatchingRefFromEventitem)
             {
                 hash.Add(FindMatchingRefFromEventitem);
             }
@@ -2966,7 +2966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)QuestAlias_FieldIndex.Location);
                 try
                 {
-                    if(rhs.Location.TryGet(out var rhsLocation))
+                    if(rhs.Location is {} rhsLocation)
                     {
                         item.Location = rhsLocation.DeepCopy(
                             errorMask: errorMask,
@@ -2992,7 +2992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)QuestAlias_FieldIndex.External);
                 try
                 {
-                    if(rhs.External.TryGet(out var rhsExternal))
+                    if(rhs.External is {} rhsExternal)
                     {
                         item.External = rhsExternal.DeepCopy(
                             errorMask: errorMask,
@@ -3018,7 +3018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)QuestAlias_FieldIndex.CreateReferenceToObject);
                 try
                 {
-                    if(rhs.CreateReferenceToObject.TryGet(out var rhsCreateReferenceToObject))
+                    if(rhs.CreateReferenceToObject is {} rhsCreateReferenceToObject)
                     {
                         item.CreateReferenceToObject = rhsCreateReferenceToObject.DeepCopy(
                             errorMask: errorMask,
@@ -3044,7 +3044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias);
                 try
                 {
-                    if(rhs.FindMatchingRefNearAlias.TryGet(out var rhsFindMatchingRefNearAlias))
+                    if(rhs.FindMatchingRefNearAlias is {} rhsFindMatchingRefNearAlias)
                     {
                         item.FindMatchingRefNearAlias = rhsFindMatchingRefNearAlias.DeepCopy(
                             errorMask: errorMask,
@@ -3070,7 +3070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent);
                 try
                 {
-                    if(rhs.FindMatchingRefFromEvent.TryGet(out var rhsFindMatchingRefFromEvent))
+                    if(rhs.FindMatchingRefFromEvent is {} rhsFindMatchingRefFromEvent)
                     {
                         item.FindMatchingRefFromEvent = rhsFindMatchingRefFromEvent.DeepCopy(
                             errorMask: errorMask,

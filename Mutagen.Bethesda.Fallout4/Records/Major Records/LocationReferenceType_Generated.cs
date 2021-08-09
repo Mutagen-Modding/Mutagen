@@ -1018,11 +1018,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(ILocationReferenceTypeGetter item)
         {
             var hash = new HashCode();
-            if (item.Color.TryGet(out var Coloritem))
+            if (item.Color is {} Coloritem)
             {
                 hash.Add(Coloritem);
             }
-            if (item.TNAM.TryGet(out var TNAMitem))
+            if (item.TNAM is {} TNAMitem)
             {
                 hash.Add(TNAMitem);
             }

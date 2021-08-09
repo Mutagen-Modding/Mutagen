@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Properties?.Overall ?? true)
-                        && Properties.TryGet(out var PropertiesItem))
+                        && Properties is {} PropertiesItem)
                     {
                         fg.AppendLine("Properties =>");
                         fg.AppendLine("[");
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(Flags, "Flags");
-                if (Properties.TryGet(out var PropertiesItem))
+                if (Properties is {} PropertiesItem)
                 {
                     fg.AppendLine("Properties =>");
                     fg.AppendLine("[");

@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Quests?.Overall ?? true)
-                        && Quests.TryGet(out var QuestsItem))
+                        && Quests is {} QuestsItem)
                     {
                         fg.AppendLine("Quests =>");
                         fg.AppendLine("[");
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Timestamp, "Timestamp");
                     }
                     if ((printMask?.Items?.Overall ?? true)
-                        && Items.TryGet(out var ItemsItem))
+                        && Items is {} ItemsItem)
                     {
                         fg.AppendLine("Items =>");
                         fg.AppendLine("[");
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (Quests.TryGet(out var QuestsItem))
+                if (Quests is {} QuestsItem)
                 {
                     fg.AppendLine("Quests =>");
                     fg.AppendLine("[");
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(DialogType, "DialogType");
                 fg.AppendItem(Timestamp, "Timestamp");
-                if (Items.TryGet(out var ItemsItem))
+                if (Items is {} ItemsItem)
                 {
                     fg.AppendLine("Items =>");
                     fg.AppendLine("[");
@@ -1693,11 +1693,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Quests);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.DialogType.TryGet(out var DialogTypeitem))
+            if (item.DialogType is {} DialogTypeitem)
             {
                 hash.Add(DialogTypeitem);
             }

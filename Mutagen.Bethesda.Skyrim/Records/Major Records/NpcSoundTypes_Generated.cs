@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Types?.Overall ?? true)
-                        && Types.TryGet(out var TypesItem))
+                        && Types is {} TypesItem)
                     {
                         fg.AppendLine("Types =>");
                         fg.AppendLine("[");
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (Types.TryGet(out var TypesItem))
+                if (Types is {} TypesItem)
                 {
                     fg.AppendLine("Types =>");
                     fg.AppendLine("[");

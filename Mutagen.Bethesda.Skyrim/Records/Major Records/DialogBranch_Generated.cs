@@ -1132,11 +1132,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Quest);
-            if (item.TNAM.TryGet(out var TNAMitem))
+            if (item.TNAM is {} TNAMitem)
             {
                 hash.Add(TNAMitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }

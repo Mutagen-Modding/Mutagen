@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
                         Lighting?.ToString(fg);
                     }
                     if ((printMask?.Regions?.Overall ?? true)
-                        && Regions.TryGet(out var RegionsItem))
+                        && Regions is {} RegionsItem)
                     {
                         fg.AppendLine("Regions =>");
                         fg.AppendLine("[");
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(PersistentTimestamp, "PersistentTimestamp");
                     }
                     if ((printMask?.Persistent?.Overall ?? true)
-                        && Persistent.TryGet(out var PersistentItem))
+                        && Persistent is {} PersistentItem)
                     {
                         fg.AppendLine("Persistent =>");
                         fg.AppendLine("[");
@@ -828,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
                     }
                     if ((printMask?.Temporary?.Overall ?? true)
-                        && Temporary.TryGet(out var TemporaryItem))
+                        && Temporary is {} TemporaryItem)
                     {
                         fg.AppendLine("Temporary =>");
                         fg.AppendLine("[");
@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
                     }
                     if ((printMask?.VisibleWhenDistant?.Overall ?? true)
-                        && VisibleWhenDistant.TryGet(out var VisibleWhenDistantItem))
+                        && VisibleWhenDistant is {} VisibleWhenDistantItem)
                     {
                         fg.AppendLine("VisibleWhenDistant =>");
                         fg.AppendLine("[");
@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Grid, "Grid");
                 Lighting?.ToString(fg);
-                if (Regions.TryGet(out var RegionsItem))
+                if (Regions is {} RegionsItem)
                 {
                     fg.AppendLine("Regions =>");
                     fg.AppendLine("[");
@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Landscape?.ToString(fg);
                 fg.AppendItem(Timestamp, "Timestamp");
                 fg.AppendItem(PersistentTimestamp, "PersistentTimestamp");
-                if (Persistent.TryGet(out var PersistentItem))
+                if (Persistent is {} PersistentItem)
                 {
                     fg.AppendLine("Persistent =>");
                     fg.AppendLine("[");
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
-                if (Temporary.TryGet(out var TemporaryItem))
+                if (Temporary is {} TemporaryItem)
                 {
                     fg.AppendLine("Temporary =>");
                     fg.AppendLine("[");
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
-                if (VisibleWhenDistant.TryGet(out var VisibleWhenDistantItem))
+                if (VisibleWhenDistant is {} VisibleWhenDistantItem)
                 {
                     fg.AppendLine("VisibleWhenDistant =>");
                     fg.AppendLine("[");
@@ -2834,44 +2834,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ICellGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.Grid.TryGet(out var Griditem))
+            if (item.Grid is {} Griditem)
             {
                 hash.Add(Griditem);
             }
-            if (item.Lighting.TryGet(out var Lightingitem))
+            if (item.Lighting is {} Lightingitem)
             {
                 hash.Add(Lightingitem);
             }
             hash.Add(item.Regions);
-            if (item.MusicType.TryGet(out var MusicTypeitem))
+            if (item.MusicType is {} MusicTypeitem)
             {
                 hash.Add(MusicTypeitem);
             }
-            if (item.WaterHeight.TryGet(out var WaterHeightitem))
+            if (item.WaterHeight is {} WaterHeightitem)
             {
                 hash.Add(WaterHeightitem);
             }
             hash.Add(item.Climate);
             hash.Add(item.Water);
             hash.Add(item.Owner);
-            if (item.FactionRank.TryGet(out var FactionRankitem))
+            if (item.FactionRank is {} FactionRankitem)
             {
                 hash.Add(FactionRankitem);
             }
             hash.Add(item.GlobalVariable);
-            if (item.PathGrid.TryGet(out var PathGriditem))
+            if (item.PathGrid is {} PathGriditem)
             {
                 hash.Add(PathGriditem);
             }
-            if (item.Landscape.TryGet(out var Landscapeitem))
+            if (item.Landscape is {} Landscapeitem)
             {
                 hash.Add(Landscapeitem);
             }
@@ -3950,7 +3950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
                 try
                 {
-                    if(rhs.Lighting.TryGet(out var rhsLighting))
+                    if(rhs.Lighting is {} rhsLighting)
                     {
                         item.Lighting = rhsLighting.DeepCopy(
                             errorMask: errorMask,
@@ -4031,7 +4031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.PathGrid);
                 try
                 {
-                    if(rhs.PathGrid.TryGet(out var rhsPathGrid))
+                    if(rhs.PathGrid is {} rhsPathGrid)
                     {
                         item.PathGrid = (PathGrid)rhsPathGrid.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Cell_FieldIndex.PathGrid),
@@ -4057,7 +4057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
                 try
                 {
-                    if(rhs.Landscape.TryGet(out var rhsLandscape))
+                    if(rhs.Landscape is {} rhsLandscape)
                     {
                         item.Landscape = (Landscape)rhsLandscape.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape),

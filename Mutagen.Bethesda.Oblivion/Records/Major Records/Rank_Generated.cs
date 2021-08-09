@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IRankGetter item)
         {
             var hash = new HashCode();
-            if (item.RankNumber.TryGet(out var RankNumberitem))
+            if (item.RankNumber is {} RankNumberitem)
             {
                 hash.Add(RankNumberitem);
             }
@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(HashCode.Combine(Nameitem.Male, Nameitem.Female));
             }
-            if (item.Insignia.TryGet(out var Insigniaitem))
+            if (item.Insignia is {} Insigniaitem)
             {
                 hash.Add(Insigniaitem);
             }

@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendItem(OpCode, "OpCode");
                     }
                     if ((printMask?.Arguments?.Overall ?? true)
-                        && Arguments.TryGet(out var ArgumentsItem))
+                        && Arguments is {} ArgumentsItem)
                     {
                         fg.AppendLine("Arguments =>");
                         fg.AppendLine("[");
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Pex
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(OpCode, "OpCode");
-                if (Arguments.TryGet(out var ArgumentsItem))
+                if (Arguments is {} ArgumentsItem)
                 {
                     fg.AppendLine("Arguments =>");
                     fg.AppendLine("[");

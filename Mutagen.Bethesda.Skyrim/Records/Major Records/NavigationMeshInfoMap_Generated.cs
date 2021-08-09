@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(NavMeshVersion, "NavMeshVersion");
                     }
                     if ((printMask?.MapInfos?.Overall ?? true)
-                        && MapInfos.TryGet(out var MapInfosItem))
+                        && MapInfos is {} MapInfosItem)
                     {
                         fg.AppendLine("MapInfos =>");
                         fg.AppendLine("[");
@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(NavMeshVersion, "NavMeshVersion");
-                if (MapInfos.TryGet(out var MapInfosItem))
+                if (MapInfos is {} MapInfosItem)
                 {
                     fg.AppendLine("MapInfos =>");
                     fg.AppendLine("[");
@@ -1250,16 +1250,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(INavigationMeshInfoMapGetter item)
         {
             var hash = new HashCode();
-            if (item.NavMeshVersion.TryGet(out var NavMeshVersionitem))
+            if (item.NavMeshVersion is {} NavMeshVersionitem)
             {
                 hash.Add(NavMeshVersionitem);
             }
             hash.Add(item.MapInfos);
-            if (item.PreferredPathing.TryGet(out var PreferredPathingitem))
+            if (item.PreferredPathing is {} PreferredPathingitem)
             {
                 hash.Add(PreferredPathingitem);
             }
-            if (item.NVSI.TryGet(out var NVSIItem))
+            if (item.NVSI is {} NVSIItem)
             {
                 hash.Add(NVSIItem);
             }
@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing);
                 try
                 {
-                    if(rhs.PreferredPathing.TryGet(out var rhsPreferredPathing))
+                    if(rhs.PreferredPathing is {} rhsPreferredPathing)
                     {
                         item.PreferredPathing = rhsPreferredPathing.DeepCopy(
                             errorMask: errorMask,
@@ -1433,7 +1433,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NVSI) ?? true))
             {
-                if(rhs.NVSI.TryGet(out var NVSIrhs))
+                if(rhs.NVSI is {} NVSIrhs)
                 {
                     item.NVSI = NVSIrhs.ToArray();
                 }

@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IRegionMapGetter item)
         {
             var hash = new HashCode();
-            if (item.Map.TryGet(out var Mapitem))
+            if (item.Map is {} Mapitem)
             {
                 hash.Add(Mapitem);
             }

@@ -870,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.LargeIconFilename);
-            if (item.SmallIconFilename.TryGet(out var SmallIconFilenameitem))
+            if (item.SmallIconFilename is {} SmallIconFilenameitem)
             {
                 hash.Add(SmallIconFilenameitem);
             }

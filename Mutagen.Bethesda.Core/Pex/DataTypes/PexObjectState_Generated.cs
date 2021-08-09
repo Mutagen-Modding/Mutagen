@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.Functions?.Overall ?? true)
-                        && Functions.TryGet(out var FunctionsItem))
+                        && Functions is {} FunctionsItem)
                     {
                         fg.AppendLine("Functions =>");
                         fg.AppendLine("[");
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Pex
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Name, "Name");
-                if (Functions.TryGet(out var FunctionsItem))
+                if (Functions is {} FunctionsItem)
                 {
                     fg.AppendLine("Functions =>");
                     fg.AppendLine("[");
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IPexObjectStateGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }

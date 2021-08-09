@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.ToString_FillInternal(fg);
                 Icons?.ToString(fg);
                 fg.AppendItem(Description, "Description");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1534,30 +1534,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ILoadScreenGetter item)
         {
             var hash = new HashCode();
-            if (item.Icons.TryGet(out var Iconsitem))
+            if (item.Icons is {} Iconsitem)
             {
                 hash.Add(Iconsitem);
             }
             hash.Add(item.Description);
             hash.Add(item.Conditions);
             hash.Add(item.LoadingScreenNif);
-            if (item.InitialScale.TryGet(out var InitialScaleitem))
+            if (item.InitialScale is {} InitialScaleitem)
             {
                 hash.Add(InitialScaleitem);
             }
-            if (item.InitialRotation.TryGet(out var InitialRotationitem))
+            if (item.InitialRotation is {} InitialRotationitem)
             {
                 hash.Add(InitialRotationitem);
             }
-            if (item.RotationOffsetConstraints.TryGet(out var RotationOffsetConstraintsitem))
+            if (item.RotationOffsetConstraints is {} RotationOffsetConstraintsitem)
             {
                 hash.Add(RotationOffsetConstraintsitem);
             }
-            if (item.InitialTranslationOffset.TryGet(out var InitialTranslationOffsetitem))
+            if (item.InitialTranslationOffset is {} InitialTranslationOffsetitem)
             {
                 hash.Add(InitialTranslationOffsetitem);
             }
-            if (item.CameraPath.TryGet(out var CameraPathitem))
+            if (item.CameraPath is {} CameraPathitem)
             {
                 hash.Add(CameraPathitem);
             }
@@ -1675,7 +1675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.Icons);
                 try
                 {
-                    if(rhs.Icons.TryGet(out var rhsIcons))
+                    if(rhs.Icons is {} rhsIcons)
                     {
                         item.Icons = rhsIcons.DeepCopy(
                             errorMask: errorMask,
@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.RotationOffsetConstraints);
                 try
                 {
-                    if(rhs.RotationOffsetConstraints.TryGet(out var rhsRotationOffsetConstraints))
+                    if(rhs.RotationOffsetConstraints is {} rhsRotationOffsetConstraints)
                     {
                         item.RotationOffsetConstraints = rhsRotationOffsetConstraints.DeepCopy(
                             errorMask: errorMask,

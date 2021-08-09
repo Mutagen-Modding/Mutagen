@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Sound);
-            if (item.Chance.TryGet(out var Chanceitem))
+            if (item.Chance is {} Chanceitem)
             {
                 hash.Add(Chanceitem);
             }

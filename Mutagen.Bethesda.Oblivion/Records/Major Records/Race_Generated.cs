@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Spells?.Overall ?? true)
-                        && Spells.TryGet(out var SpellsItem))
+                        && Spells is {} SpellsItem)
                     {
                         fg.AppendLine("Spells =>");
                         fg.AppendLine("[");
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Relations?.Overall ?? true)
-                        && Relations.TryGet(out var RelationsItem))
+                        && Relations is {} RelationsItem)
                     {
                         fg.AppendLine("Relations =>");
                         fg.AppendLine("[");
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine($"RaceStats => {RaceStats}");
                     }
                     if ((printMask?.FaceData?.Overall ?? true)
-                        && FaceData.TryGet(out var FaceDataItem))
+                        && FaceData is {} FaceDataItem)
                     {
                         fg.AppendLine("FaceData =>");
                         fg.AppendLine("[");
@@ -807,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine($"BodyData => {BodyData}");
                     }
                     if ((printMask?.Hairs?.Overall ?? true)
-                        && Hairs.TryGet(out var HairsItem))
+                        && Hairs is {} HairsItem)
                     {
                         fg.AppendLine("Hairs =>");
                         fg.AppendLine("[");
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Eyes?.Overall ?? true)
-                        && Eyes.TryGet(out var EyesItem))
+                        && Eyes is {} EyesItem)
                     {
                         fg.AppendLine("Eyes =>");
                         fg.AppendLine("[");
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(Description, "Description");
-                if (Spells.TryGet(out var SpellsItem))
+                if (Spells is {} SpellsItem)
                 {
                     fg.AppendLine("Spells =>");
                     fg.AppendLine("[");
@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (Relations.TryGet(out var RelationsItem))
+                if (Relations is {} RelationsItem)
                 {
                     fg.AppendLine("Relations =>");
                     fg.AppendLine("[");
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     fg.AppendLine($"RaceStats => {RaceStats}");
                 }
-                if (FaceData.TryGet(out var FaceDataItem))
+                if (FaceData is {} FaceDataItem)
                 {
                     fg.AppendLine("FaceData =>");
                     fg.AppendLine("[");
@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     fg.AppendLine($"BodyData => {BodyData}");
                 }
-                if (Hairs.TryGet(out var HairsItem))
+                if (Hairs is {} HairsItem)
                 {
                     fg.AppendLine("Hairs =>");
                     fg.AppendLine("[");
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (Eyes.TryGet(out var EyesItem))
+                if (Eyes is {} EyesItem)
                 {
                     fg.AppendLine("Eyes =>");
                     fg.AppendLine("[");
@@ -2334,17 +2334,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IRaceGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.Spells);
             hash.Add(item.Relations);
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -2356,15 +2356,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(HashCode.Combine(DefaultHairitem.Male, DefaultHairitem.Female));
             }
-            if (item.DefaultHairColor.TryGet(out var DefaultHairColoritem))
+            if (item.DefaultHairColor is {} DefaultHairColoritem)
             {
                 hash.Add(DefaultHairColoritem);
             }
-            if (item.FaceGenMainClamp.TryGet(out var FaceGenMainClampitem))
+            if (item.FaceGenMainClamp is {} FaceGenMainClampitem)
             {
                 hash.Add(FaceGenMainClampitem);
             }
-            if (item.FaceGenFaceClamp.TryGet(out var FaceGenFaceClampitem))
+            if (item.FaceGenFaceClamp is {} FaceGenFaceClampitem)
             {
                 hash.Add(FaceGenFaceClampitem);
             }
@@ -2379,11 +2379,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             hash.Add(item.Hairs);
             hash.Add(item.Eyes);
-            if (item.FaceGenData.TryGet(out var FaceGenDataitem))
+            if (item.FaceGenData is {} FaceGenDataitem)
             {
                 hash.Add(FaceGenDataitem);
             }
-            if (item.SNAM.TryGet(out var SNAMitem))
+            if (item.SNAM is {} SNAMitem)
             {
                 hash.Add(SNAMitem);
             }
@@ -2582,7 +2582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -2746,7 +2746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
                 try
                 {
-                    if(rhs.FaceGenData.TryGet(out var rhsFaceGenData))
+                    if(rhs.FaceGenData is {} rhsFaceGenData)
                     {
                         item.FaceGenData = rhsFaceGenData.DeepCopy(
                             errorMask: errorMask,

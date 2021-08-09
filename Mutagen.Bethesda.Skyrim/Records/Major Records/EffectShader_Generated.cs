@@ -5902,23 +5902,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IEffectShaderGetter item)
         {
             var hash = new HashCode();
-            if (item.FillTexture.TryGet(out var FillTextureitem))
+            if (item.FillTexture is {} FillTextureitem)
             {
                 hash.Add(FillTextureitem);
             }
-            if (item.ParticleShaderTexture.TryGet(out var ParticleShaderTextureitem))
+            if (item.ParticleShaderTexture is {} ParticleShaderTextureitem)
             {
                 hash.Add(ParticleShaderTextureitem);
             }
-            if (item.HolesTexture.TryGet(out var HolesTextureitem))
+            if (item.HolesTexture is {} HolesTextureitem)
             {
                 hash.Add(HolesTextureitem);
             }
-            if (item.MembranePaletteTexture.TryGet(out var MembranePaletteTextureitem))
+            if (item.MembranePaletteTexture is {} MembranePaletteTextureitem)
             {
                 hash.Add(MembranePaletteTextureitem);
             }
-            if (item.ParticlePaletteTexture.TryGet(out var ParticlePaletteTextureitem))
+            if (item.ParticlePaletteTexture is {} ParticlePaletteTextureitem)
             {
                 hash.Add(ParticlePaletteTextureitem);
             }

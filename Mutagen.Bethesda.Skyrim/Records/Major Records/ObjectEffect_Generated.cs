@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(WornRestrictions, "WornRestrictions");
                     }
                     if ((printMask?.Effects?.Overall ?? true)
-                        && Effects.TryGet(out var EffectsItem))
+                        && Effects is {} EffectsItem)
                     {
                         fg.AppendLine("Effects =>");
                         fg.AppendLine("[");
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(ChargeTime, "ChargeTime");
                 fg.AppendItem(BaseEnchantment, "BaseEnchantment");
                 fg.AppendItem(WornRestrictions, "WornRestrictions");
-                if (Effects.TryGet(out var EffectsItem))
+                if (Effects is {} EffectsItem)
                 {
                     fg.AppendLine("Effects =>");
                     fg.AppendLine("[");
@@ -1725,7 +1725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }

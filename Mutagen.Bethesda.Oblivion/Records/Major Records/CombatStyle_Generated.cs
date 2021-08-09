@@ -1042,11 +1042,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ICombatStyleGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.Advanced.TryGet(out var Advanceditem))
+            if (item.Advanced is {} Advanceditem)
             {
                 hash.Add(Advanceditem);
             }
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
                 try
                 {
-                    if(rhs.Advanced.TryGet(out var rhsAdvanced))
+                    if(rhs.Advanced is {} rhsAdvanced)
                     {
                         item.Advanced = rhsAdvanced.DeepCopy(
                             errorMask: errorMask,

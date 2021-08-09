@@ -1007,11 +1007,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var hash = new HashCode();
             hash.Add(item.Unknown);
             hash.Add(item.FileName);
-            if (item.OnBegin.TryGet(out var OnBeginitem))
+            if (item.OnBegin is {} OnBeginitem)
             {
                 hash.Add(OnBeginitem);
             }
-            if (item.OnEnd.TryGet(out var OnEnditem))
+            if (item.OnEnd is {} OnEnditem)
             {
                 hash.Add(OnEnditem);
             }
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ScriptFragments_FieldIndex.OnBegin);
                 try
                 {
-                    if(rhs.OnBegin.TryGet(out var rhsOnBegin))
+                    if(rhs.OnBegin is {} rhsOnBegin)
                     {
                         item.OnBegin = rhsOnBegin.DeepCopy(
                             errorMask: errorMask,
@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ScriptFragments_FieldIndex.OnEnd);
                 try
                 {
-                    if(rhs.OnEnd.TryGet(out var rhsOnEnd))
+                    if(rhs.OnEnd is {} rhsOnEnd)
                     {
                         item.OnEnd = rhsOnEnd.DeepCopy(
                             errorMask: errorMask,

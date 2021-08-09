@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IPexObjectNamedFunctionGetter item)
         {
             var hash = new HashCode();
-            if (item.FunctionName.TryGet(out var FunctionNameitem))
+            if (item.FunctionName is {} FunctionNameitem)
             {
                 hash.Add(FunctionNameitem);
             }

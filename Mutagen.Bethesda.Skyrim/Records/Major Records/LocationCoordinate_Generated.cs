@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Location, "Location");
                     }
                     if ((printMask?.Coordinates?.Overall ?? true)
-                        && Coordinates.TryGet(out var CoordinatesItem))
+                        && Coordinates is {} CoordinatesItem)
                     {
                         fg.AppendLine("Coordinates =>");
                         fg.AppendLine("[");
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Location, "Location");
-                if (Coordinates.TryGet(out var CoordinatesItem))
+                if (Coordinates is {} CoordinatesItem)
                 {
                     fg.AppendLine("Coordinates =>");
                     fg.AppendLine("[");

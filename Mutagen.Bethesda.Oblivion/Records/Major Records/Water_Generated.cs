@@ -1288,28 +1288,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IWaterGetter item)
         {
             var hash = new HashCode();
-            if (item.Texture.TryGet(out var Textureitem))
+            if (item.Texture is {} Textureitem)
             {
                 hash.Add(Textureitem);
             }
-            if (item.Opacity.TryGet(out var Opacityitem))
+            if (item.Opacity is {} Opacityitem)
             {
                 hash.Add(Opacityitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.MaterialID.TryGet(out var MaterialIDitem))
+            if (item.MaterialID is {} MaterialIDitem)
             {
                 hash.Add(MaterialIDitem);
             }
             hash.Add(item.Sound);
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.RelatedWaters.TryGet(out var RelatedWatersitem))
+            if (item.RelatedWaters is {} RelatedWatersitem)
             {
                 hash.Add(RelatedWatersitem);
             }
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1478,7 +1478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
                 try
                 {
-                    if(rhs.RelatedWaters.TryGet(out var rhsRelatedWaters))
+                    if(rhs.RelatedWaters is {} rhsRelatedWaters)
                     {
                         item.RelatedWaters = rhsRelatedWaters.DeepCopy(
                             errorMask: errorMask,

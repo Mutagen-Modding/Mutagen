@@ -2216,77 +2216,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Base);
-            if (item.XPCIFluff.TryGet(out var XPCIFluffItem))
+            if (item.XPCIFluff is {} XPCIFluffItem)
             {
                 hash.Add(XPCIFluffItem);
             }
-            if (item.FULLFluff.TryGet(out var FULLFluffItem))
+            if (item.FULLFluff is {} FULLFluffItem)
             {
                 hash.Add(FULLFluffItem);
             }
-            if (item.TeleportDestination.TryGet(out var TeleportDestinationitem))
+            if (item.TeleportDestination is {} TeleportDestinationitem)
             {
                 hash.Add(TeleportDestinationitem);
             }
-            if (item.Lock.TryGet(out var Lockitem))
+            if (item.Lock is {} Lockitem)
             {
                 hash.Add(Lockitem);
             }
             hash.Add(item.Owner);
-            if (item.FactionRank.TryGet(out var FactionRankitem))
+            if (item.FactionRank is {} FactionRankitem)
             {
                 hash.Add(FactionRankitem);
             }
             hash.Add(item.GlobalVariable);
-            if (item.EnableParent.TryGet(out var EnableParentitem))
+            if (item.EnableParent is {} EnableParentitem)
             {
                 hash.Add(EnableParentitem);
             }
             hash.Add(item.Target);
-            if (item.SpeedTreeSeed.TryGet(out var SpeedTreeSeeditem))
+            if (item.SpeedTreeSeed is {} SpeedTreeSeeditem)
             {
                 hash.Add(SpeedTreeSeeditem);
             }
-            if (item.DistantLODData.TryGet(out var DistantLODDataitem))
+            if (item.DistantLODData is {} DistantLODDataitem)
             {
                 hash.Add(DistantLODDataitem);
             }
-            if (item.Charge.TryGet(out var Chargeitem))
+            if (item.Charge is {} Chargeitem)
             {
                 hash.Add(Chargeitem);
             }
-            if (item.Health.TryGet(out var Healthitem))
+            if (item.Health is {} Healthitem)
             {
                 hash.Add(Healthitem);
             }
-            if (item.LevelModifier.TryGet(out var LevelModifieritem))
+            if (item.LevelModifier is {} LevelModifieritem)
             {
                 hash.Add(LevelModifieritem);
             }
             hash.Add(item.XRTM);
-            if (item.ActionFlags.TryGet(out var ActionFlagsitem))
+            if (item.ActionFlags is {} ActionFlagsitem)
             {
                 hash.Add(ActionFlagsitem);
             }
-            if (item.Count.TryGet(out var Countitem))
+            if (item.Count is {} Countitem)
             {
                 hash.Add(Countitem);
             }
-            if (item.MapMarker.TryGet(out var MapMarkeritem))
+            if (item.MapMarker is {} MapMarkeritem)
             {
                 hash.Add(MapMarkeritem);
             }
             hash.Add(item.OpenByDefault);
-            if (item.RagdollData.TryGet(out var RagdollDataItem))
+            if (item.RagdollData is {} RagdollDataItem)
             {
                 hash.Add(RagdollDataItem);
             }
-            if (item.Scale.TryGet(out var Scaleitem))
+            if (item.Scale is {} Scaleitem)
             {
                 hash.Add(Scaleitem);
             }
             hash.Add(item.ContainedSoul);
-            if (item.Location.TryGet(out var Locationitem))
+            if (item.Location is {} Locationitem)
             {
                 hash.Add(Locationitem);
             }
@@ -2444,7 +2444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XPCIFluff) ?? true))
             {
-                if(rhs.XPCIFluff.TryGet(out var XPCIFluffrhs))
+                if(rhs.XPCIFluff is {} XPCIFluffrhs)
                 {
                     item.XPCIFluff = XPCIFluffrhs.ToArray();
                 }
@@ -2455,7 +2455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FULLFluff) ?? true))
             {
-                if(rhs.FULLFluff.TryGet(out var FULLFluffrhs))
+                if(rhs.FULLFluff is {} FULLFluffrhs)
                 {
                     item.FULLFluff = FULLFluffrhs.ToArray();
                 }
@@ -2469,7 +2469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.TeleportDestination);
                 try
                 {
-                    if(rhs.TeleportDestination.TryGet(out var rhsTeleportDestination))
+                    if(rhs.TeleportDestination is {} rhsTeleportDestination)
                     {
                         item.TeleportDestination = rhsTeleportDestination.DeepCopy(
                             errorMask: errorMask,
@@ -2495,7 +2495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Lock);
                 try
                 {
-                    if(rhs.Lock.TryGet(out var rhsLock))
+                    if(rhs.Lock is {} rhsLock)
                     {
                         item.Lock = rhsLock.DeepCopy(
                             errorMask: errorMask,
@@ -2533,7 +2533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.EnableParent);
                 try
                 {
-                    if(rhs.EnableParent.TryGet(out var rhsEnableParent))
+                    if(rhs.EnableParent is {} rhsEnableParent)
                     {
                         item.EnableParent = rhsEnableParent.DeepCopy(
                             errorMask: errorMask,
@@ -2567,7 +2567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.DistantLODData);
                 try
                 {
-                    if(rhs.DistantLODData.TryGet(out var rhsDistantLODData))
+                    if(rhs.DistantLODData is {} rhsDistantLODData)
                     {
                         item.DistantLODData = rhsDistantLODData.DeepCopy(
                             errorMask: errorMask,
@@ -2617,7 +2617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.MapMarker);
                 try
                 {
-                    if(rhs.MapMarker.TryGet(out var rhsMapMarker))
+                    if(rhs.MapMarker is {} rhsMapMarker)
                     {
                         item.MapMarker = rhsMapMarker.DeepCopy(
                             errorMask: errorMask,
@@ -2644,7 +2644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
             {
-                if(rhs.RagdollData.TryGet(out var RagdollDatarhs))
+                if(rhs.RagdollData is {} RagdollDatarhs)
                 {
                     item.RagdollData = RagdollDatarhs.ToArray();
                 }
@@ -2666,7 +2666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Location);
                 try
                 {
-                    if(rhs.Location.TryGet(out var rhsLocation))
+                    if(rhs.Location is {} rhsLocation)
                     {
                         item.Location = rhsLocation.DeepCopy(
                             errorMask: errorMask,

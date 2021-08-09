@@ -910,19 +910,19 @@ namespace Mutagen.Bethesda.Pex.Internals
         {
             var hash = new HashCode();
             hash.Add(item.VariableType);
-            if (item.StringValue.TryGet(out var StringValueitem))
+            if (item.StringValue is {} StringValueitem)
             {
                 hash.Add(StringValueitem);
             }
-            if (item.IntValue.TryGet(out var IntValueitem))
+            if (item.IntValue is {} IntValueitem)
             {
                 hash.Add(IntValueitem);
             }
-            if (item.FloatValue.TryGet(out var FloatValueitem))
+            if (item.FloatValue is {} FloatValueitem)
             {
                 hash.Add(FloatValueitem);
             }
-            if (item.BoolValue.TryGet(out var BoolValueitem))
+            if (item.BoolValue is {} BoolValueitem)
             {
                 hash.Add(BoolValueitem);
             }

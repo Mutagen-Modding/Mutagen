@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(SCTX, "SCTX");
                     }
                     if ((printMask?.Topics?.Overall ?? true)
-                        && Topics.TryGet(out var TopicsItem))
+                        && Topics is {} TopicsItem)
                     {
                         fg.AppendLine("Topics =>");
                         fg.AppendLine("[");
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Idle, "Idle");
                 fg.AppendItem(SCHR, "SCHR");
                 fg.AppendItem(SCTX, "SCTX");
-                if (Topics.TryGet(out var TopicsItem))
+                if (Topics is {} TopicsItem)
                 {
                     fg.AppendLine("Topics =>");
                     fg.AppendLine("[");
@@ -1136,11 +1136,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var hash = new HashCode();
             hash.Add(item.IdleTime);
             hash.Add(item.Idle);
-            if (item.SCHR.TryGet(out var SCHRItem))
+            if (item.SCHR is {} SCHRItem)
             {
                 hash.Add(SCHRItem);
             }
-            if (item.SCTX.TryGet(out var SCTXItem))
+            if (item.SCTX is {} SCTXItem)
             {
                 hash.Add(SCTXItem);
             }
@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
             {
-                if(rhs.SCHR.TryGet(out var SCHRrhs))
+                if(rhs.SCHR is {} SCHRrhs)
                 {
                     item.SCHR = SCHRrhs.ToArray();
                 }
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCTX) ?? true))
             {
-                if(rhs.SCTX.TryGet(out var SCTXrhs))
+                if(rhs.SCTX is {} SCTXrhs)
                 {
                     item.SCTX = SCTXrhs.ToArray();
                 }

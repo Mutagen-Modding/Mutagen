@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(TimerSetting, "TimerSetting");
                     }
                     if ((printMask?.Animations?.Overall ?? true)
-                        && Animations.TryGet(out var AnimationsItem))
+                        && Animations is {} AnimationsItem)
                     {
                         fg.AppendLine("Animations =>");
                         fg.AppendLine("[");
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 fg.AppendItem(Type, "Type");
                 fg.AppendItem(TimerSetting, "TimerSetting");
-                if (Animations.TryGet(out var AnimationsItem))
+                if (Animations is {} AnimationsItem)
                 {
                     fg.AppendLine("Animations =>");
                     fg.AppendLine("[");

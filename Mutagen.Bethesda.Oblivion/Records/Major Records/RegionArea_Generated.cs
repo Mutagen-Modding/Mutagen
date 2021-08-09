@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(EdgeFallOff, "EdgeFallOff");
                     }
                     if ((printMask?.RegionPoints?.Overall ?? true)
-                        && RegionPoints.TryGet(out var RegionPointsItem))
+                        && RegionPoints is {} RegionPointsItem)
                     {
                         fg.AppendLine("RegionPoints =>");
                         fg.AppendLine("[");
@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(EdgeFallOff, "EdgeFallOff");
-                if (RegionPoints.TryGet(out var RegionPointsItem))
+                if (RegionPoints is {} RegionPointsItem)
                 {
                     fg.AppendLine("RegionPoints =>");
                     fg.AppendLine("[");
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IRegionAreaGetter item)
         {
             var hash = new HashCode();
-            if (item.EdgeFallOff.TryGet(out var EdgeFallOffitem))
+            if (item.EdgeFallOff is {} EdgeFallOffitem)
             {
                 hash.Add(EdgeFallOffitem);
             }

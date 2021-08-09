@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.AlternateTextures?.Overall ?? true)
-                        && AlternateTextures.TryGet(out var AlternateTexturesItem))
+                        && AlternateTextures is {} AlternateTexturesItem)
                     {
                         fg.AppendLine("AlternateTextures =>");
                         fg.AppendLine("[");
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (AlternateTextures.TryGet(out var AlternateTexturesItem))
+                if (AlternateTextures is {} AlternateTexturesItem)
                 {
                     fg.AppendLine("AlternateTextures =>");
                     fg.AppendLine("[");

@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(AlternateSoundFor, "AlternateSoundFor");
                     }
                     if ((printMask?.SoundFiles?.Overall ?? true)
-                        && SoundFiles.TryGet(out var SoundFilesItem))
+                        && SoundFiles is {} SoundFilesItem)
                     {
                         fg.AppendLine("SoundFiles =>");
                         fg.AppendLine("[");
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(String, "String");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(CNAM, "CNAM");
                 fg.AppendItem(Category, "Category");
                 fg.AppendItem(AlternateSoundFor, "AlternateSoundFor");
-                if (SoundFiles.TryGet(out var SoundFilesItem))
+                if (SoundFiles is {} SoundFilesItem)
                 {
                     fg.AppendLine("SoundFiles =>");
                     fg.AppendLine("[");
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendItem(OutputModel, "OutputModel");
                 fg.AppendItem(String, "String");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1820,7 +1820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ISoundDescriptorGetter item)
         {
             var hash = new HashCode();
-            if (item.CNAM.TryGet(out var CNAMItem))
+            if (item.CNAM is {} CNAMItem)
             {
                 hash.Add(CNAMItem);
             }
@@ -1828,12 +1828,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.AlternateSoundFor);
             hash.Add(item.SoundFiles);
             hash.Add(item.OutputModel);
-            if (item.String.TryGet(out var Stringitem))
+            if (item.String is {} Stringitem)
             {
                 hash.Add(Stringitem);
             }
             hash.Add(item.Conditions);
-            if (item.LoopAndRumble.TryGet(out var LoopAndRumbleitem))
+            if (item.LoopAndRumble is {} LoopAndRumbleitem)
             {
                 hash.Add(LoopAndRumbleitem);
             }
@@ -1965,7 +1965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.CNAM) ?? true))
             {
-                if(rhs.CNAM.TryGet(out var CNAMrhs))
+                if(rhs.CNAM is {} CNAMrhs)
                 {
                     item.CNAM = CNAMrhs.ToArray();
                 }
@@ -2036,7 +2036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SoundDescriptor_FieldIndex.LoopAndRumble);
                 try
                 {
-                    if(rhs.LoopAndRumble.TryGet(out var rhsLoopAndRumble))
+                    if(rhs.LoopAndRumble is {} rhsLoopAndRumble)
                     {
                         item.LoopAndRumble = rhsLoopAndRumble.DeepCopy(
                             errorMask: errorMask,

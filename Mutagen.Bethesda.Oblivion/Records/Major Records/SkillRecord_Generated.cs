@@ -1303,35 +1303,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ISkillRecordGetter item)
         {
             var hash = new HashCode();
-            if (item.Skill.TryGet(out var Skillitem))
+            if (item.Skill is {} Skillitem)
             {
                 hash.Add(Skillitem);
             }
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.ApprenticeText.TryGet(out var ApprenticeTextitem))
+            if (item.ApprenticeText is {} ApprenticeTextitem)
             {
                 hash.Add(ApprenticeTextitem);
             }
-            if (item.JourneymanText.TryGet(out var JourneymanTextitem))
+            if (item.JourneymanText is {} JourneymanTextitem)
             {
                 hash.Add(JourneymanTextitem);
             }
-            if (item.ExpertText.TryGet(out var ExpertTextitem))
+            if (item.ExpertText is {} ExpertTextitem)
             {
                 hash.Add(ExpertTextitem);
             }
-            if (item.MasterText.TryGet(out var MasterTextitem))
+            if (item.MasterText is {} MasterTextitem)
             {
                 hash.Add(MasterTextitem);
             }
@@ -1455,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,

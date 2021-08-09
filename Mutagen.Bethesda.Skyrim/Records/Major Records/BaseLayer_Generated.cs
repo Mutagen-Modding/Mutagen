@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IBaseLayerGetter item)
         {
             var hash = new HashCode();
-            if (item.Header.TryGet(out var Headeritem))
+            if (item.Header is {} Headeritem)
             {
                 hash.Add(Headeritem);
             }
@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)BaseLayer_FieldIndex.Header);
                 try
                 {
-                    if(rhs.Header.TryGet(out var rhsHeader))
+                    if(rhs.Header is {} rhsHeader)
                     {
                         item.Header = rhsHeader.DeepCopy(
                             errorMask: errorMask,

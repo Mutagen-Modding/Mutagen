@@ -1289,16 +1289,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IClassGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.Description);
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.Properties.TryGet(out var Propertiesitem))
+            if (item.Properties is {} Propertiesitem)
             {
                 hash.Add(Propertiesitem);
             }
@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask?.PushIndex((int)Class_FieldIndex.Properties);
                 try
                 {
-                    if(rhs.Properties.TryGet(out var rhsProperties))
+                    if(rhs.Properties is {} rhsProperties)
                     {
                         item.Properties = rhsProperties.DeepCopy(
                             errorMask: errorMask,

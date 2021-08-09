@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.HeadParts?.Overall ?? true)
-                        && HeadParts.TryGet(out var HeadPartsItem))
+                        && HeadParts is {} HeadPartsItem)
                     {
                         fg.AppendLine("HeadParts =>");
                         fg.AppendLine("[");
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
                         AvailableMorphs?.ToString(fg);
                     }
                     if ((printMask?.RacePresets?.Overall ?? true)
-                        && RacePresets.TryGet(out var RacePresetsItem))
+                        && RacePresets is {} RacePresetsItem)
                     {
                         fg.AppendLine("RacePresets =>");
                         fg.AppendLine("[");
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.AvailableHairColors?.Overall ?? true)
-                        && AvailableHairColors.TryGet(out var AvailableHairColorsItem))
+                        && AvailableHairColors is {} AvailableHairColorsItem)
                     {
                         fg.AppendLine("AvailableHairColors =>");
                         fg.AppendLine("[");
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.FaceDetails?.Overall ?? true)
-                        && FaceDetails.TryGet(out var FaceDetailsItem))
+                        && FaceDetails is {} FaceDetailsItem)
                     {
                         fg.AppendLine("FaceDetails =>");
                         fg.AppendLine("[");
@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(DefaultFaceTexture, "DefaultFaceTexture");
                     }
                     if ((printMask?.TintMasks?.Overall ?? true)
-                        && TintMasks.TryGet(out var TintMasksItem))
+                        && TintMasks is {} TintMasksItem)
                     {
                         fg.AppendLine("TintMasks =>");
                         fg.AppendLine("[");
@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                if (HeadParts.TryGet(out var HeadPartsItem))
+                if (HeadParts is {} HeadPartsItem)
                 {
                     fg.AppendLine("HeadParts =>");
                     fg.AppendLine("[");
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 AvailableMorphs?.ToString(fg);
-                if (RacePresets.TryGet(out var RacePresetsItem))
+                if (RacePresets is {} RacePresetsItem)
                 {
                     fg.AppendLine("RacePresets =>");
                     fg.AppendLine("[");
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (AvailableHairColors.TryGet(out var AvailableHairColorsItem))
+                if (AvailableHairColors is {} AvailableHairColorsItem)
                 {
                     fg.AppendLine("AvailableHairColors =>");
                     fg.AppendLine("[");
@@ -909,7 +909,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (FaceDetails.TryGet(out var FaceDetailsItem))
+                if (FaceDetails is {} FaceDetailsItem)
                 {
                     fg.AppendLine("FaceDetails =>");
                     fg.AppendLine("[");
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(DefaultFaceTexture, "DefaultFaceTexture");
-                if (TintMasks.TryGet(out var TintMasksItem))
+                if (TintMasks is {} TintMasksItem)
                 {
                     fg.AppendLine("TintMasks =>");
                     fg.AppendLine("[");
@@ -1749,7 +1749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.HeadParts);
-            if (item.AvailableMorphs.TryGet(out var AvailableMorphsitem))
+            if (item.AvailableMorphs is {} AvailableMorphsitem)
             {
                 hash.Add(AvailableMorphsitem);
             }
@@ -1758,7 +1758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.FaceDetails);
             hash.Add(item.DefaultFaceTexture);
             hash.Add(item.TintMasks);
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)HeadData_FieldIndex.AvailableMorphs);
                 try
                 {
-                    if(rhs.AvailableMorphs.TryGet(out var rhsAvailableMorphs))
+                    if(rhs.AvailableMorphs is {} rhsAvailableMorphs)
                     {
                         item.AvailableMorphs = rhsAvailableMorphs.DeepCopy(
                             errorMask: errorMask,
@@ -1965,7 +1965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)HeadData_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,

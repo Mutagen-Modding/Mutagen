@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.WalkForwardFootsteps?.Overall ?? true)
-                        && WalkForwardFootsteps.TryGet(out var WalkForwardFootstepsItem))
+                        && WalkForwardFootsteps is {} WalkForwardFootstepsItem)
                     {
                         fg.AppendLine("WalkForwardFootsteps =>");
                         fg.AppendLine("[");
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.RunForwardFootsteps?.Overall ?? true)
-                        && RunForwardFootsteps.TryGet(out var RunForwardFootstepsItem))
+                        && RunForwardFootsteps is {} RunForwardFootstepsItem)
                     {
                         fg.AppendLine("RunForwardFootsteps =>");
                         fg.AppendLine("[");
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.WalkForwardAlternateFootsteps?.Overall ?? true)
-                        && WalkForwardAlternateFootsteps.TryGet(out var WalkForwardAlternateFootstepsItem))
+                        && WalkForwardAlternateFootsteps is {} WalkForwardAlternateFootstepsItem)
                     {
                         fg.AppendLine("WalkForwardAlternateFootsteps =>");
                         fg.AppendLine("[");
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.RunForwardAlternateFootsteps?.Overall ?? true)
-                        && RunForwardAlternateFootsteps.TryGet(out var RunForwardAlternateFootstepsItem))
+                        && RunForwardAlternateFootsteps is {} RunForwardAlternateFootstepsItem)
                     {
                         fg.AppendLine("RunForwardAlternateFootsteps =>");
                         fg.AppendLine("[");
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.WalkForwardAlternateFootsteps2?.Overall ?? true)
-                        && WalkForwardAlternateFootsteps2.TryGet(out var WalkForwardAlternateFootsteps2Item))
+                        && WalkForwardAlternateFootsteps2 is {} WalkForwardAlternateFootsteps2Item)
                     {
                         fg.AppendLine("WalkForwardAlternateFootsteps2 =>");
                         fg.AppendLine("[");
@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (WalkForwardFootsteps.TryGet(out var WalkForwardFootstepsItem))
+                if (WalkForwardFootsteps is {} WalkForwardFootstepsItem)
                 {
                     fg.AppendLine("WalkForwardFootsteps =>");
                     fg.AppendLine("[");
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (RunForwardFootsteps.TryGet(out var RunForwardFootstepsItem))
+                if (RunForwardFootsteps is {} RunForwardFootstepsItem)
                 {
                     fg.AppendLine("RunForwardFootsteps =>");
                     fg.AppendLine("[");
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (WalkForwardAlternateFootsteps.TryGet(out var WalkForwardAlternateFootstepsItem))
+                if (WalkForwardAlternateFootsteps is {} WalkForwardAlternateFootstepsItem)
                 {
                     fg.AppendLine("WalkForwardAlternateFootsteps =>");
                     fg.AppendLine("[");
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (RunForwardAlternateFootsteps.TryGet(out var RunForwardAlternateFootstepsItem))
+                if (RunForwardAlternateFootsteps is {} RunForwardAlternateFootstepsItem)
                 {
                     fg.AppendLine("RunForwardAlternateFootsteps =>");
                     fg.AppendLine("[");
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (WalkForwardAlternateFootsteps2.TryGet(out var WalkForwardAlternateFootsteps2Item))
+                if (WalkForwardAlternateFootsteps2 is {} WalkForwardAlternateFootsteps2Item)
                 {
                     fg.AppendLine("WalkForwardAlternateFootsteps2 =>");
                     fg.AppendLine("[");

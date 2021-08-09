@@ -1477,7 +1477,7 @@ namespace Mutagen.Bethesda.Skyrim
                         Configuration?.ToString(fg);
                     }
                     if ((printMask?.Factions?.Overall ?? true)
-                        && Factions.TryGet(out var FactionsItem))
+                        && Factions is {} FactionsItem)
                     {
                         fg.AppendLine("Factions =>");
                         fg.AppendLine("[");
@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Race, "Race");
                     }
                     if ((printMask?.ActorEffect?.Overall ?? true)
-                        && ActorEffect.TryGet(out var ActorEffectItem))
+                        && ActorEffect is {} ActorEffectItem)
                     {
                         fg.AppendLine("ActorEffect =>");
                         fg.AppendLine("[");
@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(AttackRace, "AttackRace");
                     }
                     if ((printMask?.Attacks?.Overall ?? true)
-                        && Attacks.TryGet(out var AttacksItem))
+                        && Attacks is {} AttacksItem)
                     {
                         fg.AppendLine("Attacks =>");
                         fg.AppendLine("[");
@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
                     }
                     if ((printMask?.Perks?.Overall ?? true)
-                        && Perks.TryGet(out var PerksItem))
+                        && Perks is {} PerksItem)
                     {
                         fg.AppendLine("Perks =>");
                         fg.AppendLine("[");
@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Items?.Overall ?? true)
-                        && Items.TryGet(out var ItemsItem))
+                        && Items is {} ItemsItem)
                     {
                         fg.AppendLine("Items =>");
                         fg.AppendLine("[");
@@ -1644,7 +1644,7 @@ namespace Mutagen.Bethesda.Skyrim
                         AIData?.ToString(fg);
                     }
                     if ((printMask?.Packages?.Overall ?? true)
-                        && Packages.TryGet(out var PackagesItem))
+                        && Packages is {} PackagesItem)
                     {
                         fg.AppendLine("Packages =>");
                         fg.AppendLine("[");
@@ -1667,7 +1667,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords.TryGet(out var KeywordsItem))
+                        && Keywords is {} KeywordsItem)
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
@@ -1706,7 +1706,7 @@ namespace Mutagen.Bethesda.Skyrim
                         PlayerSkills?.ToString(fg);
                     }
                     if ((printMask?.HeadParts?.Overall ?? true)
-                        && HeadParts.TryGet(out var HeadPartsItem))
+                        && HeadParts is {} HeadPartsItem)
                     {
                         fg.AppendLine("HeadParts =>");
                         fg.AppendLine("[");
@@ -1793,7 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim
                         FaceParts?.ToString(fg);
                     }
                     if ((printMask?.TintLayers?.Overall ?? true)
-                        && TintLayers.TryGet(out var TintLayersItem))
+                        && TintLayers is {} TintLayersItem)
                     {
                         fg.AppendLine("TintLayers =>");
                         fg.AppendLine("[");
@@ -2353,7 +2353,7 @@ namespace Mutagen.Bethesda.Skyrim
                 VirtualMachineAdapter?.ToString(fg);
                 ObjectBounds?.ToString(fg);
                 Configuration?.ToString(fg);
-                if (Factions.TryGet(out var FactionsItem))
+                if (Factions is {} FactionsItem)
                 {
                     fg.AppendLine("Factions =>");
                     fg.AppendLine("[");
@@ -2379,7 +2379,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Voice, "Voice");
                 fg.AppendItem(Template, "Template");
                 fg.AppendItem(Race, "Race");
-                if (ActorEffect.TryGet(out var ActorEffectItem))
+                if (ActorEffect is {} ActorEffectItem)
                 {
                     fg.AppendLine("ActorEffect =>");
                     fg.AppendLine("[");
@@ -2405,7 +2405,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(WornArmor, "WornArmor");
                 fg.AppendItem(FarAwayModel, "FarAwayModel");
                 fg.AppendItem(AttackRace, "AttackRace");
-                if (Attacks.TryGet(out var AttacksItem))
+                if (Attacks is {} AttacksItem)
                 {
                     fg.AppendLine("Attacks =>");
                     fg.AppendLine("[");
@@ -2431,7 +2431,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(ObserveDeadBodyOverridePackageList, "ObserveDeadBodyOverridePackageList");
                 fg.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
                 fg.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
-                if (Perks.TryGet(out var PerksItem))
+                if (Perks is {} PerksItem)
                 {
                     fg.AppendLine("Perks =>");
                     fg.AppendLine("[");
@@ -2453,7 +2453,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Items.TryGet(out var ItemsItem))
+                if (Items is {} ItemsItem)
                 {
                     fg.AppendLine("Items =>");
                     fg.AppendLine("[");
@@ -2476,7 +2476,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 AIData?.ToString(fg);
-                if (Packages.TryGet(out var PackagesItem))
+                if (Packages is {} PackagesItem)
                 {
                     fg.AppendLine("Packages =>");
                     fg.AppendLine("[");
@@ -2498,7 +2498,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Keywords.TryGet(out var KeywordsItem))
+                if (Keywords is {} KeywordsItem)
                 {
                     fg.AppendLine("Keywords =>");
                     fg.AppendLine("[");
@@ -2524,7 +2524,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(ShortName, "ShortName");
                 PlayerSkills?.ToString(fg);
-                if (HeadParts.TryGet(out var HeadPartsItem))
+                if (HeadParts is {} HeadPartsItem)
                 {
                     fg.AppendLine("HeadParts =>");
                     fg.AppendLine("[");
@@ -2562,7 +2562,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(TextureLighting, "TextureLighting");
                 FaceMorph?.ToString(fg);
                 FaceParts?.ToString(fg);
-                if (TintLayers.TryGet(out var TintLayersItem))
+                if (TintLayers is {} TintLayersItem)
                 {
                     fg.AppendLine("TintLayers =>");
                     fg.AppendLine("[");
@@ -4332,7 +4332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(INpcGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
@@ -4344,7 +4344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Template);
             hash.Add(item.Race);
             hash.Add(item.ActorEffect);
-            if (item.Destructible.TryGet(out var Destructibleitem))
+            if (item.Destructible is {} Destructibleitem)
             {
                 hash.Add(Destructibleitem);
             }
@@ -4362,15 +4362,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Packages);
             hash.Add(item.Keywords);
             hash.Add(item.Class);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.ShortName.TryGet(out var ShortNameitem))
+            if (item.ShortName is {} ShortNameitem)
             {
                 hash.Add(ShortNameitem);
             }
-            if (item.PlayerSkills.TryGet(out var PlayerSkillsitem))
+            if (item.PlayerSkills is {} PlayerSkillsitem)
             {
                 hash.Add(PlayerSkillsitem);
             }
@@ -4382,7 +4382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Height);
             hash.Add(item.Weight);
             hash.Add(item.SoundLevel);
-            if (item.Sound.TryGet(out var Sounditem))
+            if (item.Sound is {} Sounditem)
             {
                 hash.Add(Sounditem);
             }
@@ -4391,15 +4391,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.DefaultPackageList);
             hash.Add(item.CrimeFaction);
             hash.Add(item.HeadTexture);
-            if (item.TextureLighting.TryGet(out var TextureLightingitem))
+            if (item.TextureLighting is {} TextureLightingitem)
             {
                 hash.Add(TextureLightingitem);
             }
-            if (item.FaceMorph.TryGet(out var FaceMorphitem))
+            if (item.FaceMorph is {} FaceMorphitem)
             {
                 hash.Add(FaceMorphitem);
             }
-            if (item.FaceParts.TryGet(out var FacePartsitem))
+            if (item.FaceParts is {} FacePartsitem)
             {
                 hash.Add(FacePartsitem);
             }
@@ -4652,7 +4652,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Npc_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -4789,7 +4789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Npc_FieldIndex.Destructible);
                 try
                 {
-                    if(rhs.Destructible.TryGet(out var rhsDestructible))
+                    if(rhs.Destructible is {} rhsDestructible)
                     {
                         item.Destructible = rhsDestructible.DeepCopy(
                             errorMask: errorMask,
@@ -5011,7 +5011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Npc_FieldIndex.PlayerSkills);
                 try
                 {
-                    if(rhs.PlayerSkills.TryGet(out var rhsPlayerSkills))
+                    if(rhs.PlayerSkills is {} rhsPlayerSkills)
                     {
                         item.PlayerSkills = rhsPlayerSkills.DeepCopy(
                             errorMask: errorMask,
@@ -5084,7 +5084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Npc_FieldIndex.Sound);
                 try
                 {
-                    if(rhs.Sound.TryGet(out var rhsSound))
+                    if(rhs.Sound is {} rhsSound)
                     {
                         item.Sound = rhsSound.DeepCopy(
                             errorMask: errorMask,
@@ -5134,7 +5134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Npc_FieldIndex.FaceMorph);
                 try
                 {
-                    if(rhs.FaceMorph.TryGet(out var rhsFaceMorph))
+                    if(rhs.FaceMorph is {} rhsFaceMorph)
                     {
                         item.FaceMorph = rhsFaceMorph.DeepCopy(
                             errorMask: errorMask,
@@ -5160,7 +5160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Npc_FieldIndex.FaceParts);
                 try
                 {
-                    if(rhs.FaceParts.TryGet(out var rhsFaceParts))
+                    if(rhs.FaceParts is {} rhsFaceParts)
                     {
                         item.FaceParts = rhsFaceParts.DeepCopy(
                             errorMask: errorMask,

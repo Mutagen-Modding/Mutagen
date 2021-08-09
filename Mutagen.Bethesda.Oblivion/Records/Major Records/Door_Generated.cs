@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.RandomTeleportDestinations?.Overall ?? true)
-                        && RandomTeleportDestinations.TryGet(out var RandomTeleportDestinationsItem))
+                        && RandomTeleportDestinations is {} RandomTeleportDestinationsItem)
                     {
                         fg.AppendLine("RandomTeleportDestinations =>");
                         fg.AppendLine("[");
@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(CloseSound, "CloseSound");
                 fg.AppendItem(LoopSound, "LoopSound");
                 fg.AppendItem(Flags, "Flags");
-                if (RandomTeleportDestinations.TryGet(out var RandomTeleportDestinationsItem))
+                if (RandomTeleportDestinations is {} RandomTeleportDestinationsItem)
                 {
                     fg.AppendLine("RandomTeleportDestinations =>");
                     fg.AppendLine("[");
@@ -1470,11 +1470,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IDoorGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1482,7 +1482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.OpenSound);
             hash.Add(item.CloseSound);
             hash.Add(item.LoopSound);
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
@@ -1619,7 +1619,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,

@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Fallout4
                         fg.AppendItem(Type, "Type");
                     }
                     if ((printMask?.ExtraParts?.Overall ?? true)
-                        && ExtraParts.TryGet(out var ExtraPartsItem))
+                        && ExtraParts is {} ExtraPartsItem)
                     {
                         fg.AppendLine("ExtraParts =>");
                         fg.AppendLine("[");
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Fallout4
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Parts?.Overall ?? true)
-                        && Parts.TryGet(out var PartsItem))
+                        && Parts is {} PartsItem)
                     {
                         fg.AppendLine("Parts =>");
                         fg.AppendLine("[");
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Fallout4
                         fg.AppendItem(ValidRaces, "ValidRaces");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Model?.ToString(fg);
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Type, "Type");
-                if (ExtraParts.TryGet(out var ExtraPartsItem))
+                if (ExtraParts is {} ExtraPartsItem)
                 {
                     fg.AppendLine("ExtraParts =>");
                     fg.AppendLine("[");
@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     fg.AppendLine("]");
                 }
-                if (Parts.TryGet(out var PartsItem))
+                if (Parts is {} PartsItem)
                 {
                     fg.AppendLine("Parts =>");
                     fg.AppendLine("[");
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendItem(TextureSet, "TextureSet");
                 fg.AppendItem(Color, "Color");
                 fg.AppendItem(ValidRaces, "ValidRaces");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1786,16 +1786,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IHeadPartGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
             hash.Add(item.Flags);
-            if (item.Type.TryGet(out var Typeitem))
+            if (item.Type is {} Typeitem)
             {
                 hash.Add(Typeitem);
             }
@@ -1945,7 +1945,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask?.PushIndex((int)HeadPart_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,

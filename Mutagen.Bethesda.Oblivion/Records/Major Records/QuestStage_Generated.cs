@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Stage, "Stage");
                     }
                     if ((printMask?.LogEntries?.Overall ?? true)
-                        && LogEntries.TryGet(out var LogEntriesItem))
+                        && LogEntries is {} LogEntriesItem)
                     {
                         fg.AppendLine("LogEntries =>");
                         fg.AppendLine("[");
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Stage, "Stage");
-                if (LogEntries.TryGet(out var LogEntriesItem))
+                if (LogEntries is {} LogEntriesItem)
                 {
                     fg.AppendLine("LogEntries =>");
                     fg.AppendLine("[");

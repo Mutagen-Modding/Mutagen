@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.SubBlocks?.Overall ?? true)
-                        && SubBlocks.TryGet(out var SubBlocksItem))
+                        && SubBlocks is {} SubBlocksItem)
                     {
                         fg.AppendLine("SubBlocks =>");
                         fg.AppendLine("[");
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(GroupType, "GroupType");
                 fg.AppendItem(LastModified, "LastModified");
                 fg.AppendItem(Unknown, "Unknown");
-                if (SubBlocks.TryGet(out var SubBlocksItem))
+                if (SubBlocks is {} SubBlocksItem)
                 {
                     fg.AppendLine("SubBlocks =>");
                     fg.AppendLine("[");

@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.BenchType);
-            if (item.UsesSkill.TryGet(out var UsesSkillitem))
+            if (item.UsesSkill is {} UsesSkillitem)
             {
                 hash.Add(UsesSkillitem);
             }

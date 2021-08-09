@@ -949,15 +949,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IDialogResponseGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.ResponseText.TryGet(out var ResponseTextitem))
+            if (item.ResponseText is {} ResponseTextitem)
             {
                 hash.Add(ResponseTextitem);
             }
-            if (item.ActorNotes.TryGet(out var ActorNotesitem))
+            if (item.ActorNotes is {} ActorNotesitem)
             {
                 hash.Add(ActorNotesitem);
             }
@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,

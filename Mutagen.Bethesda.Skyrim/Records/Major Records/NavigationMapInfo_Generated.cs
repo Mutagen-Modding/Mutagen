@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
                     }
                     if ((printMask?.MergedTo?.Overall ?? true)
-                        && MergedTo.TryGet(out var MergedToItem))
+                        && MergedTo is {} MergedToItem)
                     {
                         fg.AppendLine("MergedTo =>");
                         fg.AppendLine("[");
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.PreferredMerges?.Overall ?? true)
-                        && PreferredMerges.TryGet(out var PreferredMergesItem))
+                        && PreferredMerges is {} PreferredMergesItem)
                     {
                         fg.AppendLine("PreferredMerges =>");
                         fg.AppendLine("[");
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.LinkedDoors?.Overall ?? true)
-                        && LinkedDoors.TryGet(out var LinkedDoorsItem))
+                        && LinkedDoors is {} LinkedDoorsItem)
                     {
                         fg.AppendLine("LinkedDoors =>");
                         fg.AppendLine("[");
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(Point, "Point");
                 fg.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
-                if (MergedTo.TryGet(out var MergedToItem))
+                if (MergedTo is {} MergedToItem)
                 {
                     fg.AppendLine("MergedTo =>");
                     fg.AppendLine("[");
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (PreferredMerges.TryGet(out var PreferredMergesItem))
+                if (PreferredMerges is {} PreferredMergesItem)
                 {
                     fg.AppendLine("PreferredMerges =>");
                     fg.AppendLine("[");
@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (LinkedDoors.TryGet(out var LinkedDoorsItem))
+                if (LinkedDoors is {} LinkedDoorsItem)
                 {
                     fg.AppendLine("LinkedDoors =>");
                     fg.AppendLine("[");
@@ -1677,7 +1677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.MergedTo);
             hash.Add(item.PreferredMerges);
             hash.Add(item.LinkedDoors);
-            if (item.Island.TryGet(out var Islanditem))
+            if (item.Island is {} Islanditem)
             {
                 hash.Add(Islanditem);
             }
@@ -1815,7 +1815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.Island);
                 try
                 {
-                    if(rhs.Island.TryGet(out var rhsIsland))
+                    if(rhs.Island is {} rhsIsland)
                     {
                         item.Island = rhsIsland.DeepCopy(
                             errorMask: errorMask,

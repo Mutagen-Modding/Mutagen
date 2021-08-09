@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(VertexColors, "VertexColors");
                     }
                     if ((printMask?.Layers?.Overall ?? true)
-                        && Layers.TryGet(out var LayersItem))
+                        && Layers is {} LayersItem)
                     {
                         fg.AppendLine("Layers =>");
                         fg.AppendLine("[");
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Textures?.Overall ?? true)
-                        && Textures.TryGet(out var TexturesItem))
+                        && Textures is {} TexturesItem)
                     {
                         fg.AppendLine("Textures =>");
                         fg.AppendLine("[");
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(VertexNormals, "VertexNormals");
                 fg.AppendItem(VertexHeightMap, "VertexHeightMap");
                 fg.AppendItem(VertexColors, "VertexColors");
-                if (Layers.TryGet(out var LayersItem))
+                if (Layers is {} LayersItem)
                 {
                     fg.AppendLine("Layers =>");
                     fg.AppendLine("[");
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (Textures.TryGet(out var TexturesItem))
+                if (Textures is {} TexturesItem)
                 {
                     fg.AppendLine("Textures =>");
                     fg.AppendLine("[");
@@ -1420,19 +1420,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ILandscapeGetter item)
         {
             var hash = new HashCode();
-            if (item.DATA.TryGet(out var DATAItem))
+            if (item.DATA is {} DATAItem)
             {
                 hash.Add(DATAItem);
             }
-            if (item.VertexNormals.TryGet(out var VertexNormalsItem))
+            if (item.VertexNormals is {} VertexNormalsItem)
             {
                 hash.Add(VertexNormalsItem);
             }
-            if (item.VertexHeightMap.TryGet(out var VertexHeightMapItem))
+            if (item.VertexHeightMap is {} VertexHeightMapItem)
             {
                 hash.Add(VertexHeightMapItem);
             }
-            if (item.VertexColors.TryGet(out var VertexColorsItem))
+            if (item.VertexColors is {} VertexColorsItem)
             {
                 hash.Add(VertexColorsItem);
             }
@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
             {
-                if(rhs.DATA.TryGet(out var DATArhs))
+                if(rhs.DATA is {} DATArhs)
                 {
                     item.DATA = DATArhs.ToArray();
                 }
@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {
-                if(rhs.VertexNormals.TryGet(out var VertexNormalsrhs))
+                if(rhs.VertexNormals is {} VertexNormalsrhs)
                 {
                     item.VertexNormals = VertexNormalsrhs.ToArray();
                 }
@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
             {
-                if(rhs.VertexHeightMap.TryGet(out var VertexHeightMaprhs))
+                if(rhs.VertexHeightMap is {} VertexHeightMaprhs)
                 {
                     item.VertexHeightMap = VertexHeightMaprhs.ToArray();
                 }
@@ -1587,7 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
             {
-                if(rhs.VertexColors.TryGet(out var VertexColorsrhs))
+                if(rhs.VertexColors is {} VertexColorsrhs)
                 {
                     item.VertexColors = VertexColorsrhs.ToArray();
                 }

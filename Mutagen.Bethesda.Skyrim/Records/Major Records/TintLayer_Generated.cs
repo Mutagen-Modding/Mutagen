@@ -976,19 +976,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ITintLayerGetter item)
         {
             var hash = new HashCode();
-            if (item.Index.TryGet(out var Indexitem))
+            if (item.Index is {} Indexitem)
             {
                 hash.Add(Indexitem);
             }
-            if (item.Color.TryGet(out var Coloritem))
+            if (item.Color is {} Coloritem)
             {
                 hash.Add(Coloritem);
             }
-            if (item.InterpolationValue.TryGet(out var InterpolationValueitem))
+            if (item.InterpolationValue is {} InterpolationValueitem)
             {
                 hash.Add(InterpolationValueitem);
             }
-            if (item.Preset.TryGet(out var Presetitem))
+            if (item.Preset is {} Presetitem)
             {
                 hash.Add(Presetitem);
             }

@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Flags, "Flags");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1253,25 +1253,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IQuestLogEntryGetter item)
         {
             var hash = new HashCode();
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
             hash.Add(item.Conditions);
-            if (item.Entry.TryGet(out var Entryitem))
+            if (item.Entry is {} Entryitem)
             {
                 hash.Add(Entryitem);
             }
             hash.Add(item.NextQuest);
-            if (item.SCHR.TryGet(out var SCHRItem))
+            if (item.SCHR is {} SCHRItem)
             {
                 hash.Add(SCHRItem);
             }
-            if (item.SCTX.TryGet(out var SCTXItem))
+            if (item.SCTX is {} SCTXItem)
             {
                 hash.Add(SCTXItem);
             }
-            if (item.QNAM.TryGet(out var QNAMItem))
+            if (item.QNAM is {} QNAMItem)
             {
                 hash.Add(QNAMItem);
             }
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {
-                if(rhs.SCHR.TryGet(out var SCHRrhs))
+                if(rhs.SCHR is {} SCHRrhs)
                 {
                     item.SCHR = SCHRrhs.ToArray();
                 }
@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCTX) ?? true))
             {
-                if(rhs.SCTX.TryGet(out var SCTXrhs))
+                if(rhs.SCTX is {} SCTXrhs)
                 {
                     item.SCTX = SCTXrhs.ToArray();
                 }
@@ -1376,7 +1376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.QNAM) ?? true))
             {
-                if(rhs.QNAM.TryGet(out var QNAMrhs))
+                if(rhs.QNAM is {} QNAMrhs)
                 {
                     item.QNAM = QNAMrhs.ToArray();
                 }

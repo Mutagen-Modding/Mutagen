@@ -1053,23 +1053,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IScenePhaseUnusedDataGetter item)
         {
             var hash = new HashCode();
-            if (item.SCHR.TryGet(out var SCHRItem))
+            if (item.SCHR is {} SCHRItem)
             {
                 hash.Add(SCHRItem);
             }
-            if (item.SCDA.TryGet(out var SCDAItem))
+            if (item.SCDA is {} SCDAItem)
             {
                 hash.Add(SCDAItem);
             }
-            if (item.SCTX.TryGet(out var SCTXItem))
+            if (item.SCTX is {} SCTXItem)
             {
                 hash.Add(SCTXItem);
             }
-            if (item.QNAM.TryGet(out var QNAMItem))
+            if (item.QNAM is {} QNAMItem)
             {
                 hash.Add(QNAMItem);
             }
-            if (item.SCRO.TryGet(out var SCROItem))
+            if (item.SCRO is {} SCROItem)
             {
                 hash.Add(SCROItem);
             }
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCHR) ?? true))
             {
-                if(rhs.SCHR.TryGet(out var SCHRrhs))
+                if(rhs.SCHR is {} SCHRrhs)
                 {
                     item.SCHR = SCHRrhs.ToArray();
                 }
@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCDA) ?? true))
             {
-                if(rhs.SCDA.TryGet(out var SCDArhs))
+                if(rhs.SCDA is {} SCDArhs)
                 {
                     item.SCDA = SCDArhs.ToArray();
                 }
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCTX) ?? true))
             {
-                if(rhs.SCTX.TryGet(out var SCTXrhs))
+                if(rhs.SCTX is {} SCTXrhs)
                 {
                     item.SCTX = SCTXrhs.ToArray();
                 }
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.QNAM) ?? true))
             {
-                if(rhs.QNAM.TryGet(out var QNAMrhs))
+                if(rhs.QNAM is {} QNAMrhs)
                 {
                     item.QNAM = QNAMrhs.ToArray();
                 }
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCRO) ?? true))
             {
-                if(rhs.SCRO.TryGet(out var SCROrhs))
+                if(rhs.SCRO is {} SCROrhs)
                 {
                     item.SCRO = SCROrhs.ToArray();
                 }

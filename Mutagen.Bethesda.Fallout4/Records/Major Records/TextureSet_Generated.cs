@@ -1544,44 +1544,44 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Diffuse.TryGet(out var Diffuseitem))
+            if (item.Diffuse is {} Diffuseitem)
             {
                 hash.Add(Diffuseitem);
             }
-            if (item.NormalOrGloss.TryGet(out var NormalOrGlossitem))
+            if (item.NormalOrGloss is {} NormalOrGlossitem)
             {
                 hash.Add(NormalOrGlossitem);
             }
-            if (item.Glow.TryGet(out var Glowitem))
+            if (item.Glow is {} Glowitem)
             {
                 hash.Add(Glowitem);
             }
-            if (item.Height.TryGet(out var Heightitem))
+            if (item.Height is {} Heightitem)
             {
                 hash.Add(Heightitem);
             }
-            if (item.Environment.TryGet(out var Environmentitem))
+            if (item.Environment is {} Environmentitem)
             {
                 hash.Add(Environmentitem);
             }
-            if (item.Wrinkles.TryGet(out var Wrinklesitem))
+            if (item.Wrinkles is {} Wrinklesitem)
             {
                 hash.Add(Wrinklesitem);
             }
-            if (item.Multilayer.TryGet(out var Multilayeritem))
+            if (item.Multilayer is {} Multilayeritem)
             {
                 hash.Add(Multilayeritem);
             }
-            if (item.SmoothSpec.TryGet(out var SmoothSpecitem))
+            if (item.SmoothSpec is {} SmoothSpecitem)
             {
                 hash.Add(SmoothSpecitem);
             }
-            if (item.Decal.TryGet(out var Decalitem))
+            if (item.Decal is {} Decalitem)
             {
                 hash.Add(Decalitem);
             }
             hash.Add(item.Flags);
-            if (item.Material.TryGet(out var Materialitem))
+            if (item.Material is {} Materialitem)
             {
                 hash.Add(Materialitem);
             }
@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
                 try
                 {
-                    if(rhs.Decal.TryGet(out var rhsDecal))
+                    if(rhs.Decal is {} rhsDecal)
                     {
                         item.Decal = rhsDecal.DeepCopy(
                             errorMask: errorMask,

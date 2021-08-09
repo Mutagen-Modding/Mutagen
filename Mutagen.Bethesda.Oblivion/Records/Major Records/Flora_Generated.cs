@@ -1241,17 +1241,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IFloraGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
             hash.Add(item.Script);
             hash.Add(item.Ingredient);
-            if (item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionitem))
+            if (item.SeasonalIngredientProduction is {} SeasonalIngredientProductionitem)
             {
                 hash.Add(SeasonalIngredientProductionitem);
             }
@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.SeasonalIngredientProduction);
                 try
                 {
-                    if(rhs.SeasonalIngredientProduction.TryGet(out var rhsSeasonalIngredientProduction))
+                    if(rhs.SeasonalIngredientProduction is {} rhsSeasonalIngredientProduction)
                     {
                         item.SeasonalIngredientProduction = rhsSeasonalIngredientProduction.DeepCopy(
                             errorMask: errorMask,

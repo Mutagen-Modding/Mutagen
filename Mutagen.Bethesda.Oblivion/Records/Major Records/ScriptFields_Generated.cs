@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(SourceCode, "SourceCode");
                     }
                     if ((printMask?.LocalVariables?.Overall ?? true)
-                        && LocalVariables.TryGet(out var LocalVariablesItem))
+                        && LocalVariables is {} LocalVariablesItem)
                     {
                         fg.AppendLine("LocalVariables =>");
                         fg.AppendLine("[");
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.References?.Overall ?? true)
-                        && References.TryGet(out var ReferencesItem))
+                        && References is {} ReferencesItem)
                     {
                         fg.AppendLine("References =>");
                         fg.AppendLine("[");
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
                 MetadataSummary?.ToString(fg);
                 fg.AppendItem(CompiledScript, "CompiledScript");
                 fg.AppendItem(SourceCode, "SourceCode");
-                if (LocalVariables.TryGet(out var LocalVariablesItem))
+                if (LocalVariables is {} LocalVariablesItem)
                 {
                     fg.AppendLine("LocalVariables =>");
                     fg.AppendLine("[");
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (References.TryGet(out var ReferencesItem))
+                if (References is {} ReferencesItem)
                 {
                     fg.AppendLine("References =>");
                     fg.AppendLine("[");
@@ -1237,11 +1237,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.MetadataSummary);
-            if (item.CompiledScript.TryGet(out var CompiledScriptItem))
+            if (item.CompiledScript is {} CompiledScriptItem)
             {
                 hash.Add(CompiledScriptItem);
             }
-            if (item.SourceCode.TryGet(out var SourceCodeitem))
+            if (item.SourceCode is {} SourceCodeitem)
             {
                 hash.Add(SourceCodeitem);
             }
@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.CompiledScript) ?? true))
             {
-                if(rhs.CompiledScript.TryGet(out var CompiledScriptrhs))
+                if(rhs.CompiledScript is {} CompiledScriptrhs)
                 {
                     item.CompiledScript = CompiledScriptrhs.ToArray();
                 }

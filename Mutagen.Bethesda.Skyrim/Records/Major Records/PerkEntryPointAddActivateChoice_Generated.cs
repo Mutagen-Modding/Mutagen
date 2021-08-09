@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Spell);
-            if (item.ButtonLabel.TryGet(out var ButtonLabelitem))
+            if (item.ButtonLabel is {} ButtonLabelitem)
             {
                 hash.Add(ButtonLabelitem);
             }

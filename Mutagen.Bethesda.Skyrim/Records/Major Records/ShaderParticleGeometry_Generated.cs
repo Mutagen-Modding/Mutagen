@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Type);
             hash.Add(item.BoxSize);
             hash.Add(item.ParticleDensity);
-            if (item.ParticleTexture.TryGet(out var ParticleTextureitem))
+            if (item.ParticleTexture is {} ParticleTextureitem)
             {
                 hash.Add(ParticleTextureitem);
             }

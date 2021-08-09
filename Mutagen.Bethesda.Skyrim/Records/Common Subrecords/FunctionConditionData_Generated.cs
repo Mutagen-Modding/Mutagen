@@ -1175,13 +1175,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Unknown2);
             hash.Add(item.ParameterOneRecord);
             hash.Add(item.ParameterOneNumber);
-            if (item.ParameterOneString.TryGet(out var ParameterOneStringitem))
+            if (item.ParameterOneString is {} ParameterOneStringitem)
             {
                 hash.Add(ParameterOneStringitem);
             }
             hash.Add(item.ParameterTwoRecord);
             hash.Add(item.ParameterTwoNumber);
-            if (item.ParameterTwoString.TryGet(out var ParameterTwoStringitem))
+            if (item.ParameterTwoString is {} ParameterTwoStringitem)
             {
                 hash.Add(ParameterTwoStringitem);
             }

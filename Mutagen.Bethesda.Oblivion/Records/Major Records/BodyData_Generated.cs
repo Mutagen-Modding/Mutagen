@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
                         Model?.ToString(fg);
                     }
                     if ((printMask?.BodyParts?.Overall ?? true)
-                        && BodyParts.TryGet(out var BodyPartsItem))
+                        && BodyParts is {} BodyPartsItem)
                     {
                         fg.AppendLine("BodyParts =>");
                         fg.AppendLine("[");
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 Model?.ToString(fg);
-                if (BodyParts.TryGet(out var BodyPartsItem))
+                if (BodyParts is {} BodyPartsItem)
                 {
                     fg.AppendLine("BodyParts =>");
                     fg.AppendLine("[");
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IBodyDataGetter item)
         {
             var hash = new HashCode();
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)BodyData_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,

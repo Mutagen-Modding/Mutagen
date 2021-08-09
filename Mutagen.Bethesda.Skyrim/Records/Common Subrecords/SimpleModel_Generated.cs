@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.File);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 hash.Add(DataItem);
             }
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
-                if(rhs.Data.TryGet(out var Datarhs))
+                if(rhs.Data is {} Datarhs)
                 {
                     item.Data = Datarhs.ToArray();
                 }

@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.MovementType);
-            if (item.Overrides.TryGet(out var Overridesitem))
+            if (item.Overrides is {} Overridesitem)
             {
                 hash.Add(Overridesitem);
             }
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)RaceMovementType_FieldIndex.Overrides);
                 try
                 {
-                    if(rhs.Overrides.TryGet(out var rhsOverrides))
+                    if(rhs.Overrides is {} rhsOverrides)
                     {
                         item.Overrides = rhsOverrides.DeepCopy(
                             errorMask: errorMask,

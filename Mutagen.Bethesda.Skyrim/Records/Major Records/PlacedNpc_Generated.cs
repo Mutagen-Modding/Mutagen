@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Health, "Health");
                     }
                     if ((printMask?.LinkedReferences?.Overall ?? true)
-                        && LinkedReferences.TryGet(out var LinkedReferencesItem))
+                        && LinkedReferences is {} LinkedReferencesItem)
                     {
                         fg.AppendLine("LinkedReferences =>");
                         fg.AppendLine("[");
@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
                     }
                     if ((printMask?.LocationRefTypes?.Overall ?? true)
-                        && LocationRefTypes.TryGet(out var LocationRefTypesItem))
+                        && LocationRefTypes is {} LocationRefTypesItem)
                     {
                         fg.AppendLine("LocationRefTypes =>");
                         fg.AppendLine("[");
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Count, "Count");
                 fg.AppendItem(Radius, "Radius");
                 fg.AppendItem(Health, "Health");
-                if (LinkedReferences.TryGet(out var LinkedReferencesItem))
+                if (LinkedReferences is {} LinkedReferencesItem)
                 {
                     fg.AppendLine("LinkedReferences =>");
                     fg.AppendLine("[");
@@ -1363,7 +1363,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(PersistentLocation, "PersistentLocation");
                 fg.AppendItem(LocationReference, "LocationReference");
                 fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
-                if (LocationRefTypes.TryGet(out var LocationRefTypesItem))
+                if (LocationRefTypes is {} LocationRefTypesItem)
                 {
                     fg.AppendLine("LocationRefTypes =>");
                     fg.AppendLine("[");
@@ -2691,47 +2691,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IPlacedNpcGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.Base);
             hash.Add(item.EncounterZone);
-            if (item.RagdollData.TryGet(out var RagdollDataItem))
+            if (item.RagdollData is {} RagdollDataItem)
             {
                 hash.Add(RagdollDataItem);
             }
-            if (item.RagdollBipedData.TryGet(out var RagdollBipedDataItem))
+            if (item.RagdollBipedData is {} RagdollBipedDataItem)
             {
                 hash.Add(RagdollBipedDataItem);
             }
-            if (item.Patrol.TryGet(out var Patrolitem))
+            if (item.Patrol is {} Patrolitem)
             {
                 hash.Add(Patrolitem);
             }
-            if (item.LevelModifier.TryGet(out var LevelModifieritem))
+            if (item.LevelModifier is {} LevelModifieritem)
             {
                 hash.Add(LevelModifieritem);
             }
             hash.Add(item.MerchantContainer);
-            if (item.Count.TryGet(out var Countitem))
+            if (item.Count is {} Countitem)
             {
                 hash.Add(Countitem);
             }
-            if (item.Radius.TryGet(out var Radiusitem))
+            if (item.Radius is {} Radiusitem)
             {
                 hash.Add(Radiusitem);
             }
-            if (item.Health.TryGet(out var Healthitem))
+            if (item.Health is {} Healthitem)
             {
                 hash.Add(Healthitem);
             }
             hash.Add(item.LinkedReferences);
-            if (item.ActivateParents.TryGet(out var ActivateParentsitem))
+            if (item.ActivateParents is {} ActivateParentsitem)
             {
                 hash.Add(ActivateParentsitem);
             }
-            if (item.LinkedReferenceColor.TryGet(out var LinkedReferenceColoritem))
+            if (item.LinkedReferenceColor is {} LinkedReferenceColoritem)
             {
                 hash.Add(LinkedReferenceColoritem);
             }
@@ -2739,31 +2739,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.LocationReference);
             hash.Add(item.IgnoredBySandbox);
             hash.Add(item.LocationRefTypes);
-            if (item.HeadTrackingWeight.TryGet(out var HeadTrackingWeightitem))
+            if (item.HeadTrackingWeight is {} HeadTrackingWeightitem)
             {
                 hash.Add(HeadTrackingWeightitem);
             }
             hash.Add(item.Horse);
-            if (item.FavorCost.TryGet(out var FavorCostitem))
+            if (item.FavorCost is {} FavorCostitem)
             {
                 hash.Add(FavorCostitem);
             }
-            if (item.EnableParent.TryGet(out var EnableParentitem))
+            if (item.EnableParent is {} EnableParentitem)
             {
                 hash.Add(EnableParentitem);
             }
-            if (item.Ownership.TryGet(out var Ownershipitem))
+            if (item.Ownership is {} Ownershipitem)
             {
                 hash.Add(Ownershipitem);
             }
             hash.Add(item.Emittance);
             hash.Add(item.MultiboundReference);
             hash.Add(item.IgnoredBySandbox2);
-            if (item.Scale.TryGet(out var Scaleitem))
+            if (item.Scale is {} Scaleitem)
             {
                 hash.Add(Scaleitem);
             }
-            if (item.Placement.TryGet(out var Placementitem))
+            if (item.Placement is {} Placementitem)
             {
                 hash.Add(Placementitem);
             }
@@ -2953,7 +2953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -2984,7 +2984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
             {
-                if(rhs.RagdollData.TryGet(out var RagdollDatarhs))
+                if(rhs.RagdollData is {} RagdollDatarhs)
                 {
                     item.RagdollData = RagdollDatarhs.ToArray();
                 }
@@ -2995,7 +2995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollBipedData) ?? true))
             {
-                if(rhs.RagdollBipedData.TryGet(out var RagdollBipedDatarhs))
+                if(rhs.RagdollBipedData is {} RagdollBipedDatarhs)
                 {
                     item.RagdollBipedData = RagdollBipedDatarhs.ToArray();
                 }
@@ -3009,7 +3009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Patrol);
                 try
                 {
-                    if(rhs.Patrol.TryGet(out var rhsPatrol))
+                    if(rhs.Patrol is {} rhsPatrol)
                     {
                         item.Patrol = rhsPatrol.DeepCopy(
                             errorMask: errorMask,
@@ -3079,7 +3079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.ActivateParents);
                 try
                 {
-                    if(rhs.ActivateParents.TryGet(out var rhsActivateParents))
+                    if(rhs.ActivateParents is {} rhsActivateParents)
                     {
                         item.ActivateParents = rhsActivateParents.DeepCopy(
                             errorMask: errorMask,
@@ -3105,7 +3105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.LinkedReferenceColor);
                 try
                 {
-                    if(rhs.LinkedReferenceColor.TryGet(out var rhsLinkedReferenceColor))
+                    if(rhs.LinkedReferenceColor is {} rhsLinkedReferenceColor)
                     {
                         item.LinkedReferenceColor = rhsLinkedReferenceColor.DeepCopy(
                             errorMask: errorMask,
@@ -3182,7 +3182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.EnableParent);
                 try
                 {
-                    if(rhs.EnableParent.TryGet(out var rhsEnableParent))
+                    if(rhs.EnableParent is {} rhsEnableParent)
                     {
                         item.EnableParent = rhsEnableParent.DeepCopy(
                             errorMask: errorMask,
@@ -3208,7 +3208,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Ownership);
                 try
                 {
-                    if(rhs.Ownership.TryGet(out var rhsOwnership))
+                    if(rhs.Ownership is {} rhsOwnership)
                     {
                         item.Ownership = rhsOwnership.DeepCopy(
                             errorMask: errorMask,
@@ -3250,7 +3250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Placement);
                 try
                 {
-                    if(rhs.Placement.TryGet(out var rhsPlacement))
+                    if(rhs.Placement is {} rhsPlacement)
                     {
                         item.Placement = rhsPlacement.DeepCopy(
                             errorMask: errorMask,

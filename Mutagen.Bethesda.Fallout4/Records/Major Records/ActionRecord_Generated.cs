@@ -1195,20 +1195,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IActionRecordGetter item)
         {
             var hash = new HashCode();
-            if (item.Color.TryGet(out var Coloritem))
+            if (item.Color is {} Coloritem)
             {
                 hash.Add(Coloritem);
             }
-            if (item.Notes.TryGet(out var Notesitem))
+            if (item.Notes is {} Notesitem)
             {
                 hash.Add(Notesitem);
             }
-            if (item.Type.TryGet(out var Typeitem))
+            if (item.Type is {} Typeitem)
             {
                 hash.Add(Typeitem);
             }
             hash.Add(item.AttractionRule);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }

@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Navmeshes?.Overall ?? true)
-                        && Navmeshes.TryGet(out var NavmeshesItem))
+                        && Navmeshes is {} NavmeshesItem)
                     {
                         fg.AppendLine("Navmeshes =>");
                         fg.AppendLine("[");
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                if (Navmeshes.TryGet(out var NavmeshesItem))
+                if (Navmeshes is {} NavmeshesItem)
                 {
                     fg.AppendLine("Navmeshes =>");
                     fg.AppendLine("[");

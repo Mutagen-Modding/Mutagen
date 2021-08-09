@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Worldspace, "Worldspace");
                     }
                     if ((printMask?.Areas?.Overall ?? true)
-                        && Areas.TryGet(out var AreasItem))
+                        && Areas is {} AreasItem)
                     {
                         fg.AppendLine("Areas =>");
                         fg.AppendLine("[");
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Icon, "Icon");
                 fg.AppendItem(MapColor, "MapColor");
                 fg.AppendItem(Worldspace, "Worldspace");
-                if (Areas.TryGet(out var AreasItem))
+                if (Areas is {} AreasItem)
                 {
                     fg.AppendLine("Areas =>");
                     fg.AppendLine("[");
@@ -1549,33 +1549,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IRegionGetter item)
         {
             var hash = new HashCode();
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.MapColor.TryGet(out var MapColoritem))
+            if (item.MapColor is {} MapColoritem)
             {
                 hash.Add(MapColoritem);
             }
             hash.Add(item.Worldspace);
             hash.Add(item.Areas);
-            if (item.Objects.TryGet(out var Objectsitem))
+            if (item.Objects is {} Objectsitem)
             {
                 hash.Add(Objectsitem);
             }
-            if (item.Weather.TryGet(out var Weatheritem))
+            if (item.Weather is {} Weatheritem)
             {
                 hash.Add(Weatheritem);
             }
-            if (item.MapName.TryGet(out var MapNameitem))
+            if (item.MapName is {} MapNameitem)
             {
                 hash.Add(MapNameitem);
             }
-            if (item.Grasses.TryGet(out var Grassesitem))
+            if (item.Grasses is {} Grassesitem)
             {
                 hash.Add(Grassesitem);
             }
-            if (item.Sounds.TryGet(out var Soundsitem))
+            if (item.Sounds is {} Soundsitem)
             {
                 hash.Add(Soundsitem);
             }
@@ -1755,7 +1755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Objects);
                 try
                 {
-                    if(rhs.Objects.TryGet(out var rhsObjects))
+                    if(rhs.Objects is {} rhsObjects)
                     {
                         item.Objects = rhsObjects.DeepCopy(
                             errorMask: errorMask,
@@ -1781,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Weather);
                 try
                 {
-                    if(rhs.Weather.TryGet(out var rhsWeather))
+                    if(rhs.Weather is {} rhsWeather)
                     {
                         item.Weather = rhsWeather.DeepCopy(
                             errorMask: errorMask,
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.MapName);
                 try
                 {
-                    if(rhs.MapName.TryGet(out var rhsMapName))
+                    if(rhs.MapName is {} rhsMapName)
                     {
                         item.MapName = rhsMapName.DeepCopy(
                             errorMask: errorMask,
@@ -1833,7 +1833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
                 try
                 {
-                    if(rhs.Grasses.TryGet(out var rhsGrasses))
+                    if(rhs.Grasses is {} rhsGrasses)
                     {
                         item.Grasses = rhsGrasses.DeepCopy(
                             errorMask: errorMask,
@@ -1859,7 +1859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
                 try
                 {
-                    if(rhs.Sounds.TryGet(out var rhsSounds))
+                    if(rhs.Sounds is {} rhsSounds)
                     {
                         item.Sounds = rhsSounds.DeepCopy(
                             errorMask: errorMask,

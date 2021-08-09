@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Entries?.Overall ?? true)
-                        && Entries.TryGet(out var EntriesItem))
+                        && Entries is {} EntriesItem)
                     {
                         fg.AppendLine("Entries =>");
                         fg.AppendLine("[");
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(ChanceNone, "ChanceNone");
                 fg.AppendItem(Flags, "Flags");
-                if (Entries.TryGet(out var EntriesItem))
+                if (Entries is {} EntriesItem)
                 {
                     fg.AppendLine("Entries =>");
                     fg.AppendLine("[");
@@ -1259,11 +1259,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ILeveledCreatureGetter item)
         {
             var hash = new HashCode();
-            if (item.ChanceNone.TryGet(out var ChanceNoneitem))
+            if (item.ChanceNone is {} ChanceNoneitem)
             {
                 hash.Add(ChanceNoneitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }

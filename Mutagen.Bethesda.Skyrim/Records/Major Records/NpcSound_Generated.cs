@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Sound);
-            if (item.SoundChance.TryGet(out var SoundChanceitem))
+            if (item.SoundChance is {} SoundChanceitem)
             {
                 hash.Add(SoundChanceitem);
             }

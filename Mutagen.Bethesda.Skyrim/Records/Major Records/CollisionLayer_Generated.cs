@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.CollidesWith?.Overall ?? true)
-                        && CollidesWith.TryGet(out var CollidesWithItem))
+                        && CollidesWith is {} CollidesWithItem)
                     {
                         fg.AppendLine("CollidesWith =>");
                         fg.AppendLine("[");
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(DebugColor, "DebugColor");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Name, "Name");
-                if (CollidesWith.TryGet(out var CollidesWithItem))
+                if (CollidesWith is {} CollidesWithItem)
                 {
                     fg.AppendLine("CollidesWith =>");
                     fg.AppendLine("[");

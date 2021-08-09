@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(BranchType, "BranchType");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.DataInputIndices?.Overall ?? true)
-                        && DataInputIndices.TryGet(out var DataInputIndicesItem))
+                        && DataInputIndices is {} DataInputIndicesItem)
                     {
                         fg.AppendLine("DataInputIndices =>");
                         fg.AppendLine("[");
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
                         FlagsOverrideUnused?.ToString(fg);
                     }
                     if ((printMask?.Unknown?.Overall ?? true)
-                        && Unknown.TryGet(out var UnknownItem))
+                        && Unknown is {} UnknownItem)
                     {
                         fg.AppendLine("Unknown =>");
                         fg.AppendLine("[");
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(BranchType, "BranchType");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -770,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Root?.ToString(fg);
                 fg.AppendItem(ProcedureType, "ProcedureType");
                 fg.AppendItem(Flags, "Flags");
-                if (DataInputIndices.TryGet(out var DataInputIndicesItem))
+                if (DataInputIndices is {} DataInputIndicesItem)
                 {
                     fg.AppendLine("DataInputIndices =>");
                     fg.AppendLine("[");
@@ -794,7 +794,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 FlagsOverride?.ToString(fg);
                 FlagsOverrideUnused?.ToString(fg);
-                if (Unknown.TryGet(out var UnknownItem))
+                if (Unknown is {} UnknownItem)
                 {
                     fg.AppendLine("Unknown =>");
                     fg.AppendLine("[");
@@ -1566,24 +1566,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var hash = new HashCode();
             hash.Add(item.BranchType);
             hash.Add(item.Conditions);
-            if (item.Root.TryGet(out var Rootitem))
+            if (item.Root is {} Rootitem)
             {
                 hash.Add(Rootitem);
             }
-            if (item.ProcedureType.TryGet(out var ProcedureTypeitem))
+            if (item.ProcedureType is {} ProcedureTypeitem)
             {
                 hash.Add(ProcedureTypeitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
             hash.Add(item.DataInputIndices);
-            if (item.FlagsOverride.TryGet(out var FlagsOverrideitem))
+            if (item.FlagsOverride is {} FlagsOverrideitem)
             {
                 hash.Add(FlagsOverrideitem);
             }
-            if (item.FlagsOverrideUnused.TryGet(out var FlagsOverrideUnuseditem))
+            if (item.FlagsOverrideUnused is {} FlagsOverrideUnuseditem)
             {
                 hash.Add(FlagsOverrideUnuseditem);
             }
@@ -1658,7 +1658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PackageBranch_FieldIndex.Root);
                 try
                 {
-                    if(rhs.Root.TryGet(out var rhsRoot))
+                    if(rhs.Root is {} rhsRoot)
                     {
                         item.Root = rhsRoot.DeepCopy(
                             errorMask: errorMask,
@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PackageBranch_FieldIndex.FlagsOverride);
                 try
                 {
-                    if(rhs.FlagsOverride.TryGet(out var rhsFlagsOverride))
+                    if(rhs.FlagsOverride is {} rhsFlagsOverride)
                     {
                         item.FlagsOverride = rhsFlagsOverride.DeepCopy(
                             errorMask: errorMask,
@@ -1735,7 +1735,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PackageBranch_FieldIndex.FlagsOverrideUnused);
                 try
                 {
-                    if(rhs.FlagsOverrideUnused.TryGet(out var rhsFlagsOverrideUnused))
+                    if(rhs.FlagsOverrideUnused is {} rhsFlagsOverrideUnused)
                     {
                         item.FlagsOverrideUnused = rhsFlagsOverrideUnused.DeepCopy(
                             errorMask: errorMask,

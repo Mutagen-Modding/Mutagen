@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.Relations?.Overall ?? true)
-                        && Relations.TryGet(out var RelationsItem))
+                        && Relations is {} RelationsItem)
                     {
                         fg.AppendLine("Relations =>");
                         fg.AppendLine("[");
@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
                         CrimeValues?.ToString(fg);
                     }
                     if ((printMask?.Ranks?.Overall ?? true)
-                        && Ranks.TryGet(out var RanksItem))
+                        && Ranks is {} RanksItem)
                     {
                         fg.AppendLine("Ranks =>");
                         fg.AppendLine("[");
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim
                         VendorLocation?.ToString(fg);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Name, "Name");
-                if (Relations.TryGet(out var RelationsItem))
+                if (Relations is {} RelationsItem)
                 {
                     fg.AppendLine("Relations =>");
                     fg.AppendLine("[");
@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(SharedCrimeFactionList, "SharedCrimeFactionList");
                 fg.AppendItem(JailOutfit, "JailOutfit");
                 CrimeValues?.ToString(fg);
-                if (Ranks.TryGet(out var RanksItem))
+                if (Ranks is {} RanksItem)
                 {
                     fg.AppendLine("Ranks =>");
                     fg.AppendLine("[");
@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(MerchantContainer, "MerchantContainer");
                 VendorValues?.ToString(fg);
                 VendorLocation?.ToString(fg);
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -2144,7 +2144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IFactionGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
@@ -2156,18 +2156,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.PlayerInventoryContainer);
             hash.Add(item.SharedCrimeFactionList);
             hash.Add(item.JailOutfit);
-            if (item.CrimeValues.TryGet(out var CrimeValuesitem))
+            if (item.CrimeValues is {} CrimeValuesitem)
             {
                 hash.Add(CrimeValuesitem);
             }
             hash.Add(item.Ranks);
             hash.Add(item.VendorBuySellList);
             hash.Add(item.MerchantContainer);
-            if (item.VendorValues.TryGet(out var VendorValuesitem))
+            if (item.VendorValues is {} VendorValuesitem)
             {
                 hash.Add(VendorValuesitem);
             }
-            if (item.VendorLocation.TryGet(out var VendorLocationitem))
+            if (item.VendorLocation is {} VendorLocationitem)
             {
                 hash.Add(VendorLocationitem);
             }
@@ -2387,7 +2387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.CrimeValues);
                 try
                 {
-                    if(rhs.CrimeValues.TryGet(out var rhsCrimeValues))
+                    if(rhs.CrimeValues is {} rhsCrimeValues)
                     {
                         item.CrimeValues = rhsCrimeValues.DeepCopy(
                             errorMask: errorMask,
@@ -2445,7 +2445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.VendorValues);
                 try
                 {
-                    if(rhs.VendorValues.TryGet(out var rhsVendorValues))
+                    if(rhs.VendorValues is {} rhsVendorValues)
                     {
                         item.VendorValues = rhsVendorValues.DeepCopy(
                             errorMask: errorMask,
@@ -2471,7 +2471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.VendorLocation);
                 try
                 {
-                    if(rhs.VendorLocation.TryGet(out var rhsVendorLocation))
+                    if(rhs.VendorLocation is {} rhsVendorLocation)
                     {
                         item.VendorLocation = rhsVendorLocation.DeepCopy(
                             errorMask: errorMask,

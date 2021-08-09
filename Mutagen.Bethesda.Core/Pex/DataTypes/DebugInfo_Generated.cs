@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendItem(ModificationTime, "ModificationTime");
                     }
                     if ((printMask?.Functions?.Overall ?? true)
-                        && Functions.TryGet(out var FunctionsItem))
+                        && Functions is {} FunctionsItem)
                     {
                         fg.AppendLine("Functions =>");
                         fg.AppendLine("[");
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendLine("]");
                     }
                     if ((printMask?.PropertyGroups?.Overall ?? true)
-                        && PropertyGroups.TryGet(out var PropertyGroupsItem))
+                        && PropertyGroups is {} PropertyGroupsItem)
                     {
                         fg.AppendLine("PropertyGroups =>");
                         fg.AppendLine("[");
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendLine("]");
                     }
                     if ((printMask?.StructOrders?.Overall ?? true)
-                        && StructOrders.TryGet(out var StructOrdersItem))
+                        && StructOrders is {} StructOrdersItem)
                     {
                         fg.AppendLine("StructOrders =>");
                         fg.AppendLine("[");
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Pex
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(ModificationTime, "ModificationTime");
-                if (Functions.TryGet(out var FunctionsItem))
+                if (Functions is {} FunctionsItem)
                 {
                     fg.AppendLine("Functions =>");
                     fg.AppendLine("[");
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Pex
                     }
                     fg.AppendLine("]");
                 }
-                if (PropertyGroups.TryGet(out var PropertyGroupsItem))
+                if (PropertyGroups is {} PropertyGroupsItem)
                 {
                     fg.AppendLine("PropertyGroups =>");
                     fg.AppendLine("[");
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Pex
                     }
                     fg.AppendLine("]");
                 }
-                if (StructOrders.TryGet(out var StructOrdersItem))
+                if (StructOrders is {} StructOrdersItem)
                 {
                     fg.AppendLine("StructOrders =>");
                     fg.AppendLine("[");

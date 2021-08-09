@@ -1481,33 +1481,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Base);
-            if (item.XPCIFluff.TryGet(out var XPCIFluffItem))
+            if (item.XPCIFluff is {} XPCIFluffItem)
             {
                 hash.Add(XPCIFluffItem);
             }
-            if (item.FULLFluff.TryGet(out var FULLFluffItem))
+            if (item.FULLFluff is {} FULLFluffItem)
             {
                 hash.Add(FULLFluffItem);
             }
-            if (item.DistantLODData.TryGet(out var DistantLODDataitem))
+            if (item.DistantLODData is {} DistantLODDataitem)
             {
                 hash.Add(DistantLODDataitem);
             }
-            if (item.EnableParent.TryGet(out var EnableParentitem))
+            if (item.EnableParent is {} EnableParentitem)
             {
                 hash.Add(EnableParentitem);
             }
             hash.Add(item.MerchantContainer);
             hash.Add(item.Horse);
-            if (item.RagdollData.TryGet(out var RagdollDataItem))
+            if (item.RagdollData is {} RagdollDataItem)
             {
                 hash.Add(RagdollDataItem);
             }
-            if (item.Scale.TryGet(out var Scaleitem))
+            if (item.Scale is {} Scaleitem)
             {
                 hash.Add(Scaleitem);
             }
-            if (item.Location.TryGet(out var Locationitem))
+            if (item.Location is {} Locationitem)
             {
                 hash.Add(Locationitem);
             }
@@ -1639,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.XPCIFluff) ?? true))
             {
-                if(rhs.XPCIFluff.TryGet(out var XPCIFluffrhs))
+                if(rhs.XPCIFluff is {} XPCIFluffrhs)
                 {
                     item.XPCIFluff = XPCIFluffrhs.ToArray();
                 }
@@ -1650,7 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FULLFluff) ?? true))
             {
-                if(rhs.FULLFluff.TryGet(out var FULLFluffrhs))
+                if(rhs.FULLFluff is {} FULLFluffrhs)
                 {
                     item.FULLFluff = FULLFluffrhs.ToArray();
                 }
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.DistantLODData);
                 try
                 {
-                    if(rhs.DistantLODData.TryGet(out var rhsDistantLODData))
+                    if(rhs.DistantLODData is {} rhsDistantLODData)
                     {
                         item.DistantLODData = rhsDistantLODData.DeepCopy(
                             errorMask: errorMask,
@@ -1690,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.EnableParent);
                 try
                 {
-                    if(rhs.EnableParent.TryGet(out var rhsEnableParent))
+                    if(rhs.EnableParent is {} rhsEnableParent)
                     {
                         item.EnableParent = rhsEnableParent.DeepCopy(
                             errorMask: errorMask,
@@ -1721,7 +1721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
             {
-                if(rhs.RagdollData.TryGet(out var RagdollDatarhs))
+                if(rhs.RagdollData is {} RagdollDatarhs)
                 {
                     item.RagdollData = RagdollDatarhs.ToArray();
                 }
@@ -1739,7 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Location);
                 try
                 {
-                    if(rhs.Location.TryGet(out var rhsLocation))
+                    if(rhs.Location is {} rhsLocation)
                     {
                         item.Location = rhsLocation.DeepCopy(
                             errorMask: errorMask,

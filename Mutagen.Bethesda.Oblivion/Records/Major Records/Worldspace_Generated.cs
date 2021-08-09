@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
                     }
                     if ((printMask?.SubCells?.Overall ?? true)
-                        && SubCells.TryGet(out var SubCellsItem))
+                        && SubCells is {} SubCellsItem)
                     {
                         fg.AppendLine("SubCells =>");
                         fg.AppendLine("[");
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Road?.ToString(fg);
                 TopCell?.ToString(fg);
                 fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
-                if (SubCells.TryGet(out var SubCellsItem))
+                if (SubCells is {} SubCellsItem)
                 {
                     fg.AppendLine("SubCells =>");
                     fg.AppendLine("[");
@@ -2320,46 +2320,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IWorldspaceGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.Parent);
             hash.Add(item.Climate);
             hash.Add(item.Water);
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.MapData.TryGet(out var MapDataitem))
+            if (item.MapData is {} MapDataitem)
             {
                 hash.Add(MapDataitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.ObjectBoundsMin.TryGet(out var ObjectBoundsMinitem))
+            if (item.ObjectBoundsMin is {} ObjectBoundsMinitem)
             {
                 hash.Add(ObjectBoundsMinitem);
             }
-            if (item.ObjectBoundsMax.TryGet(out var ObjectBoundsMaxitem))
+            if (item.ObjectBoundsMax is {} ObjectBoundsMaxitem)
             {
                 hash.Add(ObjectBoundsMaxitem);
             }
-            if (item.Music.TryGet(out var Musicitem))
+            if (item.Music is {} Musicitem)
             {
                 hash.Add(Musicitem);
             }
-            if (item.OffsetData.TryGet(out var OffsetDataItem))
+            if (item.OffsetData is {} OffsetDataItem)
             {
                 hash.Add(OffsetDataItem);
             }
-            if (item.Road.TryGet(out var Roaditem))
+            if (item.Road is {} Roaditem)
             {
                 hash.Add(Roaditem);
             }
-            if (item.TopCell.TryGet(out var TopCellitem))
+            if (item.TopCell is {} TopCellitem)
             {
                 hash.Add(TopCellitem);
             }
@@ -3352,7 +3352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
                 try
                 {
-                    if(rhs.MapData.TryGet(out var rhsMapData))
+                    if(rhs.MapData is {} rhsMapData)
                     {
                         item.MapData = rhsMapData.DeepCopy(
                             errorMask: errorMask,
@@ -3391,7 +3391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
-                if(rhs.OffsetData.TryGet(out var OffsetDatarhs))
+                if(rhs.OffsetData is {} OffsetDatarhs)
                 {
                     item.OffsetData = OffsetDatarhs.ToArray();
                 }
@@ -3405,7 +3405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Road);
                 try
                 {
-                    if(rhs.Road.TryGet(out var rhsRoad))
+                    if(rhs.Road is {} rhsRoad)
                     {
                         item.Road = (Road)rhsRoad.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.Road),
@@ -3431,7 +3431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.TopCell);
                 try
                 {
-                    if(rhs.TopCell.TryGet(out var rhsTopCell))
+                    if(rhs.TopCell is {} rhsTopCell)
                     {
                         item.TopCell = (Cell)rhsTopCell.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell),

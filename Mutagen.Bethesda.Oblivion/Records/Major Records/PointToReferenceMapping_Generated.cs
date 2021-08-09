@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Reference, "Reference");
                     }
                     if ((printMask?.Points?.Overall ?? true)
-                        && Points.TryGet(out var PointsItem))
+                        && Points is {} PointsItem)
                     {
                         fg.AppendLine("Points =>");
                         fg.AppendLine("[");
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Reference, "Reference");
-                if (Points.TryGet(out var PointsItem))
+                if (Points is {} PointsItem)
                 {
                     fg.AppendLine("Points =>");
                     fg.AppendLine("[");

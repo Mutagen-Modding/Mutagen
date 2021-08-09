@@ -334,7 +334,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Global, "Global");
                     }
                     if ((printMask?.Entries?.Overall ?? true)
-                        && Entries.TryGet(out var EntriesItem))
+                        && Entries is {} EntriesItem)
                     {
                         fg.AppendLine("Entries =>");
                         fg.AppendLine("[");
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(ChanceNone, "ChanceNone");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Global, "Global");
-                if (Entries.TryGet(out var EntriesItem))
+                if (Entries is {} EntriesItem)
                 {
                     fg.AppendLine("Entries =>");
                     fg.AppendLine("[");

@@ -1222,20 +1222,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ISoundCategoryGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
             hash.Add(item.Parent);
-            if (item.StaticVolumeMultiplier.TryGet(out var StaticVolumeMultiplieritem))
+            if (item.StaticVolumeMultiplier is {} StaticVolumeMultiplieritem)
             {
                 hash.Add(StaticVolumeMultiplieritem);
             }
-            if (item.DefaultMenuVolume.TryGet(out var DefaultMenuVolumeitem))
+            if (item.DefaultMenuVolume is {} DefaultMenuVolumeitem)
             {
                 hash.Add(DefaultMenuVolumeitem);
             }

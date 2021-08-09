@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.LargeReferences?.Overall ?? true)
-                        && LargeReferences.TryGet(out var LargeReferencesItem))
+                        && LargeReferences is {} LargeReferencesItem)
                     {
                         fg.AppendLine("LargeReferences =>");
                         fg.AppendLine("[");
@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(SubCellsUnknown, "SubCellsUnknown");
                     }
                     if ((printMask?.SubCells?.Overall ?? true)
-                        && SubCells.TryGet(out var SubCellsItem))
+                        && SubCells is {} SubCellsItem)
                     {
                         fg.AppendLine("SubCells =>");
                         fg.AppendLine("[");
@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (LargeReferences.TryGet(out var LargeReferencesItem))
+                if (LargeReferences is {} LargeReferencesItem)
                 {
                     fg.AppendLine("LargeReferences =>");
                     fg.AppendLine("[");
@@ -1483,7 +1483,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TopCell?.ToString(fg);
                 fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
                 fg.AppendItem(SubCellsUnknown, "SubCellsUnknown");
-                if (SubCells.TryGet(out var SubCellsItem))
+                if (SubCells is {} SubCellsItem)
                 {
                     fg.AppendLine("SubCells =>");
                     fg.AppendLine("[");
@@ -3372,84 +3372,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.LargeReferences);
-            if (item.MaxHeight.TryGet(out var MaxHeightitem))
+            if (item.MaxHeight is {} MaxHeightitem)
             {
                 hash.Add(MaxHeightitem);
             }
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.FixedDimensionsCenterCell.TryGet(out var FixedDimensionsCenterCellitem))
+            if (item.FixedDimensionsCenterCell is {} FixedDimensionsCenterCellitem)
             {
                 hash.Add(FixedDimensionsCenterCellitem);
             }
             hash.Add(item.InteriorLighting);
             hash.Add(item.EncounterZone);
             hash.Add(item.Location);
-            if (item.Parent.TryGet(out var Parentitem))
+            if (item.Parent is {} Parentitem)
             {
                 hash.Add(Parentitem);
             }
             hash.Add(item.Climate);
             hash.Add(item.Water);
             hash.Add(item.LodWater);
-            if (item.LodWaterHeight.TryGet(out var LodWaterHeightitem))
+            if (item.LodWaterHeight is {} LodWaterHeightitem)
             {
                 hash.Add(LodWaterHeightitem);
             }
-            if (item.LandDefaults.TryGet(out var LandDefaultsitem))
+            if (item.LandDefaults is {} LandDefaultsitem)
             {
                 hash.Add(LandDefaultsitem);
             }
-            if (item.MapImage.TryGet(out var MapImageitem))
+            if (item.MapImage is {} MapImageitem)
             {
                 hash.Add(MapImageitem);
             }
-            if (item.CloudModel.TryGet(out var CloudModelitem))
+            if (item.CloudModel is {} CloudModelitem)
             {
                 hash.Add(CloudModelitem);
             }
-            if (item.MapData.TryGet(out var MapDataitem))
+            if (item.MapData is {} MapDataitem)
             {
                 hash.Add(MapDataitem);
             }
             hash.Add(item.MapOffset);
-            if (item.DistantLodMultiplier.TryGet(out var DistantLodMultiplieritem))
+            if (item.DistantLodMultiplier is {} DistantLodMultiplieritem)
             {
                 hash.Add(DistantLodMultiplieritem);
             }
             hash.Add(item.Flags);
-            if (item.ObjectBounds.TryGet(out var ObjectBoundsitem))
+            if (item.ObjectBounds is {} ObjectBoundsitem)
             {
                 hash.Add(ObjectBoundsitem);
             }
             hash.Add(item.Music);
-            if (item.CanopyShadow.TryGet(out var CanopyShadowitem))
+            if (item.CanopyShadow is {} CanopyShadowitem)
             {
                 hash.Add(CanopyShadowitem);
             }
-            if (item.WaterNoiseTexture.TryGet(out var WaterNoiseTextureitem))
+            if (item.WaterNoiseTexture is {} WaterNoiseTextureitem)
             {
                 hash.Add(WaterNoiseTextureitem);
             }
-            if (item.HdLodDiffuseTexture.TryGet(out var HdLodDiffuseTextureitem))
+            if (item.HdLodDiffuseTexture is {} HdLodDiffuseTextureitem)
             {
                 hash.Add(HdLodDiffuseTextureitem);
             }
-            if (item.HdLodNormalTexture.TryGet(out var HdLodNormalTextureitem))
+            if (item.HdLodNormalTexture is {} HdLodNormalTextureitem)
             {
                 hash.Add(HdLodNormalTextureitem);
             }
-            if (item.WaterEnvironmentMap.TryGet(out var WaterEnvironmentMapitem))
+            if (item.WaterEnvironmentMap is {} WaterEnvironmentMapitem)
             {
                 hash.Add(WaterEnvironmentMapitem);
             }
-            if (item.OffsetData.TryGet(out var OffsetDataItem))
+            if (item.OffsetData is {} OffsetDataItem)
             {
                 hash.Add(OffsetDataItem);
             }
-            if (item.TopCell.TryGet(out var TopCellitem))
+            if (item.TopCell is {} TopCellitem)
             {
                 hash.Add(TopCellitem);
             }
@@ -4967,7 +4967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.MaxHeight);
                 try
                 {
-                    if(rhs.MaxHeight.TryGet(out var rhsMaxHeight))
+                    if(rhs.MaxHeight is {} rhsMaxHeight)
                     {
                         item.MaxHeight = rhsMaxHeight.DeepCopy(
                             errorMask: errorMask,
@@ -5013,7 +5013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Parent);
                 try
                 {
-                    if(rhs.Parent.TryGet(out var rhsParent))
+                    if(rhs.Parent is {} rhsParent)
                     {
                         item.Parent = rhsParent.DeepCopy(
                             errorMask: errorMask,
@@ -5055,7 +5055,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.LandDefaults);
                 try
                 {
-                    if(rhs.LandDefaults.TryGet(out var rhsLandDefaults))
+                    if(rhs.LandDefaults is {} rhsLandDefaults)
                     {
                         item.LandDefaults = rhsLandDefaults.DeepCopy(
                             errorMask: errorMask,
@@ -5085,7 +5085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.CloudModel);
                 try
                 {
-                    if(rhs.CloudModel.TryGet(out var rhsCloudModel))
+                    if(rhs.CloudModel is {} rhsCloudModel)
                     {
                         item.CloudModel = rhsCloudModel.DeepCopy(
                             errorMask: errorMask,
@@ -5111,7 +5111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
                 try
                 {
-                    if(rhs.MapData.TryGet(out var rhsMapData))
+                    if(rhs.MapData is {} rhsMapData)
                     {
                         item.MapData = rhsMapData.DeepCopy(
                             errorMask: errorMask,
@@ -5167,7 +5167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBounds);
                 try
                 {
-                    if(rhs.ObjectBounds.TryGet(out var rhsObjectBounds))
+                    if(rhs.ObjectBounds is {} rhsObjectBounds)
                     {
                         item.ObjectBounds = rhsObjectBounds.DeepCopy(
                             errorMask: errorMask,
@@ -5214,7 +5214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
-                if(rhs.OffsetData.TryGet(out var OffsetDatarhs))
+                if(rhs.OffsetData is {} OffsetDatarhs)
                 {
                     item.OffsetData = OffsetDatarhs.ToArray();
                 }
@@ -5228,7 +5228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.TopCell);
                 try
                 {
-                    if(rhs.TopCell.TryGet(out var rhsTopCell))
+                    if(rhs.TopCell is {} rhsTopCell)
                     {
                         item.TopCell = (Cell)rhsTopCell.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell),

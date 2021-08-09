@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(TimerSeconds, "TimerSeconds");
                     }
                     if ((printMask?.Packages?.Overall ?? true)
-                        && Packages.TryGet(out var PackagesItem))
+                        && Packages is {} PackagesItem)
                     {
                         fg.AppendLine("Packages =>");
                         fg.AppendLine("[");
@@ -849,7 +849,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(StartPhase, "StartPhase");
                 fg.AppendItem(EndPhase, "EndPhase");
                 fg.AppendItem(TimerSeconds, "TimerSeconds");
-                if (Packages.TryGet(out var PackagesItem))
+                if (Packages is {} PackagesItem)
                 {
                     fg.AppendLine("Packages =>");
                     fg.AppendLine("[");
@@ -1738,61 +1738,61 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Type);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.ActorID.TryGet(out var ActorIDitem))
+            if (item.ActorID is {} ActorIDitem)
             {
                 hash.Add(ActorIDitem);
             }
-            if (item.LNAM.TryGet(out var LNAMItem))
+            if (item.LNAM is {} LNAMItem)
             {
                 hash.Add(LNAMItem);
             }
-            if (item.Index.TryGet(out var Indexitem))
+            if (item.Index is {} Indexitem)
             {
                 hash.Add(Indexitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.StartPhase.TryGet(out var StartPhaseitem))
+            if (item.StartPhase is {} StartPhaseitem)
             {
                 hash.Add(StartPhaseitem);
             }
-            if (item.EndPhase.TryGet(out var EndPhaseitem))
+            if (item.EndPhase is {} EndPhaseitem)
             {
                 hash.Add(EndPhaseitem);
             }
-            if (item.TimerSeconds.TryGet(out var TimerSecondsitem))
+            if (item.TimerSeconds is {} TimerSecondsitem)
             {
                 hash.Add(TimerSecondsitem);
             }
             hash.Add(item.Packages);
             hash.Add(item.Topic);
-            if (item.HeadtrackActorID.TryGet(out var HeadtrackActorIDitem))
+            if (item.HeadtrackActorID is {} HeadtrackActorIDitem)
             {
                 hash.Add(HeadtrackActorIDitem);
             }
-            if (item.LoopingMax.TryGet(out var LoopingMaxitem))
+            if (item.LoopingMax is {} LoopingMaxitem)
             {
                 hash.Add(LoopingMaxitem);
             }
-            if (item.LoopingMin.TryGet(out var LoopingMinitem))
+            if (item.LoopingMin is {} LoopingMinitem)
             {
                 hash.Add(LoopingMinitem);
             }
-            if (item.Emotion.TryGet(out var Emotionitem))
+            if (item.Emotion is {} Emotionitem)
             {
                 hash.Add(Emotionitem);
             }
-            if (item.EmotionValue.TryGet(out var EmotionValueitem))
+            if (item.EmotionValue is {} EmotionValueitem)
             {
                 hash.Add(EmotionValueitem);
             }
-            if (item.Unused.TryGet(out var Unuseditem))
+            if (item.Unused is {} Unuseditem)
             {
                 hash.Add(Unuseditem);
             }
@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.LNAM) ?? true))
             {
-                if(rhs.LNAM.TryGet(out var LNAMrhs))
+                if(rhs.LNAM is {} LNAMrhs)
                 {
                     item.LNAM = LNAMrhs.ToArray();
                 }
@@ -1927,7 +1927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SceneAction_FieldIndex.Unused);
                 try
                 {
-                    if(rhs.Unused.TryGet(out var rhsUnused))
+                    if(rhs.Unused is {} rhsUnused)
                     {
                         item.Unused = rhsUnused.DeepCopy(
                             errorMask: errorMask,

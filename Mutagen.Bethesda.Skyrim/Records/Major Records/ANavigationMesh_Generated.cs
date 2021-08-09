@@ -1081,15 +1081,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IANavigationMeshGetter item)
         {
             var hash = new HashCode();
-            if (item.ONAM.TryGet(out var ONAMItem))
+            if (item.ONAM is {} ONAMItem)
             {
                 hash.Add(ONAMItem);
             }
-            if (item.PNAM.TryGet(out var PNAMItem))
+            if (item.PNAM is {} PNAMItem)
             {
                 hash.Add(PNAMItem);
             }
-            if (item.NNAM.TryGet(out var NNAMItem))
+            if (item.NNAM is {} NNAMItem)
             {
                 hash.Add(NNAMItem);
             }
@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.ONAM) ?? true))
             {
-                if(rhs.ONAM.TryGet(out var ONAMrhs))
+                if(rhs.ONAM is {} ONAMrhs)
                 {
                     item.ONAM = ONAMrhs.ToArray();
                 }
@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.PNAM) ?? true))
             {
-                if(rhs.PNAM.TryGet(out var PNAMrhs))
+                if(rhs.PNAM is {} PNAMrhs)
                 {
                     item.PNAM = PNAMrhs.ToArray();
                 }
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.NNAM) ?? true))
             {
-                if(rhs.NNAM.TryGet(out var NNAMrhs))
+                if(rhs.NNAM is {} NNAMrhs)
                 {
                     item.NNAM = NNAMrhs.ToArray();
                 }

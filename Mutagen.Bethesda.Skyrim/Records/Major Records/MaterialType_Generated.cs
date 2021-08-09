@@ -1253,19 +1253,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Parent);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.HavokDisplayColor.TryGet(out var HavokDisplayColoritem))
+            if (item.HavokDisplayColor is {} HavokDisplayColoritem)
             {
                 hash.Add(HavokDisplayColoritem);
             }
-            if (item.Buoyancy.TryGet(out var Buoyancyitem))
+            if (item.Buoyancy is {} Buoyancyitem)
             {
                 hash.Add(Buoyancyitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }

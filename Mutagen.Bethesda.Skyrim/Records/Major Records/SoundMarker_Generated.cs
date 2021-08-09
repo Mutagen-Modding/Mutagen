@@ -1181,11 +1181,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.FNAM.TryGet(out var FNAMItem))
+            if (item.FNAM is {} FNAMItem)
             {
                 hash.Add(FNAMItem);
             }
-            if (item.SNDD.TryGet(out var SNDDItem))
+            if (item.SNDD is {} SNDDItem)
             {
                 hash.Add(SNDDItem);
             }
@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.FNAM) ?? true))
             {
-                if(rhs.FNAM.TryGet(out var FNAMrhs))
+                if(rhs.FNAM is {} FNAMrhs)
                 {
                     item.FNAM = FNAMrhs.ToArray();
                 }
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.SNDD) ?? true))
             {
-                if(rhs.SNDD.TryGet(out var SNDDrhs))
+                if(rhs.SNDD is {} SNDDrhs)
                 {
                     item.SNDD = SNDDrhs.ToArray();
                 }

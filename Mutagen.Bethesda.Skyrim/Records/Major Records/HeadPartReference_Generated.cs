@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IHeadPartReferenceGetter item)
         {
             var hash = new HashCode();
-            if (item.Number.TryGet(out var Numberitem))
+            if (item.Number is {} Numberitem)
             {
                 hash.Add(Numberitem);
             }

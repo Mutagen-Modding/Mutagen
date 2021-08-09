@@ -917,11 +917,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ID);
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.BehaviorFlags.TryGet(out var BehaviorFlagsitem))
+            if (item.BehaviorFlags is {} BehaviorFlagsitem)
             {
                 hash.Add(BehaviorFlagsitem);
             }

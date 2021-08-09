@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(PresetDefault, "PresetDefault");
                     }
                     if ((printMask?.Presets?.Overall ?? true)
-                        && Presets.TryGet(out var PresetsItem))
+                        && Presets is {} PresetsItem)
                     {
                         fg.AppendLine("Presets =>");
                         fg.AppendLine("[");
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(FileName, "FileName");
                 fg.AppendItem(MaskType, "MaskType");
                 fg.AppendItem(PresetDefault, "PresetDefault");
-                if (Presets.TryGet(out var PresetsItem))
+                if (Presets is {} PresetsItem)
                 {
                     fg.AppendLine("Presets =>");
                     fg.AppendLine("[");
@@ -1140,15 +1140,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ITintAssetsGetter item)
         {
             var hash = new HashCode();
-            if (item.Index.TryGet(out var Indexitem))
+            if (item.Index is {} Indexitem)
             {
                 hash.Add(Indexitem);
             }
-            if (item.FileName.TryGet(out var FileNameitem))
+            if (item.FileName is {} FileNameitem)
             {
                 hash.Add(FileNameitem);
             }
-            if (item.MaskType.TryGet(out var MaskTypeitem))
+            if (item.MaskType is {} MaskTypeitem)
             {
                 hash.Add(MaskTypeitem);
             }

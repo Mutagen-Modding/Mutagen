@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(GridPosition, "GridPosition");
                     }
                     if ((printMask?.References?.Overall ?? true)
-                        && References.TryGet(out var ReferencesItem))
+                        && References is {} ReferencesItem)
                     {
                         fg.AppendLine("References =>");
                         fg.AppendLine("[");
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(GridPosition, "GridPosition");
-                if (References.TryGet(out var ReferencesItem))
+                if (References is {} ReferencesItem)
                 {
                     fg.AppendLine("References =>");
                     fg.AppendLine("[");

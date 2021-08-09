@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "obj.LocationReferenceTypes.RecordCache";
+            string testString = "PropertyNames.TryGet(out var PropertyNamesItem))";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

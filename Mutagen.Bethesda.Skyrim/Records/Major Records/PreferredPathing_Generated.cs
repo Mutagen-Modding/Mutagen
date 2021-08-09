@@ -290,7 +290,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.NavmeshSets?.Overall ?? true)
-                        && NavmeshSets.TryGet(out var NavmeshSetsItem))
+                        && NavmeshSets is {} NavmeshSetsItem)
                     {
                         fg.AppendLine("NavmeshSets =>");
                         fg.AppendLine("[");
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.NavmeshTree?.Overall ?? true)
-                        && NavmeshTree.TryGet(out var NavmeshTreeItem))
+                        && NavmeshTree is {} NavmeshTreeItem)
                     {
                         fg.AppendLine("NavmeshTree =>");
                         fg.AppendLine("[");
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                if (NavmeshSets.TryGet(out var NavmeshSetsItem))
+                if (NavmeshSets is {} NavmeshSetsItem)
                 {
                     fg.AppendLine("NavmeshSets =>");
                     fg.AppendLine("[");
@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (NavmeshTree.TryGet(out var NavmeshTreeItem))
+                if (NavmeshTree is {} NavmeshTreeItem)
                 {
                     fg.AppendLine("NavmeshTree =>");
                     fg.AppendLine("[");

@@ -2159,7 +2159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.LightFadeStartDistance);
             hash.Add(item.LightFadeEndDistance);
             hash.Add(item.Unknown);
-            if (item.DirectionalAmbientColors.TryGet(out var DirectionalAmbientColorsitem))
+            if (item.DirectionalAmbientColors is {} DirectionalAmbientColorsitem)
             {
                 hash.Add(DirectionalAmbientColorsitem);
             }
@@ -2364,7 +2364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)LightingTemplate_FieldIndex.DirectionalAmbientColors);
                 try
                 {
-                    if(rhs.DirectionalAmbientColors.TryGet(out var rhsDirectionalAmbientColors))
+                    if(rhs.DirectionalAmbientColors is {} rhsDirectionalAmbientColors)
                     {
                         item.DirectionalAmbientColors = rhsDirectionalAmbientColors.DeepCopy(
                             errorMask: errorMask,

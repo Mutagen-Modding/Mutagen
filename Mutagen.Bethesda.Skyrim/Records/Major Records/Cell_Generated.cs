@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(WaterNoiseTexture, "WaterNoiseTexture");
                     }
                     if ((printMask?.Regions?.Overall ?? true)
-                        && Regions.TryGet(out var RegionsItem))
+                        && Regions is {} RegionsItem)
                     {
                         fg.AppendLine("Regions =>");
                         fg.AppendLine("[");
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
                         Landscape?.ToString(fg);
                     }
                     if ((printMask?.NavigationMeshes?.Overall ?? true)
-                        && NavigationMeshes.TryGet(out var NavigationMeshesItem))
+                        && NavigationMeshes is {} NavigationMeshesItem)
                     {
                         fg.AppendLine("NavigationMeshes =>");
                         fg.AppendLine("[");
@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(PersistentUnknownGroupData, "PersistentUnknownGroupData");
                     }
                     if ((printMask?.Persistent?.Overall ?? true)
-                        && Persistent.TryGet(out var PersistentItem))
+                        && Persistent is {} PersistentItem)
                     {
                         fg.AppendLine("Persistent =>");
                         fg.AppendLine("[");
@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(TemporaryUnknownGroupData, "TemporaryUnknownGroupData");
                     }
                     if ((printMask?.Temporary?.Overall ?? true)
-                        && Temporary.TryGet(out var TemporaryItem))
+                        && Temporary is {} TemporaryItem)
                     {
                         fg.AppendLine("Temporary =>");
                         fg.AppendLine("[");
@@ -1643,7 +1643,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(LNAM, "LNAM");
                 fg.AppendItem(WaterHeight, "WaterHeight");
                 fg.AppendItem(WaterNoiseTexture, "WaterNoiseTexture");
-                if (Regions.TryGet(out var RegionsItem))
+                if (Regions is {} RegionsItem)
                 {
                     fg.AppendLine("Regions =>");
                     fg.AppendLine("[");
@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Music, "Music");
                 fg.AppendItem(ImageSpace, "ImageSpace");
                 Landscape?.ToString(fg);
-                if (NavigationMeshes.TryGet(out var NavigationMeshesItem))
+                if (NavigationMeshes is {} NavigationMeshesItem)
                 {
                     fg.AppendLine("NavigationMeshes =>");
                     fg.AppendLine("[");
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(UnknownGroupData, "UnknownGroupData");
                 fg.AppendItem(PersistentTimestamp, "PersistentTimestamp");
                 fg.AppendItem(PersistentUnknownGroupData, "PersistentUnknownGroupData");
-                if (Persistent.TryGet(out var PersistentItem))
+                if (Persistent is {} PersistentItem)
                 {
                     fg.AppendLine("Persistent =>");
                     fg.AppendLine("[");
@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
                 fg.AppendItem(TemporaryUnknownGroupData, "TemporaryUnknownGroupData");
-                if (Temporary.TryGet(out var TemporaryItem))
+                if (Temporary is {} TemporaryItem)
                 {
                     fg.AppendLine("Temporary =>");
                     fg.AppendLine("[");
@@ -3529,61 +3529,61 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ICellGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.Flags);
-            if (item.Grid.TryGet(out var Griditem))
+            if (item.Grid is {} Griditem)
             {
                 hash.Add(Griditem);
             }
-            if (item.Lighting.TryGet(out var Lightingitem))
+            if (item.Lighting is {} Lightingitem)
             {
                 hash.Add(Lightingitem);
             }
-            if (item.OcclusionData.TryGet(out var OcclusionDataItem))
+            if (item.OcclusionData is {} OcclusionDataItem)
             {
                 hash.Add(OcclusionDataItem);
             }
-            if (item.MaxHeightData.TryGet(out var MaxHeightDataItem))
+            if (item.MaxHeightData is {} MaxHeightDataItem)
             {
                 hash.Add(MaxHeightDataItem);
             }
             hash.Add(item.LightingTemplate);
-            if (item.LNAM.TryGet(out var LNAMItem))
+            if (item.LNAM is {} LNAMItem)
             {
                 hash.Add(LNAMItem);
             }
-            if (item.WaterHeight.TryGet(out var WaterHeightitem))
+            if (item.WaterHeight is {} WaterHeightitem)
             {
                 hash.Add(WaterHeightitem);
             }
-            if (item.WaterNoiseTexture.TryGet(out var WaterNoiseTextureitem))
+            if (item.WaterNoiseTexture is {} WaterNoiseTextureitem)
             {
                 hash.Add(WaterNoiseTextureitem);
             }
             hash.Add(item.Regions);
             hash.Add(item.Location);
-            if (item.XWCN.TryGet(out var XWCNItem))
+            if (item.XWCN is {} XWCNItem)
             {
                 hash.Add(XWCNItem);
             }
-            if (item.XWCS.TryGet(out var XWCSItem))
+            if (item.XWCS is {} XWCSItem)
             {
                 hash.Add(XWCSItem);
             }
-            if (item.WaterVelocity.TryGet(out var WaterVelocityitem))
+            if (item.WaterVelocity is {} WaterVelocityitem)
             {
                 hash.Add(WaterVelocityitem);
             }
             hash.Add(item.Water);
-            if (item.Ownership.TryGet(out var Ownershipitem))
+            if (item.Ownership is {} Ownershipitem)
             {
                 hash.Add(Ownershipitem);
             }
             hash.Add(item.LockList);
-            if (item.WaterEnvironmentMap.TryGet(out var WaterEnvironmentMapitem))
+            if (item.WaterEnvironmentMap is {} WaterEnvironmentMapitem)
             {
                 hash.Add(WaterEnvironmentMapitem);
             }
@@ -3592,7 +3592,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.EncounterZone);
             hash.Add(item.Music);
             hash.Add(item.ImageSpace);
-            if (item.Landscape.TryGet(out var Landscapeitem))
+            if (item.Landscape is {} Landscapeitem)
             {
                 hash.Add(Landscapeitem);
             }
@@ -4969,7 +4969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
                 try
                 {
-                    if(rhs.Grid.TryGet(out var rhsGrid))
+                    if(rhs.Grid is {} rhsGrid)
                     {
                         item.Grid = rhsGrid.DeepCopy(
                             errorMask: errorMask,
@@ -4995,7 +4995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
                 try
                 {
-                    if(rhs.Lighting.TryGet(out var rhsLighting))
+                    if(rhs.Lighting is {} rhsLighting)
                     {
                         item.Lighting = rhsLighting.DeepCopy(
                             errorMask: errorMask,
@@ -5018,7 +5018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.OcclusionData) ?? true))
             {
-                if(rhs.OcclusionData.TryGet(out var OcclusionDatarhs))
+                if(rhs.OcclusionData is {} OcclusionDatarhs)
                 {
                     item.OcclusionData = OcclusionDatarhs.ToArray();
                 }
@@ -5029,7 +5029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.MaxHeightData) ?? true))
             {
-                if(rhs.MaxHeightData.TryGet(out var MaxHeightDatarhs))
+                if(rhs.MaxHeightData is {} MaxHeightDatarhs)
                 {
                     item.MaxHeightData = MaxHeightDatarhs.ToArray();
                 }
@@ -5044,7 +5044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LNAM) ?? true))
             {
-                if(rhs.LNAM.TryGet(out var LNAMrhs))
+                if(rhs.LNAM is {} LNAMrhs)
                 {
                     item.LNAM = LNAMrhs.ToArray();
                 }
@@ -5094,7 +5094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
             {
-                if(rhs.XWCN.TryGet(out var XWCNrhs))
+                if(rhs.XWCN is {} XWCNrhs)
                 {
                     item.XWCN = XWCNrhs.ToArray();
                 }
@@ -5105,7 +5105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCS) ?? true))
             {
-                if(rhs.XWCS.TryGet(out var XWCSrhs))
+                if(rhs.XWCS is {} XWCSrhs)
                 {
                     item.XWCS = XWCSrhs.ToArray();
                 }
@@ -5119,7 +5119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.WaterVelocity);
                 try
                 {
-                    if(rhs.WaterVelocity.TryGet(out var rhsWaterVelocity))
+                    if(rhs.WaterVelocity is {} rhsWaterVelocity)
                     {
                         item.WaterVelocity = rhsWaterVelocity.DeepCopy(
                             errorMask: errorMask,
@@ -5149,7 +5149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Ownership);
                 try
                 {
-                    if(rhs.Ownership.TryGet(out var rhsOwnership))
+                    if(rhs.Ownership is {} rhsOwnership)
                     {
                         item.Ownership = rhsOwnership.DeepCopy(
                             errorMask: errorMask,
@@ -5203,7 +5203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
                 try
                 {
-                    if(rhs.Landscape.TryGet(out var rhsLandscape))
+                    if(rhs.Landscape is {} rhsLandscape)
                     {
                         item.Landscape = (Landscape)rhsLandscape.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape),

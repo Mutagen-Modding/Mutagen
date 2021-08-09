@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Weathers?.Overall ?? true)
-                        && Weathers.TryGet(out var WeathersItem))
+                        && Weathers is {} WeathersItem)
                     {
                         fg.AppendLine("Weathers =>");
                         fg.AppendLine("[");
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (Weathers.TryGet(out var WeathersItem))
+                if (Weathers is {} WeathersItem)
                 {
                     fg.AppendLine("Weathers =>");
                     fg.AppendLine("[");

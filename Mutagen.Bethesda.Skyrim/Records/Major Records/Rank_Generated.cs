@@ -941,7 +941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IRankGetter item)
         {
             var hash = new HashCode();
-            if (item.Number.TryGet(out var Numberitem))
+            if (item.Number is {} Numberitem)
             {
                 hash.Add(Numberitem);
             }
@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(HashCode.Combine(Titleitem.Male, Titleitem.Female));
             }
-            if (item.Insignia.TryGet(out var Insigniaitem))
+            if (item.Insignia is {} Insigniaitem)
             {
                 hash.Add(Insigniaitem);
             }

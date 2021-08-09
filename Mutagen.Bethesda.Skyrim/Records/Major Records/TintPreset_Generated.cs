@@ -941,11 +941,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Color);
-            if (item.DefaultValue.TryGet(out var DefaultValueitem))
+            if (item.DefaultValue is {} DefaultValueitem)
             {
                 hash.Add(DefaultValueitem);
             }
-            if (item.Index.TryGet(out var Indexitem))
+            if (item.Index is {} Indexitem)
             {
                 hash.Add(Indexitem);
             }
