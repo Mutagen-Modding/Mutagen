@@ -3,6 +3,7 @@ using AutoFixture.Kernel;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog;
 using Noggog.Testing.AutoFixture.Testing;
 using NSubstitute;
 using Xunit;
@@ -48,10 +49,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
         
         [Theory, BasicAutoData]
         public void ExistingNameQueriesModPath(
-            ModPath modPath,
+            FilePath filePath,
+            ModKey modKey,
             ISpecimenContext context,
             ModPathParameterBuilder sut)
         {
+            var modPath = new ModPath(modKey, filePath);
             context.MockToReturn(modPath);
             foreach (var method in typeof(ExistingName).Methods())
             {
@@ -64,10 +67,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
         
         [Theory, BasicAutoData]
         public void ExistingNameCallsToMakeExist(
-            ModPath modPath,
+            FilePath filePath,
+            ModKey modKey,
             ISpecimenContext context,
             ModPathParameterBuilder sut)
         {
+            var modPath = new ModPath(modKey, filePath);
             context.MockToReturn(modPath);
             foreach (var method in typeof(ExistingName).Methods())
             {
