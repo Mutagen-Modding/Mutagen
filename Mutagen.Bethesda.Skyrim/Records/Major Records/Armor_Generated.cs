@@ -2184,7 +2184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
@@ -2193,7 +2193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -2202,22 +2202,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
             }
             if ((printMask?.EnchantmentAmount ?? true)
-                && item.EnchantmentAmount.TryGet(out var EnchantmentAmountItem))
+                && item.EnchantmentAmount is {} EnchantmentAmountItem)
             {
                 fg.AppendItem(EnchantmentAmountItem, "EnchantmentAmount");
             }
             if ((printMask?.WorldModel?.Overall ?? true)
-                && item.WorldModel.TryGet(out var WorldModelItem))
+                && item.WorldModel is {} WorldModelItem)
             {
                 WorldModelItem?.ToString(fg, "WorldModel");
             }
             if ((printMask?.BodyTemplate?.Overall ?? true)
-                && item.BodyTemplate.TryGet(out var BodyTemplateItem))
+                && item.BodyTemplate is {} BodyTemplateItem)
             {
                 BodyTemplateItem?.ToString(fg, "BodyTemplate");
             }
             if ((printMask?.Destructible?.Overall ?? true)
-                && item.Destructible.TryGet(out var DestructibleItem))
+                && item.Destructible is {} DestructibleItem)
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
@@ -2230,7 +2230,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
             }
             if ((printMask?.RagdollConstraintTemplate ?? true)
-                && item.RagdollConstraintTemplate.TryGet(out var RagdollConstraintTemplateItem))
+                && item.RagdollConstraintTemplate is {} RagdollConstraintTemplateItem)
             {
                 fg.AppendItem(RagdollConstraintTemplateItem, "RagdollConstraintTemplate");
             }
@@ -2251,7 +2251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Race.FormKeyNullable, "Race");
             }
             if ((printMask?.Keywords?.Overall ?? true)
-                && item.Keywords.TryGet(out var KeywordsItem))
+                && item.Keywords is {} KeywordsItem)
             {
                 fg.AppendLine("Keywords =>");
                 fg.AppendLine("[");
@@ -2270,7 +2270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
@@ -2510,7 +2510,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(EnchantmentAmountitem);
             }
-            if (item.WorldModel.TryGet(out var WorldModelitem))
+            if (item.WorldModel is {} WorldModelitem)
             {
                 hash.Add(HashCode.Combine(WorldModelitem.Male, WorldModelitem.Female));
             }
@@ -2583,14 +2583,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.ObjectEffect);
             }
-            if (obj.WorldModel.TryGet(out var WorldModelItem))
+            if (obj.WorldModel is {} WorldModelItem)
             {
                 foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Destructible.TryGet(out var DestructibleItems))
+            if (obj.Destructible is {} DestructibleItems)
             {
                 foreach (var item in DestructibleItems.ContainedFormLinks)
                 {
@@ -2621,7 +2621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Race);
             }
-            if (obj.Keywords.TryGet(out var KeywordsItem))
+            if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
                 {
@@ -2770,7 +2770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.EnchantmentAmount = rhs.EnchantmentAmount;
             }
-            if (!rhs.WorldModel.TryGet(out var rhsWorldModelitem))
+            if (rhs.WorldModel is not {} rhsWorldModelitem)
             {
                 item.WorldModel = null;
             }
@@ -3100,7 +3100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
@@ -3133,7 +3133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 maleRecordConverter: Armor_Registration.WorldModelMaleConverter,
                 transl: (MutagenWriter subWriter, IArmorModelGetter? subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
+                    if (subItem is {} Item)
                     {
                         ((ArmorModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
@@ -3144,7 +3144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArmorBinaryWriteTranslation.WriteBinaryBodyTemplate(
                 writer: writer,
                 item: item);
-            if (item.Destructible.TryGet(out var DestructibleItem))
+            if (item.Destructible is {} DestructibleItem)
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
                     item: DestructibleItem,

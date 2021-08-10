@@ -1103,12 +1103,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1117,12 +1117,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
             if ((printMask?.StaticVolumeMultiplier ?? true)
-                && item.StaticVolumeMultiplier.TryGet(out var StaticVolumeMultiplierItem))
+                && item.StaticVolumeMultiplier is {} StaticVolumeMultiplierItem)
             {
                 fg.AppendItem(StaticVolumeMultiplierItem, "StaticVolumeMultiplier");
             }
             if ((printMask?.DefaultMenuVolume ?? true)
-                && item.DefaultMenuVolume.TryGet(out var DefaultMenuVolumeItem))
+                && item.DefaultMenuVolume is {} DefaultMenuVolumeItem)
             {
                 fg.AppendItem(DefaultMenuVolumeItem, "DefaultMenuVolume");
             }

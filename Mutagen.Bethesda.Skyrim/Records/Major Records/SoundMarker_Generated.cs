@@ -1071,12 +1071,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.FNAM ?? true)
-                && item.FNAM.TryGet(out var FNAMItem))
+                && item.FNAM is {} FNAMItem)
             {
                 fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
             if ((printMask?.SNDD ?? true)
-                && item.SNDD.TryGet(out var SNDDItem))
+                && item.SNDD is {} SNDDItem)
             {
                 fg.AppendLine($"SNDD => {SpanExt.ToHexString(SNDDItem)}");
             }

@@ -1882,7 +1882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.JailOutfit.FormKeyNullable, "JailOutfit");
             }
             if ((printMask?.CrimeValues?.Overall ?? true)
-                && item.CrimeValues.TryGet(out var CrimeValuesItem))
+                && item.CrimeValues is {} CrimeValuesItem)
             {
                 CrimeValuesItem?.ToString(fg, "CrimeValues");
             }
@@ -1964,17 +1964,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
             }
             if ((printMask?.VendorValues?.Overall ?? true)
-                && item.VendorValues.TryGet(out var VendorValuesItem))
+                && item.VendorValues is {} VendorValuesItem)
             {
                 VendorValuesItem?.ToString(fg, "VendorValues");
             }
             if ((printMask?.VendorLocation?.Overall ?? true)
-                && item.VendorLocation.TryGet(out var VendorLocationItem))
+                && item.VendorLocation is {} VendorLocationItem)
             {
                 VendorLocationItem?.ToString(fg, "VendorLocation");
             }
             if ((printMask?.Conditions?.Overall ?? true)
-                && item.Conditions.TryGet(out var ConditionsItem))
+                && item.Conditions is {} ConditionsItem)
             {
                 fg.AppendLine("Conditions =>");
                 fg.AppendLine("[");
@@ -2244,7 +2244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Conditions.TryGet(out var ConditionsItem))
+            if (obj.Conditions is {} ConditionsItem)
             {
                 foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))
@@ -2727,7 +2727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.JailOutfit,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.JOUT));
-            if (item.CrimeValues.TryGet(out var CrimeValuesItem))
+            if (item.CrimeValues is {} CrimeValuesItem)
             {
                 ((CrimeValuesBinaryWriteTranslation)((IBinaryItem)CrimeValuesItem).BinaryWriteTranslator).Write(
                     item: CrimeValuesItem,
@@ -2753,14 +2753,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.MerchantContainer,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.VENC));
-            if (item.VendorValues.TryGet(out var VendorValuesItem))
+            if (item.VendorValues is {} VendorValuesItem)
             {
                 ((VendorValuesBinaryWriteTranslation)((IBinaryItem)VendorValuesItem).BinaryWriteTranslator).Write(
                     item: VendorValuesItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.VendorLocation.TryGet(out var VendorLocationItem))
+            if (item.VendorLocation is {} VendorLocationItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.PLVD))
                 {

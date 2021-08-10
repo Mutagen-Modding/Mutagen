@@ -899,17 +899,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Rank.Mask<bool>? printMask = null)
         {
             if ((printMask?.RankNumber ?? true)
-                && item.RankNumber.TryGet(out var RankNumberItem))
+                && item.RankNumber is {} RankNumberItem)
             {
                 fg.AppendItem(RankNumberItem, "RankNumber");
             }
             if ((printMask?.Name?.Overall ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 NameItem?.ToString(fg, "Name");
             }
             if ((printMask?.Insignia ?? true)
-                && item.Insignia.TryGet(out var InsigniaItem))
+                && item.Insignia is {} InsigniaItem)
             {
                 fg.AppendItem(InsigniaItem, "Insignia");
             }
@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(RankNumberitem);
             }
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(HashCode.Combine(Nameitem.Male, Nameitem.Female));
             }
@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.RankNumber = rhs.RankNumber;
             }
-            if (!rhs.Name.TryGet(out var rhsNameitem))
+            if (rhs.Name is not {} rhsNameitem)
             {
                 item.Name = null;
             }

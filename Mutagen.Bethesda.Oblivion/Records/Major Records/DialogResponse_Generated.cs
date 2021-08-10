@@ -904,17 +904,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogResponse.Mask<bool>? printMask = null)
         {
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.ResponseText ?? true)
-                && item.ResponseText.TryGet(out var ResponseTextItem))
+                && item.ResponseText is {} ResponseTextItem)
             {
                 fg.AppendItem(ResponseTextItem, "ResponseText");
             }
             if ((printMask?.ActorNotes ?? true)
-                && item.ActorNotes.TryGet(out var ActorNotesItem))
+                && item.ActorNotes is {} ActorNotesItem)
             {
                 fg.AppendItem(ActorNotesItem, "ActorNotes");
             }
@@ -1124,7 +1124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((DialogResponseDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

@@ -1441,17 +1441,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Root?.Overall ?? true)
-                && item.Root.TryGet(out var RootItem))
+                && item.Root is {} RootItem)
             {
                 RootItem?.ToString(fg, "Root");
             }
             if ((printMask?.ProcedureType ?? true)
-                && item.ProcedureType.TryGet(out var ProcedureTypeItem))
+                && item.ProcedureType is {} ProcedureTypeItem)
             {
                 fg.AppendItem(ProcedureTypeItem, "ProcedureType");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1474,12 +1474,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.FlagsOverride?.Overall ?? true)
-                && item.FlagsOverride.TryGet(out var FlagsOverrideItem))
+                && item.FlagsOverride is {} FlagsOverrideItem)
             {
                 FlagsOverrideItem?.ToString(fg, "FlagsOverride");
             }
             if ((printMask?.FlagsOverrideUnused?.Overall ?? true)
-                && item.FlagsOverrideUnused.TryGet(out var FlagsOverrideUnusedItem))
+                && item.FlagsOverrideUnused is {} FlagsOverrideUnusedItem)
             {
                 FlagsOverrideUnusedItem?.ToString(fg, "FlagsOverrideUnused");
             }
@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.Root.TryGet(out var RootItem))
+            if (item.Root is {} RootItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.PRCB))
                 {

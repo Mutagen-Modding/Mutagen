@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 try
                 {
-                    if (!obj.Items.TryGet(out var items)
+                    if (obj.Items is not { } items
                         || items.Count == 0) return;
                     using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                     {

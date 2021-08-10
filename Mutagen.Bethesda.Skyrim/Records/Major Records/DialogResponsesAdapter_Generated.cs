@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.ScriptFragments?.Overall ?? true)
-                && item.ScriptFragments.TryGet(out var ScriptFragmentsItem))
+                && item.ScriptFragments is {} ScriptFragmentsItem)
             {
                 ScriptFragmentsItem?.ToString(fg, "ScriptFragments");
             }

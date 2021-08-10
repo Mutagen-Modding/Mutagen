@@ -932,12 +932,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionArea.Mask<bool>? printMask = null)
         {
             if ((printMask?.EdgeFallOff ?? true)
-                && item.EdgeFallOff.TryGet(out var EdgeFallOffItem))
+                && item.EdgeFallOff is {} EdgeFallOffItem)
             {
                 fg.AppendItem(EdgeFallOffItem, "EdgeFallOff");
             }
             if ((printMask?.RegionPoints?.Overall ?? true)
-                && item.RegionPoints.TryGet(out var RegionPointsItem))
+                && item.RegionPoints is {} RegionPointsItem)
             {
                 fg.AppendLine("RegionPoints =>");
                 fg.AppendLine("[");

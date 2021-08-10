@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.MovementType.FormKeyNullable, "MovementType");
             }
             if ((printMask?.Overrides?.Overall ?? true)
-                && item.Overrides.TryGet(out var OverridesItem))
+                && item.Overrides is {} OverridesItem)
             {
                 OverridesItem?.ToString(fg, "Overrides");
             }
@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.MovementType,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MTYP));
-            if (item.Overrides.TryGet(out var OverridesItem))
+            if (item.Overrides is {} OverridesItem)
             {
                 ((SpeedOverridesBinaryWriteTranslation)((IBinaryItem)OverridesItem).BinaryWriteTranslator).Write(
                     item: OverridesItem,

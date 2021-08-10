@@ -853,12 +853,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FindMatchingRefFromEvent.Mask<bool>? printMask = null)
         {
             if ((printMask?.FromEvent ?? true)
-                && item.FromEvent.TryGet(out var FromEventItem))
+                && item.FromEvent is {} FromEventItem)
             {
                 fg.AppendItem(FromEventItem, "FromEvent");
             }
             if ((printMask?.EventData ?? true)
-                && item.EventData.TryGet(out var EventDataItem))
+                && item.EventData is {} EventDataItem)
             {
                 fg.AppendLine($"EventData => {SpanExt.ToHexString(EventDataItem)}");
             }

@@ -926,22 +926,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TintLayer.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
-                && item.Index.TryGet(out var IndexItem))
+                && item.Index is {} IndexItem)
             {
                 fg.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.Color ?? true)
-                && item.Color.TryGet(out var ColorItem))
+                && item.Color is {} ColorItem)
             {
                 fg.AppendItem(ColorItem, "Color");
             }
             if ((printMask?.InterpolationValue ?? true)
-                && item.InterpolationValue.TryGet(out var InterpolationValueItem))
+                && item.InterpolationValue is {} InterpolationValueItem)
             {
                 fg.AppendItem(InterpolationValueItem, "InterpolationValue");
             }
             if ((printMask?.Preset ?? true)
-                && item.Preset.TryGet(out var PresetItem))
+                && item.Preset is {} PresetItem)
             {
                 fg.AppendItem(PresetItem, "Preset");
             }

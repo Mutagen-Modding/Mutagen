@@ -1913,22 +1913,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if ((printMask?.XPCIFluff ?? true)
-                && item.XPCIFluff.TryGet(out var XPCIFluffItem))
+                && item.XPCIFluff is {} XPCIFluffItem)
             {
                 fg.AppendLine($"XPCIFluff => {SpanExt.ToHexString(XPCIFluffItem)}");
             }
             if ((printMask?.FULLFluff ?? true)
-                && item.FULLFluff.TryGet(out var FULLFluffItem))
+                && item.FULLFluff is {} FULLFluffItem)
             {
                 fg.AppendLine($"FULLFluff => {SpanExt.ToHexString(FULLFluffItem)}");
             }
             if ((printMask?.TeleportDestination?.Overall ?? true)
-                && item.TeleportDestination.TryGet(out var TeleportDestinationItem))
+                && item.TeleportDestination is {} TeleportDestinationItem)
             {
                 TeleportDestinationItem?.ToString(fg, "TeleportDestination");
             }
             if ((printMask?.Lock?.Overall ?? true)
-                && item.Lock.TryGet(out var LockItem))
+                && item.Lock is {} LockItem)
             {
                 LockItem?.ToString(fg, "Lock");
             }
@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
-                && item.FactionRank.TryGet(out var FactionRankItem))
+                && item.FactionRank is {} FactionRankItem)
             {
                 fg.AppendItem(FactionRankItem, "FactionRank");
             }
@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
-                && item.EnableParent.TryGet(out var EnableParentItem))
+                && item.EnableParent is {} EnableParentItem)
             {
                 EnableParentItem?.ToString(fg, "EnableParent");
             }
@@ -1955,27 +1955,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Target.FormKeyNullable, "Target");
             }
             if ((printMask?.SpeedTreeSeed ?? true)
-                && item.SpeedTreeSeed.TryGet(out var SpeedTreeSeedItem))
+                && item.SpeedTreeSeed is {} SpeedTreeSeedItem)
             {
                 fg.AppendItem(SpeedTreeSeedItem, "SpeedTreeSeed");
             }
             if ((printMask?.DistantLODData?.Overall ?? true)
-                && item.DistantLODData.TryGet(out var DistantLODDataItem))
+                && item.DistantLODData is {} DistantLODDataItem)
             {
                 DistantLODDataItem?.ToString(fg, "DistantLODData");
             }
             if ((printMask?.Charge ?? true)
-                && item.Charge.TryGet(out var ChargeItem))
+                && item.Charge is {} ChargeItem)
             {
                 fg.AppendItem(ChargeItem, "Charge");
             }
             if ((printMask?.Health ?? true)
-                && item.Health.TryGet(out var HealthItem))
+                && item.Health is {} HealthItem)
             {
                 fg.AppendItem(HealthItem, "Health");
             }
             if ((printMask?.LevelModifier ?? true)
-                && item.LevelModifier.TryGet(out var LevelModifierItem))
+                && item.LevelModifier is {} LevelModifierItem)
             {
                 fg.AppendItem(LevelModifierItem, "LevelModifier");
             }
@@ -1984,17 +1984,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.XRTM.FormKeyNullable, "XRTM");
             }
             if ((printMask?.ActionFlags ?? true)
-                && item.ActionFlags.TryGet(out var ActionFlagsItem))
+                && item.ActionFlags is {} ActionFlagsItem)
             {
                 fg.AppendItem(ActionFlagsItem, "ActionFlags");
             }
             if ((printMask?.Count ?? true)
-                && item.Count.TryGet(out var CountItem))
+                && item.Count is {} CountItem)
             {
                 fg.AppendItem(CountItem, "Count");
             }
             if ((printMask?.MapMarker?.Overall ?? true)
-                && item.MapMarker.TryGet(out var MapMarkerItem))
+                && item.MapMarker is {} MapMarkerItem)
             {
                 MapMarkerItem?.ToString(fg, "MapMarker");
             }
@@ -2003,12 +2003,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.OpenByDefault, "OpenByDefault");
             }
             if ((printMask?.RagdollData ?? true)
-                && item.RagdollData.TryGet(out var RagdollDataItem))
+                && item.RagdollData is {} RagdollDataItem)
             {
                 fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
             if ((printMask?.Scale ?? true)
-                && item.Scale.TryGet(out var ScaleItem))
+                && item.Scale is {} ScaleItem)
             {
                 fg.AppendItem(ScaleItem, "Scale");
             }
@@ -2017,7 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.ContainedSoul.FormKeyNullable, "ContainedSoul");
             }
             if ((printMask?.Location?.Overall ?? true)
-                && item.Location.TryGet(out var LocationItem))
+                && item.Location is {} LocationItem)
             {
                 LocationItem?.ToString(fg, "Location");
             }
@@ -2323,14 +2323,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Base);
             }
-            if (obj.TeleportDestination.TryGet(out var TeleportDestinationItems))
+            if (obj.TeleportDestination is {} TeleportDestinationItems)
             {
                 foreach (var item in TeleportDestinationItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Lock.TryGet(out var LockItems))
+            if (obj.Lock is {} LockItems)
             {
                 foreach (var item in LockItems.ContainedFormLinks)
                 {
@@ -2345,7 +2345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(obj.GlobalVariable);
             }
-            if (obj.EnableParent.TryGet(out var EnableParentItems))
+            if (obj.EnableParent is {} EnableParentItems)
             {
                 foreach (var item in EnableParentItems.ContainedFormLinks)
                 {
@@ -2856,14 +2856,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.FULLFluff,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL));
-            if (item.TeleportDestination.TryGet(out var TeleportDestinationItem))
+            if (item.TeleportDestination is {} TeleportDestinationItem)
             {
                 ((TeleportDestinationBinaryWriteTranslation)((IBinaryItem)TeleportDestinationItem).BinaryWriteTranslator).Write(
                     item: TeleportDestinationItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Lock.TryGet(out var LockItem))
+            if (item.Lock is {} LockItem)
             {
                 ((LockInformationBinaryWriteTranslation)((IBinaryItem)LockItem).BinaryWriteTranslator).Write(
                     item: LockItem,
@@ -2882,7 +2882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.GlobalVariable,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XGLB));
-            if (item.EnableParent.TryGet(out var EnableParentItem))
+            if (item.EnableParent is {} EnableParentItem)
             {
                 ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
                     item: EnableParentItem,
@@ -2897,7 +2897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.SpeedTreeSeed,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XSED));
-            if (item.DistantLODData.TryGet(out var DistantLODDataItem))
+            if (item.DistantLODData is {} DistantLODDataItem)
             {
                 ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)DistantLODDataItem).BinaryWriteTranslator).Write(
                     item: DistantLODDataItem,
@@ -2929,7 +2929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Count,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCNT));
-            if (item.MapMarker.TryGet(out var MapMarkerItem))
+            if (item.MapMarker is {} MapMarkerItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.XMRK)) { }
                 ((MapMarkerBinaryWriteTranslation)((IBinaryItem)MapMarkerItem).BinaryWriteTranslator).Write(
@@ -2952,7 +2952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.ContainedSoul,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XSOL));
-            if (item.Location.TryGet(out var LocationItem))
+            if (item.Location is {} LocationItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
                 {

@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.PointToPointConnections?.Overall ?? true)
-                && item.PointToPointConnections.TryGet(out var PointToPointConnectionsItem))
+                && item.PointToPointConnections is {} PointToPointConnectionsItem)
             {
                 fg.AppendLine("PointToPointConnections =>");
                 fg.AppendLine("[");
@@ -1277,12 +1277,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.PGAG ?? true)
-                && item.PGAG.TryGet(out var PGAGItem))
+                && item.PGAG is {} PGAGItem)
             {
                 fg.AppendLine($"PGAG => {SpanExt.ToHexString(PGAGItem)}");
             }
             if ((printMask?.InterCellConnections?.Overall ?? true)
-                && item.InterCellConnections.TryGet(out var InterCellConnectionsItem))
+                && item.InterCellConnections is {} InterCellConnectionsItem)
             {
                 fg.AppendLine("InterCellConnections =>");
                 fg.AppendLine("[");

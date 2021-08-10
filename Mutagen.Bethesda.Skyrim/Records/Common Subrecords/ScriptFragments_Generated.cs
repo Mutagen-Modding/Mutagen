@@ -957,12 +957,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.FileName, "FileName");
             }
             if ((printMask?.OnBegin?.Overall ?? true)
-                && item.OnBegin.TryGet(out var OnBeginItem))
+                && item.OnBegin is {} OnBeginItem)
             {
                 OnBeginItem?.ToString(fg, "OnBegin");
             }
             if ((printMask?.OnEnd?.Overall ?? true)
-                && item.OnEnd.TryGet(out var OnEndItem))
+                && item.OnEnd is {} OnEndItem)
             {
                 OnEndItem?.ToString(fg, "OnEnd");
             }

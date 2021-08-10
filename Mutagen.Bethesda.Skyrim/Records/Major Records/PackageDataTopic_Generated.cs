@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.TPIC ?? true)
-                && item.TPIC.TryGet(out var TPICItem))
+                && item.TPIC is {} TPICItem)
             {
                 fg.AppendLine($"TPIC => {SpanExt.ToHexString(TPICItem)}");
             }

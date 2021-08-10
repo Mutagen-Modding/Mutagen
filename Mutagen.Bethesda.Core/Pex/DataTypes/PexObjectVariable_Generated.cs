@@ -833,12 +833,12 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObjectVariable.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.TypeName ?? true)
-                && item.TypeName.TryGet(out var TypeNameItem))
+                && item.TypeName is {} TypeNameItem)
             {
                 fg.AppendItem(TypeNameItem, "TypeName");
             }
@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 fg.AppendItem(item.RawUserFlags, "RawUserFlags");
             }
             if ((printMask?.VariableData?.Overall ?? true)
-                && item.VariableData.TryGet(out var VariableDataItem))
+                && item.VariableData is {} VariableDataItem)
             {
                 VariableDataItem?.ToString(fg, "VariableData");
             }

@@ -1117,27 +1117,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.ENAM ?? true)
-                && item.ENAM.TryGet(out var ENAMItem))
+                && item.ENAM is {} ENAMItem)
             {
                 fg.AppendLine($"ENAM => {SpanExt.ToHexString(ENAMItem)}");
             }
             if ((printMask?.Hdr?.Overall ?? true)
-                && item.Hdr.TryGet(out var HdrItem))
+                && item.Hdr is {} HdrItem)
             {
                 HdrItem?.ToString(fg, "Hdr");
             }
             if ((printMask?.Cinematic?.Overall ?? true)
-                && item.Cinematic.TryGet(out var CinematicItem))
+                && item.Cinematic is {} CinematicItem)
             {
                 CinematicItem?.ToString(fg, "Cinematic");
             }
             if ((printMask?.Tint?.Overall ?? true)
-                && item.Tint.TryGet(out var TintItem))
+                && item.Tint is {} TintItem)
             {
                 TintItem?.ToString(fg, "Tint");
             }
             if ((printMask?.DepthOfField?.Overall ?? true)
-                && item.DepthOfField.TryGet(out var DepthOfFieldItem))
+                && item.DepthOfField is {} DepthOfFieldItem)
             {
                 DepthOfFieldItem?.ToString(fg, "DepthOfField");
             }
@@ -1652,28 +1652,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ENAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
-            if (item.Hdr.TryGet(out var HdrItem))
+            if (item.Hdr is {} HdrItem)
             {
                 ((ImageSpaceHdrBinaryWriteTranslation)((IBinaryItem)HdrItem).BinaryWriteTranslator).Write(
                     item: HdrItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Cinematic.TryGet(out var CinematicItem))
+            if (item.Cinematic is {} CinematicItem)
             {
                 ((ImageSpaceCinematicBinaryWriteTranslation)((IBinaryItem)CinematicItem).BinaryWriteTranslator).Write(
                     item: CinematicItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Tint.TryGet(out var TintItem))
+            if (item.Tint is {} TintItem)
             {
                 ((ImageSpaceTintBinaryWriteTranslation)((IBinaryItem)TintItem).BinaryWriteTranslator).Write(
                     item: TintItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.DepthOfField.TryGet(out var DepthOfFieldItem))
+            if (item.DepthOfField is {} DepthOfFieldItem)
             {
                 ((ImageSpaceDepthOfFieldBinaryWriteTranslation)((IBinaryItem)DepthOfFieldItem).BinaryWriteTranslator).Write(
                     item: DepthOfFieldItem,

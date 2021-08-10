@@ -1329,52 +1329,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Diffuse ?? true)
-                && item.Diffuse.TryGet(out var DiffuseItem))
+                && item.Diffuse is {} DiffuseItem)
             {
                 fg.AppendItem(DiffuseItem, "Diffuse");
             }
             if ((printMask?.NormalOrGloss ?? true)
-                && item.NormalOrGloss.TryGet(out var NormalOrGlossItem))
+                && item.NormalOrGloss is {} NormalOrGlossItem)
             {
                 fg.AppendItem(NormalOrGlossItem, "NormalOrGloss");
             }
             if ((printMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
-                && item.EnvironmentMaskOrSubsurfaceTint.TryGet(out var EnvironmentMaskOrSubsurfaceTintItem))
+                && item.EnvironmentMaskOrSubsurfaceTint is {} EnvironmentMaskOrSubsurfaceTintItem)
             {
                 fg.AppendItem(EnvironmentMaskOrSubsurfaceTintItem, "EnvironmentMaskOrSubsurfaceTint");
             }
             if ((printMask?.GlowOrDetailMap ?? true)
-                && item.GlowOrDetailMap.TryGet(out var GlowOrDetailMapItem))
+                && item.GlowOrDetailMap is {} GlowOrDetailMapItem)
             {
                 fg.AppendItem(GlowOrDetailMapItem, "GlowOrDetailMap");
             }
             if ((printMask?.Height ?? true)
-                && item.Height.TryGet(out var HeightItem))
+                && item.Height is {} HeightItem)
             {
                 fg.AppendItem(HeightItem, "Height");
             }
             if ((printMask?.Environment ?? true)
-                && item.Environment.TryGet(out var EnvironmentItem))
+                && item.Environment is {} EnvironmentItem)
             {
                 fg.AppendItem(EnvironmentItem, "Environment");
             }
             if ((printMask?.Multilayer ?? true)
-                && item.Multilayer.TryGet(out var MultilayerItem))
+                && item.Multilayer is {} MultilayerItem)
             {
                 fg.AppendItem(MultilayerItem, "Multilayer");
             }
             if ((printMask?.BacklightMaskOrSpecular ?? true)
-                && item.BacklightMaskOrSpecular.TryGet(out var BacklightMaskOrSpecularItem))
+                && item.BacklightMaskOrSpecular is {} BacklightMaskOrSpecularItem)
             {
                 fg.AppendItem(BacklightMaskOrSpecularItem, "BacklightMaskOrSpecular");
             }
             if ((printMask?.Decal?.Overall ?? true)
-                && item.Decal.TryGet(out var DecalItem))
+                && item.Decal is {} DecalItem)
             {
                 DecalItem?.ToString(fg, "Decal");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1936,7 +1936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.BacklightMaskOrSpecular,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TX07),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Decal.TryGet(out var DecalItem))
+            if (item.Decal is {} DecalItem)
             {
                 ((DecalBinaryWriteTranslation)((IBinaryItem)DecalItem).BinaryWriteTranslator).Write(
                     item: DecalItem,

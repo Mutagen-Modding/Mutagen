@@ -1188,37 +1188,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.FNAM ?? true)
-                && item.FNAM.TryGet(out var FNAMItem))
+                && item.FNAM is {} FNAMItem)
             {
                 fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
             if ((printMask?.Type ?? true)
-                && item.Type.TryGet(out var TypeItem))
+                && item.Type is {} TypeItem)
             {
                 fg.AppendItem(TypeItem, "Type");
             }
             if ((printMask?.CNAM ?? true)
-                && item.CNAM.TryGet(out var CNAMItem))
+                && item.CNAM is {} CNAMItem)
             {
                 fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
             if ((printMask?.SNAM ?? true)
-                && item.SNAM.TryGet(out var SNAMItem))
+                && item.SNAM is {} SNAMItem)
             {
                 fg.AppendLine($"SNAM => {SpanExt.ToHexString(SNAMItem)}");
             }
             if ((printMask?.OutputChannels?.Overall ?? true)
-                && item.OutputChannels.TryGet(out var OutputChannelsItem))
+                && item.OutputChannels is {} OutputChannelsItem)
             {
                 OutputChannelsItem?.ToString(fg, "OutputChannels");
             }
             if ((printMask?.Attenuation?.Overall ?? true)
-                && item.Attenuation.TryGet(out var AttenuationItem))
+                && item.Attenuation is {} AttenuationItem)
             {
                 AttenuationItem?.ToString(fg, "Attenuation");
             }
@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((SoundOutputDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
@@ -1765,14 +1765,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.SNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            if (item.OutputChannels.TryGet(out var OutputChannelsItem))
+            if (item.OutputChannels is {} OutputChannelsItem)
             {
                 ((SoundOutputChannelsBinaryWriteTranslation)((IBinaryItem)OutputChannelsItem).BinaryWriteTranslator).Write(
                     item: OutputChannelsItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Attenuation.TryGet(out var AttenuationItem))
+            if (item.Attenuation is {} AttenuationItem)
             {
                 ((SoundOutputAttenuationBinaryWriteTranslation)((IBinaryItem)AttenuationItem).BinaryWriteTranslator).Write(
                     item: AttenuationItem,

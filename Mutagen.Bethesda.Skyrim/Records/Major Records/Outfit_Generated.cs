@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Items?.Overall ?? true)
-                && item.Items.TryGet(out var ItemsItem))
+                && item.Items is {} ItemsItem)
             {
                 fg.AppendLine("Items =>");
                 fg.AppendLine("[");
@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Items.TryGet(out var ItemsItem))
+            if (obj.Items is {} ItemsItem)
             {
                 foreach (var item in ItemsItem)
                 {

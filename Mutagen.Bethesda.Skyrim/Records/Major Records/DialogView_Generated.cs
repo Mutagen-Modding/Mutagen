@@ -1277,12 +1277,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.ENAM ?? true)
-                && item.ENAM.TryGet(out var ENAMItem))
+                && item.ENAM is {} ENAMItem)
             {
                 fg.AppendLine($"ENAM => {SpanExt.ToHexString(ENAMItem)}");
             }
             if ((printMask?.DNAM ?? true)
-                && item.DNAM.TryGet(out var DNAMItem))
+                && item.DNAM is {} DNAMItem)
             {
                 fg.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
             }

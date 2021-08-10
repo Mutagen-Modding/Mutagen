@@ -1466,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1479,47 +1479,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Enchantment.FormKeyNullable, "Enchantment");
             }
             if ((printMask?.EnchantmentPoints ?? true)
-                && item.EnchantmentPoints.TryGet(out var EnchantmentPointsItem))
+                && item.EnchantmentPoints is {} EnchantmentPointsItem)
             {
                 fg.AppendItem(EnchantmentPointsItem, "EnchantmentPoints");
             }
             if ((printMask?.ClothingFlags?.Overall ?? true)
-                && item.ClothingFlags.TryGet(out var ClothingFlagsItem))
+                && item.ClothingFlags is {} ClothingFlagsItem)
             {
                 ClothingFlagsItem?.ToString(fg, "ClothingFlags");
             }
             if ((printMask?.MaleBipedModel?.Overall ?? true)
-                && item.MaleBipedModel.TryGet(out var MaleBipedModelItem))
+                && item.MaleBipedModel is {} MaleBipedModelItem)
             {
                 MaleBipedModelItem?.ToString(fg, "MaleBipedModel");
             }
             if ((printMask?.MaleWorldModel?.Overall ?? true)
-                && item.MaleWorldModel.TryGet(out var MaleWorldModelItem))
+                && item.MaleWorldModel is {} MaleWorldModelItem)
             {
                 MaleWorldModelItem?.ToString(fg, "MaleWorldModel");
             }
             if ((printMask?.MaleIcon ?? true)
-                && item.MaleIcon.TryGet(out var MaleIconItem))
+                && item.MaleIcon is {} MaleIconItem)
             {
                 fg.AppendItem(MaleIconItem, "MaleIcon");
             }
             if ((printMask?.FemaleBipedModel?.Overall ?? true)
-                && item.FemaleBipedModel.TryGet(out var FemaleBipedModelItem))
+                && item.FemaleBipedModel is {} FemaleBipedModelItem)
             {
                 FemaleBipedModelItem?.ToString(fg, "FemaleBipedModel");
             }
             if ((printMask?.FemaleWorldModel?.Overall ?? true)
-                && item.FemaleWorldModel.TryGet(out var FemaleWorldModelItem))
+                && item.FemaleWorldModel is {} FemaleWorldModelItem)
             {
                 FemaleWorldModelItem?.ToString(fg, "FemaleWorldModel");
             }
             if ((printMask?.FemaleIcon ?? true)
-                && item.FemaleIcon.TryGet(out var FemaleIconItem))
+                && item.FemaleIcon is {} FemaleIconItem)
             {
                 fg.AppendItem(FemaleIconItem, "FemaleIcon");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -2176,21 +2176,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.EnchantmentPoints,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
-            if (item.ClothingFlags.TryGet(out var ClothingFlagsItem))
+            if (item.ClothingFlags is {} ClothingFlagsItem)
             {
                 ((ClothingFlagsBinaryWriteTranslation)((IBinaryItem)ClothingFlagsItem).BinaryWriteTranslator).Write(
                     item: ClothingFlagsItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.MaleBipedModel.TryGet(out var MaleBipedModelItem))
+            if (item.MaleBipedModel is {} MaleBipedModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)MaleBipedModelItem).BinaryWriteTranslator).Write(
                     item: MaleBipedModelItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.MaleWorldModel.TryGet(out var MaleWorldModelItem))
+            if (item.MaleWorldModel is {} MaleWorldModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)MaleWorldModelItem).BinaryWriteTranslator).Write(
                     item: MaleWorldModelItem,
@@ -2202,14 +2202,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.MaleIcon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.FemaleBipedModel.TryGet(out var FemaleBipedModelItem))
+            if (item.FemaleBipedModel is {} FemaleBipedModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)FemaleBipedModelItem).BinaryWriteTranslator).Write(
                     item: FemaleBipedModelItem,
                     writer: writer,
                     recordTypeConverter: Armor_Registration.FemaleBipedModelConverter);
             }
-            if (item.FemaleWorldModel.TryGet(out var FemaleWorldModelItem))
+            if (item.FemaleWorldModel is {} FemaleWorldModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)FemaleWorldModelItem).BinaryWriteTranslator).Write(
                     item: FemaleWorldModelItem,
@@ -2221,7 +2221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.FemaleIcon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICO2),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((ArmorDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

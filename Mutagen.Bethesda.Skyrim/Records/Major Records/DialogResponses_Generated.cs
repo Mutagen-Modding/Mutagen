@@ -1871,17 +1871,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
             if ((printMask?.DATA ?? true)
-                && item.DATA.TryGet(out var DATAItem))
+                && item.DATA is {} DATAItem)
             {
                 fg.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
             }
             if ((printMask?.Flags?.Overall ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 FlagsItem?.ToString(fg, "Flags");
             }
@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.PreviousDialog.FormKeyNullable, "PreviousDialog");
             }
             if ((printMask?.FavorLevel ?? true)
-                && item.FavorLevel.TryGet(out var FavorLevelItem))
+                && item.FavorLevel is {} FavorLevelItem)
             {
                 fg.AppendItem(FavorLevelItem, "FavorLevel");
             }
@@ -1975,7 +1975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Prompt ?? true)
-                && item.Prompt.TryGet(out var PromptItem))
+                && item.Prompt is {} PromptItem)
             {
                 fg.AppendItem(PromptItem, "Prompt");
             }
@@ -2659,7 +2659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((DialogResponsesAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
@@ -2670,7 +2670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.DATA,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
-            if (item.Flags.TryGet(out var FlagsItem))
+            if (item.Flags is {} FlagsItem)
             {
                 ((DialogResponseFlagsBinaryWriteTranslation)((IBinaryItem)FlagsItem).BinaryWriteTranslator).Write(
                     item: FlagsItem,

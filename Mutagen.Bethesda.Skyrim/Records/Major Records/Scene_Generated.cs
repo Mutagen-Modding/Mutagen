@@ -1691,12 +1691,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1755,12 +1755,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unused?.Overall ?? true)
-                && item.Unused.TryGet(out var UnusedItem))
+                && item.Unused is {} UnusedItem)
             {
                 UnusedItem?.ToString(fg, "Unused");
             }
             if ((printMask?.Unused2?.Overall ?? true)
-                && item.Unused2.TryGet(out var Unused2Item))
+                && item.Unused2 is {} Unused2Item)
             {
                 Unused2Item?.ToString(fg, "Unused2");
             }
@@ -1769,12 +1769,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
             if ((printMask?.LastActionIndex ?? true)
-                && item.LastActionIndex.TryGet(out var LastActionIndexItem))
+                && item.LastActionIndex is {} LastActionIndexItem)
             {
                 fg.AppendItem(LastActionIndexItem, "LastActionIndex");
             }
             if ((printMask?.VNAM ?? true)
-                && item.VNAM.TryGet(out var VNAMItem))
+                && item.VNAM is {} VNAMItem)
             {
                 fg.AppendLine($"VNAM => {SpanExt.ToHexString(VNAMItem)}");
             }
@@ -2439,7 +2439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((SceneAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
@@ -2484,14 +2484,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.Unused.TryGet(out var UnusedItem))
+            if (item.Unused is {} UnusedItem)
             {
                 ((ScenePhaseUnusedDataBinaryWriteTranslation)((IBinaryItem)UnusedItem).BinaryWriteTranslator).Write(
                     item: UnusedItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Unused2.TryGet(out var Unused2Item))
+            if (item.Unused2 is {} Unused2Item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
                 ((ScenePhaseUnusedDataBinaryWriteTranslation)((IBinaryItem)Unused2Item).BinaryWriteTranslator).Write(

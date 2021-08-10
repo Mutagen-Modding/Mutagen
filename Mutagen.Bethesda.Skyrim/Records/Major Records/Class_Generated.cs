@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Description, "Description");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
@@ -1570,7 +1570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Unknown, "Unknown");
             }
             if ((printMask?.Teaches ?? true)
-                && item.Teaches.TryGet(out var TeachesItem))
+                && item.Teaches is {} TeachesItem)
             {
                 fg.AppendItem(TeachesItem, "Teaches");
             }

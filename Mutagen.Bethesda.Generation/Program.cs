@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "PropertyNames.TryGet(out var PropertyNamesItem))";
+            string testString = "if (!rhs.Name.TryGet(out var rhsNameitem))";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

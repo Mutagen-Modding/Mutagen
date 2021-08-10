@@ -1687,22 +1687,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item.Stats?.ToString(fg, "Stats");
             }
             if ((printMask?.TypeOffsets ?? true)
-                && item.TypeOffsets.TryGet(out var TypeOffsetsItem))
+                && item.TypeOffsets is {} TypeOffsetsItem)
             {
                 fg.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
             }
             if ((printMask?.Deleted ?? true)
-                && item.Deleted.TryGet(out var DeletedItem))
+                && item.Deleted is {} DeletedItem)
             {
                 fg.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
             }
             if ((printMask?.Author ?? true)
-                && item.Author.TryGet(out var AuthorItem))
+                && item.Author is {} AuthorItem)
             {
                 fg.AppendItem(AuthorItem, "Author");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
@@ -1725,7 +1725,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.OverriddenForms?.Overall ?? true)
-                && item.OverriddenForms.TryGet(out var OverriddenFormsItem))
+                && item.OverriddenForms is {} OverriddenFormsItem)
             {
                 fg.AppendLine("OverriddenForms =>");
                 fg.AppendLine("[");
@@ -1744,7 +1744,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Screenshot ?? true)
-                && item.Screenshot.TryGet(out var ScreenshotItem))
+                && item.Screenshot is {} ScreenshotItem)
             {
                 fg.AppendLine($"Screenshot => {SpanExt.ToHexString(ScreenshotItem)}");
             }
@@ -1767,12 +1767,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.INTV ?? true)
-                && item.INTV.TryGet(out var INTVItem))
+                && item.INTV is {} INTVItem)
             {
                 fg.AppendLine($"INTV => {SpanExt.ToHexString(INTVItem)}");
             }
             if ((printMask?.INCC ?? true)
-                && item.INCC.TryGet(out var INCCItem))
+                && item.INCC is {} INCCItem)
             {
                 fg.AppendItem(INCCItem, "INCC");
             }
@@ -1910,7 +1910,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFallout4ModHeaderGetter obj)
         {
-            if (obj.OverriddenForms.TryGet(out var OverriddenFormsItem))
+            if (obj.OverriddenForms is {} OverriddenFormsItem)
             {
                 foreach (var item in OverriddenFormsItem)
                 {

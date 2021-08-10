@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.CraftingSound.FormKeyNullable, "CraftingSound");
             }
             if ((printMask?.AutoCalcValue ?? true)
-                && item.AutoCalcValue.TryGet(out var AutoCalcValueItem))
+                && item.AutoCalcValue is {} AutoCalcValueItem)
             {
                 fg.AppendItem(AutoCalcValueItem, "AutoCalcValue");
             }

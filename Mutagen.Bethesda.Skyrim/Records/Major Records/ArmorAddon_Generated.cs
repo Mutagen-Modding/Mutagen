@@ -1683,7 +1683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.BodyTemplate?.Overall ?? true)
-                && item.BodyTemplate.TryGet(out var BodyTemplateItem))
+                && item.BodyTemplate is {} BodyTemplateItem)
             {
                 BodyTemplateItem?.ToString(fg, "BodyTemplate");
             }
@@ -1716,22 +1716,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.WeaponAdjust, "WeaponAdjust");
             }
             if ((printMask?.WorldModel?.Overall ?? true)
-                && item.WorldModel.TryGet(out var WorldModelItem))
+                && item.WorldModel is {} WorldModelItem)
             {
                 WorldModelItem?.ToString(fg, "WorldModel");
             }
             if ((printMask?.FirstPersonModel?.Overall ?? true)
-                && item.FirstPersonModel.TryGet(out var FirstPersonModelItem))
+                && item.FirstPersonModel is {} FirstPersonModelItem)
             {
                 FirstPersonModelItem?.ToString(fg, "FirstPersonModel");
             }
             if ((printMask?.SkinTexture?.Overall ?? true)
-                && item.SkinTexture.TryGet(out var SkinTextureItem))
+                && item.SkinTexture is {} SkinTextureItem)
             {
                 SkinTextureItem?.ToString(fg, "SkinTexture");
             }
             if ((printMask?.TextureSwapList?.Overall ?? true)
-                && item.TextureSwapList.TryGet(out var TextureSwapListItem))
+                && item.TextureSwapList is {} TextureSwapListItem)
             {
                 TextureSwapListItem?.ToString(fg, "TextureSwapList");
             }
@@ -1920,19 +1920,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.DetectionSoundValue);
             hash.Add(item.Unknown2);
             hash.Add(item.WeaponAdjust);
-            if (item.WorldModel.TryGet(out var WorldModelitem))
+            if (item.WorldModel is {} WorldModelitem)
             {
                 hash.Add(HashCode.Combine(WorldModelitem.Male, WorldModelitem.Female));
             }
-            if (item.FirstPersonModel.TryGet(out var FirstPersonModelitem))
+            if (item.FirstPersonModel is {} FirstPersonModelitem)
             {
                 hash.Add(HashCode.Combine(FirstPersonModelitem.Male, FirstPersonModelitem.Female));
             }
-            if (item.SkinTexture.TryGet(out var SkinTextureitem))
+            if (item.SkinTexture is {} SkinTextureitem)
             {
                 hash.Add(HashCode.Combine(SkinTextureitem.Male, SkinTextureitem.Female));
             }
-            if (item.TextureSwapList.TryGet(out var TextureSwapListitem))
+            if (item.TextureSwapList is {} TextureSwapListitem)
             {
                 hash.Add(HashCode.Combine(TextureSwapListitem.Male, TextureSwapListitem.Female));
             }
@@ -1973,28 +1973,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Race);
             }
-            if (obj.WorldModel.TryGet(out var WorldModelItem))
+            if (obj.WorldModel is {} WorldModelItem)
             {
                 foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.FirstPersonModel.TryGet(out var FirstPersonModelItem))
+            if (obj.FirstPersonModel is {} FirstPersonModelItem)
             {
                 foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.SkinTexture.TryGet(out var SkinTextureItem))
+            if (obj.SkinTexture is {} SkinTextureItem)
             {
                 foreach (var item in SkinTextureItem.NotNull())
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.TextureSwapList.TryGet(out var TextureSwapListItem))
+            if (obj.TextureSwapList is {} TextureSwapListItem)
             {
                 foreach (var item in TextureSwapListItem.NotNull())
                 {
@@ -2139,7 +2139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.WeaponAdjust = rhs.WeaponAdjust;
             }
-            if (!rhs.WorldModel.TryGet(out var rhsWorldModelitem))
+            if (rhs.WorldModel is not {} rhsWorldModelitem)
             {
                 item.WorldModel = null;
             }
@@ -2153,7 +2153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask: errorMask,
                         default(TranslationCrystal)));
             }
-            if (!rhs.FirstPersonModel.TryGet(out var rhsFirstPersonModelitem))
+            if (rhs.FirstPersonModel is not {} rhsFirstPersonModelitem)
             {
                 item.FirstPersonModel = null;
             }
@@ -2167,7 +2167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask: errorMask,
                         default(TranslationCrystal)));
             }
-            if (!rhs.SkinTexture.TryGet(out var rhsSkinTextureitem))
+            if (rhs.SkinTexture is not {} rhsSkinTextureitem)
             {
                 item.SkinTexture = null;
             }
@@ -2177,7 +2177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     male: new FormLinkNullable<ITextureSetGetter>(rhsSkinTextureitem.Male.FormKeyNullable),
                     female: new FormLinkNullable<ITextureSetGetter>(rhsSkinTextureitem.Female.FormKeyNullable));
             }
-            if (!rhs.TextureSwapList.TryGet(out var rhsTextureSwapListitem))
+            if (rhs.TextureSwapList is not {} rhsTextureSwapListitem)
             {
                 item.TextureSwapList = null;
             }
@@ -2414,7 +2414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
                 transl: (MutagenWriter subWriter, IModelGetter? subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
+                    if (subItem is {} Item)
                     {
                         ((ModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
@@ -2429,7 +2429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
                 transl: (MutagenWriter subWriter, IModelGetter? subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
+                    if (subItem is {} Item)
                     {
                         ((ModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,

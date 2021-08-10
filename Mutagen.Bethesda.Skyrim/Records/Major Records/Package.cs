@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
                             break;
                         case PackageDataTopic topic:
                             ATopicReferenceBinaryWriteTranslation.Write(writer, topic.Topics);
-                            if (topic.TPIC.TryGet(out var tpic))
+                            if (topic.TPIC is {} tpic)
                             {
                                 using (HeaderExport.Subrecord(writer, TPIC))
                                 {

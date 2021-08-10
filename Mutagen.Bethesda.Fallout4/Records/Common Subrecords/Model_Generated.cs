@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+                && item.Unknown is {} UnknownItem)
             {
                 fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
             }

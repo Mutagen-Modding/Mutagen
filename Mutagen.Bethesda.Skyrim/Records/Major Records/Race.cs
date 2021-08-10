@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static partial void WriteBinaryBodyTemplateCustom(MutagenWriter writer, IRaceGetter item)
             {
-                if (item.BodyTemplate.TryGet(out var templ))
+                if (item.BodyTemplate is {} templ)
                 {
                     BodyTemplateBinaryWriteTranslation.Write(writer, templ);
                 }

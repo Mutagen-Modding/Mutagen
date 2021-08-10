@@ -979,17 +979,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.ONAM ?? true)
-                && item.ONAM.TryGet(out var ONAMItem))
+                && item.ONAM is {} ONAMItem)
             {
                 fg.AppendLine($"ONAM => {SpanExt.ToHexString(ONAMItem)}");
             }
             if ((printMask?.PNAM ?? true)
-                && item.PNAM.TryGet(out var PNAMItem))
+                && item.PNAM is {} PNAMItem)
             {
                 fg.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
             }
             if ((printMask?.NNAM ?? true)
-                && item.NNAM.TryGet(out var NNAMItem))
+                && item.NNAM is {} NNAMItem)
             {
                 fg.AppendLine($"NNAM => {SpanExt.ToHexString(NNAMItem)}");
             }

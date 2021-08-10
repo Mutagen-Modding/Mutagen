@@ -1076,17 +1076,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Color ?? true)
-                && item.Color.TryGet(out var ColorItem))
+                && item.Color is {} ColorItem)
             {
                 fg.AppendItem(ColorItem, "Color");
             }
             if ((printMask?.Notes ?? true)
-                && item.Notes.TryGet(out var NotesItem))
+                && item.Notes is {} NotesItem)
             {
                 fg.AppendItem(NotesItem, "Notes");
             }
             if ((printMask?.Type ?? true)
-                && item.Type.TryGet(out var TypeItem))
+                && item.Type is {} TypeItem)
             {
                 fg.AppendItem(TypeItem, "Type");
             }
@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.AttractionRule.FormKeyNullable, "AttractionRule");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }

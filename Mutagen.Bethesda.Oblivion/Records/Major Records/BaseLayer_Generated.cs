@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BaseLayer.Mask<bool>? printMask = null)
         {
             if ((printMask?.Header?.Overall ?? true)
-                && item.Header.TryGet(out var HeaderItem))
+                && item.Header is {} HeaderItem)
             {
                 HeaderItem?.ToString(fg, "Header");
             }
@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBaseLayerGetter obj)
         {
-            if (obj.Header.TryGet(out var HeaderItems))
+            if (obj.Header is {} HeaderItems)
             {
                 foreach (var item in HeaderItems.ContainedFormLinks)
                 {
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            if (item.Header.TryGet(out var HeaderItem))
+            if (item.Header is {} HeaderItem)
             {
                 ((LayerHeaderBinaryWriteTranslation)((IBinaryItem)HeaderItem).BinaryWriteTranslator).Write(
                     item: HeaderItem,

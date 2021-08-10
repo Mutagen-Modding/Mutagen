@@ -1072,12 +1072,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Idle.FormKey, "Idle");
             }
             if ((printMask?.SCHR ?? true)
-                && item.SCHR.TryGet(out var SCHRItem))
+                && item.SCHR is {} SCHRItem)
             {
                 fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
             if ((printMask?.SCTX ?? true)
-                && item.SCTX.TryGet(out var SCTXItem))
+                && item.SCTX is {} SCTXItem)
             {
                 fg.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
             }

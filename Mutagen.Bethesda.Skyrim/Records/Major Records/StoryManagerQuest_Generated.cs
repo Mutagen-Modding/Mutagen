@@ -910,12 +910,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
             if ((printMask?.FNAM ?? true)
-                && item.FNAM.TryGet(out var FNAMItem))
+                && item.FNAM is {} FNAMItem)
             {
                 fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
             if ((printMask?.HoursUntilReset ?? true)
-                && item.HoursUntilReset.TryGet(out var HoursUntilResetItem))
+                && item.HoursUntilReset is {} HoursUntilResetItem)
             {
                 fg.AppendItem(HoursUntilResetItem, "HoursUntilReset");
             }

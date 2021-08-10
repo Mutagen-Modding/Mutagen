@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.EffectShader.FormKey, "EffectShader");
             }
             if ((printMask?.SubData?.Overall ?? true)
-                && item.SubData.TryGet(out var SubDataItem))
+                && item.SubData is {} SubDataItem)
             {
                 SubDataItem?.ToString(fg, "SubData");
             }
@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield return FormLinkInformation.Factory(obj.Light);
             yield return FormLinkInformation.Factory(obj.EffectShader);
             if (obj.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) yield break;
-            if (obj.SubData.TryGet(out var SubDataItems))
+            if (obj.SubData is {} SubDataItems)
             {
                 foreach (var item in SubDataItems.ContainedFormLinks)
                 {
@@ -1564,7 +1564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.EffectShader);
             if (!item.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0))
             {
-                if (item.SubData.TryGet(out var SubDataItem))
+                if (item.SubData is {} SubDataItem)
                 {
                     ((MagicEffectSubDataBinaryWriteTranslation)((IBinaryItem)SubDataItem).BinaryWriteTranslator).Write(
                         item: SubDataItem,

@@ -1145,22 +1145,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Texture ?? true)
-                && item.Texture.TryGet(out var TextureItem))
+                && item.Texture is {} TextureItem)
             {
                 fg.AppendItem(TextureItem, "Texture");
             }
             if ((printMask?.Opacity ?? true)
-                && item.Opacity.TryGet(out var OpacityItem))
+                && item.Opacity is {} OpacityItem)
             {
                 fg.AppendItem(OpacityItem, "Opacity");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.MaterialID ?? true)
-                && item.MaterialID.TryGet(out var MaterialIDItem))
+                && item.MaterialID is {} MaterialIDItem)
             {
                 fg.AppendItem(MaterialIDItem, "MaterialID");
             }
@@ -1169,12 +1169,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.RelatedWaters?.Overall ?? true)
-                && item.RelatedWaters.TryGet(out var RelatedWatersItem))
+                && item.RelatedWaters is {} RelatedWatersItem)
             {
                 RelatedWatersItem?.ToString(fg, "RelatedWaters");
             }
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Sound);
             }
-            if (obj.RelatedWaters.TryGet(out var RelatedWatersItems))
+            if (obj.RelatedWaters is {} RelatedWatersItems)
             {
                 foreach (var item in RelatedWatersItems.ContainedFormLinks)
                 {
@@ -1682,7 +1682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WaterBinaryWriteTranslation.WriteBinaryData(
                 writer: writer,
                 item: item);
-            if (item.RelatedWaters.TryGet(out var RelatedWatersItem))
+            if (item.RelatedWaters is {} RelatedWatersItem)
             {
                 ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)RelatedWatersItem).BinaryWriteTranslator).Write(
                     item: RelatedWatersItem,

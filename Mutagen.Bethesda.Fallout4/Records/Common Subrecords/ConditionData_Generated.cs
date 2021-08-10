@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.ParameterOneNumber, "ParameterOneNumber");
             }
             if ((printMask?.ParameterOneString ?? true)
-                && item.ParameterOneString.TryGet(out var ParameterOneStringItem))
+                && item.ParameterOneString is {} ParameterOneStringItem)
             {
                 fg.AppendItem(ParameterOneStringItem, "ParameterOneString");
             }
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.ParameterTwoNumber, "ParameterTwoNumber");
             }
             if ((printMask?.ParameterTwoString ?? true)
-                && item.ParameterTwoString.TryGet(out var ParameterTwoStringItem))
+                && item.ParameterTwoString is {} ParameterTwoStringItem)
             {
                 fg.AppendItem(ParameterTwoStringItem, "ParameterTwoString");
             }

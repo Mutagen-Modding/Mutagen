@@ -1948,7 +1948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Unknown, "Unknown");
             }
             if ((printMask?.DirectionalAmbientColors?.Overall ?? true)
-                && item.DirectionalAmbientColors.TryGet(out var DirectionalAmbientColorsItem))
+                && item.DirectionalAmbientColors is {} DirectionalAmbientColorsItem)
             {
                 DirectionalAmbientColorsItem?.ToString(fg, "DirectionalAmbientColors");
             }
@@ -2627,7 +2627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                 }
             }
-            if (item.DirectionalAmbientColors.TryGet(out var DirectionalAmbientColorsItem))
+            if (item.DirectionalAmbientColors is {} DirectionalAmbientColorsItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.DALC))
                 {

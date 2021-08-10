@@ -1117,12 +1117,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Ingredient.FormKeyNullable, "Ingredient");
             }
             if ((printMask?.SeasonalIngredientProduction?.Overall ?? true)
-                && item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionItem))
+                && item.SeasonalIngredientProduction is {} SeasonalIngredientProductionItem)
             {
                 SeasonalIngredientProductionItem?.ToString(fg, "SeasonalIngredientProduction");
             }
@@ -1592,7 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -1607,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Ingredient,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PFIG));
-            if (item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionItem))
+            if (item.SeasonalIngredientProduction is {} SeasonalIngredientProductionItem)
             {
                 ((SeasonalIngredientProductionBinaryWriteTranslation)((IBinaryItem)SeasonalIngredientProductionItem).BinaryWriteTranslator).Write(
                     item: SeasonalIngredientProductionItem,

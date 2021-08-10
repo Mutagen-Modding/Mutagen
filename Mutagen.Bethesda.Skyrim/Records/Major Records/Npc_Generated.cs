@@ -3722,7 +3722,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
@@ -3769,7 +3769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Race.FormKey, "Race");
             }
             if ((printMask?.ActorEffect?.Overall ?? true)
-                && item.ActorEffect.TryGet(out var ActorEffectItem))
+                && item.ActorEffect is {} ActorEffectItem)
             {
                 fg.AppendLine("ActorEffect =>");
                 fg.AppendLine("[");
@@ -3788,7 +3788,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Destructible?.Overall ?? true)
-                && item.Destructible.TryGet(out var DestructibleItem))
+                && item.Destructible is {} DestructibleItem)
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
@@ -3839,7 +3839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.CombatOverridePackageList.FormKeyNullable, "CombatOverridePackageList");
             }
             if ((printMask?.Perks?.Overall ?? true)
-                && item.Perks.TryGet(out var PerksItem))
+                && item.Perks is {} PerksItem)
             {
                 fg.AppendLine("Perks =>");
                 fg.AppendLine("[");
@@ -3858,7 +3858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Items?.Overall ?? true)
-                && item.Items.TryGet(out var ItemsItem))
+                && item.Items is {} ItemsItem)
             {
                 fg.AppendLine("Items =>");
                 fg.AppendLine("[");
@@ -3899,7 +3899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Keywords?.Overall ?? true)
-                && item.Keywords.TryGet(out var KeywordsItem))
+                && item.Keywords is {} KeywordsItem)
             {
                 fg.AppendLine("Keywords =>");
                 fg.AppendLine("[");
@@ -3922,17 +3922,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Class.FormKey, "Class");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.ShortName ?? true)
-                && item.ShortName.TryGet(out var ShortNameItem))
+                && item.ShortName is {} ShortNameItem)
             {
                 fg.AppendItem(ShortNameItem, "ShortName");
             }
             if ((printMask?.PlayerSkills?.Overall ?? true)
-                && item.PlayerSkills.TryGet(out var PlayerSkillsItem))
+                && item.PlayerSkills is {} PlayerSkillsItem)
             {
                 PlayerSkillsItem?.ToString(fg, "PlayerSkills");
             }
@@ -3983,7 +3983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.SoundLevel, "SoundLevel");
             }
             if ((printMask?.Sound?.Overall ?? true)
-                && item.Sound.TryGet(out var SoundItem))
+                && item.Sound is {} SoundItem)
             {
                 SoundItem?.ToString(fg, "Sound");
             }
@@ -4008,17 +4008,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.HeadTexture.FormKeyNullable, "HeadTexture");
             }
             if ((printMask?.TextureLighting ?? true)
-                && item.TextureLighting.TryGet(out var TextureLightingItem))
+                && item.TextureLighting is {} TextureLightingItem)
             {
                 fg.AppendItem(TextureLightingItem, "TextureLighting");
             }
             if ((printMask?.FaceMorph?.Overall ?? true)
-                && item.FaceMorph.TryGet(out var FaceMorphItem))
+                && item.FaceMorph is {} FaceMorphItem)
             {
                 FaceMorphItem?.ToString(fg, "FaceMorph");
             }
             if ((printMask?.FaceParts?.Overall ?? true)
-                && item.FaceParts.TryGet(out var FacePartsItem))
+                && item.FaceParts is {} FacePartsItem)
             {
                 FacePartsItem?.ToString(fg, "FaceParts");
             }
@@ -4457,14 +4457,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return FormLinkInformation.Factory(obj.Template);
             }
             yield return FormLinkInformation.Factory(obj.Race);
-            if (obj.ActorEffect.TryGet(out var ActorEffectItem))
+            if (obj.ActorEffect is {} ActorEffectItem)
             {
                 foreach (var item in ActorEffectItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Destructible.TryGet(out var DestructibleItems))
+            if (obj.Destructible is {} DestructibleItems)
             {
                 foreach (var item in DestructibleItems.ContainedFormLinks)
                 {
@@ -4503,14 +4503,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.CombatOverridePackageList);
             }
-            if (obj.Perks.TryGet(out var PerksItem))
+            if (obj.Perks is {} PerksItem)
             {
                 foreach (var item in PerksItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Items.TryGet(out var ItemsItem))
+            if (obj.Items is {} ItemsItem)
             {
                 foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))
@@ -4522,7 +4522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Keywords.TryGet(out var KeywordsItem))
+            if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
                 {
@@ -5362,7 +5362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
@@ -5419,7 +5419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            if (item.Destructible.TryGet(out var DestructibleItem))
+            if (item.Destructible is {} DestructibleItem)
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
                     item: DestructibleItem,
@@ -5537,7 +5537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NpcBinaryWriteTranslation.WriteBinaryDataMarker(
                 writer: writer,
                 item: item);
-            if (item.PlayerSkills.TryGet(out var PlayerSkillsItem))
+            if (item.PlayerSkills is {} PlayerSkillsItem)
             {
                 ((PlayerSkillsBinaryWriteTranslation)((IBinaryItem)PlayerSkillsItem).BinaryWriteTranslator).Write(
                     item: PlayerSkillsItem,
@@ -5583,7 +5583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.SoundLevel,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM8));
-            if (item.Sound.TryGet(out var SoundItem))
+            if (item.Sound is {} SoundItem)
             {
                 ((ANpcSoundDefinitionBinaryWriteTranslation)((IBinaryItem)SoundItem).BinaryWriteTranslator).Write(
                     item: SoundItem,
@@ -5615,14 +5615,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.TextureLighting,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM),
                 binaryType: ColorBinaryType.NoAlphaFloat);
-            if (item.FaceMorph.TryGet(out var FaceMorphItem))
+            if (item.FaceMorph is {} FaceMorphItem)
             {
                 ((NpcFaceMorphBinaryWriteTranslation)((IBinaryItem)FaceMorphItem).BinaryWriteTranslator).Write(
                     item: FaceMorphItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.FaceParts.TryGet(out var FacePartsItem))
+            if (item.FaceParts is {} FacePartsItem)
             {
                 ((NpcFacePartsBinaryWriteTranslation)((IBinaryItem)FacePartsItem).BinaryWriteTranslator).Write(
                     item: FacePartsItem,

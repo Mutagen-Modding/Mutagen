@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             QuestLogEntry.Mask<bool>? printMask = null)
         {
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Entry ?? true)
-                && item.Entry.TryGet(out var EntryItem))
+                && item.Entry is {} EntryItem)
             {
                 fg.AppendItem(EntryItem, "Entry");
             }
@@ -1196,17 +1196,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.NextQuest.FormKeyNullable, "NextQuest");
             }
             if ((printMask?.SCHR ?? true)
-                && item.SCHR.TryGet(out var SCHRItem))
+                && item.SCHR is {} SCHRItem)
             {
                 fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
             if ((printMask?.SCTX ?? true)
-                && item.SCTX.TryGet(out var SCTXItem))
+                && item.SCTX is {} SCTXItem)
             {
                 fg.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
             }
             if ((printMask?.QNAM ?? true)
-                && item.QNAM.TryGet(out var QNAMItem))
+                && item.QNAM is {} QNAMItem)
             {
                 fg.AppendLine($"QNAM => {SpanExt.ToHexString(QNAMItem)}");
             }

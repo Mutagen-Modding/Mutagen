@@ -1423,8 +1423,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache
                 WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<INpcGetter>(TestFileFormKey2, out var rec));
-                    Assert.True(rec.Name.TryGet(out var name));
-                    Assert.Equal("A Name", name.String);
+                    Assert.NotNull(rec.Name);
+                    Assert.Equal("A Name", rec.Name.String);
                 });
             }
             WrapPotentialThrow(cacheType, style, () =>

@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Description, "Description");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.DisplayTime ?? true)
-                && item.DisplayTime.TryGet(out var DisplayTimeItem))
+                && item.DisplayTime is {} DisplayTimeItem)
             {
                 fg.AppendItem(DisplayTimeItem, "DisplayTime");
             }

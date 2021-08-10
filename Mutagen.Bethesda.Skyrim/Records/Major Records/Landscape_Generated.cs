@@ -1284,22 +1284,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.DATA ?? true)
-                && item.DATA.TryGet(out var DATAItem))
+                && item.DATA is {} DATAItem)
             {
                 fg.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
             }
             if ((printMask?.VertexNormals ?? true)
-                && item.VertexNormals.TryGet(out var VertexNormalsItem))
+                && item.VertexNormals is {} VertexNormalsItem)
             {
                 fg.AppendLine($"VertexNormals => {SpanExt.ToHexString(VertexNormalsItem)}");
             }
             if ((printMask?.VertexHeightMap ?? true)
-                && item.VertexHeightMap.TryGet(out var VertexHeightMapItem))
+                && item.VertexHeightMap is {} VertexHeightMapItem)
             {
                 fg.AppendLine($"VertexHeightMap => {SpanExt.ToHexString(VertexHeightMapItem)}");
             }
             if ((printMask?.VertexColors ?? true)
-                && item.VertexColors.TryGet(out var VertexColorsItem))
+                && item.VertexColors is {} VertexColorsItem)
             {
                 fg.AppendLine($"VertexColors => {SpanExt.ToHexString(VertexColorsItem)}");
             }
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Textures?.Overall ?? true)
-                && item.Textures.TryGet(out var TexturesItem))
+                && item.Textures is {} TexturesItem)
             {
                 fg.AppendLine("Textures =>");
                 fg.AppendLine("[");
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Textures.TryGet(out var TexturesItem))
+            if (obj.Textures is {} TexturesItem)
             {
                 foreach (var item in TexturesItem)
                 {

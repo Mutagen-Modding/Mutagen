@@ -874,12 +874,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Attack.Mask<bool>? printMask = null)
         {
             if ((printMask?.AttackData?.Overall ?? true)
-                && item.AttackData.TryGet(out var AttackDataItem))
+                && item.AttackData is {} AttackDataItem)
             {
                 AttackDataItem?.ToString(fg, "AttackData");
             }
             if ((printMask?.AttackEvent ?? true)
-                && item.AttackEvent.TryGet(out var AttackEventItem))
+                && item.AttackEvent is {} AttackEventItem)
             {
                 fg.AppendItem(AttackEventItem, "AttackEvent");
             }
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAttackGetter obj)
         {
-            if (obj.AttackData.TryGet(out var AttackDataItems))
+            if (obj.AttackData is {} AttackDataItems)
             {
                 foreach (var item in AttackDataItems.ContainedFormLinks)
                 {
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            if (item.AttackData.TryGet(out var AttackDataItem))
+            if (item.AttackData is {} AttackDataItem)
             {
                 ((AttackDataBinaryWriteTranslation)((IBinaryItem)AttackDataItem).BinaryWriteTranslator).Write(
                     item: AttackDataItem,

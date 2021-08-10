@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
                 fg.AppendItem(item.VersionControl, "VersionControl");
             }
             if ((printMask?.EditorID ?? true)
-                && item.EditorID.TryGet(out var EditorIDItem))
+                && item.EditorID is {} EditorIDItem)
             {
                 fg.AppendItem(EditorIDItem, "EditorID");
             }

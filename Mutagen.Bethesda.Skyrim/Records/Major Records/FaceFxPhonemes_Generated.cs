@@ -1678,82 +1678,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ForceNames, "ForceNames");
             }
             if ((printMask?.Aah_LipBigAah?.Overall ?? true)
-                && item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahItem))
+                && item.Aah_LipBigAah is {} Aah_LipBigAahItem)
             {
                 Aah_LipBigAahItem?.ToString(fg, "Aah_LipBigAah");
             }
             if ((printMask?.BigAah_LipDST?.Overall ?? true)
-                && item.BigAah_LipDST.TryGet(out var BigAah_LipDSTItem))
+                && item.BigAah_LipDST is {} BigAah_LipDSTItem)
             {
                 BigAah_LipDSTItem?.ToString(fg, "BigAah_LipDST");
             }
             if ((printMask?.BMP_LipEee?.Overall ?? true)
-                && item.BMP_LipEee.TryGet(out var BMP_LipEeeItem))
+                && item.BMP_LipEee is {} BMP_LipEeeItem)
             {
                 BMP_LipEeeItem?.ToString(fg, "BMP_LipEee");
             }
             if ((printMask?.ChJSh_LipFV?.Overall ?? true)
-                && item.ChJSh_LipFV.TryGet(out var ChJSh_LipFVItem))
+                && item.ChJSh_LipFV is {} ChJSh_LipFVItem)
             {
                 ChJSh_LipFVItem?.ToString(fg, "ChJSh_LipFV");
             }
             if ((printMask?.DST_LipK?.Overall ?? true)
-                && item.DST_LipK.TryGet(out var DST_LipKItem))
+                && item.DST_LipK is {} DST_LipKItem)
             {
                 DST_LipKItem?.ToString(fg, "DST_LipK");
             }
             if ((printMask?.Eee_LipL?.Overall ?? true)
-                && item.Eee_LipL.TryGet(out var Eee_LipLItem))
+                && item.Eee_LipL is {} Eee_LipLItem)
             {
                 Eee_LipLItem?.ToString(fg, "Eee_LipL");
             }
             if ((printMask?.Eh_LipR?.Overall ?? true)
-                && item.Eh_LipR.TryGet(out var Eh_LipRItem))
+                && item.Eh_LipR is {} Eh_LipRItem)
             {
                 Eh_LipRItem?.ToString(fg, "Eh_LipR");
             }
             if ((printMask?.FV_LipTh?.Overall ?? true)
-                && item.FV_LipTh.TryGet(out var FV_LipThItem))
+                && item.FV_LipTh is {} FV_LipThItem)
             {
                 FV_LipThItem?.ToString(fg, "FV_LipTh");
             }
             if ((printMask?.I?.Overall ?? true)
-                && item.I.TryGet(out var IItem))
+                && item.I is {} IItem)
             {
                 IItem?.ToString(fg, "I");
             }
             if ((printMask?.K?.Overall ?? true)
-                && item.K.TryGet(out var KItem))
+                && item.K is {} KItem)
             {
                 KItem?.ToString(fg, "K");
             }
             if ((printMask?.N?.Overall ?? true)
-                && item.N.TryGet(out var NItem))
+                && item.N is {} NItem)
             {
                 NItem?.ToString(fg, "N");
             }
             if ((printMask?.Oh?.Overall ?? true)
-                && item.Oh.TryGet(out var OhItem))
+                && item.Oh is {} OhItem)
             {
                 OhItem?.ToString(fg, "Oh");
             }
             if ((printMask?.OohQ?.Overall ?? true)
-                && item.OohQ.TryGet(out var OohQItem))
+                && item.OohQ is {} OohQItem)
             {
                 OohQItem?.ToString(fg, "OohQ");
             }
             if ((printMask?.R?.Overall ?? true)
-                && item.R.TryGet(out var RItem))
+                && item.R is {} RItem)
             {
                 RItem?.ToString(fg, "R");
             }
             if ((printMask?.Th?.Overall ?? true)
-                && item.Th.TryGet(out var ThItem))
+                && item.Th is {} ThItem)
             {
                 ThItem?.ToString(fg, "Th");
             }
             if ((printMask?.W?.Overall ?? true)
-                && item.W.TryGet(out var WItem))
+                && item.W is {} WItem)
             {
                 WItem?.ToString(fg, "W");
             }

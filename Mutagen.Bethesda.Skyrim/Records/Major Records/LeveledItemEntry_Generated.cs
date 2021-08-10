@@ -892,12 +892,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LeveledItemEntry.Mask<bool>? printMask = null)
         {
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.ExtraData?.Overall ?? true)
-                && item.ExtraData.TryGet(out var ExtraDataItem))
+                && item.ExtraData is {} ExtraDataItem)
             {
                 ExtraDataItem?.ToString(fg, "ExtraData");
             }
@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILeveledItemEntryGetter obj)
         {
-            if (obj.Data.TryGet(out var DataItems))
+            if (obj.Data is {} DataItems)
             {
                 foreach (var item in DataItems.ContainedFormLinks)
                 {
@@ -1135,14 +1135,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((LeveledItemEntryDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.ExtraData.TryGet(out var ExtraDataItem))
+            if (item.ExtraData is {} ExtraDataItem)
             {
                 ((ExtraDataBinaryWriteTranslation)((IBinaryItem)ExtraDataItem).BinaryWriteTranslator).Write(
                     item: ExtraDataItem,

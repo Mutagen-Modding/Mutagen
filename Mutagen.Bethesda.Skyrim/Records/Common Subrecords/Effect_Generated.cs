@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.BaseEffect.FormKeyNullable, "BaseEffect");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.BaseEffect,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.EFID));
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((EffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

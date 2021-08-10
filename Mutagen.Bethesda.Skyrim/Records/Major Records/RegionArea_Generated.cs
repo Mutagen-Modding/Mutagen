@@ -932,12 +932,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RegionArea.Mask<bool>? printMask = null)
         {
             if ((printMask?.EdgeFallOff ?? true)
-                && item.EdgeFallOff.TryGet(out var EdgeFallOffItem))
+                && item.EdgeFallOff is {} EdgeFallOffItem)
             {
                 fg.AppendItem(EdgeFallOffItem, "EdgeFallOff");
             }
             if ((printMask?.RegionPointListData?.Overall ?? true)
-                && item.RegionPointListData.TryGet(out var RegionPointListDataItem))
+                && item.RegionPointListData is {} RegionPointListDataItem)
             {
                 fg.AppendLine("RegionPointListData =>");
                 fg.AppendLine("[");

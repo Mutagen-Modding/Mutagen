@@ -855,22 +855,22 @@ namespace Mutagen.Bethesda.Pex.Internals
                 fg.AppendItem(item.VariableType, "VariableType");
             }
             if ((printMask?.StringValue ?? true)
-                && item.StringValue.TryGet(out var StringValueItem))
+                && item.StringValue is {} StringValueItem)
             {
                 fg.AppendItem(StringValueItem, "StringValue");
             }
             if ((printMask?.IntValue ?? true)
-                && item.IntValue.TryGet(out var IntValueItem))
+                && item.IntValue is {} IntValueItem)
             {
                 fg.AppendItem(IntValueItem, "IntValue");
             }
             if ((printMask?.FloatValue ?? true)
-                && item.FloatValue.TryGet(out var FloatValueItem))
+                && item.FloatValue is {} FloatValueItem)
             {
                 fg.AppendItem(FloatValueItem, "FloatValue");
             }
             if ((printMask?.BoolValue ?? true)
-                && item.BoolValue.TryGet(out var BoolValueItem))
+                && item.BoolValue is {} BoolValueItem)
             {
                 fg.AppendItem(BoolValueItem, "BoolValue");
             }

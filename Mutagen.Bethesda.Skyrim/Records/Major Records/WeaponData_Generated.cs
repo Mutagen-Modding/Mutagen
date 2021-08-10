@@ -1805,7 +1805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
             }
             if ((printMask?.Skill ?? true)
-                && item.Skill.TryGet(out var SkillItem))
+                && item.Skill is {} SkillItem)
             {
                 fg.AppendItem(SkillItem, "Skill");
             }

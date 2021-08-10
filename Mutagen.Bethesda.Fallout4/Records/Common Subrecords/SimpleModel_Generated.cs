@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.File, "File");
             }
             if ((printMask?.ColorRemappingIndex ?? true)
-                && item.ColorRemappingIndex.TryGet(out var ColorRemappingIndexItem))
+                && item.ColorRemappingIndex is {} ColorRemappingIndexItem)
             {
                 fg.AppendItem(ColorRemappingIndexItem, "ColorRemappingIndex");
             }
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.MaterialSwap.FormKeyNullable, "MaterialSwap");
             }
             if ((printMask?.Data ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 fg.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
             }

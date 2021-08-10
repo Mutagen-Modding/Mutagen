@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScenePhase.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1275,17 +1275,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unused?.Overall ?? true)
-                && item.Unused.TryGet(out var UnusedItem))
+                && item.Unused is {} UnusedItem)
             {
                 UnusedItem?.ToString(fg, "Unused");
             }
             if ((printMask?.Unused2?.Overall ?? true)
-                && item.Unused2.TryGet(out var Unused2Item))
+                && item.Unused2 is {} Unused2Item)
             {
                 Unused2Item?.ToString(fg, "Unused2");
             }
             if ((printMask?.EditorWidth ?? true)
-                && item.EditorWidth.TryGet(out var EditorWidthItem))
+                && item.EditorWidth is {} EditorWidthItem)
             {
                 fg.AppendItem(EditorWidthItem, "EditorWidth");
             }
@@ -1613,14 +1613,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScenePhaseBinaryWriteTranslation.WriteBinaryCompletionConditions(
                 writer: writer,
                 item: item);
-            if (item.Unused.TryGet(out var UnusedItem))
+            if (item.Unused is {} UnusedItem)
             {
                 ((ScenePhaseUnusedDataBinaryWriteTranslation)((IBinaryItem)UnusedItem).BinaryWriteTranslator).Write(
                     item: UnusedItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Unused2.TryGet(out var Unused2Item))
+            if (item.Unused2 is {} Unused2Item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
                 ((ScenePhaseUnusedDataBinaryWriteTranslation)((IBinaryItem)Unused2Item).BinaryWriteTranslator).Write(

@@ -1246,27 +1246,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
             if ((printMask?.Abbreviation ?? true)
-                && item.Abbreviation.TryGet(out var AbbreviationItem))
+                && item.Abbreviation is {} AbbreviationItem)
             {
                 fg.AppendItem(AbbreviationItem, "Abbreviation");
             }
             if ((printMask?.CNAM ?? true)
-                && item.CNAM.TryGet(out var CNAMItem))
+                && item.CNAM is {} CNAMItem)
             {
                 fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
             if ((printMask?.Skill?.Overall ?? true)
-                && item.Skill.TryGet(out var SkillItem))
+                && item.Skill is {} SkillItem)
             {
                 SkillItem?.ToString(fg, "Skill");
             }
@@ -1771,7 +1771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.CNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
-            if (item.Skill.TryGet(out var SkillItem))
+            if (item.Skill is {} SkillItem)
             {
                 ((ActorValueSkillBinaryWriteTranslation)((IBinaryItem)SkillItem).BinaryWriteTranslator).Write(
                     item: SkillItem,

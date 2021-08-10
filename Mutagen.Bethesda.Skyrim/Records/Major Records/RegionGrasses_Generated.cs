@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Grasses?.Overall ?? true)
-                && item.Grasses.TryGet(out var GrassesItem))
+                && item.Grasses is {} GrassesItem)
             {
                 fg.AppendLine("Grasses =>");
                 fg.AppendLine("[");
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Grasses.TryGet(out var GrassesItem))
+            if (obj.Grasses is {} GrassesItem)
             {
                 foreach (var item in GrassesItem.SelectMany(f => f.ContainedFormLinks))
                 {

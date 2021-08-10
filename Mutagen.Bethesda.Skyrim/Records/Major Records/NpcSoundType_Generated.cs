@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NpcSoundType.Mask<bool>? printMask = null)
         {
             if ((printMask?.Type ?? true)
-                && item.Type.TryGet(out var TypeItem))
+                && item.Type is {} TypeItem)
             {
                 fg.AppendItem(TypeItem, "Type");
             }

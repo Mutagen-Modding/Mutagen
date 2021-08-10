@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.CNAM ?? true)
-                && item.CNAM.TryGet(out var CNAMItem))
+                && item.CNAM is {} CNAMItem)
             {
                 fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.OutputModel.FormKeyNullable, "OutputModel");
             }
             if ((printMask?.String ?? true)
-                && item.String.TryGet(out var StringItem))
+                && item.String is {} StringItem)
             {
                 fg.AppendItem(StringItem, "String");
             }
@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.LoopAndRumble?.Overall ?? true)
-                && item.LoopAndRumble.TryGet(out var LoopAndRumbleItem))
+                && item.LoopAndRumble is {} LoopAndRumbleItem)
             {
                 LoopAndRumbleItem?.ToString(fg, "LoopAndRumble");
             }
@@ -2284,7 +2284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.LoopAndRumble.TryGet(out var LoopAndRumbleItem))
+            if (item.LoopAndRumble is {} LoopAndRumbleItem)
             {
                 ((SoundLoopAndRumbleBinaryWriteTranslation)((IBinaryItem)LoopAndRumbleItem).BinaryWriteTranslator).Write(
                     item: LoopAndRumbleItem,

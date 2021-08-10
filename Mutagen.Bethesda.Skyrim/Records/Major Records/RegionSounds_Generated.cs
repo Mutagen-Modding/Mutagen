@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Music.FormKeyNullable, "Music");
             }
             if ((printMask?.Sounds?.Overall ?? true)
-                && item.Sounds.TryGet(out var SoundsItem))
+                && item.Sounds is {} SoundsItem)
             {
                 fg.AppendLine("Sounds =>");
                 fg.AppendLine("[");
@@ -1039,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Music);
             }
-            if (obj.Sounds.TryGet(out var SoundsItem))
+            if (obj.Sounds is {} SoundsItem)
             {
                 foreach (var item in SoundsItem.SelectMany(f => f.ContainedFormLinks))
                 {

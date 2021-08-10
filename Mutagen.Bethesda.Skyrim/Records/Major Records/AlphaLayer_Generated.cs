@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.AlphaLayerData ?? true)
-                && item.AlphaLayerData.TryGet(out var AlphaLayerDataItem))
+                && item.AlphaLayerData is {} AlphaLayerDataItem)
             {
                 fg.AppendLine($"AlphaLayerData => {SpanExt.ToHexString(AlphaLayerDataItem)}");
             }

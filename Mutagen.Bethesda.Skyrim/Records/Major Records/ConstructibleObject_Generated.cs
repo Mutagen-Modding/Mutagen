@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Items?.Overall ?? true)
-                && item.Items.TryGet(out var ItemsItem))
+                && item.Items is {} ItemsItem)
             {
                 fg.AppendLine("Items =>");
                 fg.AppendLine("[");
@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.WorkbenchKeyword.FormKeyNullable, "WorkbenchKeyword");
             }
             if ((printMask?.CreatedObjectCount ?? true)
-                && item.CreatedObjectCount.TryGet(out var CreatedObjectCountItem))
+                && item.CreatedObjectCount is {} CreatedObjectCountItem)
             {
                 fg.AppendItem(CreatedObjectCountItem, "CreatedObjectCount");
             }
@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Items.TryGet(out var ItemsItem))
+            if (obj.Items is {} ItemsItem)
             {
                 foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))

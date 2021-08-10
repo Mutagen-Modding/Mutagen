@@ -1363,12 +1363,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.MapColor ?? true)
-                && item.MapColor.TryGet(out var MapColorItem))
+                && item.MapColor is {} MapColorItem)
             {
                 fg.AppendItem(MapColorItem, "MapColor");
             }
@@ -1395,27 +1395,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Objects?.Overall ?? true)
-                && item.Objects.TryGet(out var ObjectsItem))
+                && item.Objects is {} ObjectsItem)
             {
                 ObjectsItem?.ToString(fg, "Objects");
             }
             if ((printMask?.Weather?.Overall ?? true)
-                && item.Weather.TryGet(out var WeatherItem))
+                && item.Weather is {} WeatherItem)
             {
                 WeatherItem?.ToString(fg, "Weather");
             }
             if ((printMask?.MapName?.Overall ?? true)
-                && item.MapName.TryGet(out var MapNameItem))
+                && item.MapName is {} MapNameItem)
             {
                 MapNameItem?.ToString(fg, "MapName");
             }
             if ((printMask?.Grasses?.Overall ?? true)
-                && item.Grasses.TryGet(out var GrassesItem))
+                && item.Grasses is {} GrassesItem)
             {
                 GrassesItem?.ToString(fg, "Grasses");
             }
             if ((printMask?.Sounds?.Overall ?? true)
-                && item.Sounds.TryGet(out var SoundsItem))
+                && item.Sounds is {} SoundsItem)
             {
                 SoundsItem?.ToString(fg, "Sounds");
             }
@@ -1612,28 +1612,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Worldspace);
             }
-            if (obj.Objects.TryGet(out var ObjectsItems))
+            if (obj.Objects is {} ObjectsItems)
             {
                 foreach (var item in ObjectsItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Weather.TryGet(out var WeatherItems))
+            if (obj.Weather is {} WeatherItems)
             {
                 foreach (var item in WeatherItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Grasses.TryGet(out var GrassesItems))
+            if (obj.Grasses is {} GrassesItems)
             {
                 foreach (var item in GrassesItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Sounds.TryGet(out var SoundsItems))
+            if (obj.Sounds is {} SoundsItems)
             {
                 foreach (var item in SoundsItems.ContainedFormLinks)
                 {

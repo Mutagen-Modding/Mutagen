@@ -847,12 +847,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FindMatchingRefNearAlias.Mask<bool>? printMask = null)
         {
             if ((printMask?.AliasIndex ?? true)
-                && item.AliasIndex.TryGet(out var AliasIndexItem))
+                && item.AliasIndex is {} AliasIndexItem)
             {
                 fg.AppendItem(AliasIndexItem, "AliasIndex");
             }
             if ((printMask?.Type ?? true)
-                && item.Type.TryGet(out var TypeItem))
+                && item.Type is {} TypeItem)
             {
                 fg.AppendItem(TypeItem, "Type");
             }

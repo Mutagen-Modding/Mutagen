@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Item?.ToString(fg, "Item");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ItemItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((ExtraDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

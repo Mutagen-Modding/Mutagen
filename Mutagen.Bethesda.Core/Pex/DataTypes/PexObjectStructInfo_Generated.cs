@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObjectStructInfo.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }

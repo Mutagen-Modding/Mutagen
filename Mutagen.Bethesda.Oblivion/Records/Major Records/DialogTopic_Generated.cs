@@ -1567,12 +1567,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.DialogType ?? true)
-                && item.DialogType.TryGet(out var DialogTypeItem))
+                && item.DialogType is {} DialogTypeItem)
             {
                 fg.AppendItem(DialogTypeItem, "DialogType");
             }

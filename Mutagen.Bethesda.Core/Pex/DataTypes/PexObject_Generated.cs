@@ -1388,17 +1388,17 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObject.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.ParentClassName ?? true)
-                && item.ParentClassName.TryGet(out var ParentClassNameItem))
+                && item.ParentClassName is {} ParentClassNameItem)
             {
                 fg.AppendItem(ParentClassNameItem, "ParentClassName");
             }
             if ((printMask?.DocString ?? true)
-                && item.DocString.TryGet(out var DocStringItem))
+                && item.DocString is {} DocStringItem)
             {
                 fg.AppendItem(DocStringItem, "DocString");
             }

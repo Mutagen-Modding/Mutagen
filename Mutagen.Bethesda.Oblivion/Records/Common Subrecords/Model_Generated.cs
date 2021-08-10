@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.BoundRadius, "BoundRadius");
             }
             if ((printMask?.Hashes ?? true)
-                && item.Hashes.TryGet(out var HashesItem))
+                && item.Hashes is {} HashesItem)
             {
                 fg.AppendLine($"Hashes => {SpanExt.ToHexString(HashesItem)}");
             }

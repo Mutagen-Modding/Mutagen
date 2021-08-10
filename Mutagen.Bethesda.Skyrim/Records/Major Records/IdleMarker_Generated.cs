@@ -1223,17 +1223,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.IdleTimer ?? true)
-                && item.IdleTimer.TryGet(out var IdleTimerItem))
+                && item.IdleTimer is {} IdleTimerItem)
             {
                 fg.AppendItem(IdleTimerItem, "IdleTimer");
             }
             if ((printMask?.Animations?.Overall ?? true)
-                && item.Animations.TryGet(out var AnimationsItem))
+                && item.Animations is {} AnimationsItem)
             {
                 fg.AppendLine("Animations =>");
                 fg.AppendLine("[");
@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1403,14 +1403,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Animations.TryGet(out var AnimationsItem))
+            if (obj.Animations is {} AnimationsItem)
             {
                 foreach (var item in AnimationsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -1751,7 +1751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleMarkerBinaryWriteTranslation.WriteBinaryAnimations(
                 writer: writer,
                 item: item);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

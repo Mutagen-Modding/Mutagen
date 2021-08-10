@@ -4956,7 +4956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -4965,7 +4965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Description, "Description");
             }
             if ((printMask?.ActorEffect?.Overall ?? true)
-                && item.ActorEffect.TryGet(out var ActorEffectItem))
+                && item.ActorEffect is {} ActorEffectItem)
             {
                 fg.AppendLine("ActorEffect =>");
                 fg.AppendLine("[");
@@ -4988,12 +4988,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Skin.FormKeyNullable, "Skin");
             }
             if ((printMask?.BodyTemplate?.Overall ?? true)
-                && item.BodyTemplate.TryGet(out var BodyTemplateItem))
+                && item.BodyTemplate is {} BodyTemplateItem)
             {
                 BodyTemplateItem?.ToString(fg, "BodyTemplate");
             }
             if ((printMask?.Keywords?.Overall ?? true)
-                && item.Keywords.TryGet(out var KeywordsItem))
+                && item.Keywords is {} KeywordsItem)
             {
                 fg.AppendLine("Keywords =>");
                 fg.AppendLine("[");
@@ -5162,7 +5162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.MountData?.ToString(fg, "MountData");
             }
             if ((printMask?.SkeletalModel?.Overall ?? true)
-                && item.SkeletalModel.TryGet(out var SkeletalModelItem))
+                && item.SkeletalModel is {} SkeletalModelItem)
             {
                 SkeletalModelItem?.ToString(fg, "SkeletalModel");
             }
@@ -5189,17 +5189,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Voices.ToString(fg, "Voices");
             }
             if ((printMask?.DecapitateArmors?.Overall ?? true)
-                && item.DecapitateArmors.TryGet(out var DecapitateArmorsItem))
+                && item.DecapitateArmors is {} DecapitateArmorsItem)
             {
                 DecapitateArmorsItem?.ToString(fg, "DecapitateArmors");
             }
             if ((printMask?.DefaultHairColors?.Overall ?? true)
-                && item.DefaultHairColors.TryGet(out var DefaultHairColorsItem))
+                && item.DefaultHairColors is {} DefaultHairColorsItem)
             {
                 DefaultHairColorsItem?.ToString(fg, "DefaultHairColors");
             }
             if ((printMask?.NumberOfTintsInList ?? true)
-                && item.NumberOfTintsInList.TryGet(out var NumberOfTintsInListItem))
+                && item.NumberOfTintsInList is {} NumberOfTintsInListItem)
             {
                 fg.AppendItem(NumberOfTintsInListItem, "NumberOfTintsInList");
             }
@@ -5238,7 +5238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.BodyData.ToString(fg, "BodyData");
             }
             if ((printMask?.Hairs?.Overall ?? true)
-                && item.Hairs.TryGet(out var HairsItem))
+                && item.Hairs is {} HairsItem)
             {
                 fg.AppendLine("Hairs =>");
                 fg.AppendLine("[");
@@ -5257,7 +5257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Eyes?.Overall ?? true)
-                && item.Eyes.TryGet(out var EyesItem))
+                && item.Eyes is {} EyesItem)
             {
                 fg.AppendLine("Eyes =>");
                 fg.AppendLine("[");
@@ -5304,7 +5304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.CloseLootSound.FormKeyNullable, "CloseLootSound");
             }
             if ((printMask?.BipedObjectNames?.Overall ?? true)
-                && item.BipedObjectNames.TryGet(out var BipedObjectNamesItem))
+                && item.BipedObjectNames is {} BipedObjectNamesItem)
             {
                 fg.AppendLine("BipedObjectNames =>");
                 fg.AppendLine("[");
@@ -5342,7 +5342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.EquipmentFlags ?? true)
-                && item.EquipmentFlags.TryGet(out var EquipmentFlagsItem))
+                && item.EquipmentFlags is {} EquipmentFlagsItem)
             {
                 fg.AppendItem(EquipmentFlagsItem, "EquipmentFlags");
             }
@@ -5397,7 +5397,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.BaseMovementDefaultSprint.FormKeyNullable, "BaseMovementDefaultSprint");
             }
             if ((printMask?.HeadData?.Overall ?? true)
-                && item.HeadData.TryGet(out var HeadDataItem))
+                && item.HeadData is {} HeadDataItem)
             {
                 HeadDataItem?.ToString(fg, "HeadData");
             }
@@ -5859,17 +5859,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.AngularAccelerationRate);
             hash.Add(item.AngularTolerance);
             hash.Add(item.MountData);
-            if (item.SkeletalModel.TryGet(out var SkeletalModelitem))
+            if (item.SkeletalModel is {} SkeletalModelitem)
             {
                 hash.Add(HashCode.Combine(SkeletalModelitem.Male, SkeletalModelitem.Female));
             }
             hash.Add(item.MovementTypeNames);
             hash.Add(HashCode.Combine(item.Voices.Male, item.Voices.Female));
-            if (item.DecapitateArmors.TryGet(out var DecapitateArmorsitem))
+            if (item.DecapitateArmors is {} DecapitateArmorsitem)
             {
                 hash.Add(HashCode.Combine(DecapitateArmorsitem.Male, DecapitateArmorsitem.Female));
             }
-            if (item.DefaultHairColors.TryGet(out var DefaultHairColorsitem))
+            if (item.DefaultHairColors is {} DefaultHairColorsitem)
             {
                 hash.Add(HashCode.Combine(DefaultHairColorsitem.Male, DefaultHairColorsitem.Female));
             }
@@ -5906,7 +5906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.BaseMovementDefaultFly);
             hash.Add(item.BaseMovementDefaultSneak);
             hash.Add(item.BaseMovementDefaultSprint);
-            if (item.HeadData.TryGet(out var HeadDataitem))
+            if (item.HeadData is {} HeadDataitem)
             {
                 hash.Add(HashCode.Combine(HeadDataitem.Male, HeadDataitem.Female));
             }
@@ -5942,7 +5942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.ActorEffect.TryGet(out var ActorEffectItem))
+            if (obj.ActorEffect is {} ActorEffectItem)
             {
                 foreach (var item in ActorEffectItem)
                 {
@@ -5953,14 +5953,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Skin);
             }
-            if (obj.Keywords.TryGet(out var KeywordsItem))
+            if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.SkeletalModel.TryGet(out var SkeletalModelItem))
+            if (obj.SkeletalModel is {} SkeletalModelItem)
             {
                 foreach (var item in SkeletalModelItem.NotNull().WhereCastable<ISimpleModelGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))
@@ -5972,14 +5972,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DecapitateArmors.TryGet(out var DecapitateArmorsItem))
+            if (obj.DecapitateArmors is {} DecapitateArmorsItem)
             {
                 foreach (var item in DecapitateArmorsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.DefaultHairColors.TryGet(out var DefaultHairColorsItem))
+            if (obj.DefaultHairColors is {} DefaultHairColorsItem)
             {
                 foreach (var item in DefaultHairColorsItem)
                 {
@@ -5998,14 +5998,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Hairs.TryGet(out var HairsItem))
+            if (obj.Hairs is {} HairsItem)
             {
                 foreach (var item in HairsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Eyes.TryGet(out var EyesItem))
+            if (obj.Eyes is {} EyesItem)
             {
                 foreach (var item in EyesItem)
                 {
@@ -6076,7 +6076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.BaseMovementDefaultSprint);
             }
-            if (obj.HeadData.TryGet(out var HeadDataItem))
+            if (obj.HeadData is {} HeadDataItem)
             {
                 foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.ContainedFormLinks))
                 {
@@ -6519,7 +6519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (!rhs.SkeletalModel.TryGet(out var rhsSkeletalModelitem))
+            if (rhs.SkeletalModel is not {} rhsSkeletalModelitem)
             {
                 item.SkeletalModel = null;
             }
@@ -6553,7 +6553,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Voices = new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
                 male: new FormLink<IVoiceTypeGetter>(rhs.Voices.Male.FormKey),
                 female: new FormLink<IVoiceTypeGetter>(rhs.Voices.Female.FormKey));
-            if (!rhs.DecapitateArmors.TryGet(out var rhsDecapitateArmorsitem))
+            if (rhs.DecapitateArmors is not {} rhsDecapitateArmorsitem)
             {
                 item.DecapitateArmors = null;
             }
@@ -6563,7 +6563,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     male: new FormLink<IArmorGetter>(rhsDecapitateArmorsitem.Male.FormKey),
                     female: new FormLink<IArmorGetter>(rhsDecapitateArmorsitem.Female.FormKey));
             }
-            if (!rhs.DefaultHairColors.TryGet(out var rhsDefaultHairColorsitem))
+            if (rhs.DefaultHairColors is not {} rhsDefaultHairColorsitem)
             {
                 item.DefaultHairColors = null;
             }
@@ -6806,7 +6806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.BaseMovementDefaultSprint.SetTo(rhs.BaseMovementDefaultSprint.FormKeyNullable);
             }
-            if (!rhs.HeadData.TryGet(out var rhsHeadDataitem))
+            if (rhs.HeadData is not {} rhsHeadDataitem)
             {
                 item.HeadData = null;
             }
@@ -7176,7 +7176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 markerWrap: false,
                 transl: (MutagenWriter subWriter, ISimpleModelGetter? subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
+                    if (subItem is {} Item)
                     {
                         ((SimpleModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
@@ -7261,7 +7261,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 markerWrap: false,
                 transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
+                    if (subItem is {} Item)
                     {
                         ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
@@ -7302,7 +7302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 markerWrap: false,
                 transl: (MutagenWriter subWriter, IModelGetter? subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
+                    if (subItem is {} Item)
                     {
                         ((ModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
@@ -7403,7 +7403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
                 transl: (MutagenWriter subWriter, IHeadDataGetter? subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
+                    if (subItem is {} Item)
                     {
                         ((HeadDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,

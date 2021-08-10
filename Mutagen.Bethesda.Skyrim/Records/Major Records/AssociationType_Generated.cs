@@ -991,12 +991,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.ParentTitle?.Overall ?? true)
-                && item.ParentTitle.TryGet(out var ParentTitleItem))
+                && item.ParentTitle is {} ParentTitleItem)
             {
                 ParentTitleItem?.ToString(fg, "ParentTitle");
             }
             if ((printMask?.Title?.Overall ?? true)
-                && item.Title.TryGet(out var TitleItem))
+                && item.Title is {} TitleItem)
             {
                 TitleItem?.ToString(fg, "Title");
             }
@@ -1092,11 +1092,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IAssociationTypeGetter item)
         {
             var hash = new HashCode();
-            if (item.ParentTitle.TryGet(out var ParentTitleitem))
+            if (item.ParentTitle is {} ParentTitleitem)
             {
                 hash.Add(HashCode.Combine(ParentTitleitem.Male, ParentTitleitem.Female));
             }
-            if (item.Title.TryGet(out var Titleitem))
+            if (item.Title is {} Titleitem)
             {
                 hash.Add(HashCode.Combine(Titleitem.Male, Titleitem.Female));
             }
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if (!rhs.ParentTitle.TryGet(out var rhsParentTitleitem))
+            if (rhs.ParentTitle is not {} rhsParentTitleitem)
             {
                 item.ParentTitle = null;
             }
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     male: rhsParentTitleitem.Male,
                     female: rhsParentTitleitem.Female);
             }
-            if (!rhs.Title.TryGet(out var rhsTitleitem))
+            if (rhs.Title is not {} rhsTitleitem)
             {
                 item.Title = null;
             }

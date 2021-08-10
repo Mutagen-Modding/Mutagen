@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Enabled, "Enabled");
             }
             if ((printMask?.DisabledEntryPoints?.Overall ?? true)
-                && item.DisabledEntryPoints.TryGet(out var DisabledEntryPointsItem))
+                && item.DisabledEntryPoints is {} DisabledEntryPointsItem)
             {
                 DisabledEntryPointsItem?.ToString(fg, "DisabledEntryPoints");
             }
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.MarkerKeyword.FormKeyNullable, "MarkerKeyword");
             }
             if ((printMask?.EntryPoints?.Overall ?? true)
-                && item.EntryPoints.TryGet(out var EntryPointsItem))
+                && item.EntryPoints is {} EntryPointsItem)
             {
                 EntryPointsItem?.ToString(fg, "EntryPoints");
             }
@@ -1216,7 +1216,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer)
         {
             writer.Write(item.Enabled);
-            if (item.DisabledEntryPoints.TryGet(out var DisabledEntryPointsItem))
+            if (item.DisabledEntryPoints is {} DisabledEntryPointsItem)
             {
                 ((EntryPointsBinaryWriteTranslation)((IBinaryItem)DisabledEntryPointsItem).BinaryWriteTranslator).Write(
                     item: DisabledEntryPointsItem,
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MarkerKeyword);
-            if (item.EntryPoints.TryGet(out var EntryPointsItem))
+            if (item.EntryPoints is {} EntryPointsItem)
             {
                 ((EntryPointsBinaryWriteTranslation)((IBinaryItem)EntryPointsItem).BinaryWriteTranslator).Write(
                     item: EntryPointsItem,

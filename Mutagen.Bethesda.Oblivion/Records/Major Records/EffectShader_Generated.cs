@@ -964,17 +964,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.FillTexture ?? true)
-                && item.FillTexture.TryGet(out var FillTextureItem))
+                && item.FillTexture is {} FillTextureItem)
             {
                 fg.AppendItem(FillTextureItem, "FillTexture");
             }
             if ((printMask?.ParticleShaderTexture ?? true)
-                && item.ParticleShaderTexture.TryGet(out var ParticleShaderTextureItem))
+                && item.ParticleShaderTexture is {} ParticleShaderTextureItem)
             {
                 fg.AppendItem(ParticleShaderTextureItem, "ParticleShaderTexture");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1384,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.ParticleShaderTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICO2),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((EffectShaderDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

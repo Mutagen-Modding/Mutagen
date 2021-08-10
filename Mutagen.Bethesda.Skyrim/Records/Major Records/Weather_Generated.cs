@@ -3836,27 +3836,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.DNAM ?? true)
-                && item.DNAM.TryGet(out var DNAMItem))
+                && item.DNAM is {} DNAMItem)
             {
                 fg.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
             }
             if ((printMask?.CNAM ?? true)
-                && item.CNAM.TryGet(out var CNAMItem))
+                && item.CNAM is {} CNAMItem)
             {
                 fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
             if ((printMask?.ANAM ?? true)
-                && item.ANAM.TryGet(out var ANAMItem))
+                && item.ANAM is {} ANAMItem)
             {
                 fg.AppendLine($"ANAM => {SpanExt.ToHexString(ANAMItem)}");
             }
             if ((printMask?.BNAM ?? true)
-                && item.BNAM.TryGet(out var BNAMItem))
+                && item.BNAM is {} BNAMItem)
             {
                 fg.AppendLine($"BNAM => {SpanExt.ToHexString(BNAMItem)}");
             }
             if ((printMask?.LNAM ?? true)
-                && item.LNAM.TryGet(out var LNAMItem))
+                && item.LNAM is {} LNAMItem)
             {
                 fg.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
             }
@@ -3869,7 +3869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.VisualEffect.FormKey, "VisualEffect");
             }
             if ((printMask?.ONAM ?? true)
-                && item.ONAM.TryGet(out var ONAMItem))
+                && item.ONAM is {} ONAMItem)
             {
                 fg.AppendLine($"ONAM => {SpanExt.ToHexString(ONAMItem)}");
             }
@@ -4092,32 +4092,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.ImageSpaces?.Overall ?? true)
-                && item.ImageSpaces.TryGet(out var ImageSpacesItem))
+                && item.ImageSpaces is {} ImageSpacesItem)
             {
                 ImageSpacesItem?.ToString(fg, "ImageSpaces");
             }
             if ((printMask?.VolumetricLighting?.Overall ?? true)
-                && item.VolumetricLighting.TryGet(out var VolumetricLightingItem))
+                && item.VolumetricLighting is {} VolumetricLightingItem)
             {
                 VolumetricLightingItem?.ToString(fg, "VolumetricLighting");
             }
             if ((printMask?.DirectionalAmbientLightingColors?.Overall ?? true)
-                && item.DirectionalAmbientLightingColors.TryGet(out var DirectionalAmbientLightingColorsItem))
+                && item.DirectionalAmbientLightingColors is {} DirectionalAmbientLightingColorsItem)
             {
                 DirectionalAmbientLightingColorsItem?.ToString(fg, "DirectionalAmbientLightingColors");
             }
             if ((printMask?.NAM2 ?? true)
-                && item.NAM2.TryGet(out var NAM2Item))
+                && item.NAM2 is {} NAM2Item)
             {
                 fg.AppendLine($"NAM2 => {SpanExt.ToHexString(NAM2Item)}");
             }
             if ((printMask?.NAM3 ?? true)
-                && item.NAM3.TryGet(out var NAM3Item))
+                && item.NAM3 is {} NAM3Item)
             {
                 fg.AppendLine($"NAM3 => {SpanExt.ToHexString(NAM3Item)}");
             }
             if ((printMask?.Aurora?.Overall ?? true)
-                && item.Aurora.TryGet(out var AuroraItem))
+                && item.Aurora is {} AuroraItem)
             {
                 AuroraItem?.ToString(fg, "Aurora");
             }
@@ -4690,21 +4690,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.ImageSpaces.TryGet(out var ImageSpacesItems))
+            if (obj.ImageSpaces is {} ImageSpacesItems)
             {
                 foreach (var item in ImageSpacesItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.VolumetricLighting.TryGet(out var VolumetricLightingItems))
+            if (obj.VolumetricLighting is {} VolumetricLightingItems)
             {
                 foreach (var item in VolumetricLightingItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Aurora.TryGet(out var AuroraItems))
+            if (obj.Aurora is {} AuroraItems)
             {
                 foreach (var item in AuroraItems.ContainedFormLinks)
                 {
@@ -5958,7 +5958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
                 });
-            if (item.ImageSpaces.TryGet(out var ImageSpacesItem))
+            if (item.ImageSpaces is {} ImageSpacesItem)
             {
                 ((WeatherImageSpacesBinaryWriteTranslation)((IBinaryItem)ImageSpacesItem).BinaryWriteTranslator).Write(
                     item: ImageSpacesItem,
@@ -5967,7 +5967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (writer.MetaData.FormVersion!.Value >= 43)
             {
-                if (item.VolumetricLighting.TryGet(out var VolumetricLightingItem))
+                if (item.VolumetricLighting is {} VolumetricLightingItem)
                 {
                     ((WeatherVolumetricLightingBinaryWriteTranslation)((IBinaryItem)VolumetricLightingItem).BinaryWriteTranslator).Write(
                         item: VolumetricLightingItem,
@@ -5986,7 +5986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.NAM3,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM3));
-            if (item.Aurora.TryGet(out var AuroraItem))
+            if (item.Aurora is {} AuroraItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)AuroraItem).BinaryWriteTranslator).Write(
                     item: AuroraItem,

@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObjectNamedFunction.Mask<bool>? printMask = null)
         {
             if ((printMask?.FunctionName ?? true)
-                && item.FunctionName.TryGet(out var FunctionNameItem))
+                && item.FunctionName is {} FunctionNameItem)
             {
                 fg.AppendItem(FunctionNameItem, "FunctionName");
             }

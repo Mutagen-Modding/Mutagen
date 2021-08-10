@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Points?.Overall ?? true)
-                && item.Points.TryGet(out var PointsItem))
+                && item.Points is {} PointsItem)
             {
                 fg.AppendLine("Points =>");
                 fg.AppendLine("[");

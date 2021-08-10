@@ -1424,12 +1424,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Filename ?? true)
-                && item.Filename.TryGet(out var FilenameItem))
+                && item.Filename is {} FilenameItem)
             {
                 fg.AppendItem(FilenameItem, "Filename");
             }
             if ((printMask?.AnimationEvent ?? true)
-                && item.AnimationEvent.TryGet(out var AnimationEventItem))
+                && item.AnimationEvent is {} AnimationEventItem)
             {
                 fg.AppendItem(AnimationEventItem, "AnimationEvent");
             }

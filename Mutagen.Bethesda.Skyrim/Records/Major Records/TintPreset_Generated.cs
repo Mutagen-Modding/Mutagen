@@ -904,12 +904,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Color.FormKeyNullable, "Color");
             }
             if ((printMask?.DefaultValue ?? true)
-                && item.DefaultValue.TryGet(out var DefaultValueItem))
+                && item.DefaultValue is {} DefaultValueItem)
             {
                 fg.AppendItem(DefaultValueItem, "DefaultValue");
             }
             if ((printMask?.Index ?? true)
-                && item.Index.TryGet(out var IndexItem))
+                && item.Index is {} IndexItem)
             {
                 fg.AppendItem(IndexItem, "Index");
             }

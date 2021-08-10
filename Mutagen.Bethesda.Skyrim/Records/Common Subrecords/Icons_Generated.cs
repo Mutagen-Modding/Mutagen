@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.LargeIconFilename, "LargeIconFilename");
             }
             if ((printMask?.SmallIconFilename ?? true)
-                && item.SmallIconFilename.TryGet(out var SmallIconFilenameItem))
+                && item.SmallIconFilename is {} SmallIconFilenameItem)
             {
                 fg.AppendItem(SmallIconFilenameItem, "SmallIconFilename");
             }

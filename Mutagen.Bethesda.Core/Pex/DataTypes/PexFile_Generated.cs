@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 fg.AppendItem(item.MachineName, "MachineName");
             }
             if ((printMask?.DebugInfo?.Overall ?? true)
-                && item.DebugInfo.TryGet(out var DebugInfoItem))
+                && item.DebugInfo is {} DebugInfoItem)
             {
                 DebugInfoItem?.ToString(fg, "DebugInfo");
             }

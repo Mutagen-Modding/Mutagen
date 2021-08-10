@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
             if ((printMask?.Chance ?? true)
-                && item.Chance.TryGet(out var ChanceItem))
+                && item.Chance is {} ChanceItem)
             {
                 fg.AppendItem(ChanceItem, "Chance");
             }

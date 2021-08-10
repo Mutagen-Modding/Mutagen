@@ -1069,17 +1069,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TintAssets.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
-                && item.Index.TryGet(out var IndexItem))
+                && item.Index is {} IndexItem)
             {
                 fg.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.FileName ?? true)
-                && item.FileName.TryGet(out var FileNameItem))
+                && item.FileName is {} FileNameItem)
             {
                 fg.AppendItem(FileNameItem, "FileName");
             }
             if ((printMask?.MaskType ?? true)
-                && item.MaskType.TryGet(out var MaskTypeItem))
+                && item.MaskType is {} MaskTypeItem)
             {
                 fg.AppendItem(MaskTypeItem, "MaskType");
             }

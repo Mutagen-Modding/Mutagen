@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Global.FormKeyNullable, "Global");
             }
             if ((printMask?.Entries?.Overall ?? true)
-                && item.Entries.TryGet(out var EntriesItem))
+                && item.Entries is {} EntriesItem)
             {
                 fg.AppendLine("Entries =>");
                 fg.AppendLine("[");
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Global);
             }
-            if (obj.Entries.TryGet(out var EntriesItem))
+            if (obj.Entries is {} EntriesItem)
             {
                 foreach (var item in EntriesItem.WhereCastable<ILeveledItemEntryGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))

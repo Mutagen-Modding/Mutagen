@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.WeatherTypes?.Overall ?? true)
-                && item.WeatherTypes.TryGet(out var WeatherTypesItem))
+                && item.WeatherTypes is {} WeatherTypesItem)
             {
                 fg.AppendLine("WeatherTypes =>");
                 fg.AppendLine("[");
@@ -1446,17 +1446,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.SunTexture ?? true)
-                && item.SunTexture.TryGet(out var SunTextureItem))
+                && item.SunTexture is {} SunTextureItem)
             {
                 fg.AppendItem(SunTextureItem, "SunTexture");
             }
             if ((printMask?.SunGlareTexture ?? true)
-                && item.SunGlareTexture.TryGet(out var SunGlareTextureItem))
+                && item.SunGlareTexture is {} SunGlareTextureItem)
             {
                 fg.AppendItem(SunGlareTextureItem, "SunGlareTexture");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1670,14 +1670,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.WeatherTypes.TryGet(out var WeatherTypesItem))
+            if (obj.WeatherTypes is {} WeatherTypesItem)
             {
                 foreach (var item in WeatherTypesItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.SunGlareTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

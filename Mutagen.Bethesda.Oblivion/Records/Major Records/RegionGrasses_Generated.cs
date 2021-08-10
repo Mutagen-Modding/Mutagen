@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Grasses?.Overall ?? true)
-                && item.Grasses.TryGet(out var GrassesItem))
+                && item.Grasses is {} GrassesItem)
             {
                 fg.AppendLine("Grasses =>");
                 fg.AppendLine("[");
@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Grasses.TryGet(out var GrassesItem))
+            if (obj.Grasses is {} GrassesItem)
             {
                 foreach (var item in GrassesItem)
                 {

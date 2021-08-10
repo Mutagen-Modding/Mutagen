@@ -2547,7 +2547,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
@@ -2556,17 +2556,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
             if ((printMask?.Icons?.Overall ?? true)
-                && item.Icons.TryGet(out var IconsItem))
+                && item.Icons is {} IconsItem)
             {
                 IconsItem?.ToString(fg, "Icons");
             }
@@ -2575,12 +2575,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
             }
             if ((printMask?.EnchantmentAmount ?? true)
-                && item.EnchantmentAmount.TryGet(out var EnchantmentAmountItem))
+                && item.EnchantmentAmount is {} EnchantmentAmountItem)
             {
                 fg.AppendItem(EnchantmentAmountItem, "EnchantmentAmount");
             }
             if ((printMask?.Destructible?.Overall ?? true)
-                && item.Destructible.TryGet(out var DestructibleItem))
+                && item.Destructible is {} DestructibleItem)
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
@@ -2605,7 +2605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
             }
             if ((printMask?.Keywords?.Overall ?? true)
-                && item.Keywords.TryGet(out var KeywordsItem))
+                && item.Keywords is {} KeywordsItem)
             {
                 fg.AppendLine("Keywords =>");
                 fg.AppendLine("[");
@@ -2624,17 +2624,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
             if ((printMask?.ScopeModel?.Overall ?? true)
-                && item.ScopeModel.TryGet(out var ScopeModelItem))
+                && item.ScopeModel is {} ScopeModelItem)
             {
                 ScopeModelItem?.ToString(fg, "ScopeModel");
             }
             if ((printMask?.Unused ?? true)
-                && item.Unused.TryGet(out var UnusedItem))
+                && item.Unused is {} UnusedItem)
             {
                 fg.AppendLine($"Unused => {SpanExt.ToHexString(UnusedItem)}");
             }
@@ -2675,22 +2675,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.UnequipSound.FormKeyNullable, "UnequipSound");
             }
             if ((printMask?.BasicStats?.Overall ?? true)
-                && item.BasicStats.TryGet(out var BasicStatsItem))
+                && item.BasicStats is {} BasicStatsItem)
             {
                 BasicStatsItem?.ToString(fg, "BasicStats");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.Critical?.Overall ?? true)
-                && item.Critical.TryGet(out var CriticalItem))
+                && item.Critical is {} CriticalItem)
             {
                 CriticalItem?.ToString(fg, "Critical");
             }
             if ((printMask?.DetectionSoundLevel ?? true)
-                && item.DetectionSoundLevel.TryGet(out var DetectionSoundLevelItem))
+                && item.DetectionSoundLevel is {} DetectionSoundLevelItem)
             {
                 fg.AppendItem(DetectionSoundLevelItem, "DetectionSoundLevel");
             }
@@ -3040,7 +3040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -3051,7 +3051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.ObjectEffect);
             }
-            if (obj.Destructible.TryGet(out var DestructibleItems))
+            if (obj.Destructible is {} DestructibleItems)
             {
                 foreach (var item in DestructibleItems.ContainedFormLinks)
                 {
@@ -3078,14 +3078,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.PutDownSound);
             }
-            if (obj.Keywords.TryGet(out var KeywordsItem))
+            if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ScopeModel.TryGet(out var ScopeModelItems))
+            if (obj.ScopeModel is {} ScopeModelItems)
             {
                 foreach (var item in ScopeModelItems.ContainedFormLinks)
                 {
@@ -3128,7 +3128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.UnequipSound);
             }
-            if (obj.Critical.TryGet(out var CriticalItems))
+            if (obj.Critical is {} CriticalItems)
             {
                 foreach (var item in CriticalItems.ContainedFormLinks)
                 {
@@ -3718,7 +3718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
@@ -3736,14 +3736,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Icons.TryGet(out var IconsItem))
+            if (item.Icons is {} IconsItem)
             {
                 ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
                     item: IconsItem,
@@ -3758,7 +3758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.EnchantmentAmount,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.EAMT));
-            if (item.Destructible.TryGet(out var DestructibleItem))
+            if (item.Destructible is {} DestructibleItem)
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
                     item: DestructibleItem,
@@ -3803,7 +3803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
-            if (item.ScopeModel.TryGet(out var ScopeModelItem))
+            if (item.ScopeModel is {} ScopeModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ScopeModelItem).BinaryWriteTranslator).Write(
                     item: ScopeModelItem,
@@ -3850,21 +3850,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.UnequipSound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM8));
-            if (item.BasicStats.TryGet(out var BasicStatsItem))
+            if (item.BasicStats is {} BasicStatsItem)
             {
                 ((WeaponBasicStatsBinaryWriteTranslation)((IBinaryItem)BasicStatsItem).BinaryWriteTranslator).Write(
                     item: BasicStatsItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((WeaponDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Critical.TryGet(out var CriticalItem))
+            if (item.Critical is {} CriticalItem)
             {
                 ((CriticalDataBinaryWriteTranslation)((IBinaryItem)CriticalItem).BinaryWriteTranslator).Write(
                     item: CriticalItem,

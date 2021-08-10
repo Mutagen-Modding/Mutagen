@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureSound.Mask<bool>? printMask = null)
         {
             if ((printMask?.SoundType ?? true)
-                && item.SoundType.TryGet(out var SoundTypeItem))
+                && item.SoundType is {} SoundTypeItem)
             {
                 fg.AppendItem(SoundTypeItem, "SoundType");
             }

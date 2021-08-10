@@ -1583,7 +1583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Island?.Overall ?? true)
-                && item.Island.TryGet(out var IslandItem))
+                && item.Island is {} IslandItem)
             {
                 IslandItem?.ToString(fg, "Island");
             }

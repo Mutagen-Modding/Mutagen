@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Map ?? true)
-                && item.Map.TryGet(out var MapItem))
+                && item.Map is {} MapItem)
             {
                 fg.AppendItem(MapItem, "Map");
             }

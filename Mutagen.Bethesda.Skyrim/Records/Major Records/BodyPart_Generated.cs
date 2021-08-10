@@ -2059,7 +2059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Name, "Name");
             }
             if ((printMask?.PoseMatching ?? true)
-                && item.PoseMatching.TryGet(out var PoseMatchingItem))
+                && item.PoseMatching is {} PoseMatchingItem)
             {
                 fg.AppendItem(PoseMatchingItem, "PoseMatching");
             }
@@ -2180,7 +2180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.GoreTargetBone, "GoreTargetBone");
             }
             if ((printMask?.TextureFilesHashes ?? true)
-                && item.TextureFilesHashes.TryGet(out var TextureFilesHashesItem))
+                && item.TextureFilesHashes is {} TextureFilesHashesItem)
             {
                 fg.AppendLine($"TextureFilesHashes => {SpanExt.ToHexString(TextureFilesHashesItem)}");
             }

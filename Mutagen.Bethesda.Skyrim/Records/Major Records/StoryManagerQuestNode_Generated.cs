@@ -1123,17 +1123,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.MaxConcurrentQuests ?? true)
-                && item.MaxConcurrentQuests.TryGet(out var MaxConcurrentQuestsItem))
+                && item.MaxConcurrentQuests is {} MaxConcurrentQuestsItem)
             {
                 fg.AppendItem(MaxConcurrentQuestsItem, "MaxConcurrentQuests");
             }
             if ((printMask?.MaxNumQuestsToRun ?? true)
-                && item.MaxNumQuestsToRun.TryGet(out var MaxNumQuestsToRunItem))
+                && item.MaxNumQuestsToRun is {} MaxNumQuestsToRunItem)
             {
                 fg.AppendItem(MaxNumQuestsToRunItem, "MaxNumQuestsToRun");
             }

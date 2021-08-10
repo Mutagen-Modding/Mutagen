@@ -1675,32 +1675,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.AvoidThreatChance, "AvoidThreatChance");
             }
             if ((printMask?.CSMD ?? true)
-                && item.CSMD.TryGet(out var CSMDItem))
+                && item.CSMD is {} CSMDItem)
             {
                 fg.AppendLine($"CSMD => {SpanExt.ToHexString(CSMDItem)}");
             }
             if ((printMask?.Melee?.Overall ?? true)
-                && item.Melee.TryGet(out var MeleeItem))
+                && item.Melee is {} MeleeItem)
             {
                 MeleeItem?.ToString(fg, "Melee");
             }
             if ((printMask?.CloseRange?.Overall ?? true)
-                && item.CloseRange.TryGet(out var CloseRangeItem))
+                && item.CloseRange is {} CloseRangeItem)
             {
                 CloseRangeItem?.ToString(fg, "CloseRange");
             }
             if ((printMask?.LongRangeStrafeMult ?? true)
-                && item.LongRangeStrafeMult.TryGet(out var LongRangeStrafeMultItem))
+                && item.LongRangeStrafeMult is {} LongRangeStrafeMultItem)
             {
                 fg.AppendItem(LongRangeStrafeMultItem, "LongRangeStrafeMult");
             }
             if ((printMask?.Flight?.Overall ?? true)
-                && item.Flight.TryGet(out var FlightItem))
+                && item.Flight is {} FlightItem)
             {
                 FlightItem?.ToString(fg, "Flight");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -2352,14 +2352,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.CSMD,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CSMD));
-            if (item.Melee.TryGet(out var MeleeItem))
+            if (item.Melee is {} MeleeItem)
             {
                 ((CombatStyleMeleeBinaryWriteTranslation)((IBinaryItem)MeleeItem).BinaryWriteTranslator).Write(
                     item: MeleeItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.CloseRange.TryGet(out var CloseRangeItem))
+            if (item.CloseRange is {} CloseRangeItem)
             {
                 ((CombatStyleCloseRangeBinaryWriteTranslation)((IBinaryItem)CloseRangeItem).BinaryWriteTranslator).Write(
                     item: CloseRangeItem,
@@ -2370,7 +2370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.LongRangeStrafeMult,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CSLR));
-            if (item.Flight.TryGet(out var FlightItem))
+            if (item.Flight is {} FlightItem)
             {
                 ((CombatStyleFlightBinaryWriteTranslation)((IBinaryItem)FlightItem).BinaryWriteTranslator).Write(
                     item: FlightItem,

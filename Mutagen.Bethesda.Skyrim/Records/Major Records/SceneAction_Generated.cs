@@ -1559,42 +1559,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Type, "Type");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.ActorID ?? true)
-                && item.ActorID.TryGet(out var ActorIDItem))
+                && item.ActorID is {} ActorIDItem)
             {
                 fg.AppendItem(ActorIDItem, "ActorID");
             }
             if ((printMask?.LNAM ?? true)
-                && item.LNAM.TryGet(out var LNAMItem))
+                && item.LNAM is {} LNAMItem)
             {
                 fg.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
             }
             if ((printMask?.Index ?? true)
-                && item.Index.TryGet(out var IndexItem))
+                && item.Index is {} IndexItem)
             {
                 fg.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.StartPhase ?? true)
-                && item.StartPhase.TryGet(out var StartPhaseItem))
+                && item.StartPhase is {} StartPhaseItem)
             {
                 fg.AppendItem(StartPhaseItem, "StartPhase");
             }
             if ((printMask?.EndPhase ?? true)
-                && item.EndPhase.TryGet(out var EndPhaseItem))
+                && item.EndPhase is {} EndPhaseItem)
             {
                 fg.AppendItem(EndPhaseItem, "EndPhase");
             }
             if ((printMask?.TimerSeconds ?? true)
-                && item.TimerSeconds.TryGet(out var TimerSecondsItem))
+                && item.TimerSeconds is {} TimerSecondsItem)
             {
                 fg.AppendItem(TimerSecondsItem, "TimerSeconds");
             }
@@ -1621,32 +1621,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Topic.FormKeyNullable, "Topic");
             }
             if ((printMask?.HeadtrackActorID ?? true)
-                && item.HeadtrackActorID.TryGet(out var HeadtrackActorIDItem))
+                && item.HeadtrackActorID is {} HeadtrackActorIDItem)
             {
                 fg.AppendItem(HeadtrackActorIDItem, "HeadtrackActorID");
             }
             if ((printMask?.LoopingMax ?? true)
-                && item.LoopingMax.TryGet(out var LoopingMaxItem))
+                && item.LoopingMax is {} LoopingMaxItem)
             {
                 fg.AppendItem(LoopingMaxItem, "LoopingMax");
             }
             if ((printMask?.LoopingMin ?? true)
-                && item.LoopingMin.TryGet(out var LoopingMinItem))
+                && item.LoopingMin is {} LoopingMinItem)
             {
                 fg.AppendItem(LoopingMinItem, "LoopingMin");
             }
             if ((printMask?.Emotion ?? true)
-                && item.Emotion.TryGet(out var EmotionItem))
+                && item.Emotion is {} EmotionItem)
             {
                 fg.AppendItem(EmotionItem, "Emotion");
             }
             if ((printMask?.EmotionValue ?? true)
-                && item.EmotionValue.TryGet(out var EmotionValueItem))
+                && item.EmotionValue is {} EmotionValueItem)
             {
                 fg.AppendItem(EmotionValueItem, "EmotionValue");
             }
             if ((printMask?.Unused?.Overall ?? true)
-                && item.Unused.TryGet(out var UnusedItem))
+                && item.Unused is {} UnusedItem)
             {
                 UnusedItem?.ToString(fg, "Unused");
             }
@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.EmotionValue,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DEVA));
-            if (item.Unused.TryGet(out var UnusedItem))
+            if (item.Unused is {} UnusedItem)
             {
                 ((ScenePhaseUnusedDataBinaryWriteTranslation)((IBinaryItem)UnusedItem).BinaryWriteTranslator).Write(
                     item: UnusedItem,

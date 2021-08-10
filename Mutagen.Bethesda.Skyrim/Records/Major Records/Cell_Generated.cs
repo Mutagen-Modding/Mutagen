@@ -2854,7 +2854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.Landscape.TryGet(out var Landscapeitem))
+                        if (obj.Landscape is {} Landscapeitem)
                         {
                             Landscapeitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -3091,7 +3091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -3100,22 +3100,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.Grid?.Overall ?? true)
-                && item.Grid.TryGet(out var GridItem))
+                && item.Grid is {} GridItem)
             {
                 GridItem?.ToString(fg, "Grid");
             }
             if ((printMask?.Lighting?.Overall ?? true)
-                && item.Lighting.TryGet(out var LightingItem))
+                && item.Lighting is {} LightingItem)
             {
                 LightingItem?.ToString(fg, "Lighting");
             }
             if ((printMask?.OcclusionData ?? true)
-                && item.OcclusionData.TryGet(out var OcclusionDataItem))
+                && item.OcclusionData is {} OcclusionDataItem)
             {
                 fg.AppendLine($"OcclusionData => {SpanExt.ToHexString(OcclusionDataItem)}");
             }
             if ((printMask?.MaxHeightData ?? true)
-                && item.MaxHeightData.TryGet(out var MaxHeightDataItem))
+                && item.MaxHeightData is {} MaxHeightDataItem)
             {
                 fg.AppendLine($"MaxHeightData => {SpanExt.ToHexString(MaxHeightDataItem)}");
             }
@@ -3124,22 +3124,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.LightingTemplate.FormKey, "LightingTemplate");
             }
             if ((printMask?.LNAM ?? true)
-                && item.LNAM.TryGet(out var LNAMItem))
+                && item.LNAM is {} LNAMItem)
             {
                 fg.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
             }
             if ((printMask?.WaterHeight ?? true)
-                && item.WaterHeight.TryGet(out var WaterHeightItem))
+                && item.WaterHeight is {} WaterHeightItem)
             {
                 fg.AppendItem(WaterHeightItem, "WaterHeight");
             }
             if ((printMask?.WaterNoiseTexture ?? true)
-                && item.WaterNoiseTexture.TryGet(out var WaterNoiseTextureItem))
+                && item.WaterNoiseTexture is {} WaterNoiseTextureItem)
             {
                 fg.AppendItem(WaterNoiseTextureItem, "WaterNoiseTexture");
             }
             if ((printMask?.Regions?.Overall ?? true)
-                && item.Regions.TryGet(out var RegionsItem))
+                && item.Regions is {} RegionsItem)
             {
                 fg.AppendLine("Regions =>");
                 fg.AppendLine("[");
@@ -3162,17 +3162,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Location.FormKeyNullable, "Location");
             }
             if ((printMask?.XWCN ?? true)
-                && item.XWCN.TryGet(out var XWCNItem))
+                && item.XWCN is {} XWCNItem)
             {
                 fg.AppendLine($"XWCN => {SpanExt.ToHexString(XWCNItem)}");
             }
             if ((printMask?.XWCS ?? true)
-                && item.XWCS.TryGet(out var XWCSItem))
+                && item.XWCS is {} XWCSItem)
             {
                 fg.AppendLine($"XWCS => {SpanExt.ToHexString(XWCSItem)}");
             }
             if ((printMask?.WaterVelocity?.Overall ?? true)
-                && item.WaterVelocity.TryGet(out var WaterVelocityItem))
+                && item.WaterVelocity is {} WaterVelocityItem)
             {
                 WaterVelocityItem?.ToString(fg, "WaterVelocity");
             }
@@ -3181,7 +3181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Water.FormKeyNullable, "Water");
             }
             if ((printMask?.Ownership?.Overall ?? true)
-                && item.Ownership.TryGet(out var OwnershipItem))
+                && item.Ownership is {} OwnershipItem)
             {
                 OwnershipItem?.ToString(fg, "Ownership");
             }
@@ -3190,7 +3190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.LockList.FormKeyNullable, "LockList");
             }
             if ((printMask?.WaterEnvironmentMap ?? true)
-                && item.WaterEnvironmentMap.TryGet(out var WaterEnvironmentMapItem))
+                && item.WaterEnvironmentMap is {} WaterEnvironmentMapItem)
             {
                 fg.AppendItem(WaterEnvironmentMapItem, "WaterEnvironmentMap");
             }
@@ -3215,7 +3215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
             }
             if ((printMask?.Landscape?.Overall ?? true)
-                && item.Landscape.TryGet(out var LandscapeItem))
+                && item.Landscape is {} LandscapeItem)
             {
                 LandscapeItem?.ToString(fg, "Landscape");
             }
@@ -3635,7 +3635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             yield return FormLinkInformation.Factory(obj.LightingTemplate);
-            if (obj.Regions.TryGet(out var RegionsItem))
+            if (obj.Regions is {} RegionsItem)
             {
                 foreach (var item in RegionsItem)
                 {
@@ -3650,7 +3650,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Water);
             }
-            if (obj.Ownership.TryGet(out var OwnershipItems))
+            if (obj.Ownership is {} OwnershipItems)
             {
                 foreach (var item in OwnershipItems.ContainedFormLinks)
                 {
@@ -3681,7 +3681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.ImageSpace);
             }
-            if (obj.Landscape.TryGet(out var LandscapeItems))
+            if (obj.Landscape is {} LandscapeItems)
             {
                 foreach (var item in LandscapeItems.ContainedFormLinks)
                 {
@@ -3710,7 +3710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((obj.Landscape != null))
             {
-                if (obj.Landscape.TryGet(out var Landscapeitem))
+                if (obj.Landscape is {} Landscapeitem)
                 {
                     yield return Landscapeitem;
                     foreach (var item in Landscapeitem.EnumerateMajorRecords())
@@ -3777,7 +3777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.Landscape.TryGet(out var Landscapeitem))
+                        if (obj.Landscape is {} Landscapeitem)
                         {
                             yield return Landscapeitem;
                             foreach (var item in Landscapeitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -4126,7 +4126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 duplicateInto: duplicateInto,
                 parent: parent);
             {
-                if (obj.Landscape.TryGet(out var CellLandscapeitem))
+                if (obj.Landscape is {} CellLandscapeitem)
                 {
                     yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILandscapeInternal, ILandscapeGetter>(
                         modKey: modKey,
@@ -4271,7 +4271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.Landscape.TryGet(out var CellLandscapeitem))
+                        if (obj.Landscape is {} CellLandscapeitem)
                         {
                             yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILandscapeInternal, ILandscapeGetter>(
                                 modKey: modKey,
@@ -5493,14 +5493,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Flags,
                 length: 2,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
-            if (item.Grid.TryGet(out var GridItem))
+            if (item.Grid is {} GridItem)
             {
                 ((CellGridBinaryWriteTranslation)((IBinaryItem)GridItem).BinaryWriteTranslator).Write(
                     item: GridItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Lighting.TryGet(out var LightingItem))
+            if (item.Lighting is {} LightingItem)
             {
                 ((CellLightingBinaryWriteTranslation)((IBinaryItem)LightingItem).BinaryWriteTranslator).Write(
                     item: LightingItem,
@@ -5554,7 +5554,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.XWCS,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XWCS));
-            if (item.WaterVelocity.TryGet(out var WaterVelocityItem))
+            if (item.WaterVelocity is {} WaterVelocityItem)
             {
                 ((CellWaterVelocityBinaryWriteTranslation)((IBinaryItem)WaterVelocityItem).BinaryWriteTranslator).Write(
                     item: WaterVelocityItem,
@@ -5565,7 +5565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Water,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCWT));
-            if (item.Ownership.TryGet(out var OwnershipItem))
+            if (item.Ownership is {} OwnershipItem)
             {
                 ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
                     item: OwnershipItem,

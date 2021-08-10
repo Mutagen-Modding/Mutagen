@@ -975,12 +975,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Reference.FormKey, "Reference");
             }
             if ((printMask?.Count ?? true)
-                && item.Count.TryGet(out var CountItem))
+                && item.Count is {} CountItem)
             {
                 fg.AppendItem(CountItem, "Count");
             }
             if ((printMask?.Unknown2 ?? true)
-                && item.Unknown2.TryGet(out var Unknown2Item))
+                && item.Unknown2 is {} Unknown2Item)
             {
                 fg.AppendItem(Unknown2Item, "Unknown2");
             }

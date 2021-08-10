@@ -907,17 +907,17 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObjectStructInfoMember.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.TypeName ?? true)
-                && item.TypeName.TryGet(out var TypeNameItem))
+                && item.TypeName is {} TypeNameItem)
             {
                 fg.AppendItem(TypeNameItem, "TypeName");
             }
             if ((printMask?.Value?.Overall ?? true)
-                && item.Value.TryGet(out var ValueItem))
+                && item.Value is {} ValueItem)
             {
                 ValueItem?.ToString(fg, "Value");
             }
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 fg.AppendItem(item.IsConst, "IsConst");
             }
             if ((printMask?.DocString ?? true)
-                && item.DocString.TryGet(out var DocStringItem))
+                && item.DocString is {} DocStringItem)
             {
                 fg.AppendItem(DocStringItem, "DocString");
             }

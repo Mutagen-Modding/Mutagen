@@ -926,14 +926,14 @@ namespace Mutagen.Bethesda.Skyrim
             public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj)
             {
                 if (!(obj is IFunctionConditionDataGetter funcData)) return;
-                if (funcData.ParameterOneString.TryGet(out var param1))
+                if (funcData.ParameterOneString is { } param1)
                 {
                     using (HeaderExport.Subrecord(writer, Condition_Registration.CIS1))
                     {
                         StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate);
                     }
                 }
-                if (funcData.ParameterTwoString.TryGet(out var param2))
+                if (funcData.ParameterTwoString is { } param2)
                 {
                     using (HeaderExport.Subrecord(writer, Condition_Registration.CIS2))
                     {

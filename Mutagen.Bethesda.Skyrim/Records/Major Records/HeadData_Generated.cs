@@ -1608,7 +1608,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.AvailableMorphs?.Overall ?? true)
-                && item.AvailableMorphs.TryGet(out var AvailableMorphsItem))
+                && item.AvailableMorphs is {} AvailableMorphsItem)
             {
                 AvailableMorphsItem?.ToString(fg, "AvailableMorphs");
             }
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1800,7 +1800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -2094,7 +2094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.AvailableMorphs.TryGet(out var AvailableMorphsItem))
+            if (item.AvailableMorphs is {} AvailableMorphsItem)
             {
                 ((AvailableMorphsBinaryWriteTranslation)((IBinaryItem)AvailableMorphsItem).BinaryWriteTranslator).Write(
                     item: AvailableMorphsItem,
@@ -2146,7 +2146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

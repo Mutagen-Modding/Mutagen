@@ -2463,12 +2463,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -2509,7 +2509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Models?.Overall ?? true)
-                && item.Models.TryGet(out var ModelsItem))
+                && item.Models is {} ModelsItem)
             {
                 fg.AppendLine("Models =>");
                 fg.AppendLine("[");
@@ -2528,12 +2528,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.NIFT ?? true)
-                && item.NIFT.TryGet(out var NIFTItem))
+                && item.NIFT is {} NIFTItem)
             {
                 fg.AppendLine($"NIFT => {SpanExt.ToHexString(NIFTItem)}");
             }
             if ((printMask?.Configuration?.Overall ?? true)
-                && item.Configuration.TryGet(out var ConfigurationItem))
+                && item.Configuration is {} ConfigurationItem)
             {
                 ConfigurationItem?.ToString(fg, "Configuration");
             }
@@ -2564,7 +2564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if ((printMask?.AIData?.Overall ?? true)
-                && item.AIData.TryGet(out var AIDataItem))
+                && item.AIData is {} AIDataItem)
             {
                 AIDataItem?.ToString(fg, "AIData");
             }
@@ -2587,7 +2587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Animations?.Overall ?? true)
-                && item.Animations.TryGet(out var AnimationsItem))
+                && item.Animations is {} AnimationsItem)
             {
                 fg.AppendLine("Animations =>");
                 fg.AppendLine("[");
@@ -2606,12 +2606,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.AttackReach ?? true)
-                && item.AttackReach.TryGet(out var AttackReachItem))
+                && item.AttackReach is {} AttackReachItem)
             {
                 fg.AppendItem(AttackReachItem, "AttackReach");
             }
@@ -2620,27 +2620,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.CombatStyle.FormKeyNullable, "CombatStyle");
             }
             if ((printMask?.TurningSpeed ?? true)
-                && item.TurningSpeed.TryGet(out var TurningSpeedItem))
+                && item.TurningSpeed is {} TurningSpeedItem)
             {
                 fg.AppendItem(TurningSpeedItem, "TurningSpeed");
             }
             if ((printMask?.BaseScale ?? true)
-                && item.BaseScale.TryGet(out var BaseScaleItem))
+                && item.BaseScale is {} BaseScaleItem)
             {
                 fg.AppendItem(BaseScaleItem, "BaseScale");
             }
             if ((printMask?.FootWeight ?? true)
-                && item.FootWeight.TryGet(out var FootWeightItem))
+                && item.FootWeight is {} FootWeightItem)
             {
                 fg.AppendItem(FootWeightItem, "FootWeight");
             }
             if ((printMask?.BloodSpray ?? true)
-                && item.BloodSpray.TryGet(out var BloodSprayItem))
+                && item.BloodSpray is {} BloodSprayItem)
             {
                 fg.AppendItem(BloodSprayItem, "BloodSpray");
             }
             if ((printMask?.BloodDecal ?? true)
-                && item.BloodDecal.TryGet(out var BloodDecalItem))
+                && item.BloodDecal is {} BloodDecalItem)
             {
                 fg.AppendItem(BloodDecalItem, "BloodDecal");
             }
@@ -3529,7 +3529,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -3566,7 +3566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.NIFT,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NIFT));
-            if (item.Configuration.TryGet(out var ConfigurationItem))
+            if (item.Configuration is {} ConfigurationItem)
             {
                 ((CreatureConfigurationBinaryWriteTranslation)((IBinaryItem)ConfigurationItem).BinaryWriteTranslator).Write(
                     item: ConfigurationItem,
@@ -3592,7 +3592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Script,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
-            if (item.AIData.TryGet(out var AIDataItem))
+            if (item.AIData is {} AIDataItem)
             {
                 ((CreatureAIDataBinaryWriteTranslation)((IBinaryItem)AIDataItem).BinaryWriteTranslator).Write(
                     item: AIDataItem,
@@ -3614,7 +3614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Animations,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KFFZ),
                 transl: StringBinaryTranslation.Instance.Write);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((CreatureDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

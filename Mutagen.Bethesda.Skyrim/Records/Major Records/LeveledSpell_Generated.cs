@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.ChanceNone ?? true)
-                && item.ChanceNone.TryGet(out var ChanceNoneItem))
+                && item.ChanceNone is {} ChanceNoneItem)
             {
                 fg.AppendItem(ChanceNoneItem, "ChanceNone");
             }
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.Entries?.Overall ?? true)
-                && item.Entries.TryGet(out var EntriesItem))
+                && item.Entries is {} EntriesItem)
             {
                 fg.AppendLine("Entries =>");
                 fg.AppendLine("[");
@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Entries.TryGet(out var EntriesItem))
+            if (obj.Entries is {} EntriesItem)
             {
                 foreach (var item in EntriesItem.WhereCastable<ILeveledSpellEntryGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))

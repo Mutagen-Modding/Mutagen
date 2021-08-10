@@ -4974,27 +4974,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.FillTexture ?? true)
-                && item.FillTexture.TryGet(out var FillTextureItem))
+                && item.FillTexture is {} FillTextureItem)
             {
                 fg.AppendItem(FillTextureItem, "FillTexture");
             }
             if ((printMask?.ParticleShaderTexture ?? true)
-                && item.ParticleShaderTexture.TryGet(out var ParticleShaderTextureItem))
+                && item.ParticleShaderTexture is {} ParticleShaderTextureItem)
             {
                 fg.AppendItem(ParticleShaderTextureItem, "ParticleShaderTexture");
             }
             if ((printMask?.HolesTexture ?? true)
-                && item.HolesTexture.TryGet(out var HolesTextureItem))
+                && item.HolesTexture is {} HolesTextureItem)
             {
                 fg.AppendItem(HolesTextureItem, "HolesTexture");
             }
             if ((printMask?.MembranePaletteTexture ?? true)
-                && item.MembranePaletteTexture.TryGet(out var MembranePaletteTextureItem))
+                && item.MembranePaletteTexture is {} MembranePaletteTextureItem)
             {
                 fg.AppendItem(MembranePaletteTextureItem, "MembranePaletteTexture");
             }
             if ((printMask?.ParticlePaletteTexture ?? true)
-                && item.ParticlePaletteTexture.TryGet(out var ParticlePaletteTextureItem))
+                && item.ParticlePaletteTexture is {} ParticlePaletteTextureItem)
             {
                 fg.AppendItem(ParticlePaletteTextureItem, "ParticlePaletteTexture");
             }

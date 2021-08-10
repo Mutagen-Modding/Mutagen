@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static partial void WriteBinaryIslandCustom(MutagenWriter writer, INavigationMapInfoGetter item)
             {
-                if (item.Island.TryGet(out var island))
+                if (item.Island is {} island)
                 {
                     writer.Write((byte)1);
                     island.WriteToBinary(writer);

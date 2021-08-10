@@ -1026,12 +1026,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Quest.FormKey, "Quest");
             }
             if ((printMask?.TNAM ?? true)
-                && item.TNAM.TryGet(out var TNAMItem))
+                && item.TNAM is {} TNAMItem)
             {
                 fg.AppendItem(TNAMItem, "TNAM");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }

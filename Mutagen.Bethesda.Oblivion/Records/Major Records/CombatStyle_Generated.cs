@@ -943,12 +943,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.Advanced?.Overall ?? true)
-                && item.Advanced.TryGet(out var AdvancedItem))
+                && item.Advanced is {} AdvancedItem)
             {
                 AdvancedItem?.ToString(fg, "Advanced");
             }
@@ -1362,14 +1362,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((CombatStyleDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Advanced.TryGet(out var AdvancedItem))
+            if (item.Advanced is {} AdvancedItem)
             {
                 ((CombatStyleAdvancedBinaryWriteTranslation)((IBinaryItem)AdvancedItem).BinaryWriteTranslator).Write(
                     item: AdvancedItem,

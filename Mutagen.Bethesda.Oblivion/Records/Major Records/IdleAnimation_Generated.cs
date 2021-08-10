@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1221,12 +1221,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.AnimationGroupSection ?? true)
-                && item.AnimationGroupSection.TryGet(out var AnimationGroupSectionItem))
+                && item.AnimationGroupSection is {} AnimationGroupSectionItem)
             {
                 fg.AppendItem(AnimationGroupSectionItem, "AnimationGroupSection");
             }
             if ((printMask?.RelatedIdleAnimations?.Overall ?? true)
-                && item.RelatedIdleAnimations.TryGet(out var RelatedIdleAnimationsItem))
+                && item.RelatedIdleAnimations is {} RelatedIdleAnimationsItem)
             {
                 fg.AppendLine("RelatedIdleAnimations =>");
                 fg.AppendLine("[");
@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.RelatedIdleAnimations.TryGet(out var RelatedIdleAnimationsItem))
+            if (obj.RelatedIdleAnimations is {} RelatedIdleAnimationsItem)
             {
                 foreach (var item in RelatedIdleAnimationsItem)
                 {
@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

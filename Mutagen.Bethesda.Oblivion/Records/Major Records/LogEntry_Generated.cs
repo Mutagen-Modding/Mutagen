@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LogEntry.Mask<bool>? printMask = null)
         {
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1064,12 +1064,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Entry ?? true)
-                && item.Entry.TryGet(out var EntryItem))
+                && item.Entry is {} EntryItem)
             {
                 fg.AppendItem(EntryItem, "Entry");
             }
             if ((printMask?.ResultScript?.Overall ?? true)
-                && item.ResultScript.TryGet(out var ResultScriptItem))
+                && item.ResultScript is {} ResultScriptItem)
             {
                 ResultScriptItem?.ToString(fg, "ResultScript");
             }
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Entry,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.ResultScript.TryGet(out var ResultScriptItem))
+            if (item.ResultScript is {} ResultScriptItem)
             {
                 ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)ResultScriptItem).BinaryWriteTranslator).Write(
                     item: ResultScriptItem,

@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ParticleDensity, "ParticleDensity");
             }
             if ((printMask?.ParticleTexture ?? true)
-                && item.ParticleTexture.TryGet(out var ParticleTextureItem))
+                && item.ParticleTexture is {} ParticleTextureItem)
             {
                 fg.AppendItem(ParticleTextureItem, "ParticleTexture");
             }

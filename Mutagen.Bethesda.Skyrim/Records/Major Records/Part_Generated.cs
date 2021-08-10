@@ -847,12 +847,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Part.Mask<bool>? printMask = null)
         {
             if ((printMask?.PartType ?? true)
-                && item.PartType.TryGet(out var PartTypeItem))
+                && item.PartType is {} PartTypeItem)
             {
                 fg.AppendItem(PartTypeItem, "PartType");
             }
             if ((printMask?.FileName ?? true)
-                && item.FileName.TryGet(out var FileNameItem))
+                && item.FileName is {} FileNameItem)
             {
                 fg.AppendItem(FileNameItem, "FileName");
             }

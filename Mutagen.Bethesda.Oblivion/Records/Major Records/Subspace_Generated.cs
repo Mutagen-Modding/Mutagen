@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Point ?? true)
-                && item.Point.TryGet(out var PointItem))
+                && item.Point is {} PointItem)
             {
                 fg.AppendItem(PointItem, "Point");
             }

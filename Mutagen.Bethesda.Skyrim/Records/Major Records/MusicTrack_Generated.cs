@@ -1478,32 +1478,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Type, "Type");
             }
             if ((printMask?.Duration ?? true)
-                && item.Duration.TryGet(out var DurationItem))
+                && item.Duration is {} DurationItem)
             {
                 fg.AppendItem(DurationItem, "Duration");
             }
             if ((printMask?.FadeOut ?? true)
-                && item.FadeOut.TryGet(out var FadeOutItem))
+                && item.FadeOut is {} FadeOutItem)
             {
                 fg.AppendItem(FadeOutItem, "FadeOut");
             }
             if ((printMask?.TrackFilename ?? true)
-                && item.TrackFilename.TryGet(out var TrackFilenameItem))
+                && item.TrackFilename is {} TrackFilenameItem)
             {
                 fg.AppendItem(TrackFilenameItem, "TrackFilename");
             }
             if ((printMask?.FinaleFilename ?? true)
-                && item.FinaleFilename.TryGet(out var FinaleFilenameItem))
+                && item.FinaleFilename is {} FinaleFilenameItem)
             {
                 fg.AppendItem(FinaleFilenameItem, "FinaleFilename");
             }
             if ((printMask?.LoopData?.Overall ?? true)
-                && item.LoopData.TryGet(out var LoopDataItem))
+                && item.LoopData is {} LoopDataItem)
             {
                 LoopDataItem?.ToString(fg, "LoopData");
             }
             if ((printMask?.CuePoints?.Overall ?? true)
-                && item.CuePoints.TryGet(out var CuePointsItem))
+                && item.CuePoints is {} CuePointsItem)
             {
                 fg.AppendLine("CuePoints =>");
                 fg.AppendLine("[");
@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Conditions?.Overall ?? true)
-                && item.Conditions.TryGet(out var ConditionsItem))
+                && item.Conditions is {} ConditionsItem)
             {
                 fg.AppendLine("Conditions =>");
                 fg.AppendLine("[");
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Tracks?.Overall ?? true)
-                && item.Tracks.TryGet(out var TracksItem))
+                && item.Tracks is {} TracksItem)
             {
                 fg.AppendLine("Tracks =>");
                 fg.AppendLine("[");
@@ -1728,7 +1728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Conditions.TryGet(out var ConditionsItem))
+            if (obj.Conditions is {} ConditionsItem)
             {
                 foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Tracks.TryGet(out var TracksItem))
+            if (obj.Tracks is {} TracksItem)
             {
                 foreach (var item in TracksItem)
                 {
@@ -2128,7 +2128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.FinaleFilename,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.LoopData.TryGet(out var LoopDataItem))
+            if (item.LoopData is {} LoopDataItem)
             {
                 ((MusicTrackLoopDataBinaryWriteTranslation)((IBinaryItem)LoopDataItem).BinaryWriteTranslator).Write(
                     item: LoopDataItem,

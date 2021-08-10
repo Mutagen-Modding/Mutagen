@@ -1177,17 +1177,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.SpeedTreeSeeds?.Overall ?? true)
-                && item.SpeedTreeSeeds.TryGet(out var SpeedTreeSeedsItem))
+                && item.SpeedTreeSeeds is {} SpeedTreeSeedsItem)
             {
                 fg.AppendLine("SpeedTreeSeeds =>");
                 fg.AppendLine("[");
@@ -1206,12 +1206,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.BillboardDimensions?.Overall ?? true)
-                && item.BillboardDimensions.TryGet(out var BillboardDimensionsItem))
+                && item.BillboardDimensions is {} BillboardDimensionsItem)
             {
                 BillboardDimensionsItem?.ToString(fg, "BillboardDimensions");
             }
@@ -1706,7 +1706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -1723,14 +1723,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.SpeedTreeSeeds,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((TreeDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.BillboardDimensions.TryGet(out var BillboardDimensionsItem))
+            if (item.BillboardDimensions is {} BillboardDimensionsItem)
             {
                 ((DimensionsBinaryWriteTranslation)((IBinaryItem)BillboardDimensionsItem).BinaryWriteTranslator).Write(
                     item: BillboardDimensionsItem,

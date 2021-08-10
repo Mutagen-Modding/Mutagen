@@ -1184,22 +1184,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.Location?.Overall ?? true)
-                && item.Location.TryGet(out var LocationItem))
+                && item.Location is {} LocationItem)
             {
                 LocationItem?.ToString(fg, "Location");
             }
             if ((printMask?.Schedule?.Overall ?? true)
-                && item.Schedule.TryGet(out var ScheduleItem))
+                && item.Schedule is {} ScheduleItem)
             {
                 ScheduleItem?.ToString(fg, "Schedule");
             }
             if ((printMask?.Target?.Overall ?? true)
-                && item.Target.TryGet(out var TargetItem))
+                && item.Target is {} TargetItem)
             {
                 TargetItem?.ToString(fg, "Target");
             }
@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Location.TryGet(out var LocationItems))
+            if (obj.Location is {} LocationItems)
             {
                 foreach (var item in LocationItems.ContainedFormLinks)
                 {
@@ -1743,28 +1743,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((AIPackageDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Location.TryGet(out var LocationItem))
+            if (item.Location is {} LocationItem)
             {
                 ((AIPackageLocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
                     item: LocationItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Schedule.TryGet(out var ScheduleItem))
+            if (item.Schedule is {} ScheduleItem)
             {
                 ((AIPackageScheduleBinaryWriteTranslation)((IBinaryItem)ScheduleItem).BinaryWriteTranslator).Write(
                     item: ScheduleItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Target.TryGet(out var TargetItem))
+            if (item.Target is {} TargetItem)
             {
                 ((AIPackageTargetBinaryWriteTranslation)((IBinaryItem)TargetItem).BinaryWriteTranslator).Write(
                     item: TargetItem,

@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.SlotParents?.Overall ?? true)
-                && item.SlotParents.TryGet(out var SlotParentsItem))
+                && item.SlotParents is {} SlotParentsItem)
             {
                 fg.AppendLine("SlotParents =>");
                 fg.AppendLine("[");
@@ -1039,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.UseAllParents ?? true)
-                && item.UseAllParents.TryGet(out var UseAllParentsItem))
+                && item.UseAllParents is {} UseAllParentsItem)
             {
                 fg.AppendItem(UseAllParentsItem, "UseAllParents");
             }
@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.SlotParents.TryGet(out var SlotParentsItem))
+            if (obj.SlotParents is {} SlotParentsItem)
             {
                 foreach (var item in SlotParentsItem)
                 {

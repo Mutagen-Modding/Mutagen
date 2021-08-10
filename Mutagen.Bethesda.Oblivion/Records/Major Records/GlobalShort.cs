@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalShortGetter item)
             {
-                if (!item.Data.TryGet(out var data)) return;
+                if (item.Data is not { } data) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.FLTV))
                 {
                     writer.Write((float)data);
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         public partial class GlobalShortBinaryOverlay
         {
             public override char TypeChar => GlobalShort.TRIGGER_CHAR;
-            public override float? RawFloat => this.Data.TryGet(out var data) ? (float)data : default;
+            public override float? RawFloat => this.Data is { } data? (float)data : default;
 
             private int? _DataLocation;
             public bool GetDataIsSetCustom() => _DataLocation.HasValue;

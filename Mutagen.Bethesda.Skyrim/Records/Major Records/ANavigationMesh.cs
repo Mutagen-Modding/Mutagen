@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static partial void WriteBinaryDataLogicCustom(MutagenWriter writer, IANavigationMeshGetter item)
             {
-                if (!item.Data.TryGet(out var data)) return;
+                if (item.Data is not { } data) return;
                 using (var header = HeaderExport.Subrecord(
                     writer,
                     RecordTypes.NVNM,

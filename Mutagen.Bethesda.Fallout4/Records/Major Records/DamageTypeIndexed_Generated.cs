@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.DamageTypes?.Overall ?? true)
-                && item.DamageTypes.TryGet(out var DamageTypesItem))
+                && item.DamageTypes is {} DamageTypesItem)
             {
                 fg.AppendLine("DamageTypes =>");
                 fg.AppendLine("[");

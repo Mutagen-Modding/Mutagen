@@ -1042,12 +1042,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.ChanceNone ?? true)
-                && item.ChanceNone.TryGet(out var ChanceNoneItem))
+                && item.ChanceNone is {} ChanceNoneItem)
             {
                 fg.AppendItem(ChanceNoneItem, "ChanceNone");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }

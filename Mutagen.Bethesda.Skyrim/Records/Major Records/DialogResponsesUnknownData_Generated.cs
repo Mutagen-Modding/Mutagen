@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponsesUnknownData.Mask<bool>? printMask = null)
         {
             if ((printMask?.SCHR ?? true)
-                && item.SCHR.TryGet(out var SCHRItem))
+                && item.SCHR is {} SCHRItem)
             {
                 fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }

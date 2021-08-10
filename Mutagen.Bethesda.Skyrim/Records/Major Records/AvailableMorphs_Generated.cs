@@ -985,22 +985,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AvailableMorphs.Mask<bool>? printMask = null)
         {
             if ((printMask?.Nose?.Overall ?? true)
-                && item.Nose.TryGet(out var NoseItem))
+                && item.Nose is {} NoseItem)
             {
                 NoseItem?.ToString(fg, "Nose");
             }
             if ((printMask?.Brow?.Overall ?? true)
-                && item.Brow.TryGet(out var BrowItem))
+                && item.Brow is {} BrowItem)
             {
                 BrowItem?.ToString(fg, "Brow");
             }
             if ((printMask?.Eye?.Overall ?? true)
-                && item.Eye.TryGet(out var EyeItem))
+                && item.Eye is {} EyeItem)
             {
                 EyeItem?.ToString(fg, "Eye");
             }
             if ((printMask?.Lip?.Overall ?? true)
-                && item.Lip.TryGet(out var LipItem))
+                && item.Lip is {} LipItem)
             {
                 LipItem?.ToString(fg, "Lip");
             }

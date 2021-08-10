@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static partial void WriteBinaryAnimationCountCustom(MutagenWriter writer, IIdleMarkerGetter item)
             {
-                if (!item.Animations.TryGet(out var anims)) return;
+                if (item.Animations is not {} anims) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.IDLC))
                 {
                     writer.Write(checked((byte)anims.Count));
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static partial void WriteBinaryAnimationsCustom(MutagenWriter writer, IIdleMarkerGetter item)
             {
-                if (!item.Animations.TryGet(out var anims)) return;
+                if (item.Animations is not {} anims) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.IDLA))
                 {
                     foreach (var anim in anims)

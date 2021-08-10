@@ -2246,7 +2246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPathGrid":
                 case "IPathGridInternal":
                     {
-                        if (obj.PathGrid.TryGet(out var PathGriditem))
+                        if (obj.PathGrid is {} PathGriditem)
                         {
                             PathGriditem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2257,7 +2257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.Landscape.TryGet(out var Landscapeitem))
+                        if (obj.Landscape is {} Landscapeitem)
                         {
                             Landscapeitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2485,27 +2485,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.Grid ?? true)
-                && item.Grid.TryGet(out var GridItem))
+                && item.Grid is {} GridItem)
             {
                 fg.AppendItem(GridItem, "Grid");
             }
             if ((printMask?.Lighting?.Overall ?? true)
-                && item.Lighting.TryGet(out var LightingItem))
+                && item.Lighting is {} LightingItem)
             {
                 LightingItem?.ToString(fg, "Lighting");
             }
             if ((printMask?.Regions?.Overall ?? true)
-                && item.Regions.TryGet(out var RegionsItem))
+                && item.Regions is {} RegionsItem)
             {
                 fg.AppendLine("Regions =>");
                 fg.AppendLine("[");
@@ -2524,12 +2524,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.MusicType ?? true)
-                && item.MusicType.TryGet(out var MusicTypeItem))
+                && item.MusicType is {} MusicTypeItem)
             {
                 fg.AppendItem(MusicTypeItem, "MusicType");
             }
             if ((printMask?.WaterHeight ?? true)
-                && item.WaterHeight.TryGet(out var WaterHeightItem))
+                && item.WaterHeight is {} WaterHeightItem)
             {
                 fg.AppendItem(WaterHeightItem, "WaterHeight");
             }
@@ -2546,7 +2546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
-                && item.FactionRank.TryGet(out var FactionRankItem))
+                && item.FactionRank is {} FactionRankItem)
             {
                 fg.AppendItem(FactionRankItem, "FactionRank");
             }
@@ -2555,12 +2555,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
             }
             if ((printMask?.PathGrid?.Overall ?? true)
-                && item.PathGrid.TryGet(out var PathGridItem))
+                && item.PathGrid is {} PathGridItem)
             {
                 PathGridItem?.ToString(fg, "PathGrid");
             }
             if ((printMask?.Landscape?.Overall ?? true)
-                && item.Landscape.TryGet(out var LandscapeItem))
+                && item.Landscape is {} LandscapeItem)
             {
                 LandscapeItem?.ToString(fg, "Landscape");
             }
@@ -2916,7 +2916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Regions.TryGet(out var RegionsItem))
+            if (obj.Regions is {} RegionsItem)
             {
                 foreach (var item in RegionsItem)
                 {
@@ -2939,14 +2939,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(obj.GlobalVariable);
             }
-            if (obj.PathGrid.TryGet(out var PathGridItems))
+            if (obj.PathGrid is {} PathGridItems)
             {
                 foreach (var item in PathGridItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Landscape.TryGet(out var LandscapeItems))
+            if (obj.Landscape is {} LandscapeItems)
             {
                 foreach (var item in LandscapeItems.ContainedFormLinks)
                 {
@@ -2975,7 +2975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((obj.PathGrid != null))
             {
-                if (obj.PathGrid.TryGet(out var PathGriditem))
+                if (obj.PathGrid is {} PathGriditem)
                 {
                     yield return PathGriditem;
                     foreach (var item in PathGriditem.EnumerateMajorRecords())
@@ -2986,7 +2986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((obj.Landscape != null))
             {
-                if (obj.Landscape.TryGet(out var Landscapeitem))
+                if (obj.Landscape is {} Landscapeitem)
                 {
                     yield return Landscapeitem;
                     foreach (var item in Landscapeitem.EnumerateMajorRecords())
@@ -3049,7 +3049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPathGrid":
                 case "IPathGridInternal":
                     {
-                        if (obj.PathGrid.TryGet(out var PathGriditem))
+                        if (obj.PathGrid is {} PathGriditem)
                         {
                             yield return PathGriditem;
                             foreach (var item in PathGriditem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3064,7 +3064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.Landscape.TryGet(out var Landscapeitem))
+                        if (obj.Landscape is {} Landscapeitem)
                         {
                             yield return Landscapeitem;
                             foreach (var item in Landscapeitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3224,7 +3224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 duplicateInto: duplicateInto,
                 parent: parent);
             {
-                if (obj.PathGrid.TryGet(out var CellPathGriditem))
+                if (obj.PathGrid is {} CellPathGriditem)
                 {
                     yield return new ModContext<IOblivionMod, IOblivionModGetter, IPathGridInternal, IPathGridGetter>(
                         modKey: modKey,
@@ -3248,7 +3248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             {
-                if (obj.Landscape.TryGet(out var CellLandscapeitem))
+                if (obj.Landscape is {} CellLandscapeitem)
                 {
                     yield return new ModContext<IOblivionMod, IOblivionModGetter, ILandscapeInternal, ILandscapeGetter>(
                         modKey: modKey,
@@ -3393,7 +3393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPathGrid":
                 case "IPathGridInternal":
                     {
-                        if (obj.PathGrid.TryGet(out var CellPathGriditem))
+                        if (obj.PathGrid is {} CellPathGriditem)
                         {
                             yield return new ModContext<IOblivionMod, IOblivionModGetter, IPathGridInternal, IPathGridGetter>(
                                 modKey: modKey,
@@ -3422,7 +3422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.Landscape.TryGet(out var CellLandscapeitem))
+                        if (obj.Landscape is {} CellLandscapeitem)
                         {
                             yield return new ModContext<IOblivionMod, IOblivionModGetter, ILandscapeInternal, ILandscapeGetter>(
                                 modKey: modKey,
@@ -4370,7 +4370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Grid,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCLC));
-            if (item.Lighting.TryGet(out var LightingItem))
+            if (item.Lighting is {} LightingItem)
             {
                 ((CellLightingBinaryWriteTranslation)((IBinaryItem)LightingItem).BinaryWriteTranslator).Write(
                     item: LightingItem,

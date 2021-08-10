@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var cloudTex = item.CloudTextures;
                 for (int i = 0; i < cloudTex.Length; i++)
                 {
-                    if (!cloudTex[i].TryGet(out var tex)) continue;
+                    if (cloudTex[i] is not {} tex) continue;
                     using (HeaderExport.Subrecord(writer, new RecordType(WeatherBinaryCreateTranslation.TextureIntBase + i)))
                     {
                         writer.Write(tex, StringBinaryType.NullTerminate);
@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static partial void WriteBinaryDirectionalAmbientLightingColorsCustom(MutagenWriter writer, IWeatherGetter item)
             {
-                if (!item.DirectionalAmbientLightingColors.TryGet(out var colors)) return;
+                if (item.DirectionalAmbientLightingColors is not {} colors) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.DALC))
                 {
                     colors.Sunrise.WriteToBinary(writer);

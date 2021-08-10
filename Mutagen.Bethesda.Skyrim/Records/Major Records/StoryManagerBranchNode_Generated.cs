@@ -960,12 +960,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.XNAM ?? true)
-                && item.XNAM.TryGet(out var XNAMItem))
+                && item.XNAM is {} XNAMItem)
             {
                 fg.AppendLine($"XNAM => {SpanExt.ToHexString(XNAMItem)}");
             }

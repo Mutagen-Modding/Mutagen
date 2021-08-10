@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.DamageTypes?.Overall ?? true)
-                && item.DamageTypes.TryGet(out var DamageTypesItem))
+                && item.DamageTypes is {} DamageTypesItem)
             {
                 fg.AppendLine("DamageTypes =>");
                 fg.AppendLine("[");
@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.DamageTypes.TryGet(out var DamageTypesItem))
+            if (obj.DamageTypes is {} DamageTypesItem)
             {
                 foreach (var item in DamageTypesItem)
                 {

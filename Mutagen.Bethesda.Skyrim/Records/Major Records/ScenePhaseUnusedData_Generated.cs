@@ -994,27 +994,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScenePhaseUnusedData.Mask<bool>? printMask = null)
         {
             if ((printMask?.SCHR ?? true)
-                && item.SCHR.TryGet(out var SCHRItem))
+                && item.SCHR is {} SCHRItem)
             {
                 fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
             if ((printMask?.SCDA ?? true)
-                && item.SCDA.TryGet(out var SCDAItem))
+                && item.SCDA is {} SCDAItem)
             {
                 fg.AppendLine($"SCDA => {SpanExt.ToHexString(SCDAItem)}");
             }
             if ((printMask?.SCTX ?? true)
-                && item.SCTX.TryGet(out var SCTXItem))
+                && item.SCTX is {} SCTXItem)
             {
                 fg.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
             }
             if ((printMask?.QNAM ?? true)
-                && item.QNAM.TryGet(out var QNAMItem))
+                && item.QNAM is {} QNAMItem)
             {
                 fg.AppendLine($"QNAM => {SpanExt.ToHexString(QNAMItem)}");
             }
             if ((printMask?.SCRO ?? true)
-                && item.SCRO.TryGet(out var SCROItem))
+                && item.SCRO is {} SCROItem)
             {
                 fg.AppendLine($"SCRO => {SpanExt.ToHexString(SCROItem)}");
             }

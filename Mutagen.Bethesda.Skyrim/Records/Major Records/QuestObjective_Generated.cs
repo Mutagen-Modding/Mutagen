@@ -1013,12 +1013,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Index, "Index");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.DisplayText ?? true)
-                && item.DisplayText.TryGet(out var DisplayTextItem))
+                && item.DisplayText is {} DisplayTextItem)
             {
                 fg.AppendItem(DisplayTextItem, "DisplayText");
             }

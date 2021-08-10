@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public static partial void WriteBinaryDataCustom(MutagenWriter writer, IWaterGetter item)
             {
-                if (!item.Data.TryGet(out var data)) return;
+                if (item.Data is not { } data) return;
                 data.WriteToBinary(writer);
             }
         }

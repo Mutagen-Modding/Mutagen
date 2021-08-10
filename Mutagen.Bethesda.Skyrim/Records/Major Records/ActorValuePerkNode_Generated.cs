@@ -1218,27 +1218,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Perk.FormKey, "Perk");
             }
             if ((printMask?.FNAM ?? true)
-                && item.FNAM.TryGet(out var FNAMItem))
+                && item.FNAM is {} FNAMItem)
             {
                 fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
             if ((printMask?.PerkGridX ?? true)
-                && item.PerkGridX.TryGet(out var PerkGridXItem))
+                && item.PerkGridX is {} PerkGridXItem)
             {
                 fg.AppendItem(PerkGridXItem, "PerkGridX");
             }
             if ((printMask?.PerkGridY ?? true)
-                && item.PerkGridY.TryGet(out var PerkGridYItem))
+                && item.PerkGridY is {} PerkGridYItem)
             {
                 fg.AppendItem(PerkGridYItem, "PerkGridY");
             }
             if ((printMask?.HorizontalPosition ?? true)
-                && item.HorizontalPosition.TryGet(out var HorizontalPositionItem))
+                && item.HorizontalPosition is {} HorizontalPositionItem)
             {
                 fg.AppendItem(HorizontalPositionItem, "HorizontalPosition");
             }
             if ((printMask?.VerticalPosition ?? true)
-                && item.VerticalPosition.TryGet(out var VerticalPositionItem))
+                && item.VerticalPosition is {} VerticalPositionItem)
             {
                 fg.AppendItem(VerticalPositionItem, "VerticalPosition");
             }
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Index ?? true)
-                && item.Index.TryGet(out var IndexItem))
+                && item.Index is {} IndexItem)
             {
                 fg.AppendItem(IndexItem, "Index");
             }

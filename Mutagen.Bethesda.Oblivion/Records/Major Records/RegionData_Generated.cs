@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionData.Mask<bool>? printMask = null)
         {
             if ((printMask?.Header?.Overall ?? true)
-                && item.Header.TryGet(out var HeaderItem))
+                && item.Header is {} HeaderItem)
             {
                 HeaderItem?.ToString(fg, "Header");
             }
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            if (item.Header.TryGet(out var HeaderItem))
+            if (item.Header is {} HeaderItem)
             {
                 ((RegionDataHeaderBinaryWriteTranslation)((IBinaryItem)HeaderItem).BinaryWriteTranslator).Write(
                     item: HeaderItem,

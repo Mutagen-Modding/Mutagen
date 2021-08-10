@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.NavMeshVersion ?? true)
-                && item.NavMeshVersion.TryGet(out var NavMeshVersionItem))
+                && item.NavMeshVersion is {} NavMeshVersionItem)
             {
                 fg.AppendItem(NavMeshVersionItem, "NavMeshVersion");
             }
@@ -1145,12 +1145,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.PreferredPathing?.Overall ?? true)
-                && item.PreferredPathing.TryGet(out var PreferredPathingItem))
+                && item.PreferredPathing is {} PreferredPathingItem)
             {
                 PreferredPathingItem?.ToString(fg, "PreferredPathing");
             }
             if ((printMask?.NVSI ?? true)
-                && item.NVSI.TryGet(out var NVSIItem))
+                && item.NVSI is {} NVSIItem)
             {
                 fg.AppendLine($"NVSI => {SpanExt.ToHexString(NVSIItem)}");
             }
@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.PreferredPathing.TryGet(out var PreferredPathingItems))
+            if (obj.PreferredPathing is {} PreferredPathingItems)
             {
                 foreach (var item in PreferredPathingItems.ContainedFormLinks)
                 {
@@ -1614,7 +1614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.PreferredPathing.TryGet(out var PreferredPathingItem))
+            if (item.PreferredPathing is {} PreferredPathingItem)
             {
                 ((PreferredPathingBinaryWriteTranslation)((IBinaryItem)PreferredPathingItem).BinaryWriteTranslator).Write(
                     item: PreferredPathingItem,

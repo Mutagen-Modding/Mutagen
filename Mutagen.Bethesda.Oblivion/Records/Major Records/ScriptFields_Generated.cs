@@ -1152,12 +1152,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.MetadataSummary?.ToString(fg, "MetadataSummary");
             }
             if ((printMask?.CompiledScript ?? true)
-                && item.CompiledScript.TryGet(out var CompiledScriptItem))
+                && item.CompiledScript is {} CompiledScriptItem)
             {
                 fg.AppendLine($"CompiledScript => {SpanExt.ToHexString(CompiledScriptItem)}");
             }
             if ((printMask?.SourceCode ?? true)
-                && item.SourceCode.TryGet(out var SourceCodeItem))
+                && item.SourceCode is {} SourceCodeItem)
             {
                 fg.AppendItem(SourceCodeItem, "SourceCode");
             }

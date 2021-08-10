@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.TextureFileHashes ?? true)
-                && item.TextureFileHashes.TryGet(out var TextureFileHashesItem))
+                && item.TextureFileHashes is {} TextureFileHashesItem)
             {
                 fg.AppendLine($"TextureFileHashes => {SpanExt.ToHexString(TextureFileHashesItem)}");
             }

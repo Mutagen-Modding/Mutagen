@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
             if ((printMask?.AliasIndex ?? true)
-                && item.AliasIndex.TryGet(out var AliasIndexItem))
+                && item.AliasIndex is {} AliasIndexItem)
             {
                 fg.AppendItem(AliasIndexItem, "AliasIndex");
             }

@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Weathers?.Overall ?? true)
-                && item.Weathers.TryGet(out var WeathersItem))
+                && item.Weathers is {} WeathersItem)
             {
                 fg.AppendLine("Weathers =>");
                 fg.AppendLine("[");
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Weathers.TryGet(out var WeathersItem))
+            if (obj.Weathers is {} WeathersItem)
             {
                 foreach (var item in WeathersItem.SelectMany(f => f.ContainedFormLinks))
                 {

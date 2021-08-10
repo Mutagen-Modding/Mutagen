@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override float? RawFloat
         {
-            get => this.Data.TryGet(out var data) ? (float)data : default;
+            get => this.Data is {} data ? (float)data : default;
             set
             {
                 if (value.HasValue)
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalShortGetter item)
             {
-                if (!item.Data.TryGet(out var data)) return;
+                if (item.Data is not {} data) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.FLTV))
                 {
                     writer.Write((float)data);

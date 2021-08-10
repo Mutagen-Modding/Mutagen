@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             HeadPartReference.Mask<bool>? printMask = null)
         {
             if ((printMask?.Number ?? true)
-                && item.Number.TryGet(out var NumberItem))
+                && item.Number is {} NumberItem)
             {
                 fg.AppendItem(NumberItem, "Number");
             }

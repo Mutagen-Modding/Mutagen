@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LocationAliasReference.Mask<bool>? printMask = null)
         {
             if ((printMask?.AliasIndex ?? true)
-                && item.AliasIndex.TryGet(out var AliasIndexItem))
+                && item.AliasIndex is {} AliasIndexItem)
             {
                 fg.AppendItem(AliasIndexItem, "AliasIndex");
             }

@@ -916,7 +916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Spell.FormKeyNullable, "Spell");
             }
             if ((printMask?.ButtonLabel ?? true)
-                && item.ButtonLabel.TryGet(out var ButtonLabelItem))
+                && item.ButtonLabel is {} ButtonLabelItem)
             {
                 fg.AppendItem(ButtonLabelItem, "ButtonLabel");
             }

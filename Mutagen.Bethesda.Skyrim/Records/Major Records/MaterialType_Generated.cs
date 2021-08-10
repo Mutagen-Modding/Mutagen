@@ -1129,22 +1129,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.HavokDisplayColor ?? true)
-                && item.HavokDisplayColor.TryGet(out var HavokDisplayColorItem))
+                && item.HavokDisplayColor is {} HavokDisplayColorItem)
             {
                 fg.AppendItem(HavokDisplayColorItem, "HavokDisplayColor");
             }
             if ((printMask?.Buoyancy ?? true)
-                && item.Buoyancy.TryGet(out var BuoyancyItem))
+                && item.Buoyancy is {} BuoyancyItem)
             {
                 fg.AppendItem(BuoyancyItem, "Buoyancy");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }

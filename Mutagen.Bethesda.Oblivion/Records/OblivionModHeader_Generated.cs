@@ -1226,22 +1226,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Stats?.ToString(fg, "Stats");
             }
             if ((printMask?.TypeOffsets ?? true)
-                && item.TypeOffsets.TryGet(out var TypeOffsetsItem))
+                && item.TypeOffsets is {} TypeOffsetsItem)
             {
                 fg.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
             }
             if ((printMask?.Deleted ?? true)
-                && item.Deleted.TryGet(out var DeletedItem))
+                && item.Deleted is {} DeletedItem)
             {
                 fg.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
             }
             if ((printMask?.Author ?? true)
-                && item.Author.TryGet(out var AuthorItem))
+                && item.Author is {} AuthorItem)
             {
                 fg.AppendItem(AuthorItem, "Author");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }

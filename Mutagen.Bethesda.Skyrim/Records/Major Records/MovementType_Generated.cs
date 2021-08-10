@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.RotateWhileMovingRun, "RotateWhileMovingRun");
             }
             if ((printMask?.AnimationChangeThresholds?.Overall ?? true)
-                && item.AnimationChangeThresholds.TryGet(out var AnimationChangeThresholdsItem))
+                && item.AnimationChangeThresholds is {} AnimationChangeThresholdsItem)
             {
                 AnimationChangeThresholdsItem?.ToString(fg, "AnimationChangeThresholds");
             }
@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         multiplier: 57.2958f);
                 }
             }
-            if (item.AnimationChangeThresholds.TryGet(out var AnimationChangeThresholdsItem))
+            if (item.AnimationChangeThresholds is {} AnimationChangeThresholdsItem)
             {
                 ((AnimationChangeThresholdsBinaryWriteTranslation)((IBinaryItem)AnimationChangeThresholdsItem).BinaryWriteTranslator).Write(
                     item: AnimationChangeThresholdsItem,

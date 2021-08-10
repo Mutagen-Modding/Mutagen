@@ -982,27 +982,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CloudLayer.Mask<bool>? printMask = null)
         {
             if ((printMask?.Enabled ?? true)
-                && item.Enabled.TryGet(out var EnabledItem))
+                && item.Enabled is {} EnabledItem)
             {
                 fg.AppendItem(EnabledItem, "Enabled");
             }
             if ((printMask?.XSpeed ?? true)
-                && item.XSpeed.TryGet(out var XSpeedItem))
+                && item.XSpeed is {} XSpeedItem)
             {
                 fg.AppendItem(XSpeedItem, "XSpeed");
             }
             if ((printMask?.YSpeed ?? true)
-                && item.YSpeed.TryGet(out var YSpeedItem))
+                && item.YSpeed is {} YSpeedItem)
             {
                 fg.AppendItem(YSpeedItem, "YSpeed");
             }
             if ((printMask?.Colors?.Overall ?? true)
-                && item.Colors.TryGet(out var ColorsItem))
+                && item.Colors is {} ColorsItem)
             {
                 ColorsItem?.ToString(fg, "Colors");
             }
             if ((printMask?.Alphas?.Overall ?? true)
-                && item.Alphas.TryGet(out var AlphasItem))
+                && item.Alphas is {} AlphasItem)
             {
                 AlphasItem?.ToString(fg, "Alphas");
             }

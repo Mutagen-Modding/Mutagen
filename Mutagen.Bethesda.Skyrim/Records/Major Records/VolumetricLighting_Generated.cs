@@ -1313,62 +1313,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Intensity ?? true)
-                && item.Intensity.TryGet(out var IntensityItem))
+                && item.Intensity is {} IntensityItem)
             {
                 fg.AppendItem(IntensityItem, "Intensity");
             }
             if ((printMask?.CustomColorContribution ?? true)
-                && item.CustomColorContribution.TryGet(out var CustomColorContributionItem))
+                && item.CustomColorContribution is {} CustomColorContributionItem)
             {
                 fg.AppendItem(CustomColorContributionItem, "CustomColorContribution");
             }
             if ((printMask?.ColorR ?? true)
-                && item.ColorR.TryGet(out var ColorRItem))
+                && item.ColorR is {} ColorRItem)
             {
                 fg.AppendItem(ColorRItem, "ColorR");
             }
             if ((printMask?.ColorG ?? true)
-                && item.ColorG.TryGet(out var ColorGItem))
+                && item.ColorG is {} ColorGItem)
             {
                 fg.AppendItem(ColorGItem, "ColorG");
             }
             if ((printMask?.ColorB ?? true)
-                && item.ColorB.TryGet(out var ColorBItem))
+                && item.ColorB is {} ColorBItem)
             {
                 fg.AppendItem(ColorBItem, "ColorB");
             }
             if ((printMask?.DensityContribution ?? true)
-                && item.DensityContribution.TryGet(out var DensityContributionItem))
+                && item.DensityContribution is {} DensityContributionItem)
             {
                 fg.AppendItem(DensityContributionItem, "DensityContribution");
             }
             if ((printMask?.DensitySize ?? true)
-                && item.DensitySize.TryGet(out var DensitySizeItem))
+                && item.DensitySize is {} DensitySizeItem)
             {
                 fg.AppendItem(DensitySizeItem, "DensitySize");
             }
             if ((printMask?.DensityWindSpeed ?? true)
-                && item.DensityWindSpeed.TryGet(out var DensityWindSpeedItem))
+                && item.DensityWindSpeed is {} DensityWindSpeedItem)
             {
                 fg.AppendItem(DensityWindSpeedItem, "DensityWindSpeed");
             }
             if ((printMask?.DensityFallingSpeed ?? true)
-                && item.DensityFallingSpeed.TryGet(out var DensityFallingSpeedItem))
+                && item.DensityFallingSpeed is {} DensityFallingSpeedItem)
             {
                 fg.AppendItem(DensityFallingSpeedItem, "DensityFallingSpeed");
             }
             if ((printMask?.PhaseFunctionContribution ?? true)
-                && item.PhaseFunctionContribution.TryGet(out var PhaseFunctionContributionItem))
+                && item.PhaseFunctionContribution is {} PhaseFunctionContributionItem)
             {
                 fg.AppendItem(PhaseFunctionContributionItem, "PhaseFunctionContribution");
             }
             if ((printMask?.PhaseFunctionScattering ?? true)
-                && item.PhaseFunctionScattering.TryGet(out var PhaseFunctionScatteringItem))
+                && item.PhaseFunctionScattering is {} PhaseFunctionScatteringItem)
             {
                 fg.AppendItem(PhaseFunctionScatteringItem, "PhaseFunctionScattering");
             }
             if ((printMask?.SamplingRepartitionRangeFactor ?? true)
-                && item.SamplingRepartitionRangeFactor.TryGet(out var SamplingRepartitionRangeFactorItem))
+                && item.SamplingRepartitionRangeFactor is {} SamplingRepartitionRangeFactorItem)
             {
                 fg.AppendItem(SamplingRepartitionRangeFactorItem, "SamplingRepartitionRangeFactor");
             }

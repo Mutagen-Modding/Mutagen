@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
             if ((printMask?.SoundChance ?? true)
-                && item.SoundChance.TryGet(out var SoundChanceItem))
+                && item.SoundChance is {} SoundChanceItem)
             {
                 fg.AppendItem(SoundChanceItem, "SoundChance");
             }

@@ -904,17 +904,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FaceGenData.Mask<bool>? printMask = null)
         {
             if ((printMask?.SymmetricGeometry ?? true)
-                && item.SymmetricGeometry.TryGet(out var SymmetricGeometryItem))
+                && item.SymmetricGeometry is {} SymmetricGeometryItem)
             {
                 fg.AppendLine($"SymmetricGeometry => {SpanExt.ToHexString(SymmetricGeometryItem)}");
             }
             if ((printMask?.AsymmetricGeometry ?? true)
-                && item.AsymmetricGeometry.TryGet(out var AsymmetricGeometryItem))
+                && item.AsymmetricGeometry is {} AsymmetricGeometryItem)
             {
                 fg.AppendLine($"AsymmetricGeometry => {SpanExt.ToHexString(AsymmetricGeometryItem)}");
             }
             if ((printMask?.SymmetricTexture ?? true)
-                && item.SymmetricTexture.TryGet(out var SymmetricTextureItem))
+                && item.SymmetricTexture is {} SymmetricTextureItem)
             {
                 fg.AppendLine($"SymmetricTexture => {SpanExt.ToHexString(SymmetricTextureItem)}");
             }

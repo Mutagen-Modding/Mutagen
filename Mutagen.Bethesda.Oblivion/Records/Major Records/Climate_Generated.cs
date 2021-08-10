@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Weathers?.Overall ?? true)
-                && item.Weathers.TryGet(out var WeathersItem))
+                && item.Weathers is {} WeathersItem)
             {
                 fg.AppendLine("Weathers =>");
                 fg.AppendLine("[");
@@ -1187,22 +1187,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.SunTexture ?? true)
-                && item.SunTexture.TryGet(out var SunTextureItem))
+                && item.SunTexture is {} SunTextureItem)
             {
                 fg.AppendItem(SunTextureItem, "SunTexture");
             }
             if ((printMask?.SunGlareTexture ?? true)
-                && item.SunGlareTexture.TryGet(out var SunGlareTextureItem))
+                && item.SunGlareTexture is {} SunGlareTextureItem)
             {
                 fg.AppendItem(SunGlareTextureItem, "SunGlareTexture");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Weathers.TryGet(out var WeathersItem))
+            if (obj.Weathers is {} WeathersItem)
             {
                 foreach (var item in WeathersItem.SelectMany(f => f.ContainedFormLinks))
                 {
@@ -1706,14 +1706,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.SunGlareTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((ClimateDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

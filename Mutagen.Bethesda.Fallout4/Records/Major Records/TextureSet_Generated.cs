@@ -1358,47 +1358,47 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Diffuse ?? true)
-                && item.Diffuse.TryGet(out var DiffuseItem))
+                && item.Diffuse is {} DiffuseItem)
             {
                 fg.AppendItem(DiffuseItem, "Diffuse");
             }
             if ((printMask?.NormalOrGloss ?? true)
-                && item.NormalOrGloss.TryGet(out var NormalOrGlossItem))
+                && item.NormalOrGloss is {} NormalOrGlossItem)
             {
                 fg.AppendItem(NormalOrGlossItem, "NormalOrGloss");
             }
             if ((printMask?.Glow ?? true)
-                && item.Glow.TryGet(out var GlowItem))
+                && item.Glow is {} GlowItem)
             {
                 fg.AppendItem(GlowItem, "Glow");
             }
             if ((printMask?.Height ?? true)
-                && item.Height.TryGet(out var HeightItem))
+                && item.Height is {} HeightItem)
             {
                 fg.AppendItem(HeightItem, "Height");
             }
             if ((printMask?.Environment ?? true)
-                && item.Environment.TryGet(out var EnvironmentItem))
+                && item.Environment is {} EnvironmentItem)
             {
                 fg.AppendItem(EnvironmentItem, "Environment");
             }
             if ((printMask?.Wrinkles ?? true)
-                && item.Wrinkles.TryGet(out var WrinklesItem))
+                && item.Wrinkles is {} WrinklesItem)
             {
                 fg.AppendItem(WrinklesItem, "Wrinkles");
             }
             if ((printMask?.Multilayer ?? true)
-                && item.Multilayer.TryGet(out var MultilayerItem))
+                && item.Multilayer is {} MultilayerItem)
             {
                 fg.AppendItem(MultilayerItem, "Multilayer");
             }
             if ((printMask?.SmoothSpec ?? true)
-                && item.SmoothSpec.TryGet(out var SmoothSpecItem))
+                && item.SmoothSpec is {} SmoothSpecItem)
             {
                 fg.AppendItem(SmoothSpecItem, "SmoothSpec");
             }
             if ((printMask?.Decal?.Overall ?? true)
-                && item.Decal.TryGet(out var DecalItem))
+                && item.Decal is {} DecalItem)
             {
                 DecalItem?.ToString(fg, "Decal");
             }
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.Material ?? true)
-                && item.Material.TryGet(out var MaterialItem))
+                && item.Material is {} MaterialItem)
             {
                 fg.AppendItem(MaterialItem, "Material");
             }
@@ -1978,7 +1978,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item.SmoothSpec,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TX07),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Decal.TryGet(out var DecalItem))
+            if (item.Decal is {} DecalItem)
             {
                 ((DecalBinaryWriteTranslation)((IBinaryItem)DecalItem).BinaryWriteTranslator).Write(
                     item: DecalItem,

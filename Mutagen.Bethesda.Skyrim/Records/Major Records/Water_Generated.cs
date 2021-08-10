@@ -3548,7 +3548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -3575,12 +3575,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Opacity, "Opacity");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.MNAM ?? true)
-                && item.MNAM.TryGet(out var MNAMItem))
+                && item.MNAM is {} MNAMItem)
             {
                 fg.AppendLine($"MNAM => {SpanExt.ToHexString(MNAMItem)}");
             }
@@ -3601,7 +3601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
             }
             if ((printMask?.DamagePerSecond ?? true)
-                && item.DamagePerSecond.TryGet(out var DamagePerSecondItem))
+                && item.DamagePerSecond is {} DamagePerSecondItem)
             {
                 fg.AppendItem(DamagePerSecondItem, "DamagePerSecond");
             }
@@ -3806,37 +3806,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.NoiseFlowmapScale, "NoiseFlowmapScale");
             }
             if ((printMask?.GNAM ?? true)
-                && item.GNAM.TryGet(out var GNAMItem))
+                && item.GNAM is {} GNAMItem)
             {
                 fg.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
             }
             if ((printMask?.LinearVelocity ?? true)
-                && item.LinearVelocity.TryGet(out var LinearVelocityItem))
+                && item.LinearVelocity is {} LinearVelocityItem)
             {
                 fg.AppendItem(LinearVelocityItem, "LinearVelocity");
             }
             if ((printMask?.AngularVelocity ?? true)
-                && item.AngularVelocity.TryGet(out var AngularVelocityItem))
+                && item.AngularVelocity is {} AngularVelocityItem)
             {
                 fg.AppendItem(AngularVelocityItem, "AngularVelocity");
             }
             if ((printMask?.NoiseLayerOneTexture ?? true)
-                && item.NoiseLayerOneTexture.TryGet(out var NoiseLayerOneTextureItem))
+                && item.NoiseLayerOneTexture is {} NoiseLayerOneTextureItem)
             {
                 fg.AppendItem(NoiseLayerOneTextureItem, "NoiseLayerOneTexture");
             }
             if ((printMask?.NoiseLayerTwoTexture ?? true)
-                && item.NoiseLayerTwoTexture.TryGet(out var NoiseLayerTwoTextureItem))
+                && item.NoiseLayerTwoTexture is {} NoiseLayerTwoTextureItem)
             {
                 fg.AppendItem(NoiseLayerTwoTextureItem, "NoiseLayerTwoTexture");
             }
             if ((printMask?.NoiseLayerThreeTexture ?? true)
-                && item.NoiseLayerThreeTexture.TryGet(out var NoiseLayerThreeTextureItem))
+                && item.NoiseLayerThreeTexture is {} NoiseLayerThreeTextureItem)
             {
                 fg.AppendItem(NoiseLayerThreeTextureItem, "NoiseLayerThreeTexture");
             }
             if ((printMask?.FlowNormalsNoiseTexture ?? true)
-                && item.FlowNormalsNoiseTexture.TryGet(out var FlowNormalsNoiseTextureItem))
+                && item.FlowNormalsNoiseTexture is {} FlowNormalsNoiseTextureItem)
             {
                 fg.AppendItem(FlowNormalsNoiseTextureItem, "FlowNormalsNoiseTexture");
             }

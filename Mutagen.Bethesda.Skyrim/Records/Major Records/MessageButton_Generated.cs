@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MessageButton.Mask<bool>? printMask = null)
         {
             if ((printMask?.Text ?? true)
-                && item.Text.TryGet(out var TextItem))
+                && item.Text is {} TextItem)
             {
                 fg.AppendItem(TextItem, "Text");
             }

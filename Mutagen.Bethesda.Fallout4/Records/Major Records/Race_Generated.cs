@@ -3043,7 +3043,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.AnimationSound.FormKeyNullable, "AnimationSound");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -3052,7 +3052,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.Description, "Description");
             }
             if ((printMask?.ActorEffect?.Overall ?? true)
-                && item.ActorEffect.TryGet(out var ActorEffectItem))
+                && item.ActorEffect is {} ActorEffectItem)
             {
                 fg.AppendLine("ActorEffect =>");
                 fg.AppendLine("[");
@@ -3075,12 +3075,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.Skin.FormKeyNullable, "Skin");
             }
             if ((printMask?.BipedBodyTemplate?.Overall ?? true)
-                && item.BipedBodyTemplate.TryGet(out var BipedBodyTemplateItem))
+                && item.BipedBodyTemplate is {} BipedBodyTemplateItem)
             {
                 BipedBodyTemplateItem?.ToString(fg, "BipedBodyTemplate");
             }
             if ((printMask?.Keywords?.Overall ?? true)
-                && item.Keywords.TryGet(out var KeywordsItem))
+                && item.Keywords is {} KeywordsItem)
             {
                 fg.AppendLine("Keywords =>");
                 fg.AppendLine("[");
@@ -3099,12 +3099,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Properties?.Overall ?? true)
-                && item.Properties.TryGet(out var PropertiesItem))
+                && item.Properties is {} PropertiesItem)
             {
                 PropertiesItem?.ToString(fg, "Properties");
             }
             if ((printMask?.AttachParentSlots?.Overall ?? true)
-                && item.AttachParentSlots.TryGet(out var AttachParentSlotsItem))
+                && item.AttachParentSlots is {} AttachParentSlotsItem)
             {
                 fg.AppendLine("AttachParentSlots =>");
                 fg.AppendLine("[");
@@ -3635,7 +3635,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return FormLinkInformation.Factory(obj.AnimationSound);
             }
-            if (obj.ActorEffect.TryGet(out var ActorEffectItem))
+            if (obj.ActorEffect is {} ActorEffectItem)
             {
                 foreach (var item in ActorEffectItem)
                 {
@@ -3646,14 +3646,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Skin);
             }
-            if (obj.Keywords.TryGet(out var KeywordsItem))
+            if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.AttachParentSlots.TryGet(out var AttachParentSlotsItem))
+            if (obj.AttachParentSlots is {} AttachParentSlotsItem)
             {
                 foreach (var item in AttachParentSlotsItem)
                 {
@@ -4241,7 +4241,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.Skin,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
-            if (item.BipedBodyTemplate.TryGet(out var BipedBodyTemplateItem))
+            if (item.BipedBodyTemplate is {} BipedBodyTemplateItem)
             {
                 ((BipedBodyTemplateBinaryWriteTranslation)((IBinaryItem)BipedBodyTemplateItem).BinaryWriteTranslator).Write(
                     item: BipedBodyTemplateItem,
@@ -4260,7 +4260,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            if (item.Properties.TryGet(out var PropertiesItem))
+            if (item.Properties is {} PropertiesItem)
             {
                 ((PropertiesBinaryWriteTranslation)((IBinaryItem)PropertiesItem).BinaryWriteTranslator).Write(
                     item: PropertiesItem,

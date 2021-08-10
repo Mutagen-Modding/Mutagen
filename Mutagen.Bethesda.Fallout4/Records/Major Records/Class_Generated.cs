@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1160,12 +1160,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.Description, "Description");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.Properties?.Overall ?? true)
-                && item.Properties.TryGet(out var PropertiesItem))
+                && item.Properties is {} PropertiesItem)
             {
                 PropertiesItem?.ToString(fg, "Properties");
             }
@@ -1639,7 +1639,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Properties.TryGet(out var PropertiesItem))
+            if (item.Properties is {} PropertiesItem)
             {
                 ((PropertiesBinaryWriteTranslation)((IBinaryItem)PropertiesItem).BinaryWriteTranslator).Write(
                     item: PropertiesItem,

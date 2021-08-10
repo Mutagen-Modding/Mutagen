@@ -1093,17 +1093,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.Havok?.Overall ?? true)
-                && item.Havok.TryGet(out var HavokItem))
+                && item.Havok is {} HavokItem)
             {
                 HavokItem?.ToString(fg, "Havok");
             }
             if ((printMask?.TextureSpecularExponent ?? true)
-                && item.TextureSpecularExponent.TryGet(out var TextureSpecularExponentItem))
+                && item.TextureSpecularExponent is {} TextureSpecularExponentItem)
             {
                 fg.AppendItem(TextureSpecularExponentItem, "TextureSpecularExponent");
             }
@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Havok.TryGet(out var HavokItem))
+            if (item.Havok is {} HavokItem)
             {
                 ((HavokDataBinaryWriteTranslation)((IBinaryItem)HavokItem).BinaryWriteTranslator).Write(
                     item: HavokItem,

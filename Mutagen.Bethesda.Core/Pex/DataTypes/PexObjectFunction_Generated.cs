@@ -1189,12 +1189,12 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObjectFunction.Mask<bool>? printMask = null)
         {
             if ((printMask?.ReturnTypeName ?? true)
-                && item.ReturnTypeName.TryGet(out var ReturnTypeNameItem))
+                && item.ReturnTypeName is {} ReturnTypeNameItem)
             {
                 fg.AppendItem(ReturnTypeNameItem, "ReturnTypeName");
             }
             if ((printMask?.DocString ?? true)
-                && item.DocString.TryGet(out var DocStringItem))
+                && item.DocString is {} DocStringItem)
             {
                 fg.AppendItem(DocStringItem, "DocString");
             }
