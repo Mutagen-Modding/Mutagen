@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
             : base(stream, bufferSize, dispose)
         {
             var startPos = stream.Position;
-            this.MetaData = new ParsingBundle(release, MasterReferenceReader.FromStream(stream, modKey, release, disposeStream: dispose))
+            this.MetaData = new ParsingBundle(release, MasterReferenceReader.FromStream(stream, modKey, release, disposeStream: false))
             {
                 ModKey = modKey
             };
