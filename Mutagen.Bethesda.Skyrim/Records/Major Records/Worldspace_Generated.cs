@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ILightingTemplateGetter> InteriorLighting
         {
             get => _InteriorLighting;
-            init => _InteriorLighting = value.AsNullable();
+            set => _InteriorLighting = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILightingTemplateGetter> IWorldspaceGetter.InteriorLighting => this.InteriorLighting;
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
         {
             get => _EncounterZone;
-            init => _EncounterZone = value.AsNullable();
+            set => _EncounterZone = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> IWorldspaceGetter.EncounterZone => this.EncounterZone;
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ILocationGetter> Location
         {
             get => _Location;
-            init => _Location = value.AsNullable();
+            set => _Location = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> IWorldspaceGetter.Location => this.Location;
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IClimateGetter> Climate
         {
             get => _Climate;
-            init => _Climate = value.AsNullable();
+            set => _Climate = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClimateGetter> IWorldspaceGetter.Climate => this.Climate;
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IWaterGetter> Water
         {
             get => _Water;
-            init => _Water = value.AsNullable();
+            set => _Water = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IWaterGetter> LodWater
         {
             get => _LodWater;
-            init => _LodWater = value.AsNullable();
+            set => _LodWater = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.LodWater => this.LodWater;
@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMusicTypeGetter> Music
         {
             get => _Music;
-            init => _Music = value.AsNullable();
+            set => _Music = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMusicTypeGetter> IWorldspaceGetter.Music => this.Music;

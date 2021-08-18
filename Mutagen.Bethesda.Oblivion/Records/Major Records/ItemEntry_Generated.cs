@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IItemGetter> Item
         {
             get => _Item;
-            init => _Item = value.AsSetter();
+            set => _Item = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IItemGetter> IItemEntryGetter.Item => this.Item;

@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IItemGetter> DeathItem
         {
             get => _DeathItem;
-            init => _DeathItem = value.AsNullable();
+            set => _DeathItem = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IItemGetter> ICreatureGetter.DeathItem => this.DeathItem;
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            init => _Script = value.AsNullable();
+            set => _Script = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> ICreatureGetter.Script => this.Script;
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<ICombatStyleGetter> CombatStyle
         {
             get => _CombatStyle;
-            init => _CombatStyle = value.AsNullable();
+            set => _CombatStyle = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> ICreatureGetter.CombatStyle => this.CombatStyle;
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<ICreatureGetter> InheritsSoundFrom
         {
             get => _InheritsSoundFrom;
-            init => _InheritsSoundFrom = value.AsNullable();
+            set => _InheritsSoundFrom = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICreatureGetter> ICreatureGetter.InheritsSoundFrom => this.InheritsSoundFrom;

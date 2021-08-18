@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
         {
             get => _ObjectEffect;
-            init => _ObjectEffect = value.AsNullable();
+            set => _ObjectEffect = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEffectRecordGetter> IWeaponGetter.ObjectEffect => this.ObjectEffect;
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEquipTypeGetter> EquipmentType
         {
             get => _EquipmentType;
-            init => _EquipmentType = value.AsNullable();
+            set => _EquipmentType = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IWeaponGetter.EquipmentType => this.EquipmentType;
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IImpactDataSetGetter> BlockBashImpact
         {
             get => _BlockBashImpact;
-            init => _BlockBashImpact = value.AsNullable();
+            set => _BlockBashImpact = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IWeaponGetter.BlockBashImpact => this.BlockBashImpact;
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial
         {
             get => _AlternateBlockMaterial;
-            init => _AlternateBlockMaterial = value.AsNullable();
+            set => _AlternateBlockMaterial = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IWeaponGetter.AlternateBlockMaterial => this.AlternateBlockMaterial;
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
         {
             get => _PickUpSound;
-            init => _PickUpSound = value.AsNullable();
+            set => _PickUpSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.PickUpSound => this.PickUpSound;
@@ -235,7 +235,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
         {
             get => _PutDownSound;
-            init => _PutDownSound = value.AsNullable();
+            set => _PutDownSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.PutDownSound => this.PutDownSound;
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet
         {
             get => _ImpactDataSet;
-            init => _ImpactDataSet = value.AsNullable();
+            set => _ImpactDataSet = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IWeaponGetter.ImpactDataSet => this.ImpactDataSet;
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IStaticGetter> FirstPersonModel
         {
             get => _FirstPersonModel;
-            init => _FirstPersonModel = value.AsNullable();
+            set => _FirstPersonModel = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IWeaponGetter.FirstPersonModel => this.FirstPersonModel;
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> AttackSound
         {
             get => _AttackSound;
-            init => _AttackSound = value.AsNullable();
+            set => _AttackSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackSound => this.AttackSound;
@@ -323,7 +323,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> AttackSound2D
         {
             get => _AttackSound2D;
-            init => _AttackSound2D = value.AsNullable();
+            set => _AttackSound2D = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackSound2D => this.AttackSound2D;
@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> AttackLoopSound
         {
             get => _AttackLoopSound;
-            init => _AttackLoopSound = value.AsNullable();
+            set => _AttackLoopSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackLoopSound => this.AttackLoopSound;
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> AttackFailSound
         {
             get => _AttackFailSound;
-            init => _AttackFailSound = value.AsNullable();
+            set => _AttackFailSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackFailSound => this.AttackFailSound;
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> IdleSound
         {
             get => _IdleSound;
-            init => _IdleSound = value.AsNullable();
+            set => _IdleSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.IdleSound => this.IdleSound;
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> EquipSound
         {
             get => _EquipSound;
-            init => _EquipSound = value.AsNullable();
+            set => _EquipSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.EquipSound => this.EquipSound;
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> UnequipSound
         {
             get => _UnequipSound;
-            init => _UnequipSound = value.AsNullable();
+            set => _UnequipSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.UnequipSound => this.UnequipSound;
@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IWeaponGetter> Template
         {
             get => _Template;
-            init => _Template = value.AsNullable();
+            set => _Template = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWeaponGetter> IWeaponGetter.Template => this.Template;

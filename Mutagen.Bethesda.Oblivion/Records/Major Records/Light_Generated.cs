@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            init => _Script = value.AsNullable();
+            set => _Script = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> ILightGetter.Script => this.Script;
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<ISoundGetter> Sound
         {
             get => _Sound;
-            init => _Sound = value.AsNullable();
+            set => _Sound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> ILightGetter.Sound => this.Sound;

@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
         {
             get => _PickUpSound;
-            init => _PickUpSound = value.AsNullable();
+            set => _PickUpSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ISoulGemGetter.PickUpSound => this.PickUpSound;
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
         {
             get => _PutDownSound;
-            init => _PutDownSound = value.AsNullable();
+            set => _PutDownSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ISoulGemGetter.PutDownSound => this.PutDownSound;
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoulGemGetter> LinkedTo
         {
             get => _LinkedTo;
-            init => _LinkedTo = value.AsNullable();
+            set => _LinkedTo = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoulGemGetter> ISoulGemGetter.LinkedTo => this.LinkedTo;

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILandscapeTextureGetter> Texture
         {
             get => _Texture;
-            init => _Texture = value.AsSetter();
+            set => _Texture = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILandscapeTextureGetter> ILayerHeaderGetter.Texture => this.Texture;

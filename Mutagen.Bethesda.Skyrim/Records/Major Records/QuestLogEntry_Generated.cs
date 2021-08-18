@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IQuestGetter> NextQuest
         {
             get => _NextQuest;
-            init => _NextQuest = value.AsNullable();
+            set => _NextQuest = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IQuestLogEntryGetter.NextQuest => this.NextQuest;

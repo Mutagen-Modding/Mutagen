@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundCategoryGetter> Category
         {
             get => _Category;
-            init => _Category = value.AsNullable();
+            set => _Category = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundCategoryGetter> ISoundDescriptorGetter.Category => this.Category;
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor
         {
             get => _AlternateSoundFor;
-            init => _AlternateSoundFor = value.AsNullable();
+            set => _AlternateSoundFor = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundDescriptorGetter.AlternateSoundFor => this.AlternateSoundFor;
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundOutputModelGetter> OutputModel
         {
             get => _OutputModel;
-            init => _OutputModel = value.AsNullable();
+            set => _OutputModel = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundOutputModelGetter> ISoundDescriptorGetter.OutputModel => this.OutputModel;

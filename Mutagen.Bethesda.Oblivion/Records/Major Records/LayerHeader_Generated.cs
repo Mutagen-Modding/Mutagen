@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<ILandTextureGetter> Texture
         {
             get => _Texture;
-            init => _Texture = value.AsSetter();
+            set => _Texture = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILandTextureGetter> ILayerHeaderGetter.Texture => this.Texture;

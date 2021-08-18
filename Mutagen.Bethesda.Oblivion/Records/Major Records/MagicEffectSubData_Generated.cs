@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IEffectShaderGetter> EnchantEffect
         {
             get => _EnchantEffect;
-            init => _EnchantEffect = value.AsSetter();
+            set => _EnchantEffect = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectSubDataGetter.EnchantEffect => this.EnchantEffect;
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<ISoundGetter> CastingSound
         {
             get => _CastingSound;
-            init => _CastingSound = value.AsSetter();
+            set => _CastingSound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.CastingSound => this.CastingSound;
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<ISoundGetter> BoltSound
         {
             get => _BoltSound;
-            init => _BoltSound = value.AsSetter();
+            set => _BoltSound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.BoltSound => this.BoltSound;
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<ISoundGetter> HitSound
         {
             get => _HitSound;
-            init => _HitSound = value.AsSetter();
+            set => _HitSound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.HitSound => this.HitSound;
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<ISoundGetter> AreaSound
         {
             get => _AreaSound;
-            init => _AreaSound = value.AsSetter();
+            set => _AreaSound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.AreaSound => this.AreaSound;

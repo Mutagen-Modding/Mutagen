@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ILocationGetter> SpecificLocation
         {
             get => _SpecificLocation;
-            init => _SpecificLocation = value.AsNullable();
+            set => _SpecificLocation = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> IQuestAliasGetter.SpecificLocation => this.SpecificLocation;
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IPlacedGetter> ForcedReference
         {
             get => _ForcedReference;
-            init => _ForcedReference = value.AsNullable();
+            set => _ForcedReference = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedGetter> IQuestAliasGetter.ForcedReference => this.ForcedReference;
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<INpcGetter> UniqueActor
         {
             get => _UniqueActor;
-            init => _UniqueActor = value.AsNullable();
+            set => _UniqueActor = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> IQuestAliasGetter.UniqueActor => this.UniqueActor;
@@ -224,7 +224,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList
         {
             get => _SpectatorOverridePackageList;
-            init => _SpectatorOverridePackageList = value.AsNullable();
+            set => _SpectatorOverridePackageList = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IQuestAliasGetter.SpectatorOverridePackageList => this.SpectatorOverridePackageList;
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList
         {
             get => _ObserveDeadBodyOverridePackageList;
-            init => _ObserveDeadBodyOverridePackageList = value.AsNullable();
+            set => _ObserveDeadBodyOverridePackageList = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IQuestAliasGetter.ObserveDeadBodyOverridePackageList => this.ObserveDeadBodyOverridePackageList;
@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList
         {
             get => _GuardWarnOverridePackageList;
-            init => _GuardWarnOverridePackageList = value.AsNullable();
+            set => _GuardWarnOverridePackageList = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IQuestAliasGetter.GuardWarnOverridePackageList => this.GuardWarnOverridePackageList;
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> CombatOverridePackageList
         {
             get => _CombatOverridePackageList;
-            init => _CombatOverridePackageList = value.AsNullable();
+            set => _CombatOverridePackageList = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IQuestAliasGetter.CombatOverridePackageList => this.CombatOverridePackageList;
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMessageGetter> DisplayName
         {
             get => _DisplayName;
-            init => _DisplayName = value.AsNullable();
+            set => _DisplayName = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMessageGetter> IQuestAliasGetter.DisplayName => this.DisplayName;
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes
         {
             get => _VoiceTypes;
-            init => _VoiceTypes = value.AsNullable();
+            set => _VoiceTypes = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAliasVoiceTypeGetter> IQuestAliasGetter.VoiceTypes => this.VoiceTypes;

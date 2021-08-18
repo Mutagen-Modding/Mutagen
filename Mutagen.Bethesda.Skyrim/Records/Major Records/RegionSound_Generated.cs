@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISoundDescriptorGetter> Sound
         {
             get => _Sound;
-            init => _Sound = value.AsSetter();
+            set => _Sound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IRegionSoundGetter.Sound => this.Sound;

@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IColorRecordGetter> PresetDefault
         {
             get => _PresetDefault;
-            init => _PresetDefault = value.AsNullable();
+            set => _PresetDefault = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> ITintAssetsGetter.PresetDefault => this.PresetDefault;

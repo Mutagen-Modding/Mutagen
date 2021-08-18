@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IFactionGetter> Faction
         {
             get => _Faction;
-            init => _Faction = value.AsSetter();
+            set => _Faction = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;

@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISpellGetter> Effect
         {
             get => _Effect;
-            init => _Effect = value.AsSetter();
+            set => _Effect = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> ICriticalDataGetter.Effect => this.Effect;

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IPerkGetter> Perk
         {
             get => _Perk;
-            init => _Perk = value.AsSetter();
+            set => _Perk = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> IActorValuePerkNodeGetter.Perk => this.Perk;
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill
         {
             get => _AssociatedSkill;
-            init => _AssociatedSkill = value.AsNullable();
+            set => _AssociatedSkill = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IActorValueInformationGetter> IActorValuePerkNodeGetter.AssociatedSkill => this.AssociatedSkill;

@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IANavigationMeshGetter> NavigationMesh
         {
             get => _NavigationMesh;
-            init => _NavigationMesh = value.AsSetter();
+            set => _NavigationMesh = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IANavigationMeshGetter> INavigationMapInfoGetter.NavigationMesh => this.NavigationMesh;
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IWorldspaceGetter> ParentWorldspace
         {
             get => _ParentWorldspace;
-            init => _ParentWorldspace = value.AsSetter();
+            set => _ParentWorldspace = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> INavigationMapInfoGetter.ParentWorldspace => this.ParentWorldspace;
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ICellGetter> ParentCell
         {
             get => _ParentCell;
-            init => _ParentCell = value.AsSetter();
+            set => _ParentCell = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ICellGetter> INavigationMapInfoGetter.ParentCell => this.ParentCell;

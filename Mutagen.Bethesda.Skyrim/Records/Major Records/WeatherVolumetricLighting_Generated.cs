@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IVolumetricLightingGetter> Sunrise
         {
             get => _Sunrise;
-            init => _Sunrise = value.AsSetter();
+            set => _Sunrise = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Sunrise => this.Sunrise;
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IVolumetricLightingGetter> Day
         {
             get => _Day;
-            init => _Day = value.AsSetter();
+            set => _Day = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Day => this.Day;
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IVolumetricLightingGetter> Sunset
         {
             get => _Sunset;
-            init => _Sunset = value.AsSetter();
+            set => _Sunset = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Sunset => this.Sunset;
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IVolumetricLightingGetter> Night
         {
             get => _Night;
-            init => _Night = value.AsSetter();
+            set => _Night = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Night => this.Night;

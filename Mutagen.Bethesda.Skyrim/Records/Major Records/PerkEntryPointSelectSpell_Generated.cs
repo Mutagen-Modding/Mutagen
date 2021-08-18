@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISpellGetter> Spell
         {
             get => _Spell;
-            init => _Spell = value.AsSetter();
+            set => _Spell = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> IPerkEntryPointSelectSpellGetter.Spell => this.Spell;

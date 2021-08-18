@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IConstructibleGetter> CreatedObject
         {
             get => _CreatedObject;
-            init => _CreatedObject = value.AsNullable();
+            set => _CreatedObject = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IConstructibleGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject;
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IKeywordGetter> WorkbenchKeyword
         {
             get => _WorkbenchKeyword;
-            init => _WorkbenchKeyword = value.AsNullable();
+            set => _WorkbenchKeyword = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IConstructibleObjectGetter.WorkbenchKeyword => this.WorkbenchKeyword;

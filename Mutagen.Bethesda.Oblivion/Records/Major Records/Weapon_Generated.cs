@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            init => _Script = value.AsNullable();
+            set => _Script = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> IWeaponGetter.Script => this.Script;
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IEnchantmentGetter> Enchantment
         {
             get => _Enchantment;
-            init => _Enchantment = value.AsNullable();
+            set => _Enchantment = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEnchantmentGetter> IWeaponGetter.Enchantment => this.Enchantment;

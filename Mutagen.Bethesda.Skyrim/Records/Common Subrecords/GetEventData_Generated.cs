@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISkyrimMajorRecordGetter> Parameter3
         {
             get => _Parameter3;
-            init => _Parameter3 = value.AsSetter();
+            set => _Parameter3 = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IGetEventDataGetter.Parameter3 => this.Parameter3;

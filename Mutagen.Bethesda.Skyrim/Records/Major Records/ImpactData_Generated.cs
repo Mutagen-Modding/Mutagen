@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IMaterialTypeGetter> Material
         {
             get => _Material;
-            init => _Material = value.AsSetter();
+            set => _Material = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IMaterialTypeGetter> IImpactDataGetter.Material => this.Material;
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImpactGetter> Impact
         {
             get => _Impact;
-            init => _Impact = value.AsSetter();
+            set => _Impact = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactGetter> IImpactDataGetter.Impact => this.Impact;

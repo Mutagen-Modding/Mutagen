@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IPlacedGetter> LocationReference
         {
             get => _LocationReference;
-            init => _LocationReference = value.AsSetter();
+            set => _LocationReference = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;

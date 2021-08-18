@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IWeatherGetter> Weather
         {
             get => _Weather;
-            init => _Weather = value.AsSetter();
+            set => _Weather = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather;

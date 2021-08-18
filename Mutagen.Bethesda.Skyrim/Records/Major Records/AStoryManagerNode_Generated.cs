@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IAStoryManagerNodeGetter> Parent
         {
             get => _Parent;
-            init => _Parent = value.AsNullable();
+            set => _Parent = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAStoryManagerNodeGetter> IAStoryManagerNodeGetter.Parent => this.Parent;
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling
         {
             get => _PreviousSibling;
-            init => _PreviousSibling = value.AsNullable();
+            set => _PreviousSibling = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAStoryManagerNodeGetter> IAStoryManagerNodeGetter.PreviousSibling => this.PreviousSibling;

@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IDialogTopicGetter> Topic
         {
             get => _Topic;
-            init => _Topic = value.AsNullable();
+            set => _Topic = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogTopicGetter> IDialogResponsesGetter.Topic => this.Topic;
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IDialogResponsesGetter> PreviousDialog
         {
             get => _PreviousDialog;
-            init => _PreviousDialog = value.AsNullable();
+            set => _PreviousDialog = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponsesGetter.PreviousDialog => this.PreviousDialog;
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IDialogResponsesGetter> ResponseData
         {
             get => _ResponseData;
-            init => _ResponseData = value.AsNullable();
+            set => _ResponseData = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponsesGetter.ResponseData => this.ResponseData;
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<INpcGetter> Speaker
         {
             get => _Speaker;
-            init => _Speaker = value.AsNullable();
+            set => _Speaker = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> IDialogResponsesGetter.Speaker => this.Speaker;
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IDialogTopicGetter> WalkAwayTopic
         {
             get => _WalkAwayTopic;
-            init => _WalkAwayTopic = value.AsNullable();
+            set => _WalkAwayTopic = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogTopicGetter> IDialogResponsesGetter.WalkAwayTopic => this.WalkAwayTopic;
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride
         {
             get => _AudioOutputOverride;
-            init => _AudioOutputOverride = value.AsNullable();
+            set => _AudioOutputOverride = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundOutputModelGetter> IDialogResponsesGetter.AudioOutputOverride => this.AudioOutputOverride;

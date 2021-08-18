@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IRaceGetter> Race
         {
             get => _Race;
-            init => _Race = value.AsSetter();
+            set => _Race = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IRaceGetter> IRaceRelationGetter.Race => this.Race;

@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IClimateGetter> Climate
         {
             get => _Climate;
-            init => _Climate = value.AsNullable();
+            set => _Climate = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClimateGetter> ICellGetter.Climate => this.Climate;
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IWaterGetter> Water
         {
             get => _Water;
-            init => _Water = value.AsNullable();
+            set => _Water = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> ICellGetter.Water => this.Water;
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IFactionGetter> Owner
         {
             get => _Owner;
-            init => _Owner = value.AsNullable();
+            set => _Owner = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> ICellGetter.Owner => this.Owner;
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IGlobalGetter> GlobalVariable
         {
             get => _GlobalVariable;
-            init => _GlobalVariable = value.AsNullable();
+            set => _GlobalVariable = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> ICellGetter.GlobalVariable => this.GlobalVariable;

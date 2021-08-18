@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISpellRecordGetter> Spell
         {
             get => _Spell;
-            init => _Spell = value.AsSetter();
+            set => _Spell = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellRecordGetter> IAttackDataGetter.Spell => this.Spell;
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IKeywordGetter> AttackType
         {
             get => _AttackType;
-            init => _AttackType = value.AsSetter();
+            set => _AttackType = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType;

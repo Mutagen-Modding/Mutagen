@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
         {
             get => _PickUpSound;
-            init => _PickUpSound = value.AsNullable();
+            set => _PickUpSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IBookGetter.PickUpSound => this.PickUpSound;
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
         {
             get => _PutDownSound;
-            init => _PutDownSound = value.AsNullable();
+            set => _PutDownSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IBookGetter.PutDownSound => this.PutDownSound;
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IStaticGetter> InventoryArt
         {
             get => _InventoryArt;
-            init => _InventoryArt = value.AsNullable();
+            set => _InventoryArt = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IBookGetter.InventoryArt => this.InventoryArt;

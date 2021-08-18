@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> LoopingSound
         {
             get => _LoopingSound;
-            init => _LoopingSound = value.AsNullable();
+            set => _LoopingSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IMoveableStaticGetter.LoopingSound => this.LoopingSound;

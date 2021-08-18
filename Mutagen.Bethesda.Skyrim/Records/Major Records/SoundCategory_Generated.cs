@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundCategoryGetter> Parent
         {
             get => _Parent;
-            init => _Parent = value.AsNullable();
+            set => _Parent = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundCategoryGetter> ISoundCategoryGetter.Parent => this.Parent;

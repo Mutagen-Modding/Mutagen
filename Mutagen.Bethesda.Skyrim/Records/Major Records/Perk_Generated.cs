@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IPerkGetter> NextPerk
         {
             get => _NextPerk;
-            init => _NextPerk = value.AsNullable();
+            set => _NextPerk = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPerkGetter> IPerkGetter.NextPerk => this.NextPerk;

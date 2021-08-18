@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<INpcSpawnGetter> Reference
         {
             get => _Reference;
-            init => _Reference = value.AsSetter();
+            set => _Reference = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcSpawnGetter> ILeveledNpcEntryDataGetter.Reference => this.Reference;

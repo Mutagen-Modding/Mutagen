@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullable<ITextureSetGetter> TextureSet
         {
             get => _TextureSet;
-            init => _TextureSet = value.AsNullable();
+            set => _TextureSet = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IHeadPartGetter.TextureSet => this.TextureSet;
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullable<IColorRecordGetter> Color
         {
             get => _Color;
-            init => _Color = value.AsNullable();
+            set => _Color = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> IHeadPartGetter.Color => this.Color;
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullable<IFormListGetter> ValidRaces
         {
             get => _ValidRaces;
-            init => _ValidRaces = value.AsNullable();
+            set => _ValidRaces = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IHeadPartGetter.ValidRaces => this.ValidRaces;

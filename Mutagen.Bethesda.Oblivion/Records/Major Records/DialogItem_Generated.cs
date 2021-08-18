@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IQuestGetter> Quest
         {
             get => _Quest;
-            init => _Quest = value.AsNullable();
+            set => _Quest = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IDialogItemGetter.Quest => this.Quest;
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IDialogItemGetter> PreviousTopic
         {
             get => _PreviousTopic;
-            init => _PreviousTopic = value.AsNullable();
+            set => _PreviousTopic = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogItemGetter> IDialogItemGetter.PreviousTopic => this.PreviousTopic;

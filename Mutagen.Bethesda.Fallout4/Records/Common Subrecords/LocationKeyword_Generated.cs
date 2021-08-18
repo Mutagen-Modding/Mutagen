@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IKeywordGetter> Link
         {
             get => _Link;
-            init => _Link = value.AsSetter();
+            set => _Link = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeywordGetter> ILocationKeywordGetter.Link => this.Link;

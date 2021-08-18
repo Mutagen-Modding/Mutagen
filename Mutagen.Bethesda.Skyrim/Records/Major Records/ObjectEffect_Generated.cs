@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IObjectEffectGetter> BaseEnchantment
         {
             get => _BaseEnchantment;
-            init => _BaseEnchantment = value.AsSetter();
+            set => _BaseEnchantment = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IObjectEffectGetter> IObjectEffectGetter.BaseEnchantment => this.BaseEnchantment;
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IFormListGetter> WornRestrictions
         {
             get => _WornRestrictions;
-            init => _WornRestrictions = value.AsSetter();
+            set => _WornRestrictions = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFormListGetter> IObjectEffectGetter.WornRestrictions => this.WornRestrictions;

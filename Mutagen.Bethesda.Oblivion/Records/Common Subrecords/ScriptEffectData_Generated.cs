@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IScriptGetter> Script
         {
             get => _Script;
-            init => _Script = value.AsSetter();
+            set => _Script = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IScriptGetter> IScriptEffectDataGetter.Script => this.Script;
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEDIDLink<IMagicEffectGetter> VisualEffect
         {
             get => _VisualEffect;
-            init => _VisualEffect = value.AsSetter();
+            set => _VisualEffect = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEDIDLinkGetter<IMagicEffectGetter> IScriptEffectDataGetter.VisualEffect => this.VisualEffect;

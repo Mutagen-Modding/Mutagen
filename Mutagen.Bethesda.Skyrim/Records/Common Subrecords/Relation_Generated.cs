@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IRelatableGetter> Target
         {
             get => _Target;
-            init => _Target = value.AsSetter();
+            set => _Target = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;

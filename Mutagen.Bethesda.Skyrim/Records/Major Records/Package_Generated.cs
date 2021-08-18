@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ICombatStyleGetter> CombatStyle
         {
             get => _CombatStyle;
-            init => _CombatStyle = value.AsNullable();
+            set => _CombatStyle = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle;
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IQuestGetter> OwnerQuest
         {
             get => _OwnerQuest;
-            init => _OwnerQuest = value.AsNullable();
+            set => _OwnerQuest = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IPackageGetter.OwnerQuest => this.OwnerQuest;
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IPackageGetter> PackageTemplate
         {
             get => _PackageTemplate;
-            init => _PackageTemplate = value.AsSetter();
+            set => _PackageTemplate = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate;

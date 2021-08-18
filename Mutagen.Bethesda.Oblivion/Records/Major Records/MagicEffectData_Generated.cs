@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<ILightGetter> Light
         {
             get => _Light;
-            init => _Light = value.AsSetter();
+            set => _Light = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IMagicEffectDataGetter.Light => this.Light;
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IEffectShaderGetter> EffectShader
         {
             get => _EffectShader;
-            init => _EffectShader = value.AsSetter();
+            set => _EffectShader = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectDataGetter.EffectShader => this.EffectShader;

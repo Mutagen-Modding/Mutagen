@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ILocationGetter> ParentLocation
         {
             get => _ParentLocation;
-            init => _ParentLocation = value.AsNullable();
+            set => _ParentLocation = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> ILocationGetter.ParentLocation => this.ParentLocation;
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMusicTypeGetter> Music
         {
             get => _Music;
-            init => _Music = value.AsNullable();
+            set => _Music = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMusicTypeGetter> ILocationGetter.Music => this.Music;
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction
         {
             get => _UnreportedCrimeFaction;
-            init => _UnreportedCrimeFaction = value.AsNullable();
+            set => _UnreportedCrimeFaction = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> ILocationGetter.UnreportedCrimeFaction => this.UnreportedCrimeFaction;
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef
         {
             get => _WorldLocationMarkerRef;
-            init => _WorldLocationMarkerRef = value.AsNullable();
+            set => _WorldLocationMarkerRef = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedSimpleGetter> ILocationGetter.WorldLocationMarkerRef => this.WorldLocationMarkerRef;
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef
         {
             get => _HorseMarkerRef;
-            init => _HorseMarkerRef = value.AsNullable();
+            set => _HorseMarkerRef = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> ILocationGetter.HorseMarkerRef => this.HorseMarkerRef;

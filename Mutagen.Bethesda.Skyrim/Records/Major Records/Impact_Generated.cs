@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ITextureSetGetter> TextureSet
         {
             get => _TextureSet;
-            init => _TextureSet = value.AsNullable();
+            set => _TextureSet = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IImpactGetter.TextureSet => this.TextureSet;
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet
         {
             get => _SecondaryTextureSet;
-            init => _SecondaryTextureSet = value.AsNullable();
+            set => _SecondaryTextureSet = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IImpactGetter.SecondaryTextureSet => this.SecondaryTextureSet;
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundGetter> Sound1
         {
             get => _Sound1;
-            init => _Sound1 = value.AsNullable();
+            set => _Sound1 = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IImpactGetter.Sound1 => this.Sound1;
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundGetter> Sound2
         {
             get => _Sound2;
-            init => _Sound2 = value.AsNullable();
+            set => _Sound2 = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IImpactGetter.Sound2 => this.Sound2;
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IHazardGetter> Hazard
         {
             get => _Hazard;
-            init => _Hazard = value.AsNullable();
+            set => _Hazard = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHazardGetter> IImpactGetter.Hazard => this.Hazard;

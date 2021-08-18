@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IPerkGetter> Perk
         {
             get => _Perk;
-            init => _Perk = value.AsSetter();
+            set => _Perk = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> IPerkPlacementGetter.Perk => this.Perk;

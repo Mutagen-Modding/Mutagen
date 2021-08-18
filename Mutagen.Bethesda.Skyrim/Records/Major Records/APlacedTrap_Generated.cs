@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
         {
             get => _EncounterZone;
-            init => _EncounterZone = value.AsNullable();
+            set => _EncounterZone = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> IAPlacedTrapGetter.EncounterZone => this.EncounterZone;
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEmittanceGetter> Emittance
         {
             get => _Emittance;
-            init => _Emittance = value.AsNullable();
+            set => _Emittance = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEmittanceGetter> IAPlacedTrapGetter.Emittance => this.Emittance;
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IPlacedObjectGetter> MultiBoundReference
         {
             get => _MultiBoundReference;
-            init => _MultiBoundReference = value.AsNullable();
+            set => _MultiBoundReference = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IAPlacedTrapGetter.MultiBoundReference => this.MultiBoundReference;
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ILocationRecordGetter> LocationReference
         {
             get => _LocationReference;
-            init => _LocationReference = value.AsNullable();
+            set => _LocationReference = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationRecordGetter> IAPlacedTrapGetter.LocationReference => this.LocationReference;

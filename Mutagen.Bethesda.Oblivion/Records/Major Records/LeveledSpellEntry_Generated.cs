@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<ISpellRecordGetter> Reference
         {
             get => _Reference;
-            init => _Reference = value.AsSetter();
+            set => _Reference = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellRecordGetter> ILeveledSpellEntryGetter.Reference => this.Reference;

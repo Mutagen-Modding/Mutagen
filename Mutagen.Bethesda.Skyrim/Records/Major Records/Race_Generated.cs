@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IArmorGetter> Skin
         {
             get => _Skin;
-            init => _Skin = value.AsNullable();
+            set => _Skin = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArmorGetter> IRaceGetter.Skin => this.Skin;
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IRaceGetter> AttackRace
         {
             get => _AttackRace;
-            init => _AttackRace = value.AsNullable();
+            set => _AttackRace = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> IRaceGetter.AttackRace => this.AttackRace;
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IBodyPartDataGetter> BodyPartData
         {
             get => _BodyPartData;
-            init => _BodyPartData = value.AsNullable();
+            set => _BodyPartData = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IBodyPartDataGetter> IRaceGetter.BodyPartData => this.BodyPartData;
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMaterialTypeGetter> MaterialType
         {
             get => _MaterialType;
-            init => _MaterialType = value.AsNullable();
+            set => _MaterialType = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IRaceGetter.MaterialType => this.MaterialType;
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet
         {
             get => _ImpactDataSet;
-            init => _ImpactDataSet = value.AsNullable();
+            set => _ImpactDataSet = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IRaceGetter.ImpactDataSet => this.ImpactDataSet;
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IArtObjectGetter> DecapitationFX
         {
             get => _DecapitationFX;
-            init => _DecapitationFX = value.AsNullable();
+            set => _DecapitationFX = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArtObjectGetter> IRaceGetter.DecapitationFX => this.DecapitationFX;
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> OpenLootSound
         {
             get => _OpenLootSound;
-            init => _OpenLootSound = value.AsNullable();
+            set => _OpenLootSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IRaceGetter.OpenLootSound => this.OpenLootSound;
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> CloseLootSound
         {
             get => _CloseLootSound;
-            init => _CloseLootSound = value.AsNullable();
+            set => _CloseLootSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IRaceGetter.CloseLootSound => this.CloseLootSound;
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEquipTypeGetter> UnarmedEquipSlot
         {
             get => _UnarmedEquipSlot;
-            init => _UnarmedEquipSlot = value.AsNullable();
+            set => _UnarmedEquipSlot = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IRaceGetter.UnarmedEquipSlot => this.UnarmedEquipSlot;
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultWalk
         {
             get => _BaseMovementDefaultWalk;
-            init => _BaseMovementDefaultWalk = value.AsNullable();
+            set => _BaseMovementDefaultWalk = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultWalk => this.BaseMovementDefaultWalk;
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultRun
         {
             get => _BaseMovementDefaultRun;
-            init => _BaseMovementDefaultRun = value.AsNullable();
+            set => _BaseMovementDefaultRun = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultRun => this.BaseMovementDefaultRun;
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSwim
         {
             get => _BaseMovementDefaultSwim;
-            init => _BaseMovementDefaultSwim = value.AsNullable();
+            set => _BaseMovementDefaultSwim = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultSwim => this.BaseMovementDefaultSwim;
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultFly
         {
             get => _BaseMovementDefaultFly;
-            init => _BaseMovementDefaultFly = value.AsNullable();
+            set => _BaseMovementDefaultFly = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultFly => this.BaseMovementDefaultFly;
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak
         {
             get => _BaseMovementDefaultSneak;
-            init => _BaseMovementDefaultSneak = value.AsNullable();
+            set => _BaseMovementDefaultSneak = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultSneak => this.BaseMovementDefaultSneak;
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSprint
         {
             get => _BaseMovementDefaultSprint;
-            init => _BaseMovementDefaultSprint = value.AsNullable();
+            set => _BaseMovementDefaultSprint = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultSprint => this.BaseMovementDefaultSprint;
@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IRaceGetter> MorphRace
         {
             get => _MorphRace;
-            init => _MorphRace = value.AsNullable();
+            set => _MorphRace = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> IRaceGetter.MorphRace => this.MorphRace;
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IRaceGetter> ArmorRace
         {
             get => _ArmorRace;
-            init => _ArmorRace = value.AsNullable();
+            set => _ArmorRace = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> IRaceGetter.ArmorRace => this.ArmorRace;

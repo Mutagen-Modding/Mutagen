@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IWorldspaceGetter> Parent
         {
             get => _Parent;
-            init => _Parent = value.AsNullable();
+            set => _Parent = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWorldspaceGetter> IWorldspaceGetter.Parent => this.Parent;
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IClimateGetter> Climate
         {
             get => _Climate;
-            init => _Climate = value.AsNullable();
+            set => _Climate = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClimateGetter> IWorldspaceGetter.Climate => this.Climate;
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IWaterGetter> Water
         {
             get => _Water;
-            init => _Water = value.AsNullable();
+            set => _Water = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;

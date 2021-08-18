@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullable<ISoundDescriptorGetter> CraftingSound
         {
             get => _CraftingSound;
-            init => _CraftingSound = value.AsNullable();
+            set => _CraftingSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IComponentGetter.CraftingSound => this.CraftingSound;
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullable<IMiscItemGetter> ScrapItem
         {
             get => _ScrapItem;
-            init => _ScrapItem = value.AsNullable();
+            set => _ScrapItem = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMiscItemGetter> IComponentGetter.ScrapItem => this.ScrapItem;
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullable<IGlobalGetter> ModScrapScalar
         {
             get => _ModScrapScalar;
-            init => _ModScrapScalar = value.AsNullable();
+            set => _ModScrapScalar = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> IComponentGetter.ModScrapScalar => this.ModScrapScalar;

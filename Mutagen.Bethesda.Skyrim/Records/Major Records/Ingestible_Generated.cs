@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
         {
             get => _PickUpSound;
-            init => _PickUpSound = value.AsNullable();
+            set => _PickUpSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IIngestibleGetter.PickUpSound => this.PickUpSound;
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
         {
             get => _PutDownSound;
-            init => _PutDownSound = value.AsNullable();
+            set => _PutDownSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IIngestibleGetter.PutDownSound => this.PutDownSound;
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEquipTypeGetter> EquipmentType
         {
             get => _EquipmentType;
-            init => _EquipmentType = value.AsNullable();
+            set => _EquipmentType = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IIngestibleGetter.EquipmentType => this.EquipmentType;
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISkyrimMajorRecordGetter> Addiction
         {
             get => _Addiction;
-            init => _Addiction = value.AsSetter();
+            set => _Addiction = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IIngestibleGetter.Addiction => this.Addiction;
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISoundDescriptorGetter> ConsumeSound
         {
             get => _ConsumeSound;
-            init => _ConsumeSound = value.AsSetter();
+            set => _ConsumeSound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IIngestibleGetter.ConsumeSound => this.ConsumeSound;

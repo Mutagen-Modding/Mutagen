@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IPlacedObjectGetter> Origin
         {
             get => _Origin;
-            init => _Origin = value.AsSetter();
+            set => _Origin = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedObjectGetter> IPortalGetter.Origin => this.Origin;
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IPlacedObjectGetter> Destination
         {
             get => _Destination;
-            init => _Destination = value.AsSetter();
+            set => _Destination = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedObjectGetter> IPortalGetter.Destination => this.Destination;

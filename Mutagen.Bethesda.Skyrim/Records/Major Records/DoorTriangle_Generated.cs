@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IPlacedObjectGetter> Door
         {
             get => _Door;
-            init => _Door = value.AsSetter();
+            set => _Door = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedObjectGetter> IDoorTriangleGetter.Door => this.Door;

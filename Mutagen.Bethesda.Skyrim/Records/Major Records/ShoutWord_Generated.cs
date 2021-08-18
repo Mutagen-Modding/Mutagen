@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IWordOfPowerGetter> Word
         {
             get => _Word;
-            init => _Word = value.AsSetter();
+            set => _Word = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWordOfPowerGetter> IShoutWordGetter.Word => this.Word;
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISpellGetter> Spell
         {
             get => _Spell;
-            init => _Spell = value.AsSetter();
+            set => _Spell = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> IShoutWordGetter.Spell => this.Spell;

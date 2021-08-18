@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"get => _{this.Name};");
-                fg.AppendLine($"init => _{this.Name} = value.{(this.Nullable ? "AsNullable" : "AsSetter")}();");
+                fg.AppendLine($"set => _{this.Name} = value.{(this.Nullable ? "AsNullable" : "AsSetter")}();");
             }
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
             fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name};");

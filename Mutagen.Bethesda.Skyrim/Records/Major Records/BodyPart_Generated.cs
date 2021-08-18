@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IDebrisGetter> ExplodableDebris
         {
             get => _ExplodableDebris;
-            init => _ExplodableDebris = value.AsSetter();
+            set => _ExplodableDebris = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IBodyPartGetter.ExplodableDebris => this.ExplodableDebris;
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IExplosionGetter> ExplodableExplosion
         {
             get => _ExplodableExplosion;
-            init => _ExplodableExplosion = value.AsSetter();
+            set => _ExplodableExplosion = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IBodyPartGetter.ExplodableExplosion => this.ExplodableExplosion;
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IDebrisGetter> SeverableDebris
         {
             get => _SeverableDebris;
-            init => _SeverableDebris = value.AsSetter();
+            set => _SeverableDebris = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IBodyPartGetter.SeverableDebris => this.SeverableDebris;
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IExplosionGetter> SeverableExplosion
         {
             get => _SeverableExplosion;
-            init => _SeverableExplosion = value.AsSetter();
+            set => _SeverableExplosion = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IBodyPartGetter.SeverableExplosion => this.SeverableExplosion;
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImpactDataSetGetter> SeverableImpactData
         {
             get => _SeverableImpactData;
-            init => _SeverableImpactData = value.AsSetter();
+            set => _SeverableImpactData = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IBodyPartGetter.SeverableImpactData => this.SeverableImpactData;
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImpactDataSetGetter> ExplodableImpactData
         {
             get => _ExplodableImpactData;
-            init => _ExplodableImpactData = value.AsSetter();
+            set => _ExplodableImpactData = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IBodyPartGetter.ExplodableImpactData => this.ExplodableImpactData;

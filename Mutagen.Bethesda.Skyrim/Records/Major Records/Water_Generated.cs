@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMaterialTypeGetter> Material
         {
             get => _Material;
-            init => _Material = value.AsNullable();
+            set => _Material = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IWaterGetter.Material => this.Material;
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> OpenSound
         {
             get => _OpenSound;
-            init => _OpenSound = value.AsNullable();
+            set => _OpenSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWaterGetter.OpenSound => this.OpenSound;
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISpellGetter> Spell
         {
             get => _Spell;
-            init => _Spell = value.AsNullable();
+            set => _Spell = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpellGetter> IWaterGetter.Spell => this.Spell;
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace
         {
             get => _ImageSpace;
-            init => _ImageSpace = value.AsNullable();
+            set => _ImageSpace = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IWaterGetter.ImageSpace => this.ImageSpace;

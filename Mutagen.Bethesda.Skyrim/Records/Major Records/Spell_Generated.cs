@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IStaticGetter> MenuDisplayObject
         {
             get => _MenuDisplayObject;
-            init => _MenuDisplayObject = value.AsNullable();
+            set => _MenuDisplayObject = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> ISpellGetter.MenuDisplayObject => this.MenuDisplayObject;
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEquipTypeGetter> EquipmentType
         {
             get => _EquipmentType;
-            init => _EquipmentType = value.AsNullable();
+            set => _EquipmentType = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> ISpellGetter.EquipmentType => this.EquipmentType;
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IPerkGetter> HalfCostPerk
         {
             get => _HalfCostPerk;
-            init => _HalfCostPerk = value.AsSetter();
+            set => _HalfCostPerk = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> ISpellGetter.HalfCostPerk => this.HalfCostPerk;

@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM
         {
             get => _QNAM;
-            init => _QNAM = value.AsNullable();
+            set => _QNAM = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.QNAM => this.QNAM;

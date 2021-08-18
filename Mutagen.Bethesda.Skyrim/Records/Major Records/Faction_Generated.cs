@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker
         {
             get => _ExteriorJailMarker;
-            init => _ExteriorJailMarker = value.AsNullable();
+            set => _ExteriorJailMarker = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.ExteriorJailMarker => this.ExteriorJailMarker;
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker
         {
             get => _FollowerWaitMarker;
-            init => _FollowerWaitMarker = value.AsNullable();
+            set => _FollowerWaitMarker = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.FollowerWaitMarker => this.FollowerWaitMarker;
@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer
         {
             get => _StolenGoodsContainer;
-            init => _StolenGoodsContainer = value.AsNullable();
+            set => _StolenGoodsContainer = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.StolenGoodsContainer => this.StolenGoodsContainer;
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer
         {
             get => _PlayerInventoryContainer;
-            init => _PlayerInventoryContainer = value.AsNullable();
+            set => _PlayerInventoryContainer = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.PlayerInventoryContainer => this.PlayerInventoryContainer;
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> SharedCrimeFactionList
         {
             get => _SharedCrimeFactionList;
-            init => _SharedCrimeFactionList = value.AsNullable();
+            set => _SharedCrimeFactionList = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IFactionGetter.SharedCrimeFactionList => this.SharedCrimeFactionList;
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IOutfitGetter> JailOutfit
         {
             get => _JailOutfit;
-            init => _JailOutfit = value.AsNullable();
+            set => _JailOutfit = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOutfitGetter> IFactionGetter.JailOutfit => this.JailOutfit;
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> VendorBuySellList
         {
             get => _VendorBuySellList;
-            init => _VendorBuySellList = value.AsNullable();
+            set => _VendorBuySellList = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IFactionGetter.VendorBuySellList => this.VendorBuySellList;
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer
         {
             get => _MerchantContainer;
-            init => _MerchantContainer = value.AsNullable();
+            set => _MerchantContainer = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.MerchantContainer => this.MerchantContainer;

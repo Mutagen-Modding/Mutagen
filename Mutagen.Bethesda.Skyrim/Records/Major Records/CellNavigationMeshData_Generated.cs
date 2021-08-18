@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IWorldspaceGetter> UnusedWorldspaceParent
         {
             get => _UnusedWorldspaceParent;
-            init => _UnusedWorldspaceParent = value.AsSetter();
+            set => _UnusedWorldspaceParent = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent;
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ICellGetter> Parent
         {
             get => _Parent;
-            init => _Parent = value.AsSetter();
+            set => _Parent = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent;

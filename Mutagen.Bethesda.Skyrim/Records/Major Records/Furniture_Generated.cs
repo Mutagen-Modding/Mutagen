@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IKeywordGetter> InteractionKeyword
         {
             get => _InteractionKeyword;
-            init => _InteractionKeyword = value.AsNullable();
+            set => _InteractionKeyword = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IFurnitureGetter.InteractionKeyword => this.InteractionKeyword;
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISpellGetter> AssociatedSpell
         {
             get => _AssociatedSpell;
-            init => _AssociatedSpell = value.AsNullable();
+            set => _AssociatedSpell = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpellGetter> IFurnitureGetter.AssociatedSpell => this.AssociatedSpell;

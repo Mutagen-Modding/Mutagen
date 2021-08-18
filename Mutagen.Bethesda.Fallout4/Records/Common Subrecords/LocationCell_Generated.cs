@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<ICellGetter> Link
         {
             get => _Link;
-            init => _Link = value.AsSetter();
+            set => _Link = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ICellGetter> ILocationCellGetter.Link => this.Link;

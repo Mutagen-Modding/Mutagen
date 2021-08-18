@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
             var targetMod = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
             targetMod.Npcs.Add(npc);
             var safeNpc = targetMod.Npcs.AddNew();
-            safeNpc.Race.SetTo(race);
+            safeNpc.Race = new FormLink<IRaceGetter>(race.FormKey);
 
             var linkCache = new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(modToExtract, targetMod);
 
@@ -72,9 +72,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
             var targetMod = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
             targetMod.Npcs.Add(npc);
             var safeNpc = targetMod.Npcs.AddNew();
-            safeNpc.Race.SetTo(race);
+            safeNpc.Race = new FormLink<IRaceGetter>(race.FormKey);
             var safeNpc2 = targetMod.Npcs.AddNew();
-            safeNpc2.Race.SetTo(race);
+            safeNpc2.Race = new FormLink<IRaceGetter>(race.FormKey);
 
             var linkCache = new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(modToExtract, targetMod);
 
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
             var targetMod = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
             targetMod.Npcs.Add(npc);
             var safeNpc = targetMod.Npcs.AddNew();
-            safeNpc.Race.SetTo(race);
+            safeNpc.Race = new FormLink<IRaceGetter>(race.FormKey);
 
             var linkCache = new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(modToExtract, targetMod);
 
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
             var targetMod = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
             targetMod.Npcs.Add(npc);
             var safeNpc = targetMod.Npcs.AddNew();
-            safeNpc.Race.SetTo(race);
+            safeNpc.Race = new FormLink<IRaceGetter>(race.FormKey);
 
             var linkCache = new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(modToExtract, targetMod);
 

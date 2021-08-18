@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IGlobalGetter> ComparisonValue
         {
             get => _ComparisonValue;
-            init => _ComparisonValue = value.AsSetter();
+            set => _ComparisonValue = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGlobalGetter> IConditionGlobalGetter.ComparisonValue => this.ComparisonValue;

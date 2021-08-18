@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IQuestGetter> Quest
         {
             get => _Quest;
-            init => _Quest = value.AsNullable();
+            set => _Quest = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IExternalAliasReferenceGetter.Quest => this.Quest;

@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> OpenSound
         {
             get => _OpenSound;
-            init => _OpenSound = value.AsNullable();
+            set => _OpenSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IContainerGetter.OpenSound => this.OpenSound;
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> CloseSound
         {
             get => _CloseSound;
-            init => _CloseSound = value.AsNullable();
+            set => _CloseSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IContainerGetter.CloseSound => this.CloseSound;

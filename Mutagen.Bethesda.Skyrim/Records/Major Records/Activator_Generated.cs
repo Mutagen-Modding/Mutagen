@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> LoopingSound
         {
             get => _LoopingSound;
-            init => _LoopingSound = value.AsNullable();
+            set => _LoopingSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IActivatorGetter.LoopingSound => this.LoopingSound;
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> ActivationSound
         {
             get => _ActivationSound;
-            init => _ActivationSound = value.AsNullable();
+            set => _ActivationSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IActivatorGetter.ActivationSound => this.ActivationSound;
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IWaterGetter> WaterType
         {
             get => _WaterType;
-            init => _WaterType = value.AsNullable();
+            set => _WaterType = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IActivatorGetter.WaterType => this.WaterType;
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IKeywordGetter> InteractionKeyword
         {
             get => _InteractionKeyword;
-            init => _InteractionKeyword = value.AsNullable();
+            set => _InteractionKeyword = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IActivatorGetter.InteractionKeyword => this.InteractionKeyword;

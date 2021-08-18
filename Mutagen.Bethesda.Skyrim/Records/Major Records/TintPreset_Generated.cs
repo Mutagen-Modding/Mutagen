@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IColorRecordGetter> Color
         {
             get => _Color;
-            init => _Color = value.AsNullable();
+            set => _Color = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> ITintPresetGetter.Color => this.Color;

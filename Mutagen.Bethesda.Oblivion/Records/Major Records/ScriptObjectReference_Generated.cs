@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IOblivionMajorRecordGetter> Reference
         {
             get => _Reference;
-            init => _Reference = value.AsSetter();
+            set => _Reference = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference => this.Reference;

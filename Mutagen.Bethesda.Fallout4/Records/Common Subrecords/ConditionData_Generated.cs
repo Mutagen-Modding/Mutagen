@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IFallout4MajorRecordGetter> ParameterOneRecord
         {
             get => _ParameterOneRecord;
-            init => _ParameterOneRecord = value.AsSetter();
+            set => _ParameterOneRecord = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFallout4MajorRecordGetter> IConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IFallout4MajorRecordGetter> ParameterTwoRecord
         {
             get => _ParameterTwoRecord;
-            init => _ParameterTwoRecord = value.AsSetter();
+            set => _ParameterTwoRecord = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFallout4MajorRecordGetter> IConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;

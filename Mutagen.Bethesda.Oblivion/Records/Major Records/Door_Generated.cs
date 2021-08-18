@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            init => _Script = value.AsNullable();
+            set => _Script = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> IDoorGetter.Script => this.Script;
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<ISoundGetter> OpenSound
         {
             get => _OpenSound;
-            init => _OpenSound = value.AsNullable();
+            set => _OpenSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IDoorGetter.OpenSound => this.OpenSound;
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<ISoundGetter> CloseSound
         {
             get => _CloseSound;
-            init => _CloseSound = value.AsNullable();
+            set => _CloseSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IDoorGetter.CloseSound => this.CloseSound;
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<ISoundGetter> LoopSound
         {
             get => _LoopSound;
-            init => _LoopSound = value.AsNullable();
+            set => _LoopSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IDoorGetter.LoopSound => this.LoopSound;

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IANavigationMeshGetter> NavMesh
         {
             get => _NavMesh;
-            init => _NavMesh = value.AsSetter();
+            set => _NavMesh = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IANavigationMeshGetter> INavigationDoorLinkGetter.NavMesh => this.NavMesh;

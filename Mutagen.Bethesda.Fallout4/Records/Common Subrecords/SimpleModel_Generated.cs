@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullable<IMaterialSwapGetter> MaterialSwap
         {
             get => _MaterialSwap;
-            init => _MaterialSwap = value.AsNullable();
+            set => _MaterialSwap = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialSwapGetter> ISimpleModelGetter.MaterialSwap => this.MaterialSwap;
