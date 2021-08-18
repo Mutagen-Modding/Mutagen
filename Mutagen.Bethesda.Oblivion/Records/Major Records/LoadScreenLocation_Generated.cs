@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IPlaceGetter> Direct
         {
             get => _Direct;
-            set => _Direct = value.AsSetter();
+            init => _Direct = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlaceGetter> ILoadScreenLocationGetter.Direct => this.Direct;
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IWorldspaceGetter> Indirect
         {
             get => _Indirect;
-            set => _Indirect = value.AsSetter();
+            init => _Indirect = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect;

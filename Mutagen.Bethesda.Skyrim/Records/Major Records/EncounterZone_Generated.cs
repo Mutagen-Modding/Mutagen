@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IOwnerGetter> Owner
         {
             get => _Owner;
-            set => _Owner = value.AsSetter();
+            init => _Owner = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IOwnerGetter> IEncounterZoneGetter.Owner => this.Owner;
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILocationGetter> Location
         {
             get => _Location;
-            set => _Location = value.AsSetter();
+            init => _Location = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILocationGetter> IEncounterZoneGetter.Location => this.Location;

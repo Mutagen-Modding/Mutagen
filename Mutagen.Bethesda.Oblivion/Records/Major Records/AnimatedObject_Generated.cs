@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IIdleAnimationGetter> IdleAnimation
         {
             get => _IdleAnimation;
-            set => _IdleAnimation = value.AsNullable();
+            init => _IdleAnimation = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IAnimatedObjectGetter.IdleAnimation => this.IdleAnimation;

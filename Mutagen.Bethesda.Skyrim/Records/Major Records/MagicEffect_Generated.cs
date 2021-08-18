@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IStaticGetter> MenuDisplayObject
         {
             get => _MenuDisplayObject;
-            set => _MenuDisplayObject = value.AsNullable();
+            init => _MenuDisplayObject = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IMagicEffectGetter.MenuDisplayObject => this.MenuDisplayObject;
@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILightGetter> CastingLight
         {
             get => _CastingLight;
-            set => _CastingLight = value.AsSetter();
+            init => _CastingLight = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IMagicEffectGetter.CastingLight => this.CastingLight;
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IEffectShaderGetter> HitShader
         {
             get => _HitShader;
-            set => _HitShader = value.AsSetter();
+            init => _HitShader = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectGetter.HitShader => this.HitShader;
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IEffectShaderGetter> EnchantShader
         {
             get => _EnchantShader;
-            set => _EnchantShader = value.AsSetter();
+            init => _EnchantShader = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectGetter.EnchantShader => this.EnchantShader;
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IProjectileGetter> Projectile
         {
             get => _Projectile;
-            set => _Projectile = value.AsSetter();
+            init => _Projectile = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IMagicEffectGetter.Projectile => this.Projectile;
@@ -230,7 +230,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IExplosionGetter> Explosion
         {
             get => _Explosion;
-            set => _Explosion = value.AsSetter();
+            init => _Explosion = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IMagicEffectGetter.Explosion => this.Explosion;
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IArtObjectGetter> CastingArt
         {
             get => _CastingArt;
-            set => _CastingArt = value.AsSetter();
+            init => _CastingArt = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.CastingArt => this.CastingArt;
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IArtObjectGetter> HitEffectArt
         {
             get => _HitEffectArt;
-            set => _HitEffectArt = value.AsSetter();
+            init => _HitEffectArt = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.HitEffectArt => this.HitEffectArt;
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImpactDataSetGetter> ImpactData
         {
             get => _ImpactData;
-            set => _ImpactData = value.AsSetter();
+            init => _ImpactData = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IMagicEffectGetter.ImpactData => this.ImpactData;
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IDualCastDataGetter> DualCastArt
         {
             get => _DualCastArt;
-            set => _DualCastArt = value.AsSetter();
+            init => _DualCastArt = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDualCastDataGetter> IMagicEffectGetter.DualCastArt => this.DualCastArt;
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IArtObjectGetter> EnchantArt
         {
             get => _EnchantArt;
-            set => _EnchantArt = value.AsSetter();
+            init => _EnchantArt = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.EnchantArt => this.EnchantArt;
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISkyrimMajorRecordGetter> Unknown2
         {
             get => _Unknown2;
-            set => _Unknown2 = value.AsSetter();
+            init => _Unknown2 = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown2 => this.Unknown2;
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISkyrimMajorRecordGetter> Unknown3
         {
             get => _Unknown3;
-            set => _Unknown3 = value.AsSetter();
+            init => _Unknown3 = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown3 => this.Unknown3;
@@ -326,7 +326,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISpellGetter> EquipAbility
         {
             get => _EquipAbility;
-            set => _EquipAbility = value.AsSetter();
+            init => _EquipAbility = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> IMagicEffectGetter.EquipAbility => this.EquipAbility;
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImageSpaceAdapterGetter> ImageSpaceModifier
         {
             get => _ImageSpaceModifier;
-            set => _ImageSpaceModifier = value.AsSetter();
+            init => _ImageSpaceModifier = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImageSpaceAdapterGetter> IMagicEffectGetter.ImageSpaceModifier => this.ImageSpaceModifier;
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IPerkGetter> PerkToApply
         {
             get => _PerkToApply;
-            set => _PerkToApply = value.AsSetter();
+            init => _PerkToApply = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> IMagicEffectGetter.PerkToApply => this.PerkToApply;

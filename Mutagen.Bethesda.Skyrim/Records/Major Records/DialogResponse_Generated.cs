@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISoundDescriptorGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsSetter();
+            init => _Sound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IDialogResponseGetter.Sound => this.Sound;
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation
         {
             get => _SpeakerIdleAnimation;
-            set => _SpeakerIdleAnimation = value.AsNullable();
+            init => _SpeakerIdleAnimation = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IDialogResponseGetter.SpeakerIdleAnimation => this.SpeakerIdleAnimation;
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation
         {
             get => _ListenerIdleAnimation;
-            set => _ListenerIdleAnimation = value.AsNullable();
+            init => _ListenerIdleAnimation = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IDialogResponseGetter.ListenerIdleAnimation => this.ListenerIdleAnimation;

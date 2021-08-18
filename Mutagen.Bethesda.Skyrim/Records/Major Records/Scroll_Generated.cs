@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IStaticGetter> MenuDisplayObject
         {
             get => _MenuDisplayObject;
-            set => _MenuDisplayObject = value.AsNullable();
+            init => _MenuDisplayObject = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IScrollGetter.MenuDisplayObject => this.MenuDisplayObject;
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEquipTypeGetter> EquipmentType
         {
             get => _EquipmentType;
-            set => _EquipmentType = value.AsNullable();
+            init => _EquipmentType = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IScrollGetter.EquipmentType => this.EquipmentType;
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
         {
             get => _PickUpSound;
-            set => _PickUpSound = value.AsNullable();
+            init => _PickUpSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IScrollGetter.PickUpSound => this.PickUpSound;
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
         {
             get => _PutDownSound;
-            set => _PutDownSound = value.AsNullable();
+            init => _PutDownSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IScrollGetter.PutDownSound => this.PutDownSound;
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IPerkGetter> HalfCostPerk
         {
             get => _HalfCostPerk;
-            set => _HalfCostPerk = value.AsSetter();
+            init => _HalfCostPerk = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> IScrollGetter.HalfCostPerk => this.HalfCostPerk;

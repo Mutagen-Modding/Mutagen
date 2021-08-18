@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation
         {
             get => _Precipitation;
-            set => _Precipitation = value.AsNullable();
+            init => _Precipitation = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IShaderParticleGeometryGetter> IWeatherGetter.Precipitation => this.Precipitation;
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IVisualEffectGetter> VisualEffect
         {
             get => _VisualEffect;
-            set => _VisualEffect = value.AsSetter();
+            init => _VisualEffect = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IVisualEffectGetter> IWeatherGetter.VisualEffect => this.VisualEffect;
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare
         {
             get => _SunGlareLensFlare;
-            set => _SunGlareLensFlare = value.AsNullable();
+            init => _SunGlareLensFlare = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILensFlareGetter> IWeatherGetter.SunGlareLensFlare => this.SunGlareLensFlare;

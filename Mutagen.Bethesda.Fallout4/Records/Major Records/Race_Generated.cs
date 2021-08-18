@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound
         {
             get => _AnimationSound;
-            set => _AnimationSound = value.AsNullable();
+            init => _AnimationSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAnimationSoundTagSetGetter> IRaceGetter.AnimationSound => this.AnimationSound;
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullable<IArmorGetter> Skin
         {
             get => _Skin;
-            set => _Skin = value.AsNullable();
+            init => _Skin = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArmorGetter> IRaceGetter.Skin => this.Skin;
@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IExplosionGetter> SeverableExplosion
         {
             get => _SeverableExplosion;
-            set => _SeverableExplosion = value.AsSetter();
+            init => _SeverableExplosion = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.SeverableExplosion => this.SeverableExplosion;
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IDebrisGetter> SeverableDebris
         {
             get => _SeverableDebris;
-            set => _SeverableDebris = value.AsSetter();
+            init => _SeverableDebris = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IRaceGetter.SeverableDebris => this.SeverableDebris;
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IImpactDataSetGetter> SeverableImpactDataSet
         {
             get => _SeverableImpactDataSet;
-            set => _SeverableImpactDataSet = value.AsSetter();
+            init => _SeverableImpactDataSet = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.SeverableImpactDataSet => this.SeverableImpactDataSet;
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IExplosionGetter> ExplodableExplosion
         {
             get => _ExplodableExplosion;
-            set => _ExplodableExplosion = value.AsSetter();
+            init => _ExplodableExplosion = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.ExplodableExplosion => this.ExplodableExplosion;
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IDebrisGetter> ExplodableDebris
         {
             get => _ExplodableDebris;
-            set => _ExplodableDebris = value.AsSetter();
+            init => _ExplodableDebris = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IRaceGetter.ExplodableDebris => this.ExplodableDebris;
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IImpactDataSetGetter> ExplodableImpactDataSet
         {
             get => _ExplodableImpactDataSet;
-            set => _ExplodableImpactDataSet = value.AsSetter();
+            init => _ExplodableImpactDataSet = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.ExplodableImpactDataSet => this.ExplodableImpactDataSet;
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IExplosionGetter> OnCrippleExplosion
         {
             get => _OnCrippleExplosion;
-            set => _OnCrippleExplosion = value.AsSetter();
+            init => _OnCrippleExplosion = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.OnCrippleExplosion => this.OnCrippleExplosion;
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IDebrisGetter> OnCrippleDebris
         {
             get => _OnCrippleDebris;
-            set => _OnCrippleDebris = value.AsSetter();
+            init => _OnCrippleDebris = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IRaceGetter.OnCrippleDebris => this.OnCrippleDebris;
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IImpactDataSetGetter> OnCrippleImpactDataSet
         {
             get => _OnCrippleImpactDataSet;
-            set => _OnCrippleImpactDataSet = value.AsSetter();
+            init => _OnCrippleImpactDataSet = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.OnCrippleImpactDataSet => this.OnCrippleImpactDataSet;
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IExplosionGetter> ExplodableSubsegmentExplosion
         {
             get => _ExplodableSubsegmentExplosion;
-            set => _ExplodableSubsegmentExplosion = value.AsSetter();
+            init => _ExplodableSubsegmentExplosion = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.ExplodableSubsegmentExplosion => this.ExplodableSubsegmentExplosion;

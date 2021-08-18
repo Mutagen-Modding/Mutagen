@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IKeyGetter> Key
         {
             get => _Key;
-            set => _Key = value.AsSetter();
+            init => _Key = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeyGetter> ILockInformationGetter.Key => this.Key;

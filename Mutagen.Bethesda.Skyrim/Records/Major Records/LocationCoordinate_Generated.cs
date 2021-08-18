@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IComplexLocationGetter> Location
         {
             get => _Location;
-            set => _Location = value.AsSetter();
+            init => _Location = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IComplexLocationGetter> ILocationCoordinateGetter.Location => this.Location;

@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ICellGetter> Link
         {
             get => _Link;
-            set => _Link = value.AsSetter();
+            init => _Link = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ICellGetter> ILocationCellGetter.Link => this.Link;

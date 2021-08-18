@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISkyrimMajorRecordGetter> Object
         {
             get => _Object;
-            set => _Object = value.AsSetter();
+            init => _Object = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object;

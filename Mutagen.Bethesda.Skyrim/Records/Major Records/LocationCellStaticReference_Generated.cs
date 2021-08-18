@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILocationReferenceTypeGetter> LocationRefType
         {
             get => _LocationRefType;
-            set => _LocationRefType = value.AsSetter();
+            init => _LocationRefType = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILocationReferenceTypeGetter> ILocationCellStaticReferenceGetter.LocationRefType => this.LocationRefType;
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILinkedReferenceGetter> Marker
         {
             get => _Marker;
-            set => _Marker = value.AsSetter();
+            init => _Marker = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILinkedReferenceGetter> ILocationCellStaticReferenceGetter.Marker => this.Marker;
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IComplexLocationGetter> Location
         {
             get => _Location;
-            set => _Location = value.AsSetter();
+            init => _Location = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IComplexLocationGetter> ILocationCellStaticReferenceGetter.Location => this.Location;

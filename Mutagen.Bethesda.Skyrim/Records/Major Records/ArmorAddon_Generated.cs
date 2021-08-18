@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IRaceGetter> Race
         {
             get => _Race;
-            set => _Race = value.AsNullable();
+            init => _Race = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> IArmorAddonGetter.Race => this.Race;
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFootstepSetGetter> FootstepSound
         {
             get => _FootstepSound;
-            set => _FootstepSound = value.AsNullable();
+            init => _FootstepSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFootstepSetGetter> IArmorAddonGetter.FootstepSound => this.FootstepSound;
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IArtObjectGetter> ArtObject
         {
             get => _ArtObject;
-            set => _ArtObject = value.AsNullable();
+            init => _ArtObject = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArtObjectGetter> IArmorAddonGetter.ArtObject => this.ArtObject;

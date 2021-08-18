@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IKeywordGetter> Keyword
         {
             get => _Keyword;
-            set => _Keyword = value.AsNullable();
+            init => _Keyword = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> ILocationAliasReferenceGetter.Keyword => this.Keyword;
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ILocationReferenceTypeGetter> RefType
         {
             get => _RefType;
-            set => _RefType = value.AsNullable();
+            init => _RefType = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationReferenceTypeGetter> ILocationAliasReferenceGetter.RefType => this.RefType;

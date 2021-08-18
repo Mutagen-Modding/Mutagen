@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IStaticGetter> MenuDisplayObject
         {
             get => _MenuDisplayObject;
-            set => _MenuDisplayObject = value.AsNullable();
+            init => _MenuDisplayObject = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IShoutGetter.MenuDisplayObject => this.MenuDisplayObject;

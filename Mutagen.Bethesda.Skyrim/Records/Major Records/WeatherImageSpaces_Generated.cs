@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImageSpaceAdapterGetter> Sunrise
         {
             get => _Sunrise;
-            set => _Sunrise = value.AsSetter();
+            init => _Sunrise = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunrise => this.Sunrise;
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImageSpaceAdapterGetter> Day
         {
             get => _Day;
-            set => _Day = value.AsSetter();
+            init => _Day = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Day => this.Day;
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImageSpaceAdapterGetter> Sunset
         {
             get => _Sunset;
-            set => _Sunset = value.AsSetter();
+            init => _Sunset = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunset => this.Sunset;
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImageSpaceAdapterGetter> Night
         {
             get => _Night;
-            set => _Night = value.AsSetter();
+            init => _Night = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Night => this.Night;

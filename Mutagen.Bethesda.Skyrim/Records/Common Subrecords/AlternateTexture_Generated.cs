@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ITextureSetGetter> NewTexture
         {
             get => _NewTexture;
-            set => _NewTexture = value.AsSetter();
+            init => _NewTexture = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture;

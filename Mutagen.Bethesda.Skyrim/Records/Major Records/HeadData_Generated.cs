@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ITextureSetGetter> DefaultFaceTexture
         {
             get => _DefaultFaceTexture;
-            set => _DefaultFaceTexture = value.AsNullable();
+            init => _DefaultFaceTexture = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IHeadDataGetter.DefaultFaceTexture => this.DefaultFaceTexture;

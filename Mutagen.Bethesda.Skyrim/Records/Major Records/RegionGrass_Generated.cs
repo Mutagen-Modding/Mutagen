@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IGrassGetter> Grass
         {
             get => _Grass;
-            set => _Grass = value.AsSetter();
+            init => _Grass = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGrassGetter> IRegionGrassGetter.Grass => this.Grass;

@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILightGetter> Light
         {
             get => _Light;
-            set => _Light = value.AsSetter();
+            init => _Light = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IProjectileGetter.Light => this.Light;
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILightGetter> MuzzleFlash
         {
             get => _MuzzleFlash;
-            set => _MuzzleFlash = value.AsSetter();
+            init => _MuzzleFlash = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IProjectileGetter.MuzzleFlash => this.MuzzleFlash;
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IExplosionGetter> Explosion
         {
             get => _Explosion;
-            set => _Explosion = value.AsSetter();
+            init => _Explosion = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IProjectileGetter.Explosion => this.Explosion;
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISoundDescriptorGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsSetter();
+            init => _Sound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IProjectileGetter.Sound => this.Sound;
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISoundDescriptorGetter> CountdownSound
         {
             get => _CountdownSound;
-            set => _CountdownSound = value.AsSetter();
+            init => _CountdownSound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IProjectileGetter.CountdownSound => this.CountdownSound;
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISoundDescriptorGetter> DisaleSound
         {
             get => _DisaleSound;
-            set => _DisaleSound = value.AsSetter();
+            init => _DisaleSound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IProjectileGetter.DisaleSound => this.DisaleSound;
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IWeaponGetter> DefaultWeaponSource
         {
             get => _DefaultWeaponSource;
-            set => _DefaultWeaponSource = value.AsSetter();
+            init => _DefaultWeaponSource = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWeaponGetter> IProjectileGetter.DefaultWeaponSource => this.DefaultWeaponSource;
@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ITextureSetGetter> DecalData
         {
             get => _DecalData;
-            set => _DecalData = value.AsSetter();
+            init => _DecalData = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ITextureSetGetter> IProjectileGetter.DecalData => this.DecalData;
@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ICollisionLayerGetter> CollisionLayer
         {
             get => _CollisionLayer;
-            set => _CollisionLayer = value.AsSetter();
+            init => _CollisionLayer = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ICollisionLayerGetter> IProjectileGetter.CollisionLayer => this.CollisionLayer;

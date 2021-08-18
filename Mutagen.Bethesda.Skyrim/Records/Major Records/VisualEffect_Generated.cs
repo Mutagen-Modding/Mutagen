@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IArtObjectGetter> EffectArt
         {
             get => _EffectArt;
-            set => _EffectArt = value.AsSetter();
+            init => _EffectArt = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IVisualEffectGetter.EffectArt => this.EffectArt;
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IEffectShaderGetter> Shader
         {
             get => _Shader;
-            set => _Shader = value.AsSetter();
+            init => _Shader = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IVisualEffectGetter.Shader => this.Shader;

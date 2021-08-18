@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IStaticGetter> LoadingScreenNif
         {
             get => _LoadingScreenNif;
-            set => _LoadingScreenNif = value.AsSetter();
+            init => _LoadingScreenNif = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IStaticGetter> ILoadScreenGetter.LoadingScreenNif => this.LoadingScreenNif;

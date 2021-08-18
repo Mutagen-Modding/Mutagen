@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> AmbientSound
         {
             get => _AmbientSound;
-            set => _AmbientSound = value.AsNullable();
+            init => _AmbientSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IAcousticSpaceGetter.AmbientSound => this.AmbientSound;
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IRegionGetter> UseSoundFromRegion
         {
             get => _UseSoundFromRegion;
-            set => _UseSoundFromRegion = value.AsNullable();
+            init => _UseSoundFromRegion = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRegionGetter> IAcousticSpaceGetter.UseSoundFromRegion => this.UseSoundFromRegion;
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IReverbParametersGetter> EnvironmentType
         {
             get => _EnvironmentType;
-            set => _EnvironmentType = value.AsNullable();
+            init => _EnvironmentType = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IReverbParametersGetter> IAcousticSpaceGetter.EnvironmentType => this.EnvironmentType;

@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IExplosionGetter> Explosion
         {
             get => _Explosion;
-            set => _Explosion = value.AsSetter();
+            init => _Explosion = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IDestructionStageDataGetter.Explosion => this.Explosion;
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IDebrisGetter> Debris
         {
             get => _Debris;
-            set => _Debris = value.AsSetter();
+            init => _Debris = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IDestructionStageDataGetter.Debris => this.Debris;

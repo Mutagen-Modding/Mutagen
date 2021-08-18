@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ITextureSetGetter> TextureSet
         {
             get => _TextureSet;
-            set => _TextureSet = value.AsNullable();
+            init => _TextureSet = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> ILandscapeTextureGetter.TextureSet => this.TextureSet;
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IMaterialTypeGetter> MaterialType
         {
             get => _MaterialType;
-            set => _MaterialType = value.AsSetter();
+            init => _MaterialType = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType;

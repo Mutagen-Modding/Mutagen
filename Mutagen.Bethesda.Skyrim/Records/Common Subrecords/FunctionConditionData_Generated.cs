@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord
         {
             get => _ParameterOneRecord;
-            set => _ParameterOneRecord = value.AsSetter();
+            init => _ParameterOneRecord = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord
         {
             get => _ParameterTwoRecord;
-            set => _ParameterTwoRecord = value.AsSetter();
+            init => _ParameterTwoRecord = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;

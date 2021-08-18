@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsNullable();
+            init => _Sound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ILightGetter.Sound => this.Sound;

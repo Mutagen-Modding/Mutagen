@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IKeyGetter> Key
         {
             get => _Key;
-            set => _Key = value.AsSetter();
+            init => _Key = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeyGetter> ILockDataGetter.Key => this.Key;

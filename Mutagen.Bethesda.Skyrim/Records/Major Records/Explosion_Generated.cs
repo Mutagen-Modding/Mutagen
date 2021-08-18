@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
         {
             get => _ObjectEffect;
-            set => _ObjectEffect = value.AsNullable();
+            init => _ObjectEffect = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEffectRecordGetter> IExplosionGetter.ObjectEffect => this.ObjectEffect;
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
         {
             get => _ImageSpaceModifier;
-            set => _ImageSpaceModifier = value.AsNullable();
+            init => _ImageSpaceModifier = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IExplosionGetter.ImageSpaceModifier => this.ImageSpaceModifier;
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILightGetter> Light
         {
             get => _Light;
-            set => _Light = value.AsSetter();
+            init => _Light = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IExplosionGetter.Light => this.Light;
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISoundDescriptorGetter> Sound1
         {
             get => _Sound1;
-            set => _Sound1 = value.AsSetter();
+            init => _Sound1 = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IExplosionGetter.Sound1 => this.Sound1;
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISoundDescriptorGetter> Sound2
         {
             get => _Sound2;
-            set => _Sound2 = value.AsSetter();
+            init => _Sound2 = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IExplosionGetter.Sound2 => this.Sound2;
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImpactDataSetGetter> ImpactDataSet
         {
             get => _ImpactDataSet;
-            set => _ImpactDataSet = value.AsSetter();
+            init => _ImpactDataSet = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IExplosionGetter.ImpactDataSet => this.ImpactDataSet;
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISkyrimMajorRecordGetter> PlacedObject
         {
             get => _PlacedObject;
-            set => _PlacedObject = value.AsSetter();
+            init => _PlacedObject = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IExplosionGetter.PlacedObject => this.PlacedObject;
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IProjectileGetter> SpawnProjectile
         {
             get => _SpawnProjectile;
-            set => _SpawnProjectile = value.AsSetter();
+            init => _SpawnProjectile = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IExplosionGetter.SpawnProjectile => this.SpawnProjectile;

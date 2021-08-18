@@ -274,7 +274,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IDebrisGetter> AddonModels
         {
             get => _AddonModels;
-            set => _AddonModels = value.AsSetter();
+            init => _AddonModels = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IEffectShaderGetter.AddonModels => this.AddonModels;
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISoundGetter> AmbientSound
         {
             get => _AmbientSound;
-            set => _AmbientSound = value.AsSetter();
+            init => _AmbientSound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IEffectShaderGetter.AmbientSound => this.AmbientSound;

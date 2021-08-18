@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundMarkerGetter> LoopingSound
         {
             get => _LoopingSound;
-            set => _LoopingSound = value.AsNullable();
+            init => _LoopingSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundMarkerGetter> ITalkingActivatorGetter.LoopingSound => this.LoopingSound;
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IVoiceTypeGetter> VoiceType
         {
             get => _VoiceType;
-            set => _VoiceType = value.AsNullable();
+            init => _VoiceType = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IVoiceTypeGetter> ITalkingActivatorGetter.VoiceType => this.VoiceType;

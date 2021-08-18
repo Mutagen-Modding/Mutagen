@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMovementTypeGetter> MovementType
         {
             get => _MovementType;
-            set => _MovementType = value.AsNullable();
+            init => _MovementType = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMovementTypeGetter> IRaceMovementTypeGetter.MovementType => this.MovementType;

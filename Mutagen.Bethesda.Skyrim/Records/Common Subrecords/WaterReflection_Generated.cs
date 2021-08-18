@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IPlacedObjectGetter> Water
         {
             get => _Water;
-            set => _Water = value.AsSetter();
+            init => _Water = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedObjectGetter> IWaterReflectionGetter.Water => this.Water;

@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISpellGetter> Ability
         {
             get => _Ability;
-            set => _Ability = value.AsSetter();
+            init => _Ability = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> IPerkAbilityEffectGetter.Ability => this.Ability;

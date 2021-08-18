@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            init => _Script = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> IFloraGetter.Script => this.Script;
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IIngredientGetter> Ingredient
         {
             get => _Ingredient;
-            set => _Ingredient = value.AsNullable();
+            init => _Ingredient = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIngredientGetter> IFloraGetter.Ingredient => this.Ingredient;

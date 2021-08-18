@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IProjectileGetter> Projectile
         {
             get => _Projectile;
-            set => _Projectile = value.AsSetter();
+            init => _Projectile = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IPlacedTrapGetter.Projectile => this.Projectile;

@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IProjectileGetter> Projectile
         {
             get => _Projectile;
-            set => _Projectile = value.AsSetter();
+            init => _Projectile = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IDualCastDataGetter.Projectile => this.Projectile;
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IExplosionGetter> Explosion
         {
             get => _Explosion;
-            set => _Explosion = value.AsSetter();
+            init => _Explosion = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IDualCastDataGetter.Explosion => this.Explosion;
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IEffectShaderGetter> EffectShader
         {
             get => _EffectShader;
-            set => _EffectShader = value.AsSetter();
+            init => _EffectShader = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IDualCastDataGetter.EffectShader => this.EffectShader;
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IArtObjectGetter> HitEffectArt
         {
             get => _HitEffectArt;
-            set => _HitEffectArt = value.AsSetter();
+            init => _HitEffectArt = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IDualCastDataGetter.HitEffectArt => this.HitEffectArt;
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImpactDataSetGetter> ImpactDataSet
         {
             get => _ImpactDataSet;
-            set => _ImpactDataSet = value.AsSetter();
+            init => _ImpactDataSet = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IDualCastDataGetter.ImpactDataSet => this.ImpactDataSet;

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IFactionGetter> Faction
         {
             get => _Faction;
-            set => _Faction = value.AsSetter();
+            init => _Faction = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;

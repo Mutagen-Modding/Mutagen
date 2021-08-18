@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISpellGetter> Spell
         {
             get => _Spell;
-            set => _Spell = value.AsNullable();
+            init => _Spell = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpellGetter> IPerkEntryPointAddActivateChoiceGetter.Spell => this.Spell;

@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IKeywordGetter> MarkerKeyword
         {
             get => _MarkerKeyword;
-            set => _MarkerKeyword = value.AsNullable();
+            init => _MarkerKeyword = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IFurnitureMarkerGetter.MarkerKeyword => this.MarkerKeyword;

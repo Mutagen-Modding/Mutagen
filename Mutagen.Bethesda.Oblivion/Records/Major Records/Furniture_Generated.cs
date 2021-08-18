@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            init => _Script = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> IFurnitureGetter.Script => this.Script;

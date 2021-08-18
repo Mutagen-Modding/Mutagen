@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullable<IAttractionRuleGetter> AttractionRule
         {
             get => _AttractionRule;
-            set => _AttractionRule = value.AsNullable();
+            init => _AttractionRule = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAttractionRuleGetter> IKeywordGetter.AttractionRule => this.AttractionRule;

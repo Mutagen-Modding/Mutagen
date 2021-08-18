@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
         {
             get => _PickUpSound;
-            set => _PickUpSound = value.AsNullable();
+            init => _PickUpSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IAmmunitionGetter.PickUpSound => this.PickUpSound;
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
         {
             get => _PutDownSound;
-            set => _PutDownSound = value.AsNullable();
+            init => _PutDownSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IAmmunitionGetter.PutDownSound => this.PutDownSound;
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IProjectileGetter> Projectile
         {
             get => _Projectile;
-            set => _Projectile = value.AsSetter();
+            init => _Projectile = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IAmmunitionGetter.Projectile => this.Projectile;

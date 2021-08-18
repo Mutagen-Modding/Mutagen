@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IMaterialObjectGetter> Material
         {
             get => _Material;
-            set => _Material = value.AsSetter();
+            init => _Material = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IMaterialObjectGetter> IStaticGetter.Material => this.Material;

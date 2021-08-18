@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLink<IRelatableGetter> Target
         {
             get => _Target;
-            set => _Target = value.AsSetter();
+            init => _Target = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;

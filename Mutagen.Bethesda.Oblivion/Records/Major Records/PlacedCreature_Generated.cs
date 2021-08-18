@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<ICreatureGetter> Base
         {
             get => _Base;
-            set => _Base = value.AsNullable();
+            init => _Base = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICreatureGetter> IPlacedCreatureGetter.Base => this.Base;
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IFactionGetter> Owner
         {
             get => _Owner;
-            set => _Owner = value.AsNullable();
+            init => _Owner = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> IPlacedCreatureGetter.Owner => this.Owner;
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IGlobalGetter> GlobalVariable
         {
             get => _GlobalVariable;
-            set => _GlobalVariable = value.AsNullable();
+            init => _GlobalVariable = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> IPlacedCreatureGetter.GlobalVariable => this.GlobalVariable;

@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImpactDataSetGetter> ImpactDataSet
         {
             get => _ImpactDataSet;
-            set => _ImpactDataSet = value.AsSetter();
+            init => _ImpactDataSet = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IFootstepGetter.ImpactDataSet => this.ImpactDataSet;

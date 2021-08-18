@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IHarvestTargetGetter> Ingredient
         {
             get => _Ingredient;
-            set => _Ingredient = value.AsNullable();
+            init => _Ingredient = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHarvestTargetGetter> ITreeGetter.Ingredient => this.Ingredient;
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> HarvestSound
         {
             get => _HarvestSound;
-            set => _HarvestSound = value.AsNullable();
+            init => _HarvestSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ITreeGetter.HarvestSound => this.HarvestSound;

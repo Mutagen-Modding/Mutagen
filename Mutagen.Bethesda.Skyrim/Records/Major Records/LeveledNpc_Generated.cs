@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IGlobalGetter> Global
         {
             get => _Global;
-            set => _Global = value.AsNullable();
+            init => _Global = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> ILeveledNpcGetter.Global => this.Global;

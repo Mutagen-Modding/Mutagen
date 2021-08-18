@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IGlobalGetter> ComparisonValue
         {
             get => _ComparisonValue;
-            set => _ComparisonValue = value.AsSetter();
+            init => _ComparisonValue = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGlobalGetter> IConditionGlobalGetter.ComparisonValue => this.ComparisonValue;

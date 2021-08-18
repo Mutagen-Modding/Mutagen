@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IEnchantmentGetter> Enchantment
         {
             get => _Enchantment;
-            set => _Enchantment = value.AsNullable();
+            init => _Enchantment = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEnchantmentGetter> IAmmunitionGetter.Enchantment => this.Enchantment;

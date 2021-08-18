@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IHeadPartGetter> Head
         {
             get => _Head;
-            set => _Head = value.AsNullable();
+            init => _Head = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHeadPartGetter> IHeadPartReferenceGetter.Head => this.Head;

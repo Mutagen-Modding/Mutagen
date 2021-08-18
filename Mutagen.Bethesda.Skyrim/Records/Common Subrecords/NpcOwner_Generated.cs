@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<INpcGetter> Npc
         {
             get => _Npc;
-            set => _Npc = value.AsSetter();
+            init => _Npc = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcGetter> INpcOwnerGetter.Npc => this.Npc;
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IGlobalGetter> Global
         {
             get => _Global;
-            set => _Global = value.AsSetter();
+            init => _Global = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGlobalGetter> INpcOwnerGetter.Global => this.Global;

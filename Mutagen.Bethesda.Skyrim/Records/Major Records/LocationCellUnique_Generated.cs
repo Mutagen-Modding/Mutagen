@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<INpcGetter> Actor
         {
             get => _Actor;
-            set => _Actor = value.AsSetter();
+            init => _Actor = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcGetter> ILocationCellUniqueGetter.Actor => this.Actor;
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IPlacedNpcGetter> Ref
         {
             get => _Ref;
-            set => _Ref = value.AsSetter();
+            init => _Ref = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedNpcGetter> ILocationCellUniqueGetter.Ref => this.Ref;
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILocationGetter> Location
         {
             get => _Location;
-            set => _Location = value.AsSetter();
+            init => _Location = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILocationGetter> ILocationCellUniqueGetter.Location => this.Location;

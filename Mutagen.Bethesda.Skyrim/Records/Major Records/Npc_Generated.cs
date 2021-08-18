@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ILeveledItemGetter> DeathItem
         {
             get => _DeathItem;
-            set => _DeathItem = value.AsNullable();
+            init => _DeathItem = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILeveledItemGetter> INpcGetter.DeathItem => this.DeathItem;
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IVoiceTypeGetter> Voice
         {
             get => _Voice;
-            set => _Voice = value.AsNullable();
+            init => _Voice = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IVoiceTypeGetter> INpcGetter.Voice => this.Voice;
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<INpcSpawnGetter> Template
         {
             get => _Template;
-            set => _Template = value.AsNullable();
+            init => _Template = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcSpawnGetter> INpcGetter.Template => this.Template;
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IRaceGetter> Race
         {
             get => _Race;
-            set => _Race = value.AsSetter();
+            init => _Race = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IRaceGetter> INpcGetter.Race => this.Race;
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IArmorGetter> WornArmor
         {
             get => _WornArmor;
-            set => _WornArmor = value.AsNullable();
+            init => _WornArmor = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArmorGetter> INpcGetter.WornArmor => this.WornArmor;
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IArmorGetter> FarAwayModel
         {
             get => _FarAwayModel;
-            set => _FarAwayModel = value.AsNullable();
+            init => _FarAwayModel = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArmorGetter> INpcGetter.FarAwayModel => this.FarAwayModel;
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IRaceGetter> AttackRace
         {
             get => _AttackRace;
-            set => _AttackRace = value.AsNullable();
+            init => _AttackRace = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> INpcGetter.AttackRace => this.AttackRace;
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList
         {
             get => _SpectatorOverridePackageList;
-            set => _SpectatorOverridePackageList = value.AsNullable();
+            init => _SpectatorOverridePackageList = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.SpectatorOverridePackageList => this.SpectatorOverridePackageList;
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList
         {
             get => _ObserveDeadBodyOverridePackageList;
-            set => _ObserveDeadBodyOverridePackageList = value.AsNullable();
+            init => _ObserveDeadBodyOverridePackageList = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.ObserveDeadBodyOverridePackageList => this.ObserveDeadBodyOverridePackageList;
@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList
         {
             get => _GuardWarnOverridePackageList;
-            set => _GuardWarnOverridePackageList = value.AsNullable();
+            init => _GuardWarnOverridePackageList = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.GuardWarnOverridePackageList => this.GuardWarnOverridePackageList;
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> CombatOverridePackageList
         {
             get => _CombatOverridePackageList;
-            set => _CombatOverridePackageList = value.AsNullable();
+            init => _CombatOverridePackageList = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.CombatOverridePackageList => this.CombatOverridePackageList;
@@ -334,7 +334,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IClassGetter> Class
         {
             get => _Class;
-            set => _Class = value.AsSetter();
+            init => _Class = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IClassGetter> INpcGetter.Class => this.Class;
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IColorRecordGetter> HairColor
         {
             get => _HairColor;
-            set => _HairColor = value.AsNullable();
+            init => _HairColor = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> INpcGetter.HairColor => this.HairColor;
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ICombatStyleGetter> CombatStyle
         {
             get => _CombatStyle;
-            set => _CombatStyle = value.AsNullable();
+            init => _CombatStyle = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> INpcGetter.CombatStyle => this.CombatStyle;
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> GiftFilter
         {
             get => _GiftFilter;
-            set => _GiftFilter = value.AsNullable();
+            init => _GiftFilter = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.GiftFilter => this.GiftFilter;
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IOutfitGetter> DefaultOutfit
         {
             get => _DefaultOutfit;
-            set => _DefaultOutfit = value.AsNullable();
+            init => _DefaultOutfit = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOutfitGetter> INpcGetter.DefaultOutfit => this.DefaultOutfit;
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IOutfitGetter> SleepingOutfit
         {
             get => _SleepingOutfit;
-            set => _SleepingOutfit = value.AsNullable();
+            init => _SleepingOutfit = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOutfitGetter> INpcGetter.SleepingOutfit => this.SleepingOutfit;
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFormListGetter> DefaultPackageList
         {
             get => _DefaultPackageList;
-            set => _DefaultPackageList = value.AsNullable();
+            init => _DefaultPackageList = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.DefaultPackageList => this.DefaultPackageList;
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IFactionGetter> CrimeFaction
         {
             get => _CrimeFaction;
-            set => _CrimeFaction = value.AsNullable();
+            init => _CrimeFaction = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> INpcGetter.CrimeFaction => this.CrimeFaction;
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ITextureSetGetter> HeadTexture
         {
             get => _HeadTexture;
-            set => _HeadTexture = value.AsNullable();
+            init => _HeadTexture = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> INpcGetter.HeadTexture => this.HeadTexture;

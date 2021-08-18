@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEDIDLink<IMagicEffectGetter> MagicEffect
         {
             get => _MagicEffect;
-            set => _MagicEffect = value.AsSetter();
+            init => _MagicEffect = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEDIDLinkGetter<IMagicEffectGetter> IEffectDataGetter.MagicEffect => this.MagicEffect;

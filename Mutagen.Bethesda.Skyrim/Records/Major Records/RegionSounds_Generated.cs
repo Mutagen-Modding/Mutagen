@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMusicTypeGetter> Music
         {
             get => _Music;
-            set => _Music = value.AsNullable();
+            init => _Music = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMusicTypeGetter> IRegionSoundsGetter.Music => this.Music;

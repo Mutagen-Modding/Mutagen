@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IWorldspaceGetter> Worldspace
         {
             get => _Worldspace;
-            set => _Worldspace = value.AsNullable();
+            init => _Worldspace = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;

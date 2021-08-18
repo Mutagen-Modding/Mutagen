@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IDialogBranchGetter> Branch
         {
             get => _Branch;
-            set => _Branch = value.AsNullable();
+            init => _Branch = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogBranchGetter> IDialogTopicGetter.Branch => this.Branch;
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IQuestGetter> Quest
         {
             get => _Quest;
-            set => _Quest = value.AsNullable();
+            init => _Quest = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IDialogTopicGetter.Quest => this.Quest;

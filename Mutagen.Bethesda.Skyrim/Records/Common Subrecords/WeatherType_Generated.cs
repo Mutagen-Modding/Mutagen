@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IWeatherGetter> Weather
         {
             get => _Weather;
-            set => _Weather = value.AsSetter();
+            init => _Weather = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather;
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IGlobalGetter> Global
         {
             get => _Global;
-            set => _Global = value.AsSetter();
+            init => _Global = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGlobalGetter> IWeatherTypeGetter.Global => this.Global;

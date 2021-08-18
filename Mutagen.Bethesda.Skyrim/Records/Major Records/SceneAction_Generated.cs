@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IDialogTopicGetter> Topic
         {
             get => _Topic;
-            set => _Topic = value.AsNullable();
+            init => _Topic = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogTopicGetter> ISceneActionGetter.Topic => this.Topic;

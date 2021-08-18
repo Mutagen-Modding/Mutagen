@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<INpcGetter> Base
         {
             get => _Base;
-            set => _Base = value.AsNullable();
+            init => _Base = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> IPlacedNpcGetter.Base => this.Base;
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer
         {
             get => _MerchantContainer;
-            set => _MerchantContainer = value.AsNullable();
+            init => _MerchantContainer = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedNpcGetter.MerchantContainer => this.MerchantContainer;
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IPlacedCreatureGetter> Horse
         {
             get => _Horse;
-            set => _Horse = value.AsNullable();
+            init => _Horse = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedCreatureGetter> IPlacedNpcGetter.Horse => this.Horse;

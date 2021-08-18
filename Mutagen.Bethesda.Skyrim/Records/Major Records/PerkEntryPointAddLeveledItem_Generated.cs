@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILeveledItemGetter> Item
         {
             get => _Item;
-            set => _Item = value.AsSetter();
+            init => _Item = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILeveledItemGetter> IPerkEntryPointAddLeveledItemGetter.Item => this.Item;

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLink<IPlacedGetter> Destination
         {
             get => _Destination;
-            set => _Destination = value.AsSetter();
+            init => _Destination = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedGetter> ITeleportDestinationGetter.Destination => this.Destination;

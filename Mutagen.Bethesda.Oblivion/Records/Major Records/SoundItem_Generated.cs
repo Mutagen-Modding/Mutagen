@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<ISoundGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsNullable();
+            init => _Sound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> ISoundItemGetter.Sound => this.Sound;

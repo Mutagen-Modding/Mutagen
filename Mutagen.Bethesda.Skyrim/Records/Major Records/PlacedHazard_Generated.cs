@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IHazardGetter> Hazard
         {
             get => _Hazard;
-            set => _Hazard = value.AsSetter();
+            init => _Hazard = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IHazardGetter> IPlacedHazardGetter.Hazard => this.Hazard;

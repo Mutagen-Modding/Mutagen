@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IItemGetter> DeathItem
         {
             get => _DeathItem;
-            set => _DeathItem = value.AsNullable();
+            init => _DeathItem = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IItemGetter> INpcGetter.DeathItem => this.DeathItem;
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IRaceGetter> Race
         {
             get => _Race;
-            set => _Race = value.AsNullable();
+            init => _Race = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> INpcGetter.Race => this.Race;
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            init => _Script = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> INpcGetter.Script => this.Script;
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IClassGetter> Class
         {
             get => _Class;
-            set => _Class = value.AsNullable();
+            init => _Class = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClassGetter> INpcGetter.Class => this.Class;
@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IHairGetter> Hair
         {
             get => _Hair;
-            set => _Hair = value.AsNullable();
+            init => _Hair = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHairGetter> INpcGetter.Hair => this.Hair;
@@ -272,7 +272,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<ICombatStyleGetter> CombatStyle
         {
             get => _CombatStyle;
-            set => _CombatStyle = value.AsNullable();
+            init => _CombatStyle = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> INpcGetter.CombatStyle => this.CombatStyle;

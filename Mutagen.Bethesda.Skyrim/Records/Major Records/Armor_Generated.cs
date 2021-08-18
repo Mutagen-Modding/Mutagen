@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
         {
             get => _ObjectEffect;
-            set => _ObjectEffect = value.AsNullable();
+            init => _ObjectEffect = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEffectRecordGetter> IArmorGetter.ObjectEffect => this.ObjectEffect;
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
         {
             get => _PickUpSound;
-            set => _PickUpSound = value.AsNullable();
+            init => _PickUpSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IArmorGetter.PickUpSound => this.PickUpSound;
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
         {
             get => _PutDownSound;
-            set => _PutDownSound = value.AsNullable();
+            init => _PutDownSound = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IArmorGetter.PutDownSound => this.PutDownSound;
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IEquipTypeGetter> EquipmentType
         {
             get => _EquipmentType;
-            set => _EquipmentType = value.AsNullable();
+            init => _EquipmentType = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IArmorGetter.EquipmentType => this.EquipmentType;
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IImpactDataSetGetter> BashImpactDataSet
         {
             get => _BashImpactDataSet;
-            set => _BashImpactDataSet = value.AsNullable();
+            init => _BashImpactDataSet = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IArmorGetter.BashImpactDataSet => this.BashImpactDataSet;
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial
         {
             get => _AlternateBlockMaterial;
-            set => _AlternateBlockMaterial = value.AsNullable();
+            init => _AlternateBlockMaterial = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IArmorGetter.AlternateBlockMaterial => this.AlternateBlockMaterial;
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IRaceGetter> Race
         {
             get => _Race;
-            set => _Race = value.AsNullable();
+            init => _Race = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> IArmorGetter.Race => this.Race;
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IArmorGetter> TemplateArmor
         {
             get => _TemplateArmor;
-            set => _TemplateArmor = value.AsNullable();
+            init => _TemplateArmor = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArmorGetter> IArmorGetter.TemplateArmor => this.TemplateArmor;

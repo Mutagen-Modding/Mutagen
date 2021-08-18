@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IQuestGetter> Quest
         {
             get => _Quest;
-            set => _Quest = value.AsSetter();
+            init => _Quest = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IQuestGetter> IDialogViewGetter.Quest => this.Quest;

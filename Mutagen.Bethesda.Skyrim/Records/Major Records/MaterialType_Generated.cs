@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IMaterialTypeGetter> Parent
         {
             get => _Parent;
-            set => _Parent = value.AsNullable();
+            init => _Parent = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IMaterialTypeGetter.Parent => this.Parent;
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet
         {
             get => _HavokImpactDataSet;
-            set => _HavokImpactDataSet = value.AsNullable();
+            init => _HavokImpactDataSet = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IMaterialTypeGetter.HavokImpactDataSet => this.HavokImpactDataSet;

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILinkedReferenceGetter> Reference
         {
             get => _Reference;
-            set => _Reference = value.AsSetter();
+            init => _Reference = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILinkedReferenceGetter> IActivateParentGetter.Reference => this.Reference;

@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            init => _Script = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> ILeveledCreatureGetter.Script => this.Script;
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<INpcRecordGetter> Template
         {
             get => _Template;
-            set => _Template = value.AsNullable();
+            init => _Template = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcRecordGetter> ILeveledCreatureGetter.Template => this.Template;

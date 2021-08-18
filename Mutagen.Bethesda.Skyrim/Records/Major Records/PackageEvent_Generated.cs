@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IIdleAnimationGetter> Idle
         {
             get => _Idle;
-            set => _Idle = value.AsNullable();
+            init => _Idle = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IPackageEventGetter.Idle => this.Idle;

@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<INpcGetter> Parent
         {
             get => _Parent;
-            set => _Parent = value.AsSetter();
+            init => _Parent = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcGetter> IRelationshipGetter.Parent => this.Parent;
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<INpcGetter> Child
         {
             get => _Child;
-            set => _Child = value.AsSetter();
+            init => _Child = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcGetter> IRelationshipGetter.Child => this.Child;
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IAssociationTypeGetter> AssociationType
         {
             get => _AssociationType;
-            set => _AssociationType = value.AsSetter();
+            init => _AssociationType = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType;

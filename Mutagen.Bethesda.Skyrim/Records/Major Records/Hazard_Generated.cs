@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
         {
             get => _ImageSpaceModifier;
-            set => _ImageSpaceModifier = value.AsNullable();
+            init => _ImageSpaceModifier = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IHazardGetter.ImageSpaceModifier => this.ImageSpaceModifier;
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IEffectRecordGetter> Spell
         {
             get => _Spell;
-            set => _Spell = value.AsSetter();
+            init => _Spell = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectRecordGetter> IHazardGetter.Spell => this.Spell;
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ILightGetter> Light
         {
             get => _Light;
-            set => _Light = value.AsSetter();
+            init => _Light = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IHazardGetter.Light => this.Light;
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IImpactDataSetGetter> ImpactDataSet
         {
             get => _ImpactDataSet;
-            set => _ImpactDataSet = value.AsSetter();
+            init => _ImpactDataSet = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IHazardGetter.ImpactDataSet => this.ImpactDataSet;
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<ISoundDescriptorGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsSetter();
+            init => _Sound = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IHazardGetter.Sound => this.Sound;

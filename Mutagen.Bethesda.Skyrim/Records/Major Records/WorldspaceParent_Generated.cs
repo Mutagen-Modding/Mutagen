@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<IWorldspaceGetter> Worldspace
         {
             get => _Worldspace;
-            set => _Worldspace = value.AsSetter();
+            init => _Worldspace = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> IWorldspaceParentGetter.Worldspace => this.Worldspace;
