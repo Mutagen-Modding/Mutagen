@@ -139,9 +139,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                             new CreationClubEnabledProvider(
                                 categoryContext),
                             new GameDirectoryInjection(dataPath.Directory!.Value)),
-                        new CreationClubRawListingsReader(
-                            fileSystem,
-                            dataDir)))
+                        new CreationClubRawListingsReader()))
                 .Get();
         }
 
@@ -175,9 +173,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                         fileSystem,
                         dataDir,
                         new CreationClubListingsPathInjection(creationClubFilePath),
-                        new CreationClubRawListingsReader(
-                            fileSystem,
-                            dataDir)))
+                        new CreationClubRawListingsReader()))
                 .Get();
         }
 
@@ -273,9 +269,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                 pluginPath,
                 throwOnMissingMods,
                 fileSystem);
-            var creationClubRawListingsReader = new CreationClubRawListingsReader(
-                fileSystem,
-                dataDir);
+            var creationClubRawListingsReader = new CreationClubRawListingsReader();
             var cccListingsProv = new CreationClubListingsProvider(
                 fileSystem,
                 dataDir,

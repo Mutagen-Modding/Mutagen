@@ -143,9 +143,7 @@ namespace Mutagen.Bethesda.Environments
                                 IFileSystemExt.DefaultFilesystem,
                                 dataDirectory,
                                 creationClubListingsPathProvider,
-                                new CreationClubRawListingsReader(
-                                    IFileSystemExt.DefaultFilesystem,
-                                    dataDirectory))),
+                                new CreationClubRawListingsReader())),
                         new ModImporter<TModGetter>(
                             IFileSystemExt.DefaultFilesystem,
                             gameReleaseInjection)),

@@ -35,9 +35,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     new CreationClubEnabledProvider(
                         gameCategoryInjection),
                     new GameDirectoryInjection(dataPath.Directory!.Value)),
-                new CreationClubRawListingsReader(
-                    IFileSystemExt.DefaultFilesystem,
-                    dataDirectoryInjection)).Get();
+                new CreationClubRawListingsReader()).Get();
         }
 
         public static IEnumerable<IModListingGetter> ListingsFromPath(
@@ -51,9 +49,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                 fileSystem,
                 dataDirectoryInjection,
                 new CreationClubListingsPathInjection(cccFilePath),
-                new CreationClubRawListingsReader(
-                    fileSystem,
-                    dataDirectoryInjection)).Get();
+                new CreationClubRawListingsReader()).Get();
         }
 
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
@@ -69,9 +65,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return new CreationClubLiveLoadOrderProvider(
                 new CreationClubLiveListingsFileReader(
                     fileSystem,
-                    new CreationClubRawListingsReader(
-                        fileSystem,
-                        dataDir),
+                    new CreationClubRawListingsReader(),
                     cccPath),
                 new CreationClubLiveLoadOrderFolderWatcher(
                     fileSystem,
