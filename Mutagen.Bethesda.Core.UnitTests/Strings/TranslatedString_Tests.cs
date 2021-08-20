@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
                 _dict.Add(UnusedLanguage, new Dictionary<uint, string>());
             }
 
-            public IEnumerable<Language> AvailableLanguages(StringsSource source)
+            public IReadOnlyCollection<Language> AvailableLanguages(StringsSource source)
             {
                 return _dict.Keys;
             }

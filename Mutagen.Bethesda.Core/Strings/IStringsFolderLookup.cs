@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Strings
         /// </summary>
         /// <param name="source">Source to query</param>
         /// <returns>Enumerable of languages present for given source</returns>
-        IEnumerable<Language> AvailableLanguages(StringsSource source);
+        IReadOnlyCollection<Language> AvailableLanguages(StringsSource source);
 
         /// <summary>
         /// Attempts to retrieve a string given its index key

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Strings
         public Language TargetLanguage { get; }
 
         private string? _directString;
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
         internal Dictionary<Language, string?>? _localization;
 
         // Alternate way of populating a Translated String
@@ -64,8 +64,7 @@ namespace Mutagen.Bethesda.Strings
         {
             get
             {
-                ResolveAllStringSources();
-                return _localization?.Count ?? 1;
+                return StringsLookup?.AvailableLanguages(StringsSource).Count ?? 1;
             }
         }
 

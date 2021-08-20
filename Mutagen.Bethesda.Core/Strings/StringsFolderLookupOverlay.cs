@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Strings
             };
         }
 
-        public IEnumerable<Language> AvailableLanguages(StringsSource source)
+        public IReadOnlyCollection<Language> AvailableLanguages(StringsSource source)
         {
             return Get(source).Keys;
         }
