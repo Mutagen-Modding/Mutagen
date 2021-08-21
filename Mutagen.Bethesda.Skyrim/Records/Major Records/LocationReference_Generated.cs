@@ -505,8 +505,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationReferenceGetter,
         ILoquiObjectSetter<ILocationReference>
     {
-        new IFormLink<ILinkedReferenceGetter> Actor { get; }
-        new IFormLink<IComplexLocationGetter> Location { get; }
+        new IFormLink<ILinkedReferenceGetter> Actor { get; set; }
+        new IFormLink<IComplexLocationGetter> Location { get; set; }
         new P2Int16 Grid { get; set; }
     }
 

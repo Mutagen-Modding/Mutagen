@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptObjectPropertyGetter,
         IScriptProperty
     {
-        new IFormLink<ISkyrimMajorRecordGetter> Object { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> Object { get; set; }
         new Int16 Alias { get; set; }
         new UInt16 Unused { get; set; }
     }

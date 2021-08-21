@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32? EndPhase { get; set; }
         new Single? TimerSeconds { get; set; }
         new ExtendedList<IFormLinkGetter<IPackageGetter>> Packages { get; }
-        new IFormLinkNullable<IDialogTopicGetter> Topic { get; }
+        new IFormLinkNullable<IDialogTopicGetter> Topic { get; set; }
         new Int32? HeadtrackActorID { get; set; }
         new Single? LoopingMax { get; set; }
         new Single? LoopingMin { get; set; }

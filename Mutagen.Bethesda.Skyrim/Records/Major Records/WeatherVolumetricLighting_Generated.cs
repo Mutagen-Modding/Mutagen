@@ -551,10 +551,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherVolumetricLighting>,
         IWeatherVolumetricLightingGetter
     {
-        new IFormLink<IVolumetricLightingGetter> Sunrise { get; }
-        new IFormLink<IVolumetricLightingGetter> Day { get; }
-        new IFormLink<IVolumetricLightingGetter> Sunset { get; }
-        new IFormLink<IVolumetricLightingGetter> Night { get; }
+        new IFormLink<IVolumetricLightingGetter> Sunrise { get; set; }
+        new IFormLink<IVolumetricLightingGetter> Day { get; set; }
+        new IFormLink<IVolumetricLightingGetter> Sunset { get; set; }
+        new IFormLink<IVolumetricLightingGetter> Night { get; set; }
     }
 
     public partial interface IWeatherVolumetricLightingGetter :

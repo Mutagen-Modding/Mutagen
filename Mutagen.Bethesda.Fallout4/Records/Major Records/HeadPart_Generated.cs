@@ -1092,9 +1092,9 @@ namespace Mutagen.Bethesda.Fallout4
         new HeadPart.TypeEnum? Type { get; set; }
         new ExtendedList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
         new ExtendedList<Part> Parts { get; }
-        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        new IFormLinkNullable<IColorRecordGetter> Color { get; }
-        new IFormLinkNullable<IFormListGetter> ValidRaces { get; }
+        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new IFormLinkNullable<IColorRecordGetter> Color { get; set; }
+        new IFormLinkNullable<IFormListGetter> ValidRaces { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         #region Mutagen
         new HeadPart.MajorFlag MajorFlags { get; set; }

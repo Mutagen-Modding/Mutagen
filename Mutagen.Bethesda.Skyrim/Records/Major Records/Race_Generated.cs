@@ -4034,7 +4034,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; set; }
-        new IFormLinkNullable<IArmorGetter> Skin { get; }
+        new IFormLinkNullable<IArmorGetter> Skin { get; set; }
         new BodyTemplate? BodyTemplate { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
@@ -4078,33 +4078,33 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16? NumberOfTintsInList { get; set; }
         new Single FacegenMainClamp { get; set; }
         new Single FacegenFaceClamp { get; set; }
-        new IFormLinkNullable<IRaceGetter> AttackRace { get; }
+        new IFormLinkNullable<IRaceGetter> AttackRace { get; set; }
         new ExtendedList<Attack> Attacks { get; }
         new IGenderedItem<BodyData?> BodyData { get; set; }
         new ExtendedList<IFormLinkGetter<IHairGetter>>? Hairs { get; set; }
         new ExtendedList<IFormLinkGetter<IEyesGetter>>? Eyes { get; set; }
-        new IFormLinkNullable<IBodyPartDataGetter> BodyPartData { get; }
+        new IFormLinkNullable<IBodyPartDataGetter> BodyPartData { get; set; }
         new IGenderedItem<Model?> BehaviorGraph { get; set; }
-        new IFormLinkNullable<IMaterialTypeGetter> MaterialType { get; }
-        new IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; }
-        new IFormLinkNullable<IArtObjectGetter> DecapitationFX { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> OpenLootSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> CloseLootSound { get; }
+        new IFormLinkNullable<IMaterialTypeGetter> MaterialType { get; set; }
+        new IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new IFormLinkNullable<IArtObjectGetter> DecapitationFX { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> OpenLootSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> CloseLootSound { get; set; }
         new IDictionary<BipedObject, String> BipedObjectNames { get; }
         new ExtendedList<RaceMovementType> MovementTypes { get; }
         new EquipTypeFlag? EquipmentFlags { get; set; }
         new ExtendedList<IFormLinkGetter<IEquipTypeGetter>> EquipmentSlots { get; }
-        new IFormLinkNullable<IEquipTypeGetter> UnarmedEquipSlot { get; }
+        new IFormLinkNullable<IEquipTypeGetter> UnarmedEquipSlot { get; set; }
         new FaceFxPhonemes FaceFxPhonemes { get; set; }
-        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultWalk { get; }
-        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultRun { get; }
-        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSwim { get; }
-        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultFly { get; }
-        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak { get; }
-        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSprint { get; }
+        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultWalk { get; set; }
+        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultRun { get; set; }
+        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSwim { get; set; }
+        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultFly { get; set; }
+        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak { get; set; }
+        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSprint { get; set; }
         new IGenderedItem<HeadData?>? HeadData { get; set; }
-        new IFormLinkNullable<IRaceGetter> MorphRace { get; }
-        new IFormLinkNullable<IRaceGetter> ArmorRace { get; }
+        new IFormLinkNullable<IRaceGetter> MorphRace { get; set; }
+        new IFormLinkNullable<IRaceGetter> ArmorRace { get; set; }
         new Race.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Race.MajorFlag MajorFlags { get; set; }

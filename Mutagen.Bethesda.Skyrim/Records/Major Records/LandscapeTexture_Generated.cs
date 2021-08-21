@@ -805,8 +805,8 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionTarget,
         ISkyrimMajorRecordInternal
     {
-        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        new IFormLink<IMaterialTypeGetter> MaterialType { get; }
+        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new IFormLink<IMaterialTypeGetter> MaterialType { get; set; }
         new Byte HavokFriction { get; set; }
         new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }

@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPointToReferenceMapping>,
         IPointToReferenceMappingGetter
     {
-        new IFormLink<IPlacedGetter> Reference { get; }
+        new IFormLink<IPlacedGetter> Reference { get; set; }
         new ExtendedList<Int16> Points { get; }
     }
 

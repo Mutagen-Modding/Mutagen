@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Color? Color { get; set; }
         new String? Notes { get; set; }
         new ActionRecord.TypeEnum? Type { get; set; }
-        new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
+        new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired
         /// </summary>

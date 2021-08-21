@@ -721,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
+        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
         new TranslatedString? Description { get; set; }
         new ExtendedList<ShoutWord> WordsOfPower { get; }
         #region Mutagen

@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new IFormLink<IStaticGetter> LoadingScreenNif { get; }
+        new IFormLink<IStaticGetter> LoadingScreenNif { get; set; }
         new Single? InitialScale { get; set; }
         new P3Int16? InitialRotation { get; set; }
         new Int16MinMax? RotationOffsetConstraints { get; set; }

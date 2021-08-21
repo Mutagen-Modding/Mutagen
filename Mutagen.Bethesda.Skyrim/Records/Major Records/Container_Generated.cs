@@ -1049,8 +1049,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new Container.Flag Flags { get; set; }
         new Single Weight { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; }
         new Container.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Container.MajorFlag MajorFlags { get; set; }

@@ -728,8 +728,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEncounterZoneInternal>,
         ISkyrimMajorRecordInternal
     {
-        new IFormLink<IOwnerGetter> Owner { get; }
-        new IFormLink<ILocationGetter> Location { get; }
+        new IFormLink<IOwnerGetter> Owner { get; set; }
+        new IFormLink<ILocationGetter> Location { get; set; }
         new SByte Rank { get; set; }
         new SByte MinLevel { get; set; }
         new EncounterZone.Flag Flags { get; set; }

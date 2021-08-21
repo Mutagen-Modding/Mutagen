@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: INamedRequired
         /// </summary>
         new String Name { get; set; }
-        new IFormLink<ITextureSetGetter> NewTexture { get; }
+        new IFormLink<ITextureSetGetter> NewTexture { get; set; }
         new Int32 Index { get; set; }
     }
 

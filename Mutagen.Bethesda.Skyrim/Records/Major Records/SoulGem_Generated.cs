@@ -1151,8 +1151,8 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single Weight { get; set; }
         new SoulGem.Level ContainedSoul { get; set; }
         new SoulGem.Level MaximumCapacity { get; set; }
-        new IFormLinkNullable<ISoulGemGetter> LinkedTo { get; }
+        new IFormLinkNullable<ISoulGemGetter> LinkedTo { get; set; }
         new SoulGem.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new SoulGem.MajorFlag MajorFlags { get; set; }

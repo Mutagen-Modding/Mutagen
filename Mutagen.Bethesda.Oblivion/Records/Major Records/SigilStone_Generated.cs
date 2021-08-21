@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// </summary>
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         new ExtendedList<Effect> Effects { get; }
         new SigilStoneData? Data { get; set; }
     }

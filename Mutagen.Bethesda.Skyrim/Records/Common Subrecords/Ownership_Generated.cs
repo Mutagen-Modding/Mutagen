@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IOwnership>,
         IOwnershipGetter
     {
-        new IFormLinkNullable<IOwnerGetter> Owner { get; }
+        new IFormLinkNullable<IOwnerGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
     }
 

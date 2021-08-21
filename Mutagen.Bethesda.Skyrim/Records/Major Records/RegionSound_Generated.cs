@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionSound>,
         IRegionSoundGetter
     {
-        new IFormLink<ISoundDescriptorGetter> Sound { get; }
+        new IFormLink<ISoundDescriptorGetter> Sound { get; set; }
         new RegionSound.Flag Flags { get; set; }
         new Single Chance { get; set; }
     }

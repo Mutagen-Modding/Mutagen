@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectSoundGetter
     {
         new MagicEffect.SoundType Type { get; set; }
-        new IFormLink<ISoundDescriptorGetter> Sound { get; }
+        new IFormLink<ISoundDescriptorGetter> Sound { get; set; }
     }
 
     public partial interface IMagicEffectSoundGetter :

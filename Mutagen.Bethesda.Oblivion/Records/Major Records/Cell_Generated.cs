@@ -1578,11 +1578,11 @@ namespace Mutagen.Bethesda.Oblivion
         new ExtendedList<IFormLinkGetter<IRegionGetter>>? Regions { get; set; }
         new MusicType? MusicType { get; set; }
         new Single? WaterHeight { get; set; }
-        new IFormLinkNullable<IClimateGetter> Climate { get; }
-        new IFormLinkNullable<IWaterGetter> Water { get; }
-        new IFormLinkNullable<IFactionGetter> Owner { get; }
+        new IFormLinkNullable<IClimateGetter> Climate { get; set; }
+        new IFormLinkNullable<IWaterGetter> Water { get; set; }
+        new IFormLinkNullable<IFactionGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
-        new IFormLinkNullable<IGlobalGetter> GlobalVariable { get; }
+        new IFormLinkNullable<IGlobalGetter> GlobalVariable { get; set; }
         new PathGrid? PathGrid { get; set; }
         new Landscape? Landscape { get; set; }
         new Int32 Timestamp { get; set; }

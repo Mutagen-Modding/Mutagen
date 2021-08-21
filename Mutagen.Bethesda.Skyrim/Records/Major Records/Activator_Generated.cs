@@ -1136,12 +1136,12 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new Color? MarkerColor { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> ActivationSound { get; }
-        new IFormLinkNullable<IWaterGetter> WaterType { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> ActivationSound { get; set; }
+        new IFormLinkNullable<IWaterGetter> WaterType { get; set; }
         new TranslatedString? ActivateTextOverride { get; set; }
         new Activator.Flag? Flags { get; set; }
-        new IFormLinkNullable<IKeywordGetter> InteractionKeyword { get; }
+        new IFormLinkNullable<IKeywordGetter> InteractionKeyword { get; set; }
         #region Mutagen
         new Activator.MajorFlag MajorFlags { get; set; }
         #endregion

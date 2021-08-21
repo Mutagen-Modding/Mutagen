@@ -513,9 +513,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRelatedWaters>,
         IRelatedWatersGetter
     {
-        new IFormLink<IWaterGetter> RelatedWaterDaytime { get; }
-        new IFormLink<IWaterGetter> RelatedWaterNighttime { get; }
-        new IFormLink<IWaterGetter> RelatedWaterUnderwater { get; }
+        new IFormLink<IWaterGetter> RelatedWaterDaytime { get; set; }
+        new IFormLink<IWaterGetter> RelatedWaterNighttime { get; set; }
+        new IFormLink<IWaterGetter> RelatedWaterUnderwater { get; set; }
     }
 
     public partial interface IRelatedWatersGetter :

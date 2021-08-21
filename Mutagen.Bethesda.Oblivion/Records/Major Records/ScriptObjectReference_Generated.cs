@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IScriptObjectReference>,
         IScriptObjectReferenceGetter
     {
-        new IFormLink<IOblivionMajorRecordGetter> Reference { get; }
+        new IFormLink<IOblivionMajorRecordGetter> Reference { get; set; }
     }
 
     public partial interface IScriptObjectReferenceGetter :

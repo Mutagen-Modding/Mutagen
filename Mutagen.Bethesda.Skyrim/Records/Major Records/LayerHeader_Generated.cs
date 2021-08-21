@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILayerHeaderGetter,
         ILoquiObjectSetter<ILayerHeader>
     {
-        new IFormLink<ILandscapeTextureGetter> Texture { get; }
+        new IFormLink<ILandscapeTextureGetter> Texture { get; set; }
         new Quadrant Quadrant { get; set; }
         new UInt16 LayerNumber { get; set; }
     }

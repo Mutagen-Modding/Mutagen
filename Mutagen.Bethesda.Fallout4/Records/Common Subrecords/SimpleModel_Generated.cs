@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new String File { get; set; }
         new Single? ColorRemappingIndex { get; set; }
-        new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; }
+        new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; }
         new MemorySlice<Byte>? Data { get; set; }
     }
 

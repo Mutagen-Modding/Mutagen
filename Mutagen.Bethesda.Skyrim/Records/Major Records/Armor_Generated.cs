@@ -1559,18 +1559,18 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; }
+        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
         new UInt16? EnchantmentAmount { get; set; }
         new IGenderedItem<ArmorModel?>? WorldModel { get; set; }
         new BodyTemplate? BodyTemplate { get; set; }
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new String? RagdollConstraintTemplate { get; set; }
-        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
-        new IFormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; }
-        new IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; }
-        new IFormLinkNullable<IRaceGetter> Race { get; }
+        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
+        new IFormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; set; }
+        new IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; set; }
+        new IFormLinkNullable<IRaceGetter> Race { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
@@ -1580,7 +1580,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single ArmorRating { get; set; }
-        new IFormLinkNullable<IArmorGetter> TemplateArmor { get; }
+        new IFormLinkNullable<IArmorGetter> TemplateArmor { get; set; }
         new Armor.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Armor.MajorFlag MajorFlags { get; set; }

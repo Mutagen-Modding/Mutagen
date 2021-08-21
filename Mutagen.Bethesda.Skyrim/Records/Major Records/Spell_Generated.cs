@@ -1263,8 +1263,8 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
-        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
+        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
+        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new TranslatedString Description { get; set; }
         new UInt32 BaseCost { get; set; }
         new SpellDataFlag Flags { get; set; }
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new Single CastDuration { get; set; }
         new Single Range { get; set; }
-        new IFormLink<IPerkGetter> HalfCostPerk { get; }
+        new IFormLink<IPerkGetter> HalfCostPerk { get; set; }
         new ExtendedList<Effect> Effects { get; }
         new Spell.SPITDataType SPITDataTypeState { get; set; }
     }

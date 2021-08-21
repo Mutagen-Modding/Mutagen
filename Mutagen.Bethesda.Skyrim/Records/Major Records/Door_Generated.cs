@@ -902,9 +902,9 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> LoopSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> LoopSound { get; set; }
         new Door.Flag Flags { get; set; }
         #region Mutagen
         new Door.MajorFlag MajorFlags { get; set; }

@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEnableParent>
     {
         new EnableParent.VersioningBreaks Versioning { get; set; }
-        new IFormLink<ILinkedReferenceGetter> Reference { get; }
+        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
         new EnableParent.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }

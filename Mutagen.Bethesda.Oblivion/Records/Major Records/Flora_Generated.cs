@@ -666,8 +666,8 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
-        new IFormLinkNullable<IIngredientGetter> Ingredient { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
+        new IFormLinkNullable<IIngredientGetter> Ingredient { get; set; }
         new SeasonalIngredientProduction? SeasonalIngredientProduction { get; set; }
     }
 

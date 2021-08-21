@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
         new LeveledNpc.Flag Flags { get; set; }
-        new IFormLinkNullable<IGlobalGetter> Global { get; }
+        new IFormLinkNullable<IGlobalGetter> Global { get; set; }
         new ExtendedList<LeveledNpcEntry>? Entries { get; set; }
         /// <summary>
         /// Aspects: IModeled

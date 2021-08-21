@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkEntryPointAddActivateChoice>,
         IPerkEntryPointAddActivateChoiceGetter
     {
-        new IFormLinkNullable<ISpellGetter> Spell { get; }
+        new IFormLinkNullable<ISpellGetter> Spell { get; set; }
         new TranslatedString? ButtonLabel { get; set; }
         new PerkScriptFlag Flags { get; set; }
     }

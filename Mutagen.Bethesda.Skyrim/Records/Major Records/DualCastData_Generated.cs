@@ -770,11 +770,11 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IObjectBounded, IObjectBoundedOptional
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new IFormLink<IProjectileGetter> Projectile { get; }
-        new IFormLink<IExplosionGetter> Explosion { get; }
-        new IFormLink<IEffectShaderGetter> EffectShader { get; }
-        new IFormLink<IArtObjectGetter> HitEffectArt { get; }
-        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
+        new IFormLink<IProjectileGetter> Projectile { get; set; }
+        new IFormLink<IExplosionGetter> Explosion { get; set; }
+        new IFormLink<IEffectShaderGetter> EffectShader { get; set; }
+        new IFormLink<IArtObjectGetter> HitEffectArt { get; set; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
         new DualCastData.InheritScaleType InheritScale { get; set; }
         new DualCastData.DATADataType DATADataTypeState { get; set; }
     }

@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILinkedDoor>
     {
         new Int32 Unknown { get; set; }
-        new IFormLink<IPlacedObjectGetter> Door { get; }
+        new IFormLink<IPlacedObjectGetter> Door { get; set; }
     }
 
     public partial interface ILinkedDoorGetter :

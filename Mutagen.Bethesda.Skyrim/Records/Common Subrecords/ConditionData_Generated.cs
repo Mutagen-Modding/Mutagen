@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IConditionData>
     {
         new Condition.RunOnType RunOnType { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> Reference { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> Reference { get; set; }
         new Int32 Unknown3 { get; set; }
     }
 

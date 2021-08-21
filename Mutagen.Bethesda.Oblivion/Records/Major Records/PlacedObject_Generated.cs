@@ -1350,29 +1350,29 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaced,
         IPlacedObjectGetter
     {
-        new IFormLinkNullable<IOblivionMajorRecordGetter> Base { get; }
+        new IFormLinkNullable<IOblivionMajorRecordGetter> Base { get; set; }
         new MemorySlice<Byte>? XPCIFluff { get; set; }
         new MemorySlice<Byte>? FULLFluff { get; set; }
         new TeleportDestination? TeleportDestination { get; set; }
         new LockInformation? Lock { get; set; }
-        new IFormLinkNullable<IOwnerGetter> Owner { get; }
+        new IFormLinkNullable<IOwnerGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
-        new IFormLinkNullable<IGlobalGetter> GlobalVariable { get; }
+        new IFormLinkNullable<IGlobalGetter> GlobalVariable { get; set; }
         new EnableParent? EnableParent { get; set; }
-        new IFormLinkNullable<IPlacedGetter> Target { get; }
+        new IFormLinkNullable<IPlacedGetter> Target { get; set; }
         new Byte? SpeedTreeSeed { get; set; }
         new DistantLODData? DistantLODData { get; set; }
         new Single? Charge { get; set; }
         new Int32? Health { get; set; }
         new Int32? LevelModifier { get; set; }
-        new IFormLinkNullable<IOblivionMajorRecordGetter> XRTM { get; }
+        new IFormLinkNullable<IOblivionMajorRecordGetter> XRTM { get; set; }
         new PlacedObject.ActionFlag? ActionFlags { get; set; }
         new Int32? Count { get; set; }
         new MapMarker? MapMarker { get; set; }
         new Boolean OpenByDefault { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
-        new IFormLinkNullable<ISoulGemGetter> ContainedSoul { get; }
+        new IFormLinkNullable<ISoulGemGetter> ContainedSoul { get; set; }
         new Location? Location { get; set; }
     }
 

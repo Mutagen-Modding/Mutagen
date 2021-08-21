@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Boolean Enabled { get; set; }
         new EntryPoints? DisabledEntryPoints { get; set; }
-        new IFormLinkNullable<IKeywordGetter> MarkerKeyword { get; }
+        new IFormLinkNullable<IKeywordGetter> MarkerKeyword { get; set; }
         new EntryPoints? EntryPoints { get; set; }
     }
 

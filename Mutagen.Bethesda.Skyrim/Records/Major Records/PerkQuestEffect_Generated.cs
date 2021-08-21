@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkQuestEffect>,
         IPerkQuestEffectGetter
     {
-        new IFormLink<IQuestGetter> Quest { get; }
+        new IFormLink<IQuestGetter> Quest { get; set; }
         new Byte Stage { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }

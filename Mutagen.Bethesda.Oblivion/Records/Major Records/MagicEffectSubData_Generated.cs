@@ -650,11 +650,11 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IMagicEffectSubData>,
         IMagicEffectSubDataGetter
     {
-        new IFormLink<IEffectShaderGetter> EnchantEffect { get; }
-        new IFormLink<ISoundGetter> CastingSound { get; }
-        new IFormLink<ISoundGetter> BoltSound { get; }
-        new IFormLink<ISoundGetter> HitSound { get; }
-        new IFormLink<ISoundGetter> AreaSound { get; }
+        new IFormLink<IEffectShaderGetter> EnchantEffect { get; set; }
+        new IFormLink<ISoundGetter> CastingSound { get; set; }
+        new IFormLink<ISoundGetter> BoltSound { get; set; }
+        new IFormLink<ISoundGetter> HitSound { get; set; }
+        new IFormLink<ISoundGetter> AreaSound { get; set; }
         new Single ConstantEffectEnchantmentFactor { get; set; }
         new Single ConstantEffectBarterFactor { get; set; }
     }

@@ -1003,9 +1003,9 @@ namespace Mutagen.Bethesda.Skyrim
         new HeadPart.TypeEnum? Type { get; set; }
         new ExtendedList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
         new ExtendedList<Part> Parts { get; }
-        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        new IFormLinkNullable<IColorRecordGetter> Color { get; }
-        new IFormLinkNullable<IFormListGetter> ValidRaces { get; }
+        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new IFormLinkNullable<IColorRecordGetter> Color { get; set; }
+        new IFormLinkNullable<IFormListGetter> ValidRaces { get; set; }
         #region Mutagen
         new HeadPart.MajorFlag MajorFlags { get; set; }
         #endregion

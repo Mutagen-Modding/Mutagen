@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IQuestTarget>,
         IQuestTargetGetter
     {
-        new IFormLink<IPlacedGetter> Target { get; }
+        new IFormLink<IPlacedGetter> Target { get; set; }
         new Quest.TargetFlag Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new QuestTarget.QSTADataType QSTADataTypeState { get; set; }

@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Skyrim
         new QuestLogEntry.Flag? Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new TranslatedString? Entry { get; set; }
-        new IFormLinkNullable<IQuestGetter> NextQuest { get; }
+        new IFormLinkNullable<IQuestGetter> NextQuest { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
         new MemorySlice<Byte>? QNAM { get; set; }

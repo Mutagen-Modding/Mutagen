@@ -505,9 +505,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherType>,
         IWeatherTypeGetter
     {
-        new IFormLink<IWeatherGetter> Weather { get; }
+        new IFormLink<IWeatherGetter> Weather { get; set; }
         new Int32 Chance { get; set; }
-        new IFormLink<IGlobalGetter> Global { get; }
+        new IFormLink<IGlobalGetter> Global { get; set; }
     }
 
     public partial interface IWeatherTypeGetter :

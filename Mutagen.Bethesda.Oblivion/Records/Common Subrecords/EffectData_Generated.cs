@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILoquiObjectSetter<IEffectData>
     {
-        new IEDIDLink<IMagicEffectGetter> MagicEffect { get; }
+        new IEDIDLink<IMagicEffectGetter> MagicEffect { get; set; }
         new UInt32 Magnitude { get; set; }
         new UInt32 Area { get; set; }
         new UInt32 Duration { get; set; }

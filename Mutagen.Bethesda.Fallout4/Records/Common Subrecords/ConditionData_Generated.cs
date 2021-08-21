@@ -759,10 +759,10 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new Condition.FunctionType Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new IFormLink<IFallout4MajorRecordGetter> ParameterOneRecord { get; }
+        new IFormLink<IFallout4MajorRecordGetter> ParameterOneRecord { get; set; }
         new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
-        new IFormLink<IFallout4MajorRecordGetter> ParameterTwoRecord { get; }
+        new IFormLink<IFallout4MajorRecordGetter> ParameterTwoRecord { get; set; }
         new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
         new Condition.RunOnType RunOnType { get; set; }

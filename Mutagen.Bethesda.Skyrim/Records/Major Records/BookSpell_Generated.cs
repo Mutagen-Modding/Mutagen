@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IBookSpell>
     {
-        new IFormLink<ISpellGetter> Spell { get; }
+        new IFormLink<ISpellGetter> Spell { get; set; }
     }
 
     public partial interface IBookSpellGetter :

@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRaceRelation>,
         IRaceRelationGetter
     {
-        new IFormLink<IRaceGetter> Race { get; }
+        new IFormLink<IRaceGetter> Race { get; set; }
         new Int32 Modifier { get; set; }
     }
 

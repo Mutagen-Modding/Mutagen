@@ -512,8 +512,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILinkedReferences>
     {
         new LinkedReferences.VersioningBreaks Versioning { get; set; }
-        new IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; }
-        new IFormLink<ILinkedReferenceGetter> Reference { get; }
+        new IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; set; }
+        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
     }
 
     public partial interface ILinkedReferencesGetter :

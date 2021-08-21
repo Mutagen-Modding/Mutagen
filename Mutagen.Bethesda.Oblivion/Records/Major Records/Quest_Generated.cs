@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordInternal,
         IQuestGetter
     {
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired
         /// </summary>

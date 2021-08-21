@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILocationCellGetter,
         ILoquiObjectSetter<ILocationCell>
     {
-        new IFormLink<ICellGetter> Link { get; }
+        new IFormLink<ICellGetter> Link { get; set; }
     }
 
     public partial interface ILocationCellGetter :

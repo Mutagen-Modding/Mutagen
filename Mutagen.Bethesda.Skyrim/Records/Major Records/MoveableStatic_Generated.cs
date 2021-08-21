@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new MoveableStatic.Flag Flags { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; set; }
         #region Mutagen
         new MoveableStatic.MajorFlag MajorFlags { get; set; }
         #endregion

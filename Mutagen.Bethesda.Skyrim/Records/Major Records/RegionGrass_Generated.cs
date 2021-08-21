@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionGrass>,
         IRegionGrassGetter
     {
-        new IFormLink<IGrassGetter> Grass { get; }
+        new IFormLink<IGrassGetter> Grass { get; set; }
         new Int32 Unknown { get; set; }
     }
 

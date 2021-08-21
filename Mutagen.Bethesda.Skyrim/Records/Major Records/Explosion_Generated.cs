@@ -1295,14 +1295,14 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
-        new IFormLink<ILightGetter> Light { get; }
-        new IFormLink<ISoundDescriptorGetter> Sound1 { get; }
-        new IFormLink<ISoundDescriptorGetter> Sound2 { get; }
-        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
-        new IFormLink<ISkyrimMajorRecordGetter> PlacedObject { get; }
-        new IFormLink<IProjectileGetter> SpawnProjectile { get; }
+        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new IFormLink<ILightGetter> Light { get; set; }
+        new IFormLink<ISoundDescriptorGetter> Sound1 { get; set; }
+        new IFormLink<ISoundDescriptorGetter> Sound2 { get; set; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> PlacedObject { get; set; }
+        new IFormLink<IProjectileGetter> SpawnProjectile { get; set; }
         new Single Force { get; set; }
         new Single Damage { get; set; }
         new Single Radius { get; set; }

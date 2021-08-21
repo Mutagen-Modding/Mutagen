@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
-        new IFormLinkNullable<IWorldspaceGetter> Worldspace { get; }
+        new IFormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
         new ExtendedList<RegionArea> Areas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }

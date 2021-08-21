@@ -821,11 +821,11 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         new ExtendedList<ContainerItem> Items { get; }
         new ContainerData? Data { get; set; }
-        new IFormLinkNullable<ISoundGetter> OpenSound { get; }
-        new IFormLinkNullable<ISoundGetter> CloseSound { get; }
+        new IFormLinkNullable<ISoundGetter> OpenSound { get; set; }
+        new IFormLinkNullable<ISoundGetter> CloseSound { get; set; }
     }
 
     public partial interface IContainerInternal :

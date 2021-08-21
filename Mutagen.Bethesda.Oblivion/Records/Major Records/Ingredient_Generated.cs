@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// </summary>
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         new Single? Weight { get; set; }
         new IngredientData? Data { get; set; }
         new ExtendedList<Effect> Effects { get; }

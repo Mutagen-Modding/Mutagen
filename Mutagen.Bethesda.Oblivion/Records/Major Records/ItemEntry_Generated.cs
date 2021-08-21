@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
         IItemEntryGetter,
         ILoquiObjectSetter<IItemEntry>
     {
-        new IFormLink<IItemGetter> Item { get; }
+        new IFormLink<IItemGetter> Item { get; set; }
         new Int32? Count { get; set; }
     }
 

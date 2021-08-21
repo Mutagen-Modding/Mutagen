@@ -1050,8 +1050,8 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new QualityLevel? Quality { get; set; }
         new TranslatedString? Description { get; set; }
         new UInt32 Value { get; set; }

@@ -2426,7 +2426,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
+        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
@@ -2437,10 +2437,10 @@ namespace Mutagen.Bethesda.Skyrim
         new ActorValue ResistValue { get; set; }
         new UInt16 CounterEffectCount { get; set; }
         new UInt16 Unknown1 { get; set; }
-        new IFormLink<ILightGetter> CastingLight { get; }
+        new IFormLink<ILightGetter> CastingLight { get; set; }
         new Single TaperWeight { get; set; }
-        new IFormLink<IEffectShaderGetter> HitShader { get; }
-        new IFormLink<IEffectShaderGetter> EnchantShader { get; }
+        new IFormLink<IEffectShaderGetter> HitShader { get; set; }
+        new IFormLink<IEffectShaderGetter> EnchantShader { get; set; }
         new UInt32 MinimumSkillLevel { get; set; }
         new UInt32 SpellmakingArea { get; set; }
         new Single SpellmakingCastingTime { get; set; }
@@ -2448,23 +2448,23 @@ namespace Mutagen.Bethesda.Skyrim
         new Single TaperDuration { get; set; }
         new Single SecondActorValueWeight { get; set; }
         new MagicEffectArchetype Archetype { get; set; }
-        new IFormLink<IProjectileGetter> Projectile { get; }
-        new IFormLink<IExplosionGetter> Explosion { get; }
+        new IFormLink<IProjectileGetter> Projectile { get; set; }
+        new IFormLink<IExplosionGetter> Explosion { get; set; }
         new CastType CastType { get; set; }
         new TargetType TargetType { get; set; }
         new ActorValue SecondActorValue { get; set; }
-        new IFormLink<IArtObjectGetter> CastingArt { get; }
-        new IFormLink<IArtObjectGetter> HitEffectArt { get; }
-        new IFormLink<IImpactDataSetGetter> ImpactData { get; }
+        new IFormLink<IArtObjectGetter> CastingArt { get; set; }
+        new IFormLink<IArtObjectGetter> HitEffectArt { get; set; }
+        new IFormLink<IImpactDataSetGetter> ImpactData { get; set; }
         new Single SkillUsageMultiplier { get; set; }
-        new IFormLink<IDualCastDataGetter> DualCastArt { get; }
+        new IFormLink<IDualCastDataGetter> DualCastArt { get; set; }
         new Single DualCastScale { get; set; }
-        new IFormLink<IArtObjectGetter> EnchantArt { get; }
-        new IFormLink<ISkyrimMajorRecordGetter> Unknown2 { get; }
-        new IFormLink<ISkyrimMajorRecordGetter> Unknown3 { get; }
-        new IFormLink<ISpellGetter> EquipAbility { get; }
-        new IFormLink<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
-        new IFormLink<IPerkGetter> PerkToApply { get; }
+        new IFormLink<IArtObjectGetter> EnchantArt { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> Unknown2 { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> Unknown3 { get; set; }
+        new IFormLink<ISpellGetter> EquipAbility { get; set; }
+        new IFormLink<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new IFormLink<IPerkGetter> PerkToApply { get; set; }
         new SoundLevel CastingSoundLevel { get; set; }
         new Single ScriptEffectAIScore { get; set; }
         new Single ScriptEffectAIDelayTime { get; set; }

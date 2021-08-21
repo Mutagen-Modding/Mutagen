@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRankPlacement>,
         IRankPlacementGetter
     {
-        new IFormLink<IFactionGetter> Faction { get; }
+        new IFormLink<IFactionGetter> Faction { get; set; }
         new Byte Rank { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
     }

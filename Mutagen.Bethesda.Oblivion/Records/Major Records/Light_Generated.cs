@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired
         /// </summary>
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new LightData? Data { get; set; }
         new Single? Fade { get; set; }
-        new IFormLinkNullable<ISoundGetter> Sound { get; }
+        new IFormLinkNullable<ISoundGetter> Sound { get; set; }
     }
 
     public partial interface ILightInternal :

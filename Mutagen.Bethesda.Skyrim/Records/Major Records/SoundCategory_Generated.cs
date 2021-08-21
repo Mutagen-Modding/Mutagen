@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new TranslatedString? Name { get; set; }
         new SoundCategory.Flag? Flags { get; set; }
-        new IFormLinkNullable<ISoundCategoryGetter> Parent { get; }
+        new IFormLinkNullable<ISoundCategoryGetter> Parent { get; set; }
         new Single? StaticVolumeMultiplier { get; set; }
         new Single? DefaultMenuVolume { get; set; }
     }

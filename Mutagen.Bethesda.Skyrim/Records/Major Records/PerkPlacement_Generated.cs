@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkPlacement>,
         IPerkPlacementGetter
     {
-        new IFormLink<IPerkGetter> Perk { get; }
+        new IFormLink<IPerkGetter> Perk { get; set; }
         new Byte Rank { get; set; }
         new MemorySlice<Byte> Fluff { get; set; }
     }

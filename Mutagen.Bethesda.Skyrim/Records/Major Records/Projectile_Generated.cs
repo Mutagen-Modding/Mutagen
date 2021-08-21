@@ -1644,25 +1644,25 @@ namespace Mutagen.Bethesda.Skyrim
         new Single Gravity { get; set; }
         new Single Speed { get; set; }
         new Single Range { get; set; }
-        new IFormLink<ILightGetter> Light { get; }
-        new IFormLink<ILightGetter> MuzzleFlash { get; }
+        new IFormLink<ILightGetter> Light { get; set; }
+        new IFormLink<ILightGetter> MuzzleFlash { get; set; }
         new Single TracerChance { get; set; }
         new Single ExplosionAltTriggerProximity { get; set; }
         new Single ExplosionAltTriggerTimer { get; set; }
-        new IFormLink<IExplosionGetter> Explosion { get; }
-        new IFormLink<ISoundDescriptorGetter> Sound { get; }
+        new IFormLink<IExplosionGetter> Explosion { get; set; }
+        new IFormLink<ISoundDescriptorGetter> Sound { get; set; }
         new Single MuzzleFlashDuration { get; set; }
         new Single FadeDuration { get; set; }
         new Single ImpactForce { get; set; }
-        new IFormLink<ISoundDescriptorGetter> CountdownSound { get; }
-        new IFormLink<ISoundDescriptorGetter> DisaleSound { get; }
-        new IFormLink<IWeaponGetter> DefaultWeaponSource { get; }
+        new IFormLink<ISoundDescriptorGetter> CountdownSound { get; set; }
+        new IFormLink<ISoundDescriptorGetter> DisaleSound { get; set; }
+        new IFormLink<IWeaponGetter> DefaultWeaponSource { get; set; }
         new Single ConeSpread { get; set; }
         new Single CollisionRadius { get; set; }
         new Single Lifetime { get; set; }
         new Single RelaunchInterval { get; set; }
-        new IFormLink<ITextureSetGetter> DecalData { get; }
-        new IFormLink<ICollisionLayerGetter> CollisionLayer { get; }
+        new IFormLink<ITextureSetGetter> DecalData { get; set; }
+        new IFormLink<ICollisionLayerGetter> CollisionLayer { get; set; }
         new String MuzzleFlashModel { get; set; }
         new MemorySlice<Byte>? TextureFilesHashes { get; set; }
         new UInt32 SoundLevel { get; set; }

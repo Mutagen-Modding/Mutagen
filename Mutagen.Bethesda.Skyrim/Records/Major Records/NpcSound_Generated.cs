@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INpcSound>,
         INpcSoundGetter
     {
-        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
         new Byte? SoundChance { get; set; }
     }
 

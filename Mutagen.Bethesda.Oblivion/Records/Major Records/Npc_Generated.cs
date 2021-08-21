@@ -1832,21 +1832,21 @@ namespace Mutagen.Bethesda.Oblivion
         new Model? Model { get; set; }
         new NpcConfiguration? Configuration { get; set; }
         new ExtendedList<RankPlacement> Factions { get; }
-        new IFormLinkNullable<IItemGetter> DeathItem { get; }
-        new IFormLinkNullable<IRaceGetter> Race { get; }
+        new IFormLinkNullable<IItemGetter> DeathItem { get; set; }
+        new IFormLinkNullable<IRaceGetter> Race { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         new ExtendedList<ItemEntry> Items { get; }
         new AIData? AIData { get; set; }
         new ExtendedList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; }
         new ExtendedList<String>? Animations { get; set; }
-        new IFormLinkNullable<IClassGetter> Class { get; }
+        new IFormLinkNullable<IClassGetter> Class { get; set; }
         new NpcData? Stats { get; set; }
-        new IFormLinkNullable<IHairGetter> Hair { get; }
+        new IFormLinkNullable<IHairGetter> Hair { get; set; }
         new Single? HairLength { get; set; }
         new ExtendedList<IFormLinkGetter<IEyeGetter>>? Eyes { get; set; }
         new Color? HairColor { get; set; }
-        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
+        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
         new MemorySlice<Byte>? FaceGenGeometrySymmetric { get; set; }
         new MemorySlice<Byte>? FaceGenGeometryAsymmetric { get; set; }
         new MemorySlice<Byte>? FaceGenTextureSymmetric { get; set; }

@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkEntryPointSelectSpell>,
         IPerkEntryPointSelectSpellGetter
     {
-        new IFormLink<ISpellGetter> Spell { get; }
+        new IFormLink<ISpellGetter> Spell { get; set; }
     }
 
     public partial interface IPerkEntryPointSelectSpellGetter :

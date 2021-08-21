@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IAIPackageLocation>
     {
         new AIPackageLocation.LocationType Type { get; set; }
-        new IFormLink<IPlacedGetter> LocationReference { get; }
+        new IFormLink<IPlacedGetter> LocationReference { get; set; }
         new Single Radius { get; set; }
     }
 

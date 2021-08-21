@@ -1861,13 +1861,13 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new TranslatedString? Name { get; set; }
         new P2Int16? FixedDimensionsCenterCell { get; set; }
-        new IFormLinkNullable<ILightingTemplateGetter> InteriorLighting { get; }
-        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
-        new IFormLinkNullable<ILocationGetter> Location { get; }
+        new IFormLinkNullable<ILightingTemplateGetter> InteriorLighting { get; set; }
+        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
+        new IFormLinkNullable<ILocationGetter> Location { get; set; }
         new WorldspaceParent? Parent { get; set; }
-        new IFormLinkNullable<IClimateGetter> Climate { get; }
-        new IFormLinkNullable<IWaterGetter> Water { get; }
-        new IFormLinkNullable<IWaterGetter> LodWater { get; }
+        new IFormLinkNullable<IClimateGetter> Climate { get; set; }
+        new IFormLinkNullable<IWaterGetter> Water { get; set; }
+        new IFormLinkNullable<IWaterGetter> LodWater { get; set; }
         new Single? LodWaterHeight { get; set; }
         new WorldspaceLandDefaults? LandDefaults { get; set; }
         new String? MapImage { get; set; }
@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single? DistantLodMultiplier { get; set; }
         new Worldspace.Flag Flags { get; set; }
         new WorldspaceObjectBounds? ObjectBounds { get; set; }
-        new IFormLinkNullable<IMusicTypeGetter> Music { get; }
+        new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new String? CanopyShadow { get; set; }
         new String? WaterNoiseTexture { get; set; }
         new String? HdLodDiffuseTexture { get; set; }

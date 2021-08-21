@@ -797,8 +797,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ExtendedList<ContainerEntry>? Items { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new IFormLinkNullable<IConstructibleGetter> CreatedObject { get; }
-        new IFormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; }
+        new IFormLinkNullable<IConstructibleGetter> CreatedObject { get; set; }
+        new IFormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; set; }
         new UInt16? CreatedObjectCount { get; set; }
     }
 

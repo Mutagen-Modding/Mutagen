@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IRelation>,
         IRelationGetter
     {
-        new IFormLink<IRelatableGetter> Target { get; }
+        new IFormLink<IRelatableGetter> Target { get; set; }
         new Int32 Modifier { get; set; }
         new CombatReaction Reaction { get; set; }
     }

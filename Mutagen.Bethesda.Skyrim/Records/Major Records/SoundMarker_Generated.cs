@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new MemorySlice<Byte>? SNDD { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; set; }
     }
 
     public partial interface ISoundMarkerInternal :

@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new Model? Model { get; set; }
         new Int32 NodeIndex { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
         new UInt16 MasterParticleSystemCap { get; set; }
         new Boolean AlwaysLoaded { get; set; }
         new AddonNode.DNAMDataType DNAMDataTypeState { get; set; }

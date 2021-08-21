@@ -734,8 +734,8 @@ namespace Mutagen.Bethesda.Oblivion
         /// </summary>
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
-        new IFormLinkNullable<IEnchantmentGetter> Enchantment { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
+        new IFormLinkNullable<IEnchantmentGetter> Enchantment { get; set; }
         new UInt16? EnchantmentPoints { get; set; }
         new WeaponData? Data { get; set; }
     }

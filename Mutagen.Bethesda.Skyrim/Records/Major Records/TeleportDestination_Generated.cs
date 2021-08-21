@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPositionRotation,
         ITeleportDestinationGetter
     {
-        new IFormLink<IPlacedObjectGetter> Door { get; }
+        new IFormLink<IPlacedObjectGetter> Door { get; set; }
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
         new TeleportDestination.Flag Flags { get; set; }

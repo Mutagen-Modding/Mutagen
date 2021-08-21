@@ -475,8 +475,8 @@ namespace Mutagen.Bethesda.Skyrim
         IImpactDataGetter,
         ILoquiObjectSetter<IImpactData>
     {
-        new IFormLink<IMaterialTypeGetter> Material { get; }
-        new IFormLink<IImpactGetter> Impact { get; }
+        new IFormLink<IMaterialTypeGetter> Material { get; set; }
+        new IFormLink<IImpactGetter> Impact { get; set; }
     }
 
     public partial interface IImpactDataGetter :

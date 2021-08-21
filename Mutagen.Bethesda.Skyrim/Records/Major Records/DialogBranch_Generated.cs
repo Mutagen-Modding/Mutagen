@@ -594,10 +594,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogBranchInternal>,
         ISkyrimMajorRecordInternal
     {
-        new IFormLink<IQuestGetter> Quest { get; }
+        new IFormLink<IQuestGetter> Quest { get; set; }
         new Int32? TNAM { get; set; }
         new DialogBranch.Flag? Flags { get; set; }
-        new IFormLinkNullable<IDialogTopicGetter> StartingTopic { get; }
+        new IFormLinkNullable<IDialogTopicGetter> StartingTopic { get; set; }
     }
 
     public partial interface IDialogBranchInternal :

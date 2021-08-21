@@ -938,8 +938,8 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
-        new IFormLinkNullable<IEnchantmentGetter> Enchantment { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
+        new IFormLinkNullable<IEnchantmentGetter> Enchantment { get; set; }
         new UInt16? EnchantmentPoints { get; set; }
         new ClothingFlags? ClothingFlags { get; set; }
         new Model? MaleBipedModel { get; set; }

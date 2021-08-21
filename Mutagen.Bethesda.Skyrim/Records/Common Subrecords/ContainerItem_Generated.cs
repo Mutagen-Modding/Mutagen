@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IContainerItem>
     {
-        new IFormLink<IItemGetter> Item { get; }
+        new IFormLink<IItemGetter> Item { get; set; }
         new Int32 Count { get; set; }
     }
 

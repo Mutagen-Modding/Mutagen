@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEdgeLink>
     {
         new Int32 Unknown { get; set; }
-        new IFormLink<IANavigationMeshGetter> Mesh { get; }
+        new IFormLink<IANavigationMeshGetter> Mesh { get; set; }
         new Int16 TriangleIndex { get; set; }
     }
 

@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherSound>,
         IWeatherSoundGetter
     {
-        new IFormLink<ISoundGetter> Sound { get; }
+        new IFormLink<ISoundGetter> Sound { get; set; }
         new WeatherSound.TypeEnum Type { get; set; }
     }
 

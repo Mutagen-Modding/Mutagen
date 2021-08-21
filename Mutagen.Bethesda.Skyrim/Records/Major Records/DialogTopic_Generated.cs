@@ -1008,8 +1008,8 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new TranslatedString? Name { get; set; }
         new Single Priority { get; set; }
-        new IFormLinkNullable<IDialogBranchGetter> Branch { get; }
-        new IFormLinkNullable<IQuestGetter> Quest { get; }
+        new IFormLinkNullable<IDialogBranchGetter> Branch { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
         new DialogTopic.TopicFlag TopicFlags { get; set; }
         new DialogTopic.CategoryEnum Category { get; set; }
         new DialogTopic.SubtypeEnum Subtype { get; set; }

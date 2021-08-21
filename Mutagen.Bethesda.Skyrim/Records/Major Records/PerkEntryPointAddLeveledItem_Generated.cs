@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkEntryPointAddLeveledItem>,
         IPerkEntryPointAddLeveledItemGetter
     {
-        new IFormLink<ILeveledItemGetter> Item { get; }
+        new IFormLink<ILeveledItemGetter> Item { get; set; }
     }
 
     public partial interface IPerkEntryPointAddLeveledItemGetter :

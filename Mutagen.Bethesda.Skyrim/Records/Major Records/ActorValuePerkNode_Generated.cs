@@ -794,13 +794,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IActorValuePerkNode>
     {
-        new IFormLink<IPerkGetter> Perk { get; }
+        new IFormLink<IPerkGetter> Perk { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new UInt32? PerkGridX { get; set; }
         new UInt32? PerkGridY { get; set; }
         new Single? HorizontalPosition { get; set; }
         new Single? VerticalPosition { get; set; }
-        new IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; }
+        new IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; set; }
         new ExtendedList<UInt32> ConnectionLineToIndices { get; }
         new UInt32? Index { get; set; }
     }

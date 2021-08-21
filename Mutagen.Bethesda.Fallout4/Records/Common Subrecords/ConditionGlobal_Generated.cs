@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<IConditionGlobal>
     {
-        new IFormLink<IGlobalGetter> ComparisonValue { get; }
+        new IFormLink<IGlobalGetter> ComparisonValue { get; set; }
         new ConditionData Data { get; set; }
     }
 

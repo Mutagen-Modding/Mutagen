@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ISoundItem>,
         ISoundItemGetter
     {
-        new IFormLinkNullable<ISoundGetter> Sound { get; }
+        new IFormLinkNullable<ISoundGetter> Sound { get; set; }
         new Byte? Chance { get; set; }
     }
 

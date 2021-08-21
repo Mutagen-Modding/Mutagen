@@ -575,9 +575,9 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptEffectDataGetter
     {
         new ScriptEffectData.VersioningBreaks Versioning { get; set; }
-        new IFormLink<IScriptGetter> Script { get; }
+        new IFormLink<IScriptGetter> Script { get; set; }
         new MagicSchool MagicSchool { get; set; }
-        new IEDIDLink<IMagicEffectGetter> VisualEffect { get; }
+        new IEDIDLink<IMagicEffectGetter> VisualEffect { get; set; }
         new ScriptEffect.Flag Flags { get; set; }
     }
 

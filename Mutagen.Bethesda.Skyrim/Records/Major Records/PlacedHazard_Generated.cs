@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedHazardGetter,
         IScripted
     {
-        new IFormLink<IHazardGetter> Hazard { get; }
+        new IFormLink<IHazardGetter> Hazard { get; set; }
     }
 
     public partial interface IPlacedHazardInternal :

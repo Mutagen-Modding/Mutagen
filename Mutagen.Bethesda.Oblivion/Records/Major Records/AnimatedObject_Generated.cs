@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; }
+        new IFormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; set; }
     }
 
     public partial interface IAnimatedObjectInternal :

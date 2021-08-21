@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkAbilityEffect>,
         IPerkAbilityEffectGetter
     {
-        new IFormLink<ISpellGetter> Ability { get; }
+        new IFormLink<ISpellGetter> Ability { get; set; }
     }
 
     public partial interface IPerkAbilityEffectGetter :

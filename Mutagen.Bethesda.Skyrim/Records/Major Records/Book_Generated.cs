@@ -1351,8 +1351,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Icons? Icons { get; set; }
         new TranslatedString BookText { get; set; }
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
@@ -1363,7 +1363,7 @@ namespace Mutagen.Bethesda.Skyrim
         new BookTeachTarget? Teaches { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
-        new IFormLinkNullable<IStaticGetter> InventoryArt { get; }
+        new IFormLinkNullable<IStaticGetter> InventoryArt { get; set; }
         new TranslatedString? Description { get; set; }
         new Book.DATADataType DATADataTypeState { get; set; }
     }

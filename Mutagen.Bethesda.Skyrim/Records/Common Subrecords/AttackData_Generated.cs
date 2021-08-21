@@ -756,12 +756,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Single DamageMult { get; set; }
         new Single Chance { get; set; }
-        new IFormLink<ISpellRecordGetter> Spell { get; }
+        new IFormLink<ISpellRecordGetter> Spell { get; set; }
         new AttackData.Flag Flags { get; set; }
         new Single AttackAngle { get; set; }
         new Single StrikeAngle { get; set; }
         new Single Stagger { get; set; }
-        new IFormLink<IKeywordGetter> AttackType { get; }
+        new IFormLink<IKeywordGetter> AttackType { get; set; }
         new Single Knockdown { get; set; }
         new Single RecoveryTime { get; set; }
         new Single StaminaMult { get; set; }

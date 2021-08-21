@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavigationMapInfo>,
         INavigationMapInfoGetter
     {
-        new IFormLink<IANavigationMeshGetter> NavigationMesh { get; }
+        new IFormLink<IANavigationMeshGetter> NavigationMesh { get; set; }
         new Int32 Unknown { get; set; }
         new P3Float Point { get; set; }
         new UInt32 PreferredMergesFlag { get; set; }
@@ -1071,9 +1071,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<LinkedDoor> LinkedDoors { get; }
         new IslandData? Island { get; set; }
         new Int32 Unknown2 { get; set; }
-        new IFormLink<IWorldspaceGetter> ParentWorldspace { get; }
+        new IFormLink<IWorldspaceGetter> ParentWorldspace { get; set; }
         new P2Int16 ParentWorldspaceCoord { get; set; }
-        new IFormLink<ICellGetter> ParentCell { get; }
+        new IFormLink<ICellGetter> ParentCell { get; set; }
     }
 
     public partial interface INavigationMapInfoGetter :

@@ -1039,11 +1039,11 @@ namespace Mutagen.Bethesda.Skyrim
         new Impact.ResultType Result { get; set; }
         new Int16 Unknown { get; set; }
         new Decal? Decal { get; set; }
-        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        new IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; }
-        new IFormLinkNullable<ISoundGetter> Sound1 { get; }
-        new IFormLinkNullable<ISoundGetter> Sound2 { get; }
-        new IFormLinkNullable<IHazardGetter> Hazard { get; }
+        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; set; }
+        new IFormLinkNullable<ISoundGetter> Sound1 { get; set; }
+        new IFormLinkNullable<ISoundGetter> Sound2 { get; set; }
+        new IFormLinkNullable<IHazardGetter> Hazard { get; set; }
         new Impact.DATADataType DATADataTypeState { get; set; }
     }
 

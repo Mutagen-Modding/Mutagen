@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRaceMovementType>,
         IRaceMovementTypeGetter
     {
-        new IFormLinkNullable<IMovementTypeGetter> MovementType { get; }
+        new IFormLinkNullable<IMovementTypeGetter> MovementType { get; set; }
         new SpeedOverrides? Overrides { get; set; }
     }
 

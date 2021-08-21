@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ITintPreset>,
         ITintPresetGetter
     {
-        new IFormLinkNullable<IColorRecordGetter> Color { get; }
+        new IFormLinkNullable<IColorRecordGetter> Color { get; set; }
         new Single? DefaultValue { get; set; }
         new UInt16? Index { get; set; }
     }

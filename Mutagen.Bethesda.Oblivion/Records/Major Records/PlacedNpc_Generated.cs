@@ -836,13 +836,13 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaced,
         IPlacedNpcGetter
     {
-        new IFormLinkNullable<INpcGetter> Base { get; }
+        new IFormLinkNullable<INpcGetter> Base { get; set; }
         new MemorySlice<Byte>? XPCIFluff { get; set; }
         new MemorySlice<Byte>? FULLFluff { get; set; }
         new DistantLODData? DistantLODData { get; set; }
         new EnableParent? EnableParent { get; set; }
-        new IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; }
-        new IFormLinkNullable<IPlacedCreatureGetter> Horse { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
+        new IFormLinkNullable<IPlacedCreatureGetter> Horse { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
         new Location? Location { get; set; }

@@ -1890,20 +1890,20 @@ namespace Mutagen.Bethesda.Oblivion
         new MemorySlice<Byte>? NIFT { get; set; }
         new CreatureConfiguration? Configuration { get; set; }
         new ExtendedList<RankPlacement> Factions { get; }
-        new IFormLinkNullable<IItemGetter> DeathItem { get; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IItemGetter> DeathItem { get; set; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         new CreatureAIData? AIData { get; set; }
         new ExtendedList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; }
         new ExtendedList<String>? Animations { get; set; }
         new CreatureData? Data { get; set; }
         new Byte? AttackReach { get; set; }
-        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
+        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
         new Single? TurningSpeed { get; set; }
         new Single? BaseScale { get; set; }
         new Single? FootWeight { get; set; }
         new String? BloodSpray { get; set; }
         new String? BloodDecal { get; set; }
-        new IFormLinkNullable<ICreatureGetter> InheritsSoundFrom { get; }
+        new IFormLinkNullable<ICreatureGetter> InheritsSoundFrom { get; set; }
         new ExtendedList<CreatureSound> Sounds { get; }
     }
 

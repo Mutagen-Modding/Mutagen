@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILoquiObjectSetter<IEnableParent>
     {
-        new IFormLink<IPlacedGetter> Reference { get; }
+        new IFormLink<IPlacedGetter> Reference { get; set; }
         new EnableParent.Flag Flags { get; set; }
     }
 

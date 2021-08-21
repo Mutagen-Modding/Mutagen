@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new UInt16 EventFunction { get; set; }
         new UInt16 EventMember { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> Parameter3 { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> Parameter3 { get; set; }
     }
 
     public partial interface IGetEventDataGetter :

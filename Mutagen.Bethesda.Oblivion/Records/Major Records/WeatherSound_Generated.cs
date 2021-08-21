@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IWeatherSound>,
         IWeatherSoundGetter
     {
-        new IFormLink<ISoundGetter> Sound { get; }
+        new IFormLink<ISoundGetter> Sound { get; set; }
         new WeatherSound.SoundType Type { get; set; }
     }
 

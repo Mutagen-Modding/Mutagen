@@ -505,8 +505,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationCellEnablePointGetter,
         ILoquiObjectSetter<ILocationCellEnablePoint>
     {
-        new IFormLink<IPlacedGetter> Actor { get; }
-        new IFormLink<IPlacedGetter> Ref { get; }
+        new IFormLink<IPlacedGetter> Actor { get; set; }
+        new IFormLink<IPlacedGetter> Ref { get; set; }
         new P2Int16 Grid { get; set; }
     }
 

@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new TranslatedString? Name { get; set; }
         new MemorySlice<Byte> INAM { get; set; }
-        new IFormLinkNullable<IQuestGetter> Quest { get; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
         new Message.Flag Flags { get; set; }
         new UInt32? DisplayTime { get; set; }
         new ExtendedList<MessageButton> MenuButtons { get; }

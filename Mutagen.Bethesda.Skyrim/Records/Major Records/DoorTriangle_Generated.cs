@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int16 TriangleBeforeDoor { get; set; }
         new Int32 Unknown { get; set; }
-        new IFormLink<IPlacedObjectGetter> Door { get; }
+        new IFormLink<IPlacedObjectGetter> Door { get; set; }
     }
 
     public partial interface IDoorTriangleGetter :

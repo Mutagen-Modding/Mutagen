@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Generation
             else
             {
                 if (!ApplicableInterfaceField(getter, internalInterface)) return;
-                fg.AppendLine($"new {TypeName(getter: false)} {this.Name} {{ get; }}");
+                fg.AppendLine($"new {TypeName(getter: false)} {this.Name} {{ get; set; }}");
             }
         }
 

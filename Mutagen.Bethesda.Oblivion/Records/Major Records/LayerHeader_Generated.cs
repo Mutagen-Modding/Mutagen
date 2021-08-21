@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILayerHeaderGetter,
         ILoquiObjectSetter<ILayerHeaderInternal>
     {
-        new IFormLink<ILandTextureGetter> Texture { get; }
+        new IFormLink<ILandTextureGetter> Texture { get; set; }
         new Quadrant Quadrant { get; set; }
     }
 

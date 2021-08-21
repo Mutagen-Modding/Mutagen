@@ -706,10 +706,10 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; set; }
         new Int32? AutoCalcValue { get; set; }
-        new IFormLinkNullable<IMiscItemGetter> ScrapItem { get; }
-        new IFormLinkNullable<IGlobalGetter> ModScrapScalar { get; }
+        new IFormLinkNullable<IMiscItemGetter> ScrapItem { get; set; }
+        new IFormLinkNullable<IGlobalGetter> ModScrapScalar { get; set; }
     }
 
     public partial interface IComponentInternal :

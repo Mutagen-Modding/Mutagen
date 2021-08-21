@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogResponsesUnknownData>
     {
         new MemorySlice<Byte>? SCHR { get; set; }
-        new IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; }
+        new IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; }
         new Boolean NEXT { get; set; }
     }
 

@@ -1327,16 +1327,16 @@ namespace Mutagen.Bethesda.Fallout4
         new String? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
-        new IFormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker { get; }
-        new IFormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker { get; }
-        new IFormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer { get; }
-        new IFormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer { get; }
-        new IFormLinkNullable<IFormListGetter> SharedCrimeFactionList { get; }
-        new IFormLinkNullable<IOutfitGetter> JailOutfit { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer { get; set; }
+        new IFormLinkNullable<IFormListGetter> SharedCrimeFactionList { get; set; }
+        new IFormLinkNullable<IOutfitGetter> JailOutfit { get; set; }
         new CrimeValues? CrimeValues { get; set; }
         new ExtendedList<Rank> Ranks { get; }
-        new IFormLinkNullable<IFormListGetter> VendorBuySellList { get; }
-        new IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; }
+        new IFormLinkNullable<IFormListGetter> VendorBuySellList { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
         new VendorValues? VendorValues { get; set; }
         new LocationTargetRadius? VendorLocation { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }

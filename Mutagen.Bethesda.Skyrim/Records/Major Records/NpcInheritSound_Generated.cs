@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INpcInheritSound>,
         INpcInheritSoundGetter
     {
-        new IFormLinkNullable<INpcGetter> InheritsSoundsFrom { get; }
+        new IFormLinkNullable<INpcGetter> InheritsSoundsFrom { get; set; }
     }
 
     public partial interface INpcInheritSoundGetter :

@@ -1705,30 +1705,30 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
-        new IFormLinkNullable<INpcGetter> Base { get; }
-        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
+        new IFormLinkNullable<INpcGetter> Base { get; set; }
+        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new MemorySlice<Byte>? RagdollBipedData { get; set; }
         new Patrol? Patrol { get; set; }
         new Level? LevelModifier { get; set; }
-        new IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
         new Int32? Count { get; set; }
         new Single? Radius { get; set; }
         new Single? Health { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new ActivateParents? ActivateParents { get; set; }
         new LinkedReferenceColor? LinkedReferenceColor { get; set; }
-        new IFormLinkNullable<ILocationGetter> PersistentLocation { get; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; }
+        new IFormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
+        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
         new Boolean IgnoredBySandbox { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Single? HeadTrackingWeight { get; set; }
-        new IFormLinkNullable<IPlacedNpcGetter> Horse { get; }
+        new IFormLinkNullable<IPlacedNpcGetter> Horse { get; set; }
         new Single? FavorCost { get; set; }
         new EnableParent? EnableParent { get; set; }
         new Ownership? Ownership { get; set; }
-        new IFormLinkNullable<IEmittanceGetter> Emittance { get; }
-        new IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; }
+        new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; }
         new Boolean IgnoredBySandbox2 { get; set; }
         new Single? Scale { get; set; }
         new Placement? Placement { get; set; }

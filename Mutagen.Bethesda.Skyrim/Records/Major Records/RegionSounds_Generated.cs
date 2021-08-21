@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionData,
         IRegionSoundsGetter
     {
-        new IFormLinkNullable<IMusicTypeGetter> Music { get; }
+        new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new ExtendedList<RegionSound>? Sounds { get; set; }
     }
 

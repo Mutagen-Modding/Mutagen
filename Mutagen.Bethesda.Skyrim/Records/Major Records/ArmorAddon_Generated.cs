@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new BodyTemplate? BodyTemplate { get; set; }
-        new IFormLinkNullable<IRaceGetter> Race { get; }
+        new IFormLinkNullable<IRaceGetter> Race { get; set; }
         new IGenderedItem<Byte> Priority { get; set; }
         new IGenderedItem<Boolean> WeightSliderEnabled { get; set; }
         new UInt16 Unknown { get; set; }
@@ -1127,8 +1127,8 @@ namespace Mutagen.Bethesda.Skyrim
         new IGenderedItem<IFormLinkNullableGetter<ITextureSetGetter>>? SkinTexture { get; set; }
         new IGenderedItem<IFormLinkNullableGetter<IFormListGetter>>? TextureSwapList { get; set; }
         new ExtendedList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; }
-        new IFormLinkNullable<IFootstepSetGetter> FootstepSound { get; }
-        new IFormLinkNullable<IArtObjectGetter> ArtObject { get; }
+        new IFormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; }
+        new IFormLinkNullable<IArtObjectGetter> ArtObject { get; set; }
         new ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; }
     }
 

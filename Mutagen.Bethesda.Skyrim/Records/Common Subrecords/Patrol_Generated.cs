@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPatrolGetter
     {
         new Single IdleTime { get; set; }
-        new IFormLink<IIdleAnimationGetter> Idle { get; }
+        new IFormLink<IIdleAnimationGetter> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
         new ExtendedList<ATopicReference> Topics { get; }

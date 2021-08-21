@@ -844,10 +844,10 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
-        new IFormLinkNullable<ISoundGetter> OpenSound { get; }
-        new IFormLinkNullable<ISoundGetter> CloseSound { get; }
-        new IFormLinkNullable<ISoundGetter> LoopSound { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
+        new IFormLinkNullable<ISoundGetter> OpenSound { get; set; }
+        new IFormLinkNullable<ISoundGetter> CloseSound { get; set; }
+        new IFormLinkNullable<ISoundGetter> LoopSound { get; set; }
         new Door.DoorFlag? Flags { get; set; }
         new ExtendedList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; }
     }

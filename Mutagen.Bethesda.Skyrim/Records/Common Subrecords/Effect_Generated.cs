@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IEffect>
     {
-        new IFormLinkNullable<IMagicEffectGetter> BaseEffect { get; }
+        new IFormLinkNullable<IMagicEffectGetter> BaseEffect { get; set; }
         new EffectData? Data { get; set; }
         new ExtendedList<Condition> Conditions { get; }
     }

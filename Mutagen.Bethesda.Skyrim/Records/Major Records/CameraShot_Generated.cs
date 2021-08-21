@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single MinTime { get; set; }
         new Single TargetPercentBetweenActors { get; set; }
         new Single NearTargetDistance { get; set; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
         new CameraShot.DATADataType DATADataTypeState { get; set; }
     }
 

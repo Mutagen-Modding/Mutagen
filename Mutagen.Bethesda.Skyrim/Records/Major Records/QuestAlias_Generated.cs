@@ -1858,9 +1858,9 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Name { get; set; }
         new QuestAlias.Flag? Flags { get; set; }
         new Int32? AliasIndexToForceIntoWhenFilled { get; set; }
-        new IFormLinkNullable<ILocationGetter> SpecificLocation { get; }
-        new IFormLinkNullable<IPlacedGetter> ForcedReference { get; }
-        new IFormLinkNullable<INpcGetter> UniqueActor { get; }
+        new IFormLinkNullable<ILocationGetter> SpecificLocation { get; set; }
+        new IFormLinkNullable<IPlacedGetter> ForcedReference { get; set; }
+        new IFormLinkNullable<INpcGetter> UniqueActor { get; set; }
         new LocationAliasReference? Location { get; set; }
         new ExternalAliasReference? External { get; set; }
         new CreateReferenceToObject? CreateReferenceToObject { get; set; }
@@ -1872,15 +1872,15 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
-        new IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; }
-        new IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; }
-        new IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; }
-        new IFormLinkNullable<IFormListGetter> CombatOverridePackageList { get; }
-        new IFormLinkNullable<IMessageGetter> DisplayName { get; }
+        new IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> CombatOverridePackageList { get; set; }
+        new IFormLinkNullable<IMessageGetter> DisplayName { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellGetter>> Spells { get; }
         new ExtendedList<IFormLinkGetter<IFactionGetter>> Factions { get; }
         new ExtendedList<IFormLinkGetter<IPackageGetter>> PackageData { get; }
-        new IFormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes { get; }
+        new IFormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes { get; set; }
     }
 
     public partial interface IQuestAliasGetter :

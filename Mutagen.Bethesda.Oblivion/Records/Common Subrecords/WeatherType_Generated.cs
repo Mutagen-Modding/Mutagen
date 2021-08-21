@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IWeatherType>,
         IWeatherTypeGetter
     {
-        new IFormLink<IWeatherGetter> Weather { get; }
+        new IFormLink<IWeatherGetter> Weather { get; set; }
         new Int32 Chance { get; set; }
     }
 

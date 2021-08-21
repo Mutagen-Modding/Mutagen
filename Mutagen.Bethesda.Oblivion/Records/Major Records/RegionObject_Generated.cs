@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionObject>,
         IRegionObjectGetter
     {
-        new IFormLink<IOblivionMajorRecordGetter> Object { get; }
+        new IFormLink<IOblivionMajorRecordGetter> Object { get; set; }
         new UInt16 ParentIndex { get; set; }
         new Int16 Unknown { get; set; }
         new Single Density { get; set; }

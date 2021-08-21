@@ -2125,24 +2125,24 @@ namespace Mutagen.Bethesda.Skyrim
         new CellLighting? Lighting { get; set; }
         new MemorySlice<Byte>? OcclusionData { get; set; }
         new MemorySlice<Byte>? MaxHeightData { get; set; }
-        new IFormLink<ILightingTemplateGetter> LightingTemplate { get; }
+        new IFormLink<ILightingTemplateGetter> LightingTemplate { get; set; }
         new MemorySlice<Byte>? LNAM { get; set; }
         new Single? WaterHeight { get; set; }
         new String? WaterNoiseTexture { get; set; }
         new ExtendedList<IFormLinkGetter<IRegionGetter>>? Regions { get; set; }
-        new IFormLinkNullable<ILocationGetter> Location { get; }
+        new IFormLinkNullable<ILocationGetter> Location { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new MemorySlice<Byte>? XWCS { get; set; }
         new CellWaterVelocity? WaterVelocity { get; set; }
-        new IFormLinkNullable<IWaterGetter> Water { get; }
+        new IFormLinkNullable<IWaterGetter> Water { get; set; }
         new Ownership? Ownership { get; set; }
-        new IFormLinkNullable<ILockListGetter> LockList { get; }
+        new IFormLinkNullable<ILockListGetter> LockList { get; set; }
         new String? WaterEnvironmentMap { get; set; }
-        new IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion { get; }
-        new IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace { get; }
-        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
-        new IFormLinkNullable<IMusicTypeGetter> Music { get; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
+        new IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion { get; set; }
+        new IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace { get; set; }
+        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
+        new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
         new Landscape? Landscape { get; set; }
         new ExtendedList<ANavigationMesh> NavigationMeshes { get; }
         new Int32 Timestamp { get; set; }

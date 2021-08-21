@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageTargetReference>,
         IPackageTargetReferenceGetter
     {
-        new IFormLink<ISkyrimMajorRecordGetter> Reference { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> Reference { get; set; }
     }
 
     public partial interface IPackageTargetReferenceGetter :

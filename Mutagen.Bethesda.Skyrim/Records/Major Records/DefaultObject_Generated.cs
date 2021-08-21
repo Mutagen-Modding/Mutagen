@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDefaultObject>
     {
         new RecordType Use { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> Object { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> Object { get; set; }
     }
 
     public partial interface IDefaultObjectGetter :

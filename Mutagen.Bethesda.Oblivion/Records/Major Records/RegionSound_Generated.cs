@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionSound>,
         IRegionSoundGetter
     {
-        new IFormLink<ISoundGetter> Sound { get; }
+        new IFormLink<ISoundGetter> Sound { get; set; }
         new RegionSound.Flag Flags { get; set; }
         new Single Chance { get; set; }
     }

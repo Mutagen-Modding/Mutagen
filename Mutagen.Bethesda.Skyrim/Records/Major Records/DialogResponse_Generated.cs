@@ -881,14 +881,14 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new Byte ResponseNumber { get; set; }
         new MemorySlice<Byte> Unknown2 { get; set; }
-        new IFormLink<ISoundDescriptorGetter> Sound { get; }
+        new IFormLink<ISoundDescriptorGetter> Sound { get; set; }
         new DialogResponse.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown3 { get; set; }
         new TranslatedString Text { get; set; }
         new String ScriptNotes { get; set; }
         new String Edits { get; set; }
-        new IFormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation { get; }
-        new IFormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation { get; }
+        new IFormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation { get; set; }
+        new IFormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation { get; set; }
         new DialogResponse.TRDTDataType TRDTDataTypeState { get; set; }
     }
 

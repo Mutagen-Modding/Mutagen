@@ -474,8 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPortal>,
         IPortalGetter
     {
-        new IFormLink<IPlacedObjectGetter> Origin { get; }
-        new IFormLink<IPlacedObjectGetter> Destination { get; }
+        new IFormLink<IPlacedObjectGetter> Origin { get; set; }
+        new IFormLink<IPlacedObjectGetter> Destination { get; set; }
     }
 
     public partial interface IPortalGetter :

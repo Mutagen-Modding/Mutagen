@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         ISkyrimMajorRecordInternal
     {
-        new IFormLinkNullable<IMaterialTypeGetter> Parent { get; }
+        new IFormLinkNullable<IMaterialTypeGetter> Parent { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired
         /// </summary>
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Color? HavokDisplayColor { get; set; }
         new Single? Buoyancy { get; set; }
         new MaterialType.Flag? Flags { get; set; }
-        new IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; }
+        new IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; set; }
     }
 
     public partial interface IMaterialTypeInternal :

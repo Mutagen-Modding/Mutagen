@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte NumRanks { get; set; }
         new Boolean Playable { get; set; }
         new Boolean Hidden { get; set; }
-        new IFormLinkNullable<IPerkGetter> NextPerk { get; }
+        new IFormLinkNullable<IPerkGetter> NextPerk { get; set; }
         new ExtendedList<APerkEffect> Effects { get; }
         new Perk.DATADataType DATADataTypeState { get; set; }
         #region Mutagen

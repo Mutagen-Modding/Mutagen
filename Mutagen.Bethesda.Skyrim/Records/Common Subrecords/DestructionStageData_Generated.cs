@@ -666,8 +666,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte ModelDamageStage { get; set; }
         new DestructionStageData.Flag Flags { get; set; }
         new Int32 SelfDamagePerSecond { get; set; }
-        new IFormLink<IExplosionGetter> Explosion { get; }
-        new IFormLink<IDebrisGetter> Debris { get; }
+        new IFormLink<IExplosionGetter> Explosion { get; set; }
+        new IFormLink<IDebrisGetter> Debris { get; set; }
         new Int32 DebrisCount { get; set; }
     }
 

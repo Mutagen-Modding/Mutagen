@@ -2330,14 +2330,14 @@ namespace Mutagen.Bethesda.Fallout4
         IRaceGetter,
         IRelatable
     {
-        new IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound { get; }
+        new IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         new TranslatedString Description { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; set; }
-        new IFormLinkNullable<IArmorGetter> Skin { get; }
+        new IFormLinkNullable<IArmorGetter> Skin { get; set; }
         new BipedBodyTemplate? BipedBodyTemplate { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
@@ -2370,18 +2370,18 @@ namespace Mutagen.Bethesda.Fallout4
         new Single ExplodableDebrisScale { get; set; }
         new Byte ExplodableDebrisCount { get; set; }
         new Byte ExplodableDecalCount { get; set; }
-        new IFormLink<IExplosionGetter> SeverableExplosion { get; }
-        new IFormLink<IDebrisGetter> SeverableDebris { get; }
-        new IFormLink<IImpactDataSetGetter> SeverableImpactDataSet { get; }
-        new IFormLink<IExplosionGetter> ExplodableExplosion { get; }
-        new IFormLink<IDebrisGetter> ExplodableDebris { get; }
-        new IFormLink<IImpactDataSetGetter> ExplodableImpactDataSet { get; }
+        new IFormLink<IExplosionGetter> SeverableExplosion { get; set; }
+        new IFormLink<IDebrisGetter> SeverableDebris { get; set; }
+        new IFormLink<IImpactDataSetGetter> SeverableImpactDataSet { get; set; }
+        new IFormLink<IExplosionGetter> ExplodableExplosion { get; set; }
+        new IFormLink<IDebrisGetter> ExplodableDebris { get; set; }
+        new IFormLink<IImpactDataSetGetter> ExplodableImpactDataSet { get; set; }
         new Byte OnCrippleDebrisCount { get; set; }
         new Byte OnCrippleDecalCount { get; set; }
-        new IFormLink<IExplosionGetter> OnCrippleExplosion { get; }
-        new IFormLink<IDebrisGetter> OnCrippleDebris { get; }
-        new IFormLink<IImpactDataSetGetter> OnCrippleImpactDataSet { get; }
-        new IFormLink<IExplosionGetter> ExplodableSubsegmentExplosion { get; }
+        new IFormLink<IExplosionGetter> OnCrippleExplosion { get; set; }
+        new IFormLink<IDebrisGetter> OnCrippleDebris { get; set; }
+        new IFormLink<IImpactDataSetGetter> OnCrippleImpactDataSet { get; set; }
+        new IFormLink<IExplosionGetter> ExplodableSubsegmentExplosion { get; set; }
         new Race.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Race.MajorFlag MajorFlags { get; set; }

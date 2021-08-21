@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Int16 Level { get; set; }
         new Int16 Unknown { get; set; }
-        new IFormLink<ISpellRecordGetter> Reference { get; }
+        new IFormLink<ISpellRecordGetter> Reference { get; set; }
         new Int16? Count { get; set; }
         new Int16? Unknown2 { get; set; }
     }

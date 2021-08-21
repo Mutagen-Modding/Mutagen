@@ -1229,9 +1229,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
         new Furniture.Flag? Flags { get; set; }
-        new IFormLinkNullable<IKeywordGetter> InteractionKeyword { get; }
+        new IFormLinkNullable<IKeywordGetter> InteractionKeyword { get; set; }
         new WorkbenchData? WorkbenchData { get; set; }
-        new IFormLinkNullable<ISpellGetter> AssociatedSpell { get; }
+        new IFormLinkNullable<ISpellGetter> AssociatedSpell { get; set; }
         new ExtendedList<FurnitureMarker>? Markers { get; set; }
         new String? ModelFilename { get; set; }
         #region Mutagen

@@ -506,8 +506,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoadScreenLocationGetter,
         ILoquiObjectSetter<ILoadScreenLocation>
     {
-        new IFormLink<IPlaceGetter> Direct { get; }
-        new IFormLink<IWorldspaceGetter> Indirect { get; }
+        new IFormLink<IPlaceGetter> Direct { get; set; }
+        new IFormLink<IWorldspaceGetter> Indirect { get; set; }
         new P2Int16 GridPoint { get; set; }
     }
 

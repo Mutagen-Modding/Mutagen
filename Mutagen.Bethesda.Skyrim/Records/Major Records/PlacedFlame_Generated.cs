@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedFlameGetter,
         IScripted
     {
-        new IFormLink<IProjectileGetter> Projectile { get; }
+        new IFormLink<IProjectileGetter> Projectile { get; set; }
     }
 
     public partial interface IPlacedFlameInternal :

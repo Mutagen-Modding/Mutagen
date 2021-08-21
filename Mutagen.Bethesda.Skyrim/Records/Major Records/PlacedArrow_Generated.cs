@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedArrowGetter,
         IScripted
     {
-        new IFormLink<IProjectileGetter> Projectile { get; }
+        new IFormLink<IProjectileGetter> Projectile { get; set; }
     }
 
     public partial interface IPlacedArrowInternal :

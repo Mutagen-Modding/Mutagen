@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceParent>,
         IWorldspaceParentGetter
     {
-        new IFormLink<IWorldspaceGetter> Worldspace { get; }
+        new IFormLink<IWorldspaceGetter> Worldspace { get; set; }
         new WorldspaceParent.Flag Flags { get; set; }
     }
 

@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionObject>,
         IRegionObjectGetter
     {
-        new IFormLink<IRegionTargetGetter> Object { get; }
+        new IFormLink<IRegionTargetGetter> Object { get; set; }
         new UInt16 ParentIndex { get; set; }
         new UInt16 Unknown { get; set; }
         new Single Density { get; set; }

@@ -512,9 +512,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationCellUniqueGetter,
         ILoquiObjectSetter<ILocationCellUnique>
     {
-        new IFormLink<INpcGetter> Actor { get; }
-        new IFormLink<IPlacedNpcGetter> Ref { get; }
-        new IFormLink<ILocationGetter> Location { get; }
+        new IFormLink<INpcGetter> Actor { get; set; }
+        new IFormLink<IPlacedNpcGetter> Ref { get; set; }
+        new IFormLink<ILocationGetter> Location { get; set; }
     }
 
     public partial interface ILocationCellUniqueGetter :

@@ -2791,10 +2791,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte Opacity { get; set; }
         new Water.Flag? Flags { get; set; }
         new MemorySlice<Byte>? MNAM { get; set; }
-        new IFormLinkNullable<IMaterialTypeGetter> Material { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; }
-        new IFormLinkNullable<ISpellGetter> Spell { get; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
+        new IFormLinkNullable<IMaterialTypeGetter> Material { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
+        new IFormLinkNullable<ISpellGetter> Spell { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
         new UInt16? DamagePerSecond { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
         new Single SpecularSunPower { get; set; }

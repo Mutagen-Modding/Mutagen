@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWaterReflectionGetter
     {
         new WaterReflection.VersioningBreaks Versioning { get; set; }
-        new IFormLink<IPlacedObjectGetter> Water { get; }
+        new IFormLink<IPlacedObjectGetter> Water { get; set; }
         new WaterReflection.Flag Type { get; set; }
     }
 

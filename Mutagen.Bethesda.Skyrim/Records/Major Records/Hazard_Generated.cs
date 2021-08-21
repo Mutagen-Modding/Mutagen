@@ -1057,17 +1057,17 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
         new UInt32 Limit { get; set; }
         new Single Radius { get; set; }
         new Single Lifetime { get; set; }
         new Single ImageSpaceRadius { get; set; }
         new Single TargetInterval { get; set; }
         new Hazard.Flag Flags { get; set; }
-        new IFormLink<IEffectRecordGetter> Spell { get; }
-        new IFormLink<ILightGetter> Light { get; }
-        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
-        new IFormLink<ISoundDescriptorGetter> Sound { get; }
+        new IFormLink<IEffectRecordGetter> Spell { get; set; }
+        new IFormLink<ILightGetter> Light { get; set; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new IFormLink<ISoundDescriptorGetter> Sound { get; set; }
         new Hazard.DATADataType DATADataTypeState { get; set; }
     }
 

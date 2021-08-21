@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavigationDoorLink>,
         INavigationDoorLinkGetter
     {
-        new IFormLink<IANavigationMeshGetter> NavMesh { get; }
+        new IFormLink<IANavigationMeshGetter> NavMesh { get; set; }
         new Int16 NavMeshTriangleIndex { get; set; }
         new Int16 Unused { get; set; }
     }

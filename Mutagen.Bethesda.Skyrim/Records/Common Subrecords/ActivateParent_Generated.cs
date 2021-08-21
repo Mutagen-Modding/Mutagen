@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IActivateParent>
     {
-        new IFormLink<ILinkedReferenceGetter> Reference { get; }
+        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
         new Single Delay { get; set; }
     }
 

@@ -551,10 +551,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherImageSpaces>,
         IWeatherImageSpacesGetter
     {
-        new IFormLink<IImageSpaceAdapterGetter> Sunrise { get; }
-        new IFormLink<IImageSpaceAdapterGetter> Day { get; }
-        new IFormLink<IImageSpaceAdapterGetter> Sunset { get; }
-        new IFormLink<IImageSpaceAdapterGetter> Night { get; }
+        new IFormLink<IImageSpaceAdapterGetter> Sunrise { get; set; }
+        new IFormLink<IImageSpaceAdapterGetter> Day { get; set; }
+        new IFormLink<IImageSpaceAdapterGetter> Sunset { get; set; }
+        new IFormLink<IImageSpaceAdapterGetter> Night { get; set; }
     }
 
     public partial interface IWeatherImageSpacesGetter :

@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte? Opacity { get; set; }
         new Water.Flag? Flags { get; set; }
         new String? MaterialID { get; set; }
-        new IFormLinkNullable<ISoundGetter> Sound { get; }
+        new IFormLinkNullable<ISoundGetter> Sound { get; set; }
         new WaterData? Data { get; set; }
         new RelatedWaters? RelatedWaters { get; set; }
     }

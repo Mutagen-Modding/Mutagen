@@ -2789,12 +2789,12 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new IFormLinkNullable<ILocationGetter> ParentLocation { get; }
-        new IFormLinkNullable<IMusicTypeGetter> Music { get; }
-        new IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; }
-        new IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
+        new IFormLinkNullable<ILocationGetter> ParentLocation { get; set; }
+        new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
+        new IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; set; }
+        new IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; set; }
         new Single? WorldLocationRadius { get; set; }
-        new IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; set; }
         new Color? Color { get; set; }
     }
 

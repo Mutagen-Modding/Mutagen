@@ -4102,7 +4102,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single ParticleInitialRotationDegreePlusMinus { get; set; }
         new Single ParticleRotationSpeedDegreePerSec { get; set; }
         new Single ParticleRotationSpeedDegreePerSecPlusMinus { get; set; }
-        new IFormLink<IDebrisGetter> AddonModels { get; }
+        new IFormLink<IDebrisGetter> AddonModels { get; set; }
         new Single HolesStartTime { get; set; }
         new Single HolesEndTime { get; set; }
         new Single HolesStartValue { get; set; }
@@ -4118,7 +4118,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AddonModelsScaleEnd { get; set; }
         new Single AddonModelsScaleInTime { get; set; }
         new Single AddonModelsScaleOutTime { get; set; }
-        new IFormLink<ISoundGetter> AmbientSound { get; }
+        new IFormLink<ISoundGetter> AmbientSound { get; set; }
         new Color FillColorKey2 { get; set; }
         new Color FillColorKey3 { get; set; }
         new Single FillColorKey1Scale { get; set; }

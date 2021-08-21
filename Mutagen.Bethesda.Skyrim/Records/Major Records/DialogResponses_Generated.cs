@@ -1353,18 +1353,18 @@ namespace Mutagen.Bethesda.Skyrim
         new DialogResponsesAdapter? VirtualMachineAdapter { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
         new DialogResponseFlags? Flags { get; set; }
-        new IFormLinkNullable<IDialogTopicGetter> Topic { get; }
-        new IFormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; }
+        new IFormLinkNullable<IDialogTopicGetter> Topic { get; set; }
+        new IFormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; set; }
         new FavorLevel? FavorLevel { get; set; }
         new ExtendedList<IFormLinkGetter<IDialogGetter>> LinkTo { get; }
-        new IFormLinkNullable<IDialogResponsesGetter> ResponseData { get; }
+        new IFormLinkNullable<IDialogResponsesGetter> ResponseData { get; set; }
         new ExtendedList<DialogResponse> Responses { get; }
         new ExtendedList<Condition> Conditions { get; }
         new ExtendedList<DialogResponsesUnknownData> UnknownData { get; }
         new TranslatedString? Prompt { get; set; }
-        new IFormLinkNullable<INpcGetter> Speaker { get; }
-        new IFormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; }
-        new IFormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; }
+        new IFormLinkNullable<INpcGetter> Speaker { get; set; }
+        new IFormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; set; }
+        new IFormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; set; }
         #region Mutagen
         new DialogResponses.MajorFlag MajorFlags { get; set; }
         #endregion

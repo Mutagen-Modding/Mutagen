@@ -1869,14 +1869,14 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IHasIcons
         /// </summary>
         new Icons? Icons { get; set; }
-        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; }
+        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
         new UInt16? EnchantmentAmount { get; set; }
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
-        new IFormLinkNullable<IImpactDataSetGetter> BlockBashImpact { get; }
-        new IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
+        new IFormLinkNullable<IImpactDataSetGetter> BlockBashImpact { get; set; }
+        new IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
@@ -1884,20 +1884,20 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Description { get; set; }
         new Model? ScopeModel { get; set; }
         new MemorySlice<Byte>? Unused { get; set; }
-        new IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; }
-        new IFormLinkNullable<IStaticGetter> FirstPersonModel { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> AttackSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> AttackSound2D { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> AttackLoopSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> AttackFailSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> IdleSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> EquipSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> UnequipSound { get; }
+        new IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new IFormLinkNullable<IStaticGetter> FirstPersonModel { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> AttackSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> AttackSound2D { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> AttackLoopSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> AttackFailSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> IdleSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> EquipSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> UnequipSound { get; set; }
         new WeaponBasicStats? BasicStats { get; set; }
         new WeaponData? Data { get; set; }
         new CriticalData? Critical { get; set; }
         new SoundLevel? DetectionSoundLevel { get; set; }
-        new IFormLinkNullable<IWeaponGetter> Template { get; }
+        new IFormLinkNullable<IWeaponGetter> Template { get; set; }
         #region Mutagen
         new Weapon.MajorFlag MajorFlags { get; set; }
         #endregion

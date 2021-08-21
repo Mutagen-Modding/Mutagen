@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte LockLevel { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
-        new IFormLink<IKeyGetter> Key { get; }
+        new IFormLink<IKeyGetter> Key { get; set; }
         new LockInformation.Flag Flags { get; set; }
     }
 

@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new LockLevel Level { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
-        new IFormLink<IKeyGetter> Key { get; }
+        new IFormLink<IKeyGetter> Key { get; set; }
         new LockData.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused2 { get; set; }
     }

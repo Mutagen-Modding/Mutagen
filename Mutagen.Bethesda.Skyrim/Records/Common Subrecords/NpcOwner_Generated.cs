@@ -463,8 +463,8 @@ namespace Mutagen.Bethesda.Skyrim
         INpcOwnerGetter,
         IOwnerTarget
     {
-        new IFormLink<INpcGetter> Npc { get; }
-        new IFormLink<IGlobalGetter> Global { get; }
+        new IFormLink<INpcGetter> Npc { get; set; }
+        new IFormLink<IGlobalGetter> Global { get; set; }
     }
 
     public partial interface INpcOwnerGetter :

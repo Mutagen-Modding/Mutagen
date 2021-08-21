@@ -1520,18 +1520,18 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte ToHitChance { get; set; }
         new Byte ExplodableExplosionChance { get; set; }
         new UInt16 ExplodableDebrisCount { get; set; }
-        new IFormLink<IDebrisGetter> ExplodableDebris { get; }
-        new IFormLink<IExplosionGetter> ExplodableExplosion { get; }
+        new IFormLink<IDebrisGetter> ExplodableDebris { get; set; }
+        new IFormLink<IExplosionGetter> ExplodableExplosion { get; set; }
         new Single TrackingMaxAngle { get; set; }
         new Single ExplodableDebrisScale { get; set; }
         new Int32 SeverableDebrisCount { get; set; }
-        new IFormLink<IDebrisGetter> SeverableDebris { get; }
-        new IFormLink<IExplosionGetter> SeverableExplosion { get; }
+        new IFormLink<IDebrisGetter> SeverableDebris { get; set; }
+        new IFormLink<IExplosionGetter> SeverableExplosion { get; set; }
         new Single SeverableDebrisScale { get; set; }
         new P3Float GorePositioning { get; set; }
         new P3Float GoreRotation { get; set; }
-        new IFormLink<IImpactDataSetGetter> SeverableImpactData { get; }
-        new IFormLink<IImpactDataSetGetter> ExplodableImpactData { get; }
+        new IFormLink<IImpactDataSetGetter> SeverableImpactData { get; set; }
+        new IFormLink<IImpactDataSetGetter> ExplodableImpactData { get; set; }
         new Byte SeverableDecalCount { get; set; }
         new Byte ExplodableDecalCount { get; set; }
         new UInt16 Unknown { get; set; }

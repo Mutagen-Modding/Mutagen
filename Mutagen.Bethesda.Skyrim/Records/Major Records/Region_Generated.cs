@@ -924,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new Color? MapColor { get; set; }
-        new IFormLinkNullable<IWorldspaceGetter> Worldspace { get; }
+        new IFormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
         new ExtendedList<RegionArea> RegionAreas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }

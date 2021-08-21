@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IHeadPartReference>
     {
         new Int32? Number { get; set; }
-        new IFormLinkNullable<IHeadPartGetter> Head { get; }
+        new IFormLinkNullable<IHeadPartGetter> Head { get; set; }
     }
 
     public partial interface IHeadPartReferenceGetter :

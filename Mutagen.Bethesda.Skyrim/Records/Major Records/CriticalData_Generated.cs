@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Skyrim
         new CriticalData.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused2 { get; set; }
         new Int32 Unused3 { get; set; }
-        new IFormLink<ISpellGetter> Effect { get; }
+        new IFormLink<ISpellGetter> Effect { get; set; }
         new Int32 Unused4 { get; set; }
     }
 

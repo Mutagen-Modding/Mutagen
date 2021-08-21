@@ -699,12 +699,12 @@ namespace Mutagen.Bethesda.Skyrim
         IRelationshipGetter,
         ISkyrimMajorRecordInternal
     {
-        new IFormLink<INpcGetter> Parent { get; }
-        new IFormLink<INpcGetter> Child { get; }
+        new IFormLink<INpcGetter> Parent { get; set; }
+        new IFormLink<INpcGetter> Child { get; set; }
         new Relationship.RankType Rank { get; set; }
         new Byte Unknown { get; set; }
         new Relationship.Flag Flags { get; set; }
-        new IFormLink<IAssociationTypeGetter> AssociationType { get; }
+        new IFormLink<IAssociationTypeGetter> AssociationType { get; set; }
         new Relationship.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Relationship.MajorFlag MajorFlags { get; set; }

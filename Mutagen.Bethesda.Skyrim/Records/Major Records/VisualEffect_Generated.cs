@@ -594,8 +594,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal,
         IVisualEffectGetter
     {
-        new IFormLink<IArtObjectGetter> EffectArt { get; }
-        new IFormLink<IEffectShaderGetter> Shader { get; }
+        new IFormLink<IArtObjectGetter> EffectArt { get; set; }
+        new IFormLink<IEffectShaderGetter> Shader { get; set; }
         new VisualEffect.Flag Flags { get; set; }
         new VisualEffect.DATADataType DATADataTypeState { get; set; }
     }

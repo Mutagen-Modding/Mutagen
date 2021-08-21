@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new Model? Model { get; set; }
         new Single MaxAngle { get; set; }
-        new IFormLink<IMaterialObjectGetter> Material { get; }
+        new IFormLink<IMaterialObjectGetter> Material { get; set; }
         new Static.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
         new Lod? Lod { get; set; }

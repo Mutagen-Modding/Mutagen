@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationCoordinateGetter,
         ILoquiObjectSetter<ILocationCoordinate>
     {
-        new IFormLink<IComplexLocationGetter> Location { get; }
+        new IFormLink<IComplexLocationGetter> Location { get; set; }
         new ExtendedList<P2Int16> Coordinates { get; }
     }
 

@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILocationKeywordGetter,
         ILoquiObjectSetter<ILocationKeyword>
     {
-        new IFormLink<IKeywordGetter> Link { get; }
+        new IFormLink<IKeywordGetter> Link { get; set; }
     }
 
     public partial interface ILocationKeywordGetter :

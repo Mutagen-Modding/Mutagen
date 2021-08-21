@@ -661,10 +661,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Condition.Function Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; set; }
         new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; set; }
         new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
     }

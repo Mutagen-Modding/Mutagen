@@ -1809,9 +1809,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<Condition> Conditions { get; }
         new Int32? Unknown4 { get; set; }
         new PackageIdles? IdleAnimations { get; set; }
-        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
-        new IFormLinkNullable<IQuestGetter> OwnerQuest { get; }
-        new IFormLink<IPackageGetter> PackageTemplate { get; }
+        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
+        new IFormLinkNullable<IQuestGetter> OwnerQuest { get; set; }
+        new IFormLink<IPackageGetter> PackageTemplate { get; set; }
         new Int32 DataInputVersion { get; set; }
         new IDictionary<SByte, APackageData> Data { get; }
         new MemorySlice<Byte> XnamMarker { get; set; }

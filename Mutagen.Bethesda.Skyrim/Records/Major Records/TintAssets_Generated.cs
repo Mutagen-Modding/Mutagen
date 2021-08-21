@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16? Index { get; set; }
         new String? FileName { get; set; }
         new TintAssets.TintMaskType? MaskType { get; set; }
-        new IFormLinkNullable<IColorRecordGetter> PresetDefault { get; }
+        new IFormLinkNullable<IColorRecordGetter> PresetDefault { get; set; }
         new ExtendedList<TintPreset> Presets { get; }
     }
 

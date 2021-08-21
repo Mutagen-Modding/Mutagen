@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavmeshNode>,
         INavmeshNodeGetter
     {
-        new IFormLink<IANavigationMeshGetter> NavMesh { get; }
+        new IFormLink<IANavigationMeshGetter> NavMesh { get; set; }
         new UInt32 NodeIndex { get; set; }
     }
 

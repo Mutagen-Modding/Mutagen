@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLinkGetter<INpcGetter>> RacePresets { get; }
         new ExtendedList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; }
         new ExtendedList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; }
-        new IFormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; }
+        new IFormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; set; }
         new ExtendedList<TintAssets> TintMasks { get; }
         /// <summary>
         /// Aspects: IModeled

@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceReference>,
         IWorldspaceReferenceGetter
     {
-        new IFormLink<IPlacedObjectGetter> Reference { get; }
+        new IFormLink<IPlacedObjectGetter> Reference { get; set; }
         new P2Int16 Position { get; set; }
     }
 

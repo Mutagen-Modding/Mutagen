@@ -624,8 +624,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IAStoryManagerNodeInternal>,
         ISkyrimMajorRecordInternal
     {
-        new IFormLinkNullable<IAStoryManagerNodeGetter> Parent { get; }
-        new IFormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling { get; }
+        new IFormLinkNullable<IAStoryManagerNodeGetter> Parent { get; set; }
+        new IFormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling { get; set; }
         new ExtendedList<Condition> Conditions { get; }
     }
 

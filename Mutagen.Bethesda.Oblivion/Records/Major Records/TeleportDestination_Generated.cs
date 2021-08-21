@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ITeleportDestination>,
         ITeleportDestinationGetter
     {
-        new IFormLink<IPlacedGetter> Destination { get; }
+        new IFormLink<IPlacedGetter> Destination { get; set; }
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
     }

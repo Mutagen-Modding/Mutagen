@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ITopicReference>,
         ITopicReferenceGetter
     {
-        new IFormLink<IDialogTopicGetter> Reference { get; }
+        new IFormLink<IDialogTopicGetter> Reference { get; set; }
     }
 
     public partial interface ITopicReferenceGetter :

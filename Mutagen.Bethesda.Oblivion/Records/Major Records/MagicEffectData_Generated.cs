@@ -782,9 +782,9 @@ namespace Mutagen.Bethesda.Oblivion
         new MagicSchool MagicSchool { get; set; }
         new Resistance Resistance { get; set; }
         new UInt32 CounterEffectCount { get; set; }
-        new IFormLink<ILightGetter> Light { get; }
+        new IFormLink<ILightGetter> Light { get; set; }
         new Single ProjectileSpeed { get; set; }
-        new IFormLink<IEffectShaderGetter> EffectShader { get; }
+        new IFormLink<IEffectShaderGetter> EffectShader { get; set; }
         new MagicEffectSubData? SubData { get; set; }
     }
 

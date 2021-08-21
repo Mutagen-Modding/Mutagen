@@ -2967,20 +2967,20 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new NpcConfiguration Configuration { get; set; }
         new ExtendedList<RankPlacement> Factions { get; }
-        new IFormLinkNullable<ILeveledItemGetter> DeathItem { get; }
-        new IFormLinkNullable<IVoiceTypeGetter> Voice { get; }
-        new IFormLinkNullable<INpcSpawnGetter> Template { get; }
-        new IFormLink<IRaceGetter> Race { get; }
+        new IFormLinkNullable<ILeveledItemGetter> DeathItem { get; set; }
+        new IFormLinkNullable<IVoiceTypeGetter> Voice { get; set; }
+        new IFormLinkNullable<INpcSpawnGetter> Template { get; set; }
+        new IFormLink<IRaceGetter> Race { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; set; }
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<IArmorGetter> WornArmor { get; }
-        new IFormLinkNullable<IArmorGetter> FarAwayModel { get; }
-        new IFormLinkNullable<IRaceGetter> AttackRace { get; }
+        new IFormLinkNullable<IArmorGetter> WornArmor { get; set; }
+        new IFormLinkNullable<IArmorGetter> FarAwayModel { get; set; }
+        new IFormLinkNullable<IRaceGetter> AttackRace { get; set; }
         new ExtendedList<Attack> Attacks { get; }
-        new IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; }
-        new IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; }
-        new IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; }
-        new IFormLinkNullable<IFormListGetter> CombatOverridePackageList { get; }
+        new IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> CombatOverridePackageList { get; set; }
         new ExtendedList<PerkPlacement>? Perks { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
         new AIData AIData { get; set; }
@@ -2989,7 +2989,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new IFormLink<IClassGetter> Class { get; }
+        new IFormLink<IClassGetter> Class { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
@@ -2997,19 +2997,19 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? ShortName { get; set; }
         new PlayerSkills? PlayerSkills { get; set; }
         new ExtendedList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; }
-        new IFormLinkNullable<IColorRecordGetter> HairColor { get; }
-        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
-        new IFormLinkNullable<IFormListGetter> GiftFilter { get; }
+        new IFormLinkNullable<IColorRecordGetter> HairColor { get; set; }
+        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
+        new IFormLinkNullable<IFormListGetter> GiftFilter { get; set; }
         new UInt16 NAM5 { get; set; }
         new Single Height { get; set; }
         new Single Weight { get; set; }
         new SoundLevel SoundLevel { get; set; }
         new ANpcSoundDefinition? Sound { get; set; }
-        new IFormLinkNullable<IOutfitGetter> DefaultOutfit { get; }
-        new IFormLinkNullable<IOutfitGetter> SleepingOutfit { get; }
-        new IFormLinkNullable<IFormListGetter> DefaultPackageList { get; }
-        new IFormLinkNullable<IFactionGetter> CrimeFaction { get; }
-        new IFormLinkNullable<ITextureSetGetter> HeadTexture { get; }
+        new IFormLinkNullable<IOutfitGetter> DefaultOutfit { get; set; }
+        new IFormLinkNullable<IOutfitGetter> SleepingOutfit { get; set; }
+        new IFormLinkNullable<IFormListGetter> DefaultPackageList { get; set; }
+        new IFormLinkNullable<IFactionGetter> CrimeFaction { get; set; }
+        new IFormLinkNullable<ITextureSetGetter> HeadTexture { get; set; }
         new Color? TextureLighting { get; set; }
         new NpcFaceMorph? FaceMorph { get; set; }
         new NpcFaceParts? FaceParts { get; set; }

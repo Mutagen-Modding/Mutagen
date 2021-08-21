@@ -1437,7 +1437,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
-        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
+        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new Ownership? Ownership { get; set; }
         new Single? HeadTrackingWeight { get; set; }
         new Single? FavorCost { get; set; }
@@ -1445,11 +1445,11 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new ActivateParents? ActivateParents { get; set; }
         new EnableParent? EnableParent { get; set; }
-        new IFormLinkNullable<IEmittanceGetter> Emittance { get; }
-        new IFormLinkNullable<IPlacedObjectGetter> MultiBoundReference { get; }
+        new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> MultiBoundReference { get; set; }
         new MemorySlice<Byte>? IgnoredBySandbox { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; }
+        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
         new ExtendedList<Single>? DistantLodData { get; set; }
         new Single? Scale { get; set; }
         new Placement? Placement { get; set; }

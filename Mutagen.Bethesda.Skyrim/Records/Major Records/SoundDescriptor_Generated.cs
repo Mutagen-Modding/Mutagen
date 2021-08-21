@@ -1108,10 +1108,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundDescriptorGetter
     {
         new MemorySlice<Byte>? CNAM { get; set; }
-        new IFormLinkNullable<ISoundCategoryGetter> Category { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; }
+        new IFormLinkNullable<ISoundCategoryGetter> Category { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; set; }
         new ExtendedList<String> SoundFiles { get; }
-        new IFormLinkNullable<ISoundOutputModelGetter> OutputModel { get; }
+        new IFormLinkNullable<ISoundOutputModelGetter> OutputModel { get; set; }
         new String? String { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new SoundLoopAndRumble? LoopAndRumble { get; set; }

@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IStoryManagerQuest>,
         IStoryManagerQuestGetter
     {
-        new IFormLinkNullable<IQuestGetter> Quest { get; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new Single? HoursUntilReset { get; set; }
     }

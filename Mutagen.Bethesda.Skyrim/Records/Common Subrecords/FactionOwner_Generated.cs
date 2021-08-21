@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFactionOwner>,
         IOwnerTarget
     {
-        new IFormLink<IFactionGetter> Faction { get; }
+        new IFormLink<IFactionGetter> Faction { get; set; }
         new Int32 RequiredRank { get; set; }
     }
 

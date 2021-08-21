@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// </summary>
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         new SoulGemData? Data { get; set; }
         new SoulLevel? ContainedSoul { get; set; }
         new SoulLevel? MaximumCapacity { get; set; }

@@ -1025,9 +1025,9 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new Int32? PNAM { get; set; }
-        new IFormLinkNullable<ISoundMarkerGetter> LoopingSound { get; }
+        new IFormLinkNullable<ISoundMarkerGetter> LoopingSound { get; set; }
         new Int16? FNAM { get; set; }
-        new IFormLinkNullable<IVoiceTypeGetter> VoiceType { get; }
+        new IFormLinkNullable<IVoiceTypeGetter> VoiceType { get; set; }
         #region Mutagen
         new TalkingActivator.MajorFlag MajorFlags { get; set; }
         #endregion

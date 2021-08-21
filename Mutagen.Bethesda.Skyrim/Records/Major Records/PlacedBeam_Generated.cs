@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedBeamGetter,
         IScripted
     {
-        new IFormLink<IProjectileGetter> Projectile { get; }
+        new IFormLink<IProjectileGetter> Projectile { get; set; }
     }
 
     public partial interface IPlacedBeamInternal :

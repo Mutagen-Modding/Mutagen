@@ -1101,8 +1101,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? PNAM { get; set; }
         new TranslatedString? ActivateTextOverride { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
-        new IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; }
+        new IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; }
         new SeasonalIngredientProduction? Production { get; set; }
     }
 

@@ -1308,7 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single FadeValue { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
         new Light.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Light.MajorFlag MajorFlags { get; set; }

@@ -1177,8 +1177,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordInternal
     {
         new DialogItemData? Data { get; set; }
-        new IFormLinkNullable<IQuestGetter> Quest { get; }
-        new IFormLinkNullable<IDialogItemGetter> PreviousTopic { get; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IDialogItemGetter> PreviousTopic { get; set; }
         new ExtendedList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; }
         new ExtendedList<DialogResponse> Responses { get; }
         new ExtendedList<Condition> Conditions { get; }

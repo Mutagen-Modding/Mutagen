@@ -3201,7 +3201,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
-        new IFormLinkNullable<ISkyrimMajorRecordGetter> Base { get; }
+        new IFormLinkNullable<ISkyrimMajorRecordGetter> Base { get; set; }
         new P3Float? BoundHalfExtents { get; set; }
         new PlacedPrimitive? Primitive { get; set; }
         new MemorySlice<Byte>? XORD { get; set; }
@@ -3209,8 +3209,8 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<Portal>? Portals { get; set; }
         new Bounding? RoomPortal { get; set; }
         new Int16 Unknown { get; set; }
-        new IFormLinkNullable<ILightGetter> LightingTemplate { get; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
+        new IFormLinkNullable<ILightGetter> LightingTemplate { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         new Boolean MultiBoundPrimitive { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
@@ -3218,35 +3218,35 @@ namespace Mutagen.Bethesda.Skyrim
         new Single? Radius { get; set; }
         new ExtendedList<WaterReflection> Reflections { get; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; }
-        new IFormLinkNullable<IEmittanceGetter> Emittance { get; }
+        new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
         new LightData? LightData { get; set; }
         new Alpha? Alpha { get; set; }
         new TeleportDestination? TeleportDestination { get; set; }
-        new IFormLinkNullable<IMessageGetter> TeleportMessageBox { get; }
-        new IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; }
+        new IFormLinkNullable<IMessageGetter> TeleportMessageBox { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new MemorySlice<Byte>? XWCS { get; set; }
         new WaterVelocity? WaterVelocity { get; set; }
         new MemorySlice<Byte>? XCVL { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> XCZR { get; }
+        new IFormLinkNullable<ILinkedReferenceGetter> XCZR { get; set; }
         new MemorySlice<Byte>? XCZA { get; set; }
-        new IFormLinkNullable<ICellGetter> XCZC { get; }
+        new IFormLinkNullable<ICellGetter> XCZC { get; set; }
         new Single? Scale { get; set; }
-        new IFormLinkNullable<IPlacedObjectGetter> SpawnContainer { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> SpawnContainer { get; set; }
         new ActivateParents? ActivateParents { get; set; }
-        new IFormLinkNullable<ILeveledItemGetter> LeveledItemBaseObject { get; }
+        new IFormLinkNullable<ILeveledItemGetter> LeveledItemBaseObject { get; set; }
         new Level? LevelModifier { get; set; }
-        new IFormLinkNullable<ILocationGetter> PersistentLocation { get; }
+        new IFormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
         new UInt32? CollisionLayer { get; set; }
         new LockData? Lock { get; set; }
-        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
+        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new NavigationDoorLink? NavigationDoorLink { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Boolean IgnoredBySandbox { get; set; }
         new Ownership? Ownership { get; set; }
         new Int32? ItemCount { get; set; }
         new Single? Charge { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; }
+        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
         new EnableParent? EnableParent { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new Patrol? Patrol { get; set; }
@@ -3255,7 +3255,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single? FavorCost { get; set; }
         new Boolean OpenByDefault { get; set; }
         new MapMarker? MapMarker { get; set; }
-        new IFormLinkNullable<IPlacedThingGetter> AttachRef { get; }
+        new IFormLinkNullable<IPlacedThingGetter> AttachRef { get; set; }
         new MemorySlice<Byte>? DistantLodData { get; set; }
         new Placement? Placement { get; set; }
     }

@@ -1041,8 +1041,8 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new ObjectEffect.EnchantTypeEnum EnchantType { get; set; }
         new Single ChargeTime { get; set; }
-        new IFormLink<IObjectEffectGetter> BaseEnchantment { get; }
-        new IFormLink<IFormListGetter> WornRestrictions { get; }
+        new IFormLink<IObjectEffectGetter> BaseEnchantment { get; set; }
+        new IFormLink<IFormListGetter> WornRestrictions { get; set; }
         new ExtendedList<Effect> Effects { get; }
         new ObjectEffect.ENITDataType ENITDataTypeState { get; set; }
     }

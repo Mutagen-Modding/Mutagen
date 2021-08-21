@@ -3067,8 +3067,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? ANAM { get; set; }
         new MemorySlice<Byte>? BNAM { get; set; }
         new MemorySlice<Byte>? LNAM { get; set; }
-        new IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; }
-        new IFormLink<IVisualEffectGetter> VisualEffect { get; }
+        new IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; set; }
+        new IFormLink<IVisualEffectGetter> VisualEffect { get; set; }
         new MemorySlice<Byte>? ONAM { get; set; }
         new CloudLayer[] Clouds { get; }
         new WeatherColor SkyUpperColor { get; set; }
@@ -3120,7 +3120,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? NAM2 { get; set; }
         new MemorySlice<Byte>? NAM3 { get; set; }
         new Model? Aurora { get; set; }
-        new IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; }
+        new IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; set; }
         new Weather.NAM0DataType NAM0DataTypeState { get; set; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
         new Weather.DATADataType DATADataTypeState { get; set; }

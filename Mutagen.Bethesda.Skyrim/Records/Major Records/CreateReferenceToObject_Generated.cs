@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<ICreateReferenceToObject>
     {
-        new IFormLink<ISkyrimMajorRecordGetter> Object { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> Object { get; set; }
         new Int16 AliasIndex { get; set; }
         new CreateReferenceToObject.CreateEnum Create { get; set; }
         new Level Level { get; set; }

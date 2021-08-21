@@ -1387,15 +1387,15 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IHasIcons
         /// </summary>
         new Icons? Icons { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
-        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
+        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new Single Weight { get; set; }
         new UInt32 Value { get; set; }
         new Ingestible.Flag Flags { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> Addiction { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> Addiction { get; set; }
         new Single AddictionChance { get; set; }
-        new IFormLink<ISoundDescriptorGetter> ConsumeSound { get; }
+        new IFormLink<ISoundDescriptorGetter> ConsumeSound { get; set; }
         new ExtendedList<Effect> Effects { get; }
         new Ingestible.ENITDataType ENITDataTypeState { get; set; }
         #region Mutagen

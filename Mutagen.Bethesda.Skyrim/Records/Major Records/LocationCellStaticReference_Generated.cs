@@ -543,9 +543,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationCellStaticReferenceGetter,
         ILoquiObjectSetter<ILocationCellStaticReference>
     {
-        new IFormLink<ILocationReferenceTypeGetter> LocationRefType { get; }
-        new IFormLink<ILinkedReferenceGetter> Marker { get; }
-        new IFormLink<IComplexLocationGetter> Location { get; }
+        new IFormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; }
+        new IFormLink<ILinkedReferenceGetter> Marker { get; set; }
+        new IFormLink<IComplexLocationGetter> Location { get; set; }
         new P2Int16 Grid { get; set; }
     }
 

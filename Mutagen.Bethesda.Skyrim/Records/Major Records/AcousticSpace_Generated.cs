@@ -628,9 +628,9 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IObjectBounded, IObjectBoundedOptional
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; }
-        new IFormLinkNullable<IRegionGetter> UseSoundFromRegion { get; }
-        new IFormLinkNullable<IReverbParametersGetter> EnvironmentType { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; set; }
+        new IFormLinkNullable<IRegionGetter> UseSoundFromRegion { get; set; }
+        new IFormLinkNullable<IReverbParametersGetter> EnvironmentType { get; set; }
     }
 
     public partial interface IAcousticSpaceInternal :

@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationObjectIdGetter,
         ILoquiObjectSetter<ILocationObjectId>
     {
-        new IFormLink<IObjectIdGetter> Link { get; }
+        new IFormLink<IObjectIdGetter> Link { get; set; }
     }
 
     public partial interface ILocationObjectIdGetter :

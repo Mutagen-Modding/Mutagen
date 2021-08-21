@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IQuestTargetData>,
         IQuestTargetDataGetter
     {
-        new IFormLink<IPlacedGetter> Target { get; }
+        new IFormLink<IPlacedGetter> Target { get; set; }
         new QuestTarget.Flag Flags { get; set; }
     }
 

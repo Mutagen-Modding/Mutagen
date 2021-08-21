@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceNavigationMeshData>,
         IWorldspaceNavigationMeshDataGetter
     {
-        new IFormLink<IWorldspaceGetter> Parent { get; }
+        new IFormLink<IWorldspaceGetter> Parent { get; set; }
         new P2Int16 Coordinates { get; set; }
     }
 

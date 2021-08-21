@@ -508,8 +508,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationAliasReference>
     {
         new Int32? AliasIndex { get; set; }
-        new IFormLinkNullable<IKeywordGetter> Keyword { get; }
-        new IFormLinkNullable<ILocationReferenceTypeGetter> RefType { get; }
+        new IFormLinkNullable<IKeywordGetter> Keyword { get; set; }
+        new IFormLinkNullable<ILocationReferenceTypeGetter> RefType { get; set; }
     }
 
     public partial interface ILocationAliasReferenceGetter :

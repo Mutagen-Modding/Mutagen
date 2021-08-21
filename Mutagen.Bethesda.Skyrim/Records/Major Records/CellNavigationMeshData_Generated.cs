@@ -487,8 +487,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<ICellNavigationMeshData>
     {
-        new IFormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; }
-        new IFormLink<ICellGetter> Parent { get; }
+        new IFormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; set; }
+        new IFormLink<ICellGetter> Parent { get; set; }
     }
 
     public partial interface ICellNavigationMeshDataGetter :

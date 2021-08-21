@@ -696,8 +696,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
         new ExtendedList<LeveledCreatureEntry> Entries { get; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
-        new IFormLinkNullable<INpcRecordGetter> Template { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
+        new IFormLinkNullable<INpcRecordGetter> Template { get; set; }
     }
 
     public partial interface ILeveledCreatureInternal :

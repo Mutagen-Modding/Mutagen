@@ -745,10 +745,10 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaced,
         IPlacedCreatureGetter
     {
-        new IFormLinkNullable<ICreatureGetter> Base { get; }
-        new IFormLinkNullable<IFactionGetter> Owner { get; }
+        new IFormLinkNullable<ICreatureGetter> Base { get; set; }
+        new IFormLinkNullable<IFactionGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
-        new IFormLinkNullable<IGlobalGetter> GlobalVariable { get; }
+        new IFormLinkNullable<IGlobalGetter> GlobalVariable { get; set; }
         new EnableParent? EnableParent { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }

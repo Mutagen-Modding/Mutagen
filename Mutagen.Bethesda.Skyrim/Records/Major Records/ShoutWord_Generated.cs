@@ -506,8 +506,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IShoutWord>,
         IShoutWordGetter
     {
-        new IFormLink<IWordOfPowerGetter> Word { get; }
-        new IFormLink<ISpellGetter> Spell { get; }
+        new IFormLink<IWordOfPowerGetter> Word { get; set; }
+        new IFormLink<ISpellGetter> Spell { get; set; }
         new Single RecoveryTime { get; set; }
     }
 
