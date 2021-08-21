@@ -5,9 +5,16 @@ namespace Mutagen.Bethesda.Strings
 {
     internal static class Encodings
     {
-        static readonly Encoding _1250 = Encoding.GetEncoding(1250);
-        static readonly Encoding _1251 = Encoding.GetEncoding(1251);
-        static readonly Encoding _1252 = Encoding.GetEncoding(1252);
+        private static readonly Encoding _1250;
+        private static readonly Encoding _1251;
+        private static readonly Encoding _1252;
+        
+        static Encodings()
+        {
+            _1250 = CodePagesEncodingProvider.Instance.GetEncoding(1250)!;
+            _1251 = CodePagesEncodingProvider.Instance.GetEncoding(1251)!;
+            _1252 = CodePagesEncodingProvider.Instance.GetEncoding(1252)!;
+        }
         
         public static Encoding Get(GameRelease release, Language language)
         {
