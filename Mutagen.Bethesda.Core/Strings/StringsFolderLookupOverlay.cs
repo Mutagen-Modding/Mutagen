@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Strings
                                 continue;
                             }
                             var dict = bundle.Get(type);
-                            dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.Path, type), LazyThreadSafetyMode.ExecutionAndPublication);
+                            dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.Path, type, Encodings.Get(release, lang)), LazyThreadSafetyMode.ExecutionAndPublication);
                         }
                     }
                     foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, dataPath, modKey, instructions?.BsaOrdering))
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Strings
                                 {
                                     if (!StringsUtility.TryRetrieveInfoFromString(
                                         release.GetLanguageFormat(), 
-                                        Path.GetFileName(item.Path.ToString()), 
+                                        Path.GetFileName(item.Path), 
                                         out var type, 
                                         out var lang,
                                         out var modName))
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Strings
                                     {
                                         try
                                         {
-                                            return new StringsLookupOverlay(item.GetMemorySlice(), type);
+                                            return new StringsLookupOverlay(item.GetMemorySlice(), type, Encodings.Get(release, lang));
                                         }
                                         catch (Exception ex)
                                         {

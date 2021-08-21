@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Strings
@@ -177,5 +178,8 @@ namespace Mutagen.Bethesda.Strings
             modName = name.Slice(0, separatorIndex);
             return TryGetLanguage(languageFormat, languageSpan, out language);
         }
+
+        public static Encoding GetEncoding(GameRelease release, Language language)
+            => Encodings.Get(release, language);
     }
 }

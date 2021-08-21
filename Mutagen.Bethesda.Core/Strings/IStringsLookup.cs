@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Strings
         bool TryLookup(uint key, [MaybeNullWhen(false)] out string str);
 
         /// <summary>
-        /// Attemps to retrieve a string given its index key
+        /// Attempts to retrieve a string given its index key
         /// </summary>
         /// <param name="key">Index key to look up</param>
         /// <returns>String if located, otherwise null</returns>
