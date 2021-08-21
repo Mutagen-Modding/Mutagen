@@ -29,7 +29,9 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
             {
                 GameRelease.Oblivion => "Oblivion/Plugins.txt",
                 GameRelease.SkyrimLE => "Skyrim/Plugins.txt",
+                GameRelease.EnderalLE => "Enderal/Plugins.txt",
                 GameRelease.SkyrimSE => "Skyrim Special Edition/Plugins.txt",
+                GameRelease.EnderalSE => "Enderal Special Edition/Plugins.txt",
                 GameRelease.SkyrimVR => "Skyrim VR/Plugins.txt",
                 GameRelease.Fallout4 => "Fallout4/Plugins.txt",
                 _ => throw new NotImplementedException()

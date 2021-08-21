@@ -14,7 +14,9 @@ namespace Mutagen.Bethesda.Plugins
 
         private readonly static ImplicitRegistration Oblivion;
         private readonly static ImplicitRegistration SkyrimLE;
+        private readonly static ImplicitRegistration EnderalLE;
         private readonly static ImplicitRegistration SkyrimSE;
+        private readonly static ImplicitRegistration EnderalSE;
         private readonly static ImplicitRegistration SkyrimVR;
         private readonly static ImplicitRegistration Fallout4;
 
@@ -52,6 +54,7 @@ namespace Mutagen.Bethesda.Plugins
                 "HearthFires.esm",
                 "Dragonborn.esm",
             });
+            var enderal = ModKey.FromFileName("Enderal - Forgotten Stories.esm");
             SkyrimLE = new ImplicitRegistration(
                GameRelease.SkyrimLE,
                BaseMasters: skyrimBaseMasters,
@@ -97,7 +100,9 @@ namespace Mutagen.Bethesda.Plugins
                    // Texture Set
                    skyrimModKey.MakeFormKey(0x28),
                });
+            EnderalLE = SkyrimLE with { Listings = new ImplicitModKeyCollection(SkyrimLE.Listings.And(enderal)) };
             SkyrimSE = SkyrimLE with { GameRelease = GameRelease.SkyrimSE };
+            EnderalSE = SkyrimSE with { Listings = new ImplicitModKeyCollection(SkyrimSE.Listings.And(enderal)) };
             SkyrimVR = SkyrimSE with
             {
                 GameRelease = GameRelease.SkyrimVR,
@@ -134,7 +139,9 @@ namespace Mutagen.Bethesda.Plugins
             {
                 GameRelease.Oblivion => Oblivion,
                 GameRelease.SkyrimLE => SkyrimLE,
+                GameRelease.EnderalLE => EnderalLE,
                 GameRelease.SkyrimSE => SkyrimSE,
+                GameRelease.EnderalSE => EnderalSE,
                 GameRelease.SkyrimVR => SkyrimVR,
                 GameRelease.Fallout4 => Fallout4,
                 _ => throw new NotImplementedException(),

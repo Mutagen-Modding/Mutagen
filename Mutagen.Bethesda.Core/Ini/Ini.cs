@@ -18,9 +18,9 @@ namespace Mutagen.Bethesda.Inis
             {
                 GameRelease.Oblivion => "Oblivion",
                 GameRelease.SkyrimLE => "Skyrim",
-                GameRelease.EnderalLE => "Skyrim",
+                GameRelease.EnderalLE => "Enderal",
                 GameRelease.SkyrimSE => "Skyrim Special Edition",
-                GameRelease.EnderalSE => "Skyrim Special Edition",
+                GameRelease.EnderalSE => "Enderal Special Edition",
                 GameRelease.SkyrimVR => "Skyrim VR",
                 GameRelease.Fallout4 => "Fallout4",
                 _ => throw new NotImplementedException(),
