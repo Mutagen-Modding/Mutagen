@@ -8,6 +8,8 @@ namespace Mutagen.Bethesda.Strings
         private static readonly Encoding _1250;
         private static readonly Encoding _1251;
         private static readonly Encoding _1252;
+
+        public static Encoding Default => _1252;
         
         static Encodings()
         {
