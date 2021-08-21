@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Environments
 {
     public class GameEnvironment
     {
-        public static readonly GameEnvironment Typical = new GameEnvironment();
+        public static readonly GameEnvironment Typical = new();
 
         private GameEnvironment()
         {
