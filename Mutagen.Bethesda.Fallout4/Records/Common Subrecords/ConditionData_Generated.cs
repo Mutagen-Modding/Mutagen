@@ -56,11 +56,11 @@ namespace Mutagen.Bethesda.Fallout4
         public UInt16 Unknown2 { get; set; } = default;
         #endregion
         #region ParameterOneRecord
-        private IFormLink<IFallout4MajorRecordGetter> _ParameterOneRecord = new FormLink<IFallout4MajorRecordGetter>();
+        private readonly IFormLink<IFallout4MajorRecordGetter> _ParameterOneRecord = new FormLink<IFallout4MajorRecordGetter>();
         public IFormLink<IFallout4MajorRecordGetter> ParameterOneRecord
         {
             get => _ParameterOneRecord;
-            set => _ParameterOneRecord = value.AsSetter();
+            set => _ParameterOneRecord.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFallout4MajorRecordGetter> IConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
@@ -74,11 +74,11 @@ namespace Mutagen.Bethesda.Fallout4
         String? IConditionDataGetter.ParameterOneString => this.ParameterOneString;
         #endregion
         #region ParameterTwoRecord
-        private IFormLink<IFallout4MajorRecordGetter> _ParameterTwoRecord = new FormLink<IFallout4MajorRecordGetter>();
+        private readonly IFormLink<IFallout4MajorRecordGetter> _ParameterTwoRecord = new FormLink<IFallout4MajorRecordGetter>();
         public IFormLink<IFallout4MajorRecordGetter> ParameterTwoRecord
         {
             get => _ParameterTwoRecord;
-            set => _ParameterTwoRecord = value.AsSetter();
+            set => _ParameterTwoRecord.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFallout4MajorRecordGetter> IConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;

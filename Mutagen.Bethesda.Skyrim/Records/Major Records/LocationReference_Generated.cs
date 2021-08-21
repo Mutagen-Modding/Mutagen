@@ -50,21 +50,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Actor
-        private IFormLink<ILinkedReferenceGetter> _Actor = new FormLink<ILinkedReferenceGetter>();
+        private readonly IFormLink<ILinkedReferenceGetter> _Actor = new FormLink<ILinkedReferenceGetter>();
         public IFormLink<ILinkedReferenceGetter> Actor
         {
             get => _Actor;
-            set => _Actor = value.AsSetter();
+            set => _Actor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILinkedReferenceGetter> ILocationReferenceGetter.Actor => this.Actor;
         #endregion
         #region Location
-        private IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
+        private readonly IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
         public IFormLink<IComplexLocationGetter> Location
         {
             get => _Location;
-            set => _Location = value.AsSetter();
+            set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IComplexLocationGetter> ILocationReferenceGetter.Location => this.Location;

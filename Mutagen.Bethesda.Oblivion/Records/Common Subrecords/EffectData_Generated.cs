@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MagicEffect
-        private IEDIDLink<IMagicEffectGetter> _MagicEffect = new EDIDLink<IMagicEffectGetter>();
+        private readonly IEDIDLink<IMagicEffectGetter> _MagicEffect = new EDIDLink<IMagicEffectGetter>();
         public IEDIDLink<IMagicEffectGetter> MagicEffect
         {
             get => _MagicEffect;
-            set => _MagicEffect = value.AsSetter();
+            set => _MagicEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEDIDLinkGetter<IMagicEffectGetter> IEffectDataGetter.MagicEffect => this.MagicEffect;

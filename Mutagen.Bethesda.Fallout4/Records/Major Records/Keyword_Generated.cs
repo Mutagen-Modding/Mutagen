@@ -74,11 +74,11 @@ namespace Mutagen.Bethesda.Fallout4
         Keyword.TypeEnum? IKeywordGetter.Type => this.Type;
         #endregion
         #region AttractionRule
-        private IFormLinkNullable<IAttractionRuleGetter> _AttractionRule = new FormLinkNullable<IAttractionRuleGetter>();
+        private readonly IFormLinkNullable<IAttractionRuleGetter> _AttractionRule = new FormLinkNullable<IAttractionRuleGetter>();
         public IFormLinkNullable<IAttractionRuleGetter> AttractionRule
         {
             get => _AttractionRule;
-            set => _AttractionRule = value.AsNullable();
+            set => _AttractionRule.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAttractionRuleGetter> IKeywordGetter.AttractionRule => this.AttractionRule;

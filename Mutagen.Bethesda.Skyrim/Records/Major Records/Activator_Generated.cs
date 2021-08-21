@@ -185,31 +185,31 @@ namespace Mutagen.Bethesda.Skyrim
         Color? IActivatorGetter.MarkerColor => this.MarkerColor;
         #endregion
         #region LoopingSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> LoopingSound
         {
             get => _LoopingSound;
-            set => _LoopingSound = value.AsNullable();
+            set => _LoopingSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IActivatorGetter.LoopingSound => this.LoopingSound;
         #endregion
         #region ActivationSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _ActivationSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _ActivationSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> ActivationSound
         {
             get => _ActivationSound;
-            set => _ActivationSound = value.AsNullable();
+            set => _ActivationSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IActivatorGetter.ActivationSound => this.ActivationSound;
         #endregion
         #region WaterType
-        private IFormLinkNullable<IWaterGetter> _WaterType = new FormLinkNullable<IWaterGetter>();
+        private readonly IFormLinkNullable<IWaterGetter> _WaterType = new FormLinkNullable<IWaterGetter>();
         public IFormLinkNullable<IWaterGetter> WaterType
         {
             get => _WaterType;
-            set => _WaterType = value.AsNullable();
+            set => _WaterType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IActivatorGetter.WaterType => this.WaterType;
@@ -225,11 +225,11 @@ namespace Mutagen.Bethesda.Skyrim
         Activator.Flag? IActivatorGetter.Flags => this.Flags;
         #endregion
         #region InteractionKeyword
-        private IFormLinkNullable<IKeywordGetter> _InteractionKeyword = new FormLinkNullable<IKeywordGetter>();
+        private readonly IFormLinkNullable<IKeywordGetter> _InteractionKeyword = new FormLinkNullable<IKeywordGetter>();
         public IFormLinkNullable<IKeywordGetter> InteractionKeyword
         {
             get => _InteractionKeyword;
-            set => _InteractionKeyword = value.AsNullable();
+            set => _InteractionKeyword.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IActivatorGetter.InteractionKeyword => this.InteractionKeyword;

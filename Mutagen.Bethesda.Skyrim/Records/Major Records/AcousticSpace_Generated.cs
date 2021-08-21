@@ -74,31 +74,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region AmbientSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _AmbientSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _AmbientSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> AmbientSound
         {
             get => _AmbientSound;
-            set => _AmbientSound = value.AsNullable();
+            set => _AmbientSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IAcousticSpaceGetter.AmbientSound => this.AmbientSound;
         #endregion
         #region UseSoundFromRegion
-        private IFormLinkNullable<IRegionGetter> _UseSoundFromRegion = new FormLinkNullable<IRegionGetter>();
+        private readonly IFormLinkNullable<IRegionGetter> _UseSoundFromRegion = new FormLinkNullable<IRegionGetter>();
         public IFormLinkNullable<IRegionGetter> UseSoundFromRegion
         {
             get => _UseSoundFromRegion;
-            set => _UseSoundFromRegion = value.AsNullable();
+            set => _UseSoundFromRegion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRegionGetter> IAcousticSpaceGetter.UseSoundFromRegion => this.UseSoundFromRegion;
         #endregion
         #region EnvironmentType
-        private IFormLinkNullable<IReverbParametersGetter> _EnvironmentType = new FormLinkNullable<IReverbParametersGetter>();
+        private readonly IFormLinkNullable<IReverbParametersGetter> _EnvironmentType = new FormLinkNullable<IReverbParametersGetter>();
         public IFormLinkNullable<IReverbParametersGetter> EnvironmentType
         {
             get => _EnvironmentType;
-            set => _EnvironmentType = value.AsNullable();
+            set => _EnvironmentType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IReverbParametersGetter> IAcousticSpaceGetter.EnvironmentType => this.EnvironmentType;

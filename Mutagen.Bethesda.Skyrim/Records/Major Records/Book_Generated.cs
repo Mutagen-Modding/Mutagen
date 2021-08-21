@@ -180,21 +180,21 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IBookGetter.Destructible => this.Destructible;
         #endregion
         #region PickUpSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
         {
             get => _PickUpSound;
-            set => _PickUpSound = value.AsNullable();
+            set => _PickUpSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IBookGetter.PickUpSound => this.PickUpSound;
         #endregion
         #region PutDownSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
         {
             get => _PutDownSound;
-            set => _PutDownSound = value.AsNullable();
+            set => _PutDownSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IBookGetter.PutDownSound => this.PutDownSound;
@@ -247,11 +247,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Weight { get; set; } = default;
         #endregion
         #region InventoryArt
-        private IFormLinkNullable<IStaticGetter> _InventoryArt = new FormLinkNullable<IStaticGetter>();
+        private readonly IFormLinkNullable<IStaticGetter> _InventoryArt = new FormLinkNullable<IStaticGetter>();
         public IFormLinkNullable<IStaticGetter> InventoryArt
         {
             get => _InventoryArt;
-            set => _InventoryArt = value.AsNullable();
+            set => _InventoryArt.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IBookGetter.InventoryArt => this.InventoryArt;

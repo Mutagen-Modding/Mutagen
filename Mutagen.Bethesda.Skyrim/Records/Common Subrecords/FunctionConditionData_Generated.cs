@@ -58,11 +58,11 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 Unknown2 { get; set; } = default;
         #endregion
         #region ParameterOneRecord
-        private IFormLink<ISkyrimMajorRecordGetter> _ParameterOneRecord = new FormLink<ISkyrimMajorRecordGetter>();
+        private readonly IFormLink<ISkyrimMajorRecordGetter> _ParameterOneRecord = new FormLink<ISkyrimMajorRecordGetter>();
         public IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord
         {
             get => _ParameterOneRecord;
-            set => _ParameterOneRecord = value.AsSetter();
+            set => _ParameterOneRecord.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
@@ -76,11 +76,11 @@ namespace Mutagen.Bethesda.Skyrim
         String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
         #endregion
         #region ParameterTwoRecord
-        private IFormLink<ISkyrimMajorRecordGetter> _ParameterTwoRecord = new FormLink<ISkyrimMajorRecordGetter>();
+        private readonly IFormLink<ISkyrimMajorRecordGetter> _ParameterTwoRecord = new FormLink<ISkyrimMajorRecordGetter>();
         public IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord
         {
             get => _ParameterTwoRecord;
-            set => _ParameterTwoRecord = value.AsSetter();
+            set => _ParameterTwoRecord.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;

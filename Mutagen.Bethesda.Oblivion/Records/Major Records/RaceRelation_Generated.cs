@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Race
-        private IFormLink<IRaceGetter> _Race = new FormLink<IRaceGetter>();
+        private readonly IFormLink<IRaceGetter> _Race = new FormLink<IRaceGetter>();
         public IFormLink<IRaceGetter> Race
         {
             get => _Race;
-            set => _Race = value.AsSetter();
+            set => _Race.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IRaceGetter> IRaceRelationGetter.Race => this.Race;

@@ -168,12 +168,12 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateForClass(FileGeneration fg)
         {
             // Want to intercept any sets and wrap, to make sure it's not sharing a ref with another record
-            fg.AppendLine($"private {this.TypeName(getter: false)} _{this.Name} = {GetNewForNonNullable()};");
+            fg.AppendLine($"private readonly {this.TypeName(getter: false)} _{this.Name} = {GetNewForNonNullable()};");
             fg.AppendLine($"public {this.TypeName(getter: false)} {this.Name}");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"get => _{this.Name};");
-                fg.AppendLine($"set => _{this.Name} = value.{(this.Nullable ? "AsNullable" : "AsSetter")}();");
+                fg.AppendLine($"set => _{this.Name}.SetTo(value);");
             }
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
             fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name};");

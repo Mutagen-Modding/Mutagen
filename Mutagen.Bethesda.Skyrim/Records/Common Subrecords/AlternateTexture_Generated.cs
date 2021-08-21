@@ -57,11 +57,11 @@ namespace Mutagen.Bethesda.Skyrim
         public String Name { get; set; } = string.Empty;
         #endregion
         #region NewTexture
-        private IFormLink<ITextureSetGetter> _NewTexture = new FormLink<ITextureSetGetter>();
+        private readonly IFormLink<ITextureSetGetter> _NewTexture = new FormLink<ITextureSetGetter>();
         public IFormLink<ITextureSetGetter> NewTexture
         {
             get => _NewTexture;
-            set => _NewTexture = value.AsSetter();
+            set => _NewTexture.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture;

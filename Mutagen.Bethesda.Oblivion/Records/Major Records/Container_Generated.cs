@@ -90,11 +90,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Script
-        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> IContainerGetter.Script => this.Script;
@@ -125,21 +125,21 @@ namespace Mutagen.Bethesda.Oblivion
         IContainerDataGetter? IContainerGetter.Data => this.Data;
         #endregion
         #region OpenSound
-        private IFormLinkNullable<ISoundGetter> _OpenSound = new FormLinkNullable<ISoundGetter>();
+        private readonly IFormLinkNullable<ISoundGetter> _OpenSound = new FormLinkNullable<ISoundGetter>();
         public IFormLinkNullable<ISoundGetter> OpenSound
         {
             get => _OpenSound;
-            set => _OpenSound = value.AsNullable();
+            set => _OpenSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IContainerGetter.OpenSound => this.OpenSound;
         #endregion
         #region CloseSound
-        private IFormLinkNullable<ISoundGetter> _CloseSound = new FormLinkNullable<ISoundGetter>();
+        private readonly IFormLinkNullable<ISoundGetter> _CloseSound = new FormLinkNullable<ISoundGetter>();
         public IFormLinkNullable<ISoundGetter> CloseSound
         {
             get => _CloseSound;
-            set => _CloseSound = value.AsNullable();
+            set => _CloseSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IContainerGetter.CloseSound => this.CloseSound;

@@ -165,11 +165,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ObjectEffect
-        private IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
+        private readonly IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
         public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
         {
             get => _ObjectEffect;
-            set => _ObjectEffect = value.AsNullable();
+            set => _ObjectEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEffectRecordGetter> IWeaponGetter.ObjectEffect => this.ObjectEffect;
@@ -191,51 +191,51 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IWeaponGetter.Destructible => this.Destructible;
         #endregion
         #region EquipmentType
-        private IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
+        private readonly IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
         public IFormLinkNullable<IEquipTypeGetter> EquipmentType
         {
             get => _EquipmentType;
-            set => _EquipmentType = value.AsNullable();
+            set => _EquipmentType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IWeaponGetter.EquipmentType => this.EquipmentType;
         #endregion
         #region BlockBashImpact
-        private IFormLinkNullable<IImpactDataSetGetter> _BlockBashImpact = new FormLinkNullable<IImpactDataSetGetter>();
+        private readonly IFormLinkNullable<IImpactDataSetGetter> _BlockBashImpact = new FormLinkNullable<IImpactDataSetGetter>();
         public IFormLinkNullable<IImpactDataSetGetter> BlockBashImpact
         {
             get => _BlockBashImpact;
-            set => _BlockBashImpact = value.AsNullable();
+            set => _BlockBashImpact.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IWeaponGetter.BlockBashImpact => this.BlockBashImpact;
         #endregion
         #region AlternateBlockMaterial
-        private IFormLinkNullable<IMaterialTypeGetter> _AlternateBlockMaterial = new FormLinkNullable<IMaterialTypeGetter>();
+        private readonly IFormLinkNullable<IMaterialTypeGetter> _AlternateBlockMaterial = new FormLinkNullable<IMaterialTypeGetter>();
         public IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial
         {
             get => _AlternateBlockMaterial;
-            set => _AlternateBlockMaterial = value.AsNullable();
+            set => _AlternateBlockMaterial.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IWeaponGetter.AlternateBlockMaterial => this.AlternateBlockMaterial;
         #endregion
         #region PickUpSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
         {
             get => _PickUpSound;
-            set => _PickUpSound = value.AsNullable();
+            set => _PickUpSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.PickUpSound => this.PickUpSound;
         #endregion
         #region PutDownSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
         {
             get => _PutDownSound;
-            set => _PutDownSound = value.AsNullable();
+            set => _PutDownSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.PutDownSound => this.PutDownSound;
@@ -289,91 +289,91 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IWeaponGetter.Unused => this.Unused;
         #endregion
         #region ImpactDataSet
-        private IFormLinkNullable<IImpactDataSetGetter> _ImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>();
+        private readonly IFormLinkNullable<IImpactDataSetGetter> _ImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>();
         public IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet
         {
             get => _ImpactDataSet;
-            set => _ImpactDataSet = value.AsNullable();
+            set => _ImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IWeaponGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion
         #region FirstPersonModel
-        private IFormLinkNullable<IStaticGetter> _FirstPersonModel = new FormLinkNullable<IStaticGetter>();
+        private readonly IFormLinkNullable<IStaticGetter> _FirstPersonModel = new FormLinkNullable<IStaticGetter>();
         public IFormLinkNullable<IStaticGetter> FirstPersonModel
         {
             get => _FirstPersonModel;
-            set => _FirstPersonModel = value.AsNullable();
+            set => _FirstPersonModel.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IWeaponGetter.FirstPersonModel => this.FirstPersonModel;
         #endregion
         #region AttackSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _AttackSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _AttackSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> AttackSound
         {
             get => _AttackSound;
-            set => _AttackSound = value.AsNullable();
+            set => _AttackSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackSound => this.AttackSound;
         #endregion
         #region AttackSound2D
-        private IFormLinkNullable<ISoundDescriptorGetter> _AttackSound2D = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _AttackSound2D = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> AttackSound2D
         {
             get => _AttackSound2D;
-            set => _AttackSound2D = value.AsNullable();
+            set => _AttackSound2D.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackSound2D => this.AttackSound2D;
         #endregion
         #region AttackLoopSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _AttackLoopSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _AttackLoopSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> AttackLoopSound
         {
             get => _AttackLoopSound;
-            set => _AttackLoopSound = value.AsNullable();
+            set => _AttackLoopSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackLoopSound => this.AttackLoopSound;
         #endregion
         #region AttackFailSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _AttackFailSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _AttackFailSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> AttackFailSound
         {
             get => _AttackFailSound;
-            set => _AttackFailSound = value.AsNullable();
+            set => _AttackFailSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackFailSound => this.AttackFailSound;
         #endregion
         #region IdleSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _IdleSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _IdleSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> IdleSound
         {
             get => _IdleSound;
-            set => _IdleSound = value.AsNullable();
+            set => _IdleSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.IdleSound => this.IdleSound;
         #endregion
         #region EquipSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _EquipSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _EquipSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> EquipSound
         {
             get => _EquipSound;
-            set => _EquipSound = value.AsNullable();
+            set => _EquipSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.EquipSound => this.EquipSound;
         #endregion
         #region UnequipSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _UnequipSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _UnequipSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> UnequipSound
         {
             get => _UnequipSound;
-            set => _UnequipSound = value.AsNullable();
+            set => _UnequipSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.UnequipSound => this.UnequipSound;
@@ -417,11 +417,11 @@ namespace Mutagen.Bethesda.Skyrim
         SoundLevel? IWeaponGetter.DetectionSoundLevel => this.DetectionSoundLevel;
         #endregion
         #region Template
-        private IFormLinkNullable<IWeaponGetter> _Template = new FormLinkNullable<IWeaponGetter>();
+        private readonly IFormLinkNullable<IWeaponGetter> _Template = new FormLinkNullable<IWeaponGetter>();
         public IFormLinkNullable<IWeaponGetter> Template
         {
             get => _Template;
-            set => _Template = value.AsNullable();
+            set => _Template.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWeaponGetter> IWeaponGetter.Template => this.Template;

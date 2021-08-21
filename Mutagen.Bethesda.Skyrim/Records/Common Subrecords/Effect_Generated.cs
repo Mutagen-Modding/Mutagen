@@ -51,11 +51,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region BaseEffect
-        private IFormLinkNullable<IMagicEffectGetter> _BaseEffect = new FormLinkNullable<IMagicEffectGetter>();
+        private readonly IFormLinkNullable<IMagicEffectGetter> _BaseEffect = new FormLinkNullable<IMagicEffectGetter>();
         public IFormLinkNullable<IMagicEffectGetter> BaseEffect
         {
             get => _BaseEffect;
-            set => _BaseEffect = value.AsNullable();
+            set => _BaseEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMagicEffectGetter> IEffectGetter.BaseEffect => this.BaseEffect;

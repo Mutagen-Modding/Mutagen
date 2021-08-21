@@ -123,21 +123,21 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IWeatherGetter.LNAM => this.LNAM;
         #endregion
         #region Precipitation
-        private IFormLinkNullable<IShaderParticleGeometryGetter> _Precipitation = new FormLinkNullable<IShaderParticleGeometryGetter>();
+        private readonly IFormLinkNullable<IShaderParticleGeometryGetter> _Precipitation = new FormLinkNullable<IShaderParticleGeometryGetter>();
         public IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation
         {
             get => _Precipitation;
-            set => _Precipitation = value.AsNullable();
+            set => _Precipitation.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IShaderParticleGeometryGetter> IWeatherGetter.Precipitation => this.Precipitation;
         #endregion
         #region VisualEffect
-        private IFormLink<IVisualEffectGetter> _VisualEffect = new FormLink<IVisualEffectGetter>();
+        private readonly IFormLink<IVisualEffectGetter> _VisualEffect = new FormLink<IVisualEffectGetter>();
         public IFormLink<IVisualEffectGetter> VisualEffect
         {
             get => _VisualEffect;
-            set => _VisualEffect = value.AsSetter();
+            set => _VisualEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IVisualEffectGetter> IWeatherGetter.VisualEffect => this.VisualEffect;
@@ -422,11 +422,11 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IWeatherGetter.Aurora => this.Aurora;
         #endregion
         #region SunGlareLensFlare
-        private IFormLinkNullable<ILensFlareGetter> _SunGlareLensFlare = new FormLinkNullable<ILensFlareGetter>();
+        private readonly IFormLinkNullable<ILensFlareGetter> _SunGlareLensFlare = new FormLinkNullable<ILensFlareGetter>();
         public IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare
         {
             get => _SunGlareLensFlare;
-            set => _SunGlareLensFlare = value.AsNullable();
+            set => _SunGlareLensFlare.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILensFlareGetter> IWeatherGetter.SunGlareLensFlare => this.SunGlareLensFlare;

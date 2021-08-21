@@ -55,21 +55,21 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? ILocationAliasReferenceGetter.AliasIndex => this.AliasIndex;
         #endregion
         #region Keyword
-        private IFormLinkNullable<IKeywordGetter> _Keyword = new FormLinkNullable<IKeywordGetter>();
+        private readonly IFormLinkNullable<IKeywordGetter> _Keyword = new FormLinkNullable<IKeywordGetter>();
         public IFormLinkNullable<IKeywordGetter> Keyword
         {
             get => _Keyword;
-            set => _Keyword = value.AsNullable();
+            set => _Keyword.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> ILocationAliasReferenceGetter.Keyword => this.Keyword;
         #endregion
         #region RefType
-        private IFormLinkNullable<ILocationReferenceTypeGetter> _RefType = new FormLinkNullable<ILocationReferenceTypeGetter>();
+        private readonly IFormLinkNullable<ILocationReferenceTypeGetter> _RefType = new FormLinkNullable<ILocationReferenceTypeGetter>();
         public IFormLinkNullable<ILocationReferenceTypeGetter> RefType
         {
             get => _RefType;
-            set => _RefType = value.AsNullable();
+            set => _RefType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationReferenceTypeGetter> ILocationAliasReferenceGetter.RefType => this.RefType;

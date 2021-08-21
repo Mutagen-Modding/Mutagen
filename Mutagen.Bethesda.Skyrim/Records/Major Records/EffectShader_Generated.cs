@@ -270,11 +270,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ParticleRotationSpeedDegreePerSecPlusMinus { get; set; } = default;
         #endregion
         #region AddonModels
-        private IFormLink<IDebrisGetter> _AddonModels = new FormLink<IDebrisGetter>();
+        private readonly IFormLink<IDebrisGetter> _AddonModels = new FormLink<IDebrisGetter>();
         public IFormLink<IDebrisGetter> AddonModels
         {
             get => _AddonModels;
-            set => _AddonModels = value.AsSetter();
+            set => _AddonModels.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IEffectShaderGetter.AddonModels => this.AddonModels;
@@ -325,11 +325,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single AddonModelsScaleOutTime { get; set; } = default;
         #endregion
         #region AmbientSound
-        private IFormLink<ISoundGetter> _AmbientSound = new FormLink<ISoundGetter>();
+        private readonly IFormLink<ISoundGetter> _AmbientSound = new FormLink<ISoundGetter>();
         public IFormLink<ISoundGetter> AmbientSound
         {
             get => _AmbientSound;
-            set => _AmbientSound = value.AsSetter();
+            set => _AmbientSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IEffectShaderGetter.AmbientSound => this.AmbientSound;

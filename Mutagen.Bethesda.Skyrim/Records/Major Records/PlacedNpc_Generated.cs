@@ -72,21 +72,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Base
-        private IFormLinkNullable<INpcGetter> _Base = new FormLinkNullable<INpcGetter>();
+        private readonly IFormLinkNullable<INpcGetter> _Base = new FormLinkNullable<INpcGetter>();
         public IFormLinkNullable<INpcGetter> Base
         {
             get => _Base;
-            set => _Base = value.AsNullable();
+            set => _Base.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> IPlacedNpcGetter.Base => this.Base;
         #endregion
         #region EncounterZone
-        private IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
+        private readonly IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
         public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
         {
             get => _EncounterZone;
-            set => _EncounterZone = value.AsNullable();
+            set => _EncounterZone.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> IPlacedNpcGetter.EncounterZone => this.EncounterZone;
@@ -130,11 +130,11 @@ namespace Mutagen.Bethesda.Skyrim
         Level? IPlacedNpcGetter.LevelModifier => this.LevelModifier;
         #endregion
         #region MerchantContainer
-        private IFormLinkNullable<IPlacedObjectGetter> _MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>();
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>();
         public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer
         {
             get => _MerchantContainer;
-            set => _MerchantContainer = value.AsNullable();
+            set => _MerchantContainer.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedNpcGetter.MerchantContainer => this.MerchantContainer;
@@ -191,21 +191,21 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReferenceColorGetter? IPlacedNpcGetter.LinkedReferenceColor => this.LinkedReferenceColor;
         #endregion
         #region PersistentLocation
-        private IFormLinkNullable<ILocationGetter> _PersistentLocation = new FormLinkNullable<ILocationGetter>();
+        private readonly IFormLinkNullable<ILocationGetter> _PersistentLocation = new FormLinkNullable<ILocationGetter>();
         public IFormLinkNullable<ILocationGetter> PersistentLocation
         {
             get => _PersistentLocation;
-            set => _PersistentLocation = value.AsNullable();
+            set => _PersistentLocation.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.PersistentLocation => this.PersistentLocation;
         #endregion
         #region LocationReference
-        private IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
+        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
         public IFormLinkNullable<ILocationRecordGetter> LocationReference
         {
             get => _LocationReference;
-            set => _LocationReference = value.AsNullable();
+            set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationRecordGetter> IPlacedNpcGetter.LocationReference => this.LocationReference;
@@ -233,11 +233,11 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedNpcGetter.HeadTrackingWeight => this.HeadTrackingWeight;
         #endregion
         #region Horse
-        private IFormLinkNullable<IPlacedNpcGetter> _Horse = new FormLinkNullable<IPlacedNpcGetter>();
+        private readonly IFormLinkNullable<IPlacedNpcGetter> _Horse = new FormLinkNullable<IPlacedNpcGetter>();
         public IFormLinkNullable<IPlacedNpcGetter> Horse
         {
             get => _Horse;
-            set => _Horse = value.AsNullable();
+            set => _Horse.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedNpcGetter> IPlacedNpcGetter.Horse => this.Horse;
@@ -270,21 +270,21 @@ namespace Mutagen.Bethesda.Skyrim
         IOwnershipGetter? IPlacedNpcGetter.Ownership => this.Ownership;
         #endregion
         #region Emittance
-        private IFormLinkNullable<IEmittanceGetter> _Emittance = new FormLinkNullable<IEmittanceGetter>();
+        private readonly IFormLinkNullable<IEmittanceGetter> _Emittance = new FormLinkNullable<IEmittanceGetter>();
         public IFormLinkNullable<IEmittanceGetter> Emittance
         {
             get => _Emittance;
-            set => _Emittance = value.AsNullable();
+            set => _Emittance.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEmittanceGetter> IPlacedNpcGetter.Emittance => this.Emittance;
         #endregion
         #region MultiboundReference
-        private IFormLinkNullable<IPlacedObjectGetter> _MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>();
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>();
         public IFormLinkNullable<IPlacedObjectGetter> MultiboundReference
         {
             get => _MultiboundReference;
-            set => _MultiboundReference = value.AsNullable();
+            set => _MultiboundReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedNpcGetter.MultiboundReference => this.MultiboundReference;

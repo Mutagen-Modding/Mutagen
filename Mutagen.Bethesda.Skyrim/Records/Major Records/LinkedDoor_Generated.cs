@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Door
-        private IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
+        private readonly IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
         public IFormLink<IPlacedObjectGetter> Door
         {
             get => _Door;
-            set => _Door = value.AsSetter();
+            set => _Door.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedObjectGetter> ILinkedDoorGetter.Door => this.Door;

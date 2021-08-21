@@ -50,41 +50,41 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sunrise
-        private IFormLink<IImageSpaceAdapterGetter> _Sunrise = new FormLink<IImageSpaceAdapterGetter>();
+        private readonly IFormLink<IImageSpaceAdapterGetter> _Sunrise = new FormLink<IImageSpaceAdapterGetter>();
         public IFormLink<IImageSpaceAdapterGetter> Sunrise
         {
             get => _Sunrise;
-            set => _Sunrise = value.AsSetter();
+            set => _Sunrise.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunrise => this.Sunrise;
         #endregion
         #region Day
-        private IFormLink<IImageSpaceAdapterGetter> _Day = new FormLink<IImageSpaceAdapterGetter>();
+        private readonly IFormLink<IImageSpaceAdapterGetter> _Day = new FormLink<IImageSpaceAdapterGetter>();
         public IFormLink<IImageSpaceAdapterGetter> Day
         {
             get => _Day;
-            set => _Day = value.AsSetter();
+            set => _Day.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Day => this.Day;
         #endregion
         #region Sunset
-        private IFormLink<IImageSpaceAdapterGetter> _Sunset = new FormLink<IImageSpaceAdapterGetter>();
+        private readonly IFormLink<IImageSpaceAdapterGetter> _Sunset = new FormLink<IImageSpaceAdapterGetter>();
         public IFormLink<IImageSpaceAdapterGetter> Sunset
         {
             get => _Sunset;
-            set => _Sunset = value.AsSetter();
+            set => _Sunset.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunset => this.Sunset;
         #endregion
         #region Night
-        private IFormLink<IImageSpaceAdapterGetter> _Night = new FormLink<IImageSpaceAdapterGetter>();
+        private readonly IFormLink<IImageSpaceAdapterGetter> _Night = new FormLink<IImageSpaceAdapterGetter>();
         public IFormLink<IImageSpaceAdapterGetter> Night
         {
             get => _Night;
-            set => _Night = value.AsSetter();
+            set => _Night.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Night => this.Night;

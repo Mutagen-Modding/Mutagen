@@ -109,11 +109,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region MenuDisplayObject
-        private IFormLinkNullable<IStaticGetter> _MenuDisplayObject = new FormLinkNullable<IStaticGetter>();
+        private readonly IFormLinkNullable<IStaticGetter> _MenuDisplayObject = new FormLinkNullable<IStaticGetter>();
         public IFormLinkNullable<IStaticGetter> MenuDisplayObject
         {
             get => _MenuDisplayObject;
-            set => _MenuDisplayObject = value.AsNullable();
+            set => _MenuDisplayObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IMagicEffectGetter.MenuDisplayObject => this.MenuDisplayObject;
@@ -160,11 +160,11 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 Unknown1 { get; set; } = default;
         #endregion
         #region CastingLight
-        private IFormLink<ILightGetter> _CastingLight = new FormLink<ILightGetter>();
+        private readonly IFormLink<ILightGetter> _CastingLight = new FormLink<ILightGetter>();
         public IFormLink<ILightGetter> CastingLight
         {
             get => _CastingLight;
-            set => _CastingLight = value.AsSetter();
+            set => _CastingLight.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IMagicEffectGetter.CastingLight => this.CastingLight;
@@ -173,21 +173,21 @@ namespace Mutagen.Bethesda.Skyrim
         public Single TaperWeight { get; set; } = default;
         #endregion
         #region HitShader
-        private IFormLink<IEffectShaderGetter> _HitShader = new FormLink<IEffectShaderGetter>();
+        private readonly IFormLink<IEffectShaderGetter> _HitShader = new FormLink<IEffectShaderGetter>();
         public IFormLink<IEffectShaderGetter> HitShader
         {
             get => _HitShader;
-            set => _HitShader = value.AsSetter();
+            set => _HitShader.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectGetter.HitShader => this.HitShader;
         #endregion
         #region EnchantShader
-        private IFormLink<IEffectShaderGetter> _EnchantShader = new FormLink<IEffectShaderGetter>();
+        private readonly IFormLink<IEffectShaderGetter> _EnchantShader = new FormLink<IEffectShaderGetter>();
         public IFormLink<IEffectShaderGetter> EnchantShader
         {
             get => _EnchantShader;
-            set => _EnchantShader = value.AsSetter();
+            set => _EnchantShader.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectGetter.EnchantShader => this.EnchantShader;
@@ -216,21 +216,21 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
         #endregion
         #region Projectile
-        private IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        private readonly IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
         public IFormLink<IProjectileGetter> Projectile
         {
             get => _Projectile;
-            set => _Projectile = value.AsSetter();
+            set => _Projectile.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IMagicEffectGetter.Projectile => this.Projectile;
         #endregion
         #region Explosion
-        private IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> Explosion
         {
             get => _Explosion;
-            set => _Explosion = value.AsSetter();
+            set => _Explosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IMagicEffectGetter.Explosion => this.Explosion;
@@ -246,31 +246,31 @@ namespace Mutagen.Bethesda.Skyrim
         public ActorValue SecondActorValue { get; set; } = _SecondActorValue_Default;
         #endregion
         #region CastingArt
-        private IFormLink<IArtObjectGetter> _CastingArt = new FormLink<IArtObjectGetter>();
+        private readonly IFormLink<IArtObjectGetter> _CastingArt = new FormLink<IArtObjectGetter>();
         public IFormLink<IArtObjectGetter> CastingArt
         {
             get => _CastingArt;
-            set => _CastingArt = value.AsSetter();
+            set => _CastingArt.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.CastingArt => this.CastingArt;
         #endregion
         #region HitEffectArt
-        private IFormLink<IArtObjectGetter> _HitEffectArt = new FormLink<IArtObjectGetter>();
+        private readonly IFormLink<IArtObjectGetter> _HitEffectArt = new FormLink<IArtObjectGetter>();
         public IFormLink<IArtObjectGetter> HitEffectArt
         {
             get => _HitEffectArt;
-            set => _HitEffectArt = value.AsSetter();
+            set => _HitEffectArt.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.HitEffectArt => this.HitEffectArt;
         #endregion
         #region ImpactData
-        private IFormLink<IImpactDataSetGetter> _ImpactData = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _ImpactData = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> ImpactData
         {
             get => _ImpactData;
-            set => _ImpactData = value.AsSetter();
+            set => _ImpactData.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IMagicEffectGetter.ImpactData => this.ImpactData;
@@ -279,11 +279,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single SkillUsageMultiplier { get; set; } = default;
         #endregion
         #region DualCastArt
-        private IFormLink<IDualCastDataGetter> _DualCastArt = new FormLink<IDualCastDataGetter>();
+        private readonly IFormLink<IDualCastDataGetter> _DualCastArt = new FormLink<IDualCastDataGetter>();
         public IFormLink<IDualCastDataGetter> DualCastArt
         {
             get => _DualCastArt;
-            set => _DualCastArt = value.AsSetter();
+            set => _DualCastArt.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDualCastDataGetter> IMagicEffectGetter.DualCastArt => this.DualCastArt;
@@ -292,61 +292,61 @@ namespace Mutagen.Bethesda.Skyrim
         public Single DualCastScale { get; set; } = default;
         #endregion
         #region EnchantArt
-        private IFormLink<IArtObjectGetter> _EnchantArt = new FormLink<IArtObjectGetter>();
+        private readonly IFormLink<IArtObjectGetter> _EnchantArt = new FormLink<IArtObjectGetter>();
         public IFormLink<IArtObjectGetter> EnchantArt
         {
             get => _EnchantArt;
-            set => _EnchantArt = value.AsSetter();
+            set => _EnchantArt.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.EnchantArt => this.EnchantArt;
         #endregion
         #region Unknown2
-        private IFormLink<ISkyrimMajorRecordGetter> _Unknown2 = new FormLink<ISkyrimMajorRecordGetter>();
+        private readonly IFormLink<ISkyrimMajorRecordGetter> _Unknown2 = new FormLink<ISkyrimMajorRecordGetter>();
         public IFormLink<ISkyrimMajorRecordGetter> Unknown2
         {
             get => _Unknown2;
-            set => _Unknown2 = value.AsSetter();
+            set => _Unknown2.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown2 => this.Unknown2;
         #endregion
         #region Unknown3
-        private IFormLink<ISkyrimMajorRecordGetter> _Unknown3 = new FormLink<ISkyrimMajorRecordGetter>();
+        private readonly IFormLink<ISkyrimMajorRecordGetter> _Unknown3 = new FormLink<ISkyrimMajorRecordGetter>();
         public IFormLink<ISkyrimMajorRecordGetter> Unknown3
         {
             get => _Unknown3;
-            set => _Unknown3 = value.AsSetter();
+            set => _Unknown3.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown3 => this.Unknown3;
         #endregion
         #region EquipAbility
-        private IFormLink<ISpellGetter> _EquipAbility = new FormLink<ISpellGetter>();
+        private readonly IFormLink<ISpellGetter> _EquipAbility = new FormLink<ISpellGetter>();
         public IFormLink<ISpellGetter> EquipAbility
         {
             get => _EquipAbility;
-            set => _EquipAbility = value.AsSetter();
+            set => _EquipAbility.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> IMagicEffectGetter.EquipAbility => this.EquipAbility;
         #endregion
         #region ImageSpaceModifier
-        private IFormLink<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLink<IImageSpaceAdapterGetter>();
+        private readonly IFormLink<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLink<IImageSpaceAdapterGetter>();
         public IFormLink<IImageSpaceAdapterGetter> ImageSpaceModifier
         {
             get => _ImageSpaceModifier;
-            set => _ImageSpaceModifier = value.AsSetter();
+            set => _ImageSpaceModifier.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImageSpaceAdapterGetter> IMagicEffectGetter.ImageSpaceModifier => this.ImageSpaceModifier;
         #endregion
         #region PerkToApply
-        private IFormLink<IPerkGetter> _PerkToApply = new FormLink<IPerkGetter>();
+        private readonly IFormLink<IPerkGetter> _PerkToApply = new FormLink<IPerkGetter>();
         public IFormLink<IPerkGetter> PerkToApply
         {
             get => _PerkToApply;
-            set => _PerkToApply = value.AsSetter();
+            set => _PerkToApply.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> IMagicEffectGetter.PerkToApply => this.PerkToApply;

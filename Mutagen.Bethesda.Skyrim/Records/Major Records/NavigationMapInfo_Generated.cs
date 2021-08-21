@@ -51,11 +51,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavigationMesh
-        private IFormLink<IANavigationMeshGetter> _NavigationMesh = new FormLink<IANavigationMeshGetter>();
+        private readonly IFormLink<IANavigationMeshGetter> _NavigationMesh = new FormLink<IANavigationMeshGetter>();
         public IFormLink<IANavigationMeshGetter> NavigationMesh
         {
             get => _NavigationMesh;
-            set => _NavigationMesh = value.AsSetter();
+            set => _NavigationMesh.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IANavigationMeshGetter> INavigationMapInfoGetter.NavigationMesh => this.NavigationMesh;
@@ -126,11 +126,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown2 { get; set; } = default;
         #endregion
         #region ParentWorldspace
-        private IFormLink<IWorldspaceGetter> _ParentWorldspace = new FormLink<IWorldspaceGetter>();
+        private readonly IFormLink<IWorldspaceGetter> _ParentWorldspace = new FormLink<IWorldspaceGetter>();
         public IFormLink<IWorldspaceGetter> ParentWorldspace
         {
             get => _ParentWorldspace;
-            set => _ParentWorldspace = value.AsSetter();
+            set => _ParentWorldspace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> INavigationMapInfoGetter.ParentWorldspace => this.ParentWorldspace;
@@ -139,11 +139,11 @@ namespace Mutagen.Bethesda.Skyrim
         public P2Int16 ParentWorldspaceCoord { get; set; } = default;
         #endregion
         #region ParentCell
-        private IFormLink<ICellGetter> _ParentCell = new FormLink<ICellGetter>();
+        private readonly IFormLink<ICellGetter> _ParentCell = new FormLink<ICellGetter>();
         public IFormLink<ICellGetter> ParentCell
         {
             get => _ParentCell;
-            set => _ParentCell = value.AsSetter();
+            set => _ParentCell.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ICellGetter> INavigationMapInfoGetter.ParentCell => this.ParentCell;

@@ -55,11 +55,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region AnimationSound
-        private IFormLinkNullable<IAnimationSoundTagSetGetter> _AnimationSound = new FormLinkNullable<IAnimationSoundTagSetGetter>();
+        private readonly IFormLinkNullable<IAnimationSoundTagSetGetter> _AnimationSound = new FormLinkNullable<IAnimationSoundTagSetGetter>();
         public IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound
         {
             get => _AnimationSound;
-            set => _AnimationSound = value.AsNullable();
+            set => _AnimationSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAnimationSoundTagSetGetter> IRaceGetter.AnimationSound => this.AnimationSound;
@@ -101,11 +101,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Skin
-        private IFormLinkNullable<IArmorGetter> _Skin = new FormLinkNullable<IArmorGetter>();
+        private readonly IFormLinkNullable<IArmorGetter> _Skin = new FormLinkNullable<IArmorGetter>();
         public IFormLinkNullable<IArmorGetter> Skin
         {
             get => _Skin;
-            set => _Skin = value.AsNullable();
+            set => _Skin.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArmorGetter> IRaceGetter.Skin => this.Skin;
@@ -265,61 +265,61 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte ExplodableDecalCount { get; set; } = default;
         #endregion
         #region SeverableExplosion
-        private IFormLink<IExplosionGetter> _SeverableExplosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _SeverableExplosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> SeverableExplosion
         {
             get => _SeverableExplosion;
-            set => _SeverableExplosion = value.AsSetter();
+            set => _SeverableExplosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.SeverableExplosion => this.SeverableExplosion;
         #endregion
         #region SeverableDebris
-        private IFormLink<IDebrisGetter> _SeverableDebris = new FormLink<IDebrisGetter>();
+        private readonly IFormLink<IDebrisGetter> _SeverableDebris = new FormLink<IDebrisGetter>();
         public IFormLink<IDebrisGetter> SeverableDebris
         {
             get => _SeverableDebris;
-            set => _SeverableDebris = value.AsSetter();
+            set => _SeverableDebris.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IRaceGetter.SeverableDebris => this.SeverableDebris;
         #endregion
         #region SeverableImpactDataSet
-        private IFormLink<IImpactDataSetGetter> _SeverableImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _SeverableImpactDataSet = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> SeverableImpactDataSet
         {
             get => _SeverableImpactDataSet;
-            set => _SeverableImpactDataSet = value.AsSetter();
+            set => _SeverableImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.SeverableImpactDataSet => this.SeverableImpactDataSet;
         #endregion
         #region ExplodableExplosion
-        private IFormLink<IExplosionGetter> _ExplodableExplosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _ExplodableExplosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> ExplodableExplosion
         {
             get => _ExplodableExplosion;
-            set => _ExplodableExplosion = value.AsSetter();
+            set => _ExplodableExplosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.ExplodableExplosion => this.ExplodableExplosion;
         #endregion
         #region ExplodableDebris
-        private IFormLink<IDebrisGetter> _ExplodableDebris = new FormLink<IDebrisGetter>();
+        private readonly IFormLink<IDebrisGetter> _ExplodableDebris = new FormLink<IDebrisGetter>();
         public IFormLink<IDebrisGetter> ExplodableDebris
         {
             get => _ExplodableDebris;
-            set => _ExplodableDebris = value.AsSetter();
+            set => _ExplodableDebris.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IRaceGetter.ExplodableDebris => this.ExplodableDebris;
         #endregion
         #region ExplodableImpactDataSet
-        private IFormLink<IImpactDataSetGetter> _ExplodableImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _ExplodableImpactDataSet = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> ExplodableImpactDataSet
         {
             get => _ExplodableImpactDataSet;
-            set => _ExplodableImpactDataSet = value.AsSetter();
+            set => _ExplodableImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.ExplodableImpactDataSet => this.ExplodableImpactDataSet;
@@ -331,41 +331,41 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte OnCrippleDecalCount { get; set; } = default;
         #endregion
         #region OnCrippleExplosion
-        private IFormLink<IExplosionGetter> _OnCrippleExplosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _OnCrippleExplosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> OnCrippleExplosion
         {
             get => _OnCrippleExplosion;
-            set => _OnCrippleExplosion = value.AsSetter();
+            set => _OnCrippleExplosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.OnCrippleExplosion => this.OnCrippleExplosion;
         #endregion
         #region OnCrippleDebris
-        private IFormLink<IDebrisGetter> _OnCrippleDebris = new FormLink<IDebrisGetter>();
+        private readonly IFormLink<IDebrisGetter> _OnCrippleDebris = new FormLink<IDebrisGetter>();
         public IFormLink<IDebrisGetter> OnCrippleDebris
         {
             get => _OnCrippleDebris;
-            set => _OnCrippleDebris = value.AsSetter();
+            set => _OnCrippleDebris.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IRaceGetter.OnCrippleDebris => this.OnCrippleDebris;
         #endregion
         #region OnCrippleImpactDataSet
-        private IFormLink<IImpactDataSetGetter> _OnCrippleImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _OnCrippleImpactDataSet = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> OnCrippleImpactDataSet
         {
             get => _OnCrippleImpactDataSet;
-            set => _OnCrippleImpactDataSet = value.AsSetter();
+            set => _OnCrippleImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.OnCrippleImpactDataSet => this.OnCrippleImpactDataSet;
         #endregion
         #region ExplodableSubsegmentExplosion
-        private IFormLink<IExplosionGetter> _ExplodableSubsegmentExplosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _ExplodableSubsegmentExplosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> ExplodableSubsegmentExplosion
         {
             get => _ExplodableSubsegmentExplosion;
-            set => _ExplodableSubsegmentExplosion = value.AsSetter();
+            set => _ExplodableSubsegmentExplosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.ExplodableSubsegmentExplosion => this.ExplodableSubsegmentExplosion;

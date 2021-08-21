@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Target
-        private IFormLink<IPlacedGetter> _Target = new FormLink<IPlacedGetter>();
+        private readonly IFormLink<IPlacedGetter> _Target = new FormLink<IPlacedGetter>();
         public IFormLink<IPlacedGetter> Target
         {
             get => _Target;
-            set => _Target = value.AsSetter();
+            set => _Target.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedGetter> IQuestTargetDataGetter.Target => this.Target;

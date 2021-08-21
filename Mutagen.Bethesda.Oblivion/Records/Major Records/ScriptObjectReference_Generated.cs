@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        private IFormLink<IOblivionMajorRecordGetter> _Reference = new FormLink<IOblivionMajorRecordGetter>();
+        private readonly IFormLink<IOblivionMajorRecordGetter> _Reference = new FormLink<IOblivionMajorRecordGetter>();
         public IFormLink<IOblivionMajorRecordGetter> Reference
         {
             get => _Reference;
-            set => _Reference = value.AsSetter();
+            set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference => this.Reference;

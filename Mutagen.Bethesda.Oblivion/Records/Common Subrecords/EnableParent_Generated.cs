@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        private IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        private readonly IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
         public IFormLink<IPlacedGetter> Reference
         {
             get => _Reference;
-            set => _Reference = value.AsSetter();
+            set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedGetter> IEnableParentGetter.Reference => this.Reference;

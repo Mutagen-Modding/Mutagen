@@ -72,11 +72,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Base
-        private IFormLinkNullable<ISkyrimMajorRecordGetter> _Base = new FormLinkNullable<ISkyrimMajorRecordGetter>();
+        private readonly IFormLinkNullable<ISkyrimMajorRecordGetter> _Base = new FormLinkNullable<ISkyrimMajorRecordGetter>();
         public IFormLinkNullable<ISkyrimMajorRecordGetter> Base
         {
             get => _Base;
-            set => _Base = value.AsNullable();
+            set => _Base.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISkyrimMajorRecordGetter> IPlacedObjectGetter.Base => this.Base;
@@ -148,21 +148,21 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region LightingTemplate
-        private IFormLinkNullable<ILightGetter> _LightingTemplate = new FormLinkNullable<ILightGetter>();
+        private readonly IFormLinkNullable<ILightGetter> _LightingTemplate = new FormLinkNullable<ILightGetter>();
         public IFormLinkNullable<ILightGetter> LightingTemplate
         {
             get => _LightingTemplate;
-            set => _LightingTemplate = value.AsNullable();
+            set => _LightingTemplate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILightGetter> IPlacedObjectGetter.LightingTemplate => this.LightingTemplate;
         #endregion
         #region ImageSpace
-        private IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
         public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace
         {
             get => _ImageSpace;
-            set => _ImageSpace = value.AsNullable();
+            set => _ImageSpace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IPlacedObjectGetter.ImageSpace => this.ImageSpace;
@@ -240,11 +240,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Emittance
-        private IFormLinkNullable<IEmittanceGetter> _Emittance = new FormLinkNullable<IEmittanceGetter>();
+        private readonly IFormLinkNullable<IEmittanceGetter> _Emittance = new FormLinkNullable<IEmittanceGetter>();
         public IFormLinkNullable<IEmittanceGetter> Emittance
         {
             get => _Emittance;
-            set => _Emittance = value.AsNullable();
+            set => _Emittance.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEmittanceGetter> IPlacedObjectGetter.Emittance => this.Emittance;
@@ -283,21 +283,21 @@ namespace Mutagen.Bethesda.Skyrim
         ITeleportDestinationGetter? IPlacedObjectGetter.TeleportDestination => this.TeleportDestination;
         #endregion
         #region TeleportMessageBox
-        private IFormLinkNullable<IMessageGetter> _TeleportMessageBox = new FormLinkNullable<IMessageGetter>();
+        private readonly IFormLinkNullable<IMessageGetter> _TeleportMessageBox = new FormLinkNullable<IMessageGetter>();
         public IFormLinkNullable<IMessageGetter> TeleportMessageBox
         {
             get => _TeleportMessageBox;
-            set => _TeleportMessageBox = value.AsNullable();
+            set => _TeleportMessageBox.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMessageGetter> IPlacedObjectGetter.TeleportMessageBox => this.TeleportMessageBox;
         #endregion
         #region MultiboundReference
-        private IFormLinkNullable<IPlacedObjectGetter> _MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>();
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>();
         public IFormLinkNullable<IPlacedObjectGetter> MultiboundReference
         {
             get => _MultiboundReference;
-            set => _MultiboundReference = value.AsNullable();
+            set => _MultiboundReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedObjectGetter.MultiboundReference => this.MultiboundReference;
@@ -347,11 +347,11 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCVL => this.XCVL;
         #endregion
         #region XCZR
-        private IFormLinkNullable<ILinkedReferenceGetter> _XCZR = new FormLinkNullable<ILinkedReferenceGetter>();
+        private readonly IFormLinkNullable<ILinkedReferenceGetter> _XCZR = new FormLinkNullable<ILinkedReferenceGetter>();
         public IFormLinkNullable<ILinkedReferenceGetter> XCZR
         {
             get => _XCZR;
-            set => _XCZR = value.AsNullable();
+            set => _XCZR.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.XCZR => this.XCZR;
@@ -368,11 +368,11 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCZA => this.XCZA;
         #endregion
         #region XCZC
-        private IFormLinkNullable<ICellGetter> _XCZC = new FormLinkNullable<ICellGetter>();
+        private readonly IFormLinkNullable<ICellGetter> _XCZC = new FormLinkNullable<ICellGetter>();
         public IFormLinkNullable<ICellGetter> XCZC
         {
             get => _XCZC;
-            set => _XCZC = value.AsNullable();
+            set => _XCZC.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICellGetter> IPlacedObjectGetter.XCZC => this.XCZC;
@@ -383,11 +383,11 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedObjectGetter.Scale => this.Scale;
         #endregion
         #region SpawnContainer
-        private IFormLinkNullable<IPlacedObjectGetter> _SpawnContainer = new FormLinkNullable<IPlacedObjectGetter>();
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _SpawnContainer = new FormLinkNullable<IPlacedObjectGetter>();
         public IFormLinkNullable<IPlacedObjectGetter> SpawnContainer
         {
             get => _SpawnContainer;
-            set => _SpawnContainer = value.AsNullable();
+            set => _SpawnContainer.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedObjectGetter.SpawnContainer => this.SpawnContainer;
@@ -404,11 +404,11 @@ namespace Mutagen.Bethesda.Skyrim
         IActivateParentsGetter? IPlacedObjectGetter.ActivateParents => this.ActivateParents;
         #endregion
         #region LeveledItemBaseObject
-        private IFormLinkNullable<ILeveledItemGetter> _LeveledItemBaseObject = new FormLinkNullable<ILeveledItemGetter>();
+        private readonly IFormLinkNullable<ILeveledItemGetter> _LeveledItemBaseObject = new FormLinkNullable<ILeveledItemGetter>();
         public IFormLinkNullable<ILeveledItemGetter> LeveledItemBaseObject
         {
             get => _LeveledItemBaseObject;
-            set => _LeveledItemBaseObject = value.AsNullable();
+            set => _LeveledItemBaseObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILeveledItemGetter> IPlacedObjectGetter.LeveledItemBaseObject => this.LeveledItemBaseObject;
@@ -419,11 +419,11 @@ namespace Mutagen.Bethesda.Skyrim
         Level? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
         #endregion
         #region PersistentLocation
-        private IFormLinkNullable<ILocationGetter> _PersistentLocation = new FormLinkNullable<ILocationGetter>();
+        private readonly IFormLinkNullable<ILocationGetter> _PersistentLocation = new FormLinkNullable<ILocationGetter>();
         public IFormLinkNullable<ILocationGetter> PersistentLocation
         {
             get => _PersistentLocation;
-            set => _PersistentLocation = value.AsNullable();
+            set => _PersistentLocation.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> IPlacedObjectGetter.PersistentLocation => this.PersistentLocation;
@@ -445,11 +445,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILockDataGetter? IPlacedObjectGetter.Lock => this.Lock;
         #endregion
         #region EncounterZone
-        private IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
+        private readonly IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
         public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
         {
             get => _EncounterZone;
-            set => _EncounterZone = value.AsNullable();
+            set => _EncounterZone.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> IPlacedObjectGetter.EncounterZone => this.EncounterZone;
@@ -504,11 +504,11 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedObjectGetter.Charge => this.Charge;
         #endregion
         #region LocationReference
-        private IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
+        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
         public IFormLinkNullable<ILocationRecordGetter> LocationReference
         {
             get => _LocationReference;
-            set => _LocationReference = value.AsNullable();
+            set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationRecordGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
@@ -579,11 +579,11 @@ namespace Mutagen.Bethesda.Skyrim
         IMapMarkerGetter? IPlacedObjectGetter.MapMarker => this.MapMarker;
         #endregion
         #region AttachRef
-        private IFormLinkNullable<IPlacedThingGetter> _AttachRef = new FormLinkNullable<IPlacedThingGetter>();
+        private readonly IFormLinkNullable<IPlacedThingGetter> _AttachRef = new FormLinkNullable<IPlacedThingGetter>();
         public IFormLinkNullable<IPlacedThingGetter> AttachRef
         {
             get => _AttachRef;
-            set => _AttachRef = value.AsNullable();
+            set => _AttachRef.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedThingGetter> IPlacedObjectGetter.AttachRef => this.AttachRef;

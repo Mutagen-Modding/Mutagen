@@ -115,21 +115,21 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 ExplodableDebrisCount { get; set; } = default;
         #endregion
         #region ExplodableDebris
-        private IFormLink<IDebrisGetter> _ExplodableDebris = new FormLink<IDebrisGetter>();
+        private readonly IFormLink<IDebrisGetter> _ExplodableDebris = new FormLink<IDebrisGetter>();
         public IFormLink<IDebrisGetter> ExplodableDebris
         {
             get => _ExplodableDebris;
-            set => _ExplodableDebris = value.AsSetter();
+            set => _ExplodableDebris.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IBodyPartGetter.ExplodableDebris => this.ExplodableDebris;
         #endregion
         #region ExplodableExplosion
-        private IFormLink<IExplosionGetter> _ExplodableExplosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _ExplodableExplosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> ExplodableExplosion
         {
             get => _ExplodableExplosion;
-            set => _ExplodableExplosion = value.AsSetter();
+            set => _ExplodableExplosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IBodyPartGetter.ExplodableExplosion => this.ExplodableExplosion;
@@ -144,21 +144,21 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 SeverableDebrisCount { get; set; } = default;
         #endregion
         #region SeverableDebris
-        private IFormLink<IDebrisGetter> _SeverableDebris = new FormLink<IDebrisGetter>();
+        private readonly IFormLink<IDebrisGetter> _SeverableDebris = new FormLink<IDebrisGetter>();
         public IFormLink<IDebrisGetter> SeverableDebris
         {
             get => _SeverableDebris;
-            set => _SeverableDebris = value.AsSetter();
+            set => _SeverableDebris.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IBodyPartGetter.SeverableDebris => this.SeverableDebris;
         #endregion
         #region SeverableExplosion
-        private IFormLink<IExplosionGetter> _SeverableExplosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _SeverableExplosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> SeverableExplosion
         {
             get => _SeverableExplosion;
-            set => _SeverableExplosion = value.AsSetter();
+            set => _SeverableExplosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IBodyPartGetter.SeverableExplosion => this.SeverableExplosion;
@@ -173,21 +173,21 @@ namespace Mutagen.Bethesda.Skyrim
         public P3Float GoreRotation { get; set; } = default;
         #endregion
         #region SeverableImpactData
-        private IFormLink<IImpactDataSetGetter> _SeverableImpactData = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _SeverableImpactData = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> SeverableImpactData
         {
             get => _SeverableImpactData;
-            set => _SeverableImpactData = value.AsSetter();
+            set => _SeverableImpactData.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IBodyPartGetter.SeverableImpactData => this.SeverableImpactData;
         #endregion
         #region ExplodableImpactData
-        private IFormLink<IImpactDataSetGetter> _ExplodableImpactData = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _ExplodableImpactData = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> ExplodableImpactData
         {
             get => _ExplodableImpactData;
-            set => _ExplodableImpactData = value.AsSetter();
+            set => _ExplodableImpactData.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IBodyPartGetter.ExplodableImpactData => this.ExplodableImpactData;

@@ -144,31 +144,31 @@ namespace Mutagen.Bethesda.Skyrim
         IPackageIdlesGetter? IPackageGetter.IdleAnimations => this.IdleAnimations;
         #endregion
         #region CombatStyle
-        private IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
+        private readonly IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
         public IFormLinkNullable<ICombatStyleGetter> CombatStyle
         {
             get => _CombatStyle;
-            set => _CombatStyle = value.AsNullable();
+            set => _CombatStyle.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle;
         #endregion
         #region OwnerQuest
-        private IFormLinkNullable<IQuestGetter> _OwnerQuest = new FormLinkNullable<IQuestGetter>();
+        private readonly IFormLinkNullable<IQuestGetter> _OwnerQuest = new FormLinkNullable<IQuestGetter>();
         public IFormLinkNullable<IQuestGetter> OwnerQuest
         {
             get => _OwnerQuest;
-            set => _OwnerQuest = value.AsNullable();
+            set => _OwnerQuest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IPackageGetter.OwnerQuest => this.OwnerQuest;
         #endregion
         #region PackageTemplate
-        private IFormLink<IPackageGetter> _PackageTemplate = new FormLink<IPackageGetter>();
+        private readonly IFormLink<IPackageGetter> _PackageTemplate = new FormLink<IPackageGetter>();
         public IFormLink<IPackageGetter> PackageTemplate
         {
             get => _PackageTemplate;
-            set => _PackageTemplate = value.AsSetter();
+            set => _PackageTemplate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate;

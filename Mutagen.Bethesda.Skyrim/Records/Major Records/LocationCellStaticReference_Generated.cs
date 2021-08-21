@@ -50,31 +50,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region LocationRefType
-        private IFormLink<ILocationReferenceTypeGetter> _LocationRefType = new FormLink<ILocationReferenceTypeGetter>();
+        private readonly IFormLink<ILocationReferenceTypeGetter> _LocationRefType = new FormLink<ILocationReferenceTypeGetter>();
         public IFormLink<ILocationReferenceTypeGetter> LocationRefType
         {
             get => _LocationRefType;
-            set => _LocationRefType = value.AsSetter();
+            set => _LocationRefType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILocationReferenceTypeGetter> ILocationCellStaticReferenceGetter.LocationRefType => this.LocationRefType;
         #endregion
         #region Marker
-        private IFormLink<ILinkedReferenceGetter> _Marker = new FormLink<ILinkedReferenceGetter>();
+        private readonly IFormLink<ILinkedReferenceGetter> _Marker = new FormLink<ILinkedReferenceGetter>();
         public IFormLink<ILinkedReferenceGetter> Marker
         {
             get => _Marker;
-            set => _Marker = value.AsSetter();
+            set => _Marker.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILinkedReferenceGetter> ILocationCellStaticReferenceGetter.Marker => this.Marker;
         #endregion
         #region Location
-        private IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
+        private readonly IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
         public IFormLink<IComplexLocationGetter> Location
         {
             get => _Location;
-            set => _Location = value.AsSetter();
+            set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IComplexLocationGetter> ILocationCellStaticReferenceGetter.Location => this.Location;

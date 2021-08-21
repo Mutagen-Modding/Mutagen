@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         public WaterReflection.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region Water
-        private IFormLink<IPlacedObjectGetter> _Water = new FormLink<IPlacedObjectGetter>();
+        private readonly IFormLink<IPlacedObjectGetter> _Water = new FormLink<IPlacedObjectGetter>();
         public IFormLink<IPlacedObjectGetter> Water
         {
             get => _Water;
-            set => _Water = value.AsSetter();
+            set => _Water.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedObjectGetter> IWaterReflectionGetter.Water => this.Water;

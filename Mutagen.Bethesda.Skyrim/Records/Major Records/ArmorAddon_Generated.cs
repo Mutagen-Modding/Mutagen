@@ -64,11 +64,11 @@ namespace Mutagen.Bethesda.Skyrim
         IBodyTemplateGetter? IArmorAddonGetter.BodyTemplate => this.BodyTemplate;
         #endregion
         #region Race
-        private IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
+        private readonly IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
         public IFormLinkNullable<IRaceGetter> Race
         {
             get => _Race;
-            set => _Race = value.AsNullable();
+            set => _Race.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> IArmorAddonGetter.Race => this.Race;
@@ -120,21 +120,21 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region FootstepSound
-        private IFormLinkNullable<IFootstepSetGetter> _FootstepSound = new FormLinkNullable<IFootstepSetGetter>();
+        private readonly IFormLinkNullable<IFootstepSetGetter> _FootstepSound = new FormLinkNullable<IFootstepSetGetter>();
         public IFormLinkNullable<IFootstepSetGetter> FootstepSound
         {
             get => _FootstepSound;
-            set => _FootstepSound = value.AsNullable();
+            set => _FootstepSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFootstepSetGetter> IArmorAddonGetter.FootstepSound => this.FootstepSound;
         #endregion
         #region ArtObject
-        private IFormLinkNullable<IArtObjectGetter> _ArtObject = new FormLinkNullable<IArtObjectGetter>();
+        private readonly IFormLinkNullable<IArtObjectGetter> _ArtObject = new FormLinkNullable<IArtObjectGetter>();
         public IFormLinkNullable<IArtObjectGetter> ArtObject
         {
             get => _ArtObject;
-            set => _ArtObject = value.AsNullable();
+            set => _ArtObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArtObjectGetter> IArmorAddonGetter.ArtObject => this.ArtObject;

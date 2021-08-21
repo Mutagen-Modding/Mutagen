@@ -111,21 +111,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Ingredient
-        private IFormLinkNullable<IHarvestTargetGetter> _Ingredient = new FormLinkNullable<IHarvestTargetGetter>();
+        private readonly IFormLinkNullable<IHarvestTargetGetter> _Ingredient = new FormLinkNullable<IHarvestTargetGetter>();
         public IFormLinkNullable<IHarvestTargetGetter> Ingredient
         {
             get => _Ingredient;
-            set => _Ingredient = value.AsNullable();
+            set => _Ingredient.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHarvestTargetGetter> ITreeGetter.Ingredient => this.Ingredient;
         #endregion
         #region HarvestSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _HarvestSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _HarvestSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> HarvestSound
         {
             get => _HarvestSound;
-            set => _HarvestSound = value.AsNullable();
+            set => _HarvestSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ITreeGetter.HarvestSound => this.HarvestSound;

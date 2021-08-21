@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        private IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
+        private readonly IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
         public IFormLink<IQuestGetter> Quest
         {
             get => _Quest;
-            set => _Quest = value.AsSetter();
+            set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IQuestGetter> IPerkQuestEffectGetter.Quest => this.Quest;

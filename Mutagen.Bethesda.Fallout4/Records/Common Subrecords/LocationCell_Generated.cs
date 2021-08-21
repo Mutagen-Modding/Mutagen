@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Link
-        private IFormLink<ICellGetter> _Link = new FormLink<ICellGetter>();
+        private readonly IFormLink<ICellGetter> _Link = new FormLink<ICellGetter>();
         public IFormLink<ICellGetter> Link
         {
             get => _Link;
-            set => _Link = value.AsSetter();
+            set => _Link.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ICellGetter> ILocationCellGetter.Link => this.Link;

@@ -95,11 +95,11 @@ namespace Mutagen.Bethesda.Oblivion
         String? IAmmunitionGetter.Icon => this.Icon;
         #endregion
         #region Enchantment
-        private IFormLinkNullable<IEnchantmentGetter> _Enchantment = new FormLinkNullable<IEnchantmentGetter>();
+        private readonly IFormLinkNullable<IEnchantmentGetter> _Enchantment = new FormLinkNullable<IEnchantmentGetter>();
         public IFormLinkNullable<IEnchantmentGetter> Enchantment
         {
             get => _Enchantment;
-            set => _Enchantment = value.AsNullable();
+            set => _Enchantment.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEnchantmentGetter> IAmmunitionGetter.Enchantment => this.Enchantment;

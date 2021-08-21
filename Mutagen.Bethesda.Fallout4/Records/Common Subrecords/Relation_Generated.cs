@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Target
-        private IFormLink<IRelatableGetter> _Target = new FormLink<IRelatableGetter>();
+        private readonly IFormLink<IRelatableGetter> _Target = new FormLink<IRelatableGetter>();
         public IFormLink<IRelatableGetter> Target
         {
             get => _Target;
-            set => _Target = value.AsSetter();
+            set => _Target.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;

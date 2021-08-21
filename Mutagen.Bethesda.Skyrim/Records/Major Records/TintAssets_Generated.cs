@@ -66,11 +66,11 @@ namespace Mutagen.Bethesda.Skyrim
         TintAssets.TintMaskType? ITintAssetsGetter.MaskType => this.MaskType;
         #endregion
         #region PresetDefault
-        private IFormLinkNullable<IColorRecordGetter> _PresetDefault = new FormLinkNullable<IColorRecordGetter>();
+        private readonly IFormLinkNullable<IColorRecordGetter> _PresetDefault = new FormLinkNullable<IColorRecordGetter>();
         public IFormLinkNullable<IColorRecordGetter> PresetDefault
         {
             get => _PresetDefault;
-            set => _PresetDefault = value.AsNullable();
+            set => _PresetDefault.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> ITintAssetsGetter.PresetDefault => this.PresetDefault;

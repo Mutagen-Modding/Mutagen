@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        private IFormLinkNullable<IOblivionMajorRecordGetter> _Base = new FormLinkNullable<IOblivionMajorRecordGetter>();
+        private readonly IFormLinkNullable<IOblivionMajorRecordGetter> _Base = new FormLinkNullable<IOblivionMajorRecordGetter>();
         public IFormLinkNullable<IOblivionMajorRecordGetter> Base
         {
             get => _Base;
-            set => _Base = value.AsNullable();
+            set => _Base.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOblivionMajorRecordGetter> IPlacedObjectGetter.Base => this.Base;
@@ -107,11 +107,11 @@ namespace Mutagen.Bethesda.Oblivion
         ILockInformationGetter? IPlacedObjectGetter.Lock => this.Lock;
         #endregion
         #region Owner
-        private IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
+        private readonly IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
         public IFormLinkNullable<IOwnerGetter> Owner
         {
             get => _Owner;
-            set => _Owner = value.AsNullable();
+            set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOwnerGetter> IPlacedObjectGetter.Owner => this.Owner;
@@ -122,11 +122,11 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IPlacedObjectGetter.FactionRank => this.FactionRank;
         #endregion
         #region GlobalVariable
-        private IFormLinkNullable<IGlobalGetter> _GlobalVariable = new FormLinkNullable<IGlobalGetter>();
+        private readonly IFormLinkNullable<IGlobalGetter> _GlobalVariable = new FormLinkNullable<IGlobalGetter>();
         public IFormLinkNullable<IGlobalGetter> GlobalVariable
         {
             get => _GlobalVariable;
-            set => _GlobalVariable = value.AsNullable();
+            set => _GlobalVariable.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> IPlacedObjectGetter.GlobalVariable => this.GlobalVariable;
@@ -143,11 +143,11 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter? IPlacedObjectGetter.EnableParent => this.EnableParent;
         #endregion
         #region Target
-        private IFormLinkNullable<IPlacedGetter> _Target = new FormLinkNullable<IPlacedGetter>();
+        private readonly IFormLinkNullable<IPlacedGetter> _Target = new FormLinkNullable<IPlacedGetter>();
         public IFormLinkNullable<IPlacedGetter> Target
         {
             get => _Target;
-            set => _Target = value.AsNullable();
+            set => _Target.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedGetter> IPlacedObjectGetter.Target => this.Target;
@@ -184,11 +184,11 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
         #endregion
         #region XRTM
-        private IFormLinkNullable<IOblivionMajorRecordGetter> _XRTM = new FormLinkNullable<IOblivionMajorRecordGetter>();
+        private readonly IFormLinkNullable<IOblivionMajorRecordGetter> _XRTM = new FormLinkNullable<IOblivionMajorRecordGetter>();
         public IFormLinkNullable<IOblivionMajorRecordGetter> XRTM
         {
             get => _XRTM;
-            set => _XRTM = value.AsNullable();
+            set => _XRTM.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOblivionMajorRecordGetter> IPlacedObjectGetter.XRTM => this.XRTM;
@@ -234,11 +234,11 @@ namespace Mutagen.Bethesda.Oblivion
         Single? IPlacedObjectGetter.Scale => this.Scale;
         #endregion
         #region ContainedSoul
-        private IFormLinkNullable<ISoulGemGetter> _ContainedSoul = new FormLinkNullable<ISoulGemGetter>();
+        private readonly IFormLinkNullable<ISoulGemGetter> _ContainedSoul = new FormLinkNullable<ISoulGemGetter>();
         public IFormLinkNullable<ISoulGemGetter> ContainedSoul
         {
             get => _ContainedSoul;
-            set => _ContainedSoul = value.AsNullable();
+            set => _ContainedSoul.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoulGemGetter> IPlacedObjectGetter.ContainedSoul => this.ContainedSoul;

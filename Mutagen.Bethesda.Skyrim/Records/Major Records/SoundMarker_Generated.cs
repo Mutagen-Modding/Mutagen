@@ -96,11 +96,11 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundMarkerGetter.SNDD => this.SNDD;
         #endregion
         #region SoundDescriptor
-        private IFormLinkNullable<ISoundDescriptorGetter> _SoundDescriptor = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _SoundDescriptor = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor
         {
             get => _SoundDescriptor;
-            set => _SoundDescriptor = value.AsNullable();
+            set => _SoundDescriptor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundMarkerGetter.SoundDescriptor => this.SoundDescriptor;

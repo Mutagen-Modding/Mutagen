@@ -168,21 +168,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DeathItem
-        private IFormLinkNullable<IItemGetter> _DeathItem = new FormLinkNullable<IItemGetter>();
+        private readonly IFormLinkNullable<IItemGetter> _DeathItem = new FormLinkNullable<IItemGetter>();
         public IFormLinkNullable<IItemGetter> DeathItem
         {
             get => _DeathItem;
-            set => _DeathItem = value.AsNullable();
+            set => _DeathItem.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IItemGetter> ICreatureGetter.DeathItem => this.DeathItem;
         #endregion
         #region Script
-        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> ICreatureGetter.Script => this.Script;
@@ -243,11 +243,11 @@ namespace Mutagen.Bethesda.Oblivion
         Byte? ICreatureGetter.AttackReach => this.AttackReach;
         #endregion
         #region CombatStyle
-        private IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
+        private readonly IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
         public IFormLinkNullable<ICombatStyleGetter> CombatStyle
         {
             get => _CombatStyle;
-            set => _CombatStyle = value.AsNullable();
+            set => _CombatStyle.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> ICreatureGetter.CombatStyle => this.CombatStyle;
@@ -278,11 +278,11 @@ namespace Mutagen.Bethesda.Oblivion
         String? ICreatureGetter.BloodDecal => this.BloodDecal;
         #endregion
         #region InheritsSoundFrom
-        private IFormLinkNullable<ICreatureGetter> _InheritsSoundFrom = new FormLinkNullable<ICreatureGetter>();
+        private readonly IFormLinkNullable<ICreatureGetter> _InheritsSoundFrom = new FormLinkNullable<ICreatureGetter>();
         public IFormLinkNullable<ICreatureGetter> InheritsSoundFrom
         {
             get => _InheritsSoundFrom;
-            set => _InheritsSoundFrom = value.AsNullable();
+            set => _InheritsSoundFrom.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICreatureGetter> ICreatureGetter.InheritsSoundFrom => this.InheritsSoundFrom;

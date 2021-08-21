@@ -77,21 +77,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> ILeveledCreatureGetter.Script => this.Script;
         #endregion
         #region Template
-        private IFormLinkNullable<INpcRecordGetter> _Template = new FormLinkNullable<INpcRecordGetter>();
+        private readonly IFormLinkNullable<INpcRecordGetter> _Template = new FormLinkNullable<INpcRecordGetter>();
         public IFormLinkNullable<INpcRecordGetter> Template
         {
             get => _Template;
-            set => _Template = value.AsNullable();
+            set => _Template.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcRecordGetter> ILeveledCreatureGetter.Template => this.Template;

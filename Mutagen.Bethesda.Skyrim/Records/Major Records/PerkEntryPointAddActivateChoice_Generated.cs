@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spell
-        private IFormLinkNullable<ISpellGetter> _Spell = new FormLinkNullable<ISpellGetter>();
+        private readonly IFormLinkNullable<ISpellGetter> _Spell = new FormLinkNullable<ISpellGetter>();
         public IFormLinkNullable<ISpellGetter> Spell
         {
             get => _Spell;
-            set => _Spell = value.AsNullable();
+            set => _Spell.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpellGetter> IPerkEntryPointAddActivateChoiceGetter.Spell => this.Spell;

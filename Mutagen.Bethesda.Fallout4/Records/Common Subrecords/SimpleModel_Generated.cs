@@ -61,11 +61,11 @@ namespace Mutagen.Bethesda.Fallout4
         Single? ISimpleModelGetter.ColorRemappingIndex => this.ColorRemappingIndex;
         #endregion
         #region MaterialSwap
-        private IFormLinkNullable<IMaterialSwapGetter> _MaterialSwap = new FormLinkNullable<IMaterialSwapGetter>();
+        private readonly IFormLinkNullable<IMaterialSwapGetter> _MaterialSwap = new FormLinkNullable<IMaterialSwapGetter>();
         public IFormLinkNullable<IMaterialSwapGetter> MaterialSwap
         {
             get => _MaterialSwap;
-            set => _MaterialSwap = value.AsNullable();
+            set => _MaterialSwap.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialSwapGetter> ISimpleModelGetter.MaterialSwap => this.MaterialSwap;

@@ -92,11 +92,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region CraftingSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _CraftingSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _CraftingSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> CraftingSound
         {
             get => _CraftingSound;
-            set => _CraftingSound = value.AsNullable();
+            set => _CraftingSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IComponentGetter.CraftingSound => this.CraftingSound;
@@ -107,21 +107,21 @@ namespace Mutagen.Bethesda.Fallout4
         Int32? IComponentGetter.AutoCalcValue => this.AutoCalcValue;
         #endregion
         #region ScrapItem
-        private IFormLinkNullable<IMiscItemGetter> _ScrapItem = new FormLinkNullable<IMiscItemGetter>();
+        private readonly IFormLinkNullable<IMiscItemGetter> _ScrapItem = new FormLinkNullable<IMiscItemGetter>();
         public IFormLinkNullable<IMiscItemGetter> ScrapItem
         {
             get => _ScrapItem;
-            set => _ScrapItem = value.AsNullable();
+            set => _ScrapItem.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMiscItemGetter> IComponentGetter.ScrapItem => this.ScrapItem;
         #endregion
         #region ModScrapScalar
-        private IFormLinkNullable<IGlobalGetter> _ModScrapScalar = new FormLinkNullable<IGlobalGetter>();
+        private readonly IFormLinkNullable<IGlobalGetter> _ModScrapScalar = new FormLinkNullable<IGlobalGetter>();
         public IFormLinkNullable<IGlobalGetter> ModScrapScalar
         {
             get => _ModScrapScalar;
-            set => _ModScrapScalar = value.AsNullable();
+            set => _ModScrapScalar.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> IComponentGetter.ModScrapScalar => this.ModScrapScalar;

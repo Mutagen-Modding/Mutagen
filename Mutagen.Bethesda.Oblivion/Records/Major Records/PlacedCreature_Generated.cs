@@ -53,21 +53,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        private IFormLinkNullable<ICreatureGetter> _Base = new FormLinkNullable<ICreatureGetter>();
+        private readonly IFormLinkNullable<ICreatureGetter> _Base = new FormLinkNullable<ICreatureGetter>();
         public IFormLinkNullable<ICreatureGetter> Base
         {
             get => _Base;
-            set => _Base = value.AsNullable();
+            set => _Base.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICreatureGetter> IPlacedCreatureGetter.Base => this.Base;
         #endregion
         #region Owner
-        private IFormLinkNullable<IFactionGetter> _Owner = new FormLinkNullable<IFactionGetter>();
+        private readonly IFormLinkNullable<IFactionGetter> _Owner = new FormLinkNullable<IFactionGetter>();
         public IFormLinkNullable<IFactionGetter> Owner
         {
             get => _Owner;
-            set => _Owner = value.AsNullable();
+            set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> IPlacedCreatureGetter.Owner => this.Owner;
@@ -78,11 +78,11 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IPlacedCreatureGetter.FactionRank => this.FactionRank;
         #endregion
         #region GlobalVariable
-        private IFormLinkNullable<IGlobalGetter> _GlobalVariable = new FormLinkNullable<IGlobalGetter>();
+        private readonly IFormLinkNullable<IGlobalGetter> _GlobalVariable = new FormLinkNullable<IGlobalGetter>();
         public IFormLinkNullable<IGlobalGetter> GlobalVariable
         {
             get => _GlobalVariable;
-            set => _GlobalVariable = value.AsNullable();
+            set => _GlobalVariable.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> IPlacedCreatureGetter.GlobalVariable => this.GlobalVariable;

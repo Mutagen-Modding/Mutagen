@@ -58,11 +58,11 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 EventMember { get; set; } = default;
         #endregion
         #region Parameter3
-        private IFormLink<ISkyrimMajorRecordGetter> _Parameter3 = new FormLink<ISkyrimMajorRecordGetter>();
+        private readonly IFormLink<ISkyrimMajorRecordGetter> _Parameter3 = new FormLink<ISkyrimMajorRecordGetter>();
         public IFormLink<ISkyrimMajorRecordGetter> Parameter3
         {
             get => _Parameter3;
-            set => _Parameter3 = value.AsSetter();
+            set => _Parameter3.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IGetEventDataGetter.Parameter3 => this.Parameter3;

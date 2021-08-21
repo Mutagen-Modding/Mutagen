@@ -64,21 +64,21 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundDescriptorGetter.CNAM => this.CNAM;
         #endregion
         #region Category
-        private IFormLinkNullable<ISoundCategoryGetter> _Category = new FormLinkNullable<ISoundCategoryGetter>();
+        private readonly IFormLinkNullable<ISoundCategoryGetter> _Category = new FormLinkNullable<ISoundCategoryGetter>();
         public IFormLinkNullable<ISoundCategoryGetter> Category
         {
             get => _Category;
-            set => _Category = value.AsNullable();
+            set => _Category.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundCategoryGetter> ISoundDescriptorGetter.Category => this.Category;
         #endregion
         #region AlternateSoundFor
-        private IFormLinkNullable<ISoundDescriptorGetter> _AlternateSoundFor = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _AlternateSoundFor = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor
         {
             get => _AlternateSoundFor;
-            set => _AlternateSoundFor = value.AsNullable();
+            set => _AlternateSoundFor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundDescriptorGetter.AlternateSoundFor => this.AlternateSoundFor;
@@ -98,11 +98,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region OutputModel
-        private IFormLinkNullable<ISoundOutputModelGetter> _OutputModel = new FormLinkNullable<ISoundOutputModelGetter>();
+        private readonly IFormLinkNullable<ISoundOutputModelGetter> _OutputModel = new FormLinkNullable<ISoundOutputModelGetter>();
         public IFormLinkNullable<ISoundOutputModelGetter> OutputModel
         {
             get => _OutputModel;
-            set => _OutputModel = value.AsNullable();
+            set => _OutputModel.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundOutputModelGetter> ISoundDescriptorGetter.OutputModel => this.OutputModel;

@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ComparisonValue
-        private IFormLink<IGlobalGetter> _ComparisonValue = new FormLink<IGlobalGetter>();
+        private readonly IFormLink<IGlobalGetter> _ComparisonValue = new FormLink<IGlobalGetter>();
         public IFormLink<IGlobalGetter> ComparisonValue
         {
             get => _ComparisonValue;
-            set => _ComparisonValue = value.AsSetter();
+            set => _ComparisonValue.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGlobalGetter> IConditionGlobalGetter.ComparisonValue => this.ComparisonValue;

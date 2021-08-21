@@ -56,21 +56,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        private IFormLinkNullable<IAStoryManagerNodeGetter> _Parent = new FormLinkNullable<IAStoryManagerNodeGetter>();
+        private readonly IFormLinkNullable<IAStoryManagerNodeGetter> _Parent = new FormLinkNullable<IAStoryManagerNodeGetter>();
         public IFormLinkNullable<IAStoryManagerNodeGetter> Parent
         {
             get => _Parent;
-            set => _Parent = value.AsNullable();
+            set => _Parent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAStoryManagerNodeGetter> IAStoryManagerNodeGetter.Parent => this.Parent;
         #endregion
         #region PreviousSibling
-        private IFormLinkNullable<IAStoryManagerNodeGetter> _PreviousSibling = new FormLinkNullable<IAStoryManagerNodeGetter>();
+        private readonly IFormLinkNullable<IAStoryManagerNodeGetter> _PreviousSibling = new FormLinkNullable<IAStoryManagerNodeGetter>();
         public IFormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling
         {
             get => _PreviousSibling;
-            set => _PreviousSibling = value.AsNullable();
+            set => _PreviousSibling.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAStoryManagerNodeGetter> IAStoryManagerNodeGetter.PreviousSibling => this.PreviousSibling;

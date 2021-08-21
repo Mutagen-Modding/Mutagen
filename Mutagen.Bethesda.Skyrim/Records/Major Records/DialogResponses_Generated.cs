@@ -87,21 +87,21 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogResponseFlagsGetter? IDialogResponsesGetter.Flags => this.Flags;
         #endregion
         #region Topic
-        private IFormLinkNullable<IDialogTopicGetter> _Topic = new FormLinkNullable<IDialogTopicGetter>();
+        private readonly IFormLinkNullable<IDialogTopicGetter> _Topic = new FormLinkNullable<IDialogTopicGetter>();
         public IFormLinkNullable<IDialogTopicGetter> Topic
         {
             get => _Topic;
-            set => _Topic = value.AsNullable();
+            set => _Topic.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogTopicGetter> IDialogResponsesGetter.Topic => this.Topic;
         #endregion
         #region PreviousDialog
-        private IFormLinkNullable<IDialogResponsesGetter> _PreviousDialog = new FormLinkNullable<IDialogResponsesGetter>();
+        private readonly IFormLinkNullable<IDialogResponsesGetter> _PreviousDialog = new FormLinkNullable<IDialogResponsesGetter>();
         public IFormLinkNullable<IDialogResponsesGetter> PreviousDialog
         {
             get => _PreviousDialog;
-            set => _PreviousDialog = value.AsNullable();
+            set => _PreviousDialog.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponsesGetter.PreviousDialog => this.PreviousDialog;
@@ -126,11 +126,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region ResponseData
-        private IFormLinkNullable<IDialogResponsesGetter> _ResponseData = new FormLinkNullable<IDialogResponsesGetter>();
+        private readonly IFormLinkNullable<IDialogResponsesGetter> _ResponseData = new FormLinkNullable<IDialogResponsesGetter>();
         public IFormLinkNullable<IDialogResponsesGetter> ResponseData
         {
             get => _ResponseData;
-            set => _ResponseData = value.AsNullable();
+            set => _ResponseData.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponsesGetter.ResponseData => this.ResponseData;
@@ -183,31 +183,31 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter? IDialogResponsesGetter.Prompt => this.Prompt;
         #endregion
         #region Speaker
-        private IFormLinkNullable<INpcGetter> _Speaker = new FormLinkNullable<INpcGetter>();
+        private readonly IFormLinkNullable<INpcGetter> _Speaker = new FormLinkNullable<INpcGetter>();
         public IFormLinkNullable<INpcGetter> Speaker
         {
             get => _Speaker;
-            set => _Speaker = value.AsNullable();
+            set => _Speaker.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> IDialogResponsesGetter.Speaker => this.Speaker;
         #endregion
         #region WalkAwayTopic
-        private IFormLinkNullable<IDialogTopicGetter> _WalkAwayTopic = new FormLinkNullable<IDialogTopicGetter>();
+        private readonly IFormLinkNullable<IDialogTopicGetter> _WalkAwayTopic = new FormLinkNullable<IDialogTopicGetter>();
         public IFormLinkNullable<IDialogTopicGetter> WalkAwayTopic
         {
             get => _WalkAwayTopic;
-            set => _WalkAwayTopic = value.AsNullable();
+            set => _WalkAwayTopic.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogTopicGetter> IDialogResponsesGetter.WalkAwayTopic => this.WalkAwayTopic;
         #endregion
         #region AudioOutputOverride
-        private IFormLinkNullable<ISoundOutputModelGetter> _AudioOutputOverride = new FormLinkNullable<ISoundOutputModelGetter>();
+        private readonly IFormLinkNullable<ISoundOutputModelGetter> _AudioOutputOverride = new FormLinkNullable<ISoundOutputModelGetter>();
         public IFormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride
         {
             get => _AudioOutputOverride;
-            set => _AudioOutputOverride = value.AsNullable();
+            set => _AudioOutputOverride.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundOutputModelGetter> IDialogResponsesGetter.AudioOutputOverride => this.AudioOutputOverride;

@@ -54,11 +54,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single IdleTime { get; set; } = default;
         #endregion
         #region Idle
-        private IFormLink<IIdleAnimationGetter> _Idle = new FormLink<IIdleAnimationGetter>();
+        private readonly IFormLink<IIdleAnimationGetter> _Idle = new FormLink<IIdleAnimationGetter>();
         public IFormLink<IIdleAnimationGetter> Idle
         {
             get => _Idle;
-            set => _Idle = value.AsSetter();
+            set => _Idle.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IIdleAnimationGetter> IPatrolGetter.Idle => this.Idle;

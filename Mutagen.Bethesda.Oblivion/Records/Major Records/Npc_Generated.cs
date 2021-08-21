@@ -116,21 +116,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DeathItem
-        private IFormLinkNullable<IItemGetter> _DeathItem = new FormLinkNullable<IItemGetter>();
+        private readonly IFormLinkNullable<IItemGetter> _DeathItem = new FormLinkNullable<IItemGetter>();
         public IFormLinkNullable<IItemGetter> DeathItem
         {
             get => _DeathItem;
-            set => _DeathItem = value.AsNullable();
+            set => _DeathItem.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IItemGetter> INpcGetter.DeathItem => this.DeathItem;
         #endregion
         #region Race
-        private IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
+        private readonly IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
         public IFormLinkNullable<IRaceGetter> Race
         {
             get => _Race;
-            set => _Race = value.AsNullable();
+            set => _Race.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> INpcGetter.Race => this.Race;
@@ -150,11 +150,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> INpcGetter.Script => this.Script;
@@ -213,11 +213,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Class
-        private IFormLinkNullable<IClassGetter> _Class = new FormLinkNullable<IClassGetter>();
+        private readonly IFormLinkNullable<IClassGetter> _Class = new FormLinkNullable<IClassGetter>();
         public IFormLinkNullable<IClassGetter> Class
         {
             get => _Class;
-            set => _Class = value.AsNullable();
+            set => _Class.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClassGetter> INpcGetter.Class => this.Class;
@@ -234,11 +234,11 @@ namespace Mutagen.Bethesda.Oblivion
         INpcDataGetter? INpcGetter.Stats => this.Stats;
         #endregion
         #region Hair
-        private IFormLinkNullable<IHairGetter> _Hair = new FormLinkNullable<IHairGetter>();
+        private readonly IFormLinkNullable<IHairGetter> _Hair = new FormLinkNullable<IHairGetter>();
         public IFormLinkNullable<IHairGetter> Hair
         {
             get => _Hair;
-            set => _Hair = value.AsNullable();
+            set => _Hair.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHairGetter> INpcGetter.Hair => this.Hair;
@@ -268,11 +268,11 @@ namespace Mutagen.Bethesda.Oblivion
         Color? INpcGetter.HairColor => this.HairColor;
         #endregion
         #region CombatStyle
-        private IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
+        private readonly IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
         public IFormLinkNullable<ICombatStyleGetter> CombatStyle
         {
             get => _CombatStyle;
-            set => _CombatStyle = value.AsNullable();
+            set => _CombatStyle.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> INpcGetter.CombatStyle => this.CombatStyle;

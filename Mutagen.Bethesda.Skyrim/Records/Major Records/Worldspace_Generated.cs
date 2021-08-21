@@ -121,31 +121,31 @@ namespace Mutagen.Bethesda.Skyrim
         P2Int16? IWorldspaceGetter.FixedDimensionsCenterCell => this.FixedDimensionsCenterCell;
         #endregion
         #region InteriorLighting
-        private IFormLinkNullable<ILightingTemplateGetter> _InteriorLighting = new FormLinkNullable<ILightingTemplateGetter>();
+        private readonly IFormLinkNullable<ILightingTemplateGetter> _InteriorLighting = new FormLinkNullable<ILightingTemplateGetter>();
         public IFormLinkNullable<ILightingTemplateGetter> InteriorLighting
         {
             get => _InteriorLighting;
-            set => _InteriorLighting = value.AsNullable();
+            set => _InteriorLighting.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILightingTemplateGetter> IWorldspaceGetter.InteriorLighting => this.InteriorLighting;
         #endregion
         #region EncounterZone
-        private IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
+        private readonly IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
         public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
         {
             get => _EncounterZone;
-            set => _EncounterZone = value.AsNullable();
+            set => _EncounterZone.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> IWorldspaceGetter.EncounterZone => this.EncounterZone;
         #endregion
         #region Location
-        private IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
+        private readonly IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
         public IFormLinkNullable<ILocationGetter> Location
         {
             get => _Location;
-            set => _Location = value.AsNullable();
+            set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> IWorldspaceGetter.Location => this.Location;
@@ -162,31 +162,31 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceParentGetter? IWorldspaceGetter.Parent => this.Parent;
         #endregion
         #region Climate
-        private IFormLinkNullable<IClimateGetter> _Climate = new FormLinkNullable<IClimateGetter>();
+        private readonly IFormLinkNullable<IClimateGetter> _Climate = new FormLinkNullable<IClimateGetter>();
         public IFormLinkNullable<IClimateGetter> Climate
         {
             get => _Climate;
-            set => _Climate = value.AsNullable();
+            set => _Climate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClimateGetter> IWorldspaceGetter.Climate => this.Climate;
         #endregion
         #region Water
-        private IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
+        private readonly IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
         public IFormLinkNullable<IWaterGetter> Water
         {
             get => _Water;
-            set => _Water = value.AsNullable();
+            set => _Water.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;
         #endregion
         #region LodWater
-        private IFormLinkNullable<IWaterGetter> _LodWater = new FormLinkNullable<IWaterGetter>();
+        private readonly IFormLinkNullable<IWaterGetter> _LodWater = new FormLinkNullable<IWaterGetter>();
         public IFormLinkNullable<IWaterGetter> LodWater
         {
             get => _LodWater;
-            set => _LodWater = value.AsNullable();
+            set => _LodWater.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.LodWater => this.LodWater;
@@ -259,11 +259,11 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceObjectBoundsGetter? IWorldspaceGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #region Music
-        private IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
+        private readonly IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
         public IFormLinkNullable<IMusicTypeGetter> Music
         {
             get => _Music;
-            set => _Music = value.AsNullable();
+            set => _Music.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMusicTypeGetter> IWorldspaceGetter.Music => this.Music;

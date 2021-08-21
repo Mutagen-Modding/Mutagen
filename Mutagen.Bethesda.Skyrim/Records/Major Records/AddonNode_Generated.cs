@@ -95,11 +95,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 NodeIndex { get; set; } = default;
         #endregion
         #region Sound
-        private IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsNullable();
+            set => _Sound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IAddonNodeGetter.Sound => this.Sound;

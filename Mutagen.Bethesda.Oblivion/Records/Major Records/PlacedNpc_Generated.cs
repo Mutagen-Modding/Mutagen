@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        private IFormLinkNullable<INpcGetter> _Base = new FormLinkNullable<INpcGetter>();
+        private readonly IFormLinkNullable<INpcGetter> _Base = new FormLinkNullable<INpcGetter>();
         public IFormLinkNullable<INpcGetter> Base
         {
             get => _Base;
-            set => _Base = value.AsNullable();
+            set => _Base.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> IPlacedNpcGetter.Base => this.Base;
@@ -107,21 +107,21 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter? IPlacedNpcGetter.EnableParent => this.EnableParent;
         #endregion
         #region MerchantContainer
-        private IFormLinkNullable<IPlacedObjectGetter> _MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>();
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>();
         public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer
         {
             get => _MerchantContainer;
-            set => _MerchantContainer = value.AsNullable();
+            set => _MerchantContainer.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedNpcGetter.MerchantContainer => this.MerchantContainer;
         #endregion
         #region Horse
-        private IFormLinkNullable<IPlacedCreatureGetter> _Horse = new FormLinkNullable<IPlacedCreatureGetter>();
+        private readonly IFormLinkNullable<IPlacedCreatureGetter> _Horse = new FormLinkNullable<IPlacedCreatureGetter>();
         public IFormLinkNullable<IPlacedCreatureGetter> Horse
         {
             get => _Horse;
-            set => _Horse = value.AsNullable();
+            set => _Horse.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedCreatureGetter> IPlacedNpcGetter.Horse => this.Horse;

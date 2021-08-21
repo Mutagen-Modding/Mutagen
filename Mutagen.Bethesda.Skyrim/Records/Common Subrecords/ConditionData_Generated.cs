@@ -56,11 +56,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Condition.RunOnType RunOnType { get; set; } = default;
         #endregion
         #region Reference
-        private IFormLink<ISkyrimMajorRecordGetter> _Reference = new FormLink<ISkyrimMajorRecordGetter>();
+        private readonly IFormLink<ISkyrimMajorRecordGetter> _Reference = new FormLink<ISkyrimMajorRecordGetter>();
         public IFormLink<ISkyrimMajorRecordGetter> Reference
         {
             get => _Reference;
-            set => _Reference = value.AsSetter();
+            set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IConditionDataGetter.Reference => this.Reference;

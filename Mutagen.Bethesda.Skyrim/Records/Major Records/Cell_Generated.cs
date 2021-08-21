@@ -138,11 +138,11 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ICellGetter.MaxHeightData => this.MaxHeightData;
         #endregion
         #region LightingTemplate
-        private IFormLink<ILightingTemplateGetter> _LightingTemplate = new FormLink<ILightingTemplateGetter>();
+        private readonly IFormLink<ILightingTemplateGetter> _LightingTemplate = new FormLink<ILightingTemplateGetter>();
         public IFormLink<ILightingTemplateGetter> LightingTemplate
         {
             get => _LightingTemplate;
-            set => _LightingTemplate = value.AsSetter();
+            set => _LightingTemplate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightingTemplateGetter> ICellGetter.LightingTemplate => this.LightingTemplate;
@@ -183,11 +183,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Location
-        private IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
+        private readonly IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
         public IFormLinkNullable<ILocationGetter> Location
         {
             get => _Location;
-            set => _Location = value.AsNullable();
+            set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> ICellGetter.Location => this.Location;
@@ -226,11 +226,11 @@ namespace Mutagen.Bethesda.Skyrim
         ICellWaterVelocityGetter? ICellGetter.WaterVelocity => this.WaterVelocity;
         #endregion
         #region Water
-        private IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
+        private readonly IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
         public IFormLinkNullable<IWaterGetter> Water
         {
             get => _Water;
-            set => _Water = value.AsNullable();
+            set => _Water.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> ICellGetter.Water => this.Water;
@@ -247,11 +247,11 @@ namespace Mutagen.Bethesda.Skyrim
         IOwnershipGetter? ICellGetter.Ownership => this.Ownership;
         #endregion
         #region LockList
-        private IFormLinkNullable<ILockListGetter> _LockList = new FormLinkNullable<ILockListGetter>();
+        private readonly IFormLinkNullable<ILockListGetter> _LockList = new FormLinkNullable<ILockListGetter>();
         public IFormLinkNullable<ILockListGetter> LockList
         {
             get => _LockList;
-            set => _LockList = value.AsNullable();
+            set => _LockList.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILockListGetter> ICellGetter.LockList => this.LockList;
@@ -262,51 +262,51 @@ namespace Mutagen.Bethesda.Skyrim
         String? ICellGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
         #endregion
         #region SkyAndWeatherFromRegion
-        private IFormLinkNullable<IRegionGetter> _SkyAndWeatherFromRegion = new FormLinkNullable<IRegionGetter>();
+        private readonly IFormLinkNullable<IRegionGetter> _SkyAndWeatherFromRegion = new FormLinkNullable<IRegionGetter>();
         public IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion
         {
             get => _SkyAndWeatherFromRegion;
-            set => _SkyAndWeatherFromRegion = value.AsNullable();
+            set => _SkyAndWeatherFromRegion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRegionGetter> ICellGetter.SkyAndWeatherFromRegion => this.SkyAndWeatherFromRegion;
         #endregion
         #region AcousticSpace
-        private IFormLinkNullable<IAcousticSpaceGetter> _AcousticSpace = new FormLinkNullable<IAcousticSpaceGetter>();
+        private readonly IFormLinkNullable<IAcousticSpaceGetter> _AcousticSpace = new FormLinkNullable<IAcousticSpaceGetter>();
         public IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace
         {
             get => _AcousticSpace;
-            set => _AcousticSpace = value.AsNullable();
+            set => _AcousticSpace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAcousticSpaceGetter> ICellGetter.AcousticSpace => this.AcousticSpace;
         #endregion
         #region EncounterZone
-        private IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
+        private readonly IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
         public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
         {
             get => _EncounterZone;
-            set => _EncounterZone = value.AsNullable();
+            set => _EncounterZone.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> ICellGetter.EncounterZone => this.EncounterZone;
         #endregion
         #region Music
-        private IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
+        private readonly IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
         public IFormLinkNullable<IMusicTypeGetter> Music
         {
             get => _Music;
-            set => _Music = value.AsNullable();
+            set => _Music.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMusicTypeGetter> ICellGetter.Music => this.Music;
         #endregion
         #region ImageSpace
-        private IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
         public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace
         {
             get => _ImageSpace;
-            set => _ImageSpace = value.AsNullable();
+            set => _ImageSpace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> ICellGetter.ImageSpace => this.ImageSpace;

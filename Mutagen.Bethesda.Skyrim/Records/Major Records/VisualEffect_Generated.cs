@@ -53,21 +53,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region EffectArt
-        private IFormLink<IArtObjectGetter> _EffectArt = new FormLink<IArtObjectGetter>();
+        private readonly IFormLink<IArtObjectGetter> _EffectArt = new FormLink<IArtObjectGetter>();
         public IFormLink<IArtObjectGetter> EffectArt
         {
             get => _EffectArt;
-            set => _EffectArt = value.AsSetter();
+            set => _EffectArt.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IVisualEffectGetter.EffectArt => this.EffectArt;
         #endregion
         #region Shader
-        private IFormLink<IEffectShaderGetter> _Shader = new FormLink<IEffectShaderGetter>();
+        private readonly IFormLink<IEffectShaderGetter> _Shader = new FormLink<IEffectShaderGetter>();
         public IFormLink<IEffectShaderGetter> Shader
         {
             get => _Shader;
-            set => _Shader = value.AsSetter();
+            set => _Shader.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IVisualEffectGetter.Shader => this.Shader;

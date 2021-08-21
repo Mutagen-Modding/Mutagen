@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Oblivion
         public AIPackageLocation.LocationType Type { get; set; } = default;
         #endregion
         #region LocationReference
-        private IFormLink<IPlacedGetter> _LocationReference = new FormLink<IPlacedGetter>();
+        private readonly IFormLink<IPlacedGetter> _LocationReference = new FormLink<IPlacedGetter>();
         public IFormLink<IPlacedGetter> LocationReference
         {
             get => _LocationReference;
-            set => _LocationReference = value.AsSetter();
+            set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;

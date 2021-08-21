@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Item
-        private IFormLink<ILeveledItemGetter> _Item = new FormLink<ILeveledItemGetter>();
+        private readonly IFormLink<ILeveledItemGetter> _Item = new FormLink<ILeveledItemGetter>();
         public IFormLink<ILeveledItemGetter> Item
         {
             get => _Item;
-            set => _Item = value.AsSetter();
+            set => _Item.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILeveledItemGetter> IPerkEntryPointAddLeveledItemGetter.Item => this.Item;

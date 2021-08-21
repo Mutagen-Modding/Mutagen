@@ -53,21 +53,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        private IFormLink<INpcGetter> _Parent = new FormLink<INpcGetter>();
+        private readonly IFormLink<INpcGetter> _Parent = new FormLink<INpcGetter>();
         public IFormLink<INpcGetter> Parent
         {
             get => _Parent;
-            set => _Parent = value.AsSetter();
+            set => _Parent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcGetter> IRelationshipGetter.Parent => this.Parent;
         #endregion
         #region Child
-        private IFormLink<INpcGetter> _Child = new FormLink<INpcGetter>();
+        private readonly IFormLink<INpcGetter> _Child = new FormLink<INpcGetter>();
         public IFormLink<INpcGetter> Child
         {
             get => _Child;
-            set => _Child = value.AsSetter();
+            set => _Child.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcGetter> IRelationshipGetter.Child => this.Child;
@@ -82,11 +82,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Relationship.Flag Flags { get; set; } = default;
         #endregion
         #region AssociationType
-        private IFormLink<IAssociationTypeGetter> _AssociationType = new FormLink<IAssociationTypeGetter>();
+        private readonly IFormLink<IAssociationTypeGetter> _AssociationType = new FormLink<IAssociationTypeGetter>();
         public IFormLink<IAssociationTypeGetter> AssociationType
         {
             get => _AssociationType;
-            set => _AssociationType = value.AsSetter();
+            set => _AssociationType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType;

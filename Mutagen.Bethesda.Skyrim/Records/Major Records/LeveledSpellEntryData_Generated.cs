@@ -56,11 +56,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        private IFormLink<ISpellRecordGetter> _Reference = new FormLink<ISpellRecordGetter>();
+        private readonly IFormLink<ISpellRecordGetter> _Reference = new FormLink<ISpellRecordGetter>();
         public IFormLink<ISpellRecordGetter> Reference
         {
             get => _Reference;
-            set => _Reference = value.AsSetter();
+            set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellRecordGetter> ILeveledSpellEntryDataGetter.Reference => this.Reference;

@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Oblivion
         public ScriptEffectData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region Script
-        private IFormLink<IScriptGetter> _Script = new FormLink<IScriptGetter>();
+        private readonly IFormLink<IScriptGetter> _Script = new FormLink<IScriptGetter>();
         public IFormLink<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsSetter();
+            set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IScriptGetter> IScriptEffectDataGetter.Script => this.Script;
@@ -66,11 +66,11 @@ namespace Mutagen.Bethesda.Oblivion
         public MagicSchool MagicSchool { get; set; } = default;
         #endregion
         #region VisualEffect
-        private IEDIDLink<IMagicEffectGetter> _VisualEffect = new EDIDLink<IMagicEffectGetter>();
+        private readonly IEDIDLink<IMagicEffectGetter> _VisualEffect = new EDIDLink<IMagicEffectGetter>();
         public IEDIDLink<IMagicEffectGetter> VisualEffect
         {
             get => _VisualEffect;
-            set => _VisualEffect = value.AsSetter();
+            set => _VisualEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEDIDLinkGetter<IMagicEffectGetter> IScriptEffectDataGetter.VisualEffect => this.VisualEffect;

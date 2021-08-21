@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Reference
-        private IFormLink<IDialogTopicGetter> _Reference = new FormLink<IDialogTopicGetter>();
+        private readonly IFormLink<IDialogTopicGetter> _Reference = new FormLink<IDialogTopicGetter>();
         public IFormLink<IDialogTopicGetter> Reference
         {
             get => _Reference;
-            set => _Reference = value.AsSetter();
+            set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDialogTopicGetter> ITopicReferenceGetter.Reference => this.Reference;

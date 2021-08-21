@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Location
-        private IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
+        private readonly IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
         public IFormLink<IComplexLocationGetter> Location
         {
             get => _Location;
-            set => _Location = value.AsSetter();
+            set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IComplexLocationGetter> ILocationCoordinateGetter.Location => this.Location;

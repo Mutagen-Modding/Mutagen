@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        private IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
+        private readonly IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
         public IFormLink<IQuestGetter> Quest
         {
             get => _Quest;
-            set => _Quest = value.AsSetter();
+            set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IQuestGetter> IDialogBranchGetter.Quest => this.Quest;
@@ -73,11 +73,11 @@ namespace Mutagen.Bethesda.Skyrim
         DialogBranch.Flag? IDialogBranchGetter.Flags => this.Flags;
         #endregion
         #region StartingTopic
-        private IFormLinkNullable<IDialogTopicGetter> _StartingTopic = new FormLinkNullable<IDialogTopicGetter>();
+        private readonly IFormLinkNullable<IDialogTopicGetter> _StartingTopic = new FormLinkNullable<IDialogTopicGetter>();
         public IFormLinkNullable<IDialogTopicGetter> StartingTopic
         {
             get => _StartingTopic;
-            set => _StartingTopic = value.AsNullable();
+            set => _StartingTopic.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogTopicGetter> IDialogBranchGetter.StartingTopic => this.StartingTopic;

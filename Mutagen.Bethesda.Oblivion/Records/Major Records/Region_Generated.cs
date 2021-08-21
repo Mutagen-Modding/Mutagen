@@ -64,11 +64,11 @@ namespace Mutagen.Bethesda.Oblivion
         Color? IRegionGetter.MapColor => this.MapColor;
         #endregion
         #region Worldspace
-        private IFormLinkNullable<IWorldspaceGetter> _Worldspace = new FormLinkNullable<IWorldspaceGetter>();
+        private readonly IFormLinkNullable<IWorldspaceGetter> _Worldspace = new FormLinkNullable<IWorldspaceGetter>();
         public IFormLinkNullable<IWorldspaceGetter> Worldspace
         {
             get => _Worldspace;
-            set => _Worldspace = value.AsNullable();
+            set => _Worldspace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
