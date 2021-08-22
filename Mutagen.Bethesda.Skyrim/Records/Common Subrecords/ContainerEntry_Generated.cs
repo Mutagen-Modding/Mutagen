@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Item?.ToString(fg, "Item");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -912,7 +912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Item);
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -986,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ContainerEntry_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ItemItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((ExtraDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

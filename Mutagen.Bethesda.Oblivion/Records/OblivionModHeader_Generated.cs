@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.MasterReferences?.Overall ?? true)
-                        && MasterReferences.TryGet(out var MasterReferencesItem))
+                        && MasterReferences is {} MasterReferencesItem)
                     {
                         fg.AppendLine("MasterReferences =>");
                         fg.AppendLine("[");
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Deleted, "Deleted");
                 fg.AppendItem(Author, "Author");
                 fg.AppendItem(Description, "Description");
-                if (MasterReferences.TryGet(out var MasterReferencesItem))
+                if (MasterReferences is {} MasterReferencesItem)
                 {
                     fg.AppendLine("MasterReferences =>");
                     fg.AppendLine("[");
@@ -1226,22 +1226,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Stats?.ToString(fg, "Stats");
             }
             if ((printMask?.TypeOffsets ?? true)
-                && item.TypeOffsets.TryGet(out var TypeOffsetsItem))
+                && item.TypeOffsets is {} TypeOffsetsItem)
             {
                 fg.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
             }
             if ((printMask?.Deleted ?? true)
-                && item.Deleted.TryGet(out var DeletedItem))
+                && item.Deleted is {} DeletedItem)
             {
                 fg.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
             }
             if ((printMask?.Author ?? true)
-                && item.Author.TryGet(out var AuthorItem))
+                && item.Author is {} AuthorItem)
             {
                 fg.AppendItem(AuthorItem, "Author");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
@@ -1322,19 +1322,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.FormID);
             hash.Add(item.Version);
             hash.Add(item.Stats);
-            if (item.TypeOffsets.TryGet(out var TypeOffsetsItem))
+            if (item.TypeOffsets is {} TypeOffsetsItem)
             {
                 hash.Add(TypeOffsetsItem);
             }
-            if (item.Deleted.TryGet(out var DeletedItem))
+            if (item.Deleted is {} DeletedItem)
             {
                 hash.Add(DeletedItem);
             }
-            if (item.Author.TryGet(out var Authoritem))
+            if (item.Author is {} Authoritem)
             {
                 hash.Add(Authoritem);
             }
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.TypeOffsets) ?? true))
             {
-                if(rhs.TypeOffsets.TryGet(out var TypeOffsetsrhs))
+                if(rhs.TypeOffsets is {} TypeOffsetsrhs)
                 {
                     item.TypeOffsets = TypeOffsetsrhs.ToArray();
                 }
@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Deleted) ?? true))
             {
-                if(rhs.Deleted.TryGet(out var Deletedrhs))
+                if(rhs.Deleted is {} Deletedrhs)
                 {
                     item.Deleted = Deletedrhs.ToArray();
                 }

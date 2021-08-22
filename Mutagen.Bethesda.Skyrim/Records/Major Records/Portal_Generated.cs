@@ -50,21 +50,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Origin
-        private IFormLink<IPlacedObjectGetter> _Origin = new FormLink<IPlacedObjectGetter>();
+        private readonly IFormLink<IPlacedObjectGetter> _Origin = new FormLink<IPlacedObjectGetter>();
         public IFormLink<IPlacedObjectGetter> Origin
         {
             get => _Origin;
-            set => _Origin = value.AsSetter();
+            set => _Origin.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedObjectGetter> IPortalGetter.Origin => this.Origin;
         #endregion
         #region Destination
-        private IFormLink<IPlacedObjectGetter> _Destination = new FormLink<IPlacedObjectGetter>();
+        private readonly IFormLink<IPlacedObjectGetter> _Destination = new FormLink<IPlacedObjectGetter>();
         public IFormLink<IPlacedObjectGetter> Destination
         {
             get => _Destination;
-            set => _Destination = value.AsSetter();
+            set => _Destination.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedObjectGetter> IPortalGetter.Destination => this.Destination;
@@ -474,8 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPortal>,
         IPortalGetter
     {
-        new IFormLink<IPlacedObjectGetter> Origin { get; }
-        new IFormLink<IPlacedObjectGetter> Destination { get; }
+        new IFormLink<IPlacedObjectGetter> Origin { get; set; }
+        new IFormLink<IPlacedObjectGetter> Destination { get; set; }
     }
 
     public partial interface IPortalGetter :

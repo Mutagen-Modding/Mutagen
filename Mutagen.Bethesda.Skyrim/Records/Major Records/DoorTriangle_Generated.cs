@@ -56,11 +56,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Door
-        private IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
+        private readonly IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
         public IFormLink<IPlacedObjectGetter> Door
         {
             get => _Door;
-            set => _Door = value.AsSetter();
+            set => _Door.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedObjectGetter> IDoorTriangleGetter.Door => this.Door;
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int16 TriangleBeforeDoor { get; set; }
         new Int32 Unknown { get; set; }
-        new IFormLink<IPlacedObjectGetter> Door { get; }
+        new IFormLink<IPlacedObjectGetter> Door { get; set; }
     }
 
     public partial interface IDoorTriangleGetter :

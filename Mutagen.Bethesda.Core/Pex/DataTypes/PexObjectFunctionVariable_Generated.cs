@@ -739,12 +739,12 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObjectFunctionVariable.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.TypeName ?? true)
-                && item.TypeName.TryGet(out var TypeNameItem))
+                && item.TypeName is {} TypeNameItem)
             {
                 fg.AppendItem(TypeNameItem, "TypeName");
             }
@@ -771,11 +771,11 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IPexObjectFunctionVariableGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.TypeName.TryGet(out var TypeNameitem))
+            if (item.TypeName is {} TypeNameitem)
             {
                 hash.Add(TypeNameitem);
             }

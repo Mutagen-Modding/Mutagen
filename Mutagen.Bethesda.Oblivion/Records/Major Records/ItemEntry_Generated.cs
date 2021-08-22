@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        private IFormLink<IItemGetter> _Item = new FormLink<IItemGetter>();
+        private readonly IFormLink<IItemGetter> _Item = new FormLink<IItemGetter>();
         public IFormLink<IItemGetter> Item
         {
             get => _Item;
-            set => _Item = value.AsSetter();
+            set => _Item.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IItemGetter> IItemEntryGetter.Item => this.Item;
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
         IItemEntryGetter,
         ILoquiObjectSetter<IItemEntry>
     {
-        new IFormLink<IItemGetter> Item { get; }
+        new IFormLink<IItemGetter> Item { get; set; }
         new Int32? Count { get; set; }
     }
 
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Item.FormKey, "Item");
             }
             if ((printMask?.Count ?? true)
-                && item.Count.TryGet(out var CountItem))
+                && item.Count is {} CountItem)
             {
                 fg.AppendItem(CountItem, "Count");
             }
@@ -885,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Item);
-            if (item.Count.TryGet(out var Countitem))
+            if (item.Count is {} Countitem)
             {
                 hash.Add(Countitem);
             }

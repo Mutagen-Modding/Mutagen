@@ -132,21 +132,21 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ChargeTime { get; set; } = default;
         #endregion
         #region BaseEnchantment
-        private IFormLink<IObjectEffectGetter> _BaseEnchantment = new FormLink<IObjectEffectGetter>();
+        private readonly IFormLink<IObjectEffectGetter> _BaseEnchantment = new FormLink<IObjectEffectGetter>();
         public IFormLink<IObjectEffectGetter> BaseEnchantment
         {
             get => _BaseEnchantment;
-            set => _BaseEnchantment = value.AsSetter();
+            set => _BaseEnchantment.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IObjectEffectGetter> IObjectEffectGetter.BaseEnchantment => this.BaseEnchantment;
         #endregion
         #region WornRestrictions
-        private IFormLink<IFormListGetter> _WornRestrictions = new FormLink<IFormListGetter>();
+        private readonly IFormLink<IFormListGetter> _WornRestrictions = new FormLink<IFormListGetter>();
         public IFormLink<IFormListGetter> WornRestrictions
         {
             get => _WornRestrictions;
-            set => _WornRestrictions = value.AsSetter();
+            set => _WornRestrictions.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFormListGetter> IObjectEffectGetter.WornRestrictions => this.WornRestrictions;
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(WornRestrictions, "WornRestrictions");
                     }
                     if ((printMask?.Effects?.Overall ?? true)
-                        && Effects.TryGet(out var EffectsItem))
+                        && Effects is {} EffectsItem)
                     {
                         fg.AppendLine("Effects =>");
                         fg.AppendLine("[");
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(ChargeTime, "ChargeTime");
                 fg.AppendItem(BaseEnchantment, "BaseEnchantment");
                 fg.AppendItem(WornRestrictions, "WornRestrictions");
-                if (Effects.TryGet(out var EffectsItem))
+                if (Effects is {} EffectsItem)
                 {
                     fg.AppendLine("Effects =>");
                     fg.AppendLine("[");
@@ -1041,8 +1041,8 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new ObjectEffect.EnchantTypeEnum EnchantType { get; set; }
         new Single ChargeTime { get; set; }
-        new IFormLink<IObjectEffectGetter> BaseEnchantment { get; }
-        new IFormLink<IFormListGetter> WornRestrictions { get; }
+        new IFormLink<IObjectEffectGetter> BaseEnchantment { get; set; }
+        new IFormLink<IFormListGetter> WornRestrictions { get; set; }
         new ExtendedList<Effect> Effects { get; }
         new ObjectEffect.ENITDataType ENITDataTypeState { get; set; }
     }
@@ -1530,7 +1530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1725,7 +1725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }

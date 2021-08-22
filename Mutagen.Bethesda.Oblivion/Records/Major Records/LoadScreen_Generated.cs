@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Locations?.Overall ?? true)
-                        && Locations.TryGet(out var LocationsItem))
+                        && Locations is {} LocationsItem)
                     {
                         fg.AppendLine("Locations =>");
                         fg.AppendLine("[");
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Icon, "Icon");
                 fg.AppendItem(Description, "Description");
-                if (Locations.TryGet(out var LocationsItem))
+                if (Locations is {} LocationsItem)
                 {
                     fg.AppendLine("Locations =>");
                     fg.AppendLine("[");
@@ -1040,12 +1040,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
@@ -1153,11 +1153,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ILoadScreenGetter item)
         {
             var hash = new HashCode();
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }

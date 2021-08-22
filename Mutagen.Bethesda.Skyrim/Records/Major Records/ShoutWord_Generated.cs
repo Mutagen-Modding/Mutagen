@@ -50,21 +50,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Word
-        private IFormLink<IWordOfPowerGetter> _Word = new FormLink<IWordOfPowerGetter>();
+        private readonly IFormLink<IWordOfPowerGetter> _Word = new FormLink<IWordOfPowerGetter>();
         public IFormLink<IWordOfPowerGetter> Word
         {
             get => _Word;
-            set => _Word = value.AsSetter();
+            set => _Word.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWordOfPowerGetter> IShoutWordGetter.Word => this.Word;
         #endregion
         #region Spell
-        private IFormLink<ISpellGetter> _Spell = new FormLink<ISpellGetter>();
+        private readonly IFormLink<ISpellGetter> _Spell = new FormLink<ISpellGetter>();
         public IFormLink<ISpellGetter> Spell
         {
             get => _Spell;
-            set => _Spell = value.AsSetter();
+            set => _Spell.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> IShoutWordGetter.Spell => this.Spell;
@@ -506,8 +506,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IShoutWord>,
         IShoutWordGetter
     {
-        new IFormLink<IWordOfPowerGetter> Word { get; }
-        new IFormLink<ISpellGetter> Spell { get; }
+        new IFormLink<IWordOfPowerGetter> Word { get; set; }
+        new IFormLink<ISpellGetter> Spell { get; set; }
         new Single RecoveryTime { get; set; }
     }
 

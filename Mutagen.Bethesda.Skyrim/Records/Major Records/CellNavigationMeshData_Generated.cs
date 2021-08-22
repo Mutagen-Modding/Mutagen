@@ -52,21 +52,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region UnusedWorldspaceParent
-        private IFormLink<IWorldspaceGetter> _UnusedWorldspaceParent = new FormLink<IWorldspaceGetter>();
+        private readonly IFormLink<IWorldspaceGetter> _UnusedWorldspaceParent = new FormLink<IWorldspaceGetter>();
         public IFormLink<IWorldspaceGetter> UnusedWorldspaceParent
         {
             get => _UnusedWorldspaceParent;
-            set => _UnusedWorldspaceParent = value.AsSetter();
+            set => _UnusedWorldspaceParent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent;
         #endregion
         #region Parent
-        private IFormLink<ICellGetter> _Parent = new FormLink<ICellGetter>();
+        private readonly IFormLink<ICellGetter> _Parent = new FormLink<ICellGetter>();
         public IFormLink<ICellGetter> Parent
         {
             get => _Parent;
-            set => _Parent = value.AsSetter();
+            set => _Parent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent;
@@ -487,8 +487,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<ICellNavigationMeshData>
     {
-        new IFormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; }
-        new IFormLink<ICellGetter> Parent { get; }
+        new IFormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; set; }
+        new IFormLink<ICellGetter> Parent { get; set; }
     }
 
     public partial interface ICellNavigationMeshDataGetter :

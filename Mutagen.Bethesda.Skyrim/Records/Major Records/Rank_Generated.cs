@@ -900,17 +900,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Rank.Mask<bool>? printMask = null)
         {
             if ((printMask?.Number ?? true)
-                && item.Number.TryGet(out var NumberItem))
+                && item.Number is {} NumberItem)
             {
                 fg.AppendItem(NumberItem, "Number");
             }
             if ((printMask?.Title?.Overall ?? true)
-                && item.Title.TryGet(out var TitleItem))
+                && item.Title is {} TitleItem)
             {
                 TitleItem?.ToString(fg, "Title");
             }
             if ((printMask?.Insignia ?? true)
-                && item.Insignia.TryGet(out var InsigniaItem))
+                && item.Insignia is {} InsigniaItem)
             {
                 fg.AppendItem(InsigniaItem, "Insignia");
             }
@@ -941,15 +941,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IRankGetter item)
         {
             var hash = new HashCode();
-            if (item.Number.TryGet(out var Numberitem))
+            if (item.Number is {} Numberitem)
             {
                 hash.Add(Numberitem);
             }
-            if (item.Title.TryGet(out var Titleitem))
+            if (item.Title is {} Titleitem)
             {
                 hash.Add(HashCode.Combine(Titleitem.Male, Titleitem.Female));
             }
-            if (item.Insignia.TryGet(out var Insigniaitem))
+            if (item.Insignia is {} Insigniaitem)
             {
                 hash.Add(Insigniaitem);
             }
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Number = rhs.Number;
             }
-            if (!rhs.Title.TryGet(out var rhsTitleitem))
+            if (rhs.Title is not {} rhsTitleitem)
             {
                 item.Title = null;
             }

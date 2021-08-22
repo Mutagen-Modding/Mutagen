@@ -3,7 +3,6 @@ using Loqui.Generation;
 using Loqui.Internal;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +17,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -155,6 +156,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     if (dir == TranslationDirection.Writer) return false;
                     return obj.GetObjectType() == ObjectType.Mod;
                 });
+            var fileSystem = new APILine(
+                nicknameKey: "FileSystem",
+                resolutionString: "IFileSystem? fileSystem = null",
+                when: (obj, dir) =>
+                {
+                    return obj.GetObjectType() == ObjectType.Mod;
+                });
             var gameRelease = new APILine(
                 nicknameKey: "GameRelease",
                 resolver: (obj) => $"{ModModule.ReleaseEnumName(obj)} release",
@@ -208,6 +216,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             .And(modAPILines)
                             .And(stringsReadParamOptional)
                             .And(parallel)
+                            .And(fileSystem)
                             .ToArray()))
                 {
                     Funnel = new TranslationFunnel(
@@ -229,6 +238,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             .And(modAPILines)
                             .And(stringsReadParamOptional)
                             .And(parallel)
+                            .And(fileSystem)
                             .ToArray()))
                 {
                     Funnel = new TranslationFunnel(
@@ -370,7 +380,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             {
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
             }
-            fg.AppendLine($"using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))");
+            fg.AppendLine($"using (var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"memStream.Position = 0;");
@@ -401,7 +411,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     fg.AppendLine($"var gameRelease = release.ToGameRelease();");
                     gameReleaseStr = $"gameRelease";
                 }
-                fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
+                fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem))");
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine("var modKey = path.ModKey;");
@@ -508,6 +518,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
                 }
+                args.Add($"IFileSystem? fileSystem = null");
             }
             using (new BraceWrapper(fg))
             {
@@ -523,6 +534,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     {
                         args.AddPassArg("release");
                     }
+                    args.AddPassArg("fileSystem");
                 }
             }
             fg.AppendLine();
@@ -1810,9 +1822,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     {
                         fg.AppendLine($"public {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{obj.GetObjectData().GameCategory};");
                     }
-                    fg.AppendLine($"IReadOnlyCache<T, FormKey> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>() => this.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>();");
-                    fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
-                    fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param: param);");
+                    fg.AppendLine($"IGroupCommonGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
+                    fg.AppendLine($"IGroupCommonGetter<IMajorRecordCommonGetter> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
+                    fg.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
+                    fg.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
                     if (obj.GetObjectData().UsesStringFiles)
                     {
@@ -2107,6 +2120,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             {
                                 args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
                             }
+                            args.Add("IFileSystem? fileSystem = null");
                         }
                         using (new BraceWrapper(fg))
                         {
@@ -2120,6 +2134,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             {
                                 args.Add($"path: path.{nameof(ModPath.Path)}");
                                 args.Add($"metaData: meta");
+                                args.AddPassArg("fileSystem");
                             }
                             fg.AppendLine("try");
                             using (new BraceWrapper(fg))

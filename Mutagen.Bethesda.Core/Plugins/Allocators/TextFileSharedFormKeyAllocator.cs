@@ -3,7 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
+using Noggog;
+using Path = System.IO.Path;
+using DirectoryNotFoundException = System.IO.DirectoryNotFoundException;
+using StreamReader = System.IO.StreamReader;
+using StreamWriter = System.IO.StreamWriter;
+using InvalidDataException = System.IO.InvalidDataException;
 
 namespace Mutagen.Bethesda.Plugins.Allocators
 {
@@ -19,6 +26,7 @@ namespace Mutagen.Bethesda.Plugins.Allocators
         private readonly uint _initialNextFormID;
         private Lazy<InternalState> _state;
         private readonly bool _preload;
+        private readonly IFileSystem _fileSystem;
         private readonly ModKey _modKey;
         public const string MarkerFileName = $"{nameof(TextFileSharedFormKeyAllocator)}.marker";
 
@@ -28,12 +36,13 @@ namespace Mutagen.Bethesda.Plugins.Allocators
             public readonly HashSet<uint> FormIDSet = new();
         }
 
-        public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder, string activePatcherName, bool preload = false)
+        public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder, string activePatcherName, bool preload = false, IFileSystem? fileSystem = null) 
             : base(mod, saveFolder, activePatcherName)
         {
+            _fileSystem = fileSystem ?? IFileSystemExt.DefaultFilesystem;
             _initialNextFormID = mod.NextFormID;
             _modKey = mod.ModKey;
-            if (!Directory.Exists(Path.GetDirectoryName(_saveLocation))) throw new DirectoryNotFoundException();
+            if (!_fileSystem.Directory.Exists(Path.GetDirectoryName(_saveLocation))) throw new DirectoryNotFoundException();
             _preload = preload;
             _state = GetLazyInternalState();
         }
@@ -53,13 +62,13 @@ namespace Mutagen.Bethesda.Plugins.Allocators
         private InternalState GetInternalState()
         {
             var ret = new InternalState();
-            if (Directory.Exists(_saveLocation))
+            if (_fileSystem.Directory.Exists(_saveLocation))
             {
-                if (!File.Exists(Path.Combine(_saveLocation, MarkerFileName)))
+                if (!_fileSystem.File.Exists(Path.Combine(_saveLocation, MarkerFileName)))
                 {
                     throw new InvalidDataException("Tried to load from a folder that did not have marker file");
                 }
-                foreach (var file in Directory.GetFiles(_saveLocation, "*.txt"))
+                foreach (var file in _fileSystem.Directory.GetFiles(_saveLocation, "*.txt"))
                 {
                     ReadFile(file, Path.GetFileNameWithoutExtension(file), ret);
                 }
@@ -69,7 +78,8 @@ namespace Mutagen.Bethesda.Plugins.Allocators
 
         private void ReadFile(string filePath, string patcherName, InternalState state)
         {
-            using var streamReader = new StreamReader(filePath);
+            using var fs = _fileSystem.FileStream.Create(filePath, FileMode.Open);
+            using var streamReader = new StreamReader(fs);
             while (true)
             {
                 var edidStr = streamReader.ReadLine();
@@ -137,11 +147,11 @@ namespace Mutagen.Bethesda.Plugins.Allocators
             lock (this._lock)
             {
                 if (!_state.IsValueCreated) return;
-                Initialize(_saveLocation);
+                Initialize(_saveLocation, _fileSystem);
                 var data = _state.Value.Cache
                     .Where(p => p.Value.patcherName == ActivePatcherName)
                     .Select(p => (p.Key, p.Value.formKey));
-                WriteToFile(Path.Combine(_saveLocation, ActivePatcherName), data);
+                WriteToFile(Path.Combine(_saveLocation, ActivePatcherName), data, _fileSystem);
             }
         }
 
@@ -157,44 +167,47 @@ namespace Mutagen.Bethesda.Plugins.Allocators
             }
         }
 
-        internal static void WriteToFile(string thePath, IEnumerable<(string Key, FormKey formKey)> data)
+        internal static void WriteToFile(string thePath, IEnumerable<(string Key, FormKey formKey)> data, IFileSystem fileSystem)
         {
             var tempFile = thePath + ".tmp";
             var targetFile = thePath + ".txt";
             {
-                using var streamWriter = new StreamWriter(tempFile);
+                using var fs = fileSystem.FileStream.Create(tempFile, FileMode.Create);
+                using var streamWriter = new StreamWriter(fs);
                 foreach (var (Key, Value) in data)
                 {
                     streamWriter.WriteLine(Key);
                     streamWriter.WriteLine(Value.ID);
                 }
             }
-            if (File.Exists(targetFile))
+            if (fileSystem.File.Exists(targetFile))
             {
-                File.Replace(tempFile, targetFile, null);
+                fileSystem.File.Replace(tempFile, targetFile, null);
             }
             else
             {
-                File.Move(tempFile, targetFile);
+                fileSystem.File.Move(tempFile, targetFile);
             }
         }
 
-        public static bool IsPathOfAllocatorType(string path)
+        public static bool IsPathOfAllocatorType(string path, IFileSystem? fileSystem = null)
         {
-            if (!Directory.Exists(path)) return false;
-            return File.Exists(Path.Combine(path, MarkerFileName));
+            fileSystem ??= IFileSystemExt.DefaultFilesystem;
+            if (!fileSystem.Directory.Exists(path)) return false;
+            return fileSystem.File.Exists(Path.Combine(path, MarkerFileName));
         }
 
-        public static void Initialize(string path)
+        public static void Initialize(string path, IFileSystem? fileSystem = null)
         {
-            if (!Directory.Exists(path))
+            fileSystem ??= IFileSystemExt.DefaultFilesystem;
+            if (!fileSystem.Directory.Exists(path))
             {
-                Directory.CreateDirectory(path);
+                fileSystem.Directory.CreateDirectory(path);
             }
             var markerPath = Path.Combine(path, MarkerFileName);
-            if (!File.Exists(markerPath))
+            if (!fileSystem.File.Exists(markerPath))
             {
-                File.WriteAllText(markerPath, null);
+                fileSystem.File.WriteAllText(markerPath, null);
             }
         }
     }

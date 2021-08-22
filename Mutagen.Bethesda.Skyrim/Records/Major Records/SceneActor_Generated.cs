@@ -880,12 +880,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ID, "ID");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.BehaviorFlags ?? true)
-                && item.BehaviorFlags.TryGet(out var BehaviorFlagsItem))
+                && item.BehaviorFlags is {} BehaviorFlagsItem)
             {
                 fg.AppendItem(BehaviorFlagsItem, "BehaviorFlags");
             }
@@ -917,11 +917,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ID);
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.BehaviorFlags.TryGet(out var BehaviorFlagsitem))
+            if (item.BehaviorFlags is {} BehaviorFlagsitem)
             {
                 hash.Add(BehaviorFlagsitem);
             }

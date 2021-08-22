@@ -1313,62 +1313,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Intensity ?? true)
-                && item.Intensity.TryGet(out var IntensityItem))
+                && item.Intensity is {} IntensityItem)
             {
                 fg.AppendItem(IntensityItem, "Intensity");
             }
             if ((printMask?.CustomColorContribution ?? true)
-                && item.CustomColorContribution.TryGet(out var CustomColorContributionItem))
+                && item.CustomColorContribution is {} CustomColorContributionItem)
             {
                 fg.AppendItem(CustomColorContributionItem, "CustomColorContribution");
             }
             if ((printMask?.ColorR ?? true)
-                && item.ColorR.TryGet(out var ColorRItem))
+                && item.ColorR is {} ColorRItem)
             {
                 fg.AppendItem(ColorRItem, "ColorR");
             }
             if ((printMask?.ColorG ?? true)
-                && item.ColorG.TryGet(out var ColorGItem))
+                && item.ColorG is {} ColorGItem)
             {
                 fg.AppendItem(ColorGItem, "ColorG");
             }
             if ((printMask?.ColorB ?? true)
-                && item.ColorB.TryGet(out var ColorBItem))
+                && item.ColorB is {} ColorBItem)
             {
                 fg.AppendItem(ColorBItem, "ColorB");
             }
             if ((printMask?.DensityContribution ?? true)
-                && item.DensityContribution.TryGet(out var DensityContributionItem))
+                && item.DensityContribution is {} DensityContributionItem)
             {
                 fg.AppendItem(DensityContributionItem, "DensityContribution");
             }
             if ((printMask?.DensitySize ?? true)
-                && item.DensitySize.TryGet(out var DensitySizeItem))
+                && item.DensitySize is {} DensitySizeItem)
             {
                 fg.AppendItem(DensitySizeItem, "DensitySize");
             }
             if ((printMask?.DensityWindSpeed ?? true)
-                && item.DensityWindSpeed.TryGet(out var DensityWindSpeedItem))
+                && item.DensityWindSpeed is {} DensityWindSpeedItem)
             {
                 fg.AppendItem(DensityWindSpeedItem, "DensityWindSpeed");
             }
             if ((printMask?.DensityFallingSpeed ?? true)
-                && item.DensityFallingSpeed.TryGet(out var DensityFallingSpeedItem))
+                && item.DensityFallingSpeed is {} DensityFallingSpeedItem)
             {
                 fg.AppendItem(DensityFallingSpeedItem, "DensityFallingSpeed");
             }
             if ((printMask?.PhaseFunctionContribution ?? true)
-                && item.PhaseFunctionContribution.TryGet(out var PhaseFunctionContributionItem))
+                && item.PhaseFunctionContribution is {} PhaseFunctionContributionItem)
             {
                 fg.AppendItem(PhaseFunctionContributionItem, "PhaseFunctionContribution");
             }
             if ((printMask?.PhaseFunctionScattering ?? true)
-                && item.PhaseFunctionScattering.TryGet(out var PhaseFunctionScatteringItem))
+                && item.PhaseFunctionScattering is {} PhaseFunctionScatteringItem)
             {
                 fg.AppendItem(PhaseFunctionScatteringItem, "PhaseFunctionScattering");
             }
             if ((printMask?.SamplingRepartitionRangeFactor ?? true)
-                && item.SamplingRepartitionRangeFactor.TryGet(out var SamplingRepartitionRangeFactorItem))
+                && item.SamplingRepartitionRangeFactor is {} SamplingRepartitionRangeFactorItem)
             {
                 fg.AppendItem(SamplingRepartitionRangeFactorItem, "SamplingRepartitionRangeFactor");
             }
@@ -1496,51 +1496,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IVolumetricLightingGetter item)
         {
             var hash = new HashCode();
-            if (item.Intensity.TryGet(out var Intensityitem))
+            if (item.Intensity is {} Intensityitem)
             {
                 hash.Add(Intensityitem);
             }
-            if (item.CustomColorContribution.TryGet(out var CustomColorContributionitem))
+            if (item.CustomColorContribution is {} CustomColorContributionitem)
             {
                 hash.Add(CustomColorContributionitem);
             }
-            if (item.ColorR.TryGet(out var ColorRitem))
+            if (item.ColorR is {} ColorRitem)
             {
                 hash.Add(ColorRitem);
             }
-            if (item.ColorG.TryGet(out var ColorGitem))
+            if (item.ColorG is {} ColorGitem)
             {
                 hash.Add(ColorGitem);
             }
-            if (item.ColorB.TryGet(out var ColorBitem))
+            if (item.ColorB is {} ColorBitem)
             {
                 hash.Add(ColorBitem);
             }
-            if (item.DensityContribution.TryGet(out var DensityContributionitem))
+            if (item.DensityContribution is {} DensityContributionitem)
             {
                 hash.Add(DensityContributionitem);
             }
-            if (item.DensitySize.TryGet(out var DensitySizeitem))
+            if (item.DensitySize is {} DensitySizeitem)
             {
                 hash.Add(DensitySizeitem);
             }
-            if (item.DensityWindSpeed.TryGet(out var DensityWindSpeeditem))
+            if (item.DensityWindSpeed is {} DensityWindSpeeditem)
             {
                 hash.Add(DensityWindSpeeditem);
             }
-            if (item.DensityFallingSpeed.TryGet(out var DensityFallingSpeeditem))
+            if (item.DensityFallingSpeed is {} DensityFallingSpeeditem)
             {
                 hash.Add(DensityFallingSpeeditem);
             }
-            if (item.PhaseFunctionContribution.TryGet(out var PhaseFunctionContributionitem))
+            if (item.PhaseFunctionContribution is {} PhaseFunctionContributionitem)
             {
                 hash.Add(PhaseFunctionContributionitem);
             }
-            if (item.PhaseFunctionScattering.TryGet(out var PhaseFunctionScatteringitem))
+            if (item.PhaseFunctionScattering is {} PhaseFunctionScatteringitem)
             {
                 hash.Add(PhaseFunctionScatteringitem);
             }
-            if (item.SamplingRepartitionRangeFactor.TryGet(out var SamplingRepartitionRangeFactoritem))
+            if (item.SamplingRepartitionRangeFactor is {} SamplingRepartitionRangeFactoritem)
             {
                 hash.Add(SamplingRepartitionRangeFactoritem);
             }

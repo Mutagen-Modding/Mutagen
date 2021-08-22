@@ -54,11 +54,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Projectile
-        private IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        private readonly IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
         public IFormLink<IProjectileGetter> Projectile
         {
             get => _Projectile;
-            set => _Projectile = value.AsSetter();
+            set => _Projectile.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IPlacedBarrierGetter.Projectile => this.Projectile;
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedBarrierGetter,
         IScripted
     {
-        new IFormLink<IProjectileGetter> Projectile { get; }
+        new IFormLink<IProjectileGetter> Projectile { get; set; }
     }
 
     public partial interface IPlacedBarrierInternal :

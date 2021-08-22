@@ -2,10 +2,11 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using Mutagen.Bethesda.Archives.Exceptions;
+using System.IO;
 
 namespace Mutagen.Bethesda.Archives.Bsa
 {
@@ -52,8 +53,8 @@ namespace Mutagen.Bethesda.Archives.Bsa
             }
         }
 
-        public BsaReader(FilePath path)
-            : this(() => File.Open(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read), path)
+        public BsaReader(FilePath path, IFileSystem? fileSystem = null)
+            : this(() => fileSystem.GetOrDefault().File.Open(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read), path)
         {
         }
 

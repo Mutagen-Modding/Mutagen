@@ -890,12 +890,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APackageData.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -922,11 +922,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IAPackageDataGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }

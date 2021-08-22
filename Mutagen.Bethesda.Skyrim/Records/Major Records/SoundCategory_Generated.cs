@@ -96,11 +96,11 @@ namespace Mutagen.Bethesda.Skyrim
         SoundCategory.Flag? ISoundCategoryGetter.Flags => this.Flags;
         #endregion
         #region Parent
-        private IFormLinkNullable<ISoundCategoryGetter> _Parent = new FormLinkNullable<ISoundCategoryGetter>();
+        private readonly IFormLinkNullable<ISoundCategoryGetter> _Parent = new FormLinkNullable<ISoundCategoryGetter>();
         public IFormLinkNullable<ISoundCategoryGetter> Parent
         {
             get => _Parent;
-            set => _Parent = value.AsNullable();
+            set => _Parent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundCategoryGetter> ISoundCategoryGetter.Parent => this.Parent;
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new TranslatedString? Name { get; set; }
         new SoundCategory.Flag? Flags { get; set; }
-        new IFormLinkNullable<ISoundCategoryGetter> Parent { get; }
+        new IFormLinkNullable<ISoundCategoryGetter> Parent { get; set; }
         new Single? StaticVolumeMultiplier { get; set; }
         new Single? DefaultMenuVolume { get; set; }
     }
@@ -1103,12 +1103,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1117,12 +1117,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
             if ((printMask?.StaticVolumeMultiplier ?? true)
-                && item.StaticVolumeMultiplier.TryGet(out var StaticVolumeMultiplierItem))
+                && item.StaticVolumeMultiplier is {} StaticVolumeMultiplierItem)
             {
                 fg.AppendItem(StaticVolumeMultiplierItem, "StaticVolumeMultiplier");
             }
             if ((printMask?.DefaultMenuVolume ?? true)
-                && item.DefaultMenuVolume.TryGet(out var DefaultMenuVolumeItem))
+                && item.DefaultMenuVolume is {} DefaultMenuVolumeItem)
             {
                 fg.AppendItem(DefaultMenuVolumeItem, "DefaultMenuVolume");
             }
@@ -1222,20 +1222,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ISoundCategoryGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
             hash.Add(item.Parent);
-            if (item.StaticVolumeMultiplier.TryGet(out var StaticVolumeMultiplieritem))
+            if (item.StaticVolumeMultiplier is {} StaticVolumeMultiplieritem)
             {
                 hash.Add(StaticVolumeMultiplieritem);
             }
-            if (item.DefaultMenuVolume.TryGet(out var DefaultMenuVolumeitem))
+            if (item.DefaultMenuVolume is {} DefaultMenuVolumeitem)
             {
                 hash.Add(DefaultMenuVolumeitem);
             }

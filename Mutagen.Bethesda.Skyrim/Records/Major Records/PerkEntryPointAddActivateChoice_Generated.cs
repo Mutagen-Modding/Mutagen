@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spell
-        private IFormLinkNullable<ISpellGetter> _Spell = new FormLinkNullable<ISpellGetter>();
+        private readonly IFormLinkNullable<ISpellGetter> _Spell = new FormLinkNullable<ISpellGetter>();
         public IFormLinkNullable<ISpellGetter> Spell
         {
             get => _Spell;
-            set => _Spell = value.AsNullable();
+            set => _Spell.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpellGetter> IPerkEntryPointAddActivateChoiceGetter.Spell => this.Spell;
@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkEntryPointAddActivateChoice>,
         IPerkEntryPointAddActivateChoiceGetter
     {
-        new IFormLinkNullable<ISpellGetter> Spell { get; }
+        new IFormLinkNullable<ISpellGetter> Spell { get; set; }
         new TranslatedString? ButtonLabel { get; set; }
         new PerkScriptFlag Flags { get; set; }
     }
@@ -916,7 +916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Spell.FormKeyNullable, "Spell");
             }
             if ((printMask?.ButtonLabel ?? true)
-                && item.ButtonLabel.TryGet(out var ButtonLabelItem))
+                && item.ButtonLabel is {} ButtonLabelItem)
             {
                 fg.AppendItem(ButtonLabelItem, "ButtonLabel");
             }
@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Spell);
-            if (item.ButtonLabel.TryGet(out var ButtonLabelitem))
+            if (item.ButtonLabel is {} ButtonLabelitem)
             {
                 hash.Add(ButtonLabelitem);
             }

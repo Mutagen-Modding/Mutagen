@@ -50,21 +50,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Direct
-        private IFormLink<IPlaceGetter> _Direct = new FormLink<IPlaceGetter>();
+        private readonly IFormLink<IPlaceGetter> _Direct = new FormLink<IPlaceGetter>();
         public IFormLink<IPlaceGetter> Direct
         {
             get => _Direct;
-            set => _Direct = value.AsSetter();
+            set => _Direct.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlaceGetter> ILoadScreenLocationGetter.Direct => this.Direct;
         #endregion
         #region Indirect
-        private IFormLink<IWorldspaceGetter> _Indirect = new FormLink<IWorldspaceGetter>();
+        private readonly IFormLink<IWorldspaceGetter> _Indirect = new FormLink<IWorldspaceGetter>();
         public IFormLink<IWorldspaceGetter> Indirect
         {
             get => _Indirect;
-            set => _Indirect = value.AsSetter();
+            set => _Indirect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect;
@@ -506,8 +506,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoadScreenLocationGetter,
         ILoquiObjectSetter<ILoadScreenLocation>
     {
-        new IFormLink<IPlaceGetter> Direct { get; }
-        new IFormLink<IWorldspaceGetter> Indirect { get; }
+        new IFormLink<IPlaceGetter> Direct { get; set; }
+        new IFormLink<IWorldspaceGetter> Indirect { get; set; }
         new P2Int16 GridPoint { get; set; }
     }
 

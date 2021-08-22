@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        private IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
+        private readonly IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
         public IFormLink<IQuestGetter> Quest
         {
             get => _Quest;
-            set => _Quest = value.AsSetter();
+            set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IQuestGetter> IDialogBranchGetter.Quest => this.Quest;
@@ -73,11 +73,11 @@ namespace Mutagen.Bethesda.Skyrim
         DialogBranch.Flag? IDialogBranchGetter.Flags => this.Flags;
         #endregion
         #region StartingTopic
-        private IFormLinkNullable<IDialogTopicGetter> _StartingTopic = new FormLinkNullable<IDialogTopicGetter>();
+        private readonly IFormLinkNullable<IDialogTopicGetter> _StartingTopic = new FormLinkNullable<IDialogTopicGetter>();
         public IFormLinkNullable<IDialogTopicGetter> StartingTopic
         {
             get => _StartingTopic;
-            set => _StartingTopic = value.AsNullable();
+            set => _StartingTopic.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogTopicGetter> IDialogBranchGetter.StartingTopic => this.StartingTopic;
@@ -594,10 +594,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogBranchInternal>,
         ISkyrimMajorRecordInternal
     {
-        new IFormLink<IQuestGetter> Quest { get; }
+        new IFormLink<IQuestGetter> Quest { get; set; }
         new Int32? TNAM { get; set; }
         new DialogBranch.Flag? Flags { get; set; }
-        new IFormLinkNullable<IDialogTopicGetter> StartingTopic { get; }
+        new IFormLinkNullable<IDialogTopicGetter> StartingTopic { get; set; }
     }
 
     public partial interface IDialogBranchInternal :
@@ -1026,12 +1026,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Quest.FormKey, "Quest");
             }
             if ((printMask?.TNAM ?? true)
-                && item.TNAM.TryGet(out var TNAMItem))
+                && item.TNAM is {} TNAMItem)
             {
                 fg.AppendItem(TNAMItem, "TNAM");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1132,11 +1132,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Quest);
-            if (item.TNAM.TryGet(out var TNAMitem))
+            if (item.TNAM is {} TNAMitem)
             {
                 hash.Add(TNAMitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }

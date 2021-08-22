@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Item
-        private IFormLink<IItemGetter> _Item = new FormLink<IItemGetter>();
+        private readonly IFormLink<IItemGetter> _Item = new FormLink<IItemGetter>();
         public IFormLink<IItemGetter> Item
         {
             get => _Item;
-            set => _Item = value.AsSetter();
+            set => _Item.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IItemGetter> IContainerItemGetter.Item => this.Item;
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IContainerItem>
     {
-        new IFormLink<IItemGetter> Item { get; }
+        new IFormLink<IItemGetter> Item { get; set; }
         new Int32 Count { get; set; }
     }
 

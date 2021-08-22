@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Grass
-        private IFormLink<IGrassGetter> _Grass = new FormLink<IGrassGetter>();
+        private readonly IFormLink<IGrassGetter> _Grass = new FormLink<IGrassGetter>();
         public IFormLink<IGrassGetter> Grass
         {
             get => _Grass;
-            set => _Grass = value.AsSetter();
+            set => _Grass.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGrassGetter> IRegionGrassGetter.Grass => this.Grass;
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionGrass>,
         IRegionGrassGetter
     {
-        new IFormLink<IGrassGetter> Grass { get; }
+        new IFormLink<IGrassGetter> Grass { get; set; }
         new Int32 Unknown { get; set; }
     }
 

@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Priority, "Priority");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 fg.AppendItem(Rank, "Rank");
                 fg.AppendItem(Priority, "Priority");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");

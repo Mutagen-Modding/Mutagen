@@ -3,8 +3,9 @@ using System;
 using Noggog;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Abstractions;
 using Loqui;
-using Mutagen.Bethesda.Plugins.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
@@ -48,11 +49,12 @@ namespace Mutagen.Bethesda.Plugins.Records
         public abstract bool CanUseLocalization { get; }
         public abstract bool UsingLocalization { get; set; }
         bool IModGetter.UsingLocalization => throw new NotImplementedException();
-        ICache<T, FormKey> IMod.GetGroup<T>() => throw new NotImplementedException();
+        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => throw new NotImplementedException();
         public abstract void SyncRecordCount();
-        IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => throw new NotImplementedException();
-        void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => throw new NotImplementedException();
-        void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => throw new NotImplementedException();
+        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => throw new NotImplementedException();
+        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => throw new NotImplementedException();
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => throw new NotImplementedException();
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => throw new NotImplementedException();
         IEnumerable<T> IMajorRecordEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown) => throw new NotImplementedException();
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => throw new NotImplementedException();
         IEnumerable<T> IMajorRecordGetterEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown) => throw new NotImplementedException();

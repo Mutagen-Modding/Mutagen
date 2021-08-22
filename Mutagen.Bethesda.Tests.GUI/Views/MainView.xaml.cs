@@ -24,15 +24,15 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                 this.WhenAnyValue(x => x.ViewModel!.RunningTests)
                     .Select(x => x != null)
                     .Select(running => running ? Visibility.Hidden : Visibility.Visible)
-                    .BindToStrict(this, x => x.Config.Visibility)
+                    .BindTo(this, x => x.Config.Visibility)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.RunningTests)
                     .Select(x => x != null)
                     .Select(running => running ? Visibility.Visible : Visibility.Hidden)
-                    .BindToStrict(this, x => x.RunningTests.Visibility)
+                    .BindTo(this, x => x.RunningTests.Visibility)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.RunningTests)
-                    .BindToStrict(this, x => x.RunningTests.ViewModel)
+                    .BindTo(this, x => x.RunningTests.ViewModel)
                     .DisposeWith(disposable);
             });
         }

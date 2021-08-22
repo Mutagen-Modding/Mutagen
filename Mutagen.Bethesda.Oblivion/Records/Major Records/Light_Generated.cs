@@ -72,11 +72,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Script
-        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> ILightGetter.Script => this.Script;
@@ -121,11 +121,11 @@ namespace Mutagen.Bethesda.Oblivion
         Single? ILightGetter.Fade => this.Fade;
         #endregion
         #region Sound
-        private IFormLinkNullable<ISoundGetter> _Sound = new FormLinkNullable<ISoundGetter>();
+        private readonly IFormLinkNullable<ISoundGetter> _Sound = new FormLinkNullable<ISoundGetter>();
         public IFormLinkNullable<ISoundGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsNullable();
+            set => _Sound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> ILightGetter.Sound => this.Sound;
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired
         /// </summary>
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new LightData? Data { get; set; }
         new Single? Fade { get; set; }
-        new IFormLinkNullable<ISoundGetter> Sound { get; }
+        new IFormLinkNullable<ISoundGetter> Sound { get; set; }
     }
 
     public partial interface ILightInternal :
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1204,22 +1204,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.Fade ?? true)
-                && item.Fade.TryGet(out var FadeItem))
+                && item.Fade is {} FadeItem)
             {
                 fg.AppendItem(FadeItem, "Fade");
             }
@@ -1337,24 +1337,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ILightGetter item)
         {
             var hash = new HashCode();
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
             hash.Add(item.Script);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.Fade.TryGet(out var Fadeitem))
+            if (item.Fade is {} Fadeitem)
             {
                 hash.Add(Fadeitem);
             }
@@ -1475,7 +1475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1513,7 +1513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1699,7 +1699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((LightDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

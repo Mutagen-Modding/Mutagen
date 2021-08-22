@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ParticleDensity, "ParticleDensity");
             }
             if ((printMask?.ParticleTexture ?? true)
-                && item.ParticleTexture.TryGet(out var ParticleTextureItem))
+                && item.ParticleTexture is {} ParticleTextureItem)
             {
                 fg.AppendItem(ParticleTextureItem, "ParticleTexture");
             }
@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Type);
             hash.Add(item.BoxSize);
             hash.Add(item.ParticleDensity);
-            if (item.ParticleTexture.TryGet(out var ParticleTextureitem))
+            if (item.ParticleTexture is {} ParticleTextureitem)
             {
                 hash.Add(ParticleTextureitem);
             }

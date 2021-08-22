@@ -95,11 +95,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 NodeIndex { get; set; } = default;
         #endregion
         #region Sound
-        private IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsNullable();
+            set => _Sound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IAddonNodeGetter.Sound => this.Sound;
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new Model? Model { get; set; }
         new Int32 NodeIndex { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
         new UInt16 MasterParticleSystemCap { get; set; }
         new Boolean AlwaysLoaded { get; set; }
         new AddonNode.DNAMDataType DNAMDataTypeState { get; set; }
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1337,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -1487,7 +1487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)AddonNode_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1699,7 +1699,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

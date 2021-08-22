@@ -1,11 +1,8 @@
 using Noggog;
 using Noggog.WPF;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 using System.Windows;
 
 namespace Mutagen.Bethesda.Tests.GUI.Views
@@ -28,11 +25,11 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                         if (t.FilePath == null) return t.Name;
                         return $"{t.Name} {t.FilePath.Value.Name}";
                     })
-                    .BindToStrict(this, x => x.Name.Text)
+                    .BindTo(this, x => x.Name.Text)
                     .DisposeWith(disposable);
                 this.TopBorder.Events().MouseUp
                     .Unit()
-                    .InvokeCommandStrict(this, x => x.ViewModel!.SelectCommand)
+                    .InvokeCommand(this, x => x.ViewModel!.SelectCommand)
                     .DisposeWith(disposable);
             });
         }

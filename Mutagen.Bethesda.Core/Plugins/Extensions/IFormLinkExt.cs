@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda
         public static bool TryResolve<TMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor majorRecord)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (!link.FormKeyNullable.TryGet(out var formKey))
+            if (link.FormKeyNullable is not {} formKey)
             {
                 majorRecord = default;
                 return false;
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda
             where TSource : class, IMajorRecordCommonGetter
             where TScopedMajor : class, TSource
         {
-            if (!link.FormKeyNullable.TryGet(out var formKey))
+            if (link.FormKeyNullable is not {} formKey)
             {
                 majorRecord = default;
                 return false;
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda
         public static bool TryResolve<TMajor>(this IFormLinkGetter link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor majorRecord)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (!link.FormKeyNullable.TryGet(out var formKey))
+            if (link.FormKeyNullable is not {} formKey)
             {
                 majorRecord = default;
                 return false;
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda
         public static IEnumerable<TMajor> ResolveAll<TMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (!link.FormKeyNullable.TryGet(out var formKey))
+            if (link.FormKeyNullable is not {} formKey)
             {
                 return Enumerable.Empty<TMajor>();
             }
@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda
             where TSource : class, IMajorRecordCommonGetter
             where TScopedMajor : class, TSource
         {
-            if (!link.FormKeyNullable.TryGet(out var formKey))
+            if (link.FormKeyNullable is not {} formKey)
             {
                 return Enumerable.Empty<TScopedMajor>();
             }
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda
             where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            if (!link.FormKeyNullable.TryGet(out var formKey))
+            if (link.FormKeyNullable is not {} formKey)
             {
                 majorRecord = default;
                 return false;
@@ -323,7 +323,7 @@ namespace Mutagen.Bethesda
             where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
             where TScopedGetter : class, TMajorGetter
         {
-            if (!link.FormKeyNullable.TryGet(out var formKey))
+            if (link.FormKeyNullable is not {} formKey)
             {
                 majorRecord = default;
                 return false;
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda
             where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            if (!link.FormKeyNullable.TryGet(out var formKey))
+            if (link.FormKeyNullable is not {} formKey)
             {
                 return Enumerable.Empty<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>();
             }
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda
             where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
             where TScopedGetter : class, TMajorGetter
         {
-            if (!link.FormKeyNullable.TryGet(out var formKey))
+            if (link.FormKeyNullable is not {} formKey)
             {
                 return Enumerable.Empty<IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter>>();
             }

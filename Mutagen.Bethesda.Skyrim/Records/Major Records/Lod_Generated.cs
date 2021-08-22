@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Level0, "Level0");
             }
             if ((printMask?.Level0Extra ?? true)
-                && item.Level0Extra.TryGet(out var Level0ExtraItem))
+                && item.Level0Extra is {} Level0ExtraItem)
             {
                 fg.AppendLine($"Level0Extra => {SpanExt.ToHexString(Level0ExtraItem)}");
             }
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Level1, "Level1");
             }
             if ((printMask?.Level1Extra ?? true)
-                && item.Level1Extra.TryGet(out var Level1ExtraItem))
+                && item.Level1Extra is {} Level1ExtraItem)
             {
                 fg.AppendLine($"Level1Extra => {SpanExt.ToHexString(Level1ExtraItem)}");
             }
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Level2, "Level2");
             }
             if ((printMask?.Level2Extra ?? true)
-                && item.Level2Extra.TryGet(out var Level2ExtraItem))
+                && item.Level2Extra is {} Level2ExtraItem)
             {
                 fg.AppendLine($"Level2Extra => {SpanExt.ToHexString(Level2ExtraItem)}");
             }
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Level3, "Level3");
             }
             if ((printMask?.Level3Extra ?? true)
-                && item.Level3Extra.TryGet(out var Level3ExtraItem))
+                && item.Level3Extra is {} Level3ExtraItem)
             {
                 fg.AppendLine($"Level3Extra => {SpanExt.ToHexString(Level3ExtraItem)}");
             }
@@ -1168,22 +1168,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Level0);
-            if (item.Level0Extra.TryGet(out var Level0ExtraItem))
+            if (item.Level0Extra is {} Level0ExtraItem)
             {
                 hash.Add(Level0ExtraItem);
             }
             hash.Add(item.Level1);
-            if (item.Level1Extra.TryGet(out var Level1ExtraItem))
+            if (item.Level1Extra is {} Level1ExtraItem)
             {
                 hash.Add(Level1ExtraItem);
             }
             hash.Add(item.Level2);
-            if (item.Level2Extra.TryGet(out var Level2ExtraItem))
+            if (item.Level2Extra is {} Level2ExtraItem)
             {
                 hash.Add(Level2ExtraItem);
             }
             hash.Add(item.Level3);
-            if (item.Level3Extra.TryGet(out var Level3ExtraItem))
+            if (item.Level3Extra is {} Level3ExtraItem)
             {
                 hash.Add(Level3ExtraItem);
             }
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level0Extra) ?? true))
             {
-                if(rhs.Level0Extra.TryGet(out var Level0Extrarhs))
+                if(rhs.Level0Extra is {} Level0Extrarhs)
                 {
                     item.Level0Extra = Level0Extrarhs.ToArray();
                 }
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level1Extra) ?? true))
             {
-                if(rhs.Level1Extra.TryGet(out var Level1Extrarhs))
+                if(rhs.Level1Extra is {} Level1Extrarhs)
                 {
                     item.Level1Extra = Level1Extrarhs.ToArray();
                 }
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level2Extra) ?? true))
             {
-                if(rhs.Level2Extra.TryGet(out var Level2Extrarhs))
+                if(rhs.Level2Extra is {} Level2Extrarhs)
                 {
                     item.Level2Extra = Level2Extrarhs.ToArray();
                 }
@@ -1270,7 +1270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level3Extra) ?? true))
             {
-                if(rhs.Level3Extra.TryGet(out var Level3Extrarhs))
+                if(rhs.Level3Extra is {} Level3Extrarhs)
                 {
                     item.Level3Extra = Level3Extrarhs.ToArray();
                 }

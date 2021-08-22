@@ -76,11 +76,11 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter? IQuestLogEntryGetter.Entry => this.Entry;
         #endregion
         #region NextQuest
-        private IFormLinkNullable<IQuestGetter> _NextQuest = new FormLinkNullable<IQuestGetter>();
+        private readonly IFormLinkNullable<IQuestGetter> _NextQuest = new FormLinkNullable<IQuestGetter>();
         public IFormLinkNullable<IQuestGetter> NextQuest
         {
             get => _NextQuest;
-            set => _NextQuest = value.AsNullable();
+            set => _NextQuest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IQuestLogEntryGetter.NextQuest => this.NextQuest;
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Flags, "Flags");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Skyrim
         new QuestLogEntry.Flag? Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new TranslatedString? Entry { get; set; }
-        new IFormLinkNullable<IQuestGetter> NextQuest { get; }
+        new IFormLinkNullable<IQuestGetter> NextQuest { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
         new MemorySlice<Byte>? QNAM { get; set; }
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             QuestLogEntry.Mask<bool>? printMask = null)
         {
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Entry ?? true)
-                && item.Entry.TryGet(out var EntryItem))
+                && item.Entry is {} EntryItem)
             {
                 fg.AppendItem(EntryItem, "Entry");
             }
@@ -1196,17 +1196,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.NextQuest.FormKeyNullable, "NextQuest");
             }
             if ((printMask?.SCHR ?? true)
-                && item.SCHR.TryGet(out var SCHRItem))
+                && item.SCHR is {} SCHRItem)
             {
                 fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
             if ((printMask?.SCTX ?? true)
-                && item.SCTX.TryGet(out var SCTXItem))
+                && item.SCTX is {} SCTXItem)
             {
                 fg.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
             }
             if ((printMask?.QNAM ?? true)
-                && item.QNAM.TryGet(out var QNAMItem))
+                && item.QNAM is {} QNAMItem)
             {
                 fg.AppendLine($"QNAM => {SpanExt.ToHexString(QNAMItem)}");
             }
@@ -1253,25 +1253,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IQuestLogEntryGetter item)
         {
             var hash = new HashCode();
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
             hash.Add(item.Conditions);
-            if (item.Entry.TryGet(out var Entryitem))
+            if (item.Entry is {} Entryitem)
             {
                 hash.Add(Entryitem);
             }
             hash.Add(item.NextQuest);
-            if (item.SCHR.TryGet(out var SCHRItem))
+            if (item.SCHR is {} SCHRItem)
             {
                 hash.Add(SCHRItem);
             }
-            if (item.SCTX.TryGet(out var SCTXItem))
+            if (item.SCTX is {} SCTXItem)
             {
                 hash.Add(SCTXItem);
             }
-            if (item.QNAM.TryGet(out var QNAMItem))
+            if (item.QNAM is {} QNAMItem)
             {
                 hash.Add(QNAMItem);
             }
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {
-                if(rhs.SCHR.TryGet(out var SCHRrhs))
+                if(rhs.SCHR is {} SCHRrhs)
                 {
                     item.SCHR = SCHRrhs.ToArray();
                 }
@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCTX) ?? true))
             {
-                if(rhs.SCTX.TryGet(out var SCTXrhs))
+                if(rhs.SCTX is {} SCTXrhs)
                 {
                     item.SCTX = SCTXrhs.ToArray();
                 }
@@ -1376,7 +1376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.QNAM) ?? true))
             {
-                if(rhs.QNAM.TryGet(out var QNAMrhs))
+                if(rhs.QNAM is {} QNAMrhs)
                 {
                     item.QNAM = QNAMrhs.ToArray();
                 }

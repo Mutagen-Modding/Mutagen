@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static partial void WriteBinaryPointToPointConnectionsCustom(MutagenWriter writer, IPathGridGetter item)
         {
-            if (!item.PointToPointConnections.TryGet(out var ptToPt)) return;
+            if (item.PointToPointConnections is not { } ptToPt) return;
 
             using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
             {
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
 
-            if (item.PGAG.TryGet(out var pgag))
+            if (item.PGAG is { } pgag)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.PGAG))
                 {

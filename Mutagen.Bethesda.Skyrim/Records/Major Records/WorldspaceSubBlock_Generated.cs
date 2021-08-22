@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.Items?.Overall ?? true)
-                        && Items.TryGet(out var ItemsItem))
+                        && Items is {} ItemsItem)
                     {
                         fg.AppendLine("Items =>");
                         fg.AppendLine("[");
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(GroupType, "GroupType");
                 fg.AppendItem(LastModified, "LastModified");
                 fg.AppendItem(Unknown, "Unknown");
-                if (Items.TryGet(out var ItemsItem))
+                if (Items is {} ItemsItem)
                 {
                     fg.AppendLine("Items =>");
                     fg.AppendLine("[");

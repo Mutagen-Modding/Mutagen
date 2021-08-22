@@ -90,11 +90,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Script
-        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> IContainerGetter.Script => this.Script;
@@ -125,21 +125,21 @@ namespace Mutagen.Bethesda.Oblivion
         IContainerDataGetter? IContainerGetter.Data => this.Data;
         #endregion
         #region OpenSound
-        private IFormLinkNullable<ISoundGetter> _OpenSound = new FormLinkNullable<ISoundGetter>();
+        private readonly IFormLinkNullable<ISoundGetter> _OpenSound = new FormLinkNullable<ISoundGetter>();
         public IFormLinkNullable<ISoundGetter> OpenSound
         {
             get => _OpenSound;
-            set => _OpenSound = value.AsNullable();
+            set => _OpenSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IContainerGetter.OpenSound => this.OpenSound;
         #endregion
         #region CloseSound
-        private IFormLinkNullable<ISoundGetter> _CloseSound = new FormLinkNullable<ISoundGetter>();
+        private readonly IFormLinkNullable<ISoundGetter> _CloseSound = new FormLinkNullable<ISoundGetter>();
         public IFormLinkNullable<ISoundGetter> CloseSound
         {
             get => _CloseSound;
-            set => _CloseSound = value.AsNullable();
+            set => _CloseSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IContainerGetter.CloseSound => this.CloseSound;
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Script, "Script");
                     }
                     if ((printMask?.Items?.Overall ?? true)
-                        && Items.TryGet(out var ItemsItem))
+                        && Items is {} ItemsItem)
                     {
                         fg.AppendLine("Items =>");
                         fg.AppendLine("[");
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Name, "Name");
                 Model?.ToString(fg);
                 fg.AppendItem(Script, "Script");
-                if (Items.TryGet(out var ItemsItem))
+                if (Items is {} ItemsItem)
                 {
                     fg.AppendLine("Items =>");
                     fg.AppendLine("[");
@@ -821,11 +821,11 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         new ExtendedList<ContainerItem> Items { get; }
         new ContainerData? Data { get; set; }
-        new IFormLinkNullable<ISoundGetter> OpenSound { get; }
-        new IFormLinkNullable<ISoundGetter> CloseSound { get; }
+        new IFormLinkNullable<ISoundGetter> OpenSound { get; set; }
+        new IFormLinkNullable<ISoundGetter> CloseSound { get; set; }
     }
 
     public partial interface IContainerInternal :
@@ -1287,12 +1287,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1441,17 +1441,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IContainerGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
             hash.Add(item.Script);
             hash.Add(item.Items);
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -1585,7 +1585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Container_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1639,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Container_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1830,7 +1830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -1852,7 +1852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((ContainerDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

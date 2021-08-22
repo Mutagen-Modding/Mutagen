@@ -76,6 +76,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             yield return "Mutagen.Bethesda.Binary";
             yield return "System.Buffers.Binary";
             yield return "Mutagen.Bethesda.Translations.Binary";
+            if (obj.GetObjectType() == ObjectType.Mod)
+            {
+                yield return "Mutagen.Bethesda.Plugins.Binary.Parameters";
+            }
         }
 
         public override async Task GenerateInTranslationWriteClass(ObjectGeneration obj, FileGeneration fg)

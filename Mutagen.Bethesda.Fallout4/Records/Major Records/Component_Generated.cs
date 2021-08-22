@@ -92,11 +92,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region CraftingSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _CraftingSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _CraftingSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> CraftingSound
         {
             get => _CraftingSound;
-            set => _CraftingSound = value.AsNullable();
+            set => _CraftingSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IComponentGetter.CraftingSound => this.CraftingSound;
@@ -107,21 +107,21 @@ namespace Mutagen.Bethesda.Fallout4
         Int32? IComponentGetter.AutoCalcValue => this.AutoCalcValue;
         #endregion
         #region ScrapItem
-        private IFormLinkNullable<IMiscItemGetter> _ScrapItem = new FormLinkNullable<IMiscItemGetter>();
+        private readonly IFormLinkNullable<IMiscItemGetter> _ScrapItem = new FormLinkNullable<IMiscItemGetter>();
         public IFormLinkNullable<IMiscItemGetter> ScrapItem
         {
             get => _ScrapItem;
-            set => _ScrapItem = value.AsNullable();
+            set => _ScrapItem.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMiscItemGetter> IComponentGetter.ScrapItem => this.ScrapItem;
         #endregion
         #region ModScrapScalar
-        private IFormLinkNullable<IGlobalGetter> _ModScrapScalar = new FormLinkNullable<IGlobalGetter>();
+        private readonly IFormLinkNullable<IGlobalGetter> _ModScrapScalar = new FormLinkNullable<IGlobalGetter>();
         public IFormLinkNullable<IGlobalGetter> ModScrapScalar
         {
             get => _ModScrapScalar;
-            set => _ModScrapScalar = value.AsNullable();
+            set => _ModScrapScalar.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> IComponentGetter.ModScrapScalar => this.ModScrapScalar;
@@ -706,10 +706,10 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; set; }
         new Int32? AutoCalcValue { get; set; }
-        new IFormLinkNullable<IMiscItemGetter> ScrapItem { get; }
-        new IFormLinkNullable<IGlobalGetter> ModScrapScalar { get; }
+        new IFormLinkNullable<IMiscItemGetter> ScrapItem { get; set; }
+        new IFormLinkNullable<IGlobalGetter> ModScrapScalar { get; set; }
     }
 
     public partial interface IComponentInternal :
@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.CraftingSound.FormKeyNullable, "CraftingSound");
             }
             if ((printMask?.AutoCalcValue ?? true)
-                && item.AutoCalcValue.TryGet(out var AutoCalcValueItem))
+                && item.AutoCalcValue is {} AutoCalcValueItem)
             {
                 fg.AppendItem(AutoCalcValueItem, "AutoCalcValue");
             }
@@ -1287,12 +1287,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.CraftingSound);
-            if (item.AutoCalcValue.TryGet(out var AutoCalcValueitem))
+            if (item.AutoCalcValue is {} AutoCalcValueitem)
             {
                 hash.Add(AutoCalcValueitem);
             }

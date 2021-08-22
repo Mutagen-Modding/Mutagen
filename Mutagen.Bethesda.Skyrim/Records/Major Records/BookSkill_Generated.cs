@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Skill ?? true)
-                && item.Skill.TryGet(out var SkillItem))
+                && item.Skill is {} SkillItem)
             {
                 fg.AppendItem(SkillItem, "Skill");
             }
@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IBookSkillGetter item)
         {
             var hash = new HashCode();
-            if (item.Skill.TryGet(out var Skillitem))
+            if (item.Skill is {} Skillitem)
             {
                 hash.Add(Skillitem);
             }

@@ -144,31 +144,31 @@ namespace Mutagen.Bethesda.Skyrim
         IPackageIdlesGetter? IPackageGetter.IdleAnimations => this.IdleAnimations;
         #endregion
         #region CombatStyle
-        private IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
+        private readonly IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
         public IFormLinkNullable<ICombatStyleGetter> CombatStyle
         {
             get => _CombatStyle;
-            set => _CombatStyle = value.AsNullable();
+            set => _CombatStyle.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle;
         #endregion
         #region OwnerQuest
-        private IFormLinkNullable<IQuestGetter> _OwnerQuest = new FormLinkNullable<IQuestGetter>();
+        private readonly IFormLinkNullable<IQuestGetter> _OwnerQuest = new FormLinkNullable<IQuestGetter>();
         public IFormLinkNullable<IQuestGetter> OwnerQuest
         {
             get => _OwnerQuest;
-            set => _OwnerQuest = value.AsNullable();
+            set => _OwnerQuest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IPackageGetter.OwnerQuest => this.OwnerQuest;
         #endregion
         #region PackageTemplate
-        private IFormLink<IPackageGetter> _PackageTemplate = new FormLink<IPackageGetter>();
+        private readonly IFormLink<IPackageGetter> _PackageTemplate = new FormLink<IPackageGetter>();
         public IFormLink<IPackageGetter> PackageTemplate
         {
             get => _PackageTemplate;
-            set => _PackageTemplate = value.AsSetter();
+            set => _PackageTemplate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate;
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(ScheduleDurationInMinutes, "ScheduleDurationInMinutes");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(XnamMarker, "XnamMarker");
                     }
                     if ((printMask?.ProcedureTree?.Overall ?? true)
-                        && ProcedureTree.TryGet(out var ProcedureTreeItem))
+                        && ProcedureTree is {} ProcedureTreeItem)
                     {
                         fg.AppendLine("ProcedureTree =>");
                         fg.AppendLine("[");
@@ -1389,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(ScheduleMinute, "ScheduleMinute");
                 fg.AppendItem(Unknown3, "Unknown3");
                 fg.AppendItem(ScheduleDurationInMinutes, "ScheduleDurationInMinutes");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1454,7 +1454,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendLine("]");
                 fg.AppendItem(XnamMarker, "XnamMarker");
-                if (ProcedureTree.TryGet(out var ProcedureTreeItem))
+                if (ProcedureTree is {} ProcedureTreeItem)
                 {
                     fg.AppendLine("ProcedureTree =>");
                     fg.AppendLine("[");
@@ -1809,9 +1809,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<Condition> Conditions { get; }
         new Int32? Unknown4 { get; set; }
         new PackageIdles? IdleAnimations { get; set; }
-        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
-        new IFormLinkNullable<IQuestGetter> OwnerQuest { get; }
-        new IFormLink<IPackageGetter> PackageTemplate { get; }
+        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
+        new IFormLinkNullable<IQuestGetter> OwnerQuest { get; set; }
+        new IFormLink<IPackageGetter> PackageTemplate { get; set; }
         new Int32 DataInputVersion { get; set; }
         new IDictionary<SByte, APackageData> Data { get; }
         new MemorySlice<Byte> XnamMarker { get; set; }
@@ -2388,7 +2388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
@@ -2467,12 +2467,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown4 ?? true)
-                && item.Unknown4.TryGet(out var Unknown4Item))
+                && item.Unknown4 is {} Unknown4Item)
             {
                 fg.AppendItem(Unknown4Item, "Unknown4");
             }
             if ((printMask?.IdleAnimations?.Overall ?? true)
-                && item.IdleAnimations.TryGet(out var IdleAnimationsItem))
+                && item.IdleAnimations is {} IdleAnimationsItem)
             {
                 IdleAnimationsItem?.ToString(fg, "IdleAnimations");
             }
@@ -2534,17 +2534,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.OnBegin?.Overall ?? true)
-                && item.OnBegin.TryGet(out var OnBeginItem))
+                && item.OnBegin is {} OnBeginItem)
             {
                 OnBeginItem?.ToString(fg, "OnBegin");
             }
             if ((printMask?.OnEnd?.Overall ?? true)
-                && item.OnEnd.TryGet(out var OnEndItem))
+                && item.OnEnd is {} OnEndItem)
             {
                 OnEndItem?.ToString(fg, "OnEnd");
             }
             if ((printMask?.OnChange?.Overall ?? true)
-                && item.OnChange.TryGet(out var OnChangeItem))
+                && item.OnChange is {} OnChangeItem)
             {
                 OnChangeItem?.ToString(fg, "OnChange");
             }
@@ -2772,7 +2772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IPackageGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
@@ -2791,11 +2791,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Unknown3);
             hash.Add(item.ScheduleDurationInMinutes);
             hash.Add(item.Conditions);
-            if (item.Unknown4.TryGet(out var Unknown4item))
+            if (item.Unknown4 is {} Unknown4item)
             {
                 hash.Add(Unknown4item);
             }
-            if (item.IdleAnimations.TryGet(out var IdleAnimationsitem))
+            if (item.IdleAnimations is {} IdleAnimationsitem)
             {
                 hash.Add(IdleAnimationsitem);
             }
@@ -2806,15 +2806,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Data);
             hash.Add(item.XnamMarker);
             hash.Add(item.ProcedureTree);
-            if (item.OnBegin.TryGet(out var OnBeginitem))
+            if (item.OnBegin is {} OnBeginitem)
             {
                 hash.Add(OnBeginitem);
             }
-            if (item.OnEnd.TryGet(out var OnEnditem))
+            if (item.OnEnd is {} OnEnditem)
             {
                 hash.Add(OnEnditem);
             }
-            if (item.OnChange.TryGet(out var OnChangeitem))
+            if (item.OnChange is {} OnChangeitem)
             {
                 hash.Add(OnChangeitem);
             }
@@ -2861,7 +2861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.IdleAnimations.TryGet(out var IdleAnimationsItems))
+            if (obj.IdleAnimations is {} IdleAnimationsItems)
             {
                 foreach (var item in IdleAnimationsItems.ContainedFormLinks)
                 {
@@ -2882,21 +2882,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.OnBegin.TryGet(out var OnBeginItems))
+            if (obj.OnBegin is {} OnBeginItems)
             {
                 foreach (var item in OnBeginItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.OnEnd.TryGet(out var OnEndItems))
+            if (obj.OnEnd is {} OnEndItems)
             {
                 foreach (var item in OnEndItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.OnChange.TryGet(out var OnChangeItems))
+            if (obj.OnChange is {} OnChangeItems)
             {
                 foreach (var item in OnChangeItems.ContainedFormLinks)
                 {
@@ -2982,7 +2982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Package_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -3092,7 +3092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Package_FieldIndex.IdleAnimations);
                 try
                 {
-                    if(rhs.IdleAnimations.TryGet(out var rhsIdleAnimations))
+                    if(rhs.IdleAnimations is {} rhsIdleAnimations)
                     {
                         item.IdleAnimations = rhsIdleAnimations.DeepCopy(
                             errorMask: errorMask,
@@ -3174,7 +3174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Package_FieldIndex.OnBegin);
                 try
                 {
-                    if(rhs.OnBegin.TryGet(out var rhsOnBegin))
+                    if(rhs.OnBegin is {} rhsOnBegin)
                     {
                         item.OnBegin = rhsOnBegin.DeepCopy(
                             errorMask: errorMask,
@@ -3200,7 +3200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Package_FieldIndex.OnEnd);
                 try
                 {
-                    if(rhs.OnEnd.TryGet(out var rhsOnEnd))
+                    if(rhs.OnEnd is {} rhsOnEnd)
                     {
                         item.OnEnd = rhsOnEnd.DeepCopy(
                             errorMask: errorMask,
@@ -3226,7 +3226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Package_FieldIndex.OnChange);
                 try
                 {
-                    if(rhs.OnChange.TryGet(out var rhsOnChange))
+                    if(rhs.OnChange is {} rhsOnChange)
                     {
                         item.OnChange = rhsOnChange.DeepCopy(
                             errorMask: errorMask,
@@ -3421,7 +3421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((PackageAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
@@ -3483,7 +3483,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Unknown4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLB));
-            if (item.IdleAnimations.TryGet(out var IdleAnimationsItem))
+            if (item.IdleAnimations is {} IdleAnimationsItem)
             {
                 ((PackageIdlesBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write(
                     item: IdleAnimationsItem,
@@ -3504,7 +3504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageBinaryWriteTranslation.WriteBinaryXnamMarker(
                 writer: writer,
                 item: item);
-            if (item.OnBegin.TryGet(out var OnBeginItem))
+            if (item.OnBegin is {} OnBeginItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.POBA)) { }
                 ((PackageEventBinaryWriteTranslation)((IBinaryItem)OnBeginItem).BinaryWriteTranslator).Write(
@@ -3512,7 +3512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.OnEnd.TryGet(out var OnEndItem))
+            if (item.OnEnd is {} OnEndItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.POEA)) { }
                 ((PackageEventBinaryWriteTranslation)((IBinaryItem)OnEndItem).BinaryWriteTranslator).Write(
@@ -3520,7 +3520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.OnChange.TryGet(out var OnChangeItem))
+            if (item.OnChange is {} OnChangeItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.POCA)) { }
                 ((PackageEventBinaryWriteTranslation)((IBinaryItem)OnChangeItem).BinaryWriteTranslator).Write(

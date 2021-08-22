@@ -51,11 +51,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region MovementType
-        private IFormLinkNullable<IMovementTypeGetter> _MovementType = new FormLinkNullable<IMovementTypeGetter>();
+        private readonly IFormLinkNullable<IMovementTypeGetter> _MovementType = new FormLinkNullable<IMovementTypeGetter>();
         public IFormLinkNullable<IMovementTypeGetter> MovementType
         {
             get => _MovementType;
-            set => _MovementType = value.AsNullable();
+            set => _MovementType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMovementTypeGetter> IRaceMovementTypeGetter.MovementType => this.MovementType;
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRaceMovementType>,
         IRaceMovementTypeGetter
     {
-        new IFormLinkNullable<IMovementTypeGetter> MovementType { get; }
+        new IFormLinkNullable<IMovementTypeGetter> MovementType { get; set; }
         new SpeedOverrides? Overrides { get; set; }
     }
 
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.MovementType.FormKeyNullable, "MovementType");
             }
             if ((printMask?.Overrides?.Overall ?? true)
-                && item.Overrides.TryGet(out var OverridesItem))
+                && item.Overrides is {} OverridesItem)
             {
                 OverridesItem?.ToString(fg, "Overrides");
             }
@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.MovementType);
-            if (item.Overrides.TryGet(out var Overridesitem))
+            if (item.Overrides is {} Overridesitem)
             {
                 hash.Add(Overridesitem);
             }
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)RaceMovementType_FieldIndex.Overrides);
                 try
                 {
-                    if(rhs.Overrides.TryGet(out var rhsOverrides))
+                    if(rhs.Overrides is {} rhsOverrides)
                     {
                         item.Overrides = rhsOverrides.DeepCopy(
                             errorMask: errorMask,
@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.MovementType,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MTYP));
-            if (item.Overrides.TryGet(out var OverridesItem))
+            if (item.Overrides is {} OverridesItem)
             {
                 ((SpeedOverridesBinaryWriteTranslation)((IBinaryItem)OverridesItem).BinaryWriteTranslator).Write(
                     item: OverridesItem,

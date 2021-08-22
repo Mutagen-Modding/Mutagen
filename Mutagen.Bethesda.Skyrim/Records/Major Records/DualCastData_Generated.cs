@@ -74,51 +74,51 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Projectile
-        private IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        private readonly IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
         public IFormLink<IProjectileGetter> Projectile
         {
             get => _Projectile;
-            set => _Projectile = value.AsSetter();
+            set => _Projectile.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IDualCastDataGetter.Projectile => this.Projectile;
         #endregion
         #region Explosion
-        private IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> Explosion
         {
             get => _Explosion;
-            set => _Explosion = value.AsSetter();
+            set => _Explosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IDualCastDataGetter.Explosion => this.Explosion;
         #endregion
         #region EffectShader
-        private IFormLink<IEffectShaderGetter> _EffectShader = new FormLink<IEffectShaderGetter>();
+        private readonly IFormLink<IEffectShaderGetter> _EffectShader = new FormLink<IEffectShaderGetter>();
         public IFormLink<IEffectShaderGetter> EffectShader
         {
             get => _EffectShader;
-            set => _EffectShader = value.AsSetter();
+            set => _EffectShader.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IDualCastDataGetter.EffectShader => this.EffectShader;
         #endregion
         #region HitEffectArt
-        private IFormLink<IArtObjectGetter> _HitEffectArt = new FormLink<IArtObjectGetter>();
+        private readonly IFormLink<IArtObjectGetter> _HitEffectArt = new FormLink<IArtObjectGetter>();
         public IFormLink<IArtObjectGetter> HitEffectArt
         {
             get => _HitEffectArt;
-            set => _HitEffectArt = value.AsSetter();
+            set => _HitEffectArt.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IDualCastDataGetter.HitEffectArt => this.HitEffectArt;
         #endregion
         #region ImpactDataSet
-        private IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> ImpactDataSet
         {
             get => _ImpactDataSet;
-            set => _ImpactDataSet = value.AsSetter();
+            set => _ImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IDualCastDataGetter.ImpactDataSet => this.ImpactDataSet;
@@ -770,11 +770,11 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IObjectBounded, IObjectBoundedOptional
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new IFormLink<IProjectileGetter> Projectile { get; }
-        new IFormLink<IExplosionGetter> Explosion { get; }
-        new IFormLink<IEffectShaderGetter> EffectShader { get; }
-        new IFormLink<IArtObjectGetter> HitEffectArt { get; }
-        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
+        new IFormLink<IProjectileGetter> Projectile { get; set; }
+        new IFormLink<IExplosionGetter> Explosion { get; set; }
+        new IFormLink<IEffectShaderGetter> EffectShader { get; set; }
+        new IFormLink<IArtObjectGetter> HitEffectArt { get; set; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
         new DualCastData.InheritScaleType InheritScale { get; set; }
         new DualCastData.DATADataType DATADataTypeState { get; set; }
     }

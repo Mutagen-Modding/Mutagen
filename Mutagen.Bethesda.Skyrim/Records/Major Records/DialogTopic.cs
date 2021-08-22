@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static partial void WriteBinaryResponseCountCustom(MutagenWriter writer, IDialogTopicGetter item)
             {
-                if (!item.Responses.TryGet(out var resp)
+                if (item.Responses is not { } resp
                     || resp.Count == 0)
                 {
                     using (HeaderExport.Subrecord(writer, RecordTypes.TIFC))
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    if (!obj.Responses.TryGet(out var resp)
+                    if (obj.Responses is not { } resp
                         || resp.Count == 0)
                     {
                         return;

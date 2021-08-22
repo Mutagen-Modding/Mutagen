@@ -125,41 +125,41 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IWaterGetter.MNAM => this.MNAM;
         #endregion
         #region Material
-        private IFormLinkNullable<IMaterialTypeGetter> _Material = new FormLinkNullable<IMaterialTypeGetter>();
+        private readonly IFormLinkNullable<IMaterialTypeGetter> _Material = new FormLinkNullable<IMaterialTypeGetter>();
         public IFormLinkNullable<IMaterialTypeGetter> Material
         {
             get => _Material;
-            set => _Material = value.AsNullable();
+            set => _Material.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IWaterGetter.Material => this.Material;
         #endregion
         #region OpenSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _OpenSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _OpenSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> OpenSound
         {
             get => _OpenSound;
-            set => _OpenSound = value.AsNullable();
+            set => _OpenSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWaterGetter.OpenSound => this.OpenSound;
         #endregion
         #region Spell
-        private IFormLinkNullable<ISpellGetter> _Spell = new FormLinkNullable<ISpellGetter>();
+        private readonly IFormLinkNullable<ISpellGetter> _Spell = new FormLinkNullable<ISpellGetter>();
         public IFormLinkNullable<ISpellGetter> Spell
         {
             get => _Spell;
-            set => _Spell = value.AsNullable();
+            set => _Spell.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpellGetter> IWaterGetter.Spell => this.Spell;
         #endregion
         #region ImageSpace
-        private IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
         public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace
         {
             get => _ImageSpace;
-            set => _ImageSpace = value.AsNullable();
+            set => _ImageSpace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IWaterGetter.ImageSpace => this.ImageSpace;
@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.UnusedNoisemaps?.Overall ?? true)
-                        && UnusedNoisemaps.TryGet(out var UnusedNoisemapsItem))
+                        && UnusedNoisemaps is {} UnusedNoisemapsItem)
                     {
                         fg.AppendLine("UnusedNoisemaps =>");
                         fg.AppendLine("[");
@@ -2224,7 +2224,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Name, "Name");
-                if (UnusedNoisemaps.TryGet(out var UnusedNoisemapsItem))
+                if (UnusedNoisemaps is {} UnusedNoisemapsItem)
                 {
                     fg.AppendLine("UnusedNoisemaps =>");
                     fg.AppendLine("[");
@@ -2791,10 +2791,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte Opacity { get; set; }
         new Water.Flag? Flags { get; set; }
         new MemorySlice<Byte>? MNAM { get; set; }
-        new IFormLinkNullable<IMaterialTypeGetter> Material { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; }
-        new IFormLinkNullable<ISpellGetter> Spell { get; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
+        new IFormLinkNullable<IMaterialTypeGetter> Material { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
+        new IFormLinkNullable<ISpellGetter> Spell { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
         new UInt16? DamagePerSecond { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
         new Single SpecularSunPower { get; set; }
@@ -3548,7 +3548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -3575,12 +3575,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Opacity, "Opacity");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.MNAM ?? true)
-                && item.MNAM.TryGet(out var MNAMItem))
+                && item.MNAM is {} MNAMItem)
             {
                 fg.AppendLine($"MNAM => {SpanExt.ToHexString(MNAMItem)}");
             }
@@ -3601,7 +3601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
             }
             if ((printMask?.DamagePerSecond ?? true)
-                && item.DamagePerSecond.TryGet(out var DamagePerSecondItem))
+                && item.DamagePerSecond is {} DamagePerSecondItem)
             {
                 fg.AppendItem(DamagePerSecondItem, "DamagePerSecond");
             }
@@ -3806,37 +3806,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.NoiseFlowmapScale, "NoiseFlowmapScale");
             }
             if ((printMask?.GNAM ?? true)
-                && item.GNAM.TryGet(out var GNAMItem))
+                && item.GNAM is {} GNAMItem)
             {
                 fg.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
             }
             if ((printMask?.LinearVelocity ?? true)
-                && item.LinearVelocity.TryGet(out var LinearVelocityItem))
+                && item.LinearVelocity is {} LinearVelocityItem)
             {
                 fg.AppendItem(LinearVelocityItem, "LinearVelocity");
             }
             if ((printMask?.AngularVelocity ?? true)
-                && item.AngularVelocity.TryGet(out var AngularVelocityItem))
+                && item.AngularVelocity is {} AngularVelocityItem)
             {
                 fg.AppendItem(AngularVelocityItem, "AngularVelocity");
             }
             if ((printMask?.NoiseLayerOneTexture ?? true)
-                && item.NoiseLayerOneTexture.TryGet(out var NoiseLayerOneTextureItem))
+                && item.NoiseLayerOneTexture is {} NoiseLayerOneTextureItem)
             {
                 fg.AppendItem(NoiseLayerOneTextureItem, "NoiseLayerOneTexture");
             }
             if ((printMask?.NoiseLayerTwoTexture ?? true)
-                && item.NoiseLayerTwoTexture.TryGet(out var NoiseLayerTwoTextureItem))
+                && item.NoiseLayerTwoTexture is {} NoiseLayerTwoTextureItem)
             {
                 fg.AppendItem(NoiseLayerTwoTextureItem, "NoiseLayerTwoTexture");
             }
             if ((printMask?.NoiseLayerThreeTexture ?? true)
-                && item.NoiseLayerThreeTexture.TryGet(out var NoiseLayerThreeTextureItem))
+                && item.NoiseLayerThreeTexture is {} NoiseLayerThreeTextureItem)
             {
                 fg.AppendItem(NoiseLayerThreeTextureItem, "NoiseLayerThreeTexture");
             }
             if ((printMask?.FlowNormalsNoiseTexture ?? true)
-                && item.FlowNormalsNoiseTexture.TryGet(out var FlowNormalsNoiseTextureItem))
+                && item.FlowNormalsNoiseTexture is {} FlowNormalsNoiseTextureItem)
             {
                 fg.AppendItem(FlowNormalsNoiseTextureItem, "FlowNormalsNoiseTexture");
             }
@@ -4192,17 +4192,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IWaterGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.UnusedNoisemaps);
             hash.Add(item.Opacity);
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.MNAM.TryGet(out var MNAMItem))
+            if (item.MNAM is {} MNAMItem)
             {
                 hash.Add(MNAMItem);
             }
@@ -4210,7 +4210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.OpenSound);
             hash.Add(item.Spell);
             hash.Add(item.ImageSpace);
-            if (item.DamagePerSecond.TryGet(out var DamagePerSeconditem))
+            if (item.DamagePerSecond is {} DamagePerSeconditem)
             {
                 hash.Add(DamagePerSeconditem);
             }
@@ -4264,31 +4264,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.DepthSpecularLighting);
             hash.Add(item.SpecularSunSparklePower);
             hash.Add(item.NoiseFlowmapScale);
-            if (item.GNAM.TryGet(out var GNAMItem))
+            if (item.GNAM is {} GNAMItem)
             {
                 hash.Add(GNAMItem);
             }
-            if (item.LinearVelocity.TryGet(out var LinearVelocityitem))
+            if (item.LinearVelocity is {} LinearVelocityitem)
             {
                 hash.Add(LinearVelocityitem);
             }
-            if (item.AngularVelocity.TryGet(out var AngularVelocityitem))
+            if (item.AngularVelocity is {} AngularVelocityitem)
             {
                 hash.Add(AngularVelocityitem);
             }
-            if (item.NoiseLayerOneTexture.TryGet(out var NoiseLayerOneTextureitem))
+            if (item.NoiseLayerOneTexture is {} NoiseLayerOneTextureitem)
             {
                 hash.Add(NoiseLayerOneTextureitem);
             }
-            if (item.NoiseLayerTwoTexture.TryGet(out var NoiseLayerTwoTextureitem))
+            if (item.NoiseLayerTwoTexture is {} NoiseLayerTwoTextureitem)
             {
                 hash.Add(NoiseLayerTwoTextureitem);
             }
-            if (item.NoiseLayerThreeTexture.TryGet(out var NoiseLayerThreeTextureitem))
+            if (item.NoiseLayerThreeTexture is {} NoiseLayerThreeTextureitem)
             {
                 hash.Add(NoiseLayerThreeTextureitem);
             }
-            if (item.FlowNormalsNoiseTexture.TryGet(out var FlowNormalsNoiseTextureitem))
+            if (item.FlowNormalsNoiseTexture is {} FlowNormalsNoiseTextureitem)
             {
                 hash.Add(FlowNormalsNoiseTextureitem);
             }
@@ -4443,7 +4443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.MNAM) ?? true))
             {
-                if(rhs.MNAM.TryGet(out var MNAMrhs))
+                if(rhs.MNAM is {} MNAMrhs)
                 {
                     item.MNAM = MNAMrhs.ToArray();
                 }
@@ -4674,7 +4674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
             {
-                if(rhs.GNAM.TryGet(out var GNAMrhs))
+                if(rhs.GNAM is {} GNAMrhs)
                 {
                     item.GNAM = GNAMrhs.ToArray();
                 }

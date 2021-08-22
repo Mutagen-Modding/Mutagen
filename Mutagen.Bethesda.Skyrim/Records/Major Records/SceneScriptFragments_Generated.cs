@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.PhaseFragments?.Overall ?? true)
-                        && PhaseFragments.TryGet(out var PhaseFragmentsItem))
+                        && PhaseFragments is {} PhaseFragmentsItem)
                     {
                         fg.AppendLine("PhaseFragments =>");
                         fg.AppendLine("[");
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (PhaseFragments.TryGet(out var PhaseFragmentsItem))
+                if (PhaseFragments is {} PhaseFragmentsItem)
                 {
                     fg.AppendLine("PhaseFragments =>");
                     fg.AppendLine("[");

@@ -51,11 +51,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Idle
-        private IFormLinkNullable<IIdleAnimationGetter> _Idle = new FormLinkNullable<IIdleAnimationGetter>();
+        private readonly IFormLinkNullable<IIdleAnimationGetter> _Idle = new FormLinkNullable<IIdleAnimationGetter>();
         public IFormLinkNullable<IIdleAnimationGetter> Idle
         {
             get => _Idle;
-            set => _Idle = value.AsNullable();
+            set => _Idle.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IPackageEventGetter.Idle => this.Idle;
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(TNAM, "TNAM");
                     }
                     if ((printMask?.Topics?.Overall ?? true)
-                        && Topics.TryGet(out var TopicsItem))
+                        && Topics is {} TopicsItem)
                     {
                         fg.AppendLine("Topics =>");
                         fg.AppendLine("[");
@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(SCTX, "SCTX");
                 fg.AppendItem(QNAM, "QNAM");
                 fg.AppendItem(TNAM, "TNAM");
-                if (Topics.TryGet(out var TopicsItem))
+                if (Topics is {} TopicsItem)
                 {
                     fg.AppendLine("Topics =>");
                     fg.AppendLine("[");
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageEvent>,
         IPackageEventGetter
     {
-        new IFormLinkNullable<IIdleAnimationGetter> Idle { get; }
+        new IFormLinkNullable<IIdleAnimationGetter> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCDA { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
@@ -1179,27 +1179,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Idle.FormKeyNullable, "Idle");
             }
             if ((printMask?.SCHR ?? true)
-                && item.SCHR.TryGet(out var SCHRItem))
+                && item.SCHR is {} SCHRItem)
             {
                 fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
             if ((printMask?.SCDA ?? true)
-                && item.SCDA.TryGet(out var SCDAItem))
+                && item.SCDA is {} SCDAItem)
             {
                 fg.AppendLine($"SCDA => {SpanExt.ToHexString(SCDAItem)}");
             }
             if ((printMask?.SCTX ?? true)
-                && item.SCTX.TryGet(out var SCTXItem))
+                && item.SCTX is {} SCTXItem)
             {
                 fg.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
             }
             if ((printMask?.QNAM ?? true)
-                && item.QNAM.TryGet(out var QNAMItem))
+                && item.QNAM is {} QNAMItem)
             {
                 fg.AppendLine($"QNAM => {SpanExt.ToHexString(QNAMItem)}");
             }
             if ((printMask?.TNAM ?? true)
-                && item.TNAM.TryGet(out var TNAMItem))
+                && item.TNAM is {} TNAMItem)
             {
                 fg.AppendLine($"TNAM => {SpanExt.ToHexString(TNAMItem)}");
             }
@@ -1265,23 +1265,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Idle);
-            if (item.SCHR.TryGet(out var SCHRItem))
+            if (item.SCHR is {} SCHRItem)
             {
                 hash.Add(SCHRItem);
             }
-            if (item.SCDA.TryGet(out var SCDAItem))
+            if (item.SCDA is {} SCDAItem)
             {
                 hash.Add(SCDAItem);
             }
-            if (item.SCTX.TryGet(out var SCTXItem))
+            if (item.SCTX is {} SCTXItem)
             {
                 hash.Add(SCTXItem);
             }
-            if (item.QNAM.TryGet(out var QNAMItem))
+            if (item.QNAM is {} QNAMItem)
             {
                 hash.Add(QNAMItem);
             }
-            if (item.TNAM.TryGet(out var TNAMItem))
+            if (item.TNAM is {} TNAMItem)
             {
                 hash.Add(TNAMItem);
             }
@@ -1333,7 +1333,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCHR) ?? true))
             {
-                if(rhs.SCHR.TryGet(out var SCHRrhs))
+                if(rhs.SCHR is {} SCHRrhs)
                 {
                     item.SCHR = SCHRrhs.ToArray();
                 }
@@ -1344,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCDA) ?? true))
             {
-                if(rhs.SCDA.TryGet(out var SCDArhs))
+                if(rhs.SCDA is {} SCDArhs)
                 {
                     item.SCDA = SCDArhs.ToArray();
                 }
@@ -1355,7 +1355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCTX) ?? true))
             {
-                if(rhs.SCTX.TryGet(out var SCTXrhs))
+                if(rhs.SCTX is {} SCTXrhs)
                 {
                     item.SCTX = SCTXrhs.ToArray();
                 }
@@ -1366,7 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.QNAM) ?? true))
             {
-                if(rhs.QNAM.TryGet(out var QNAMrhs))
+                if(rhs.QNAM is {} QNAMrhs)
                 {
                     item.QNAM = QNAMrhs.ToArray();
                 }
@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.TNAM) ?? true))
             {
-                if(rhs.TNAM.TryGet(out var TNAMrhs))
+                if(rhs.TNAM is {} TNAMrhs)
                 {
                     item.TNAM = TNAMrhs.ToArray();
                 }

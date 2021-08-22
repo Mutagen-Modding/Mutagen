@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Perk
-        private IFormLink<IPerkGetter> _Perk = new FormLink<IPerkGetter>();
+        private readonly IFormLink<IPerkGetter> _Perk = new FormLink<IPerkGetter>();
         public IFormLink<IPerkGetter> Perk
         {
             get => _Perk;
-            set => _Perk = value.AsSetter();
+            set => _Perk.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> IActorValuePerkNodeGetter.Perk => this.Perk;
@@ -91,11 +91,11 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IActorValuePerkNodeGetter.VerticalPosition => this.VerticalPosition;
         #endregion
         #region AssociatedSkill
-        private IFormLinkNullable<IActorValueInformationGetter> _AssociatedSkill = new FormLinkNullable<IActorValueInformationGetter>();
+        private readonly IFormLinkNullable<IActorValueInformationGetter> _AssociatedSkill = new FormLinkNullable<IActorValueInformationGetter>();
         public IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill
         {
             get => _AssociatedSkill;
-            set => _AssociatedSkill = value.AsNullable();
+            set => _AssociatedSkill.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IActorValueInformationGetter> IActorValuePerkNodeGetter.AssociatedSkill => this.AssociatedSkill;
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(AssociatedSkill, "AssociatedSkill");
                     }
                     if ((printMask?.ConnectionLineToIndices?.Overall ?? true)
-                        && ConnectionLineToIndices.TryGet(out var ConnectionLineToIndicesItem))
+                        && ConnectionLineToIndices is {} ConnectionLineToIndicesItem)
                     {
                         fg.AppendLine("ConnectionLineToIndices =>");
                         fg.AppendLine("[");
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(HorizontalPosition, "HorizontalPosition");
                 fg.AppendItem(VerticalPosition, "VerticalPosition");
                 fg.AppendItem(AssociatedSkill, "AssociatedSkill");
-                if (ConnectionLineToIndices.TryGet(out var ConnectionLineToIndicesItem))
+                if (ConnectionLineToIndices is {} ConnectionLineToIndicesItem)
                 {
                     fg.AppendLine("ConnectionLineToIndices =>");
                     fg.AppendLine("[");
@@ -794,13 +794,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IActorValuePerkNode>
     {
-        new IFormLink<IPerkGetter> Perk { get; }
+        new IFormLink<IPerkGetter> Perk { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new UInt32? PerkGridX { get; set; }
         new UInt32? PerkGridY { get; set; }
         new Single? HorizontalPosition { get; set; }
         new Single? VerticalPosition { get; set; }
-        new IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; }
+        new IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; set; }
         new ExtendedList<UInt32> ConnectionLineToIndices { get; }
         new UInt32? Index { get; set; }
     }
@@ -1218,27 +1218,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Perk.FormKey, "Perk");
             }
             if ((printMask?.FNAM ?? true)
-                && item.FNAM.TryGet(out var FNAMItem))
+                && item.FNAM is {} FNAMItem)
             {
                 fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
             if ((printMask?.PerkGridX ?? true)
-                && item.PerkGridX.TryGet(out var PerkGridXItem))
+                && item.PerkGridX is {} PerkGridXItem)
             {
                 fg.AppendItem(PerkGridXItem, "PerkGridX");
             }
             if ((printMask?.PerkGridY ?? true)
-                && item.PerkGridY.TryGet(out var PerkGridYItem))
+                && item.PerkGridY is {} PerkGridYItem)
             {
                 fg.AppendItem(PerkGridYItem, "PerkGridY");
             }
             if ((printMask?.HorizontalPosition ?? true)
-                && item.HorizontalPosition.TryGet(out var HorizontalPositionItem))
+                && item.HorizontalPosition is {} HorizontalPositionItem)
             {
                 fg.AppendItem(HorizontalPositionItem, "HorizontalPosition");
             }
             if ((printMask?.VerticalPosition ?? true)
-                && item.VerticalPosition.TryGet(out var VerticalPositionItem))
+                && item.VerticalPosition is {} VerticalPositionItem)
             {
                 fg.AppendItem(VerticalPositionItem, "VerticalPosition");
             }
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Index ?? true)
-                && item.Index.TryGet(out var IndexItem))
+                && item.Index is {} IndexItem)
             {
                 fg.AppendItem(IndexItem, "Index");
             }
@@ -1321,29 +1321,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Perk);
-            if (item.FNAM.TryGet(out var FNAMItem))
+            if (item.FNAM is {} FNAMItem)
             {
                 hash.Add(FNAMItem);
             }
-            if (item.PerkGridX.TryGet(out var PerkGridXitem))
+            if (item.PerkGridX is {} PerkGridXitem)
             {
                 hash.Add(PerkGridXitem);
             }
-            if (item.PerkGridY.TryGet(out var PerkGridYitem))
+            if (item.PerkGridY is {} PerkGridYitem)
             {
                 hash.Add(PerkGridYitem);
             }
-            if (item.HorizontalPosition.TryGet(out var HorizontalPositionitem))
+            if (item.HorizontalPosition is {} HorizontalPositionitem)
             {
                 hash.Add(HorizontalPositionitem);
             }
-            if (item.VerticalPosition.TryGet(out var VerticalPositionitem))
+            if (item.VerticalPosition is {} VerticalPositionitem)
             {
                 hash.Add(VerticalPositionitem);
             }
             hash.Add(item.AssociatedSkill);
             hash.Add(item.ConnectionLineToIndices);
-            if (item.Index.TryGet(out var Indexitem))
+            if (item.Index is {} Indexitem)
             {
                 hash.Add(Indexitem);
             }
@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.FNAM) ?? true))
             {
-                if(rhs.FNAM.TryGet(out var FNAMrhs))
+                if(rhs.FNAM is {} FNAMrhs)
                 {
                     item.FNAM = FNAMrhs.ToArray();
                 }

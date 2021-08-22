@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.BoundRadius, "BoundRadius");
             }
             if ((printMask?.Hashes ?? true)
-                && item.Hashes.TryGet(out var HashesItem))
+                && item.Hashes is {} HashesItem)
             {
                 fg.AppendLine($"Hashes => {SpanExt.ToHexString(HashesItem)}");
             }
@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var hash = new HashCode();
             hash.Add(item.File);
             hash.Add(item.BoundRadius);
-            if (item.Hashes.TryGet(out var HashesItem))
+            if (item.Hashes is {} HashesItem)
             {
                 hash.Add(HashesItem);
             }
@@ -967,7 +967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.Hashes) ?? true))
             {
-                if(rhs.Hashes.TryGet(out var Hashesrhs))
+                if(rhs.Hashes is {} Hashesrhs)
                 {
                     item.Hashes = Hashesrhs.ToArray();
                 }

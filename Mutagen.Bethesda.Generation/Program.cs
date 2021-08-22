@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "f (!((GroupCommon<T>)((IGroupGetter<T>)lhsGameSettings).CommonInstance(typeof(T))!).E";
+            string testString = "ate IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

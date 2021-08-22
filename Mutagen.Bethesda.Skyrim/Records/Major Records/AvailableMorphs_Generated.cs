@@ -985,22 +985,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AvailableMorphs.Mask<bool>? printMask = null)
         {
             if ((printMask?.Nose?.Overall ?? true)
-                && item.Nose.TryGet(out var NoseItem))
+                && item.Nose is {} NoseItem)
             {
                 NoseItem?.ToString(fg, "Nose");
             }
             if ((printMask?.Brow?.Overall ?? true)
-                && item.Brow.TryGet(out var BrowItem))
+                && item.Brow is {} BrowItem)
             {
                 BrowItem?.ToString(fg, "Brow");
             }
             if ((printMask?.Eye?.Overall ?? true)
-                && item.Eye.TryGet(out var EyeItem))
+                && item.Eye is {} EyeItem)
             {
                 EyeItem?.ToString(fg, "Eye");
             }
             if ((printMask?.Lip?.Overall ?? true)
-                && item.Lip.TryGet(out var LipItem))
+                && item.Lip is {} LipItem)
             {
                 LipItem?.ToString(fg, "Lip");
             }
@@ -1051,19 +1051,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IAvailableMorphsGetter item)
         {
             var hash = new HashCode();
-            if (item.Nose.TryGet(out var Noseitem))
+            if (item.Nose is {} Noseitem)
             {
                 hash.Add(Noseitem);
             }
-            if (item.Brow.TryGet(out var Browitem))
+            if (item.Brow is {} Browitem)
             {
                 hash.Add(Browitem);
             }
-            if (item.Eye.TryGet(out var Eyeitem))
+            if (item.Eye is {} Eyeitem)
             {
                 hash.Add(Eyeitem);
             }
-            if (item.Lip.TryGet(out var Lipitem))
+            if (item.Lip is {} Lipitem)
             {
                 hash.Add(Lipitem);
             }
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Nose);
                 try
                 {
-                    if(rhs.Nose.TryGet(out var rhsNose))
+                    if(rhs.Nose is {} rhsNose)
                     {
                         item.Nose = rhsNose.DeepCopy(
                             errorMask: errorMask,
@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Brow);
                 try
                 {
-                    if(rhs.Brow.TryGet(out var rhsBrow))
+                    if(rhs.Brow is {} rhsBrow)
                     {
                         item.Brow = rhsBrow.DeepCopy(
                             errorMask: errorMask,
@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Eye);
                 try
                 {
-                    if(rhs.Eye.TryGet(out var rhsEye))
+                    if(rhs.Eye is {} rhsEye)
                     {
                         item.Eye = rhsEye.DeepCopy(
                             errorMask: errorMask,
@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)AvailableMorphs_FieldIndex.Lip);
                 try
                 {
-                    if(rhs.Lip.TryGet(out var rhsLip))
+                    if(rhs.Lip is {} rhsLip)
                     {
                         item.Lip = rhsLip.DeepCopy(
                             errorMask: errorMask,

@@ -18,17 +18,17 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
-                    .BindToStrict(this, x => x.SettingsNameBlock.Text)
+                    .BindTo(this, x => x.SettingsNameBlock.Text)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Values)
-                    .BindToStrict(this, x => x.RequiredModsPicker.ModKeys)
+                    .BindTo(this, x => x.RequiredModsPicker.ModKeys)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.DetectedLoadOrder)
-                    .BindToStrict(this, x => x.RequiredModsPicker.SearchableMods)
+                    .BindTo(this, x => x.RequiredModsPicker.SearchableMods)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.IsFocused)
                     .Select((focused) => focused ? double.NaN : 200d)
-                    .BindToStrict(this, x => x.RequiredModsPicker.Height)
+                    .BindTo(this, x => x.RequiredModsPicker.Height)
                     .DisposeWith(disposable);
             });
         }

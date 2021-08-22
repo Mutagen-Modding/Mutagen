@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.LogEntries?.Overall ?? true)
-                        && LogEntries.TryGet(out var LogEntriesItem))
+                        && LogEntries is {} LogEntriesItem)
                     {
                         fg.AppendLine("LogEntries =>");
                         fg.AppendLine("[");
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Index, "Index");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Unknown, "Unknown");
-                if (LogEntries.TryGet(out var LogEntriesItem))
+                if (LogEntries is {} LogEntriesItem)
                 {
                     fg.AppendLine("LogEntries =>");
                     fg.AppendLine("[");

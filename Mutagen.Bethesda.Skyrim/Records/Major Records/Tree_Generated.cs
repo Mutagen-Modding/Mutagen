@@ -111,21 +111,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Ingredient
-        private IFormLinkNullable<IHarvestTargetGetter> _Ingredient = new FormLinkNullable<IHarvestTargetGetter>();
+        private readonly IFormLinkNullable<IHarvestTargetGetter> _Ingredient = new FormLinkNullable<IHarvestTargetGetter>();
         public IFormLinkNullable<IHarvestTargetGetter> Ingredient
         {
             get => _Ingredient;
-            set => _Ingredient = value.AsNullable();
+            set => _Ingredient.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHarvestTargetGetter> ITreeGetter.Ingredient => this.Ingredient;
         #endregion
         #region HarvestSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _HarvestSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _HarvestSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> HarvestSound
         {
             get => _HarvestSound;
-            set => _HarvestSound = value.AsNullable();
+            set => _HarvestSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ITreeGetter.HarvestSound => this.HarvestSound;
@@ -1026,8 +1026,8 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; }
+        new IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; }
         new SeasonalIngredientProduction? Production { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1573,12 +1573,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.HarvestSound.FormKeyNullable, "HarvestSound");
             }
             if ((printMask?.Production?.Overall ?? true)
-                && item.Production.TryGet(out var ProductionItem))
+                && item.Production is {} ProductionItem)
             {
                 ProductionItem?.ToString(fg, "Production");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1750,22 +1750,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ITreeGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.ObjectBounds);
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
             hash.Add(item.Ingredient);
             hash.Add(item.HarvestSound);
-            if (item.Production.TryGet(out var Productionitem))
+            if (item.Production is {} Productionitem)
             {
                 hash.Add(Productionitem);
             }
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
@@ -1811,7 +1811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -1905,7 +1905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Tree_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -1953,7 +1953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Tree_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1987,7 +1987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Tree_FieldIndex.Production);
                 try
                 {
-                    if(rhs.Production.TryGet(out var rhsProduction))
+                    if(rhs.Production is {} rhsProduction)
                     {
                         item.Production = rhsProduction.DeepCopy(
                             errorMask: errorMask,
@@ -2202,7 +2202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
@@ -2214,7 +2214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -2229,7 +2229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.HarvestSound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            if (item.Production.TryGet(out var ProductionItem))
+            if (item.Production is {} ProductionItem)
             {
                 ((SeasonalIngredientProductionBinaryWriteTranslation)((IBinaryItem)ProductionItem).BinaryWriteTranslator).Write(
                     item: ProductionItem,

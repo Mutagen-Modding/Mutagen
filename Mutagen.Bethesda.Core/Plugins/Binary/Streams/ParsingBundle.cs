@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
@@ -17,7 +18,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         /// <summary>
         /// MasterReferenceReader to reference while reading
         /// </summary>
-        public MasterReferenceReader MasterReferences { get; }
+        public IMasterReferenceCollection MasterReferences { get; }
 
         /// <summary>
         /// Optional RecordInfoCache to reference while reading
@@ -49,7 +50,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         /// </summary>
         public ModKey ModKey { get; set; }
 
-        public ParsingBundle(GameConstants constants, MasterReferenceReader masterReferences)
+        public ParsingBundle(GameConstants constants, IMasterReferenceCollection masterReferences)
         {
             this.Constants = constants;
             this.MasterReferences = masterReferences;

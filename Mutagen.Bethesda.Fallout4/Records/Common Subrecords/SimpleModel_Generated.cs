@@ -61,11 +61,11 @@ namespace Mutagen.Bethesda.Fallout4
         Single? ISimpleModelGetter.ColorRemappingIndex => this.ColorRemappingIndex;
         #endregion
         #region MaterialSwap
-        private IFormLinkNullable<IMaterialSwapGetter> _MaterialSwap = new FormLinkNullable<IMaterialSwapGetter>();
+        private readonly IFormLinkNullable<IMaterialSwapGetter> _MaterialSwap = new FormLinkNullable<IMaterialSwapGetter>();
         public IFormLinkNullable<IMaterialSwapGetter> MaterialSwap
         {
             get => _MaterialSwap;
-            set => _MaterialSwap = value.AsNullable();
+            set => _MaterialSwap.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialSwapGetter> ISimpleModelGetter.MaterialSwap => this.MaterialSwap;
@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new String File { get; set; }
         new Single? ColorRemappingIndex { get; set; }
-        new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; }
+        new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; }
         new MemorySlice<Byte>? Data { get; set; }
     }
 
@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.File, "File");
             }
             if ((printMask?.ColorRemappingIndex ?? true)
-                && item.ColorRemappingIndex.TryGet(out var ColorRemappingIndexItem))
+                && item.ColorRemappingIndex is {} ColorRemappingIndexItem)
             {
                 fg.AppendItem(ColorRemappingIndexItem, "ColorRemappingIndex");
             }
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.MaterialSwap.FormKeyNullable, "MaterialSwap");
             }
             if ((printMask?.Data ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 fg.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
             }
@@ -989,12 +989,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             var hash = new HashCode();
             hash.Add(item.File);
-            if (item.ColorRemappingIndex.TryGet(out var ColorRemappingIndexitem))
+            if (item.ColorRemappingIndex is {} ColorRemappingIndexitem)
             {
                 hash.Add(ColorRemappingIndexitem);
             }
             hash.Add(item.MaterialSwap);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 hash.Add(DataItem);
             }
@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
-                if(rhs.Data.TryGet(out var Datarhs))
+                if(rhs.Data is {} Datarhs)
                 {
                     item.Data = Datarhs.ToArray();
                 }

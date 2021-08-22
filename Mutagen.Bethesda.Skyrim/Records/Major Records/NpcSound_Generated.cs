@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sound
-        private IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsNullable();
+            set => _Sound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> INpcSoundGetter.Sound => this.Sound;
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INpcSound>,
         INpcSoundGetter
     {
-        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
         new Byte? SoundChance { get; set; }
     }
 
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
             if ((printMask?.SoundChance ?? true)
-                && item.SoundChance.TryGet(out var SoundChanceItem))
+                && item.SoundChance is {} SoundChanceItem)
             {
                 fg.AppendItem(SoundChanceItem, "SoundChance");
             }
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Sound);
-            if (item.SoundChance.TryGet(out var SoundChanceitem))
+            if (item.SoundChance is {} SoundChanceitem)
             {
                 hash.Add(SoundChanceitem);
             }

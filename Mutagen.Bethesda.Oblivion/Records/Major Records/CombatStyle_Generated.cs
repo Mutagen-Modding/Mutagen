@@ -943,12 +943,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.Advanced?.Overall ?? true)
-                && item.Advanced.TryGet(out var AdvancedItem))
+                && item.Advanced is {} AdvancedItem)
             {
                 AdvancedItem?.ToString(fg, "Advanced");
             }
@@ -1042,11 +1042,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ICombatStyleGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.Advanced.TryGet(out var Advanceditem))
+            if (item.Advanced is {} Advanceditem)
             {
                 hash.Add(Advanceditem);
             }
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
                 try
                 {
-                    if(rhs.Advanced.TryGet(out var rhsAdvanced))
+                    if(rhs.Advanced is {} rhsAdvanced)
                     {
                         item.Advanced = rhsAdvanced.DeepCopy(
                             errorMask: errorMask,
@@ -1362,14 +1362,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((CombatStyleDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Advanced.TryGet(out var AdvancedItem))
+            if (item.Advanced is {} AdvancedItem)
             {
                 ((CombatStyleAdvancedBinaryWriteTranslation)((IBinaryItem)AdvancedItem).BinaryWriteTranslator).Write(
                     item: AdvancedItem,

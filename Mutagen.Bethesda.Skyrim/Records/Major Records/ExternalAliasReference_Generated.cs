@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        private IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
         public IFormLinkNullable<IQuestGetter> Quest
         {
             get => _Quest;
-            set => _Quest = value.AsNullable();
+            set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IExternalAliasReferenceGetter.Quest => this.Quest;
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IExternalAliasReference>
     {
-        new IFormLinkNullable<IQuestGetter> Quest { get; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
         new Int32? AliasIndex { get; set; }
     }
 
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
             if ((printMask?.AliasIndex ?? true)
-                && item.AliasIndex.TryGet(out var AliasIndexItem))
+                && item.AliasIndex is {} AliasIndexItem)
             {
                 fg.AppendItem(AliasIndexItem, "AliasIndex");
             }
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Quest);
-            if (item.AliasIndex.TryGet(out var AliasIndexitem))
+            if (item.AliasIndex is {} AliasIndexitem)
             {
                 hash.Add(AliasIndexitem);
             }

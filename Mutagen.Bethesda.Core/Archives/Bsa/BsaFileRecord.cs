@@ -5,7 +5,6 @@ using System.IO;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using K4os.Compression.LZ4.Streams;
 using Noggog.Streams;
-using Noggog;
 using Mutagen.Bethesda.Archives.Exceptions;
 
 namespace Mutagen.Bethesda.Archives.Bsa

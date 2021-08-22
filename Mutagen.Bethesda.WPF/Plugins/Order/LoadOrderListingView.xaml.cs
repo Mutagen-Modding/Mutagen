@@ -18,16 +18,16 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order
             {
                 this.WhenAnyValue(x => x.ViewModel!.ModKey)
                     .Select(m => (object) m)
-                    .BindToStrict(this, x => x.CheckBox.Content)
+                    .BindTo(this, x => x.CheckBox.Content)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel)
                     .Select(x => x is IModListing)
-                    .BindToStrict(this, x => x.CheckBox.IsEnabled)
+                    .BindTo(this, x => x.CheckBox.IsEnabled)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Enabled)
                     .DistinctUntilChanged()
                     .Select(x => (bool?) x)
-                    .BindToStrict(this, x => x.CheckBox.IsChecked)
+                    .BindTo(this, x => x.CheckBox.IsChecked)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel)
                     .Select(x =>

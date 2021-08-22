@@ -960,12 +960,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.XNAM ?? true)
-                && item.XNAM.TryGet(out var XNAMItem))
+                && item.XNAM is {} XNAMItem)
             {
                 fg.AppendLine($"XNAM => {SpanExt.ToHexString(XNAMItem)}");
             }
@@ -1091,11 +1091,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IStoryManagerBranchNodeGetter item)
         {
             var hash = new HashCode();
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.XNAM.TryGet(out var XNAMItem))
+            if (item.XNAM is {} XNAMItem)
             {
                 hash.Add(XNAMItem);
             }
@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)StoryManagerBranchNode_FieldIndex.XNAM) ?? true))
             {
-                if(rhs.XNAM.TryGet(out var XNAMrhs))
+                if(rhs.XNAM is {} XNAMrhs)
                 {
                     item.XNAM = XNAMrhs.ToArray();
                 }

@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Plugins.Utility
 
         public static string ToString(IMajorRecordCommonGetter majorRec)
         {
-            if (majorRec.EditorID.TryGet(out var edid))
+            if (majorRec.EditorID is {} edid)
             {
                 return $"{TypeString} {edid} {majorRec.FormKey}";
             }

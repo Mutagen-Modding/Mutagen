@@ -61,11 +61,11 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IDialogResponsesUnknownDataGetter.SCHR => this.SCHR;
         #endregion
         #region QNAM
-        private IFormLinkNullable<ISkyrimMajorRecordGetter> _QNAM = new FormLinkNullable<ISkyrimMajorRecordGetter>();
+        private readonly IFormLinkNullable<ISkyrimMajorRecordGetter> _QNAM = new FormLinkNullable<ISkyrimMajorRecordGetter>();
         public IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM
         {
             get => _QNAM;
-            set => _QNAM = value.AsNullable();
+            set => _QNAM.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.QNAM => this.QNAM;
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogResponsesUnknownData>
     {
         new MemorySlice<Byte>? SCHR { get; set; }
-        new IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; }
+        new IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; }
         new Boolean NEXT { get; set; }
     }
 
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponsesUnknownData.Mask<bool>? printMask = null)
         {
             if ((printMask?.SCHR ?? true)
-                && item.SCHR.TryGet(out var SCHRItem))
+                && item.SCHR is {} SCHRItem)
             {
                 fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IDialogResponsesUnknownDataGetter item)
         {
             var hash = new HashCode();
-            if (item.SCHR.TryGet(out var SCHRItem))
+            if (item.SCHR is {} SCHRItem)
             {
                 hash.Add(SCHRItem);
             }
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.SCHR) ?? true))
             {
-                if(rhs.SCHR.TryGet(out var SCHRrhs))
+                if(rhs.SCHR is {} SCHRrhs)
                 {
                     item.SCHR = SCHRrhs.ToArray();
                 }

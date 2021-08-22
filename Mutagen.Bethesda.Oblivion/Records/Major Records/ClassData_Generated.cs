@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Versioning, "Versioning");
                     }
                     if ((printMask?.PrimaryAttributes?.Overall ?? true)
-                        && PrimaryAttributes.TryGet(out var PrimaryAttributesItem))
+                        && PrimaryAttributes is {} PrimaryAttributesItem)
                     {
                         fg.AppendLine("PrimaryAttributes =>");
                         fg.AppendLine("[");
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Specialization, "Specialization");
                     }
                     if ((printMask?.SecondaryAttributes?.Overall ?? true)
-                        && SecondaryAttributes.TryGet(out var SecondaryAttributesItem))
+                        && SecondaryAttributes is {} SecondaryAttributesItem)
                     {
                         fg.AppendLine("SecondaryAttributes =>");
                         fg.AppendLine("[");
@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Versioning, "Versioning");
-                if (PrimaryAttributes.TryGet(out var PrimaryAttributesItem))
+                if (PrimaryAttributes is {} PrimaryAttributesItem)
                 {
                     fg.AppendLine("PrimaryAttributes =>");
                     fg.AppendLine("[");
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(Specialization, "Specialization");
-                if (SecondaryAttributes.TryGet(out var SecondaryAttributesItem))
+                if (SecondaryAttributes is {} SecondaryAttributesItem)
                 {
                     fg.AppendLine("SecondaryAttributes =>");
                     fg.AppendLine("[");

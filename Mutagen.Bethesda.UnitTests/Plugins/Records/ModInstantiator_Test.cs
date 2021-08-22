@@ -1,4 +1,6 @@
+using System.IO.Abstractions;
 using Loqui;
+using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -6,20 +8,21 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records
 {
     public class NoReleaseModInstantiator_Test : AModInstantiator_Test<OblivionMod, IOblivionMod, IOblivionModGetter, OblivionModBinaryOverlay>
     {
-        public override ModPath ModPath => Utility.OblivionTestMod;
+        public override ModPath ModPath => TestPathing.OblivionTestMod;
         public override GameRelease Release => GameRelease.Oblivion;
         public override ILoquiRegistration Registration => OblivionMod_Registration.Instance;
     }
 
     public class ReleaseModInstantiator_Test : AModInstantiator_Test<SkyrimMod, ISkyrimMod, ISkyrimModGetter, SkyrimModBinaryOverlay>
     {
-        public override ModPath ModPath => Utility.SkyrimTestMod;
+        public override ModPath ModPath => TestPathing.SkyrimTestMod;
         public override GameRelease Release => GameRelease.SkyrimSE;
         public override ILoquiRegistration Registration => SkyrimMod_Registration.Instance;
     }
@@ -62,7 +65,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         {
             var ret = ModInstantiatorReflection.GetImporter<TDirect>(Registration)(
                 ModPath,
-                Release);
+                Release,
+                default(IFileSystem?));
             Assert.IsType<TDirect>(ret);
             Assert.Equal(ModPath.ModKey, ret.ModKey);
         }
@@ -72,7 +76,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         {
             var ret = ModInstantiatorReflection.GetImporter<TSetter>(Registration)(
                 ModPath,
-                Release);
+                Release,
+                default(IFileSystem?));
             Assert.IsType<TDirect>(ret);
             Assert.Equal(ModPath.ModKey, ret.ModKey);
         }
@@ -82,7 +87,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         {
             var ret = ModInstantiatorReflection.GetImporter<TGetter>(Registration)(
                 ModPath,
-                Release);
+                Release,
+                default(IFileSystem?));
             Assert.IsType<TOverlay>(ret);
             Assert.Equal(ModPath.ModKey, ret.ModKey);
         }

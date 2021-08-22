@@ -1,6 +1,8 @@
 using Noggog;
 using System;
 using System.Buffers.Binary;
+using System.Text;
+using Mutagen.Bethesda.Strings;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations
 {
@@ -10,45 +12,13 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
     public static class BinaryStringUtility
     {
         /// <summary>
-        /// Converts span to a string.  Should be slower than ToZString with ReadOnlyMemorySlice parameter.
+        /// Converts span to a string.
         /// </summary>
         /// <param name="bytes">Bytes to turn into a string</param>
         /// <returns>string containing a character for every byte in the input span</returns>
         public static string ToZString(ReadOnlySpan<byte> bytes)
         {
-            Span<char> chars = stackalloc char[bytes.Length];
-            ToZStringBuffer(bytes, chars);
-            return chars.ToString();
-        }
-
-        /// <summary>
-        /// Converts memory slice to a string.  Should be faster than ToZString with ReadOnlySpan parameter.
-        /// </summary>
-        /// <param name="bytes">Bytes to turn into a string</param>
-        /// <returns>string containing a character for every byte in the input span</returns>
-        public static string ToZString(ReadOnlyMemorySlice<byte> bytes)
-        {
-            if (bytes.Length <= 0) return string.Empty;
-            return string.Create(bytes.Length, bytes, (chars, state) =>
-            {
-                for (int i = 0; i < state.Length; i++)
-                {
-                    chars[i] = (char)state[i];
-                }
-            });
-        }
-
-        /// <summary>
-        /// Translates a span of bytes into a span of chars
-        /// </summary>
-        /// <param name="bytes">Bytes to convert to chars</param>
-        /// <param name="temporaryCharBuffer">Char span to put bytes into</param>
-        public static void ToZStringBuffer(ReadOnlySpan<byte> bytes, Span<char> temporaryCharBuffer)
-        {
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                temporaryCharBuffer[i] = (char)bytes[i];
-            }
+            return Encodings.Default.GetString(bytes);
         }
 
         /// <summary>
@@ -67,37 +37,11 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         }
 
         /// <summary>
-        /// Trims the last byte if it is 0.
-        /// </summary>
-        /// <param name="bytes">Bytes to trim</param>
-        /// <returns>Trimmed bytes</returns>
-        public static ReadOnlyMemorySlice<byte> ProcessNullTermination(ReadOnlyMemorySlice<byte> bytes)
-        {
-            // If null terminated, don't include
-            if (bytes[^1] == 0)
-            {
-                return bytes[0..^1];
-            }
-            return bytes;
-        }
-
-        /// <summary>
         /// Null trims and then processes bytes into a string
         /// </summary>
         /// <param name="bytes">Bytes to convert</param>
         /// <returns>String representation of bytes</returns>
         public static string ProcessWholeToZString(ReadOnlySpan<byte> bytes)
-        {
-            bytes = ProcessNullTermination(bytes);
-            return ToZString(bytes);
-        }
-
-        /// <summary>
-        /// Null trims and then processes bytes into a string
-        /// </summary>
-        /// <param name="bytes">Bytes to convert</param>
-        /// <returns>String representation of bytes</returns>
-        public static string ProcessWholeToZString(ReadOnlyMemorySlice<byte> bytes)
         {
             bytes = ProcessNullTermination(bytes);
             return ToZString(bytes);
@@ -130,12 +74,22 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <returns>First null terminated string read</returns>
         public static string ParseUnknownLengthString(ReadOnlySpan<byte> bytes)
         {
+            return ToZString(ExtractUnknownLengthString(bytes));
+        }
+
+        /// <summary>
+        /// Reads bytes from a stream until a null termination character occurs.
+        /// </summary>
+        /// <param name="bytes">Bytes to convert</param>
+        /// <returns>Initial span of bytes up until the first null byte</returns>
+        public static ReadOnlySpan<byte> ExtractUnknownLengthString(ReadOnlySpan<byte> bytes)
+        {
             var index = bytes.IndexOf(default(byte));
             if (index == -1)
             {
                 throw new ArgumentException();
             }
-            return BinaryStringUtility.ToZString(bytes[0..index]);
+            return bytes[..index];
         }
 
         /// <summary>
@@ -147,18 +101,30 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <returns>String of length denoted by initial bytes</returns>
         public static string ParsePrependedString(ReadOnlyMemorySlice<byte> span, byte lengthLength)
         {
+            return ProcessWholeToZString(ExtractPrependedString(span, lengthLength));
+        }
+
+        /// <summary>
+        /// Read string of known length, which is prepended by bytes denoting its length.
+        /// Converts results to a string.
+        /// </summary>
+        /// <param name="span">Bytes to retrieve string from</param>
+        /// <param name="lengthLength">Amount of bytes containing length information</param>
+        /// <returns>String of length denoted by initial bytes</returns>
+        public static ReadOnlySpan<byte> ExtractPrependedString(ReadOnlyMemorySlice<byte> span, byte lengthLength)
+        {
             switch (lengthLength)
             {
                 case 2:
-                    {
-                        var length = BinaryPrimitives.ReadUInt16LittleEndian(span);
-                        return ProcessWholeToZString(span.Slice(2, length));
-                    }
+                {
+                    var length = BinaryPrimitives.ReadUInt16LittleEndian(span);
+                    return span.Slice(2, length);
+                }
                 case 4:
-                    {
-                        var length = BinaryPrimitives.ReadUInt32LittleEndian(span);
-                        return ProcessWholeToZString(span.Slice(4, checked((int)length)));
-                    }
+                {
+                    var length = BinaryPrimitives.ReadUInt32LittleEndian(span);
+                    return span.Slice(4, checked((int)length));
+                }
                 default:
                     throw new NotImplementedException();
             }
@@ -192,37 +158,53 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
         public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType)
         {
+            Write(stream, str, binaryType, Encodings.Default);
+        }
+
+        public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType, Encoding encoding)
+        {
             switch (binaryType)
             {
                 case StringBinaryType.Plain:
-                    Write(stream, str.AsSpan());
+                    Write(stream, str.AsSpan(), encoding);
                     break;
                 case StringBinaryType.NullTerminate:
-                    Write(stream, str.AsSpan());
+                    Write(stream, str.AsSpan(), encoding);
                     stream.Write((byte)0);
                     break;
                 case StringBinaryType.PrependLength:
-                    stream.Write(str.Length);
-                    Write(stream, str.AsSpan());
+                {
+                    var len = encoding.GetByteCount(str);
+                    stream.Write(len);
+                    Write(stream, str.AsSpan(), encoding, len);
                     break;
+                }
                 case StringBinaryType.PrependLengthUShort:
-                    stream.Write(checked((ushort)str.Length));
-                    Write(stream, str.AsSpan());
+                {
+                    var len = encoding.GetByteCount(str);
+                    stream.Write(checked((ushort)len));
+                    Write(stream, str.AsSpan(), encoding, len);
                     break;
+                }
                 default:
                     throw new NotImplementedException();
             }
         }
 
-        /// <inheritdoc/>
         public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str)
         {
-            Span<byte> bytes = stackalloc byte[str.Length];
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                var c = str[i];
-                bytes[i] = (byte)c;
-            }
+            Write(stream, str, Encodings.Default);
+        }
+
+        public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, Encoding encoding)
+        {
+            Write(stream, str, encoding, encoding.GetByteCount(str));
+        }
+
+        public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, Encoding encoding, int byteCount)
+        {
+            Span<byte> bytes = stackalloc byte[byteCount];
+            encoding.GetBytes(str, bytes);
             stream.Write(bytes);
         }
     }

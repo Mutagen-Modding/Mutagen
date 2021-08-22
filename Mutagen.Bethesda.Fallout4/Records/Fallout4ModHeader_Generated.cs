@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Fallout4
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.MasterReferences?.Overall ?? true)
-                        && MasterReferences.TryGet(out var MasterReferencesItem))
+                        && MasterReferences is {} MasterReferencesItem)
                     {
                         fg.AppendLine("MasterReferences =>");
                         fg.AppendLine("[");
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Fallout4
                         fg.AppendLine("]");
                     }
                     if ((printMask?.OverriddenForms?.Overall ?? true)
-                        && OverriddenForms.TryGet(out var OverriddenFormsItem))
+                        && OverriddenForms is {} OverriddenFormsItem)
                     {
                         fg.AppendLine("OverriddenForms =>");
                         fg.AppendLine("[");
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Fallout4
                         fg.AppendItem(Screenshot, "Screenshot");
                     }
                     if ((printMask?.TransientTypes?.Overall ?? true)
-                        && TransientTypes.TryGet(out var TransientTypesItem))
+                        && TransientTypes is {} TransientTypesItem)
                     {
                         fg.AppendLine("TransientTypes =>");
                         fg.AppendLine("[");
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendItem(Deleted, "Deleted");
                 fg.AppendItem(Author, "Author");
                 fg.AppendItem(Description, "Description");
-                if (MasterReferences.TryGet(out var MasterReferencesItem))
+                if (MasterReferences is {} MasterReferencesItem)
                 {
                     fg.AppendLine("MasterReferences =>");
                     fg.AppendLine("[");
@@ -957,7 +957,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     fg.AppendLine("]");
                 }
-                if (OverriddenForms.TryGet(out var OverriddenFormsItem))
+                if (OverriddenForms is {} OverriddenFormsItem)
                 {
                     fg.AppendLine("OverriddenForms =>");
                     fg.AppendLine("[");
@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Fallout4
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(Screenshot, "Screenshot");
-                if (TransientTypes.TryGet(out var TransientTypesItem))
+                if (TransientTypes is {} TransientTypesItem)
                 {
                     fg.AppendLine("TransientTypes =>");
                     fg.AppendLine("[");
@@ -1687,22 +1687,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item.Stats?.ToString(fg, "Stats");
             }
             if ((printMask?.TypeOffsets ?? true)
-                && item.TypeOffsets.TryGet(out var TypeOffsetsItem))
+                && item.TypeOffsets is {} TypeOffsetsItem)
             {
                 fg.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
             }
             if ((printMask?.Deleted ?? true)
-                && item.Deleted.TryGet(out var DeletedItem))
+                && item.Deleted is {} DeletedItem)
             {
                 fg.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
             }
             if ((printMask?.Author ?? true)
-                && item.Author.TryGet(out var AuthorItem))
+                && item.Author is {} AuthorItem)
             {
                 fg.AppendItem(AuthorItem, "Author");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
@@ -1725,7 +1725,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.OverriddenForms?.Overall ?? true)
-                && item.OverriddenForms.TryGet(out var OverriddenFormsItem))
+                && item.OverriddenForms is {} OverriddenFormsItem)
             {
                 fg.AppendLine("OverriddenForms =>");
                 fg.AppendLine("[");
@@ -1744,7 +1744,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Screenshot ?? true)
-                && item.Screenshot.TryGet(out var ScreenshotItem))
+                && item.Screenshot is {} ScreenshotItem)
             {
                 fg.AppendLine($"Screenshot => {SpanExt.ToHexString(ScreenshotItem)}");
             }
@@ -1767,12 +1767,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.INTV ?? true)
-                && item.INTV.TryGet(out var INTVItem))
+                && item.INTV is {} INTVItem)
             {
                 fg.AppendLine($"INTV => {SpanExt.ToHexString(INTVItem)}");
             }
             if ((printMask?.INCC ?? true)
-                && item.INCC.TryGet(out var INCCItem))
+                && item.INCC is {} INCCItem)
             {
                 fg.AppendItem(INCCItem, "INCC");
             }
@@ -1865,34 +1865,34 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.FormVersion);
             hash.Add(item.Version2);
             hash.Add(item.Stats);
-            if (item.TypeOffsets.TryGet(out var TypeOffsetsItem))
+            if (item.TypeOffsets is {} TypeOffsetsItem)
             {
                 hash.Add(TypeOffsetsItem);
             }
-            if (item.Deleted.TryGet(out var DeletedItem))
+            if (item.Deleted is {} DeletedItem)
             {
                 hash.Add(DeletedItem);
             }
-            if (item.Author.TryGet(out var Authoritem))
+            if (item.Author is {} Authoritem)
             {
                 hash.Add(Authoritem);
             }
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.MasterReferences);
             hash.Add(item.OverriddenForms);
-            if (item.Screenshot.TryGet(out var ScreenshotItem))
+            if (item.Screenshot is {} ScreenshotItem)
             {
                 hash.Add(ScreenshotItem);
             }
             hash.Add(item.TransientTypes);
-            if (item.INTV.TryGet(out var INTVItem))
+            if (item.INTV is {} INTVItem)
             {
                 hash.Add(INTVItem);
             }
-            if (item.INCC.TryGet(out var INCCitem))
+            if (item.INCC is {} INCCitem)
             {
                 hash.Add(INCCitem);
             }
@@ -1910,7 +1910,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFallout4ModHeaderGetter obj)
         {
-            if (obj.OverriddenForms.TryGet(out var OverriddenFormsItem))
+            if (obj.OverriddenForms is {} OverriddenFormsItem)
             {
                 foreach (var item in OverriddenFormsItem)
                 {
@@ -1983,7 +1983,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.TypeOffsets) ?? true))
             {
-                if(rhs.TypeOffsets.TryGet(out var TypeOffsetsrhs))
+                if(rhs.TypeOffsets is {} TypeOffsetsrhs)
                 {
                     item.TypeOffsets = TypeOffsetsrhs.ToArray();
                 }
@@ -1994,7 +1994,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Deleted) ?? true))
             {
-                if(rhs.Deleted.TryGet(out var Deletedrhs))
+                if(rhs.Deleted is {} Deletedrhs)
                 {
                     item.Deleted = Deletedrhs.ToArray();
                 }
@@ -2064,7 +2064,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Screenshot) ?? true))
             {
-                if(rhs.Screenshot.TryGet(out var Screenshotrhs))
+                if(rhs.Screenshot is {} Screenshotrhs)
                 {
                     item.Screenshot = Screenshotrhs.ToArray();
                 }
@@ -2099,7 +2099,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.INTV) ?? true))
             {
-                if(rhs.INTV.TryGet(out var INTVrhs))
+                if(rhs.INTV is {} INTVrhs)
                 {
                     item.INTV = INTVrhs.ToArray();
                 }

@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        private IFormLink<ISoundGetter> _Sound = new FormLink<ISoundGetter>();
+        private readonly IFormLink<ISoundGetter> _Sound = new FormLink<ISoundGetter>();
         public IFormLink<ISoundGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsSetter();
+            set => _Sound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IWeatherSound>,
         IWeatherSoundGetter
     {
-        new IFormLink<ISoundGetter> Sound { get; }
+        new IFormLink<ISoundGetter> Sound { get; set; }
         new WeatherSound.SoundType Type { get; set; }
     }
 

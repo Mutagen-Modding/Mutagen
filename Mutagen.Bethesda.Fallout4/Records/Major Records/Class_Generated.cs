@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1160,12 +1160,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.Description, "Description");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.Properties?.Overall ?? true)
-                && item.Properties.TryGet(out var PropertiesItem))
+                && item.Properties is {} PropertiesItem)
             {
                 PropertiesItem?.ToString(fg, "Properties");
             }
@@ -1289,16 +1289,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IClassGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.Description);
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.Properties.TryGet(out var Propertiesitem))
+            if (item.Properties is {} Propertiesitem)
             {
                 hash.Add(Propertiesitem);
             }
@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask?.PushIndex((int)Class_FieldIndex.Properties);
                 try
                 {
-                    if(rhs.Properties.TryGet(out var rhsProperties))
+                    if(rhs.Properties is {} rhsProperties)
                     {
                         item.Properties = rhsProperties.DeepCopy(
                             errorMask: errorMask,
@@ -1639,7 +1639,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Properties.TryGet(out var PropertiesItem))
+            if (item.Properties is {} PropertiesItem)
             {
                 ((PropertiesBinaryWriteTranslation)((IBinaryItem)PropertiesItem).BinaryWriteTranslator).Write(
                     item: PropertiesItem,

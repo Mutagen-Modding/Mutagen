@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Text;
 
 namespace Mutagen.Bethesda.Strings
 {
@@ -14,10 +15,11 @@ namespace Mutagen.Bethesda.Strings
     /// </summary>
     public class StringsLookupOverlay : IStringsLookup
     {
-        private readonly Dictionary<uint, int> _locations = new Dictionary<uint, int>();
+        private readonly Dictionary<uint, int> _locations = new();
         private ReadOnlyMemorySlice<byte> _stringData;
-        private StringsFileFormat _type;
-
+        private Encoding _encoding = null!;
+        
+        public StringsFileFormat Type { get; private set; }
         public int Count => _locations.Count;
 
         /// <summary>
@@ -25,9 +27,10 @@ namespace Mutagen.Bethesda.Strings
         /// </summary>
         /// <param name="data">Data to wrap</param>
         /// <param name="type">Strings file format</param>
-        public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data, StringsFileFormat type)
+        /// <param name="encoding">Encoding to read strings with</param>
+        public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data, StringsFileFormat type, Encoding encoding)
         {
-            Init(data, type);
+            Init(data, type, encoding);
         }
 
         /// <summary>
@@ -35,9 +38,10 @@ namespace Mutagen.Bethesda.Strings
         /// </summary>
         /// <param name="data">Data to wrap</param>
         /// <param name="source">Source type</param>
-        public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data, StringsSource source)
+        /// <param name="encoding">Encoding to read strings with</param>
+        public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data, StringsSource source, Encoding encoding)
         {
-            Init(data, StringsUtility.GetFormat(source));
+            Init(data, StringsUtility.GetFormat(source), encoding);
         }
 
         /// <summary>
@@ -45,9 +49,10 @@ namespace Mutagen.Bethesda.Strings
         /// </summary>
         /// <param name="path">Path to read in</param>
         /// <param name="type">Strings file format</param>
-        public StringsLookupOverlay(string path, StringsFileFormat type)
+        /// <param name="encoding">Encoding to read strings with</param>
+        public StringsLookupOverlay(string path, StringsFileFormat type, Encoding encoding)
         {
-            Init(File.ReadAllBytes(path), type);
+            Init(File.ReadAllBytes(path), type, encoding);
         }
 
         /// <summary>
@@ -55,16 +60,18 @@ namespace Mutagen.Bethesda.Strings
         /// </summary>
         /// <param name="path">Path to read in</param>
         /// <param name="source">Source type</param>
-        public StringsLookupOverlay(string path, StringsSource source)
+        /// <param name="encoding">Encoding to read strings with</param>
+        public StringsLookupOverlay(string path, StringsSource source, Encoding encoding)
         {
-            Init(File.ReadAllBytes(path), StringsUtility.GetFormat(source));
+            Init(File.ReadAllBytes(path), StringsUtility.GetFormat(source), encoding);
         }
 
-        private void Init(ReadOnlyMemorySlice<byte> data, StringsFileFormat type)
+        private void Init(ReadOnlyMemorySlice<byte> data, StringsFileFormat type, Encoding encoding)
         {
             try
             {
-                _type = type;
+                _encoding = encoding;
+                Type = type;
                 var count = BinaryPrimitives.ReadUInt32LittleEndian(data);
                 var dataSize = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)));
                 var indexData = data.Slice(8, checked((int)(count * 2 * 4)));
@@ -103,14 +110,18 @@ namespace Mutagen.Bethesda.Strings
 
         private string Get(int loc)
         {
-            switch (_type)
+            switch (Type)
             {
                 case StringsFileFormat.Normal:
-                    return BinaryStringUtility.ParseUnknownLengthString(this._stringData.Slice(loc));
+                    return _encoding.GetString(
+                        BinaryStringUtility.ExtractUnknownLengthString(
+                            _stringData.Slice(loc)));
                 case StringsFileFormat.LengthPrepended:
                     try
                     {
-                        return BinaryStringUtility.ParsePrependedString(this._stringData.Slice(loc), 4);
+                        var extract = BinaryStringUtility.ExtractPrependedString(_stringData.Slice(loc), 4);
+                        extract = BinaryStringUtility.ProcessNullTermination(extract);
+                        return _encoding.GetString(extract);
                     }
                     catch (ArgumentOutOfRangeException)
                     {

@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records
@@ -17,7 +18,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                     Damage = 5
                 },
                 Unused = new byte[] {1, 2, 3},
-                AttackSound = Utility.Form2.AsNullableLink<ISoundDescriptorGetter>()
+                AttackSound = TestConstants.Form2.AsNullableLink<ISoundDescriptorGetter>()
             };
         }
         

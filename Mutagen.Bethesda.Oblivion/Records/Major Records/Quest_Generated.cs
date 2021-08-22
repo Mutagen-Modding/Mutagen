@@ -54,11 +54,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Script
-        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> IQuestGetter.Script => this.Script;
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
                         Data?.ToString(fg);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Stages?.Overall ?? true)
-                        && Stages.TryGet(out var StagesItem))
+                        && Stages is {} StagesItem)
                     {
                         fg.AppendLine("Stages =>");
                         fg.AppendLine("[");
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Targets?.Overall ?? true)
-                        && Targets.TryGet(out var TargetsItem))
+                        && Targets is {} TargetsItem)
                     {
                         fg.AppendLine("Targets =>");
                         fg.AppendLine("[");
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(Icon, "Icon");
                 Data?.ToString(fg);
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (Stages.TryGet(out var StagesItem))
+                if (Stages is {} StagesItem)
                 {
                     fg.AppendLine("Stages =>");
                     fg.AppendLine("[");
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (Targets.TryGet(out var TargetsItem))
+                if (Targets is {} TargetsItem)
                 {
                     fg.AppendLine("Targets =>");
                     fg.AppendLine("[");
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordInternal,
         IQuestGetter
     {
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired
         /// </summary>
@@ -1420,17 +1420,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1595,15 +1595,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Script);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -1743,7 +1743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -2007,7 +2007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((QuestDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

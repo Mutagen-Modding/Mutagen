@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Testing;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -29,7 +30,7 @@ namespace Mutagen.Bethesda.Tests
                 });
 
             using var tmp = TempFolder.FactoryByAddedPath("Mutagen_Oblivion_Binary_GroupMask_Import");
-            var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
+            var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestConstants.Oblivion.FileName);
             mod.WriteToBinary(oblivionOutputPath);
             var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, constants: GameConstants.Get(GameRelease.Oblivion));
             using var reader = new BinaryReadStream(oblivionOutputPath);
@@ -52,7 +53,7 @@ namespace Mutagen.Bethesda.Tests
                     Path.Combine(settings.DataFolderLocations.Oblivion, target.Path)));
 
             using var tmp = TempFolder.FactoryByAddedPath("Mutagen_Oblivion_Binary_GroupMask_Export");
-            var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
+            var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestConstants.Oblivion.FileName);
             mod.WriteToBinary(
                 oblivionOutputPath,
                 importMask: new GroupMask()

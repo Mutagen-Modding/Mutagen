@@ -106,11 +106,11 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IMessageGetter.INAM => this.INAM;
         #endregion
         #region Quest
-        private IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
         public IFormLinkNullable<IQuestGetter> Quest
         {
             get => _Quest;
-            set => _Quest = value.AsNullable();
+            set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IMessageGetter.Quest => this.Quest;
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(DisplayTime, "DisplayTime");
                     }
                     if ((printMask?.MenuButtons?.Overall ?? true)
-                        && MenuButtons.TryGet(out var MenuButtonsItem))
+                        && MenuButtons is {} MenuButtonsItem)
                     {
                         fg.AppendLine("MenuButtons =>");
                         fg.AppendLine("[");
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Quest, "Quest");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(DisplayTime, "DisplayTime");
-                if (MenuButtons.TryGet(out var MenuButtonsItem))
+                if (MenuButtons is {} MenuButtonsItem)
                 {
                     fg.AppendLine("MenuButtons =>");
                     fg.AppendLine("[");
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new TranslatedString? Name { get; set; }
         new MemorySlice<Byte> INAM { get; set; }
-        new IFormLinkNullable<IQuestGetter> Quest { get; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
         new Message.Flag Flags { get; set; }
         new UInt32? DisplayTime { get; set; }
         new ExtendedList<MessageButton> MenuButtons { get; }
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Description, "Description");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.DisplayTime ?? true)
-                && item.DisplayTime.TryGet(out var DisplayTimeItem))
+                && item.DisplayTime is {} DisplayTimeItem)
             {
                 fg.AppendItem(DisplayTimeItem, "DisplayTime");
             }
@@ -1418,14 +1418,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Description);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.INAM);
             hash.Add(item.Quest);
             hash.Add(item.Flags);
-            if (item.DisplayTime.TryGet(out var DisplayTimeitem))
+            if (item.DisplayTime is {} DisplayTimeitem)
             {
                 hash.Add(DisplayTimeitem);
             }

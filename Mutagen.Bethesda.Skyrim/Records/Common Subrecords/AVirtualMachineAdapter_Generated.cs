@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(ObjectFormat, "ObjectFormat");
                     }
                     if ((printMask?.Scripts?.Overall ?? true)
-                        && Scripts.TryGet(out var ScriptsItem))
+                        && Scripts is {} ScriptsItem)
                     {
                         fg.AppendLine("Scripts =>");
                         fg.AppendLine("[");
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 fg.AppendItem(Version, "Version");
                 fg.AppendItem(ObjectFormat, "ObjectFormat");
-                if (Scripts.TryGet(out var ScriptsItem))
+                if (Scripts is {} ScriptsItem)
                 {
                     fg.AppendLine("Scripts =>");
                     fg.AppendLine("[");

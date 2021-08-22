@@ -90,21 +90,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Script
-        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> IFloraGetter.Script => this.Script;
         #endregion
         #region Ingredient
-        private IFormLinkNullable<IIngredientGetter> _Ingredient = new FormLinkNullable<IIngredientGetter>();
+        private readonly IFormLinkNullable<IIngredientGetter> _Ingredient = new FormLinkNullable<IIngredientGetter>();
         public IFormLinkNullable<IIngredientGetter> Ingredient
         {
             get => _Ingredient;
-            set => _Ingredient = value.AsNullable();
+            set => _Ingredient.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIngredientGetter> IFloraGetter.Ingredient => this.Ingredient;
@@ -666,8 +666,8 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
-        new IFormLinkNullable<IIngredientGetter> Ingredient { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
+        new IFormLinkNullable<IIngredientGetter> Ingredient { get; set; }
         new SeasonalIngredientProduction? SeasonalIngredientProduction { get; set; }
     }
 
@@ -1117,12 +1117,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Ingredient.FormKeyNullable, "Ingredient");
             }
             if ((printMask?.SeasonalIngredientProduction?.Overall ?? true)
-                && item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionItem))
+                && item.SeasonalIngredientProduction is {} SeasonalIngredientProductionItem)
             {
                 SeasonalIngredientProductionItem?.ToString(fg, "SeasonalIngredientProduction");
             }
@@ -1241,17 +1241,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IFloraGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
             hash.Add(item.Script);
             hash.Add(item.Ingredient);
-            if (item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionitem))
+            if (item.SeasonalIngredientProduction is {} SeasonalIngredientProductionitem)
             {
                 hash.Add(SeasonalIngredientProductionitem);
             }
@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.SeasonalIngredientProduction);
                 try
                 {
-                    if(rhs.SeasonalIngredientProduction.TryGet(out var rhsSeasonalIngredientProduction))
+                    if(rhs.SeasonalIngredientProduction is {} rhsSeasonalIngredientProduction)
                     {
                         item.SeasonalIngredientProduction = rhsSeasonalIngredientProduction.DeepCopy(
                             errorMask: errorMask,
@@ -1592,7 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -1607,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Ingredient,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PFIG));
-            if (item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionItem))
+            if (item.SeasonalIngredientProduction is {} SeasonalIngredientProductionItem)
             {
                 ((SeasonalIngredientProductionBinaryWriteTranslation)((IBinaryItem)SeasonalIngredientProductionItem).BinaryWriteTranslator).Write(
                     item: SeasonalIngredientProductionItem,

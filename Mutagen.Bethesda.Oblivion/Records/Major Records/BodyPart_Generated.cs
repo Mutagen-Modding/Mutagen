@@ -847,12 +847,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BodyPart.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
-                && item.Index.TryGet(out var IndexItem))
+                && item.Index is {} IndexItem)
             {
                 fg.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
@@ -879,11 +879,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IBodyPartGetter item)
         {
             var hash = new HashCode();
-            if (item.Index.TryGet(out var Indexitem))
+            if (item.Index is {} Indexitem)
             {
                 hash.Add(Indexitem);
             }
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }

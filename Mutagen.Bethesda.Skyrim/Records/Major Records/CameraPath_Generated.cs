@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.RelatedPaths?.Overall ?? true)
-                        && RelatedPaths.TryGet(out var RelatedPathsItem))
+                        && RelatedPaths is {} RelatedPathsItem)
                     {
                         fg.AppendLine("RelatedPaths =>");
                         fg.AppendLine("[");
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(ZoomMustHaveCameraShots, "ZoomMustHaveCameraShots");
                     }
                     if ((printMask?.Shots?.Overall ?? true)
-                        && Shots.TryGet(out var ShotsItem))
+                        && Shots is {} ShotsItem)
                     {
                         fg.AppendLine("Shots =>");
                         fg.AppendLine("[");
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (RelatedPaths.TryGet(out var RelatedPathsItem))
+                if (RelatedPaths is {} RelatedPathsItem)
                 {
                     fg.AppendLine("RelatedPaths =>");
                     fg.AppendLine("[");
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendItem(Zoom, "Zoom");
                 fg.AppendItem(ZoomMustHaveCameraShots, "ZoomMustHaveCameraShots");
-                if (Shots.TryGet(out var ShotsItem))
+                if (Shots is {} ShotsItem)
                 {
                     fg.AppendLine("Shots =>");
                     fg.AppendLine("[");

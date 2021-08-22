@@ -925,12 +925,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Color ?? true)
-                && item.Color.TryGet(out var ColorItem))
+                && item.Color is {} ColorItem)
             {
                 fg.AppendItem(ColorItem, "Color");
             }
             if ((printMask?.TNAM ?? true)
-                && item.TNAM.TryGet(out var TNAMItem))
+                && item.TNAM is {} TNAMItem)
             {
                 fg.AppendItem(TNAMItem, "TNAM");
             }
@@ -1018,11 +1018,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(ILocationReferenceTypeGetter item)
         {
             var hash = new HashCode();
-            if (item.Color.TryGet(out var Coloritem))
+            if (item.Color is {} Coloritem)
             {
                 hash.Add(Coloritem);
             }
-            if (item.TNAM.TryGet(out var TNAMitem))
+            if (item.TNAM is {} TNAMitem)
             {
                 hash.Add(TNAMitem);
             }

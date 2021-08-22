@@ -53,21 +53,21 @@ namespace Mutagen.Bethesda.Skyrim
         public LinkedReferences.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region KeywordOrReference
-        private IFormLink<IKeywordLinkedReferenceGetter> _KeywordOrReference = new FormLink<IKeywordLinkedReferenceGetter>();
+        private readonly IFormLink<IKeywordLinkedReferenceGetter> _KeywordOrReference = new FormLink<IKeywordLinkedReferenceGetter>();
         public IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference
         {
             get => _KeywordOrReference;
-            set => _KeywordOrReference = value.AsSetter();
+            set => _KeywordOrReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeywordLinkedReferenceGetter> ILinkedReferencesGetter.KeywordOrReference => this.KeywordOrReference;
         #endregion
         #region Reference
-        private IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
+        private readonly IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
         public IFormLink<ILinkedReferenceGetter> Reference
         {
             get => _Reference;
-            set => _Reference = value.AsSetter();
+            set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILinkedReferenceGetter> ILinkedReferencesGetter.Reference => this.Reference;
@@ -512,8 +512,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILinkedReferences>
     {
         new LinkedReferences.VersioningBreaks Versioning { get; set; }
-        new IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; }
-        new IFormLink<ILinkedReferenceGetter> Reference { get; }
+        new IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; set; }
+        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
     }
 
     public partial interface ILinkedReferencesGetter :

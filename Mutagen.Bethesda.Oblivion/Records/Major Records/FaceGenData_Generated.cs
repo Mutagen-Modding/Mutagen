@@ -904,17 +904,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FaceGenData.Mask<bool>? printMask = null)
         {
             if ((printMask?.SymmetricGeometry ?? true)
-                && item.SymmetricGeometry.TryGet(out var SymmetricGeometryItem))
+                && item.SymmetricGeometry is {} SymmetricGeometryItem)
             {
                 fg.AppendLine($"SymmetricGeometry => {SpanExt.ToHexString(SymmetricGeometryItem)}");
             }
             if ((printMask?.AsymmetricGeometry ?? true)
-                && item.AsymmetricGeometry.TryGet(out var AsymmetricGeometryItem))
+                && item.AsymmetricGeometry is {} AsymmetricGeometryItem)
             {
                 fg.AppendLine($"AsymmetricGeometry => {SpanExt.ToHexString(AsymmetricGeometryItem)}");
             }
             if ((printMask?.SymmetricTexture ?? true)
-                && item.SymmetricTexture.TryGet(out var SymmetricTextureItem))
+                && item.SymmetricTexture is {} SymmetricTextureItem)
             {
                 fg.AppendLine($"SymmetricTexture => {SpanExt.ToHexString(SymmetricTextureItem)}");
             }
@@ -945,15 +945,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IFaceGenDataGetter item)
         {
             var hash = new HashCode();
-            if (item.SymmetricGeometry.TryGet(out var SymmetricGeometryItem))
+            if (item.SymmetricGeometry is {} SymmetricGeometryItem)
             {
                 hash.Add(SymmetricGeometryItem);
             }
-            if (item.AsymmetricGeometry.TryGet(out var AsymmetricGeometryItem))
+            if (item.AsymmetricGeometry is {} AsymmetricGeometryItem)
             {
                 hash.Add(AsymmetricGeometryItem);
             }
-            if (item.SymmetricTexture.TryGet(out var SymmetricTextureItem))
+            if (item.SymmetricTexture is {} SymmetricTextureItem)
             {
                 hash.Add(SymmetricTextureItem);
             }
@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricGeometry) ?? true))
             {
-                if(rhs.SymmetricGeometry.TryGet(out var SymmetricGeometryrhs))
+                if(rhs.SymmetricGeometry is {} SymmetricGeometryrhs)
                 {
                     item.SymmetricGeometry = SymmetricGeometryrhs.ToArray();
                 }
@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.AsymmetricGeometry) ?? true))
             {
-                if(rhs.AsymmetricGeometry.TryGet(out var AsymmetricGeometryrhs))
+                if(rhs.AsymmetricGeometry is {} AsymmetricGeometryrhs)
                 {
                     item.AsymmetricGeometry = AsymmetricGeometryrhs.ToArray();
                 }
@@ -1013,7 +1013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricTexture) ?? true))
             {
-                if(rhs.SymmetricTexture.TryGet(out var SymmetricTexturerhs))
+                if(rhs.SymmetricTexture is {} SymmetricTexturerhs)
                 {
                     item.SymmetricTexture = SymmetricTexturerhs.ToArray();
                 }

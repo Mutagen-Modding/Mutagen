@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.ScriptFragments?.Overall ?? true)
-                && item.ScriptFragments.TryGet(out var ScriptFragmentsItem))
+                && item.ScriptFragments is {} ScriptFragmentsItem)
             {
                 ScriptFragmentsItem?.ToString(fg, "ScriptFragments");
             }
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IDialogResponsesAdapterGetter item)
         {
             var hash = new HashCode();
-            if (item.ScriptFragments.TryGet(out var ScriptFragmentsitem))
+            if (item.ScriptFragments is {} ScriptFragmentsitem)
             {
                 hash.Add(ScriptFragmentsitem);
             }
@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)DialogResponsesAdapter_FieldIndex.ScriptFragments);
                 try
                 {
-                    if(rhs.ScriptFragments.TryGet(out var rhsScriptFragments))
+                    if(rhs.ScriptFragments is {} rhsScriptFragments)
                     {
                         item.ScriptFragments = rhsScriptFragments.DeepCopy(
                             errorMask: errorMask,

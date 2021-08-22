@@ -11,38 +11,7 @@ namespace Mutagen.Bethesda.Tests
     public class StringParsing
     {
         public static byte[] data = Enumerable.Range(1, 15).Select(i => (byte)i).ToArray();
-        public static BinaryMemoryReadStream stream = new BinaryMemoryReadStream(data);
-
-        [Benchmark]
-        public string ArrayRenting()
-        {
-            var span = data.AsSpan();
-            var chars = ArrayPool<char>.Shared.Rent(span.Length);
-            BinaryStringUtility.ToZStringBuffer(span, chars);
-            var ret = new string(chars, 0, span.Length);
-            ArrayPool<char>.Shared.Return(chars);
-            return ret;
-        }
-
-        [Benchmark]
-        public string ArrayAllocation()
-        {
-            var span = data.AsSpan();
-            char[] chars = new char[span.Length];
-            BinaryStringUtility.ToZStringBuffer(span, chars);
-            var charSpan = chars.AsSpan();
-            return charSpan.ToString();
-        }
-
-        [Benchmark]
-        public unsafe string UnsafeAlloc()
-        {
-            var span = data.AsSpan();
-            Span<char> chars = stackalloc char[span.Length];
-            BinaryStringUtility.ToZStringBuffer(span, chars);
-            return chars.ToString();
-        }
-
+        public static BinaryMemoryReadStream stream = new(data);
         [Benchmark]
         public string StringCreate()
         {

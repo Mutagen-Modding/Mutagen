@@ -1675,32 +1675,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.AvoidThreatChance, "AvoidThreatChance");
             }
             if ((printMask?.CSMD ?? true)
-                && item.CSMD.TryGet(out var CSMDItem))
+                && item.CSMD is {} CSMDItem)
             {
                 fg.AppendLine($"CSMD => {SpanExt.ToHexString(CSMDItem)}");
             }
             if ((printMask?.Melee?.Overall ?? true)
-                && item.Melee.TryGet(out var MeleeItem))
+                && item.Melee is {} MeleeItem)
             {
                 MeleeItem?.ToString(fg, "Melee");
             }
             if ((printMask?.CloseRange?.Overall ?? true)
-                && item.CloseRange.TryGet(out var CloseRangeItem))
+                && item.CloseRange is {} CloseRangeItem)
             {
                 CloseRangeItem?.ToString(fg, "CloseRange");
             }
             if ((printMask?.LongRangeStrafeMult ?? true)
-                && item.LongRangeStrafeMult.TryGet(out var LongRangeStrafeMultItem))
+                && item.LongRangeStrafeMult is {} LongRangeStrafeMultItem)
             {
                 fg.AppendItem(LongRangeStrafeMultItem, "LongRangeStrafeMult");
             }
             if ((printMask?.Flight?.Overall ?? true)
-                && item.Flight.TryGet(out var FlightItem))
+                && item.Flight is {} FlightItem)
             {
                 FlightItem?.ToString(fg, "Flight");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1874,27 +1874,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.EquipmentScoreMultUnarmed);
             hash.Add(item.EquipmentScoreMultStaff);
             hash.Add(item.AvoidThreatChance);
-            if (item.CSMD.TryGet(out var CSMDItem))
+            if (item.CSMD is {} CSMDItem)
             {
                 hash.Add(CSMDItem);
             }
-            if (item.Melee.TryGet(out var Meleeitem))
+            if (item.Melee is {} Meleeitem)
             {
                 hash.Add(Meleeitem);
             }
-            if (item.CloseRange.TryGet(out var CloseRangeitem))
+            if (item.CloseRange is {} CloseRangeitem)
             {
                 hash.Add(CloseRangeitem);
             }
-            if (item.LongRangeStrafeMult.TryGet(out var LongRangeStrafeMultitem))
+            if (item.LongRangeStrafeMult is {} LongRangeStrafeMultitem)
             {
                 hash.Add(LongRangeStrafeMultitem);
             }
-            if (item.Flight.TryGet(out var Flightitem))
+            if (item.Flight is {} Flightitem)
             {
                 hash.Add(Flightitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMD) ?? true))
             {
-                if(rhs.CSMD.TryGet(out var CSMDrhs))
+                if(rhs.CSMD is {} CSMDrhs)
                 {
                     item.CSMD = CSMDrhs.ToArray();
                 }
@@ -2058,7 +2058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.Melee);
                 try
                 {
-                    if(rhs.Melee.TryGet(out var rhsMelee))
+                    if(rhs.Melee is {} rhsMelee)
                     {
                         item.Melee = rhsMelee.DeepCopy(
                             errorMask: errorMask,
@@ -2084,7 +2084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.CloseRange);
                 try
                 {
-                    if(rhs.CloseRange.TryGet(out var rhsCloseRange))
+                    if(rhs.CloseRange is {} rhsCloseRange)
                     {
                         item.CloseRange = rhsCloseRange.DeepCopy(
                             errorMask: errorMask,
@@ -2114,7 +2114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flight);
                 try
                 {
-                    if(rhs.Flight.TryGet(out var rhsFlight))
+                    if(rhs.Flight is {} rhsFlight)
                     {
                         item.Flight = rhsFlight.DeepCopy(
                             errorMask: errorMask,
@@ -2352,14 +2352,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.CSMD,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CSMD));
-            if (item.Melee.TryGet(out var MeleeItem))
+            if (item.Melee is {} MeleeItem)
             {
                 ((CombatStyleMeleeBinaryWriteTranslation)((IBinaryItem)MeleeItem).BinaryWriteTranslator).Write(
                     item: MeleeItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.CloseRange.TryGet(out var CloseRangeItem))
+            if (item.CloseRange is {} CloseRangeItem)
             {
                 ((CombatStyleCloseRangeBinaryWriteTranslation)((IBinaryItem)CloseRangeItem).BinaryWriteTranslator).Write(
                     item: CloseRangeItem,
@@ -2370,7 +2370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.LongRangeStrafeMult,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CSLR));
-            if (item.Flight.TryGet(out var FlightItem))
+            if (item.Flight is {} FlightItem)
             {
                 ((CombatStyleFlightBinaryWriteTranslation)((IBinaryItem)FlightItem).BinaryWriteTranslator).Write(
                     item: FlightItem,

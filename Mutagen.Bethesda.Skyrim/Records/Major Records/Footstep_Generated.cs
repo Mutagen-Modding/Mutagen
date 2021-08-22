@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ImpactDataSet
-        private IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> ImpactDataSet
         {
             get => _ImpactDataSet;
-            set => _ImpactDataSet = value.AsSetter();
+            set => _ImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IFootstepGetter.ImpactDataSet => this.ImpactDataSet;
@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFootstepInternal>,
         ISkyrimMajorRecordInternal
     {
-        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
         new String Tag { get; set; }
     }
 

@@ -3514,7 +3514,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
                     }
                     if ((printMask?.BlurRadius?.Overall ?? true)
-                        && BlurRadius.TryGet(out var BlurRadiusItem))
+                        && BlurRadius is {} BlurRadiusItem)
                     {
                         fg.AppendLine("BlurRadius =>");
                         fg.AppendLine("[");
@@ -3537,7 +3537,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.DoubleVisionStrength?.Overall ?? true)
-                        && DoubleVisionStrength.TryGet(out var DoubleVisionStrengthItem))
+                        && DoubleVisionStrength is {} DoubleVisionStrengthItem)
                     {
                         fg.AppendLine("DoubleVisionStrength =>");
                         fg.AppendLine("[");
@@ -3560,7 +3560,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.TintColor?.Overall ?? true)
-                        && TintColor.TryGet(out var TintColorItem))
+                        && TintColor is {} TintColorItem)
                     {
                         fg.AppendLine("TintColor =>");
                         fg.AppendLine("[");
@@ -3583,7 +3583,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.FadeColor?.Overall ?? true)
-                        && FadeColor.TryGet(out var FadeColorItem))
+                        && FadeColor is {} FadeColorItem)
                     {
                         fg.AppendLine("FadeColor =>");
                         fg.AppendLine("[");
@@ -3606,7 +3606,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.RadialBlurStrength?.Overall ?? true)
-                        && RadialBlurStrength.TryGet(out var RadialBlurStrengthItem))
+                        && RadialBlurStrength is {} RadialBlurStrengthItem)
                     {
                         fg.AppendLine("RadialBlurStrength =>");
                         fg.AppendLine("[");
@@ -3629,7 +3629,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.RadialBlurRampUp?.Overall ?? true)
-                        && RadialBlurRampUp.TryGet(out var RadialBlurRampUpItem))
+                        && RadialBlurRampUp is {} RadialBlurRampUpItem)
                     {
                         fg.AppendLine("RadialBlurRampUp =>");
                         fg.AppendLine("[");
@@ -3652,7 +3652,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.RadialBlurStart?.Overall ?? true)
-                        && RadialBlurStart.TryGet(out var RadialBlurStartItem))
+                        && RadialBlurStart is {} RadialBlurStartItem)
                     {
                         fg.AppendLine("RadialBlurStart =>");
                         fg.AppendLine("[");
@@ -3675,7 +3675,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.RadialBlurRampDown?.Overall ?? true)
-                        && RadialBlurRampDown.TryGet(out var RadialBlurRampDownItem))
+                        && RadialBlurRampDown is {} RadialBlurRampDownItem)
                     {
                         fg.AppendLine("RadialBlurRampDown =>");
                         fg.AppendLine("[");
@@ -3698,7 +3698,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.RadialBlurDownStart?.Overall ?? true)
-                        && RadialBlurDownStart.TryGet(out var RadialBlurDownStartItem))
+                        && RadialBlurDownStart is {} RadialBlurDownStartItem)
                     {
                         fg.AppendLine("RadialBlurDownStart =>");
                         fg.AppendLine("[");
@@ -3721,7 +3721,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.DepthOfFieldStrength?.Overall ?? true)
-                        && DepthOfFieldStrength.TryGet(out var DepthOfFieldStrengthItem))
+                        && DepthOfFieldStrength is {} DepthOfFieldStrengthItem)
                     {
                         fg.AppendLine("DepthOfFieldStrength =>");
                         fg.AppendLine("[");
@@ -3744,7 +3744,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.DepthOfFieldDistance?.Overall ?? true)
-                        && DepthOfFieldDistance.TryGet(out var DepthOfFieldDistanceItem))
+                        && DepthOfFieldDistance is {} DepthOfFieldDistanceItem)
                     {
                         fg.AppendLine("DepthOfFieldDistance =>");
                         fg.AppendLine("[");
@@ -3767,7 +3767,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.DepthOfFieldRange?.Overall ?? true)
-                        && DepthOfFieldRange.TryGet(out var DepthOfFieldRangeItem))
+                        && DepthOfFieldRange is {} DepthOfFieldRangeItem)
                     {
                         fg.AppendLine("DepthOfFieldRange =>");
                         fg.AppendLine("[");
@@ -3790,7 +3790,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.MotionBlurStrength?.Overall ?? true)
-                        && MotionBlurStrength.TryGet(out var MotionBlurStrengthItem))
+                        && MotionBlurStrength is {} MotionBlurStrengthItem)
                     {
                         fg.AppendLine("MotionBlurStrength =>");
                         fg.AppendLine("[");
@@ -3813,7 +3813,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrEyeAdaptSpeedMult?.Overall ?? true)
-                        && HdrEyeAdaptSpeedMult.TryGet(out var HdrEyeAdaptSpeedMultItem))
+                        && HdrEyeAdaptSpeedMult is {} HdrEyeAdaptSpeedMultItem)
                     {
                         fg.AppendLine("HdrEyeAdaptSpeedMult =>");
                         fg.AppendLine("[");
@@ -3836,7 +3836,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrEyeAdaptSpeedAdd?.Overall ?? true)
-                        && HdrEyeAdaptSpeedAdd.TryGet(out var HdrEyeAdaptSpeedAddItem))
+                        && HdrEyeAdaptSpeedAdd is {} HdrEyeAdaptSpeedAddItem)
                     {
                         fg.AppendLine("HdrEyeAdaptSpeedAdd =>");
                         fg.AppendLine("[");
@@ -3859,7 +3859,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomBlurRadiusMult?.Overall ?? true)
-                        && HdrBloomBlurRadiusMult.TryGet(out var HdrBloomBlurRadiusMultItem))
+                        && HdrBloomBlurRadiusMult is {} HdrBloomBlurRadiusMultItem)
                     {
                         fg.AppendLine("HdrBloomBlurRadiusMult =>");
                         fg.AppendLine("[");
@@ -3882,7 +3882,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomBlurRadiusAdd?.Overall ?? true)
-                        && HdrBloomBlurRadiusAdd.TryGet(out var HdrBloomBlurRadiusAddItem))
+                        && HdrBloomBlurRadiusAdd is {} HdrBloomBlurRadiusAddItem)
                     {
                         fg.AppendLine("HdrBloomBlurRadiusAdd =>");
                         fg.AppendLine("[");
@@ -3905,7 +3905,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomThresholdMult?.Overall ?? true)
-                        && HdrBloomThresholdMult.TryGet(out var HdrBloomThresholdMultItem))
+                        && HdrBloomThresholdMult is {} HdrBloomThresholdMultItem)
                     {
                         fg.AppendLine("HdrBloomThresholdMult =>");
                         fg.AppendLine("[");
@@ -3928,7 +3928,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomThresholdAdd?.Overall ?? true)
-                        && HdrBloomThresholdAdd.TryGet(out var HdrBloomThresholdAddItem))
+                        && HdrBloomThresholdAdd is {} HdrBloomThresholdAddItem)
                     {
                         fg.AppendLine("HdrBloomThresholdAdd =>");
                         fg.AppendLine("[");
@@ -3951,7 +3951,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomScaleMult?.Overall ?? true)
-                        && HdrBloomScaleMult.TryGet(out var HdrBloomScaleMultItem))
+                        && HdrBloomScaleMult is {} HdrBloomScaleMultItem)
                     {
                         fg.AppendLine("HdrBloomScaleMult =>");
                         fg.AppendLine("[");
@@ -3974,7 +3974,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomScaleAdd?.Overall ?? true)
-                        && HdrBloomScaleAdd.TryGet(out var HdrBloomScaleAddItem))
+                        && HdrBloomScaleAdd is {} HdrBloomScaleAddItem)
                     {
                         fg.AppendLine("HdrBloomScaleAdd =>");
                         fg.AppendLine("[");
@@ -3997,7 +3997,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrTargetLumMinMult?.Overall ?? true)
-                        && HdrTargetLumMinMult.TryGet(out var HdrTargetLumMinMultItem))
+                        && HdrTargetLumMinMult is {} HdrTargetLumMinMultItem)
                     {
                         fg.AppendLine("HdrTargetLumMinMult =>");
                         fg.AppendLine("[");
@@ -4020,7 +4020,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrTargetLumMinAdd?.Overall ?? true)
-                        && HdrTargetLumMinAdd.TryGet(out var HdrTargetLumMinAddItem))
+                        && HdrTargetLumMinAdd is {} HdrTargetLumMinAddItem)
                     {
                         fg.AppendLine("HdrTargetLumMinAdd =>");
                         fg.AppendLine("[");
@@ -4043,7 +4043,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrTargetLumMaxMult?.Overall ?? true)
-                        && HdrTargetLumMaxMult.TryGet(out var HdrTargetLumMaxMultItem))
+                        && HdrTargetLumMaxMult is {} HdrTargetLumMaxMultItem)
                     {
                         fg.AppendLine("HdrTargetLumMaxMult =>");
                         fg.AppendLine("[");
@@ -4066,7 +4066,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrTargetLumMaxAdd?.Overall ?? true)
-                        && HdrTargetLumMaxAdd.TryGet(out var HdrTargetLumMaxAddItem))
+                        && HdrTargetLumMaxAdd is {} HdrTargetLumMaxAddItem)
                     {
                         fg.AppendLine("HdrTargetLumMaxAdd =>");
                         fg.AppendLine("[");
@@ -4089,7 +4089,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrSunlightScaleMult?.Overall ?? true)
-                        && HdrSunlightScaleMult.TryGet(out var HdrSunlightScaleMultItem))
+                        && HdrSunlightScaleMult is {} HdrSunlightScaleMultItem)
                     {
                         fg.AppendLine("HdrSunlightScaleMult =>");
                         fg.AppendLine("[");
@@ -4112,7 +4112,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrSunlightScaleAdd?.Overall ?? true)
-                        && HdrSunlightScaleAdd.TryGet(out var HdrSunlightScaleAddItem))
+                        && HdrSunlightScaleAdd is {} HdrSunlightScaleAddItem)
                     {
                         fg.AppendLine("HdrSunlightScaleAdd =>");
                         fg.AppendLine("[");
@@ -4135,7 +4135,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrSkyScaleMult?.Overall ?? true)
-                        && HdrSkyScaleMult.TryGet(out var HdrSkyScaleMultItem))
+                        && HdrSkyScaleMult is {} HdrSkyScaleMultItem)
                     {
                         fg.AppendLine("HdrSkyScaleMult =>");
                         fg.AppendLine("[");
@@ -4158,7 +4158,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.HdrSkyScaleAdd?.Overall ?? true)
-                        && HdrSkyScaleAdd.TryGet(out var HdrSkyScaleAddItem))
+                        && HdrSkyScaleAdd is {} HdrSkyScaleAddItem)
                     {
                         fg.AppendLine("HdrSkyScaleAdd =>");
                         fg.AppendLine("[");
@@ -4181,7 +4181,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown08?.Overall ?? true)
-                        && Unknown08.TryGet(out var Unknown08Item))
+                        && Unknown08 is {} Unknown08Item)
                     {
                         fg.AppendLine("Unknown08 =>");
                         fg.AppendLine("[");
@@ -4204,7 +4204,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown48?.Overall ?? true)
-                        && Unknown48.TryGet(out var Unknown48Item))
+                        && Unknown48 is {} Unknown48Item)
                     {
                         fg.AppendLine("Unknown48 =>");
                         fg.AppendLine("[");
@@ -4227,7 +4227,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown09?.Overall ?? true)
-                        && Unknown09.TryGet(out var Unknown09Item))
+                        && Unknown09 is {} Unknown09Item)
                     {
                         fg.AppendLine("Unknown09 =>");
                         fg.AppendLine("[");
@@ -4250,7 +4250,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown49?.Overall ?? true)
-                        && Unknown49.TryGet(out var Unknown49Item))
+                        && Unknown49 is {} Unknown49Item)
                     {
                         fg.AppendLine("Unknown49 =>");
                         fg.AppendLine("[");
@@ -4273,7 +4273,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0A?.Overall ?? true)
-                        && Unknown0A.TryGet(out var Unknown0AItem))
+                        && Unknown0A is {} Unknown0AItem)
                     {
                         fg.AppendLine("Unknown0A =>");
                         fg.AppendLine("[");
@@ -4296,7 +4296,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4A?.Overall ?? true)
-                        && Unknown4A.TryGet(out var Unknown4AItem))
+                        && Unknown4A is {} Unknown4AItem)
                     {
                         fg.AppendLine("Unknown4A =>");
                         fg.AppendLine("[");
@@ -4319,7 +4319,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0B?.Overall ?? true)
-                        && Unknown0B.TryGet(out var Unknown0BItem))
+                        && Unknown0B is {} Unknown0BItem)
                     {
                         fg.AppendLine("Unknown0B =>");
                         fg.AppendLine("[");
@@ -4342,7 +4342,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4B?.Overall ?? true)
-                        && Unknown4B.TryGet(out var Unknown4BItem))
+                        && Unknown4B is {} Unknown4BItem)
                     {
                         fg.AppendLine("Unknown4B =>");
                         fg.AppendLine("[");
@@ -4365,7 +4365,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0C?.Overall ?? true)
-                        && Unknown0C.TryGet(out var Unknown0CItem))
+                        && Unknown0C is {} Unknown0CItem)
                     {
                         fg.AppendLine("Unknown0C =>");
                         fg.AppendLine("[");
@@ -4388,7 +4388,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4C?.Overall ?? true)
-                        && Unknown4C.TryGet(out var Unknown4CItem))
+                        && Unknown4C is {} Unknown4CItem)
                     {
                         fg.AppendLine("Unknown4C =>");
                         fg.AppendLine("[");
@@ -4411,7 +4411,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0D?.Overall ?? true)
-                        && Unknown0D.TryGet(out var Unknown0DItem))
+                        && Unknown0D is {} Unknown0DItem)
                     {
                         fg.AppendLine("Unknown0D =>");
                         fg.AppendLine("[");
@@ -4434,7 +4434,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4D?.Overall ?? true)
-                        && Unknown4D.TryGet(out var Unknown4DItem))
+                        && Unknown4D is {} Unknown4DItem)
                     {
                         fg.AppendLine("Unknown4D =>");
                         fg.AppendLine("[");
@@ -4457,7 +4457,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0E?.Overall ?? true)
-                        && Unknown0E.TryGet(out var Unknown0EItem))
+                        && Unknown0E is {} Unknown0EItem)
                     {
                         fg.AppendLine("Unknown0E =>");
                         fg.AppendLine("[");
@@ -4480,7 +4480,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4E?.Overall ?? true)
-                        && Unknown4E.TryGet(out var Unknown4EItem))
+                        && Unknown4E is {} Unknown4EItem)
                     {
                         fg.AppendLine("Unknown4E =>");
                         fg.AppendLine("[");
@@ -4503,7 +4503,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0F?.Overall ?? true)
-                        && Unknown0F.TryGet(out var Unknown0FItem))
+                        && Unknown0F is {} Unknown0FItem)
                     {
                         fg.AppendLine("Unknown0F =>");
                         fg.AppendLine("[");
@@ -4526,7 +4526,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4F?.Overall ?? true)
-                        && Unknown4F.TryGet(out var Unknown4FItem))
+                        && Unknown4F is {} Unknown4FItem)
                     {
                         fg.AppendLine("Unknown4F =>");
                         fg.AppendLine("[");
@@ -4549,7 +4549,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown10?.Overall ?? true)
-                        && Unknown10.TryGet(out var Unknown10Item))
+                        && Unknown10 is {} Unknown10Item)
                     {
                         fg.AppendLine("Unknown10 =>");
                         fg.AppendLine("[");
@@ -4572,7 +4572,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown50?.Overall ?? true)
-                        && Unknown50.TryGet(out var Unknown50Item))
+                        && Unknown50 is {} Unknown50Item)
                     {
                         fg.AppendLine("Unknown50 =>");
                         fg.AppendLine("[");
@@ -4595,7 +4595,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicSaturationMult?.Overall ?? true)
-                        && CinematicSaturationMult.TryGet(out var CinematicSaturationMultItem))
+                        && CinematicSaturationMult is {} CinematicSaturationMultItem)
                     {
                         fg.AppendLine("CinematicSaturationMult =>");
                         fg.AppendLine("[");
@@ -4618,7 +4618,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicSaturationAdd?.Overall ?? true)
-                        && CinematicSaturationAdd.TryGet(out var CinematicSaturationAddItem))
+                        && CinematicSaturationAdd is {} CinematicSaturationAddItem)
                     {
                         fg.AppendLine("CinematicSaturationAdd =>");
                         fg.AppendLine("[");
@@ -4641,7 +4641,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicBrightnessMult?.Overall ?? true)
-                        && CinematicBrightnessMult.TryGet(out var CinematicBrightnessMultItem))
+                        && CinematicBrightnessMult is {} CinematicBrightnessMultItem)
                     {
                         fg.AppendLine("CinematicBrightnessMult =>");
                         fg.AppendLine("[");
@@ -4664,7 +4664,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicBrightnessAdd?.Overall ?? true)
-                        && CinematicBrightnessAdd.TryGet(out var CinematicBrightnessAddItem))
+                        && CinematicBrightnessAdd is {} CinematicBrightnessAddItem)
                     {
                         fg.AppendLine("CinematicBrightnessAdd =>");
                         fg.AppendLine("[");
@@ -4687,7 +4687,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicContrastMult?.Overall ?? true)
-                        && CinematicContrastMult.TryGet(out var CinematicContrastMultItem))
+                        && CinematicContrastMult is {} CinematicContrastMultItem)
                     {
                         fg.AppendLine("CinematicContrastMult =>");
                         fg.AppendLine("[");
@@ -4710,7 +4710,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicContrastAdd?.Overall ?? true)
-                        && CinematicContrastAdd.TryGet(out var CinematicContrastAddItem))
+                        && CinematicContrastAdd is {} CinematicContrastAddItem)
                     {
                         fg.AppendLine("CinematicContrastAdd =>");
                         fg.AppendLine("[");
@@ -4733,7 +4733,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown14?.Overall ?? true)
-                        && Unknown14.TryGet(out var Unknown14Item))
+                        && Unknown14 is {} Unknown14Item)
                     {
                         fg.AppendLine("Unknown14 =>");
                         fg.AppendLine("[");
@@ -4756,7 +4756,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown54?.Overall ?? true)
-                        && Unknown54.TryGet(out var Unknown54Item))
+                        && Unknown54 is {} Unknown54Item)
                     {
                         fg.AppendLine("Unknown54 =>");
                         fg.AppendLine("[");
@@ -5482,7 +5482,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(RadialBlurFlags, "RadialBlurFlags");
                 fg.AppendItem(RadialBlurCenter, "RadialBlurCenter");
                 fg.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
-                if (BlurRadius.TryGet(out var BlurRadiusItem))
+                if (BlurRadius is {} BlurRadiusItem)
                 {
                     fg.AppendLine("BlurRadius =>");
                     fg.AppendLine("[");
@@ -5504,7 +5504,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (DoubleVisionStrength.TryGet(out var DoubleVisionStrengthItem))
+                if (DoubleVisionStrength is {} DoubleVisionStrengthItem)
                 {
                     fg.AppendLine("DoubleVisionStrength =>");
                     fg.AppendLine("[");
@@ -5526,7 +5526,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (TintColor.TryGet(out var TintColorItem))
+                if (TintColor is {} TintColorItem)
                 {
                     fg.AppendLine("TintColor =>");
                     fg.AppendLine("[");
@@ -5548,7 +5548,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (FadeColor.TryGet(out var FadeColorItem))
+                if (FadeColor is {} FadeColorItem)
                 {
                     fg.AppendLine("FadeColor =>");
                     fg.AppendLine("[");
@@ -5570,7 +5570,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (RadialBlurStrength.TryGet(out var RadialBlurStrengthItem))
+                if (RadialBlurStrength is {} RadialBlurStrengthItem)
                 {
                     fg.AppendLine("RadialBlurStrength =>");
                     fg.AppendLine("[");
@@ -5592,7 +5592,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (RadialBlurRampUp.TryGet(out var RadialBlurRampUpItem))
+                if (RadialBlurRampUp is {} RadialBlurRampUpItem)
                 {
                     fg.AppendLine("RadialBlurRampUp =>");
                     fg.AppendLine("[");
@@ -5614,7 +5614,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (RadialBlurStart.TryGet(out var RadialBlurStartItem))
+                if (RadialBlurStart is {} RadialBlurStartItem)
                 {
                     fg.AppendLine("RadialBlurStart =>");
                     fg.AppendLine("[");
@@ -5636,7 +5636,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (RadialBlurRampDown.TryGet(out var RadialBlurRampDownItem))
+                if (RadialBlurRampDown is {} RadialBlurRampDownItem)
                 {
                     fg.AppendLine("RadialBlurRampDown =>");
                     fg.AppendLine("[");
@@ -5658,7 +5658,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (RadialBlurDownStart.TryGet(out var RadialBlurDownStartItem))
+                if (RadialBlurDownStart is {} RadialBlurDownStartItem)
                 {
                     fg.AppendLine("RadialBlurDownStart =>");
                     fg.AppendLine("[");
@@ -5680,7 +5680,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (DepthOfFieldStrength.TryGet(out var DepthOfFieldStrengthItem))
+                if (DepthOfFieldStrength is {} DepthOfFieldStrengthItem)
                 {
                     fg.AppendLine("DepthOfFieldStrength =>");
                     fg.AppendLine("[");
@@ -5702,7 +5702,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (DepthOfFieldDistance.TryGet(out var DepthOfFieldDistanceItem))
+                if (DepthOfFieldDistance is {} DepthOfFieldDistanceItem)
                 {
                     fg.AppendLine("DepthOfFieldDistance =>");
                     fg.AppendLine("[");
@@ -5724,7 +5724,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (DepthOfFieldRange.TryGet(out var DepthOfFieldRangeItem))
+                if (DepthOfFieldRange is {} DepthOfFieldRangeItem)
                 {
                     fg.AppendLine("DepthOfFieldRange =>");
                     fg.AppendLine("[");
@@ -5746,7 +5746,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (MotionBlurStrength.TryGet(out var MotionBlurStrengthItem))
+                if (MotionBlurStrength is {} MotionBlurStrengthItem)
                 {
                     fg.AppendLine("MotionBlurStrength =>");
                     fg.AppendLine("[");
@@ -5768,7 +5768,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrEyeAdaptSpeedMult.TryGet(out var HdrEyeAdaptSpeedMultItem))
+                if (HdrEyeAdaptSpeedMult is {} HdrEyeAdaptSpeedMultItem)
                 {
                     fg.AppendLine("HdrEyeAdaptSpeedMult =>");
                     fg.AppendLine("[");
@@ -5790,7 +5790,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrEyeAdaptSpeedAdd.TryGet(out var HdrEyeAdaptSpeedAddItem))
+                if (HdrEyeAdaptSpeedAdd is {} HdrEyeAdaptSpeedAddItem)
                 {
                     fg.AppendLine("HdrEyeAdaptSpeedAdd =>");
                     fg.AppendLine("[");
@@ -5812,7 +5812,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrBloomBlurRadiusMult.TryGet(out var HdrBloomBlurRadiusMultItem))
+                if (HdrBloomBlurRadiusMult is {} HdrBloomBlurRadiusMultItem)
                 {
                     fg.AppendLine("HdrBloomBlurRadiusMult =>");
                     fg.AppendLine("[");
@@ -5834,7 +5834,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrBloomBlurRadiusAdd.TryGet(out var HdrBloomBlurRadiusAddItem))
+                if (HdrBloomBlurRadiusAdd is {} HdrBloomBlurRadiusAddItem)
                 {
                     fg.AppendLine("HdrBloomBlurRadiusAdd =>");
                     fg.AppendLine("[");
@@ -5856,7 +5856,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrBloomThresholdMult.TryGet(out var HdrBloomThresholdMultItem))
+                if (HdrBloomThresholdMult is {} HdrBloomThresholdMultItem)
                 {
                     fg.AppendLine("HdrBloomThresholdMult =>");
                     fg.AppendLine("[");
@@ -5878,7 +5878,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrBloomThresholdAdd.TryGet(out var HdrBloomThresholdAddItem))
+                if (HdrBloomThresholdAdd is {} HdrBloomThresholdAddItem)
                 {
                     fg.AppendLine("HdrBloomThresholdAdd =>");
                     fg.AppendLine("[");
@@ -5900,7 +5900,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrBloomScaleMult.TryGet(out var HdrBloomScaleMultItem))
+                if (HdrBloomScaleMult is {} HdrBloomScaleMultItem)
                 {
                     fg.AppendLine("HdrBloomScaleMult =>");
                     fg.AppendLine("[");
@@ -5922,7 +5922,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrBloomScaleAdd.TryGet(out var HdrBloomScaleAddItem))
+                if (HdrBloomScaleAdd is {} HdrBloomScaleAddItem)
                 {
                     fg.AppendLine("HdrBloomScaleAdd =>");
                     fg.AppendLine("[");
@@ -5944,7 +5944,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrTargetLumMinMult.TryGet(out var HdrTargetLumMinMultItem))
+                if (HdrTargetLumMinMult is {} HdrTargetLumMinMultItem)
                 {
                     fg.AppendLine("HdrTargetLumMinMult =>");
                     fg.AppendLine("[");
@@ -5966,7 +5966,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrTargetLumMinAdd.TryGet(out var HdrTargetLumMinAddItem))
+                if (HdrTargetLumMinAdd is {} HdrTargetLumMinAddItem)
                 {
                     fg.AppendLine("HdrTargetLumMinAdd =>");
                     fg.AppendLine("[");
@@ -5988,7 +5988,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrTargetLumMaxMult.TryGet(out var HdrTargetLumMaxMultItem))
+                if (HdrTargetLumMaxMult is {} HdrTargetLumMaxMultItem)
                 {
                     fg.AppendLine("HdrTargetLumMaxMult =>");
                     fg.AppendLine("[");
@@ -6010,7 +6010,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrTargetLumMaxAdd.TryGet(out var HdrTargetLumMaxAddItem))
+                if (HdrTargetLumMaxAdd is {} HdrTargetLumMaxAddItem)
                 {
                     fg.AppendLine("HdrTargetLumMaxAdd =>");
                     fg.AppendLine("[");
@@ -6032,7 +6032,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrSunlightScaleMult.TryGet(out var HdrSunlightScaleMultItem))
+                if (HdrSunlightScaleMult is {} HdrSunlightScaleMultItem)
                 {
                     fg.AppendLine("HdrSunlightScaleMult =>");
                     fg.AppendLine("[");
@@ -6054,7 +6054,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrSunlightScaleAdd.TryGet(out var HdrSunlightScaleAddItem))
+                if (HdrSunlightScaleAdd is {} HdrSunlightScaleAddItem)
                 {
                     fg.AppendLine("HdrSunlightScaleAdd =>");
                     fg.AppendLine("[");
@@ -6076,7 +6076,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrSkyScaleMult.TryGet(out var HdrSkyScaleMultItem))
+                if (HdrSkyScaleMult is {} HdrSkyScaleMultItem)
                 {
                     fg.AppendLine("HdrSkyScaleMult =>");
                     fg.AppendLine("[");
@@ -6098,7 +6098,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (HdrSkyScaleAdd.TryGet(out var HdrSkyScaleAddItem))
+                if (HdrSkyScaleAdd is {} HdrSkyScaleAddItem)
                 {
                     fg.AppendLine("HdrSkyScaleAdd =>");
                     fg.AppendLine("[");
@@ -6120,7 +6120,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown08.TryGet(out var Unknown08Item))
+                if (Unknown08 is {} Unknown08Item)
                 {
                     fg.AppendLine("Unknown08 =>");
                     fg.AppendLine("[");
@@ -6142,7 +6142,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown48.TryGet(out var Unknown48Item))
+                if (Unknown48 is {} Unknown48Item)
                 {
                     fg.AppendLine("Unknown48 =>");
                     fg.AppendLine("[");
@@ -6164,7 +6164,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown09.TryGet(out var Unknown09Item))
+                if (Unknown09 is {} Unknown09Item)
                 {
                     fg.AppendLine("Unknown09 =>");
                     fg.AppendLine("[");
@@ -6186,7 +6186,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown49.TryGet(out var Unknown49Item))
+                if (Unknown49 is {} Unknown49Item)
                 {
                     fg.AppendLine("Unknown49 =>");
                     fg.AppendLine("[");
@@ -6208,7 +6208,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown0A.TryGet(out var Unknown0AItem))
+                if (Unknown0A is {} Unknown0AItem)
                 {
                     fg.AppendLine("Unknown0A =>");
                     fg.AppendLine("[");
@@ -6230,7 +6230,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown4A.TryGet(out var Unknown4AItem))
+                if (Unknown4A is {} Unknown4AItem)
                 {
                     fg.AppendLine("Unknown4A =>");
                     fg.AppendLine("[");
@@ -6252,7 +6252,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown0B.TryGet(out var Unknown0BItem))
+                if (Unknown0B is {} Unknown0BItem)
                 {
                     fg.AppendLine("Unknown0B =>");
                     fg.AppendLine("[");
@@ -6274,7 +6274,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown4B.TryGet(out var Unknown4BItem))
+                if (Unknown4B is {} Unknown4BItem)
                 {
                     fg.AppendLine("Unknown4B =>");
                     fg.AppendLine("[");
@@ -6296,7 +6296,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown0C.TryGet(out var Unknown0CItem))
+                if (Unknown0C is {} Unknown0CItem)
                 {
                     fg.AppendLine("Unknown0C =>");
                     fg.AppendLine("[");
@@ -6318,7 +6318,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown4C.TryGet(out var Unknown4CItem))
+                if (Unknown4C is {} Unknown4CItem)
                 {
                     fg.AppendLine("Unknown4C =>");
                     fg.AppendLine("[");
@@ -6340,7 +6340,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown0D.TryGet(out var Unknown0DItem))
+                if (Unknown0D is {} Unknown0DItem)
                 {
                     fg.AppendLine("Unknown0D =>");
                     fg.AppendLine("[");
@@ -6362,7 +6362,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown4D.TryGet(out var Unknown4DItem))
+                if (Unknown4D is {} Unknown4DItem)
                 {
                     fg.AppendLine("Unknown4D =>");
                     fg.AppendLine("[");
@@ -6384,7 +6384,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown0E.TryGet(out var Unknown0EItem))
+                if (Unknown0E is {} Unknown0EItem)
                 {
                     fg.AppendLine("Unknown0E =>");
                     fg.AppendLine("[");
@@ -6406,7 +6406,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown4E.TryGet(out var Unknown4EItem))
+                if (Unknown4E is {} Unknown4EItem)
                 {
                     fg.AppendLine("Unknown4E =>");
                     fg.AppendLine("[");
@@ -6428,7 +6428,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown0F.TryGet(out var Unknown0FItem))
+                if (Unknown0F is {} Unknown0FItem)
                 {
                     fg.AppendLine("Unknown0F =>");
                     fg.AppendLine("[");
@@ -6450,7 +6450,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown4F.TryGet(out var Unknown4FItem))
+                if (Unknown4F is {} Unknown4FItem)
                 {
                     fg.AppendLine("Unknown4F =>");
                     fg.AppendLine("[");
@@ -6472,7 +6472,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown10.TryGet(out var Unknown10Item))
+                if (Unknown10 is {} Unknown10Item)
                 {
                     fg.AppendLine("Unknown10 =>");
                     fg.AppendLine("[");
@@ -6494,7 +6494,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown50.TryGet(out var Unknown50Item))
+                if (Unknown50 is {} Unknown50Item)
                 {
                     fg.AppendLine("Unknown50 =>");
                     fg.AppendLine("[");
@@ -6516,7 +6516,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (CinematicSaturationMult.TryGet(out var CinematicSaturationMultItem))
+                if (CinematicSaturationMult is {} CinematicSaturationMultItem)
                 {
                     fg.AppendLine("CinematicSaturationMult =>");
                     fg.AppendLine("[");
@@ -6538,7 +6538,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (CinematicSaturationAdd.TryGet(out var CinematicSaturationAddItem))
+                if (CinematicSaturationAdd is {} CinematicSaturationAddItem)
                 {
                     fg.AppendLine("CinematicSaturationAdd =>");
                     fg.AppendLine("[");
@@ -6560,7 +6560,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (CinematicBrightnessMult.TryGet(out var CinematicBrightnessMultItem))
+                if (CinematicBrightnessMult is {} CinematicBrightnessMultItem)
                 {
                     fg.AppendLine("CinematicBrightnessMult =>");
                     fg.AppendLine("[");
@@ -6582,7 +6582,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (CinematicBrightnessAdd.TryGet(out var CinematicBrightnessAddItem))
+                if (CinematicBrightnessAdd is {} CinematicBrightnessAddItem)
                 {
                     fg.AppendLine("CinematicBrightnessAdd =>");
                     fg.AppendLine("[");
@@ -6604,7 +6604,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (CinematicContrastMult.TryGet(out var CinematicContrastMultItem))
+                if (CinematicContrastMult is {} CinematicContrastMultItem)
                 {
                     fg.AppendLine("CinematicContrastMult =>");
                     fg.AppendLine("[");
@@ -6626,7 +6626,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (CinematicContrastAdd.TryGet(out var CinematicContrastAddItem))
+                if (CinematicContrastAdd is {} CinematicContrastAddItem)
                 {
                     fg.AppendLine("CinematicContrastAdd =>");
                     fg.AppendLine("[");
@@ -6648,7 +6648,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown14.TryGet(out var Unknown14Item))
+                if (Unknown14 is {} Unknown14Item)
                 {
                     fg.AppendLine("Unknown14 =>");
                     fg.AppendLine("[");
@@ -6670,7 +6670,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Unknown54.TryGet(out var Unknown54Item))
+                if (Unknown54 is {} Unknown54Item)
                 {
                     fg.AppendLine("Unknown54 =>");
                     fg.AppendLine("[");
@@ -7968,7 +7968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.DepthOfFieldFlags, "DepthOfFieldFlags");
             }
             if ((printMask?.BlurRadius?.Overall ?? true)
-                && item.BlurRadius.TryGet(out var BlurRadiusItem))
+                && item.BlurRadius is {} BlurRadiusItem)
             {
                 fg.AppendLine("BlurRadius =>");
                 fg.AppendLine("[");
@@ -7987,7 +7987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.DoubleVisionStrength?.Overall ?? true)
-                && item.DoubleVisionStrength.TryGet(out var DoubleVisionStrengthItem))
+                && item.DoubleVisionStrength is {} DoubleVisionStrengthItem)
             {
                 fg.AppendLine("DoubleVisionStrength =>");
                 fg.AppendLine("[");
@@ -8006,7 +8006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.TintColor?.Overall ?? true)
-                && item.TintColor.TryGet(out var TintColorItem))
+                && item.TintColor is {} TintColorItem)
             {
                 fg.AppendLine("TintColor =>");
                 fg.AppendLine("[");
@@ -8025,7 +8025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.FadeColor?.Overall ?? true)
-                && item.FadeColor.TryGet(out var FadeColorItem))
+                && item.FadeColor is {} FadeColorItem)
             {
                 fg.AppendLine("FadeColor =>");
                 fg.AppendLine("[");
@@ -8044,7 +8044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.RadialBlurStrength?.Overall ?? true)
-                && item.RadialBlurStrength.TryGet(out var RadialBlurStrengthItem))
+                && item.RadialBlurStrength is {} RadialBlurStrengthItem)
             {
                 fg.AppendLine("RadialBlurStrength =>");
                 fg.AppendLine("[");
@@ -8063,7 +8063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.RadialBlurRampUp?.Overall ?? true)
-                && item.RadialBlurRampUp.TryGet(out var RadialBlurRampUpItem))
+                && item.RadialBlurRampUp is {} RadialBlurRampUpItem)
             {
                 fg.AppendLine("RadialBlurRampUp =>");
                 fg.AppendLine("[");
@@ -8082,7 +8082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.RadialBlurStart?.Overall ?? true)
-                && item.RadialBlurStart.TryGet(out var RadialBlurStartItem))
+                && item.RadialBlurStart is {} RadialBlurStartItem)
             {
                 fg.AppendLine("RadialBlurStart =>");
                 fg.AppendLine("[");
@@ -8101,7 +8101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.RadialBlurRampDown?.Overall ?? true)
-                && item.RadialBlurRampDown.TryGet(out var RadialBlurRampDownItem))
+                && item.RadialBlurRampDown is {} RadialBlurRampDownItem)
             {
                 fg.AppendLine("RadialBlurRampDown =>");
                 fg.AppendLine("[");
@@ -8120,7 +8120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.RadialBlurDownStart?.Overall ?? true)
-                && item.RadialBlurDownStart.TryGet(out var RadialBlurDownStartItem))
+                && item.RadialBlurDownStart is {} RadialBlurDownStartItem)
             {
                 fg.AppendLine("RadialBlurDownStart =>");
                 fg.AppendLine("[");
@@ -8139,7 +8139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.DepthOfFieldStrength?.Overall ?? true)
-                && item.DepthOfFieldStrength.TryGet(out var DepthOfFieldStrengthItem))
+                && item.DepthOfFieldStrength is {} DepthOfFieldStrengthItem)
             {
                 fg.AppendLine("DepthOfFieldStrength =>");
                 fg.AppendLine("[");
@@ -8158,7 +8158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.DepthOfFieldDistance?.Overall ?? true)
-                && item.DepthOfFieldDistance.TryGet(out var DepthOfFieldDistanceItem))
+                && item.DepthOfFieldDistance is {} DepthOfFieldDistanceItem)
             {
                 fg.AppendLine("DepthOfFieldDistance =>");
                 fg.AppendLine("[");
@@ -8177,7 +8177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.DepthOfFieldRange?.Overall ?? true)
-                && item.DepthOfFieldRange.TryGet(out var DepthOfFieldRangeItem))
+                && item.DepthOfFieldRange is {} DepthOfFieldRangeItem)
             {
                 fg.AppendLine("DepthOfFieldRange =>");
                 fg.AppendLine("[");
@@ -8196,7 +8196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.MotionBlurStrength?.Overall ?? true)
-                && item.MotionBlurStrength.TryGet(out var MotionBlurStrengthItem))
+                && item.MotionBlurStrength is {} MotionBlurStrengthItem)
             {
                 fg.AppendLine("MotionBlurStrength =>");
                 fg.AppendLine("[");
@@ -8215,7 +8215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrEyeAdaptSpeedMult?.Overall ?? true)
-                && item.HdrEyeAdaptSpeedMult.TryGet(out var HdrEyeAdaptSpeedMultItem))
+                && item.HdrEyeAdaptSpeedMult is {} HdrEyeAdaptSpeedMultItem)
             {
                 fg.AppendLine("HdrEyeAdaptSpeedMult =>");
                 fg.AppendLine("[");
@@ -8234,7 +8234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrEyeAdaptSpeedAdd?.Overall ?? true)
-                && item.HdrEyeAdaptSpeedAdd.TryGet(out var HdrEyeAdaptSpeedAddItem))
+                && item.HdrEyeAdaptSpeedAdd is {} HdrEyeAdaptSpeedAddItem)
             {
                 fg.AppendLine("HdrEyeAdaptSpeedAdd =>");
                 fg.AppendLine("[");
@@ -8253,7 +8253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomBlurRadiusMult?.Overall ?? true)
-                && item.HdrBloomBlurRadiusMult.TryGet(out var HdrBloomBlurRadiusMultItem))
+                && item.HdrBloomBlurRadiusMult is {} HdrBloomBlurRadiusMultItem)
             {
                 fg.AppendLine("HdrBloomBlurRadiusMult =>");
                 fg.AppendLine("[");
@@ -8272,7 +8272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomBlurRadiusAdd?.Overall ?? true)
-                && item.HdrBloomBlurRadiusAdd.TryGet(out var HdrBloomBlurRadiusAddItem))
+                && item.HdrBloomBlurRadiusAdd is {} HdrBloomBlurRadiusAddItem)
             {
                 fg.AppendLine("HdrBloomBlurRadiusAdd =>");
                 fg.AppendLine("[");
@@ -8291,7 +8291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomThresholdMult?.Overall ?? true)
-                && item.HdrBloomThresholdMult.TryGet(out var HdrBloomThresholdMultItem))
+                && item.HdrBloomThresholdMult is {} HdrBloomThresholdMultItem)
             {
                 fg.AppendLine("HdrBloomThresholdMult =>");
                 fg.AppendLine("[");
@@ -8310,7 +8310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomThresholdAdd?.Overall ?? true)
-                && item.HdrBloomThresholdAdd.TryGet(out var HdrBloomThresholdAddItem))
+                && item.HdrBloomThresholdAdd is {} HdrBloomThresholdAddItem)
             {
                 fg.AppendLine("HdrBloomThresholdAdd =>");
                 fg.AppendLine("[");
@@ -8329,7 +8329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomScaleMult?.Overall ?? true)
-                && item.HdrBloomScaleMult.TryGet(out var HdrBloomScaleMultItem))
+                && item.HdrBloomScaleMult is {} HdrBloomScaleMultItem)
             {
                 fg.AppendLine("HdrBloomScaleMult =>");
                 fg.AppendLine("[");
@@ -8348,7 +8348,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomScaleAdd?.Overall ?? true)
-                && item.HdrBloomScaleAdd.TryGet(out var HdrBloomScaleAddItem))
+                && item.HdrBloomScaleAdd is {} HdrBloomScaleAddItem)
             {
                 fg.AppendLine("HdrBloomScaleAdd =>");
                 fg.AppendLine("[");
@@ -8367,7 +8367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrTargetLumMinMult?.Overall ?? true)
-                && item.HdrTargetLumMinMult.TryGet(out var HdrTargetLumMinMultItem))
+                && item.HdrTargetLumMinMult is {} HdrTargetLumMinMultItem)
             {
                 fg.AppendLine("HdrTargetLumMinMult =>");
                 fg.AppendLine("[");
@@ -8386,7 +8386,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrTargetLumMinAdd?.Overall ?? true)
-                && item.HdrTargetLumMinAdd.TryGet(out var HdrTargetLumMinAddItem))
+                && item.HdrTargetLumMinAdd is {} HdrTargetLumMinAddItem)
             {
                 fg.AppendLine("HdrTargetLumMinAdd =>");
                 fg.AppendLine("[");
@@ -8405,7 +8405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrTargetLumMaxMult?.Overall ?? true)
-                && item.HdrTargetLumMaxMult.TryGet(out var HdrTargetLumMaxMultItem))
+                && item.HdrTargetLumMaxMult is {} HdrTargetLumMaxMultItem)
             {
                 fg.AppendLine("HdrTargetLumMaxMult =>");
                 fg.AppendLine("[");
@@ -8424,7 +8424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrTargetLumMaxAdd?.Overall ?? true)
-                && item.HdrTargetLumMaxAdd.TryGet(out var HdrTargetLumMaxAddItem))
+                && item.HdrTargetLumMaxAdd is {} HdrTargetLumMaxAddItem)
             {
                 fg.AppendLine("HdrTargetLumMaxAdd =>");
                 fg.AppendLine("[");
@@ -8443,7 +8443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrSunlightScaleMult?.Overall ?? true)
-                && item.HdrSunlightScaleMult.TryGet(out var HdrSunlightScaleMultItem))
+                && item.HdrSunlightScaleMult is {} HdrSunlightScaleMultItem)
             {
                 fg.AppendLine("HdrSunlightScaleMult =>");
                 fg.AppendLine("[");
@@ -8462,7 +8462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrSunlightScaleAdd?.Overall ?? true)
-                && item.HdrSunlightScaleAdd.TryGet(out var HdrSunlightScaleAddItem))
+                && item.HdrSunlightScaleAdd is {} HdrSunlightScaleAddItem)
             {
                 fg.AppendLine("HdrSunlightScaleAdd =>");
                 fg.AppendLine("[");
@@ -8481,7 +8481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrSkyScaleMult?.Overall ?? true)
-                && item.HdrSkyScaleMult.TryGet(out var HdrSkyScaleMultItem))
+                && item.HdrSkyScaleMult is {} HdrSkyScaleMultItem)
             {
                 fg.AppendLine("HdrSkyScaleMult =>");
                 fg.AppendLine("[");
@@ -8500,7 +8500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.HdrSkyScaleAdd?.Overall ?? true)
-                && item.HdrSkyScaleAdd.TryGet(out var HdrSkyScaleAddItem))
+                && item.HdrSkyScaleAdd is {} HdrSkyScaleAddItem)
             {
                 fg.AppendLine("HdrSkyScaleAdd =>");
                 fg.AppendLine("[");
@@ -8519,7 +8519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown08?.Overall ?? true)
-                && item.Unknown08.TryGet(out var Unknown08Item))
+                && item.Unknown08 is {} Unknown08Item)
             {
                 fg.AppendLine("Unknown08 =>");
                 fg.AppendLine("[");
@@ -8538,7 +8538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown48?.Overall ?? true)
-                && item.Unknown48.TryGet(out var Unknown48Item))
+                && item.Unknown48 is {} Unknown48Item)
             {
                 fg.AppendLine("Unknown48 =>");
                 fg.AppendLine("[");
@@ -8557,7 +8557,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown09?.Overall ?? true)
-                && item.Unknown09.TryGet(out var Unknown09Item))
+                && item.Unknown09 is {} Unknown09Item)
             {
                 fg.AppendLine("Unknown09 =>");
                 fg.AppendLine("[");
@@ -8576,7 +8576,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown49?.Overall ?? true)
-                && item.Unknown49.TryGet(out var Unknown49Item))
+                && item.Unknown49 is {} Unknown49Item)
             {
                 fg.AppendLine("Unknown49 =>");
                 fg.AppendLine("[");
@@ -8595,7 +8595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown0A?.Overall ?? true)
-                && item.Unknown0A.TryGet(out var Unknown0AItem))
+                && item.Unknown0A is {} Unknown0AItem)
             {
                 fg.AppendLine("Unknown0A =>");
                 fg.AppendLine("[");
@@ -8614,7 +8614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown4A?.Overall ?? true)
-                && item.Unknown4A.TryGet(out var Unknown4AItem))
+                && item.Unknown4A is {} Unknown4AItem)
             {
                 fg.AppendLine("Unknown4A =>");
                 fg.AppendLine("[");
@@ -8633,7 +8633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown0B?.Overall ?? true)
-                && item.Unknown0B.TryGet(out var Unknown0BItem))
+                && item.Unknown0B is {} Unknown0BItem)
             {
                 fg.AppendLine("Unknown0B =>");
                 fg.AppendLine("[");
@@ -8652,7 +8652,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown4B?.Overall ?? true)
-                && item.Unknown4B.TryGet(out var Unknown4BItem))
+                && item.Unknown4B is {} Unknown4BItem)
             {
                 fg.AppendLine("Unknown4B =>");
                 fg.AppendLine("[");
@@ -8671,7 +8671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown0C?.Overall ?? true)
-                && item.Unknown0C.TryGet(out var Unknown0CItem))
+                && item.Unknown0C is {} Unknown0CItem)
             {
                 fg.AppendLine("Unknown0C =>");
                 fg.AppendLine("[");
@@ -8690,7 +8690,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown4C?.Overall ?? true)
-                && item.Unknown4C.TryGet(out var Unknown4CItem))
+                && item.Unknown4C is {} Unknown4CItem)
             {
                 fg.AppendLine("Unknown4C =>");
                 fg.AppendLine("[");
@@ -8709,7 +8709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown0D?.Overall ?? true)
-                && item.Unknown0D.TryGet(out var Unknown0DItem))
+                && item.Unknown0D is {} Unknown0DItem)
             {
                 fg.AppendLine("Unknown0D =>");
                 fg.AppendLine("[");
@@ -8728,7 +8728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown4D?.Overall ?? true)
-                && item.Unknown4D.TryGet(out var Unknown4DItem))
+                && item.Unknown4D is {} Unknown4DItem)
             {
                 fg.AppendLine("Unknown4D =>");
                 fg.AppendLine("[");
@@ -8747,7 +8747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown0E?.Overall ?? true)
-                && item.Unknown0E.TryGet(out var Unknown0EItem))
+                && item.Unknown0E is {} Unknown0EItem)
             {
                 fg.AppendLine("Unknown0E =>");
                 fg.AppendLine("[");
@@ -8766,7 +8766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown4E?.Overall ?? true)
-                && item.Unknown4E.TryGet(out var Unknown4EItem))
+                && item.Unknown4E is {} Unknown4EItem)
             {
                 fg.AppendLine("Unknown4E =>");
                 fg.AppendLine("[");
@@ -8785,7 +8785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown0F?.Overall ?? true)
-                && item.Unknown0F.TryGet(out var Unknown0FItem))
+                && item.Unknown0F is {} Unknown0FItem)
             {
                 fg.AppendLine("Unknown0F =>");
                 fg.AppendLine("[");
@@ -8804,7 +8804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown4F?.Overall ?? true)
-                && item.Unknown4F.TryGet(out var Unknown4FItem))
+                && item.Unknown4F is {} Unknown4FItem)
             {
                 fg.AppendLine("Unknown4F =>");
                 fg.AppendLine("[");
@@ -8823,7 +8823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown10?.Overall ?? true)
-                && item.Unknown10.TryGet(out var Unknown10Item))
+                && item.Unknown10 is {} Unknown10Item)
             {
                 fg.AppendLine("Unknown10 =>");
                 fg.AppendLine("[");
@@ -8842,7 +8842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown50?.Overall ?? true)
-                && item.Unknown50.TryGet(out var Unknown50Item))
+                && item.Unknown50 is {} Unknown50Item)
             {
                 fg.AppendLine("Unknown50 =>");
                 fg.AppendLine("[");
@@ -8861,7 +8861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.CinematicSaturationMult?.Overall ?? true)
-                && item.CinematicSaturationMult.TryGet(out var CinematicSaturationMultItem))
+                && item.CinematicSaturationMult is {} CinematicSaturationMultItem)
             {
                 fg.AppendLine("CinematicSaturationMult =>");
                 fg.AppendLine("[");
@@ -8880,7 +8880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.CinematicSaturationAdd?.Overall ?? true)
-                && item.CinematicSaturationAdd.TryGet(out var CinematicSaturationAddItem))
+                && item.CinematicSaturationAdd is {} CinematicSaturationAddItem)
             {
                 fg.AppendLine("CinematicSaturationAdd =>");
                 fg.AppendLine("[");
@@ -8899,7 +8899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.CinematicBrightnessMult?.Overall ?? true)
-                && item.CinematicBrightnessMult.TryGet(out var CinematicBrightnessMultItem))
+                && item.CinematicBrightnessMult is {} CinematicBrightnessMultItem)
             {
                 fg.AppendLine("CinematicBrightnessMult =>");
                 fg.AppendLine("[");
@@ -8918,7 +8918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.CinematicBrightnessAdd?.Overall ?? true)
-                && item.CinematicBrightnessAdd.TryGet(out var CinematicBrightnessAddItem))
+                && item.CinematicBrightnessAdd is {} CinematicBrightnessAddItem)
             {
                 fg.AppendLine("CinematicBrightnessAdd =>");
                 fg.AppendLine("[");
@@ -8937,7 +8937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.CinematicContrastMult?.Overall ?? true)
-                && item.CinematicContrastMult.TryGet(out var CinematicContrastMultItem))
+                && item.CinematicContrastMult is {} CinematicContrastMultItem)
             {
                 fg.AppendLine("CinematicContrastMult =>");
                 fg.AppendLine("[");
@@ -8956,7 +8956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.CinematicContrastAdd?.Overall ?? true)
-                && item.CinematicContrastAdd.TryGet(out var CinematicContrastAddItem))
+                && item.CinematicContrastAdd is {} CinematicContrastAddItem)
             {
                 fg.AppendLine("CinematicContrastAdd =>");
                 fg.AppendLine("[");
@@ -8975,7 +8975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown14?.Overall ?? true)
-                && item.Unknown14.TryGet(out var Unknown14Item))
+                && item.Unknown14 is {} Unknown14Item)
             {
                 fg.AppendLine("Unknown14 =>");
                 fg.AppendLine("[");
@@ -8994,7 +8994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unknown54?.Overall ?? true)
-                && item.Unknown54.TryGet(out var Unknown54Item))
+                && item.Unknown54 is {} Unknown54Item)
             {
                 fg.AppendLine("Unknown54 =>");
                 fg.AppendLine("[");

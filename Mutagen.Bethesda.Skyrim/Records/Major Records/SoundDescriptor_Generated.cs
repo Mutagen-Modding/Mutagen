@@ -64,21 +64,21 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundDescriptorGetter.CNAM => this.CNAM;
         #endregion
         #region Category
-        private IFormLinkNullable<ISoundCategoryGetter> _Category = new FormLinkNullable<ISoundCategoryGetter>();
+        private readonly IFormLinkNullable<ISoundCategoryGetter> _Category = new FormLinkNullable<ISoundCategoryGetter>();
         public IFormLinkNullable<ISoundCategoryGetter> Category
         {
             get => _Category;
-            set => _Category = value.AsNullable();
+            set => _Category.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundCategoryGetter> ISoundDescriptorGetter.Category => this.Category;
         #endregion
         #region AlternateSoundFor
-        private IFormLinkNullable<ISoundDescriptorGetter> _AlternateSoundFor = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _AlternateSoundFor = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor
         {
             get => _AlternateSoundFor;
-            set => _AlternateSoundFor = value.AsNullable();
+            set => _AlternateSoundFor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundDescriptorGetter.AlternateSoundFor => this.AlternateSoundFor;
@@ -98,11 +98,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region OutputModel
-        private IFormLinkNullable<ISoundOutputModelGetter> _OutputModel = new FormLinkNullable<ISoundOutputModelGetter>();
+        private readonly IFormLinkNullable<ISoundOutputModelGetter> _OutputModel = new FormLinkNullable<ISoundOutputModelGetter>();
         public IFormLinkNullable<ISoundOutputModelGetter> OutputModel
         {
             get => _OutputModel;
-            set => _OutputModel = value.AsNullable();
+            set => _OutputModel.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundOutputModelGetter> ISoundDescriptorGetter.OutputModel => this.OutputModel;
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(AlternateSoundFor, "AlternateSoundFor");
                     }
                     if ((printMask?.SoundFiles?.Overall ?? true)
-                        && SoundFiles.TryGet(out var SoundFilesItem))
+                        && SoundFiles is {} SoundFilesItem)
                     {
                         fg.AppendLine("SoundFiles =>");
                         fg.AppendLine("[");
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(String, "String");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(CNAM, "CNAM");
                 fg.AppendItem(Category, "Category");
                 fg.AppendItem(AlternateSoundFor, "AlternateSoundFor");
-                if (SoundFiles.TryGet(out var SoundFilesItem))
+                if (SoundFiles is {} SoundFilesItem)
                 {
                     fg.AppendLine("SoundFiles =>");
                     fg.AppendLine("[");
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendItem(OutputModel, "OutputModel");
                 fg.AppendItem(String, "String");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1108,10 +1108,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundDescriptorGetter
     {
         new MemorySlice<Byte>? CNAM { get; set; }
-        new IFormLinkNullable<ISoundCategoryGetter> Category { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; }
+        new IFormLinkNullable<ISoundCategoryGetter> Category { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; set; }
         new ExtendedList<String> SoundFiles { get; }
-        new IFormLinkNullable<ISoundOutputModelGetter> OutputModel { get; }
+        new IFormLinkNullable<ISoundOutputModelGetter> OutputModel { get; set; }
         new String? String { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new SoundLoopAndRumble? LoopAndRumble { get; set; }
@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.CNAM ?? true)
-                && item.CNAM.TryGet(out var CNAMItem))
+                && item.CNAM is {} CNAMItem)
             {
                 fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.OutputModel.FormKeyNullable, "OutputModel");
             }
             if ((printMask?.String ?? true)
-                && item.String.TryGet(out var StringItem))
+                && item.String is {} StringItem)
             {
                 fg.AppendItem(StringItem, "String");
             }
@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.LoopAndRumble?.Overall ?? true)
-                && item.LoopAndRumble.TryGet(out var LoopAndRumbleItem))
+                && item.LoopAndRumble is {} LoopAndRumbleItem)
             {
                 LoopAndRumbleItem?.ToString(fg, "LoopAndRumble");
             }
@@ -1820,7 +1820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ISoundDescriptorGetter item)
         {
             var hash = new HashCode();
-            if (item.CNAM.TryGet(out var CNAMItem))
+            if (item.CNAM is {} CNAMItem)
             {
                 hash.Add(CNAMItem);
             }
@@ -1828,12 +1828,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.AlternateSoundFor);
             hash.Add(item.SoundFiles);
             hash.Add(item.OutputModel);
-            if (item.String.TryGet(out var Stringitem))
+            if (item.String is {} Stringitem)
             {
                 hash.Add(Stringitem);
             }
             hash.Add(item.Conditions);
-            if (item.LoopAndRumble.TryGet(out var LoopAndRumbleitem))
+            if (item.LoopAndRumble is {} LoopAndRumbleitem)
             {
                 hash.Add(LoopAndRumbleitem);
             }
@@ -1965,7 +1965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.CNAM) ?? true))
             {
-                if(rhs.CNAM.TryGet(out var CNAMrhs))
+                if(rhs.CNAM is {} CNAMrhs)
                 {
                     item.CNAM = CNAMrhs.ToArray();
                 }
@@ -2036,7 +2036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SoundDescriptor_FieldIndex.LoopAndRumble);
                 try
                 {
-                    if(rhs.LoopAndRumble.TryGet(out var rhsLoopAndRumble))
+                    if(rhs.LoopAndRumble is {} rhsLoopAndRumble)
                     {
                         item.LoopAndRumble = rhsLoopAndRumble.DeepCopy(
                             errorMask: errorMask,
@@ -2284,7 +2284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.LoopAndRumble.TryGet(out var LoopAndRumbleItem))
+            if (item.LoopAndRumble is {} LoopAndRumbleItem)
             {
                 ((SoundLoopAndRumbleBinaryWriteTranslation)((IBinaryItem)LoopAndRumbleItem).BinaryWriteTranslator).Write(
                     item: LoopAndRumbleItem,

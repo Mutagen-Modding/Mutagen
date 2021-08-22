@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        private IFormLinkNullable<ISoundGetter> _Sound = new FormLinkNullable<ISoundGetter>();
+        private readonly IFormLinkNullable<ISoundGetter> _Sound = new FormLinkNullable<ISoundGetter>();
         public IFormLinkNullable<ISoundGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsNullable();
+            set => _Sound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> ISoundItemGetter.Sound => this.Sound;
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ISoundItem>,
         ISoundItemGetter
     {
-        new IFormLinkNullable<ISoundGetter> Sound { get; }
+        new IFormLinkNullable<ISoundGetter> Sound { get; set; }
         new Byte? Chance { get; set; }
     }
 
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
             if ((printMask?.Chance ?? true)
-                && item.Chance.TryGet(out var ChanceItem))
+                && item.Chance is {} ChanceItem)
             {
                 fg.AppendItem(ChanceItem, "Chance");
             }
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Sound);
-            if (item.Chance.TryGet(out var Chanceitem))
+            if (item.Chance is {} Chanceitem)
             {
                 hash.Add(Chanceitem);
             }

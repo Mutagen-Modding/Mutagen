@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
@@ -17,7 +18,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         /// <summary>
         /// Optional master references for easy access during write operations
         /// </summary>
-        public MasterReferenceReader? MasterReferences { get; set; }
+        public IMasterReferenceReader? MasterReferences { get; set; }
 
         /// <summary>
         /// Optional strings writer for easy access during write operations

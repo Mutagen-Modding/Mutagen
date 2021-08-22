@@ -1,12 +1,10 @@
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Pex;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Processing;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using Noggog.Streams.Binary;
@@ -16,6 +14,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -339,17 +339,17 @@ namespace Mutagen.Bethesda.Tests
             });
         }
 
-        public BinaryWriteParameters GetWriteParam(MasterReferenceReader masterRefs, StringsWriter stringsWriter)
+        public BinaryWriteParameters GetWriteParam(IMasterReferenceReader masterRefs, StringsWriter stringsWriter)
         {
             return new BinaryWriteParameters()
             {
-                ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
-                RecordCount = BinaryWriteParameters.RecordCountOption.NoCheck,
-                NextFormID = BinaryWriteParameters.NextFormIDOption.NoCheck,
-                FormIDUniqueness = BinaryWriteParameters.FormIDUniquenessOption.NoCheck,
-                MasterFlag = BinaryWriteParameters.MasterFlagOption.NoCheck,
-                MastersListOrdering = masterRefs,
+                ModKey = ModKeyOption.NoCheck,
+                MastersListContent = MastersListContentOption.NoCheck,
+                RecordCount = RecordCountOption.NoCheck,
+                NextFormID = NextFormIDOption.NoCheck,
+                FormIDUniqueness = FormIDUniquenessOption.NoCheck,
+                MasterFlag = MasterFlagOption.NoCheck,
+                MastersListOrdering = AMastersListOrderingOption.ByMasters(masterRefs),
                 StringsWriter = stringsWriter,
             };
         }

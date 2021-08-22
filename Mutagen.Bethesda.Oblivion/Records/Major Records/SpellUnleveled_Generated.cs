@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
                         Data?.ToString(fg);
                     }
                     if ((printMask?.Effects?.Overall ?? true)
-                        && Effects.TryGet(out var EffectsItem))
+                        && Effects is {} EffectsItem)
                     {
                         fg.AppendLine("Effects =>");
                         fg.AppendLine("[");
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.ToString_FillInternal(fg);
                 Data?.ToString(fg);
-                if (Effects.TryGet(out var EffectsItem))
+                if (Effects is {} EffectsItem)
                 {
                     fg.AppendLine("Effects =>");
                     fg.AppendLine("[");
@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ISpellUnleveledGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((SpellDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

@@ -50,21 +50,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Actor
-        private IFormLink<IPlacedGetter> _Actor = new FormLink<IPlacedGetter>();
+        private readonly IFormLink<IPlacedGetter> _Actor = new FormLink<IPlacedGetter>();
         public IFormLink<IPlacedGetter> Actor
         {
             get => _Actor;
-            set => _Actor = value.AsSetter();
+            set => _Actor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedGetter> ILocationCellEnablePointGetter.Actor => this.Actor;
         #endregion
         #region Ref
-        private IFormLink<IPlacedGetter> _Ref = new FormLink<IPlacedGetter>();
+        private readonly IFormLink<IPlacedGetter> _Ref = new FormLink<IPlacedGetter>();
         public IFormLink<IPlacedGetter> Ref
         {
             get => _Ref;
-            set => _Ref = value.AsSetter();
+            set => _Ref.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedGetter> ILocationCellEnablePointGetter.Ref => this.Ref;
@@ -505,8 +505,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationCellEnablePointGetter,
         ILoquiObjectSetter<ILocationCellEnablePoint>
     {
-        new IFormLink<IPlacedGetter> Actor { get; }
-        new IFormLink<IPlacedGetter> Ref { get; }
+        new IFormLink<IPlacedGetter> Actor { get; set; }
+        new IFormLink<IPlacedGetter> Ref { get; set; }
         new P2Int16 Grid { get; set; }
     }
 

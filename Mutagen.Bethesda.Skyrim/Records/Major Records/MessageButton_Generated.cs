@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Text, "Text");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Text, "Text");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MessageButton.Mask<bool>? printMask = null)
         {
             if ((printMask?.Text ?? true)
-                && item.Text.TryGet(out var TextItem))
+                && item.Text is {} TextItem)
             {
                 fg.AppendItem(TextItem, "Text");
             }
@@ -990,7 +990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IMessageButtonGetter item)
         {
             var hash = new HashCode();
-            if (item.Text.TryGet(out var Textitem))
+            if (item.Text is {} Textitem)
             {
                 hash.Add(Textitem);
             }

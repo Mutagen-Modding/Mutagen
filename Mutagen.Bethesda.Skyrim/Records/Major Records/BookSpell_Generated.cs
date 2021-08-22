@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spell
-        private IFormLink<ISpellGetter> _Spell = new FormLink<ISpellGetter>();
+        private readonly IFormLink<ISpellGetter> _Spell = new FormLink<ISpellGetter>();
         public IFormLink<ISpellGetter> Spell
         {
             get => _Spell;
-            set => _Spell = value.AsSetter();
+            set => _Spell.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> IBookSpellGetter.Spell => this.Spell;
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IBookSpell>
     {
-        new IFormLink<ISpellGetter> Spell { get; }
+        new IFormLink<ISpellGetter> Spell { get; set; }
     }
 
     public partial interface IBookSpellGetter :

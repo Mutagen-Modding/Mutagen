@@ -55,11 +55,11 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? IHeadPartReferenceGetter.Number => this.Number;
         #endregion
         #region Head
-        private IFormLinkNullable<IHeadPartGetter> _Head = new FormLinkNullable<IHeadPartGetter>();
+        private readonly IFormLinkNullable<IHeadPartGetter> _Head = new FormLinkNullable<IHeadPartGetter>();
         public IFormLinkNullable<IHeadPartGetter> Head
         {
             get => _Head;
-            set => _Head = value.AsNullable();
+            set => _Head.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHeadPartGetter> IHeadPartReferenceGetter.Head => this.Head;
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IHeadPartReference>
     {
         new Int32? Number { get; set; }
-        new IFormLinkNullable<IHeadPartGetter> Head { get; }
+        new IFormLinkNullable<IHeadPartGetter> Head { get; set; }
     }
 
     public partial interface IHeadPartReferenceGetter :
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             HeadPartReference.Mask<bool>? printMask = null)
         {
             if ((printMask?.Number ?? true)
-                && item.Number.TryGet(out var NumberItem))
+                && item.Number is {} NumberItem)
             {
                 fg.AppendItem(NumberItem, "Number");
             }
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IHeadPartReferenceGetter item)
         {
             var hash = new HashCode();
-            if (item.Number.TryGet(out var Numberitem))
+            if (item.Number is {} Numberitem)
             {
                 hash.Add(Numberitem);
             }

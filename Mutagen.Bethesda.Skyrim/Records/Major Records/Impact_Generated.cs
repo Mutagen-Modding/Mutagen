@@ -107,51 +107,51 @@ namespace Mutagen.Bethesda.Skyrim
         IDecalGetter? IImpactGetter.Decal => this.Decal;
         #endregion
         #region TextureSet
-        private IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
+        private readonly IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
         public IFormLinkNullable<ITextureSetGetter> TextureSet
         {
             get => _TextureSet;
-            set => _TextureSet = value.AsNullable();
+            set => _TextureSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IImpactGetter.TextureSet => this.TextureSet;
         #endregion
         #region SecondaryTextureSet
-        private IFormLinkNullable<ITextureSetGetter> _SecondaryTextureSet = new FormLinkNullable<ITextureSetGetter>();
+        private readonly IFormLinkNullable<ITextureSetGetter> _SecondaryTextureSet = new FormLinkNullable<ITextureSetGetter>();
         public IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet
         {
             get => _SecondaryTextureSet;
-            set => _SecondaryTextureSet = value.AsNullable();
+            set => _SecondaryTextureSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IImpactGetter.SecondaryTextureSet => this.SecondaryTextureSet;
         #endregion
         #region Sound1
-        private IFormLinkNullable<ISoundGetter> _Sound1 = new FormLinkNullable<ISoundGetter>();
+        private readonly IFormLinkNullable<ISoundGetter> _Sound1 = new FormLinkNullable<ISoundGetter>();
         public IFormLinkNullable<ISoundGetter> Sound1
         {
             get => _Sound1;
-            set => _Sound1 = value.AsNullable();
+            set => _Sound1.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IImpactGetter.Sound1 => this.Sound1;
         #endregion
         #region Sound2
-        private IFormLinkNullable<ISoundGetter> _Sound2 = new FormLinkNullable<ISoundGetter>();
+        private readonly IFormLinkNullable<ISoundGetter> _Sound2 = new FormLinkNullable<ISoundGetter>();
         public IFormLinkNullable<ISoundGetter> Sound2
         {
             get => _Sound2;
-            set => _Sound2 = value.AsNullable();
+            set => _Sound2.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IImpactGetter.Sound2 => this.Sound2;
         #endregion
         #region Hazard
-        private IFormLinkNullable<IHazardGetter> _Hazard = new FormLinkNullable<IHazardGetter>();
+        private readonly IFormLinkNullable<IHazardGetter> _Hazard = new FormLinkNullable<IHazardGetter>();
         public IFormLinkNullable<IHazardGetter> Hazard
         {
             get => _Hazard;
-            set => _Hazard = value.AsNullable();
+            set => _Hazard.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHazardGetter> IImpactGetter.Hazard => this.Hazard;
@@ -1039,11 +1039,11 @@ namespace Mutagen.Bethesda.Skyrim
         new Impact.ResultType Result { get; set; }
         new Int16 Unknown { get; set; }
         new Decal? Decal { get; set; }
-        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        new IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; }
-        new IFormLinkNullable<ISoundGetter> Sound1 { get; }
-        new IFormLinkNullable<ISoundGetter> Sound2 { get; }
-        new IFormLinkNullable<IHazardGetter> Hazard { get; }
+        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; set; }
+        new IFormLinkNullable<ISoundGetter> Sound1 { get; set; }
+        new IFormLinkNullable<ISoundGetter> Sound2 { get; set; }
+        new IFormLinkNullable<IHazardGetter> Hazard { get; set; }
         new Impact.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1535,7 +1535,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1572,7 +1572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Unknown, "Unknown");
             }
             if ((printMask?.Decal?.Overall ?? true)
-                && item.Decal.TryGet(out var DecalItem))
+                && item.Decal is {} DecalItem)
             {
                 DecalItem?.ToString(fg, "Decal");
             }
@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IImpactGetter item)
         {
             var hash = new HashCode();
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1760,7 +1760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Flags);
             hash.Add(item.Result);
             hash.Add(item.Unknown);
-            if (item.Decal.TryGet(out var Decalitem))
+            if (item.Decal is {} Decalitem)
             {
                 hash.Add(Decalitem);
             }
@@ -1799,7 +1799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -1905,7 +1905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Impact_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1963,7 +1963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Impact_FieldIndex.Decal);
                 try
                 {
-                    if(rhs.Decal.TryGet(out var rhsDecal))
+                    if(rhs.Decal is {} rhsDecal)
                     {
                         item.Decal = rhsDecal.DeepCopy(
                             errorMask: errorMask,
@@ -2174,7 +2174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -2210,7 +2210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     length: 1);
                 writer.Write(item.Unknown);
             }
-            if (item.Decal.TryGet(out var DecalItem))
+            if (item.Decal is {} DecalItem)
             {
                 ((DecalBinaryWriteTranslation)((IBinaryItem)DecalItem).BinaryWriteTranslator).Write(
                     item: DecalItem,

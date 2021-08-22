@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 items: item.RecordCache.Items,
                 transl: (MutagenWriter r, T dictSubItem) =>
                 {
-                    if (dictSubItem.TryGet(out var Item))
+                    if (dictSubItem is {} Item)
                     {
                         ((Fallout4MajorRecordBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,

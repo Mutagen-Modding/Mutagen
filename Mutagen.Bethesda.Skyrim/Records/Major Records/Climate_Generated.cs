@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.WeatherTypes?.Overall ?? true)
-                        && WeatherTypes.TryGet(out var WeatherTypesItem))
+                        && WeatherTypes is {} WeatherTypesItem)
                     {
                         fg.AppendLine("WeatherTypes =>");
                         fg.AppendLine("[");
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (WeatherTypes.TryGet(out var WeatherTypesItem))
+                if (WeatherTypes is {} WeatherTypesItem)
                 {
                     fg.AppendLine("WeatherTypes =>");
                     fg.AppendLine("[");
@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.WeatherTypes?.Overall ?? true)
-                && item.WeatherTypes.TryGet(out var WeatherTypesItem))
+                && item.WeatherTypes is {} WeatherTypesItem)
             {
                 fg.AppendLine("WeatherTypes =>");
                 fg.AppendLine("[");
@@ -1446,17 +1446,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.SunTexture ?? true)
-                && item.SunTexture.TryGet(out var SunTextureItem))
+                && item.SunTexture is {} SunTextureItem)
             {
                 fg.AppendItem(SunTextureItem, "SunTexture");
             }
             if ((printMask?.SunGlareTexture ?? true)
-                && item.SunGlareTexture.TryGet(out var SunGlareTextureItem))
+                && item.SunGlareTexture is {} SunGlareTextureItem)
             {
                 fg.AppendItem(SunGlareTextureItem, "SunGlareTexture");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1621,15 +1621,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.WeatherTypes);
-            if (item.SunTexture.TryGet(out var SunTextureitem))
+            if (item.SunTexture is {} SunTextureitem)
             {
                 hash.Add(SunTextureitem);
             }
-            if (item.SunGlareTexture.TryGet(out var SunGlareTextureitem))
+            if (item.SunGlareTexture is {} SunGlareTextureitem)
             {
                 hash.Add(SunGlareTextureitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1670,14 +1670,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.WeatherTypes.TryGet(out var WeatherTypesItem))
+            if (obj.WeatherTypes is {} WeatherTypesItem)
             {
                 foreach (var item in WeatherTypesItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -1803,7 +1803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Climate_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.SunGlareTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

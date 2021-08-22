@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        private IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
+        private readonly IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
         public IFormLink<IQuestGetter> Quest
         {
             get => _Quest;
-            set => _Quest = value.AsSetter();
+            set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IQuestGetter> IDialogViewGetter.Quest => this.Quest;
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Quest, "Quest");
                     }
                     if ((printMask?.Branches?.Overall ?? true)
-                        && Branches.TryGet(out var BranchesItem))
+                        && Branches is {} BranchesItem)
                     {
                         fg.AppendLine("Branches =>");
                         fg.AppendLine("[");
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.TNAMs?.Overall ?? true)
-                        && TNAMs.TryGet(out var TNAMsItem))
+                        && TNAMs is {} TNAMsItem)
                     {
                         fg.AppendLine("TNAMs =>");
                         fg.AppendLine("[");
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Quest, "Quest");
-                if (Branches.TryGet(out var BranchesItem))
+                if (Branches is {} BranchesItem)
                 {
                     fg.AppendLine("Branches =>");
                     fg.AppendLine("[");
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (TNAMs.TryGet(out var TNAMsItem))
+                if (TNAMs is {} TNAMsItem)
                 {
                     fg.AppendLine("TNAMs =>");
                     fg.AppendLine("[");
@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogViewInternal>,
         ISkyrimMajorRecordInternal
     {
-        new IFormLink<IQuestGetter> Quest { get; }
+        new IFormLink<IQuestGetter> Quest { get; set; }
         new ExtendedList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; }
         new SliceList<byte> TNAMs { get; }
         new MemorySlice<Byte>? ENAM { get; set; }
@@ -1277,12 +1277,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.ENAM ?? true)
-                && item.ENAM.TryGet(out var ENAMItem))
+                && item.ENAM is {} ENAMItem)
             {
                 fg.AppendLine($"ENAM => {SpanExt.ToHexString(ENAMItem)}");
             }
             if ((printMask?.DNAM ?? true)
-                && item.DNAM.TryGet(out var DNAMItem))
+                && item.DNAM is {} DNAMItem)
             {
                 fg.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
             }
@@ -1385,11 +1385,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Quest);
             hash.Add(item.Branches);
             hash.Add(item.TNAMs);
-            if (item.ENAM.TryGet(out var ENAMItem))
+            if (item.ENAM is {} ENAMItem)
             {
                 hash.Add(ENAMItem);
             }
-            if (item.DNAM.TryGet(out var DNAMItem))
+            if (item.DNAM is {} DNAMItem)
             {
                 hash.Add(DNAMItem);
             }
@@ -1545,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogView_FieldIndex.ENAM) ?? true))
             {
-                if(rhs.ENAM.TryGet(out var ENAMrhs))
+                if(rhs.ENAM is {} ENAMrhs)
                 {
                     item.ENAM = ENAMrhs.ToArray();
                 }
@@ -1556,7 +1556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogView_FieldIndex.DNAM) ?? true))
             {
-                if(rhs.DNAM.TryGet(out var DNAMrhs))
+                if(rhs.DNAM is {} DNAMrhs)
                 {
                     item.DNAM = DNAMrhs.ToArray();
                 }

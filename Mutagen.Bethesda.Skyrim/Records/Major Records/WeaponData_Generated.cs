@@ -1805,7 +1805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
             }
             if ((printMask?.Skill ?? true)
-                && item.Skill.TryGet(out var SkillItem))
+                && item.Skill is {} SkillItem)
             {
                 fg.AppendItem(SkillItem, "Skill");
             }
@@ -1965,7 +1965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.RumbleRightMotorStrength);
             hash.Add(item.RumbleDuration);
             hash.Add(item.Unknown3);
-            if (item.Skill.TryGet(out var Skillitem))
+            if (item.Skill is {} Skillitem)
             {
                 hash.Add(Skillitem);
             }

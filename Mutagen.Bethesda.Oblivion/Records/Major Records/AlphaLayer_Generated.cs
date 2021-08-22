@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.AlphaLayerData ?? true)
-                && item.AlphaLayerData.TryGet(out var AlphaLayerDataItem))
+                && item.AlphaLayerData is {} AlphaLayerDataItem)
             {
                 fg.AppendLine($"AlphaLayerData => {SpanExt.ToHexString(AlphaLayerDataItem)}");
             }
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IAlphaLayerGetter item)
         {
             var hash = new HashCode();
-            if (item.AlphaLayerData.TryGet(out var AlphaLayerDataItem))
+            if (item.AlphaLayerData is {} AlphaLayerDataItem)
             {
                 hash.Add(AlphaLayerDataItem);
             }
@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
             {
-                if(rhs.AlphaLayerData.TryGet(out var AlphaLayerDatarhs))
+                if(rhs.AlphaLayerData is {} AlphaLayerDatarhs)
                 {
                     item.AlphaLayerData = AlphaLayerDatarhs.ToArray();
                 }

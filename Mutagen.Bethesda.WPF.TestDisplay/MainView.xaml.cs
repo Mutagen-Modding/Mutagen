@@ -16,43 +16,43 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.BindStrict(this.ViewModel, vm => vm.FormKey, view => view.FormKeyPicker.FormKey)
+                this.Bind(this.ViewModel, vm => vm.FormKey, view => view.FormKeyPicker.FormKey)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.LinkCache)
-                    .BindToStrict(this, x => x.FormKeyPicker.LinkCache)
+                    .BindTo(this, x => x.FormKeyPicker.LinkCache)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.ScopedTypes)
-                    .BindToStrict(this, x => x.FormKeyPicker.ScopedTypes)
+                    .BindTo(this, x => x.FormKeyPicker.ScopedTypes)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.LinkCache)
-                    .BindToStrict(this, x => x.FormKeyMultiPicker.LinkCache)
+                    .BindTo(this, x => x.FormKeyMultiPicker.LinkCache)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.ScopedTypes)
-                    .BindToStrict(this, x => x.FormKeyMultiPicker.ScopedTypes)
+                    .BindTo(this, x => x.FormKeyMultiPicker.ScopedTypes)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.FormKeys)
-                    .BindToStrict(this, x => x.FormKeyMultiPicker.FormKeys)
+                    .BindTo(this, x => x.FormKeyMultiPicker.FormKeys)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.LoadOrder)
-                    .BindToStrict(this, x => x.ModKeyPicker.SearchableMods)
+                    .BindTo(this, x => x.ModKeyPicker.SearchableMods)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.ModKeys)
-                    .BindToStrict(this, x => x.ModKeyMultiPicker.ModKeys)
+                    .BindTo(this, x => x.ModKeyMultiPicker.ModKeys)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.LoadOrder)
-                    .BindToStrict(this, x => x.ModKeyMultiPicker.SearchableMods)
+                    .BindTo(this, x => x.ModKeyMultiPicker.SearchableMods)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.LateSetPickerVM)
-                    .BindToStrict(this, x => x.LateSetPicker.DataContext)
+                    .BindTo(this, x => x.LateSetPicker.DataContext)
                     .DisposeWith(disposable);
             });
         }

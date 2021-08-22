@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+                && item.Unknown is {} UnknownItem)
             {
                 fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
             }
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IModelGetter item)
         {
             var hash = new HashCode();
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.Unknown is {} UnknownItem)
             {
                 hash.Add(UnknownItem);
             }
@@ -907,7 +907,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.Unknown) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.Unknown is {} Unknownrhs)
                 {
                     item.Unknown = Unknownrhs.ToArray();
                 }

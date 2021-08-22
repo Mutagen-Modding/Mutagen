@@ -53,21 +53,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region TextureSet
-        private IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
+        private readonly IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
         public IFormLinkNullable<ITextureSetGetter> TextureSet
         {
             get => _TextureSet;
-            set => _TextureSet = value.AsNullable();
+            set => _TextureSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> ILandscapeTextureGetter.TextureSet => this.TextureSet;
         #endregion
         #region MaterialType
-        private IFormLink<IMaterialTypeGetter> _MaterialType = new FormLink<IMaterialTypeGetter>();
+        private readonly IFormLink<IMaterialTypeGetter> _MaterialType = new FormLink<IMaterialTypeGetter>();
         public IFormLink<IMaterialTypeGetter> MaterialType
         {
             get => _MaterialType;
-            set => _MaterialType = value.AsSetter();
+            set => _MaterialType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType;
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
                     }
                     if ((printMask?.Grasses?.Overall ?? true)
-                        && Grasses.TryGet(out var GrassesItem))
+                        && Grasses is {} GrassesItem)
                     {
                         fg.AppendLine("Grasses =>");
                         fg.AppendLine("[");
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(HavokFriction, "HavokFriction");
                 fg.AppendItem(HavokRestitution, "HavokRestitution");
                 fg.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
-                if (Grasses.TryGet(out var GrassesItem))
+                if (Grasses is {} GrassesItem)
                 {
                     fg.AppendLine("Grasses =>");
                     fg.AppendLine("[");
@@ -805,8 +805,8 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionTarget,
         ISkyrimMajorRecordInternal
     {
-        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        new IFormLink<IMaterialTypeGetter> MaterialType { get; }
+        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new IFormLink<IMaterialTypeGetter> MaterialType { get; set; }
         new Byte HavokFriction { get; set; }
         new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }
@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.HavokRestitution);
             hash.Add(item.TextureSpecularExponent);
             hash.Add(item.Grasses);
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }

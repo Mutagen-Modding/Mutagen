@@ -874,12 +874,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Attack.Mask<bool>? printMask = null)
         {
             if ((printMask?.AttackData?.Overall ?? true)
-                && item.AttackData.TryGet(out var AttackDataItem))
+                && item.AttackData is {} AttackDataItem)
             {
                 AttackDataItem?.ToString(fg, "AttackData");
             }
             if ((printMask?.AttackEvent ?? true)
-                && item.AttackEvent.TryGet(out var AttackEventItem))
+                && item.AttackEvent is {} AttackEventItem)
             {
                 fg.AppendItem(AttackEventItem, "AttackEvent");
             }
@@ -910,11 +910,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IAttackGetter item)
         {
             var hash = new HashCode();
-            if (item.AttackData.TryGet(out var AttackDataitem))
+            if (item.AttackData is {} AttackDataitem)
             {
                 hash.Add(AttackDataitem);
             }
-            if (item.AttackEvent.TryGet(out var AttackEventitem))
+            if (item.AttackEvent is {} AttackEventitem)
             {
                 hash.Add(AttackEventitem);
             }
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAttackGetter obj)
         {
-            if (obj.AttackData.TryGet(out var AttackDataItems))
+            if (obj.AttackData is {} AttackDataItems)
             {
                 foreach (var item in AttackDataItems.ContainedFormLinks)
                 {
@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Attack_FieldIndex.AttackData);
                 try
                 {
-                    if(rhs.AttackData.TryGet(out var rhsAttackData))
+                    if(rhs.AttackData is {} rhsAttackData)
                     {
                         item.AttackData = rhsAttackData.DeepCopy(
                             errorMask: errorMask,
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            if (item.AttackData.TryGet(out var AttackDataItem))
+            if (item.AttackData is {} AttackDataItem)
             {
                 ((AttackDataBinaryWriteTranslation)((IBinaryItem)AttackDataItem).BinaryWriteTranslator).Write(
                     item: AttackDataItem,

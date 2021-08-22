@@ -170,32 +170,42 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         {
             int? lastParsed = null;
             Dictionary<RecordType, int>? recordParseCount = null;
+            RecordType? lastParsedType = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                SubrecordHeader subMeta = stream.GetSubrecord();
-                var minimumFinalPos = stream.Position + subMeta.TotalLength;
-                var parsed = fill(
-                    stream: stream,
-                    finalPos: minimumFinalPos,
-                    recordParseCount: recordParseCount,
-                    offset: offset,
-                    type: subMeta.RecordType,
-                    lastParsed: lastParsed,
-                    recordTypeConverter: recordTypeConverter);
-                if (!parsed.KeepParsing) break;
-                if (minimumFinalPos > stream.Position)
+                try
                 {
-                    stream.Position = minimumFinalPos;
-                }
-                if (parsed.DuplicateParseMarker != null)
-                {
-                    if (recordParseCount == null)
+                    SubrecordHeader subMeta = stream.GetSubrecord();
+                    lastParsedType = subMeta.RecordType;
+                    var minimumFinalPos = stream.Position + subMeta.TotalLength;
+                    var parsed = fill(
+                        stream: stream,
+                        finalPos: minimumFinalPos,
+                        recordParseCount: recordParseCount,
+                        offset: offset,
+                        type: lastParsedType.Value,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+                    if (!parsed.KeepParsing) break;
+                    if (minimumFinalPos > stream.Position)
                     {
-                        recordParseCount = new Dictionary<RecordType, int>();
+                        stream.Position = minimumFinalPos;
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
+                    if (parsed.DuplicateParseMarker != null)
+                    {
+                        if (recordParseCount == null)
+                        {
+                            recordParseCount = new Dictionary<RecordType, int>();
+                        }
+                        recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
+                    }
+                    lastParsed = parsed.ParsedIndex;
                 }
-                lastParsed = parsed.ParsedIndex;
+                catch (Exception e)
+                when (lastParsedType != null)
+                {
+                    throw SubrecordException.Enrich(e, lastParsedType.Value);
+                }
             }
         }
 

@@ -828,7 +828,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     using (new BraceWrapper(fieldGen))
                     {
-                        fieldGen.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {fieldAccessor}))");
+                        fieldGen.AppendLine($"if ({accessor}.{loqui.Name} is {{}} {fieldAccessor})");
                         using (new BraceWrapper(fieldGen))
                         {
                             fieldGen.AppendLines(subFg);

@@ -36,5 +36,10 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order
                     }))
                 .ToGuiProperty(this, nameof(Exists), initialValue: exists);
         }
+
+        public override string ToString()
+        {
+            return IModListing.ToString(this);
+        }
     }
 }

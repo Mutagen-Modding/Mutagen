@@ -55,21 +55,21 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? ILocationAliasReferenceGetter.AliasIndex => this.AliasIndex;
         #endregion
         #region Keyword
-        private IFormLinkNullable<IKeywordGetter> _Keyword = new FormLinkNullable<IKeywordGetter>();
+        private readonly IFormLinkNullable<IKeywordGetter> _Keyword = new FormLinkNullable<IKeywordGetter>();
         public IFormLinkNullable<IKeywordGetter> Keyword
         {
             get => _Keyword;
-            set => _Keyword = value.AsNullable();
+            set => _Keyword.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> ILocationAliasReferenceGetter.Keyword => this.Keyword;
         #endregion
         #region RefType
-        private IFormLinkNullable<ILocationReferenceTypeGetter> _RefType = new FormLinkNullable<ILocationReferenceTypeGetter>();
+        private readonly IFormLinkNullable<ILocationReferenceTypeGetter> _RefType = new FormLinkNullable<ILocationReferenceTypeGetter>();
         public IFormLinkNullable<ILocationReferenceTypeGetter> RefType
         {
             get => _RefType;
-            set => _RefType = value.AsNullable();
+            set => _RefType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationReferenceTypeGetter> ILocationAliasReferenceGetter.RefType => this.RefType;
@@ -508,8 +508,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationAliasReference>
     {
         new Int32? AliasIndex { get; set; }
-        new IFormLinkNullable<IKeywordGetter> Keyword { get; }
-        new IFormLinkNullable<ILocationReferenceTypeGetter> RefType { get; }
+        new IFormLinkNullable<IKeywordGetter> Keyword { get; set; }
+        new IFormLinkNullable<ILocationReferenceTypeGetter> RefType { get; set; }
     }
 
     public partial interface ILocationAliasReferenceGetter :
@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LocationAliasReference.Mask<bool>? printMask = null)
         {
             if ((printMask?.AliasIndex ?? true)
-                && item.AliasIndex.TryGet(out var AliasIndexItem))
+                && item.AliasIndex is {} AliasIndexItem)
             {
                 fg.AppendItem(AliasIndexItem, "AliasIndex");
             }
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ILocationAliasReferenceGetter item)
         {
             var hash = new HashCode();
-            if (item.AliasIndex.TryGet(out var AliasIndexitem))
+            if (item.AliasIndex is {} AliasIndexitem)
             {
                 hash.Add(AliasIndexitem);
             }

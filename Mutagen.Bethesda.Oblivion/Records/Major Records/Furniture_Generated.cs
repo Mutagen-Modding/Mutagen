@@ -90,11 +90,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Script
-        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> IFurnitureGetter.Script => this.Script;
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         new Int32? MarkerFlags { get; set; }
     }
 
@@ -1056,12 +1056,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if ((printMask?.MarkerFlags ?? true)
-                && item.MarkerFlags.TryGet(out var MarkerFlagsItem))
+                && item.MarkerFlags is {} MarkerFlagsItem)
             {
                 fg.AppendItem(MarkerFlagsItem, "MarkerFlags");
             }
@@ -1168,16 +1168,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IFurnitureGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
             hash.Add(item.Script);
-            if (item.MarkerFlags.TryGet(out var MarkerFlagsitem))
+            if (item.MarkerFlags is {} MarkerFlagsitem)
             {
                 hash.Add(MarkerFlagsitem);
             }
@@ -1297,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Furniture_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1488,7 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

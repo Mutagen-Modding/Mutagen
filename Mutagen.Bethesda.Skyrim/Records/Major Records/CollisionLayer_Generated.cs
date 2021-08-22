@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.CollidesWith?.Overall ?? true)
-                        && CollidesWith.TryGet(out var CollidesWithItem))
+                        && CollidesWith is {} CollidesWithItem)
                     {
                         fg.AppendLine("CollidesWith =>");
                         fg.AppendLine("[");
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(DebugColor, "DebugColor");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Name, "Name");
-                if (CollidesWith.TryGet(out var CollidesWithItem))
+                if (CollidesWith is {} CollidesWithItem)
                 {
                     fg.AppendLine("CollidesWith =>");
                     fg.AppendLine("[");
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Name, "Name");
             }
             if ((printMask?.CollidesWith?.Overall ?? true)
-                && item.CollidesWith.TryGet(out var CollidesWithItem))
+                && item.CollidesWith is {} CollidesWithItem)
             {
                 fg.AppendLine("CollidesWith =>");
                 fg.AppendLine("[");
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.CollidesWith.TryGet(out var CollidesWithItem))
+            if (obj.CollidesWith is {} CollidesWithItem)
             {
                 foreach (var item in CollidesWithItem)
                 {

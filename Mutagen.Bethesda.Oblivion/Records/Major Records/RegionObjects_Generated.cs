@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Objects?.Overall ?? true)
-                        && Objects.TryGet(out var ObjectsItem))
+                        && Objects is {} ObjectsItem)
                     {
                         fg.AppendLine("Objects =>");
                         fg.AppendLine("[");
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (Objects.TryGet(out var ObjectsItem))
+                if (Objects is {} ObjectsItem)
                 {
                     fg.AppendLine("Objects =>");
                     fg.AppendLine("[");
@@ -878,7 +878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Objects?.Overall ?? true)
-                && item.Objects.TryGet(out var ObjectsItem))
+                && item.Objects is {} ObjectsItem)
             {
                 fg.AppendLine("Objects =>");
                 fg.AppendLine("[");
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Objects.TryGet(out var ObjectsItem))
+            if (obj.Objects is {} ObjectsItem)
             {
                 foreach (var item in ObjectsItem.SelectMany(f => f.ContainedFormLinks))
                 {

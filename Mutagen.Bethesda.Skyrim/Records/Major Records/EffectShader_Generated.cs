@@ -270,11 +270,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ParticleRotationSpeedDegreePerSecPlusMinus { get; set; } = default;
         #endregion
         #region AddonModels
-        private IFormLink<IDebrisGetter> _AddonModels = new FormLink<IDebrisGetter>();
+        private readonly IFormLink<IDebrisGetter> _AddonModels = new FormLink<IDebrisGetter>();
         public IFormLink<IDebrisGetter> AddonModels
         {
             get => _AddonModels;
-            set => _AddonModels = value.AsSetter();
+            set => _AddonModels.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IEffectShaderGetter.AddonModels => this.AddonModels;
@@ -325,11 +325,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single AddonModelsScaleOutTime { get; set; } = default;
         #endregion
         #region AmbientSound
-        private IFormLink<ISoundGetter> _AmbientSound = new FormLink<ISoundGetter>();
+        private readonly IFormLink<ISoundGetter> _AmbientSound = new FormLink<ISoundGetter>();
         public IFormLink<ISoundGetter> AmbientSound
         {
             get => _AmbientSound;
-            set => _AmbientSound = value.AsSetter();
+            set => _AmbientSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IEffectShaderGetter.AmbientSound => this.AmbientSound;
@@ -4102,7 +4102,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single ParticleInitialRotationDegreePlusMinus { get; set; }
         new Single ParticleRotationSpeedDegreePerSec { get; set; }
         new Single ParticleRotationSpeedDegreePerSecPlusMinus { get; set; }
-        new IFormLink<IDebrisGetter> AddonModels { get; }
+        new IFormLink<IDebrisGetter> AddonModels { get; set; }
         new Single HolesStartTime { get; set; }
         new Single HolesEndTime { get; set; }
         new Single HolesStartValue { get; set; }
@@ -4118,7 +4118,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AddonModelsScaleEnd { get; set; }
         new Single AddonModelsScaleInTime { get; set; }
         new Single AddonModelsScaleOutTime { get; set; }
-        new IFormLink<ISoundGetter> AmbientSound { get; }
+        new IFormLink<ISoundGetter> AmbientSound { get; set; }
         new Color FillColorKey2 { get; set; }
         new Color FillColorKey3 { get; set; }
         new Single FillColorKey1Scale { get; set; }
@@ -4974,27 +4974,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.FillTexture ?? true)
-                && item.FillTexture.TryGet(out var FillTextureItem))
+                && item.FillTexture is {} FillTextureItem)
             {
                 fg.AppendItem(FillTextureItem, "FillTexture");
             }
             if ((printMask?.ParticleShaderTexture ?? true)
-                && item.ParticleShaderTexture.TryGet(out var ParticleShaderTextureItem))
+                && item.ParticleShaderTexture is {} ParticleShaderTextureItem)
             {
                 fg.AppendItem(ParticleShaderTextureItem, "ParticleShaderTexture");
             }
             if ((printMask?.HolesTexture ?? true)
-                && item.HolesTexture.TryGet(out var HolesTextureItem))
+                && item.HolesTexture is {} HolesTextureItem)
             {
                 fg.AppendItem(HolesTextureItem, "HolesTexture");
             }
             if ((printMask?.MembranePaletteTexture ?? true)
-                && item.MembranePaletteTexture.TryGet(out var MembranePaletteTextureItem))
+                && item.MembranePaletteTexture is {} MembranePaletteTextureItem)
             {
                 fg.AppendItem(MembranePaletteTextureItem, "MembranePaletteTexture");
             }
             if ((printMask?.ParticlePaletteTexture ?? true)
-                && item.ParticlePaletteTexture.TryGet(out var ParticlePaletteTextureItem))
+                && item.ParticlePaletteTexture is {} ParticlePaletteTextureItem)
             {
                 fg.AppendItem(ParticlePaletteTextureItem, "ParticlePaletteTexture");
             }
@@ -5902,23 +5902,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IEffectShaderGetter item)
         {
             var hash = new HashCode();
-            if (item.FillTexture.TryGet(out var FillTextureitem))
+            if (item.FillTexture is {} FillTextureitem)
             {
                 hash.Add(FillTextureitem);
             }
-            if (item.ParticleShaderTexture.TryGet(out var ParticleShaderTextureitem))
+            if (item.ParticleShaderTexture is {} ParticleShaderTextureitem)
             {
                 hash.Add(ParticleShaderTextureitem);
             }
-            if (item.HolesTexture.TryGet(out var HolesTextureitem))
+            if (item.HolesTexture is {} HolesTextureitem)
             {
                 hash.Add(HolesTextureitem);
             }
-            if (item.MembranePaletteTexture.TryGet(out var MembranePaletteTextureitem))
+            if (item.MembranePaletteTexture is {} MembranePaletteTextureitem)
             {
                 hash.Add(MembranePaletteTextureitem);
             }
-            if (item.ParticlePaletteTexture.TryGet(out var ParticlePaletteTextureitem))
+            if (item.ParticlePaletteTexture is {} ParticlePaletteTextureitem)
             {
                 hash.Add(ParticlePaletteTextureitem);
             }

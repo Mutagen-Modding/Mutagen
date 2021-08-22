@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Perk
-        private IFormLink<IPerkGetter> _Perk = new FormLink<IPerkGetter>();
+        private readonly IFormLink<IPerkGetter> _Perk = new FormLink<IPerkGetter>();
         public IFormLink<IPerkGetter> Perk
         {
             get => _Perk;
-            set => _Perk = value.AsSetter();
+            set => _Perk.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> IPerkPlacementGetter.Perk => this.Perk;
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkPlacement>,
         IPerkPlacementGetter
     {
-        new IFormLink<IPerkGetter> Perk { get; }
+        new IFormLink<IPerkGetter> Perk { get; set; }
         new Byte Rank { get; set; }
         new MemorySlice<Byte> Fluff { get; set; }
     }

@@ -54,11 +54,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single IdleTime { get; set; } = default;
         #endregion
         #region Idle
-        private IFormLink<IIdleAnimationGetter> _Idle = new FormLink<IIdleAnimationGetter>();
+        private readonly IFormLink<IIdleAnimationGetter> _Idle = new FormLink<IIdleAnimationGetter>();
         public IFormLink<IIdleAnimationGetter> Idle
         {
             get => _Idle;
-            set => _Idle = value.AsSetter();
+            set => _Idle.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IIdleAnimationGetter> IPatrolGetter.Idle => this.Idle;
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(SCTX, "SCTX");
                     }
                     if ((printMask?.Topics?.Overall ?? true)
-                        && Topics.TryGet(out var TopicsItem))
+                        && Topics is {} TopicsItem)
                     {
                         fg.AppendLine("Topics =>");
                         fg.AppendLine("[");
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Idle, "Idle");
                 fg.AppendItem(SCHR, "SCHR");
                 fg.AppendItem(SCTX, "SCTX");
-                if (Topics.TryGet(out var TopicsItem))
+                if (Topics is {} TopicsItem)
                 {
                     fg.AppendLine("Topics =>");
                     fg.AppendLine("[");
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPatrolGetter
     {
         new Single IdleTime { get; set; }
-        new IFormLink<IIdleAnimationGetter> Idle { get; }
+        new IFormLink<IIdleAnimationGetter> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
         new ExtendedList<ATopicReference> Topics { get; }
@@ -1072,12 +1072,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Idle.FormKey, "Idle");
             }
             if ((printMask?.SCHR ?? true)
-                && item.SCHR.TryGet(out var SCHRItem))
+                && item.SCHR is {} SCHRItem)
             {
                 fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
             if ((printMask?.SCTX ?? true)
-                && item.SCTX.TryGet(out var SCTXItem))
+                && item.SCTX is {} SCTXItem)
             {
                 fg.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
             }
@@ -1136,11 +1136,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var hash = new HashCode();
             hash.Add(item.IdleTime);
             hash.Add(item.Idle);
-            if (item.SCHR.TryGet(out var SCHRItem))
+            if (item.SCHR is {} SCHRItem)
             {
                 hash.Add(SCHRItem);
             }
-            if (item.SCTX.TryGet(out var SCTXItem))
+            if (item.SCTX is {} SCTXItem)
             {
                 hash.Add(SCTXItem);
             }
@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
             {
-                if(rhs.SCHR.TryGet(out var SCHRrhs))
+                if(rhs.SCHR is {} SCHRrhs)
                 {
                     item.SCHR = SCHRrhs.ToArray();
                 }
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCTX) ?? true))
             {
-                if(rhs.SCTX.TryGet(out var SCTXrhs))
+                if(rhs.SCTX is {} SCTXrhs)
                 {
                     item.SCTX = SCTXrhs.ToArray();
                 }

@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(EdgeFallOff, "EdgeFallOff");
                     }
                     if ((printMask?.RegionPointListData?.Overall ?? true)
-                        && RegionPointListData.TryGet(out var RegionPointListDataItem))
+                        && RegionPointListData is {} RegionPointListDataItem)
                     {
                         fg.AppendLine("RegionPointListData =>");
                         fg.AppendLine("[");
@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(EdgeFallOff, "EdgeFallOff");
-                if (RegionPointListData.TryGet(out var RegionPointListDataItem))
+                if (RegionPointListData is {} RegionPointListDataItem)
                 {
                     fg.AppendLine("RegionPointListData =>");
                     fg.AppendLine("[");
@@ -932,12 +932,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RegionArea.Mask<bool>? printMask = null)
         {
             if ((printMask?.EdgeFallOff ?? true)
-                && item.EdgeFallOff.TryGet(out var EdgeFallOffItem))
+                && item.EdgeFallOff is {} EdgeFallOffItem)
             {
                 fg.AppendItem(EdgeFallOffItem, "EdgeFallOff");
             }
             if ((printMask?.RegionPointListData?.Overall ?? true)
-                && item.RegionPointListData.TryGet(out var RegionPointListDataItem))
+                && item.RegionPointListData is {} RegionPointListDataItem)
             {
                 fg.AppendLine("RegionPointListData =>");
                 fg.AppendLine("[");
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IRegionAreaGetter item)
         {
             var hash = new HashCode();
-            if (item.EdgeFallOff.TryGet(out var EdgeFallOffitem))
+            if (item.EdgeFallOff is {} EdgeFallOffitem)
             {
                 hash.Add(EdgeFallOffitem);
             }

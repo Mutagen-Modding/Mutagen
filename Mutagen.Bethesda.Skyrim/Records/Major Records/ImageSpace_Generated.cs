@@ -1117,27 +1117,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.ENAM ?? true)
-                && item.ENAM.TryGet(out var ENAMItem))
+                && item.ENAM is {} ENAMItem)
             {
                 fg.AppendLine($"ENAM => {SpanExt.ToHexString(ENAMItem)}");
             }
             if ((printMask?.Hdr?.Overall ?? true)
-                && item.Hdr.TryGet(out var HdrItem))
+                && item.Hdr is {} HdrItem)
             {
                 HdrItem?.ToString(fg, "Hdr");
             }
             if ((printMask?.Cinematic?.Overall ?? true)
-                && item.Cinematic.TryGet(out var CinematicItem))
+                && item.Cinematic is {} CinematicItem)
             {
                 CinematicItem?.ToString(fg, "Cinematic");
             }
             if ((printMask?.Tint?.Overall ?? true)
-                && item.Tint.TryGet(out var TintItem))
+                && item.Tint is {} TintItem)
             {
                 TintItem?.ToString(fg, "Tint");
             }
             if ((printMask?.DepthOfField?.Overall ?? true)
-                && item.DepthOfField.TryGet(out var DepthOfFieldItem))
+                && item.DepthOfField is {} DepthOfFieldItem)
             {
                 DepthOfFieldItem?.ToString(fg, "DepthOfField");
             }
@@ -1253,23 +1253,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IImageSpaceGetter item)
         {
             var hash = new HashCode();
-            if (item.ENAM.TryGet(out var ENAMItem))
+            if (item.ENAM is {} ENAMItem)
             {
                 hash.Add(ENAMItem);
             }
-            if (item.Hdr.TryGet(out var Hdritem))
+            if (item.Hdr is {} Hdritem)
             {
                 hash.Add(Hdritem);
             }
-            if (item.Cinematic.TryGet(out var Cinematicitem))
+            if (item.Cinematic is {} Cinematicitem)
             {
                 hash.Add(Cinematicitem);
             }
-            if (item.Tint.TryGet(out var Tintitem))
+            if (item.Tint is {} Tintitem)
             {
                 hash.Add(Tintitem);
             }
-            if (item.DepthOfField.TryGet(out var DepthOfFielditem))
+            if (item.DepthOfField is {} DepthOfFielditem)
             {
                 hash.Add(DepthOfFielditem);
             }
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.ENAM) ?? true))
             {
-                if(rhs.ENAM.TryGet(out var ENAMrhs))
+                if(rhs.ENAM is {} ENAMrhs)
                 {
                     item.ENAM = ENAMrhs.ToArray();
                 }
@@ -1392,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ImageSpace_FieldIndex.Hdr);
                 try
                 {
-                    if(rhs.Hdr.TryGet(out var rhsHdr))
+                    if(rhs.Hdr is {} rhsHdr)
                     {
                         item.Hdr = rhsHdr.DeepCopy(
                             errorMask: errorMask,
@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ImageSpace_FieldIndex.Cinematic);
                 try
                 {
-                    if(rhs.Cinematic.TryGet(out var rhsCinematic))
+                    if(rhs.Cinematic is {} rhsCinematic)
                     {
                         item.Cinematic = rhsCinematic.DeepCopy(
                             errorMask: errorMask,
@@ -1444,7 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ImageSpace_FieldIndex.Tint);
                 try
                 {
-                    if(rhs.Tint.TryGet(out var rhsTint))
+                    if(rhs.Tint is {} rhsTint)
                     {
                         item.Tint = rhsTint.DeepCopy(
                             errorMask: errorMask,
@@ -1470,7 +1470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ImageSpace_FieldIndex.DepthOfField);
                 try
                 {
-                    if(rhs.DepthOfField.TryGet(out var rhsDepthOfField))
+                    if(rhs.DepthOfField is {} rhsDepthOfField)
                     {
                         item.DepthOfField = rhsDepthOfField.DeepCopy(
                             errorMask: errorMask,
@@ -1652,28 +1652,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ENAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
-            if (item.Hdr.TryGet(out var HdrItem))
+            if (item.Hdr is {} HdrItem)
             {
                 ((ImageSpaceHdrBinaryWriteTranslation)((IBinaryItem)HdrItem).BinaryWriteTranslator).Write(
                     item: HdrItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Cinematic.TryGet(out var CinematicItem))
+            if (item.Cinematic is {} CinematicItem)
             {
                 ((ImageSpaceCinematicBinaryWriteTranslation)((IBinaryItem)CinematicItem).BinaryWriteTranslator).Write(
                     item: CinematicItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Tint.TryGet(out var TintItem))
+            if (item.Tint is {} TintItem)
             {
                 ((ImageSpaceTintBinaryWriteTranslation)((IBinaryItem)TintItem).BinaryWriteTranslator).Write(
                     item: TintItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.DepthOfField.TryGet(out var DepthOfFieldItem))
+            if (item.DepthOfField is {} DepthOfFieldItem)
             {
                 ((ImageSpaceDepthOfFieldBinaryWriteTranslation)((IBinaryItem)DepthOfFieldItem).BinaryWriteTranslator).Write(
                     item: DepthOfFieldItem,

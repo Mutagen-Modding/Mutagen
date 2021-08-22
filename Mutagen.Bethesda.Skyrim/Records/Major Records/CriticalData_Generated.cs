@@ -79,11 +79,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unused3 { get; set; } = default;
         #endregion
         #region Effect
-        private IFormLink<ISpellGetter> _Effect = new FormLink<ISpellGetter>();
+        private readonly IFormLink<ISpellGetter> _Effect = new FormLink<ISpellGetter>();
         public IFormLink<ISpellGetter> Effect
         {
             get => _Effect;
-            set => _Effect = value.AsSetter();
+            set => _Effect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> ICriticalDataGetter.Effect => this.Effect;
@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Skyrim
         new CriticalData.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused2 { get; set; }
         new Int32 Unused3 { get; set; }
-        new IFormLink<ISpellGetter> Effect { get; }
+        new IFormLink<ISpellGetter> Effect { get; set; }
         new Int32 Unused4 { get; set; }
     }
 

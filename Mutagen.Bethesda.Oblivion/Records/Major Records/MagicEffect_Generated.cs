@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
                         Data?.ToString(fg);
                     }
                     if ((printMask?.CounterEffects?.Overall ?? true)
-                        && CounterEffects.TryGet(out var CounterEffectsItem))
+                        && CounterEffects is {} CounterEffectsItem)
                     {
                         fg.AppendLine("CounterEffects =>");
                         fg.AppendLine("[");
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Icon, "Icon");
                 Model?.ToString(fg);
                 Data?.ToString(fg);
-                if (CounterEffects.TryGet(out var CounterEffectsItem))
+                if (CounterEffects is {} CounterEffectsItem)
                 {
                     fg.AppendLine("CounterEffects =>");
                     fg.AppendLine("[");
@@ -1229,32 +1229,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.CounterEffects?.Overall ?? true)
-                && item.CounterEffects.TryGet(out var CounterEffectsItem))
+                && item.CounterEffects is {} CounterEffectsItem)
             {
                 fg.AppendLine("CounterEffects =>");
                 fg.AppendLine("[");
@@ -1378,23 +1378,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IMagicEffectGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -1428,7 +1428,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Data.TryGet(out var DataItems))
+            if (obj.Data is {} DataItems)
             {
                 foreach (var item in DataItems.ContainedFormLinks)
                 {
@@ -1526,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1552,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1772,14 +1772,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((MagicEffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

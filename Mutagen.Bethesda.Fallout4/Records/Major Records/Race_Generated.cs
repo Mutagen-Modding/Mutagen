@@ -55,11 +55,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region AnimationSound
-        private IFormLinkNullable<IAnimationSoundTagSetGetter> _AnimationSound = new FormLinkNullable<IAnimationSoundTagSetGetter>();
+        private readonly IFormLinkNullable<IAnimationSoundTagSetGetter> _AnimationSound = new FormLinkNullable<IAnimationSoundTagSetGetter>();
         public IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound
         {
             get => _AnimationSound;
-            set => _AnimationSound = value.AsNullable();
+            set => _AnimationSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAnimationSoundTagSetGetter> IRaceGetter.AnimationSound => this.AnimationSound;
@@ -101,11 +101,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Skin
-        private IFormLinkNullable<IArmorGetter> _Skin = new FormLinkNullable<IArmorGetter>();
+        private readonly IFormLinkNullable<IArmorGetter> _Skin = new FormLinkNullable<IArmorGetter>();
         public IFormLinkNullable<IArmorGetter> Skin
         {
             get => _Skin;
-            set => _Skin = value.AsNullable();
+            set => _Skin.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArmorGetter> IRaceGetter.Skin => this.Skin;
@@ -265,61 +265,61 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte ExplodableDecalCount { get; set; } = default;
         #endregion
         #region SeverableExplosion
-        private IFormLink<IExplosionGetter> _SeverableExplosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _SeverableExplosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> SeverableExplosion
         {
             get => _SeverableExplosion;
-            set => _SeverableExplosion = value.AsSetter();
+            set => _SeverableExplosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.SeverableExplosion => this.SeverableExplosion;
         #endregion
         #region SeverableDebris
-        private IFormLink<IDebrisGetter> _SeverableDebris = new FormLink<IDebrisGetter>();
+        private readonly IFormLink<IDebrisGetter> _SeverableDebris = new FormLink<IDebrisGetter>();
         public IFormLink<IDebrisGetter> SeverableDebris
         {
             get => _SeverableDebris;
-            set => _SeverableDebris = value.AsSetter();
+            set => _SeverableDebris.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IRaceGetter.SeverableDebris => this.SeverableDebris;
         #endregion
         #region SeverableImpactDataSet
-        private IFormLink<IImpactDataSetGetter> _SeverableImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _SeverableImpactDataSet = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> SeverableImpactDataSet
         {
             get => _SeverableImpactDataSet;
-            set => _SeverableImpactDataSet = value.AsSetter();
+            set => _SeverableImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.SeverableImpactDataSet => this.SeverableImpactDataSet;
         #endregion
         #region ExplodableExplosion
-        private IFormLink<IExplosionGetter> _ExplodableExplosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _ExplodableExplosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> ExplodableExplosion
         {
             get => _ExplodableExplosion;
-            set => _ExplodableExplosion = value.AsSetter();
+            set => _ExplodableExplosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.ExplodableExplosion => this.ExplodableExplosion;
         #endregion
         #region ExplodableDebris
-        private IFormLink<IDebrisGetter> _ExplodableDebris = new FormLink<IDebrisGetter>();
+        private readonly IFormLink<IDebrisGetter> _ExplodableDebris = new FormLink<IDebrisGetter>();
         public IFormLink<IDebrisGetter> ExplodableDebris
         {
             get => _ExplodableDebris;
-            set => _ExplodableDebris = value.AsSetter();
+            set => _ExplodableDebris.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IRaceGetter.ExplodableDebris => this.ExplodableDebris;
         #endregion
         #region ExplodableImpactDataSet
-        private IFormLink<IImpactDataSetGetter> _ExplodableImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _ExplodableImpactDataSet = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> ExplodableImpactDataSet
         {
             get => _ExplodableImpactDataSet;
-            set => _ExplodableImpactDataSet = value.AsSetter();
+            set => _ExplodableImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.ExplodableImpactDataSet => this.ExplodableImpactDataSet;
@@ -331,41 +331,41 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte OnCrippleDecalCount { get; set; } = default;
         #endregion
         #region OnCrippleExplosion
-        private IFormLink<IExplosionGetter> _OnCrippleExplosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _OnCrippleExplosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> OnCrippleExplosion
         {
             get => _OnCrippleExplosion;
-            set => _OnCrippleExplosion = value.AsSetter();
+            set => _OnCrippleExplosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.OnCrippleExplosion => this.OnCrippleExplosion;
         #endregion
         #region OnCrippleDebris
-        private IFormLink<IDebrisGetter> _OnCrippleDebris = new FormLink<IDebrisGetter>();
+        private readonly IFormLink<IDebrisGetter> _OnCrippleDebris = new FormLink<IDebrisGetter>();
         public IFormLink<IDebrisGetter> OnCrippleDebris
         {
             get => _OnCrippleDebris;
-            set => _OnCrippleDebris = value.AsSetter();
+            set => _OnCrippleDebris.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IRaceGetter.OnCrippleDebris => this.OnCrippleDebris;
         #endregion
         #region OnCrippleImpactDataSet
-        private IFormLink<IImpactDataSetGetter> _OnCrippleImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _OnCrippleImpactDataSet = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> OnCrippleImpactDataSet
         {
             get => _OnCrippleImpactDataSet;
-            set => _OnCrippleImpactDataSet = value.AsSetter();
+            set => _OnCrippleImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.OnCrippleImpactDataSet => this.OnCrippleImpactDataSet;
         #endregion
         #region ExplodableSubsegmentExplosion
-        private IFormLink<IExplosionGetter> _ExplodableSubsegmentExplosion = new FormLink<IExplosionGetter>();
+        private readonly IFormLink<IExplosionGetter> _ExplodableSubsegmentExplosion = new FormLink<IExplosionGetter>();
         public IFormLink<IExplosionGetter> ExplodableSubsegmentExplosion
         {
             get => _ExplodableSubsegmentExplosion;
-            set => _ExplodableSubsegmentExplosion = value.AsSetter();
+            set => _ExplodableSubsegmentExplosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.ExplodableSubsegmentExplosion => this.ExplodableSubsegmentExplosion;
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Fallout4
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.ActorEffect?.Overall ?? true)
-                        && ActorEffect.TryGet(out var ActorEffectItem))
+                        && ActorEffect is {} ActorEffectItem)
                     {
                         fg.AppendLine("ActorEffect =>");
                         fg.AppendLine("[");
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Fallout4
                         BipedBodyTemplate?.ToString(fg);
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords.TryGet(out var KeywordsItem))
+                        && Keywords is {} KeywordsItem)
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Fallout4
                         Properties?.ToString(fg);
                     }
                     if ((printMask?.AttachParentSlots?.Overall ?? true)
-                        && AttachParentSlots.TryGet(out var AttachParentSlotsItem))
+                        && AttachParentSlots is {} AttachParentSlotsItem)
                     {
                         fg.AppendLine("AttachParentSlots =>");
                         fg.AppendLine("[");
@@ -1843,7 +1843,7 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendItem(AnimationSound, "AnimationSound");
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(Description, "Description");
-                if (ActorEffect.TryGet(out var ActorEffectItem))
+                if (ActorEffect is {} ActorEffectItem)
                 {
                     fg.AppendLine("ActorEffect =>");
                     fg.AppendLine("[");
@@ -1867,7 +1867,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 fg.AppendItem(Skin, "Skin");
                 BipedBodyTemplate?.ToString(fg);
-                if (Keywords.TryGet(out var KeywordsItem))
+                if (Keywords is {} KeywordsItem)
                 {
                     fg.AppendLine("Keywords =>");
                     fg.AppendLine("[");
@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Fallout4
                     fg.AppendLine("]");
                 }
                 Properties?.ToString(fg);
-                if (AttachParentSlots.TryGet(out var AttachParentSlotsItem))
+                if (AttachParentSlots is {} AttachParentSlotsItem)
                 {
                     fg.AppendLine("AttachParentSlots =>");
                     fg.AppendLine("[");
@@ -2330,14 +2330,14 @@ namespace Mutagen.Bethesda.Fallout4
         IRaceGetter,
         IRelatable
     {
-        new IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound { get; }
+        new IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         new TranslatedString Description { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; set; }
-        new IFormLinkNullable<IArmorGetter> Skin { get; }
+        new IFormLinkNullable<IArmorGetter> Skin { get; set; }
         new BipedBodyTemplate? BipedBodyTemplate { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
@@ -2370,18 +2370,18 @@ namespace Mutagen.Bethesda.Fallout4
         new Single ExplodableDebrisScale { get; set; }
         new Byte ExplodableDebrisCount { get; set; }
         new Byte ExplodableDecalCount { get; set; }
-        new IFormLink<IExplosionGetter> SeverableExplosion { get; }
-        new IFormLink<IDebrisGetter> SeverableDebris { get; }
-        new IFormLink<IImpactDataSetGetter> SeverableImpactDataSet { get; }
-        new IFormLink<IExplosionGetter> ExplodableExplosion { get; }
-        new IFormLink<IDebrisGetter> ExplodableDebris { get; }
-        new IFormLink<IImpactDataSetGetter> ExplodableImpactDataSet { get; }
+        new IFormLink<IExplosionGetter> SeverableExplosion { get; set; }
+        new IFormLink<IDebrisGetter> SeverableDebris { get; set; }
+        new IFormLink<IImpactDataSetGetter> SeverableImpactDataSet { get; set; }
+        new IFormLink<IExplosionGetter> ExplodableExplosion { get; set; }
+        new IFormLink<IDebrisGetter> ExplodableDebris { get; set; }
+        new IFormLink<IImpactDataSetGetter> ExplodableImpactDataSet { get; set; }
         new Byte OnCrippleDebrisCount { get; set; }
         new Byte OnCrippleDecalCount { get; set; }
-        new IFormLink<IExplosionGetter> OnCrippleExplosion { get; }
-        new IFormLink<IDebrisGetter> OnCrippleDebris { get; }
-        new IFormLink<IImpactDataSetGetter> OnCrippleImpactDataSet { get; }
-        new IFormLink<IExplosionGetter> ExplodableSubsegmentExplosion { get; }
+        new IFormLink<IExplosionGetter> OnCrippleExplosion { get; set; }
+        new IFormLink<IDebrisGetter> OnCrippleDebris { get; set; }
+        new IFormLink<IImpactDataSetGetter> OnCrippleImpactDataSet { get; set; }
+        new IFormLink<IExplosionGetter> ExplodableSubsegmentExplosion { get; set; }
         new Race.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Race.MajorFlag MajorFlags { get; set; }
@@ -3043,7 +3043,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.AnimationSound.FormKeyNullable, "AnimationSound");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -3052,7 +3052,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.Description, "Description");
             }
             if ((printMask?.ActorEffect?.Overall ?? true)
-                && item.ActorEffect.TryGet(out var ActorEffectItem))
+                && item.ActorEffect is {} ActorEffectItem)
             {
                 fg.AppendLine("ActorEffect =>");
                 fg.AppendLine("[");
@@ -3075,12 +3075,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.Skin.FormKeyNullable, "Skin");
             }
             if ((printMask?.BipedBodyTemplate?.Overall ?? true)
-                && item.BipedBodyTemplate.TryGet(out var BipedBodyTemplateItem))
+                && item.BipedBodyTemplate is {} BipedBodyTemplateItem)
             {
                 BipedBodyTemplateItem?.ToString(fg, "BipedBodyTemplate");
             }
             if ((printMask?.Keywords?.Overall ?? true)
-                && item.Keywords.TryGet(out var KeywordsItem))
+                && item.Keywords is {} KeywordsItem)
             {
                 fg.AppendLine("Keywords =>");
                 fg.AppendLine("[");
@@ -3099,12 +3099,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Properties?.Overall ?? true)
-                && item.Properties.TryGet(out var PropertiesItem))
+                && item.Properties is {} PropertiesItem)
             {
                 PropertiesItem?.ToString(fg, "Properties");
             }
             if ((printMask?.AttachParentSlots?.Overall ?? true)
-                && item.AttachParentSlots.TryGet(out var AttachParentSlotsItem))
+                && item.AttachParentSlots is {} AttachParentSlotsItem)
             {
                 fg.AppendLine("AttachParentSlots =>");
                 fg.AppendLine("[");
@@ -3547,19 +3547,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             var hash = new HashCode();
             hash.Add(item.AnimationSound);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.Description);
             hash.Add(item.ActorEffect);
             hash.Add(item.Skin);
-            if (item.BipedBodyTemplate.TryGet(out var BipedBodyTemplateitem))
+            if (item.BipedBodyTemplate is {} BipedBodyTemplateitem)
             {
                 hash.Add(BipedBodyTemplateitem);
             }
             hash.Add(item.Keywords);
-            if (item.Properties.TryGet(out var Propertiesitem))
+            if (item.Properties is {} Propertiesitem)
             {
                 hash.Add(Propertiesitem);
             }
@@ -3635,7 +3635,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return FormLinkInformation.Factory(obj.AnimationSound);
             }
-            if (obj.ActorEffect.TryGet(out var ActorEffectItem))
+            if (obj.ActorEffect is {} ActorEffectItem)
             {
                 foreach (var item in ActorEffectItem)
                 {
@@ -3646,14 +3646,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Skin);
             }
-            if (obj.Keywords.TryGet(out var KeywordsItem))
+            if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.AttachParentSlots.TryGet(out var AttachParentSlotsItem))
+            if (obj.AttachParentSlots is {} AttachParentSlotsItem)
             {
                 foreach (var item in AttachParentSlotsItem)
                 {
@@ -3792,7 +3792,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.BipedBodyTemplate);
                 try
                 {
-                    if(rhs.BipedBodyTemplate.TryGet(out var rhsBipedBodyTemplate))
+                    if(rhs.BipedBodyTemplate is {} rhsBipedBodyTemplate)
                     {
                         item.BipedBodyTemplate = rhsBipedBodyTemplate.DeepCopy(
                             errorMask: errorMask,
@@ -3845,7 +3845,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Properties);
                 try
                 {
-                    if(rhs.Properties.TryGet(out var rhsProperties))
+                    if(rhs.Properties is {} rhsProperties)
                     {
                         item.Properties = rhsProperties.DeepCopy(
                             errorMask: errorMask,
@@ -4241,7 +4241,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.Skin,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
-            if (item.BipedBodyTemplate.TryGet(out var BipedBodyTemplateItem))
+            if (item.BipedBodyTemplate is {} BipedBodyTemplateItem)
             {
                 ((BipedBodyTemplateBinaryWriteTranslation)((IBinaryItem)BipedBodyTemplateItem).BinaryWriteTranslator).Write(
                     item: BipedBodyTemplateItem,
@@ -4260,7 +4260,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            if (item.Properties.TryGet(out var PropertiesItem))
+            if (item.Properties is {} PropertiesItem)
             {
                 ((PropertiesBinaryWriteTranslation)((IBinaryItem)PropertiesItem).BinaryWriteTranslator).Write(
                     item: PropertiesItem,

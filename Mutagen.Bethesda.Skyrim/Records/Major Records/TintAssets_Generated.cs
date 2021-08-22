@@ -66,11 +66,11 @@ namespace Mutagen.Bethesda.Skyrim
         TintAssets.TintMaskType? ITintAssetsGetter.MaskType => this.MaskType;
         #endregion
         #region PresetDefault
-        private IFormLinkNullable<IColorRecordGetter> _PresetDefault = new FormLinkNullable<IColorRecordGetter>();
+        private readonly IFormLinkNullable<IColorRecordGetter> _PresetDefault = new FormLinkNullable<IColorRecordGetter>();
         public IFormLinkNullable<IColorRecordGetter> PresetDefault
         {
             get => _PresetDefault;
-            set => _PresetDefault = value.AsNullable();
+            set => _PresetDefault.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> ITintAssetsGetter.PresetDefault => this.PresetDefault;
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(PresetDefault, "PresetDefault");
                     }
                     if ((printMask?.Presets?.Overall ?? true)
-                        && Presets.TryGet(out var PresetsItem))
+                        && Presets is {} PresetsItem)
                     {
                         fg.AppendLine("Presets =>");
                         fg.AppendLine("[");
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(FileName, "FileName");
                 fg.AppendItem(MaskType, "MaskType");
                 fg.AppendItem(PresetDefault, "PresetDefault");
-                if (Presets.TryGet(out var PresetsItem))
+                if (Presets is {} PresetsItem)
                 {
                     fg.AppendLine("Presets =>");
                     fg.AppendLine("[");
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16? Index { get; set; }
         new String? FileName { get; set; }
         new TintAssets.TintMaskType? MaskType { get; set; }
-        new IFormLinkNullable<IColorRecordGetter> PresetDefault { get; }
+        new IFormLinkNullable<IColorRecordGetter> PresetDefault { get; set; }
         new ExtendedList<TintPreset> Presets { get; }
     }
 
@@ -1069,17 +1069,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TintAssets.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
-                && item.Index.TryGet(out var IndexItem))
+                && item.Index is {} IndexItem)
             {
                 fg.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.FileName ?? true)
-                && item.FileName.TryGet(out var FileNameItem))
+                && item.FileName is {} FileNameItem)
             {
                 fg.AppendItem(FileNameItem, "FileName");
             }
             if ((printMask?.MaskType ?? true)
-                && item.MaskType.TryGet(out var MaskTypeItem))
+                && item.MaskType is {} MaskTypeItem)
             {
                 fg.AppendItem(MaskTypeItem, "MaskType");
             }
@@ -1140,15 +1140,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ITintAssetsGetter item)
         {
             var hash = new HashCode();
-            if (item.Index.TryGet(out var Indexitem))
+            if (item.Index is {} Indexitem)
             {
                 hash.Add(Indexitem);
             }
-            if (item.FileName.TryGet(out var FileNameitem))
+            if (item.FileName is {} FileNameitem)
             {
                 hash.Add(FileNameitem);
             }
-            if (item.MaskType.TryGet(out var MaskTypeitem))
+            if (item.MaskType is {} MaskTypeitem)
             {
                 hash.Add(MaskTypeitem);
             }

@@ -17,9 +17,9 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.EnumNames)
-                    .BindToStrict(this, view => view.Combobox.ItemsSource)
+                    .BindTo(this, view => view.Combobox.ItemsSource)
                     .DisposeWith(disposable);
-                this.BindStrict(ViewModel, vm => vm.Value, view => view.Combobox.SelectedValue)
+                this.Bind(ViewModel, vm => vm.Value, view => view.Combobox.SelectedValue)
                     .DisposeWith(disposable);
             });
         }

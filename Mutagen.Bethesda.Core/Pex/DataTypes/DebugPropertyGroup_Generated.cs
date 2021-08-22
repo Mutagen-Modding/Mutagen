@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendItem(GroupName, "GroupName");
                     }
                     if ((printMask?.PropertyNames?.Overall ?? true)
-                        && PropertyNames.TryGet(out var PropertyNamesItem))
+                        && PropertyNames is {} PropertyNamesItem)
                     {
                         fg.AppendLine("PropertyNames =>");
                         fg.AppendLine("[");
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Pex
             {
                 fg.AppendItem(ObjectName, "ObjectName");
                 fg.AppendItem(GroupName, "GroupName");
-                if (PropertyNames.TryGet(out var PropertyNamesItem))
+                if (PropertyNames is {} PropertyNamesItem)
                 {
                     fg.AppendLine("PropertyNames =>");
                     fg.AppendLine("[");

@@ -4,11 +4,12 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins
 {
-    public class ModPath : IEquatable<ModPath>
+    public record ModPath
     {
-        public readonly ModKey ModKey;
-        public readonly FilePath Path;
         public static readonly ModPath Empty = new ModPath(ModKey.Null, string.Empty);
+        
+        public ModKey ModKey { get; }
+        public FilePath Path { get; }
 
         public ModPath(ModKey modKey, FilePath path)
         {
@@ -16,11 +17,34 @@ namespace Mutagen.Bethesda.Plugins
             Path = path;
         }
 
-        public static ModPath FromPath(FilePath path)
+        /// <summary>
+        /// Constructs a ModPath from a string
+        /// </summary>
+        /// <param name="path">FilePath to convert from</param>
+        /// <exception cref="ArgumentException">Throws if path file name was not convertable to a ModKey</exception>
+        public ModPath(FilePath path)
         {
-            var modKey = ModKey.FromFileName(path.Name);
-            return new ModPath(modKey, path);
+            ModKey = ModKey.FromFileName(path.Name);
+            Path = path;
         }
+
+        /// <summary>
+        /// Constructs a ModPath from a string
+        /// </summary>
+        /// <param name="path">String to convert from</param>
+        /// <exception cref="ArgumentException">Throws if path file name was not convertable to a ModKey</exception>
+        public ModPath(string path)
+        {
+            ModKey = ModKey.FromFileName(System.IO.Path.GetFileName(path));
+            Path = path;
+        }
+
+        /// <summary>
+        /// Constructs a ModPath from a string
+        /// </summary>
+        /// <param name="path">String to convert from</param>
+        /// <exception cref="ArgumentException">Throws if path file name was not convertable to a ModKey</exception>
+        public static ModPath FromPath(FilePath path) => new(path);
 
         public static bool TryFromPath(FilePath path, [MaybeNullWhen(false)] out ModPath modPath)
         {
@@ -68,27 +92,6 @@ namespace Mutagen.Bethesda.Plugins
             {
                 return $"{ModKey} => {Path}";
             }
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is ModPath modPath && Equals(modPath);
-        }
-
-        public bool Equals(ModPath? other)
-        {
-            if (other == null) return false;
-            if (!ModKey.Equals(other.ModKey)) return false;
-            if (Path.Equals(other.Path)) return false;
-            return true;
-        }
-
-        public override int GetHashCode()
-        {
-            HashCode hash = new HashCode();
-            hash.Add(ModKey);
-            hash.Add(Path);
-            return hash.ToHashCode();
         }
     }
 }

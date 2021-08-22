@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        private IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        private readonly IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
         public IFormLink<IPlacedGetter> Reference
         {
             get => _Reference;
-            set => _Reference = value.AsSetter();
+            set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedGetter> IPointToReferenceMappingGetter.Reference => this.Reference;
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Reference, "Reference");
                     }
                     if ((printMask?.Points?.Overall ?? true)
-                        && Points.TryGet(out var PointsItem))
+                        && Points is {} PointsItem)
                     {
                         fg.AppendLine("Points =>");
                         fg.AppendLine("[");
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Reference, "Reference");
-                if (Points.TryGet(out var PointsItem))
+                if (Points is {} PointsItem)
                 {
                     fg.AppendLine("Points =>");
                     fg.AppendLine("[");
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPointToReferenceMapping>,
         IPointToReferenceMappingGetter
     {
-        new IFormLink<IPlacedGetter> Reference { get; }
+        new IFormLink<IPlacedGetter> Reference { get; set; }
         new ExtendedList<Int16> Points { get; }
     }
 

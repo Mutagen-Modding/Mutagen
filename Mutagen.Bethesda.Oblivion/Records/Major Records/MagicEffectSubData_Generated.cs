@@ -50,51 +50,51 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region EnchantEffect
-        private IFormLink<IEffectShaderGetter> _EnchantEffect = new FormLink<IEffectShaderGetter>();
+        private readonly IFormLink<IEffectShaderGetter> _EnchantEffect = new FormLink<IEffectShaderGetter>();
         public IFormLink<IEffectShaderGetter> EnchantEffect
         {
             get => _EnchantEffect;
-            set => _EnchantEffect = value.AsSetter();
+            set => _EnchantEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectSubDataGetter.EnchantEffect => this.EnchantEffect;
         #endregion
         #region CastingSound
-        private IFormLink<ISoundGetter> _CastingSound = new FormLink<ISoundGetter>();
+        private readonly IFormLink<ISoundGetter> _CastingSound = new FormLink<ISoundGetter>();
         public IFormLink<ISoundGetter> CastingSound
         {
             get => _CastingSound;
-            set => _CastingSound = value.AsSetter();
+            set => _CastingSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.CastingSound => this.CastingSound;
         #endregion
         #region BoltSound
-        private IFormLink<ISoundGetter> _BoltSound = new FormLink<ISoundGetter>();
+        private readonly IFormLink<ISoundGetter> _BoltSound = new FormLink<ISoundGetter>();
         public IFormLink<ISoundGetter> BoltSound
         {
             get => _BoltSound;
-            set => _BoltSound = value.AsSetter();
+            set => _BoltSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.BoltSound => this.BoltSound;
         #endregion
         #region HitSound
-        private IFormLink<ISoundGetter> _HitSound = new FormLink<ISoundGetter>();
+        private readonly IFormLink<ISoundGetter> _HitSound = new FormLink<ISoundGetter>();
         public IFormLink<ISoundGetter> HitSound
         {
             get => _HitSound;
-            set => _HitSound = value.AsSetter();
+            set => _HitSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.HitSound => this.HitSound;
         #endregion
         #region AreaSound
-        private IFormLink<ISoundGetter> _AreaSound = new FormLink<ISoundGetter>();
+        private readonly IFormLink<ISoundGetter> _AreaSound = new FormLink<ISoundGetter>();
         public IFormLink<ISoundGetter> AreaSound
         {
             get => _AreaSound;
-            set => _AreaSound = value.AsSetter();
+            set => _AreaSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.AreaSound => this.AreaSound;
@@ -650,11 +650,11 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IMagicEffectSubData>,
         IMagicEffectSubDataGetter
     {
-        new IFormLink<IEffectShaderGetter> EnchantEffect { get; }
-        new IFormLink<ISoundGetter> CastingSound { get; }
-        new IFormLink<ISoundGetter> BoltSound { get; }
-        new IFormLink<ISoundGetter> HitSound { get; }
-        new IFormLink<ISoundGetter> AreaSound { get; }
+        new IFormLink<IEffectShaderGetter> EnchantEffect { get; set; }
+        new IFormLink<ISoundGetter> CastingSound { get; set; }
+        new IFormLink<ISoundGetter> BoltSound { get; set; }
+        new IFormLink<ISoundGetter> HitSound { get; set; }
+        new IFormLink<ISoundGetter> AreaSound { get; set; }
         new Single ConstantEffectEnchantmentFactor { get; set; }
         new Single ConstantEffectBarterFactor { get; set; }
     }

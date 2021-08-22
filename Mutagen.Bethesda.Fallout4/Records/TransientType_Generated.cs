@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Fallout4
                         fg.AppendItem(FormType, "FormType");
                     }
                     if ((printMask?.Links?.Overall ?? true)
-                        && Links.TryGet(out var LinksItem))
+                        && Links is {} LinksItem)
                     {
                         fg.AppendLine("Links =>");
                         fg.AppendLine("[");
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(FormType, "FormType");
-                if (Links.TryGet(out var LinksItem))
+                if (Links is {} LinksItem)
                 {
                     fg.AppendLine("Links =>");
                     fg.AppendLine("[");

@@ -2,6 +2,7 @@ using Loqui;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -16,15 +17,23 @@ namespace Mutagen.Bethesda.Plugins.Records
     public static class ModInstantiator<TMod>
         where TMod : IModGetter
     {
+        public delegate TMod ActivatorDelegate(ModKey modKey, GameRelease release);
+        public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, IFileSystem? fileSystem = null);
+
         /// <summary>
         /// Function to call to retrieve a new Mod of type T
         /// </summary>
-        public static readonly Func<ModKey, GameRelease, TMod> Activator;
+        public static readonly ActivatorDelegate Activator;
 
         /// <summary>
         /// Function to call to import a new Mod of type T
         /// </summary>
-        public static readonly Func<ModPath, GameRelease, TMod> Importer;
+        public static readonly ImporterDelegate Importer;
+        //
+        // /// <summary>
+        // /// Function to call to import a new Mod of type T
+        // /// </summary>
+        // public static readonly Func<ModPath, GameRelease, IFileSystem?, TMod> FileSystemImporter;
 
         static ModInstantiator()
         {
@@ -41,7 +50,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     {
         public static class ModInstantiatorReflection
         {
-            internal static Func<ModKey, GameRelease, TMod> GetActivator<TMod>(ILoquiRegistration regis)
+            internal static ModInstantiator<TMod>.ActivatorDelegate GetActivator<TMod>(ILoquiRegistration regis)
                 where TMod : IModGetter
             {
                 var ctorInfo = regis.ClassType.GetConstructors()
@@ -74,7 +83,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 }
             }
 
-            public static Func<ModPath, GameRelease, TMod> GetImporter<TMod>(ILoquiRegistration regis)
+            public static ModInstantiator<TMod>.ImporterDelegate GetImporter<TMod>(ILoquiRegistration regis)
                 where TMod : IModGetter
             {
                 if (regis.ClassType == typeof(TMod)
@@ -93,32 +102,34 @@ namespace Mutagen.Bethesda.Plugins.Records
                     var deleg = lambda.Compile();
                     if (paramInfo[1].Name == "release")
                     {
-                        return (ModPath modPath, GameRelease release) =>
+                        return (ModPath modPath, GameRelease release, IFileSystem? fileSystem) =>
                         {
-                            object[] args = new object[paramInfo.Length];
+                            var args = new object?[paramInfo.Length];
                             args[0] = modPath;
                             args[1] = release;
-                            args[^1] = true;
+                            args[^2] = true;
+                            args[^1] = fileSystem;
                             return (TMod)deleg.DynamicInvoke(args)!;
                         };
                     }
                     else
                     {
-                        return (ModPath modPath, GameRelease release) =>
+                        return (ModPath modPath, GameRelease release, IFileSystem? fileSystem) =>
                         {
-                            object[] args = new object[paramInfo.Length];
+                            var args = new object?[paramInfo.Length];
                             args[0] = modPath;
-                            args[^1] = true;
+                            args[^2] = true;
+                            args[^1] = fileSystem;
                             return (TMod)deleg.DynamicInvoke(args)!;
                         };
                     }
                 }
                 else if (regis.GetterType == typeof(TMod))
                 {
-                    var overlayGet = GetOverlay(regis);
-                    return (ModPath modPath, GameRelease release) =>
+                    var overlayGet = GetOverlay<TMod>(regis);
+                    return (ModPath modPath, GameRelease release, IFileSystem? fileSystem) =>
                     {
-                        return (TMod)overlayGet(modPath, release);
+                        return overlayGet(modPath, release, fileSystem);
                     };
                 }
                 else
@@ -127,7 +138,8 @@ namespace Mutagen.Bethesda.Plugins.Records
                 }
             }
 
-            public static Func<ModPath, GameRelease, IModGetter> GetOverlay(ILoquiRegistration regis)
+            public static ModInstantiator<TMod>.ImporterDelegate GetOverlay<TMod>(ILoquiRegistration regis)
+                where TMod : IModGetter
             {
                 var methodInfo = regis.ClassType.GetMethods()
                     .Where(m => m.Name == "CreateFromBinaryOverlay")
@@ -142,21 +154,23 @@ namespace Mutagen.Bethesda.Plugins.Records
                 var deleg = lambda.Compile();
                 if (paramInfo.Length > 1 && paramInfo[1].Name == "release")
                 {
-                    return (ModPath modPath, GameRelease release) =>
+                    return (ModPath modPath, GameRelease release, IFileSystem? fileSystem) =>
                     {
-                        object[] args = new object[paramInfo.Length];
+                        var args = new object?[paramInfo.Length];
                         args[0] = modPath;
                         args[1] = release;
-                        return (IModGetter)deleg.DynamicInvoke(args)!;
+                        args[^1] = fileSystem;
+                        return (TMod)deleg.DynamicInvoke(args)!;
                     };
                 }
                 else
                 {
-                    return (ModPath modPath, GameRelease release) =>
+                    return (ModPath modPath, GameRelease release, IFileSystem? fileSystem) =>
                     {
-                        object[] args = new object[paramInfo.Length];
+                        var args = new object?[paramInfo.Length];
                         args[0] = modPath;
-                        return (IModGetter)deleg.DynamicInvoke(args)!;
+                        args[^1] = fileSystem;
+                        return (TMod)deleg.DynamicInvoke(args)!;
                     };
                 }
             }

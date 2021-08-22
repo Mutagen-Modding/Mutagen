@@ -894,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Color ?? true)
-                && item.Color.TryGet(out var ColorItem))
+                && item.Color is {} ColorItem)
             {
                 fg.AppendItem(ColorItem, "Color");
             }
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IActionRecordGetter item)
         {
             var hash = new HashCode();
-            if (item.Color.TryGet(out var Coloritem))
+            if (item.Color is {} Coloritem)
             {
                 hash.Add(Coloritem);
             }

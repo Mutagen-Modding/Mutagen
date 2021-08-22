@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
                 fg.AppendItem(item.VersionControl, "VersionControl");
             }
             if ((printMask?.EditorID ?? true)
-                && item.EditorID.TryGet(out var EditorIDItem))
+                && item.EditorID is {} EditorIDItem)
             {
                 fg.AppendItem(EditorIDItem, "EditorID");
             }
@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             hash.Add(item.MajorRecordFlagsRaw);
             hash.Add(item.FormKey);
             hash.Add(item.VersionControl);
-            if (item.EditorID.TryGet(out var EditorIDitem))
+            if (item.EditorID is {} EditorIDitem)
             {
                 hash.Add(EditorIDitem);
             }

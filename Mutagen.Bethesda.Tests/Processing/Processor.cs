@@ -1,6 +1,4 @@
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -17,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
 
@@ -30,7 +29,7 @@ namespace Mutagen.Bethesda.Tests
         protected BinaryFileProcessor.ConfigConstructor _Instructions = new BinaryFileProcessor.ConfigConstructor();
         private Dictionary<long, uint> _lengthTracker = new Dictionary<long, uint>();
         protected byte _NumMasters;
-        protected MasterReferenceReader Masters;
+        protected IMasterReferenceCollection Masters;
         protected ParsingBundle Bundle;
         protected ModPath SourcePath;
         protected TempFolder TempFolder;

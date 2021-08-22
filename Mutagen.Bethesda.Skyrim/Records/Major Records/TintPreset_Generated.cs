@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Color
-        private IFormLinkNullable<IColorRecordGetter> _Color = new FormLinkNullable<IColorRecordGetter>();
+        private readonly IFormLinkNullable<IColorRecordGetter> _Color = new FormLinkNullable<IColorRecordGetter>();
         public IFormLinkNullable<IColorRecordGetter> Color
         {
             get => _Color;
-            set => _Color = value.AsNullable();
+            set => _Color.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> ITintPresetGetter.Color => this.Color;
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ITintPreset>,
         ITintPresetGetter
     {
-        new IFormLinkNullable<IColorRecordGetter> Color { get; }
+        new IFormLinkNullable<IColorRecordGetter> Color { get; set; }
         new Single? DefaultValue { get; set; }
         new UInt16? Index { get; set; }
     }
@@ -904,12 +904,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Color.FormKeyNullable, "Color");
             }
             if ((printMask?.DefaultValue ?? true)
-                && item.DefaultValue.TryGet(out var DefaultValueItem))
+                && item.DefaultValue is {} DefaultValueItem)
             {
                 fg.AppendItem(DefaultValueItem, "DefaultValue");
             }
             if ((printMask?.Index ?? true)
-                && item.Index.TryGet(out var IndexItem))
+                && item.Index is {} IndexItem)
             {
                 fg.AppendItem(IndexItem, "Index");
             }
@@ -941,11 +941,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Color);
-            if (item.DefaultValue.TryGet(out var DefaultValueitem))
+            if (item.DefaultValue is {} DefaultValueitem)
             {
                 hash.Add(DefaultValueitem);
             }
-            if (item.Index.TryGet(out var Indexitem))
+            if (item.Index is {} Indexitem)
             {
                 hash.Add(Indexitem);
             }

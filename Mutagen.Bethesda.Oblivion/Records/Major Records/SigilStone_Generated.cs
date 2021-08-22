@@ -95,11 +95,11 @@ namespace Mutagen.Bethesda.Oblivion
         String? ISigilStoneGetter.Icon => this.Icon;
         #endregion
         #region Script
-        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
         public IFormLinkNullable<IScriptGetter> Script
         {
             get => _Script;
-            set => _Script = value.AsNullable();
+            set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> ISigilStoneGetter.Script => this.Script;
@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Script, "Script");
                     }
                     if ((printMask?.Effects?.Overall ?? true)
-                        && Effects.TryGet(out var EffectsItem))
+                        && Effects is {} EffectsItem)
                     {
                         fg.AppendLine("Effects =>");
                         fg.AppendLine("[");
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Model?.ToString(fg);
                 fg.AppendItem(Icon, "Icon");
                 fg.AppendItem(Script, "Script");
-                if (Effects.TryGet(out var EffectsItem))
+                if (Effects is {} EffectsItem)
                 {
                     fg.AppendLine("Effects =>");
                     fg.AppendLine("[");
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// </summary>
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
         new ExtendedList<Effect> Effects { get; }
         new SigilStoneData? Data { get; set; }
     }
@@ -1239,17 +1239,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1386,21 +1386,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ISigilStoneGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
             hash.Add(item.Script);
             hash.Add(item.Effects);
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1765,7 +1765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -1792,7 +1792,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((SigilStoneDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

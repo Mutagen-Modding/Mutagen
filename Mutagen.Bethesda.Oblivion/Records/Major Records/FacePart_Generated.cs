@@ -922,17 +922,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FacePart.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
-                && item.Index.TryGet(out var IndexItem))
+                && item.Index is {} IndexItem)
             {
                 fg.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
@@ -967,15 +967,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IFacePartGetter item)
         {
             var hash = new HashCode();
-            if (item.Index.TryGet(out var Indexitem))
+            if (item.Index is {} Indexitem)
             {
                 hash.Add(Indexitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)FacePart_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Index,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INDX));
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

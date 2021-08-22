@@ -337,41 +337,41 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ParentLocation
-        private IFormLinkNullable<ILocationGetter> _ParentLocation = new FormLinkNullable<ILocationGetter>();
+        private readonly IFormLinkNullable<ILocationGetter> _ParentLocation = new FormLinkNullable<ILocationGetter>();
         public IFormLinkNullable<ILocationGetter> ParentLocation
         {
             get => _ParentLocation;
-            set => _ParentLocation = value.AsNullable();
+            set => _ParentLocation.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> ILocationGetter.ParentLocation => this.ParentLocation;
         #endregion
         #region Music
-        private IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
+        private readonly IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
         public IFormLinkNullable<IMusicTypeGetter> Music
         {
             get => _Music;
-            set => _Music = value.AsNullable();
+            set => _Music.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMusicTypeGetter> ILocationGetter.Music => this.Music;
         #endregion
         #region UnreportedCrimeFaction
-        private IFormLinkNullable<IFactionGetter> _UnreportedCrimeFaction = new FormLinkNullable<IFactionGetter>();
+        private readonly IFormLinkNullable<IFactionGetter> _UnreportedCrimeFaction = new FormLinkNullable<IFactionGetter>();
         public IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction
         {
             get => _UnreportedCrimeFaction;
-            set => _UnreportedCrimeFaction = value.AsNullable();
+            set => _UnreportedCrimeFaction.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> ILocationGetter.UnreportedCrimeFaction => this.UnreportedCrimeFaction;
         #endregion
         #region WorldLocationMarkerRef
-        private IFormLinkNullable<IPlacedSimpleGetter> _WorldLocationMarkerRef = new FormLinkNullable<IPlacedSimpleGetter>();
+        private readonly IFormLinkNullable<IPlacedSimpleGetter> _WorldLocationMarkerRef = new FormLinkNullable<IPlacedSimpleGetter>();
         public IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef
         {
             get => _WorldLocationMarkerRef;
-            set => _WorldLocationMarkerRef = value.AsNullable();
+            set => _WorldLocationMarkerRef.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedSimpleGetter> ILocationGetter.WorldLocationMarkerRef => this.WorldLocationMarkerRef;
@@ -382,11 +382,11 @@ namespace Mutagen.Bethesda.Skyrim
         Single? ILocationGetter.WorldLocationRadius => this.WorldLocationRadius;
         #endregion
         #region HorseMarkerRef
-        private IFormLinkNullable<IPlacedObjectGetter> _HorseMarkerRef = new FormLinkNullable<IPlacedObjectGetter>();
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _HorseMarkerRef = new FormLinkNullable<IPlacedObjectGetter>();
         public IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef
         {
             get => _HorseMarkerRef;
-            set => _HorseMarkerRef = value.AsNullable();
+            set => _HorseMarkerRef.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> ILocationGetter.HorseMarkerRef => this.HorseMarkerRef;
@@ -1341,7 +1341,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.ActorCellPersistentReferences?.Overall ?? true)
-                        && ActorCellPersistentReferences.TryGet(out var ActorCellPersistentReferencesItem))
+                        && ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
                     {
                         fg.AppendLine("ActorCellPersistentReferences =>");
                         fg.AppendLine("[");
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellPersistentReferences?.Overall ?? true)
-                        && LocationCellPersistentReferences.TryGet(out var LocationCellPersistentReferencesItem))
+                        && LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
                     {
                         fg.AppendLine("LocationCellPersistentReferences =>");
                         fg.AppendLine("[");
@@ -1387,7 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellPersistentReferences?.Overall ?? true)
-                        && ReferenceCellPersistentReferences.TryGet(out var ReferenceCellPersistentReferencesItem))
+                        && ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
                     {
                         fg.AppendLine("ReferenceCellPersistentReferences =>");
                         fg.AppendLine("[");
@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.ActorCellUniques?.Overall ?? true)
-                        && ActorCellUniques.TryGet(out var ActorCellUniquesItem))
+                        && ActorCellUniques is {} ActorCellUniquesItem)
                     {
                         fg.AppendLine("ActorCellUniques =>");
                         fg.AppendLine("[");
@@ -1433,7 +1433,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellUniques?.Overall ?? true)
-                        && LocationCellUniques.TryGet(out var LocationCellUniquesItem))
+                        && LocationCellUniques is {} LocationCellUniquesItem)
                     {
                         fg.AppendLine("LocationCellUniques =>");
                         fg.AppendLine("[");
@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellUnique?.Overall ?? true)
-                        && ReferenceCellUnique.TryGet(out var ReferenceCellUniqueItem))
+                        && ReferenceCellUnique is {} ReferenceCellUniqueItem)
                     {
                         fg.AppendLine("ReferenceCellUnique =>");
                         fg.AppendLine("[");
@@ -1479,7 +1479,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.ActorCellStaticReferences?.Overall ?? true)
-                        && ActorCellStaticReferences.TryGet(out var ActorCellStaticReferencesItem))
+                        && ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
                     {
                         fg.AppendLine("ActorCellStaticReferences =>");
                         fg.AppendLine("[");
@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellStaticReferences?.Overall ?? true)
-                        && LocationCellStaticReferences.TryGet(out var LocationCellStaticReferencesItem))
+                        && LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
                     {
                         fg.AppendLine("LocationCellStaticReferences =>");
                         fg.AppendLine("[");
@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellStaticReferences?.Overall ?? true)
-                        && ReferenceCellStaticReferences.TryGet(out var ReferenceCellStaticReferencesItem))
+                        && ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
                     {
                         fg.AppendLine("ReferenceCellStaticReferences =>");
                         fg.AppendLine("[");
@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.ActorCellEncounterCell?.Overall ?? true)
-                        && ActorCellEncounterCell.TryGet(out var ActorCellEncounterCellItem))
+                        && ActorCellEncounterCell is {} ActorCellEncounterCellItem)
                     {
                         fg.AppendLine("ActorCellEncounterCell =>");
                         fg.AppendLine("[");
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellEncounterCell?.Overall ?? true)
-                        && LocationCellEncounterCell.TryGet(out var LocationCellEncounterCellItem))
+                        && LocationCellEncounterCell is {} LocationCellEncounterCellItem)
                     {
                         fg.AppendLine("LocationCellEncounterCell =>");
                         fg.AppendLine("[");
@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellEncounterCell?.Overall ?? true)
-                        && ReferenceCellEncounterCell.TryGet(out var ReferenceCellEncounterCellItem))
+                        && ReferenceCellEncounterCell is {} ReferenceCellEncounterCellItem)
                     {
                         fg.AppendLine("ReferenceCellEncounterCell =>");
                         fg.AppendLine("[");
@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.ActorCellMarkerReference?.Overall ?? true)
-                        && ActorCellMarkerReference.TryGet(out var ActorCellMarkerReferenceItem))
+                        && ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
                     {
                         fg.AppendLine("ActorCellMarkerReference =>");
                         fg.AppendLine("[");
@@ -1640,7 +1640,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellMarkerReference?.Overall ?? true)
-                        && LocationCellMarkerReference.TryGet(out var LocationCellMarkerReferenceItem))
+                        && LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
                     {
                         fg.AppendLine("LocationCellMarkerReference =>");
                         fg.AppendLine("[");
@@ -1663,7 +1663,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.ActorCellEnablePoint?.Overall ?? true)
-                        && ActorCellEnablePoint.TryGet(out var ActorCellEnablePointItem))
+                        && ActorCellEnablePoint is {} ActorCellEnablePointItem)
                     {
                         fg.AppendLine("ActorCellEnablePoint =>");
                         fg.AppendLine("[");
@@ -1686,7 +1686,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellEnablePoint?.Overall ?? true)
-                        && LocationCellEnablePoint.TryGet(out var LocationCellEnablePointItem))
+                        && LocationCellEnablePoint is {} LocationCellEnablePointItem)
                     {
                         fg.AppendLine("LocationCellEnablePoint =>");
                         fg.AppendLine("[");
@@ -1713,7 +1713,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords.TryGet(out var KeywordsItem))
+                        && Keywords is {} KeywordsItem)
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (ActorCellPersistentReferences.TryGet(out var ActorCellPersistentReferencesItem))
+                if (ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
                 {
                     fg.AppendLine("ActorCellPersistentReferences =>");
                     fg.AppendLine("[");
@@ -2120,7 +2120,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (LocationCellPersistentReferences.TryGet(out var LocationCellPersistentReferencesItem))
+                if (LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
                 {
                     fg.AppendLine("LocationCellPersistentReferences =>");
                     fg.AppendLine("[");
@@ -2142,7 +2142,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (ReferenceCellPersistentReferences.TryGet(out var ReferenceCellPersistentReferencesItem))
+                if (ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
                 {
                     fg.AppendLine("ReferenceCellPersistentReferences =>");
                     fg.AppendLine("[");
@@ -2164,7 +2164,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (ActorCellUniques.TryGet(out var ActorCellUniquesItem))
+                if (ActorCellUniques is {} ActorCellUniquesItem)
                 {
                     fg.AppendLine("ActorCellUniques =>");
                     fg.AppendLine("[");
@@ -2186,7 +2186,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (LocationCellUniques.TryGet(out var LocationCellUniquesItem))
+                if (LocationCellUniques is {} LocationCellUniquesItem)
                 {
                     fg.AppendLine("LocationCellUniques =>");
                     fg.AppendLine("[");
@@ -2208,7 +2208,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (ReferenceCellUnique.TryGet(out var ReferenceCellUniqueItem))
+                if (ReferenceCellUnique is {} ReferenceCellUniqueItem)
                 {
                     fg.AppendLine("ReferenceCellUnique =>");
                     fg.AppendLine("[");
@@ -2230,7 +2230,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (ActorCellStaticReferences.TryGet(out var ActorCellStaticReferencesItem))
+                if (ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
                 {
                     fg.AppendLine("ActorCellStaticReferences =>");
                     fg.AppendLine("[");
@@ -2252,7 +2252,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (LocationCellStaticReferences.TryGet(out var LocationCellStaticReferencesItem))
+                if (LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
                 {
                     fg.AppendLine("LocationCellStaticReferences =>");
                     fg.AppendLine("[");
@@ -2274,7 +2274,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (ReferenceCellStaticReferences.TryGet(out var ReferenceCellStaticReferencesItem))
+                if (ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
                 {
                     fg.AppendLine("ReferenceCellStaticReferences =>");
                     fg.AppendLine("[");
@@ -2296,7 +2296,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (ActorCellEncounterCell.TryGet(out var ActorCellEncounterCellItem))
+                if (ActorCellEncounterCell is {} ActorCellEncounterCellItem)
                 {
                     fg.AppendLine("ActorCellEncounterCell =>");
                     fg.AppendLine("[");
@@ -2318,7 +2318,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (LocationCellEncounterCell.TryGet(out var LocationCellEncounterCellItem))
+                if (LocationCellEncounterCell is {} LocationCellEncounterCellItem)
                 {
                     fg.AppendLine("LocationCellEncounterCell =>");
                     fg.AppendLine("[");
@@ -2340,7 +2340,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (ReferenceCellEncounterCell.TryGet(out var ReferenceCellEncounterCellItem))
+                if (ReferenceCellEncounterCell is {} ReferenceCellEncounterCellItem)
                 {
                     fg.AppendLine("ReferenceCellEncounterCell =>");
                     fg.AppendLine("[");
@@ -2362,7 +2362,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (ActorCellMarkerReference.TryGet(out var ActorCellMarkerReferenceItem))
+                if (ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
                 {
                     fg.AppendLine("ActorCellMarkerReference =>");
                     fg.AppendLine("[");
@@ -2384,7 +2384,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (LocationCellMarkerReference.TryGet(out var LocationCellMarkerReferenceItem))
+                if (LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
                 {
                     fg.AppendLine("LocationCellMarkerReference =>");
                     fg.AppendLine("[");
@@ -2406,7 +2406,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (ActorCellEnablePoint.TryGet(out var ActorCellEnablePointItem))
+                if (ActorCellEnablePoint is {} ActorCellEnablePointItem)
                 {
                     fg.AppendLine("ActorCellEnablePoint =>");
                     fg.AppendLine("[");
@@ -2428,7 +2428,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (LocationCellEnablePoint.TryGet(out var LocationCellEnablePointItem))
+                if (LocationCellEnablePoint is {} LocationCellEnablePointItem)
                 {
                     fg.AppendLine("LocationCellEnablePoint =>");
                     fg.AppendLine("[");
@@ -2451,7 +2451,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(Name, "Name");
-                if (Keywords.TryGet(out var KeywordsItem))
+                if (Keywords is {} KeywordsItem)
                 {
                     fg.AppendLine("Keywords =>");
                     fg.AppendLine("[");
@@ -2789,12 +2789,12 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new IFormLinkNullable<ILocationGetter> ParentLocation { get; }
-        new IFormLinkNullable<IMusicTypeGetter> Music { get; }
-        new IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; }
-        new IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
+        new IFormLinkNullable<ILocationGetter> ParentLocation { get; set; }
+        new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
+        new IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; set; }
+        new IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; set; }
         new Single? WorldLocationRadius { get; set; }
-        new IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; set; }
         new Color? Color { get; set; }
     }
 
@@ -3391,7 +3391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.ActorCellPersistentReferences?.Overall ?? true)
-                && item.ActorCellPersistentReferences.TryGet(out var ActorCellPersistentReferencesItem))
+                && item.ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
             {
                 fg.AppendLine("ActorCellPersistentReferences =>");
                 fg.AppendLine("[");
@@ -3410,7 +3410,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.LocationCellPersistentReferences?.Overall ?? true)
-                && item.LocationCellPersistentReferences.TryGet(out var LocationCellPersistentReferencesItem))
+                && item.LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
             {
                 fg.AppendLine("LocationCellPersistentReferences =>");
                 fg.AppendLine("[");
@@ -3429,7 +3429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.ReferenceCellPersistentReferences?.Overall ?? true)
-                && item.ReferenceCellPersistentReferences.TryGet(out var ReferenceCellPersistentReferencesItem))
+                && item.ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
             {
                 fg.AppendLine("ReferenceCellPersistentReferences =>");
                 fg.AppendLine("[");
@@ -3448,7 +3448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.ActorCellUniques?.Overall ?? true)
-                && item.ActorCellUniques.TryGet(out var ActorCellUniquesItem))
+                && item.ActorCellUniques is {} ActorCellUniquesItem)
             {
                 fg.AppendLine("ActorCellUniques =>");
                 fg.AppendLine("[");
@@ -3467,7 +3467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.LocationCellUniques?.Overall ?? true)
-                && item.LocationCellUniques.TryGet(out var LocationCellUniquesItem))
+                && item.LocationCellUniques is {} LocationCellUniquesItem)
             {
                 fg.AppendLine("LocationCellUniques =>");
                 fg.AppendLine("[");
@@ -3486,7 +3486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.ReferenceCellUnique?.Overall ?? true)
-                && item.ReferenceCellUnique.TryGet(out var ReferenceCellUniqueItem))
+                && item.ReferenceCellUnique is {} ReferenceCellUniqueItem)
             {
                 fg.AppendLine("ReferenceCellUnique =>");
                 fg.AppendLine("[");
@@ -3505,7 +3505,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.ActorCellStaticReferences?.Overall ?? true)
-                && item.ActorCellStaticReferences.TryGet(out var ActorCellStaticReferencesItem))
+                && item.ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
             {
                 fg.AppendLine("ActorCellStaticReferences =>");
                 fg.AppendLine("[");
@@ -3524,7 +3524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.LocationCellStaticReferences?.Overall ?? true)
-                && item.LocationCellStaticReferences.TryGet(out var LocationCellStaticReferencesItem))
+                && item.LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
             {
                 fg.AppendLine("LocationCellStaticReferences =>");
                 fg.AppendLine("[");
@@ -3543,7 +3543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.ReferenceCellStaticReferences?.Overall ?? true)
-                && item.ReferenceCellStaticReferences.TryGet(out var ReferenceCellStaticReferencesItem))
+                && item.ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
             {
                 fg.AppendLine("ReferenceCellStaticReferences =>");
                 fg.AppendLine("[");
@@ -3616,7 +3616,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.ActorCellMarkerReference?.Overall ?? true)
-                && item.ActorCellMarkerReference.TryGet(out var ActorCellMarkerReferenceItem))
+                && item.ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
             {
                 fg.AppendLine("ActorCellMarkerReference =>");
                 fg.AppendLine("[");
@@ -3635,7 +3635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.LocationCellMarkerReference?.Overall ?? true)
-                && item.LocationCellMarkerReference.TryGet(out var LocationCellMarkerReferenceItem))
+                && item.LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
             {
                 fg.AppendLine("LocationCellMarkerReference =>");
                 fg.AppendLine("[");
@@ -3654,7 +3654,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.ActorCellEnablePoint?.Overall ?? true)
-                && item.ActorCellEnablePoint.TryGet(out var ActorCellEnablePointItem))
+                && item.ActorCellEnablePoint is {} ActorCellEnablePointItem)
             {
                 fg.AppendLine("ActorCellEnablePoint =>");
                 fg.AppendLine("[");
@@ -3673,7 +3673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.LocationCellEnablePoint?.Overall ?? true)
-                && item.LocationCellEnablePoint.TryGet(out var LocationCellEnablePointItem))
+                && item.LocationCellEnablePoint is {} LocationCellEnablePointItem)
             {
                 fg.AppendLine("LocationCellEnablePoint =>");
                 fg.AppendLine("[");
@@ -3692,12 +3692,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Keywords?.Overall ?? true)
-                && item.Keywords.TryGet(out var KeywordsItem))
+                && item.Keywords is {} KeywordsItem)
             {
                 fg.AppendLine("Keywords =>");
                 fg.AppendLine("[");
@@ -3732,7 +3732,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.WorldLocationMarkerRef.FormKeyNullable, "WorldLocationMarkerRef");
             }
             if ((printMask?.WorldLocationRadius ?? true)
-                && item.WorldLocationRadius.TryGet(out var WorldLocationRadiusItem))
+                && item.WorldLocationRadius is {} WorldLocationRadiusItem)
             {
                 fg.AppendItem(WorldLocationRadiusItem, "WorldLocationRadius");
             }
@@ -3741,7 +3741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.HorseMarkerRef.FormKeyNullable, "HorseMarkerRef");
             }
             if ((printMask?.Color ?? true)
-                && item.Color.TryGet(out var ColorItem))
+                && item.Color is {} ColorItem)
             {
                 fg.AppendItem(ColorItem, "Color");
             }
@@ -3937,7 +3937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.LocationCellMarkerReference);
             hash.Add(item.ActorCellEnablePoint);
             hash.Add(item.LocationCellEnablePoint);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
@@ -3946,12 +3946,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Music);
             hash.Add(item.UnreportedCrimeFaction);
             hash.Add(item.WorldLocationMarkerRef);
-            if (item.WorldLocationRadius.TryGet(out var WorldLocationRadiusitem))
+            if (item.WorldLocationRadius is {} WorldLocationRadiusitem)
             {
                 hash.Add(WorldLocationRadiusitem);
             }
             hash.Add(item.HorseMarkerRef);
-            if (item.Color.TryGet(out var Coloritem))
+            if (item.Color is {} Coloritem)
             {
                 hash.Add(Coloritem);
             }
@@ -3984,63 +3984,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.ActorCellPersistentReferences.TryGet(out var ActorCellPersistentReferencesItem))
+            if (obj.ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
             {
                 foreach (var item in ActorCellPersistentReferencesItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationCellPersistentReferences.TryGet(out var LocationCellPersistentReferencesItem))
+            if (obj.LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
             {
                 foreach (var item in LocationCellPersistentReferencesItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ReferenceCellPersistentReferences.TryGet(out var ReferenceCellPersistentReferencesItem))
+            if (obj.ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
             {
                 foreach (var item in ReferenceCellPersistentReferencesItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ActorCellUniques.TryGet(out var ActorCellUniquesItem))
+            if (obj.ActorCellUniques is {} ActorCellUniquesItem)
             {
                 foreach (var item in ActorCellUniquesItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationCellUniques.TryGet(out var LocationCellUniquesItem))
+            if (obj.LocationCellUniques is {} LocationCellUniquesItem)
             {
                 foreach (var item in LocationCellUniquesItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ReferenceCellUnique.TryGet(out var ReferenceCellUniqueItem))
+            if (obj.ReferenceCellUnique is {} ReferenceCellUniqueItem)
             {
                 foreach (var item in ReferenceCellUniqueItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ActorCellStaticReferences.TryGet(out var ActorCellStaticReferencesItem))
+            if (obj.ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
             {
                 foreach (var item in ActorCellStaticReferencesItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationCellStaticReferences.TryGet(out var LocationCellStaticReferencesItem))
+            if (obj.LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
             {
                 foreach (var item in LocationCellStaticReferencesItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ReferenceCellStaticReferences.TryGet(out var ReferenceCellStaticReferencesItem))
+            if (obj.ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
             {
                 foreach (var item in ReferenceCellStaticReferencesItem)
                 {
@@ -4059,35 +4059,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.ActorCellMarkerReference.TryGet(out var ActorCellMarkerReferenceItem))
+            if (obj.ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
             {
                 foreach (var item in ActorCellMarkerReferenceItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationCellMarkerReference.TryGet(out var LocationCellMarkerReferenceItem))
+            if (obj.LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
             {
                 foreach (var item in LocationCellMarkerReferenceItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ActorCellEnablePoint.TryGet(out var ActorCellEnablePointItem))
+            if (obj.ActorCellEnablePoint is {} ActorCellEnablePointItem)
             {
                 foreach (var item in ActorCellEnablePointItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationCellEnablePoint.TryGet(out var LocationCellEnablePointItem))
+            if (obj.LocationCellEnablePoint is {} LocationCellEnablePointItem)
             {
                 foreach (var item in LocationCellEnablePointItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Keywords.TryGet(out var KeywordsItem))
+            if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
                 {

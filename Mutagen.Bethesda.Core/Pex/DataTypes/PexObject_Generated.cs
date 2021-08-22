@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendItem(AutoStateName, "AutoStateName");
                     }
                     if ((printMask?.StructInfos?.Overall ?? true)
-                        && StructInfos.TryGet(out var StructInfosItem))
+                        && StructInfos is {} StructInfosItem)
                     {
                         fg.AppendLine("StructInfos =>");
                         fg.AppendLine("[");
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Variables?.Overall ?? true)
-                        && Variables.TryGet(out var VariablesItem))
+                        && Variables is {} VariablesItem)
                     {
                         fg.AppendLine("Variables =>");
                         fg.AppendLine("[");
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Properties?.Overall ?? true)
-                        && Properties.TryGet(out var PropertiesItem))
+                        && Properties is {} PropertiesItem)
                     {
                         fg.AppendLine("Properties =>");
                         fg.AppendLine("[");
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendLine("]");
                     }
                     if ((printMask?.States?.Overall ?? true)
-                        && States.TryGet(out var StatesItem))
+                        && States is {} StatesItem)
                     {
                         fg.AppendLine("States =>");
                         fg.AppendLine("[");
@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Pex
                 fg.AppendItem(IsConst, "IsConst");
                 fg.AppendItem(RawUserFlags, "RawUserFlags");
                 fg.AppendItem(AutoStateName, "AutoStateName");
-                if (StructInfos.TryGet(out var StructInfosItem))
+                if (StructInfos is {} StructInfosItem)
                 {
                     fg.AppendLine("StructInfos =>");
                     fg.AppendLine("[");
@@ -808,7 +808,7 @@ namespace Mutagen.Bethesda.Pex
                     }
                     fg.AppendLine("]");
                 }
-                if (Variables.TryGet(out var VariablesItem))
+                if (Variables is {} VariablesItem)
                 {
                     fg.AppendLine("Variables =>");
                     fg.AppendLine("[");
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Pex
                     }
                     fg.AppendLine("]");
                 }
-                if (Properties.TryGet(out var PropertiesItem))
+                if (Properties is {} PropertiesItem)
                 {
                     fg.AppendLine("Properties =>");
                     fg.AppendLine("[");
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Pex
                     }
                     fg.AppendLine("]");
                 }
-                if (States.TryGet(out var StatesItem))
+                if (States is {} StatesItem)
                 {
                     fg.AppendLine("States =>");
                     fg.AppendLine("[");
@@ -1388,17 +1388,17 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObject.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.ParentClassName ?? true)
-                && item.ParentClassName.TryGet(out var ParentClassNameItem))
+                && item.ParentClassName is {} ParentClassNameItem)
             {
                 fg.AppendItem(ParentClassNameItem, "ParentClassName");
             }
             if ((printMask?.DocString ?? true)
-                && item.DocString.TryGet(out var DocStringItem))
+                && item.DocString is {} DocStringItem)
             {
                 fg.AppendItem(DocStringItem, "DocString");
             }
@@ -1541,15 +1541,15 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IPexObjectGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.ParentClassName.TryGet(out var ParentClassNameitem))
+            if (item.ParentClassName is {} ParentClassNameitem)
             {
                 hash.Add(ParentClassNameitem);
             }
-            if (item.DocString.TryGet(out var DocStringitem))
+            if (item.DocString is {} DocStringitem)
             {
                 hash.Add(DocStringitem);
             }

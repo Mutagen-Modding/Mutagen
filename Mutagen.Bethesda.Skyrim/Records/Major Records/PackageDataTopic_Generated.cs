@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Topics?.Overall ?? true)
-                        && Topics.TryGet(out var TopicsItem))
+                        && Topics is {} TopicsItem)
                     {
                         fg.AppendLine("Topics =>");
                         fg.AppendLine("[");
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (Topics.TryGet(out var TopicsItem))
+                if (Topics is {} TopicsItem)
                 {
                     fg.AppendLine("Topics =>");
                     fg.AppendLine("[");
@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.TPIC ?? true)
-                && item.TPIC.TryGet(out var TPICItem))
+                && item.TPIC is {} TPICItem)
             {
                 fg.AppendLine($"TPIC => {SpanExt.ToHexString(TPICItem)}");
             }
@@ -1012,7 +1012,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Topics);
-            if (item.TPIC.TryGet(out var TPICItem))
+            if (item.TPIC is {} TPICItem)
             {
                 hash.Add(TPICItem);
             }
@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PackageDataTopic_FieldIndex.TPIC) ?? true))
             {
-                if(rhs.TPIC.TryGet(out var TPICrhs))
+                if(rhs.TPIC is {} TPICrhs)
                 {
                     item.TPIC = TPICrhs.ToArray();
                 }

@@ -1,10 +1,12 @@
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Noggog.Utility;
 using System;
+using Mutagen.Bethesda.Core.UnitTests;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records
@@ -16,7 +18,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
 
         public static TempFile GetFile()
         {
-            return new TempFile(extraDirectoryPaths: Utility.TempFolderPath, suffix: ".esp");
+            return new TempFile(extraDirectoryPaths: TestPathing.TempFolderPath, suffix: ".esp");
         }
 
         [Fact]
@@ -29,8 +31,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                    MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck
+                    ModKey = ModKeyOption.NoCheck,
+                    MastersListContent = MastersListContentOption.NoCheck
                 });
         }
 
@@ -44,8 +46,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                    MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck
+                    ModKey = ModKeyOption.NoCheck,
+                    MastersListContent = MastersListContentOption.NoCheck
                 });
         }
 
@@ -60,8 +62,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                     tmp.File.Path,
                     new BinaryWriteParameters()
                     {
-                        ModKey = BinaryWriteParameters.ModKeyOption.ThrowIfMisaligned,
-                        MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                        ModKey = ModKeyOption.ThrowIfMisaligned,
+                        MastersListContent = MastersListContentOption.NoCheck,
                     }));
         }
 
@@ -76,8 +78,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                     tmp.File.Path,
                     new BinaryWriteParameters()
                     {
-                        ModKey = BinaryWriteParameters.ModKeyOption.ThrowIfMisaligned,
-                        MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                        ModKey = ModKeyOption.ThrowIfMisaligned,
+                        MastersListContent = MastersListContentOption.NoCheck,
                     }));
         }
 
@@ -93,8 +95,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                     tmp.File.Path,
                     new BinaryWriteParameters()
                     {
-                        ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                        MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                        ModKey = ModKeyOption.NoCheck,
+                        MastersListContent = MastersListContentOption.NoCheck,
                     }));
         }
 
@@ -114,8 +116,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                             tmp.File.Path,
                             new BinaryWriteParameters()
                             {
-                                ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                                MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                                ModKey = ModKeyOption.NoCheck,
+                                MastersListContent = MastersListContentOption.NoCheck,
                             });
                     }
                     catch (RecordException ex)
@@ -137,8 +139,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                    MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
+                    ModKey = ModKeyOption.NoCheck,
+                    MastersListContent = MastersListContentOption.Iterate,
                 });
         }
 
@@ -153,8 +155,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                    MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
+                    ModKey = ModKeyOption.NoCheck,
+                    MastersListContent = MastersListContentOption.Iterate,
                 });
         }
 
@@ -173,9 +175,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                    tmp.File,
                    new BinaryWriteParameters()
                    {
-                       ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                       MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
-                       MastersListOrdering = new BinaryWriteParameters.MastersListOrderingByLoadOrder(
+                       ModKey = ModKeyOption.NoCheck,
+                       MastersListContent = MastersListContentOption.Iterate,
+                       MastersListOrdering = new MastersListOrderingByLoadOrder(
                            Skyrim.Constants.Skyrim.AsEnumerable())
                    });
             });
@@ -186,8 +188,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         {
             var param = new BinaryWriteParameters()
             {
-                ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
+                ModKey = ModKeyOption.NoCheck,
+                MastersListContent = MastersListContentOption.Iterate,
             };
             using var tmp = GetFile();
             var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);

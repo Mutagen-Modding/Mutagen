@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Icon, "Icon");
                     }
                     if ((printMask?.SpeedTreeSeeds?.Overall ?? true)
-                        && SpeedTreeSeeds.TryGet(out var SpeedTreeSeedsItem))
+                        && SpeedTreeSeeds is {} SpeedTreeSeedsItem)
                     {
                         fg.AppendLine("SpeedTreeSeeds =>");
                         fg.AppendLine("[");
@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.ToString_FillInternal(fg);
                 Model?.ToString(fg);
                 fg.AppendItem(Icon, "Icon");
-                if (SpeedTreeSeeds.TryGet(out var SpeedTreeSeedsItem))
+                if (SpeedTreeSeeds is {} SpeedTreeSeedsItem)
                 {
                     fg.AppendLine("SpeedTreeSeeds =>");
                     fg.AppendLine("[");
@@ -1177,17 +1177,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.SpeedTreeSeeds?.Overall ?? true)
-                && item.SpeedTreeSeeds.TryGet(out var SpeedTreeSeedsItem))
+                && item.SpeedTreeSeeds is {} SpeedTreeSeedsItem)
             {
                 fg.AppendLine("SpeedTreeSeeds =>");
                 fg.AppendLine("[");
@@ -1206,12 +1206,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.BillboardDimensions?.Overall ?? true)
-                && item.BillboardDimensions.TryGet(out var BillboardDimensionsItem))
+                && item.BillboardDimensions is {} BillboardDimensionsItem)
             {
                 BillboardDimensionsItem?.ToString(fg, "BillboardDimensions");
             }
@@ -1321,20 +1321,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ITreeGetter item)
         {
             var hash = new HashCode();
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
             hash.Add(item.SpeedTreeSeeds);
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.BillboardDimensions.TryGet(out var BillboardDimensionsitem))
+            if (item.BillboardDimensions is {} BillboardDimensionsitem)
             {
                 hash.Add(BillboardDimensionsitem);
             }
@@ -1446,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Tree_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Tree_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1528,7 +1528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Tree_FieldIndex.BillboardDimensions);
                 try
                 {
-                    if(rhs.BillboardDimensions.TryGet(out var rhsBillboardDimensions))
+                    if(rhs.BillboardDimensions is {} rhsBillboardDimensions)
                     {
                         item.BillboardDimensions = rhsBillboardDimensions.DeepCopy(
                             errorMask: errorMask,
@@ -1706,7 +1706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -1723,14 +1723,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.SpeedTreeSeeds,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((TreeDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.BillboardDimensions.TryGet(out var BillboardDimensionsItem))
+            if (item.BillboardDimensions is {} BillboardDimensionsItem)
             {
                 ((DimensionsBinaryWriteTranslation)((IBinaryItem)BillboardDimensionsItem).BinaryWriteTranslator).Write(
                     item: BillboardDimensionsItem,

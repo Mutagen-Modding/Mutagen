@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
                     }
                     if ((printMask?.PotentialGrass?.Overall ?? true)
-                        && PotentialGrass.TryGet(out var PotentialGrassItem))
+                        && PotentialGrass is {} PotentialGrassItem)
                     {
                         fg.AppendLine("PotentialGrass =>");
                         fg.AppendLine("[");
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Icon, "Icon");
                 Havok?.ToString(fg);
                 fg.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
-                if (PotentialGrass.TryGet(out var PotentialGrassItem))
+                if (PotentialGrass is {} PotentialGrassItem)
                 {
                     fg.AppendLine("PotentialGrass =>");
                     fg.AppendLine("[");
@@ -1093,17 +1093,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.Havok?.Overall ?? true)
-                && item.Havok.TryGet(out var HavokItem))
+                && item.Havok is {} HavokItem)
             {
                 HavokItem?.ToString(fg, "Havok");
             }
             if ((printMask?.TextureSpecularExponent ?? true)
-                && item.TextureSpecularExponent.TryGet(out var TextureSpecularExponentItem))
+                && item.TextureSpecularExponent is {} TextureSpecularExponentItem)
             {
                 fg.AppendItem(TextureSpecularExponentItem, "TextureSpecularExponent");
             }
@@ -1219,15 +1219,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ILandTextureGetter item)
         {
             var hash = new HashCode();
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.Havok.TryGet(out var Havokitem))
+            if (item.Havok is {} Havokitem)
             {
                 hash.Add(Havokitem);
             }
-            if (item.TextureSpecularExponent.TryGet(out var TextureSpecularExponentitem))
+            if (item.TextureSpecularExponent is {} TextureSpecularExponentitem)
             {
                 hash.Add(TextureSpecularExponentitem);
             }
@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LandTexture_FieldIndex.Havok);
                 try
                 {
-                    if(rhs.Havok.TryGet(out var rhsHavok))
+                    if(rhs.Havok is {} rhsHavok)
                     {
                         item.Havok = rhsHavok.DeepCopy(
                             errorMask: errorMask,
@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Havok.TryGet(out var HavokItem))
+            if (item.Havok is {} HavokItem)
             {
                 ((HavokDataBinaryWriteTranslation)((IBinaryItem)HavokItem).BinaryWriteTranslator).Write(
                     item: HavokItem,

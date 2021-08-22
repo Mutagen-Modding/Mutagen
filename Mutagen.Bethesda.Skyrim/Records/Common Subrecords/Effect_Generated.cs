@@ -51,11 +51,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region BaseEffect
-        private IFormLinkNullable<IMagicEffectGetter> _BaseEffect = new FormLinkNullable<IMagicEffectGetter>();
+        private readonly IFormLinkNullable<IMagicEffectGetter> _BaseEffect = new FormLinkNullable<IMagicEffectGetter>();
         public IFormLinkNullable<IMagicEffectGetter> BaseEffect
         {
             get => _BaseEffect;
-            set => _BaseEffect = value.AsNullable();
+            set => _BaseEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMagicEffectGetter> IEffectGetter.BaseEffect => this.BaseEffect;
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
                         Data?.ToString(fg);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 fg.AppendItem(BaseEffect, "BaseEffect");
                 Data?.ToString(fg);
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IEffect>
     {
-        new IFormLinkNullable<IMagicEffectGetter> BaseEffect { get; }
+        new IFormLinkNullable<IMagicEffectGetter> BaseEffect { get; set; }
         new EffectData? Data { get; set; }
         new ExtendedList<Condition> Conditions { get; }
     }
@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.BaseEffect.FormKeyNullable, "BaseEffect");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.BaseEffect);
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.BaseEffect,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.EFID));
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((EffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

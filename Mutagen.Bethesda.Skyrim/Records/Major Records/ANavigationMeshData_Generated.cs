@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Magic, "Magic");
                     }
                     if ((printMask?.Vertices?.Overall ?? true)
-                        && Vertices.TryGet(out var VerticesItem))
+                        && Vertices is {} VerticesItem)
                     {
                         fg.AppendLine("Vertices =>");
                         fg.AppendLine("[");
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Triangles?.Overall ?? true)
-                        && Triangles.TryGet(out var TrianglesItem))
+                        && Triangles is {} TrianglesItem)
                     {
                         fg.AppendLine("Triangles =>");
                         fg.AppendLine("[");
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.EdgeLinks?.Overall ?? true)
-                        && EdgeLinks.TryGet(out var EdgeLinksItem))
+                        && EdgeLinks is {} EdgeLinksItem)
                     {
                         fg.AppendLine("EdgeLinks =>");
                         fg.AppendLine("[");
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.DoorTriangles?.Overall ?? true)
-                        && DoorTriangles.TryGet(out var DoorTrianglesItem))
+                        && DoorTriangles is {} DoorTrianglesItem)
                     {
                         fg.AppendLine("DoorTriangles =>");
                         fg.AppendLine("[");
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 fg.AppendItem(NavmeshVersion, "NavmeshVersion");
                 fg.AppendItem(Magic, "Magic");
-                if (Vertices.TryGet(out var VerticesItem))
+                if (Vertices is {} VerticesItem)
                 {
                     fg.AppendLine("Vertices =>");
                     fg.AppendLine("[");
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Triangles.TryGet(out var TrianglesItem))
+                if (Triangles is {} TrianglesItem)
                 {
                     fg.AppendLine("Triangles =>");
                     fg.AppendLine("[");
@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (EdgeLinks.TryGet(out var EdgeLinksItem))
+                if (EdgeLinks is {} EdgeLinksItem)
                 {
                     fg.AppendLine("EdgeLinks =>");
                     fg.AppendLine("[");
@@ -920,7 +920,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (DoorTriangles.TryGet(out var DoorTrianglesItem))
+                if (DoorTriangles is {} DoorTrianglesItem)
                 {
                     fg.AppendLine("DoorTriangles =>");
                     fg.AppendLine("[");

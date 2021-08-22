@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(MaxNumQuestsToRun, "MaxNumQuestsToRun");
                     }
                     if ((printMask?.Quests?.Overall ?? true)
-                        && Quests.TryGet(out var QuestsItem))
+                        && Quests is {} QuestsItem)
                     {
                         fg.AppendLine("Quests =>");
                         fg.AppendLine("[");
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(MaxConcurrentQuests, "MaxConcurrentQuests");
                 fg.AppendItem(MaxNumQuestsToRun, "MaxNumQuestsToRun");
-                if (Quests.TryGet(out var QuestsItem))
+                if (Quests is {} QuestsItem)
                 {
                     fg.AppendLine("Quests =>");
                     fg.AppendLine("[");
@@ -1123,17 +1123,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.MaxConcurrentQuests ?? true)
-                && item.MaxConcurrentQuests.TryGet(out var MaxConcurrentQuestsItem))
+                && item.MaxConcurrentQuests is {} MaxConcurrentQuestsItem)
             {
                 fg.AppendItem(MaxConcurrentQuestsItem, "MaxConcurrentQuests");
             }
             if ((printMask?.MaxNumQuestsToRun ?? true)
-                && item.MaxNumQuestsToRun.TryGet(out var MaxNumQuestsToRunItem))
+                && item.MaxNumQuestsToRun is {} MaxNumQuestsToRunItem)
             {
                 fg.AppendItem(MaxNumQuestsToRunItem, "MaxNumQuestsToRun");
             }
@@ -1285,15 +1285,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IStoryManagerQuestNodeGetter item)
         {
             var hash = new HashCode();
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.MaxConcurrentQuests.TryGet(out var MaxConcurrentQuestsitem))
+            if (item.MaxConcurrentQuests is {} MaxConcurrentQuestsitem)
             {
                 hash.Add(MaxConcurrentQuestsitem);
             }
-            if (item.MaxNumQuestsToRun.TryGet(out var MaxNumQuestsToRunitem))
+            if (item.MaxNumQuestsToRun is {} MaxNumQuestsToRunitem)
             {
                 hash.Add(MaxNumQuestsToRunitem);
             }

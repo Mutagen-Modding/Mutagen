@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Target
-        private IFormLink<IRelatableGetter> _Target = new FormLink<IRelatableGetter>();
+        private readonly IFormLink<IRelatableGetter> _Target = new FormLink<IRelatableGetter>();
         public IFormLink<IRelatableGetter> Target
         {
             get => _Target;
-            set => _Target = value.AsSetter();
+            set => _Target.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRelation>,
         IRelationGetter
     {
-        new IFormLink<IRelatableGetter> Target { get; }
+        new IFormLink<IRelatableGetter> Target { get; set; }
         new Int32 Modifier { get; set; }
         new CombatReaction Reaction { get; set; }
     }

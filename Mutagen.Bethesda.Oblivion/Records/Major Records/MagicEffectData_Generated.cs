@@ -72,11 +72,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 CounterEffectCount { get; set; } = default;
         #endregion
         #region Light
-        private IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
+        private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
         public IFormLink<ILightGetter> Light
         {
             get => _Light;
-            set => _Light = value.AsSetter();
+            set => _Light.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IMagicEffectDataGetter.Light => this.Light;
@@ -85,11 +85,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ProjectileSpeed { get; set; } = default;
         #endregion
         #region EffectShader
-        private IFormLink<IEffectShaderGetter> _EffectShader = new FormLink<IEffectShaderGetter>();
+        private readonly IFormLink<IEffectShaderGetter> _EffectShader = new FormLink<IEffectShaderGetter>();
         public IFormLink<IEffectShaderGetter> EffectShader
         {
             get => _EffectShader;
-            set => _EffectShader = value.AsSetter();
+            set => _EffectShader.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectDataGetter.EffectShader => this.EffectShader;
@@ -782,9 +782,9 @@ namespace Mutagen.Bethesda.Oblivion
         new MagicSchool MagicSchool { get; set; }
         new Resistance Resistance { get; set; }
         new UInt32 CounterEffectCount { get; set; }
-        new IFormLink<ILightGetter> Light { get; }
+        new IFormLink<ILightGetter> Light { get; set; }
         new Single ProjectileSpeed { get; set; }
-        new IFormLink<IEffectShaderGetter> EffectShader { get; }
+        new IFormLink<IEffectShaderGetter> EffectShader { get; set; }
         new MagicEffectSubData? SubData { get; set; }
     }
 
@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.EffectShader.FormKey, "EffectShader");
             }
             if ((printMask?.SubData?.Overall ?? true)
-                && item.SubData.TryGet(out var SubDataItem))
+                && item.SubData is {} SubDataItem)
             {
                 SubDataItem?.ToString(fg, "SubData");
             }
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.Light);
             hash.Add(item.ProjectileSpeed);
             hash.Add(item.EffectShader);
-            if (item.SubData.TryGet(out var SubDataitem))
+            if (item.SubData is {} SubDataitem)
             {
                 hash.Add(SubDataitem);
             }
@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield return FormLinkInformation.Factory(obj.Light);
             yield return FormLinkInformation.Factory(obj.EffectShader);
             if (obj.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) yield break;
-            if (obj.SubData.TryGet(out var SubDataItems))
+            if (obj.SubData is {} SubDataItems)
             {
                 foreach (var item in SubDataItems.ContainedFormLinks)
                 {
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectData_FieldIndex.SubData);
                 try
                 {
-                    if(rhs.SubData.TryGet(out var rhsSubData))
+                    if(rhs.SubData is {} rhsSubData)
                     {
                         item.SubData = rhsSubData.DeepCopy(
                             errorMask: errorMask,
@@ -1564,7 +1564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.EffectShader);
             if (!item.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0))
             {
-                if (item.SubData.TryGet(out var SubDataItem))
+                if (item.SubData is {} SubDataItem)
                 {
                     ((MagicEffectSubDataBinaryWriteTranslation)((IBinaryItem)SubDataItem).BinaryWriteTranslator).Write(
                         item: SubDataItem,

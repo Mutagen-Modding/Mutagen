@@ -59,11 +59,11 @@ namespace Mutagen.Bethesda.Skyrim
         Color? IRegionGetter.MapColor => this.MapColor;
         #endregion
         #region Worldspace
-        private IFormLinkNullable<IWorldspaceGetter> _Worldspace = new FormLinkNullable<IWorldspaceGetter>();
+        private readonly IFormLinkNullable<IWorldspaceGetter> _Worldspace = new FormLinkNullable<IWorldspaceGetter>();
         public IFormLinkNullable<IWorldspaceGetter> Worldspace
         {
             get => _Worldspace;
-            set => _Worldspace = value.AsNullable();
+            set => _Worldspace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Worldspace, "Worldspace");
                     }
                     if ((printMask?.RegionAreas?.Overall ?? true)
-                        && RegionAreas.TryGet(out var RegionAreasItem))
+                        && RegionAreas is {} RegionAreasItem)
                     {
                         fg.AppendLine("RegionAreas =>");
                         fg.AppendLine("[");
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(MapColor, "MapColor");
                 fg.AppendItem(Worldspace, "Worldspace");
-                if (RegionAreas.TryGet(out var RegionAreasItem))
+                if (RegionAreas is {} RegionAreasItem)
                 {
                     fg.AppendLine("RegionAreas =>");
                     fg.AppendLine("[");
@@ -924,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new Color? MapColor { get; set; }
-        new IFormLinkNullable<IWorldspaceGetter> Worldspace { get; }
+        new IFormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
         new ExtendedList<RegionArea> RegionAreas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }
@@ -1415,7 +1415,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.MapColor ?? true)
-                && item.MapColor.TryGet(out var MapColorItem))
+                && item.MapColor is {} MapColorItem)
             {
                 fg.AppendItem(MapColorItem, "MapColor");
             }
@@ -1442,32 +1442,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Objects?.Overall ?? true)
-                && item.Objects.TryGet(out var ObjectsItem))
+                && item.Objects is {} ObjectsItem)
             {
                 ObjectsItem?.ToString(fg, "Objects");
             }
             if ((printMask?.Weather?.Overall ?? true)
-                && item.Weather.TryGet(out var WeatherItem))
+                && item.Weather is {} WeatherItem)
             {
                 WeatherItem?.ToString(fg, "Weather");
             }
             if ((printMask?.Map?.Overall ?? true)
-                && item.Map.TryGet(out var MapItem))
+                && item.Map is {} MapItem)
             {
                 MapItem?.ToString(fg, "Map");
             }
             if ((printMask?.Land?.Overall ?? true)
-                && item.Land.TryGet(out var LandItem))
+                && item.Land is {} LandItem)
             {
                 LandItem?.ToString(fg, "Land");
             }
             if ((printMask?.Grasses?.Overall ?? true)
-                && item.Grasses.TryGet(out var GrassesItem))
+                && item.Grasses is {} GrassesItem)
             {
                 GrassesItem?.ToString(fg, "Grasses");
             }
             if ((printMask?.Sounds?.Overall ?? true)
-                && item.Sounds.TryGet(out var SoundsItem))
+                && item.Sounds is {} SoundsItem)
             {
                 SoundsItem?.ToString(fg, "Sounds");
             }
@@ -1607,33 +1607,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IRegionGetter item)
         {
             var hash = new HashCode();
-            if (item.MapColor.TryGet(out var MapColoritem))
+            if (item.MapColor is {} MapColoritem)
             {
                 hash.Add(MapColoritem);
             }
             hash.Add(item.Worldspace);
             hash.Add(item.RegionAreas);
-            if (item.Objects.TryGet(out var Objectsitem))
+            if (item.Objects is {} Objectsitem)
             {
                 hash.Add(Objectsitem);
             }
-            if (item.Weather.TryGet(out var Weatheritem))
+            if (item.Weather is {} Weatheritem)
             {
                 hash.Add(Weatheritem);
             }
-            if (item.Map.TryGet(out var Mapitem))
+            if (item.Map is {} Mapitem)
             {
                 hash.Add(Mapitem);
             }
-            if (item.Land.TryGet(out var Landitem))
+            if (item.Land is {} Landitem)
             {
                 hash.Add(Landitem);
             }
-            if (item.Grasses.TryGet(out var Grassesitem))
+            if (item.Grasses is {} Grassesitem)
             {
                 hash.Add(Grassesitem);
             }
-            if (item.Sounds.TryGet(out var Soundsitem))
+            if (item.Sounds is {} Soundsitem)
             {
                 hash.Add(Soundsitem);
             }
@@ -1670,28 +1670,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Worldspace);
             }
-            if (obj.Objects.TryGet(out var ObjectsItems))
+            if (obj.Objects is {} ObjectsItems)
             {
                 foreach (var item in ObjectsItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Weather.TryGet(out var WeatherItems))
+            if (obj.Weather is {} WeatherItems)
             {
                 foreach (var item in WeatherItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Grasses.TryGet(out var GrassesItems))
+            if (obj.Grasses is {} GrassesItems)
             {
                 foreach (var item in GrassesItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Sounds.TryGet(out var SoundsItems))
+            if (obj.Sounds is {} SoundsItems)
             {
                 foreach (var item in SoundsItems.ContainedFormLinks)
                 {
@@ -1809,7 +1809,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Objects);
                 try
                 {
-                    if(rhs.Objects.TryGet(out var rhsObjects))
+                    if(rhs.Objects is {} rhsObjects)
                     {
                         item.Objects = rhsObjects.DeepCopy(
                             errorMask: errorMask,
@@ -1835,7 +1835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Weather);
                 try
                 {
-                    if(rhs.Weather.TryGet(out var rhsWeather))
+                    if(rhs.Weather is {} rhsWeather)
                     {
                         item.Weather = rhsWeather.DeepCopy(
                             errorMask: errorMask,
@@ -1861,7 +1861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Map);
                 try
                 {
-                    if(rhs.Map.TryGet(out var rhsMap))
+                    if(rhs.Map is {} rhsMap)
                     {
                         item.Map = rhsMap.DeepCopy(
                             errorMask: errorMask,
@@ -1887,7 +1887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Land);
                 try
                 {
-                    if(rhs.Land.TryGet(out var rhsLand))
+                    if(rhs.Land is {} rhsLand)
                     {
                         item.Land = rhsLand.DeepCopy(
                             errorMask: errorMask,
@@ -1913,7 +1913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
                 try
                 {
-                    if(rhs.Grasses.TryGet(out var rhsGrasses))
+                    if(rhs.Grasses is {} rhsGrasses)
                     {
                         item.Grasses = rhsGrasses.DeepCopy(
                             errorMask: errorMask,
@@ -1939,7 +1939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
                 try
                 {
-                    if(rhs.Sounds.TryGet(out var rhsSounds))
+                    if(rhs.Sounds is {} rhsSounds)
                     {
                         item.Sounds = rhsSounds.DeepCopy(
                             errorMask: errorMask,

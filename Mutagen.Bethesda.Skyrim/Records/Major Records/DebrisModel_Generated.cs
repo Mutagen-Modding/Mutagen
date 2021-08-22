@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.TextureFileHashes ?? true)
-                && item.TextureFileHashes.TryGet(out var TextureFileHashesItem))
+                && item.TextureFileHashes is {} TextureFileHashesItem)
             {
                 fg.AppendLine($"TextureFileHashes => {SpanExt.ToHexString(TextureFileHashesItem)}");
             }
@@ -1025,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Percentage);
             hash.Add(item.ModelFilename);
             hash.Add(item.Flags);
-            if (item.TextureFileHashes.TryGet(out var TextureFileHashesItem))
+            if (item.TextureFileHashes is {} TextureFileHashesItem)
             {
                 hash.Add(TextureFileHashesItem);
             }
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.TextureFileHashes) ?? true))
             {
-                if(rhs.TextureFileHashes.TryGet(out var TextureFileHashesrhs))
+                if(rhs.TextureFileHashes is {} TextureFileHashesrhs)
                 {
                     item.TextureFileHashes = TextureFileHashesrhs.ToArray();
                 }

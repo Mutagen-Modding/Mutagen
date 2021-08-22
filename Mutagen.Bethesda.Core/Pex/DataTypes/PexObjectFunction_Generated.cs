@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Parameters?.Overall ?? true)
-                        && Parameters.TryGet(out var ParametersItem))
+                        && Parameters is {} ParametersItem)
                     {
                         fg.AppendLine("Parameters =>");
                         fg.AppendLine("[");
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Locals?.Overall ?? true)
-                        && Locals.TryGet(out var LocalsItem))
+                        && Locals is {} LocalsItem)
                     {
                         fg.AppendLine("Locals =>");
                         fg.AppendLine("[");
@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Instructions?.Overall ?? true)
-                        && Instructions.TryGet(out var InstructionsItem))
+                        && Instructions is {} InstructionsItem)
                     {
                         fg.AppendLine("Instructions =>");
                         fg.AppendLine("[");
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Pex
                 fg.AppendItem(ReturnTypeName, "ReturnTypeName");
                 fg.AppendItem(DocString, "DocString");
                 fg.AppendItem(Flags, "Flags");
-                if (Parameters.TryGet(out var ParametersItem))
+                if (Parameters is {} ParametersItem)
                 {
                     fg.AppendLine("Parameters =>");
                     fg.AppendLine("[");
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Pex
                     }
                     fg.AppendLine("]");
                 }
-                if (Locals.TryGet(out var LocalsItem))
+                if (Locals is {} LocalsItem)
                 {
                     fg.AppendLine("Locals =>");
                     fg.AppendLine("[");
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Pex
                     }
                     fg.AppendLine("]");
                 }
-                if (Instructions.TryGet(out var InstructionsItem))
+                if (Instructions is {} InstructionsItem)
                 {
                     fg.AppendLine("Instructions =>");
                     fg.AppendLine("[");
@@ -1189,12 +1189,12 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObjectFunction.Mask<bool>? printMask = null)
         {
             if ((printMask?.ReturnTypeName ?? true)
-                && item.ReturnTypeName.TryGet(out var ReturnTypeNameItem))
+                && item.ReturnTypeName is {} ReturnTypeNameItem)
             {
                 fg.AppendItem(ReturnTypeNameItem, "ReturnTypeName");
             }
             if ((printMask?.DocString ?? true)
-                && item.DocString.TryGet(out var DocStringItem))
+                && item.DocString is {} DocStringItem)
             {
                 fg.AppendItem(DocStringItem, "DocString");
             }
@@ -1303,11 +1303,11 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IPexObjectFunctionGetter item)
         {
             var hash = new HashCode();
-            if (item.ReturnTypeName.TryGet(out var ReturnTypeNameitem))
+            if (item.ReturnTypeName is {} ReturnTypeNameitem)
             {
                 hash.Add(ReturnTypeNameitem);
             }
-            if (item.DocString.TryGet(out var DocStringitem))
+            if (item.DocString is {} DocStringitem)
             {
                 hash.Add(DocStringitem);
             }

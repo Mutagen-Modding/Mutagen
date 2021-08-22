@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
                         Model?.ToString(fg);
                     }
                     if ((printMask?.Colors?.Overall ?? true)
-                        && Colors.TryGet(out var ColorsItem))
+                        && Colors is {} ColorsItem)
                     {
                         fg.AppendLine("Colors =>");
                         fg.AppendLine("[");
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
                         Data?.ToString(fg);
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
-                        && Sounds.TryGet(out var SoundsItem))
+                        && Sounds is {} SoundsItem)
                     {
                         fg.AppendLine("Sounds =>");
                         fg.AppendLine("[");
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(TextureLowerLayer, "TextureLowerLayer");
                 fg.AppendItem(TextureUpperLayer, "TextureUpperLayer");
                 Model?.ToString(fg);
-                if (Colors.TryGet(out var ColorsItem))
+                if (Colors is {} ColorsItem)
                 {
                     fg.AppendLine("Colors =>");
                     fg.AppendLine("[");
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
                 FogDistance?.ToString(fg);
                 HDRData?.ToString(fg);
                 Data?.ToString(fg);
-                if (Sounds.TryGet(out var SoundsItem))
+                if (Sounds is {} SoundsItem)
                 {
                     fg.AppendLine("Sounds =>");
                     fg.AppendLine("[");
@@ -1403,22 +1403,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.TextureLowerLayer ?? true)
-                && item.TextureLowerLayer.TryGet(out var TextureLowerLayerItem))
+                && item.TextureLowerLayer is {} TextureLowerLayerItem)
             {
                 fg.AppendItem(TextureLowerLayerItem, "TextureLowerLayer");
             }
             if ((printMask?.TextureUpperLayer ?? true)
-                && item.TextureUpperLayer.TryGet(out var TextureUpperLayerItem))
+                && item.TextureUpperLayer is {} TextureUpperLayerItem)
             {
                 fg.AppendItem(TextureUpperLayerItem, "TextureUpperLayer");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
             if ((printMask?.Colors?.Overall ?? true)
-                && item.Colors.TryGet(out var ColorsItem))
+                && item.Colors is {} ColorsItem)
             {
                 fg.AppendLine("Colors =>");
                 fg.AppendLine("[");
@@ -1437,17 +1437,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.FogDistance?.Overall ?? true)
-                && item.FogDistance.TryGet(out var FogDistanceItem))
+                && item.FogDistance is {} FogDistanceItem)
             {
                 FogDistanceItem?.ToString(fg, "FogDistance");
             }
             if ((printMask?.HDRData?.Overall ?? true)
-                && item.HDRData.TryGet(out var HDRDataItem))
+                && item.HDRData is {} HDRDataItem)
             {
                 HDRDataItem?.ToString(fg, "HDRData");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1591,28 +1591,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IWeatherGetter item)
         {
             var hash = new HashCode();
-            if (item.TextureLowerLayer.TryGet(out var TextureLowerLayeritem))
+            if (item.TextureLowerLayer is {} TextureLowerLayeritem)
             {
                 hash.Add(TextureLowerLayeritem);
             }
-            if (item.TextureUpperLayer.TryGet(out var TextureUpperLayeritem))
+            if (item.TextureUpperLayer is {} TextureUpperLayeritem)
             {
                 hash.Add(TextureUpperLayeritem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
             hash.Add(item.Colors);
-            if (item.FogDistance.TryGet(out var FogDistanceitem))
+            if (item.FogDistance is {} FogDistanceitem)
             {
                 hash.Add(FogDistanceitem);
             }
-            if (item.HDRData.TryGet(out var HDRDataitem))
+            if (item.HDRData is {} HDRDataitem)
             {
                 hash.Add(HDRDataitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -1737,7 +1737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.FogDistance);
                 try
                 {
-                    if(rhs.FogDistance.TryGet(out var rhsFogDistance))
+                    if(rhs.FogDistance is {} rhsFogDistance)
                     {
                         item.FogDistance = rhsFogDistance.DeepCopy(
                             errorMask: errorMask,
@@ -1821,7 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.HDRData);
                 try
                 {
-                    if(rhs.HDRData.TryGet(out var rhsHDRData))
+                    if(rhs.HDRData is {} rhsHDRData)
                     {
                         item.HDRData = rhsHDRData.DeepCopy(
                             errorMask: errorMask,
@@ -1847,7 +1847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -2059,7 +2059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.TextureUpperLayer,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -2078,21 +2078,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.FogDistance.TryGet(out var FogDistanceItem))
+            if (item.FogDistance is {} FogDistanceItem)
             {
                 ((FogDistanceBinaryWriteTranslation)((IBinaryItem)FogDistanceItem).BinaryWriteTranslator).Write(
                     item: FogDistanceItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.HDRData.TryGet(out var HDRDataItem))
+            if (item.HDRData is {} HDRDataItem)
             {
                 ((HDRDataBinaryWriteTranslation)((IBinaryItem)HDRDataItem).BinaryWriteTranslator).Write(
                     item: HDRDataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((WeatherDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

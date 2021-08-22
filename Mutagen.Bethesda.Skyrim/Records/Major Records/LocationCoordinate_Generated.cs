@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Location
-        private IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
+        private readonly IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
         public IFormLink<IComplexLocationGetter> Location
         {
             get => _Location;
-            set => _Location = value.AsSetter();
+            set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IComplexLocationGetter> ILocationCoordinateGetter.Location => this.Location;
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Location, "Location");
                     }
                     if ((printMask?.Coordinates?.Overall ?? true)
-                        && Coordinates.TryGet(out var CoordinatesItem))
+                        && Coordinates is {} CoordinatesItem)
                     {
                         fg.AppendLine("Coordinates =>");
                         fg.AppendLine("[");
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Location, "Location");
-                if (Coordinates.TryGet(out var CoordinatesItem))
+                if (Coordinates is {} CoordinatesItem)
                 {
                     fg.AppendLine("Coordinates =>");
                     fg.AppendLine("[");
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationCoordinateGetter,
         ILoquiObjectSetter<ILocationCoordinate>
     {
-        new IFormLink<IComplexLocationGetter> Location { get; }
+        new IFormLink<IComplexLocationGetter> Location { get; set; }
         new ExtendedList<P2Int16> Coordinates { get; }
     }
 

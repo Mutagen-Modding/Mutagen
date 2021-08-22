@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Faction
-        private IFormLink<IFactionGetter> _Faction = new FormLink<IFactionGetter>();
+        private readonly IFormLink<IFactionGetter> _Faction = new FormLink<IFactionGetter>();
         public IFormLink<IFactionGetter> Faction
         {
             get => _Faction;
-            set => _Faction = value.AsSetter();
+            set => _Faction.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRankPlacement>,
         IRankPlacementGetter
     {
-        new IFormLink<IFactionGetter> Faction { get; }
+        new IFormLink<IFactionGetter> Faction { get; set; }
         new Byte Rank { get; set; }
         new MemorySlice<Byte> Fluff { get; set; }
     }

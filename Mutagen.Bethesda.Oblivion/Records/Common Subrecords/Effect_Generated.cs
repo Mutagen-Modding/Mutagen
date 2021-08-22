@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Data?.ToString(fg, "Data");
             }
             if ((printMask?.ScriptEffect?.Overall ?? true)
-                && item.ScriptEffect.TryGet(out var ScriptEffectItem))
+                && item.ScriptEffect is {} ScriptEffectItem)
             {
                 ScriptEffectItem?.ToString(fg, "ScriptEffect");
             }
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Data);
-            if (item.ScriptEffect.TryGet(out var ScriptEffectitem))
+            if (item.ScriptEffect is {} ScriptEffectitem)
             {
                 hash.Add(ScriptEffectitem);
             }
@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.ScriptEffect.TryGet(out var ScriptEffectItems))
+            if (obj.ScriptEffect is {} ScriptEffectItems)
             {
                 foreach (var item in ScriptEffectItems.ContainedFormLinks)
                 {
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.ScriptEffect);
                 try
                 {
-                    if(rhs.ScriptEffect.TryGet(out var rhsScriptEffect))
+                    if(rhs.ScriptEffect is {} rhsScriptEffect)
                     {
                         item.ScriptEffect = rhsScriptEffect.DeepCopy(
                             errorMask: errorMask,
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: DataItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.ScriptEffect.TryGet(out var ScriptEffectItem))
+            if (item.ScriptEffect is {} ScriptEffectItem)
             {
                 ((ScriptEffectBinaryWriteTranslation)((IBinaryItem)ScriptEffectItem).BinaryWriteTranslator).Write(
                     item: ScriptEffectItem,

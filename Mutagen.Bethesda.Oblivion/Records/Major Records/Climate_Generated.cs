@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.Weathers?.Overall ?? true)
-                        && Weathers.TryGet(out var WeathersItem))
+                        && Weathers is {} WeathersItem)
                     {
                         fg.AppendLine("Weathers =>");
                         fg.AppendLine("[");
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (Weathers.TryGet(out var WeathersItem))
+                if (Weathers is {} WeathersItem)
                 {
                     fg.AppendLine("Weathers =>");
                     fg.AppendLine("[");
@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Weathers?.Overall ?? true)
-                && item.Weathers.TryGet(out var WeathersItem))
+                && item.Weathers is {} WeathersItem)
             {
                 fg.AppendLine("Weathers =>");
                 fg.AppendLine("[");
@@ -1187,22 +1187,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.SunTexture ?? true)
-                && item.SunTexture.TryGet(out var SunTextureItem))
+                && item.SunTexture is {} SunTextureItem)
             {
                 fg.AppendItem(SunTextureItem, "SunTexture");
             }
             if ((printMask?.SunGlareTexture ?? true)
-                && item.SunGlareTexture.TryGet(out var SunGlareTextureItem))
+                && item.SunGlareTexture is {} SunGlareTextureItem)
             {
                 fg.AppendItem(SunGlareTextureItem, "SunGlareTexture");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1309,19 +1309,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Weathers);
-            if (item.SunTexture.TryGet(out var SunTextureitem))
+            if (item.SunTexture is {} SunTextureitem)
             {
                 hash.Add(SunTextureitem);
             }
-            if (item.SunGlareTexture.TryGet(out var SunGlareTextureitem))
+            if (item.SunGlareTexture is {} SunGlareTextureitem)
             {
                 hash.Add(SunGlareTextureitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Weathers.TryGet(out var WeathersItem))
+            if (obj.Weathers is {} WeathersItem)
             {
                 foreach (var item in WeathersItem.SelectMany(f => f.ContainedFormLinks))
                 {
@@ -1480,7 +1480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Climate_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Climate_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1706,14 +1706,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.SunGlareTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((ClimateDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

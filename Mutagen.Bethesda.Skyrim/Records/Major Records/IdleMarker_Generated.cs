@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(IdleTimer, "IdleTimer");
                     }
                     if ((printMask?.Animations?.Overall ?? true)
-                        && Animations.TryGet(out var AnimationsItem))
+                        && Animations is {} AnimationsItem)
                     {
                         fg.AppendLine("Animations =>");
                         fg.AppendLine("[");
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ObjectBounds?.ToString(fg);
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(IdleTimer, "IdleTimer");
-                if (Animations.TryGet(out var AnimationsItem))
+                if (Animations is {} AnimationsItem)
                 {
                     fg.AppendLine("Animations =>");
                     fg.AppendLine("[");
@@ -1223,17 +1223,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.IdleTimer ?? true)
-                && item.IdleTimer.TryGet(out var IdleTimerItem))
+                && item.IdleTimer is {} IdleTimerItem)
             {
                 fg.AppendItem(IdleTimerItem, "IdleTimer");
             }
             if ((printMask?.Animations?.Overall ?? true)
-                && item.Animations.TryGet(out var AnimationsItem))
+                && item.Animations is {} AnimationsItem)
             {
                 fg.AppendLine("Animations =>");
                 fg.AppendLine("[");
@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1361,16 +1361,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.IdleTimer.TryGet(out var IdleTimeritem))
+            if (item.IdleTimer is {} IdleTimeritem)
             {
                 hash.Add(IdleTimeritem);
             }
             hash.Add(item.Animations);
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1403,14 +1403,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Animations.TryGet(out var AnimationsItem))
+            if (obj.Animations is {} AnimationsItem)
             {
                 foreach (var item in AnimationsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -1553,7 +1553,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)IdleMarker_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1751,7 +1751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleMarkerBinaryWriteTranslation.WriteBinaryAnimations(
                 writer: writer,
                 item: item);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

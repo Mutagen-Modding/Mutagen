@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        private IFormLinkNullable<INpcGetter> _Base = new FormLinkNullable<INpcGetter>();
+        private readonly IFormLinkNullable<INpcGetter> _Base = new FormLinkNullable<INpcGetter>();
         public IFormLinkNullable<INpcGetter> Base
         {
             get => _Base;
-            set => _Base = value.AsNullable();
+            set => _Base.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> IPlacedNpcGetter.Base => this.Base;
@@ -107,21 +107,21 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter? IPlacedNpcGetter.EnableParent => this.EnableParent;
         #endregion
         #region MerchantContainer
-        private IFormLinkNullable<IPlacedObjectGetter> _MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>();
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>();
         public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer
         {
             get => _MerchantContainer;
-            set => _MerchantContainer = value.AsNullable();
+            set => _MerchantContainer.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedNpcGetter.MerchantContainer => this.MerchantContainer;
         #endregion
         #region Horse
-        private IFormLinkNullable<IPlacedCreatureGetter> _Horse = new FormLinkNullable<IPlacedCreatureGetter>();
+        private readonly IFormLinkNullable<IPlacedCreatureGetter> _Horse = new FormLinkNullable<IPlacedCreatureGetter>();
         public IFormLinkNullable<IPlacedCreatureGetter> Horse
         {
             get => _Horse;
-            set => _Horse = value.AsNullable();
+            set => _Horse.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedCreatureGetter> IPlacedNpcGetter.Horse => this.Horse;
@@ -836,13 +836,13 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaced,
         IPlacedNpcGetter
     {
-        new IFormLinkNullable<INpcGetter> Base { get; }
+        new IFormLinkNullable<INpcGetter> Base { get; set; }
         new MemorySlice<Byte>? XPCIFluff { get; set; }
         new MemorySlice<Byte>? FULLFluff { get; set; }
         new DistantLODData? DistantLODData { get; set; }
         new EnableParent? EnableParent { get; set; }
-        new IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; }
-        new IFormLinkNullable<IPlacedCreatureGetter> Horse { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
+        new IFormLinkNullable<IPlacedCreatureGetter> Horse { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
         new Location? Location { get; set; }
@@ -1312,22 +1312,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if ((printMask?.XPCIFluff ?? true)
-                && item.XPCIFluff.TryGet(out var XPCIFluffItem))
+                && item.XPCIFluff is {} XPCIFluffItem)
             {
                 fg.AppendLine($"XPCIFluff => {SpanExt.ToHexString(XPCIFluffItem)}");
             }
             if ((printMask?.FULLFluff ?? true)
-                && item.FULLFluff.TryGet(out var FULLFluffItem))
+                && item.FULLFluff is {} FULLFluffItem)
             {
                 fg.AppendLine($"FULLFluff => {SpanExt.ToHexString(FULLFluffItem)}");
             }
             if ((printMask?.DistantLODData?.Overall ?? true)
-                && item.DistantLODData.TryGet(out var DistantLODDataItem))
+                && item.DistantLODData is {} DistantLODDataItem)
             {
                 DistantLODDataItem?.ToString(fg, "DistantLODData");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
-                && item.EnableParent.TryGet(out var EnableParentItem))
+                && item.EnableParent is {} EnableParentItem)
             {
                 EnableParentItem?.ToString(fg, "EnableParent");
             }
@@ -1340,17 +1340,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Horse.FormKeyNullable, "Horse");
             }
             if ((printMask?.RagdollData ?? true)
-                && item.RagdollData.TryGet(out var RagdollDataItem))
+                && item.RagdollData is {} RagdollDataItem)
             {
                 fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
             if ((printMask?.Scale ?? true)
-                && item.Scale.TryGet(out var ScaleItem))
+                && item.Scale is {} ScaleItem)
             {
                 fg.AppendItem(ScaleItem, "Scale");
             }
             if ((printMask?.Location?.Overall ?? true)
-                && item.Location.TryGet(out var LocationItem))
+                && item.Location is {} LocationItem)
             {
                 LocationItem?.ToString(fg, "Location");
             }
@@ -1481,33 +1481,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Base);
-            if (item.XPCIFluff.TryGet(out var XPCIFluffItem))
+            if (item.XPCIFluff is {} XPCIFluffItem)
             {
                 hash.Add(XPCIFluffItem);
             }
-            if (item.FULLFluff.TryGet(out var FULLFluffItem))
+            if (item.FULLFluff is {} FULLFluffItem)
             {
                 hash.Add(FULLFluffItem);
             }
-            if (item.DistantLODData.TryGet(out var DistantLODDataitem))
+            if (item.DistantLODData is {} DistantLODDataitem)
             {
                 hash.Add(DistantLODDataitem);
             }
-            if (item.EnableParent.TryGet(out var EnableParentitem))
+            if (item.EnableParent is {} EnableParentitem)
             {
                 hash.Add(EnableParentitem);
             }
             hash.Add(item.MerchantContainer);
             hash.Add(item.Horse);
-            if (item.RagdollData.TryGet(out var RagdollDataItem))
+            if (item.RagdollData is {} RagdollDataItem)
             {
                 hash.Add(RagdollDataItem);
             }
-            if (item.Scale.TryGet(out var Scaleitem))
+            if (item.Scale is {} Scaleitem)
             {
                 hash.Add(Scaleitem);
             }
-            if (item.Location.TryGet(out var Locationitem))
+            if (item.Location is {} Locationitem)
             {
                 hash.Add(Locationitem);
             }
@@ -1544,7 +1544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Base);
             }
-            if (obj.EnableParent.TryGet(out var EnableParentItems))
+            if (obj.EnableParent is {} EnableParentItems)
             {
                 foreach (var item in EnableParentItems.ContainedFormLinks)
                 {
@@ -1639,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.XPCIFluff) ?? true))
             {
-                if(rhs.XPCIFluff.TryGet(out var XPCIFluffrhs))
+                if(rhs.XPCIFluff is {} XPCIFluffrhs)
                 {
                     item.XPCIFluff = XPCIFluffrhs.ToArray();
                 }
@@ -1650,7 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FULLFluff) ?? true))
             {
-                if(rhs.FULLFluff.TryGet(out var FULLFluffrhs))
+                if(rhs.FULLFluff is {} FULLFluffrhs)
                 {
                     item.FULLFluff = FULLFluffrhs.ToArray();
                 }
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.DistantLODData);
                 try
                 {
-                    if(rhs.DistantLODData.TryGet(out var rhsDistantLODData))
+                    if(rhs.DistantLODData is {} rhsDistantLODData)
                     {
                         item.DistantLODData = rhsDistantLODData.DeepCopy(
                             errorMask: errorMask,
@@ -1690,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.EnableParent);
                 try
                 {
-                    if(rhs.EnableParent.TryGet(out var rhsEnableParent))
+                    if(rhs.EnableParent is {} rhsEnableParent)
                     {
                         item.EnableParent = rhsEnableParent.DeepCopy(
                             errorMask: errorMask,
@@ -1721,7 +1721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
             {
-                if(rhs.RagdollData.TryGet(out var RagdollDatarhs))
+                if(rhs.RagdollData is {} RagdollDatarhs)
                 {
                     item.RagdollData = RagdollDatarhs.ToArray();
                 }
@@ -1739,7 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Location);
                 try
                 {
-                    if(rhs.Location.TryGet(out var rhsLocation))
+                    if(rhs.Location is {} rhsLocation)
                     {
                         item.Location = rhsLocation.DeepCopy(
                             errorMask: errorMask,
@@ -1929,14 +1929,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.FULLFluff,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL));
-            if (item.DistantLODData.TryGet(out var DistantLODDataItem))
+            if (item.DistantLODData is {} DistantLODDataItem)
             {
                 ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)DistantLODDataItem).BinaryWriteTranslator).Write(
                     item: DistantLODDataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.EnableParent.TryGet(out var EnableParentItem))
+            if (item.EnableParent is {} EnableParentItem)
             {
                 ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
                     item: EnableParentItem,
@@ -1959,7 +1959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Scale,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XSCL));
-            if (item.Location.TryGet(out var LocationItem))
+            if (item.Location is {} LocationItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
                 {

@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             }
                             else if (loqui.Nullable)
                             {
-                                fg.AppendLine($"if (obj.{field.Name}.TryGet(out var {field.Name}Items))");
+                                fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Items)");
                                 access = $"{field.Name}Items";
                             }
                             else
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
                             if (field.Nullable)
                             {
-                                fg.AppendLine($"if (obj.{field.Name}.TryGet(out var {field.Name}Item))");
+                                fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
                             }
                             using (new BraceWrapper(fg, doIt: field.Nullable))
                             {

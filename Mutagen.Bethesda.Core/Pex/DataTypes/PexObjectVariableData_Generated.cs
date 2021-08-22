@@ -855,22 +855,22 @@ namespace Mutagen.Bethesda.Pex.Internals
                 fg.AppendItem(item.VariableType, "VariableType");
             }
             if ((printMask?.StringValue ?? true)
-                && item.StringValue.TryGet(out var StringValueItem))
+                && item.StringValue is {} StringValueItem)
             {
                 fg.AppendItem(StringValueItem, "StringValue");
             }
             if ((printMask?.IntValue ?? true)
-                && item.IntValue.TryGet(out var IntValueItem))
+                && item.IntValue is {} IntValueItem)
             {
                 fg.AppendItem(IntValueItem, "IntValue");
             }
             if ((printMask?.FloatValue ?? true)
-                && item.FloatValue.TryGet(out var FloatValueItem))
+                && item.FloatValue is {} FloatValueItem)
             {
                 fg.AppendItem(FloatValueItem, "FloatValue");
             }
             if ((printMask?.BoolValue ?? true)
-                && item.BoolValue.TryGet(out var BoolValueItem))
+                && item.BoolValue is {} BoolValueItem)
             {
                 fg.AppendItem(BoolValueItem, "BoolValue");
             }
@@ -910,19 +910,19 @@ namespace Mutagen.Bethesda.Pex.Internals
         {
             var hash = new HashCode();
             hash.Add(item.VariableType);
-            if (item.StringValue.TryGet(out var StringValueitem))
+            if (item.StringValue is {} StringValueitem)
             {
                 hash.Add(StringValueitem);
             }
-            if (item.IntValue.TryGet(out var IntValueitem))
+            if (item.IntValue is {} IntValueitem)
             {
                 hash.Add(IntValueitem);
             }
-            if (item.FloatValue.TryGet(out var FloatValueitem))
+            if (item.FloatValue is {} FloatValueitem)
             {
                 hash.Add(FloatValueitem);
             }
-            if (item.BoolValue.TryGet(out var BoolValueitem))
+            if (item.BoolValue is {} BoolValueitem)
             {
                 hash.Add(BoolValueitem);
             }

@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        private IFormLink<IWorldspaceGetter> _Parent = new FormLink<IWorldspaceGetter>();
+        private readonly IFormLink<IWorldspaceGetter> _Parent = new FormLink<IWorldspaceGetter>();
         public IFormLink<IWorldspaceGetter> Parent
         {
             get => _Parent;
-            set => _Parent = value.AsSetter();
+            set => _Parent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> IWorldspaceNavigationMeshDataGetter.Parent => this.Parent;
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceNavigationMeshData>,
         IWorldspaceNavigationMeshDataGetter
     {
-        new IFormLink<IWorldspaceGetter> Parent { get; }
+        new IFormLink<IWorldspaceGetter> Parent { get; set; }
         new P2Int16 Coordinates { get; set; }
     }
 

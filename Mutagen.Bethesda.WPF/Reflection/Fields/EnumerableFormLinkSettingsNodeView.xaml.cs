@@ -18,23 +18,23 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
-                    .BindToStrict(this, x => x.SettingNameBlock.Text)
+                    .BindTo(this, x => x.SettingNameBlock.Text)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.FocusSettingCommand)
-                    .BindToStrict(this, x => x.SettingNameButton.Command)
+                    .BindTo(this, x => x.SettingNameButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Values)
-                    .BindToStrict(this, x => x.FormPicker.FormKeys)
+                    .BindTo(this, x => x.FormPicker.FormKeys)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.LinkCache)
-                    .BindToStrict(this, x => x.FormPicker.LinkCache)
+                    .BindTo(this, x => x.FormPicker.LinkCache)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.ScopedTypes)
-                    .BindToStrict(this, x => x.FormPicker.ScopedTypes)
+                    .BindTo(this, x => x.FormPicker.ScopedTypes)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.IsFocused)
                     .Select((focused) => focused ? double.NaN : 200d)
-                    .BindToStrict(this, x => x.FormPicker.Height)
+                    .BindTo(this, x => x.FormPicker.Height)
                     .DisposeWith(disposable);
             });
         }

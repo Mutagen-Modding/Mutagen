@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Spells?.Overall ?? true)
-                        && Spells.TryGet(out var SpellsItem))
+                        && Spells is {} SpellsItem)
                     {
                         fg.AppendLine("Spells =>");
                         fg.AppendLine("[");
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(Icon, "Icon");
                 fg.AppendItem(Description, "Description");
-                if (Spells.TryGet(out var SpellsItem))
+                if (Spells is {} SpellsItem)
                 {
                     fg.AppendLine("Spells =>");
                     fg.AppendLine("[");
@@ -1102,17 +1102,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
@@ -1224,15 +1224,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IBirthsignGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }

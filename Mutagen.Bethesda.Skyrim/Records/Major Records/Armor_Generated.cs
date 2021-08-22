@@ -129,11 +129,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ObjectEffect
-        private IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
+        private readonly IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
         public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
         {
             get => _ObjectEffect;
-            set => _ObjectEffect = value.AsNullable();
+            set => _ObjectEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEffectRecordGetter> IArmorGetter.ObjectEffect => this.ObjectEffect;
@@ -170,21 +170,21 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IArmorGetter.Destructible => this.Destructible;
         #endregion
         #region PickUpSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
         {
             get => _PickUpSound;
-            set => _PickUpSound = value.AsNullable();
+            set => _PickUpSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IArmorGetter.PickUpSound => this.PickUpSound;
         #endregion
         #region PutDownSound
-        private IFormLinkNullable<ISoundDescriptorGetter> _PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
         {
             get => _PutDownSound;
-            set => _PutDownSound = value.AsNullable();
+            set => _PutDownSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IArmorGetter.PutDownSound => this.PutDownSound;
@@ -195,41 +195,41 @@ namespace Mutagen.Bethesda.Skyrim
         String? IArmorGetter.RagdollConstraintTemplate => this.RagdollConstraintTemplate;
         #endregion
         #region EquipmentType
-        private IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
+        private readonly IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
         public IFormLinkNullable<IEquipTypeGetter> EquipmentType
         {
             get => _EquipmentType;
-            set => _EquipmentType = value.AsNullable();
+            set => _EquipmentType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IArmorGetter.EquipmentType => this.EquipmentType;
         #endregion
         #region BashImpactDataSet
-        private IFormLinkNullable<IImpactDataSetGetter> _BashImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>();
+        private readonly IFormLinkNullable<IImpactDataSetGetter> _BashImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>();
         public IFormLinkNullable<IImpactDataSetGetter> BashImpactDataSet
         {
             get => _BashImpactDataSet;
-            set => _BashImpactDataSet = value.AsNullable();
+            set => _BashImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IArmorGetter.BashImpactDataSet => this.BashImpactDataSet;
         #endregion
         #region AlternateBlockMaterial
-        private IFormLinkNullable<IMaterialTypeGetter> _AlternateBlockMaterial = new FormLinkNullable<IMaterialTypeGetter>();
+        private readonly IFormLinkNullable<IMaterialTypeGetter> _AlternateBlockMaterial = new FormLinkNullable<IMaterialTypeGetter>();
         public IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial
         {
             get => _AlternateBlockMaterial;
-            set => _AlternateBlockMaterial = value.AsNullable();
+            set => _AlternateBlockMaterial.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IArmorGetter.AlternateBlockMaterial => this.AlternateBlockMaterial;
         #endregion
         #region Race
-        private IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
+        private readonly IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
         public IFormLinkNullable<IRaceGetter> Race
         {
             get => _Race;
-            set => _Race = value.AsNullable();
+            set => _Race.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> IArmorGetter.Race => this.Race;
@@ -284,11 +284,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ArmorRating { get; set; } = default;
         #endregion
         #region TemplateArmor
-        private IFormLinkNullable<IArmorGetter> _TemplateArmor = new FormLinkNullable<IArmorGetter>();
+        private readonly IFormLinkNullable<IArmorGetter> _TemplateArmor = new FormLinkNullable<IArmorGetter>();
         public IFormLinkNullable<IArmorGetter> TemplateArmor
         {
             get => _TemplateArmor;
-            set => _TemplateArmor = value.AsNullable();
+            set => _TemplateArmor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArmorGetter> IArmorGetter.TemplateArmor => this.TemplateArmor;
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Race, "Race");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords.TryGet(out var KeywordsItem))
+                        && Keywords is {} KeywordsItem)
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Armature?.Overall ?? true)
-                        && Armature.TryGet(out var ArmatureItem))
+                        && Armature is {} ArmatureItem)
                     {
                         fg.AppendLine("Armature =>");
                         fg.AppendLine("[");
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(BashImpactDataSet, "BashImpactDataSet");
                 fg.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
                 fg.AppendItem(Race, "Race");
-                if (Keywords.TryGet(out var KeywordsItem))
+                if (Keywords is {} KeywordsItem)
                 {
                     fg.AppendLine("Keywords =>");
                     fg.AppendLine("[");
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(Description, "Description");
-                if (Armature.TryGet(out var ArmatureItem))
+                if (Armature is {} ArmatureItem)
                 {
                     fg.AppendLine("Armature =>");
                     fg.AppendLine("[");
@@ -1559,18 +1559,18 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; }
+        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
         new UInt16? EnchantmentAmount { get; set; }
         new IGenderedItem<ArmorModel?>? WorldModel { get; set; }
         new BodyTemplate? BodyTemplate { get; set; }
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new String? RagdollConstraintTemplate { get; set; }
-        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
-        new IFormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; }
-        new IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; }
-        new IFormLinkNullable<IRaceGetter> Race { get; }
+        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
+        new IFormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; set; }
+        new IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; set; }
+        new IFormLinkNullable<IRaceGetter> Race { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
@@ -1580,7 +1580,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single ArmorRating { get; set; }
-        new IFormLinkNullable<IArmorGetter> TemplateArmor { get; }
+        new IFormLinkNullable<IArmorGetter> TemplateArmor { get; set; }
         new Armor.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Armor.MajorFlag MajorFlags { get; set; }
@@ -2184,7 +2184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
@@ -2193,7 +2193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -2202,22 +2202,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
             }
             if ((printMask?.EnchantmentAmount ?? true)
-                && item.EnchantmentAmount.TryGet(out var EnchantmentAmountItem))
+                && item.EnchantmentAmount is {} EnchantmentAmountItem)
             {
                 fg.AppendItem(EnchantmentAmountItem, "EnchantmentAmount");
             }
             if ((printMask?.WorldModel?.Overall ?? true)
-                && item.WorldModel.TryGet(out var WorldModelItem))
+                && item.WorldModel is {} WorldModelItem)
             {
                 WorldModelItem?.ToString(fg, "WorldModel");
             }
             if ((printMask?.BodyTemplate?.Overall ?? true)
-                && item.BodyTemplate.TryGet(out var BodyTemplateItem))
+                && item.BodyTemplate is {} BodyTemplateItem)
             {
                 BodyTemplateItem?.ToString(fg, "BodyTemplate");
             }
             if ((printMask?.Destructible?.Overall ?? true)
-                && item.Destructible.TryGet(out var DestructibleItem))
+                && item.Destructible is {} DestructibleItem)
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
@@ -2230,7 +2230,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
             }
             if ((printMask?.RagdollConstraintTemplate ?? true)
-                && item.RagdollConstraintTemplate.TryGet(out var RagdollConstraintTemplateItem))
+                && item.RagdollConstraintTemplate is {} RagdollConstraintTemplateItem)
             {
                 fg.AppendItem(RagdollConstraintTemplateItem, "RagdollConstraintTemplate");
             }
@@ -2251,7 +2251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Race.FormKeyNullable, "Race");
             }
             if ((printMask?.Keywords?.Overall ?? true)
-                && item.Keywords.TryGet(out var KeywordsItem))
+                && item.Keywords is {} KeywordsItem)
             {
                 fg.AppendLine("Keywords =>");
                 fg.AppendLine("[");
@@ -2270,7 +2270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
@@ -2496,35 +2496,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IArmorGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.ObjectBounds);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.ObjectEffect);
-            if (item.EnchantmentAmount.TryGet(out var EnchantmentAmountitem))
+            if (item.EnchantmentAmount is {} EnchantmentAmountitem)
             {
                 hash.Add(EnchantmentAmountitem);
             }
-            if (item.WorldModel.TryGet(out var WorldModelitem))
+            if (item.WorldModel is {} WorldModelitem)
             {
                 hash.Add(HashCode.Combine(WorldModelitem.Male, WorldModelitem.Female));
             }
-            if (item.BodyTemplate.TryGet(out var BodyTemplateitem))
+            if (item.BodyTemplate is {} BodyTemplateitem)
             {
                 hash.Add(BodyTemplateitem);
             }
-            if (item.Destructible.TryGet(out var Destructibleitem))
+            if (item.Destructible is {} Destructibleitem)
             {
                 hash.Add(Destructibleitem);
             }
             hash.Add(item.PickUpSound);
             hash.Add(item.PutDownSound);
-            if (item.RagdollConstraintTemplate.TryGet(out var RagdollConstraintTemplateitem))
+            if (item.RagdollConstraintTemplate is {} RagdollConstraintTemplateitem)
             {
                 hash.Add(RagdollConstraintTemplateitem);
             }
@@ -2533,7 +2533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.AlternateBlockMaterial);
             hash.Add(item.Race);
             hash.Add(item.Keywords);
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
@@ -2583,14 +2583,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.ObjectEffect);
             }
-            if (obj.WorldModel.TryGet(out var WorldModelItem))
+            if (obj.WorldModel is {} WorldModelItem)
             {
                 foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Destructible.TryGet(out var DestructibleItems))
+            if (obj.Destructible is {} DestructibleItems)
             {
                 foreach (var item in DestructibleItems.ContainedFormLinks)
                 {
@@ -2621,7 +2621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Race);
             }
-            if (obj.Keywords.TryGet(out var KeywordsItem))
+            if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
                 {
@@ -2715,7 +2715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Armor_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -2770,7 +2770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.EnchantmentAmount = rhs.EnchantmentAmount;
             }
-            if (!rhs.WorldModel.TryGet(out var rhsWorldModelitem))
+            if (rhs.WorldModel is not {} rhsWorldModelitem)
             {
                 item.WorldModel = null;
             }
@@ -2789,7 +2789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Armor_FieldIndex.BodyTemplate);
                 try
                 {
-                    if(rhs.BodyTemplate.TryGet(out var rhsBodyTemplate))
+                    if(rhs.BodyTemplate is {} rhsBodyTemplate)
                     {
                         item.BodyTemplate = rhsBodyTemplate.DeepCopy(
                             errorMask: errorMask,
@@ -2815,7 +2815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Armor_FieldIndex.Destructible);
                 try
                 {
-                    if(rhs.Destructible.TryGet(out var rhsDestructible))
+                    if(rhs.Destructible is {} rhsDestructible)
                     {
                         item.Destructible = rhsDestructible.DeepCopy(
                             errorMask: errorMask,
@@ -3100,7 +3100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
@@ -3133,7 +3133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 maleRecordConverter: Armor_Registration.WorldModelMaleConverter,
                 transl: (MutagenWriter subWriter, IArmorModelGetter? subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
+                    if (subItem is {} Item)
                     {
                         ((ArmorModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
@@ -3144,7 +3144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArmorBinaryWriteTranslation.WriteBinaryBodyTemplate(
                 writer: writer,
                 item: item);
-            if (item.Destructible.TryGet(out var DestructibleItem))
+            if (item.Destructible is {} DestructibleItem)
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
                     item: DestructibleItem,

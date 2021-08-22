@@ -1154,42 +1154,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Skill ?? true)
-                && item.Skill.TryGet(out var SkillItem))
+                && item.Skill is {} SkillItem)
             {
                 fg.AppendItem(SkillItem, "Skill");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.ApprenticeText ?? true)
-                && item.ApprenticeText.TryGet(out var ApprenticeTextItem))
+                && item.ApprenticeText is {} ApprenticeTextItem)
             {
                 fg.AppendItem(ApprenticeTextItem, "ApprenticeText");
             }
             if ((printMask?.JourneymanText ?? true)
-                && item.JourneymanText.TryGet(out var JourneymanTextItem))
+                && item.JourneymanText is {} JourneymanTextItem)
             {
                 fg.AppendItem(JourneymanTextItem, "JourneymanText");
             }
             if ((printMask?.ExpertText ?? true)
-                && item.ExpertText.TryGet(out var ExpertTextItem))
+                && item.ExpertText is {} ExpertTextItem)
             {
                 fg.AppendItem(ExpertTextItem, "ExpertText");
             }
             if ((printMask?.MasterText ?? true)
-                && item.MasterText.TryGet(out var MasterTextItem))
+                && item.MasterText is {} MasterTextItem)
             {
                 fg.AppendItem(MasterTextItem, "MasterText");
             }
@@ -1303,35 +1303,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ISkillRecordGetter item)
         {
             var hash = new HashCode();
-            if (item.Skill.TryGet(out var Skillitem))
+            if (item.Skill is {} Skillitem)
             {
                 hash.Add(Skillitem);
             }
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.ApprenticeText.TryGet(out var ApprenticeTextitem))
+            if (item.ApprenticeText is {} ApprenticeTextitem)
             {
                 hash.Add(ApprenticeTextitem);
             }
-            if (item.JourneymanText.TryGet(out var JourneymanTextitem))
+            if (item.JourneymanText is {} JourneymanTextitem)
             {
                 hash.Add(JourneymanTextitem);
             }
-            if (item.ExpertText.TryGet(out var ExpertTextitem))
+            if (item.ExpertText is {} ExpertTextitem)
             {
                 hash.Add(ExpertTextitem);
             }
-            if (item.MasterText.TryGet(out var MasterTextitem))
+            if (item.MasterText is {} MasterTextitem)
             {
                 hash.Add(MasterTextitem);
             }
@@ -1455,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((SkillDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

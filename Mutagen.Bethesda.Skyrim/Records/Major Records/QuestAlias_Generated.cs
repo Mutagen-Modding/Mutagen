@@ -86,31 +86,31 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? IQuestAliasGetter.AliasIndexToForceIntoWhenFilled => this.AliasIndexToForceIntoWhenFilled;
         #endregion
         #region SpecificLocation
-        private IFormLinkNullable<ILocationGetter> _SpecificLocation = new FormLinkNullable<ILocationGetter>();
+        private readonly IFormLinkNullable<ILocationGetter> _SpecificLocation = new FormLinkNullable<ILocationGetter>();
         public IFormLinkNullable<ILocationGetter> SpecificLocation
         {
             get => _SpecificLocation;
-            set => _SpecificLocation = value.AsNullable();
+            set => _SpecificLocation.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> IQuestAliasGetter.SpecificLocation => this.SpecificLocation;
         #endregion
         #region ForcedReference
-        private IFormLinkNullable<IPlacedGetter> _ForcedReference = new FormLinkNullable<IPlacedGetter>();
+        private readonly IFormLinkNullable<IPlacedGetter> _ForcedReference = new FormLinkNullable<IPlacedGetter>();
         public IFormLinkNullable<IPlacedGetter> ForcedReference
         {
             get => _ForcedReference;
-            set => _ForcedReference = value.AsNullable();
+            set => _ForcedReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedGetter> IQuestAliasGetter.ForcedReference => this.ForcedReference;
         #endregion
         #region UniqueActor
-        private IFormLinkNullable<INpcGetter> _UniqueActor = new FormLinkNullable<INpcGetter>();
+        private readonly IFormLinkNullable<INpcGetter> _UniqueActor = new FormLinkNullable<INpcGetter>();
         public IFormLinkNullable<INpcGetter> UniqueActor
         {
             get => _UniqueActor;
-            set => _UniqueActor = value.AsNullable();
+            set => _UniqueActor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> IQuestAliasGetter.UniqueActor => this.UniqueActor;
@@ -220,51 +220,51 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region SpectatorOverridePackageList
-        private IFormLinkNullable<IFormListGetter> _SpectatorOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        private readonly IFormLinkNullable<IFormListGetter> _SpectatorOverridePackageList = new FormLinkNullable<IFormListGetter>();
         public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList
         {
             get => _SpectatorOverridePackageList;
-            set => _SpectatorOverridePackageList = value.AsNullable();
+            set => _SpectatorOverridePackageList.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IQuestAliasGetter.SpectatorOverridePackageList => this.SpectatorOverridePackageList;
         #endregion
         #region ObserveDeadBodyOverridePackageList
-        private IFormLinkNullable<IFormListGetter> _ObserveDeadBodyOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        private readonly IFormLinkNullable<IFormListGetter> _ObserveDeadBodyOverridePackageList = new FormLinkNullable<IFormListGetter>();
         public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList
         {
             get => _ObserveDeadBodyOverridePackageList;
-            set => _ObserveDeadBodyOverridePackageList = value.AsNullable();
+            set => _ObserveDeadBodyOverridePackageList.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IQuestAliasGetter.ObserveDeadBodyOverridePackageList => this.ObserveDeadBodyOverridePackageList;
         #endregion
         #region GuardWarnOverridePackageList
-        private IFormLinkNullable<IFormListGetter> _GuardWarnOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        private readonly IFormLinkNullable<IFormListGetter> _GuardWarnOverridePackageList = new FormLinkNullable<IFormListGetter>();
         public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList
         {
             get => _GuardWarnOverridePackageList;
-            set => _GuardWarnOverridePackageList = value.AsNullable();
+            set => _GuardWarnOverridePackageList.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IQuestAliasGetter.GuardWarnOverridePackageList => this.GuardWarnOverridePackageList;
         #endregion
         #region CombatOverridePackageList
-        private IFormLinkNullable<IFormListGetter> _CombatOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        private readonly IFormLinkNullable<IFormListGetter> _CombatOverridePackageList = new FormLinkNullable<IFormListGetter>();
         public IFormLinkNullable<IFormListGetter> CombatOverridePackageList
         {
             get => _CombatOverridePackageList;
-            set => _CombatOverridePackageList = value.AsNullable();
+            set => _CombatOverridePackageList.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IQuestAliasGetter.CombatOverridePackageList => this.CombatOverridePackageList;
         #endregion
         #region DisplayName
-        private IFormLinkNullable<IMessageGetter> _DisplayName = new FormLinkNullable<IMessageGetter>();
+        private readonly IFormLinkNullable<IMessageGetter> _DisplayName = new FormLinkNullable<IMessageGetter>();
         public IFormLinkNullable<IMessageGetter> DisplayName
         {
             get => _DisplayName;
-            set => _DisplayName = value.AsNullable();
+            set => _DisplayName.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMessageGetter> IQuestAliasGetter.DisplayName => this.DisplayName;
@@ -312,11 +312,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region VoiceTypes
-        private IFormLinkNullable<IAliasVoiceTypeGetter> _VoiceTypes = new FormLinkNullable<IAliasVoiceTypeGetter>();
+        private readonly IFormLinkNullable<IAliasVoiceTypeGetter> _VoiceTypes = new FormLinkNullable<IAliasVoiceTypeGetter>();
         public IFormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes
         {
             get => _VoiceTypes;
-            set => _VoiceTypes = value.AsNullable();
+            set => _VoiceTypes.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAliasVoiceTypeGetter> IQuestAliasGetter.VoiceTypes => this.VoiceTypes;
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim
                         FindMatchingRefFromEvent?.ToString(fg);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords.TryGet(out var KeywordsItem))
+                        && Keywords is {} KeywordsItem)
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Items?.Overall ?? true)
-                        && Items.TryGet(out var ItemsItem))
+                        && Items is {} ItemsItem)
                     {
                         fg.AppendLine("Items =>");
                         fg.AppendLine("[");
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(DisplayName, "DisplayName");
                     }
                     if ((printMask?.Spells?.Overall ?? true)
-                        && Spells.TryGet(out var SpellsItem))
+                        && Spells is {} SpellsItem)
                     {
                         fg.AppendLine("Spells =>");
                         fg.AppendLine("[");
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Factions?.Overall ?? true)
-                        && Factions.TryGet(out var FactionsItem))
+                        && Factions is {} FactionsItem)
                     {
                         fg.AppendLine("Factions =>");
                         fg.AppendLine("[");
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.PackageData?.Overall ?? true)
-                        && PackageData.TryGet(out var PackageDataItem))
+                        && PackageData is {} PackageDataItem)
                     {
                         fg.AppendLine("PackageData =>");
                         fg.AppendLine("[");
@@ -1483,7 +1483,7 @@ namespace Mutagen.Bethesda.Skyrim
                 CreateReferenceToObject?.ToString(fg);
                 FindMatchingRefNearAlias?.ToString(fg);
                 FindMatchingRefFromEvent?.ToString(fg);
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Keywords.TryGet(out var KeywordsItem))
+                if (Keywords is {} KeywordsItem)
                 {
                     fg.AppendLine("Keywords =>");
                     fg.AppendLine("[");
@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Items.TryGet(out var ItemsItem))
+                if (Items is {} ItemsItem)
                 {
                     fg.AppendLine("Items =>");
                     fg.AppendLine("[");
@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
                 fg.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
                 fg.AppendItem(DisplayName, "DisplayName");
-                if (Spells.TryGet(out var SpellsItem))
+                if (Spells is {} SpellsItem)
                 {
                     fg.AppendLine("Spells =>");
                     fg.AppendLine("[");
@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Factions.TryGet(out var FactionsItem))
+                if (Factions is {} FactionsItem)
                 {
                     fg.AppendLine("Factions =>");
                     fg.AppendLine("[");
@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (PackageData.TryGet(out var PackageDataItem))
+                if (PackageData is {} PackageDataItem)
                 {
                     fg.AppendLine("PackageData =>");
                     fg.AppendLine("[");
@@ -1858,9 +1858,9 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Name { get; set; }
         new QuestAlias.Flag? Flags { get; set; }
         new Int32? AliasIndexToForceIntoWhenFilled { get; set; }
-        new IFormLinkNullable<ILocationGetter> SpecificLocation { get; }
-        new IFormLinkNullable<IPlacedGetter> ForcedReference { get; }
-        new IFormLinkNullable<INpcGetter> UniqueActor { get; }
+        new IFormLinkNullable<ILocationGetter> SpecificLocation { get; set; }
+        new IFormLinkNullable<IPlacedGetter> ForcedReference { get; set; }
+        new IFormLinkNullable<INpcGetter> UniqueActor { get; set; }
         new LocationAliasReference? Location { get; set; }
         new ExternalAliasReference? External { get; set; }
         new CreateReferenceToObject? CreateReferenceToObject { get; set; }
@@ -1872,15 +1872,15 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
-        new IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; }
-        new IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; }
-        new IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; }
-        new IFormLinkNullable<IFormListGetter> CombatOverridePackageList { get; }
-        new IFormLinkNullable<IMessageGetter> DisplayName { get; }
+        new IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> CombatOverridePackageList { get; set; }
+        new IFormLinkNullable<IMessageGetter> DisplayName { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellGetter>> Spells { get; }
         new ExtendedList<IFormLinkGetter<IFactionGetter>> Factions { get; }
         new ExtendedList<IFormLinkGetter<IPackageGetter>> PackageData { get; }
-        new IFormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes { get; }
+        new IFormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes { get; set; }
     }
 
     public partial interface IQuestAliasGetter :
@@ -2439,17 +2439,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Type, "Type");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.AliasIndexToForceIntoWhenFilled ?? true)
-                && item.AliasIndexToForceIntoWhenFilled.TryGet(out var AliasIndexToForceIntoWhenFilledItem))
+                && item.AliasIndexToForceIntoWhenFilled is {} AliasIndexToForceIntoWhenFilledItem)
             {
                 fg.AppendItem(AliasIndexToForceIntoWhenFilledItem, "AliasIndexToForceIntoWhenFilled");
             }
@@ -2466,27 +2466,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.UniqueActor.FormKeyNullable, "UniqueActor");
             }
             if ((printMask?.Location?.Overall ?? true)
-                && item.Location.TryGet(out var LocationItem))
+                && item.Location is {} LocationItem)
             {
                 LocationItem?.ToString(fg, "Location");
             }
             if ((printMask?.External?.Overall ?? true)
-                && item.External.TryGet(out var ExternalItem))
+                && item.External is {} ExternalItem)
             {
                 ExternalItem?.ToString(fg, "External");
             }
             if ((printMask?.CreateReferenceToObject?.Overall ?? true)
-                && item.CreateReferenceToObject.TryGet(out var CreateReferenceToObjectItem))
+                && item.CreateReferenceToObject is {} CreateReferenceToObjectItem)
             {
                 CreateReferenceToObjectItem?.ToString(fg, "CreateReferenceToObject");
             }
             if ((printMask?.FindMatchingRefNearAlias?.Overall ?? true)
-                && item.FindMatchingRefNearAlias.TryGet(out var FindMatchingRefNearAliasItem))
+                && item.FindMatchingRefNearAlias is {} FindMatchingRefNearAliasItem)
             {
                 FindMatchingRefNearAliasItem?.ToString(fg, "FindMatchingRefNearAlias");
             }
             if ((printMask?.FindMatchingRefFromEvent?.Overall ?? true)
-                && item.FindMatchingRefFromEvent.TryGet(out var FindMatchingRefFromEventItem))
+                && item.FindMatchingRefFromEvent is {} FindMatchingRefFromEventItem)
             {
                 FindMatchingRefFromEventItem?.ToString(fg, "FindMatchingRefFromEvent");
             }
@@ -2509,7 +2509,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Keywords?.Overall ?? true)
-                && item.Keywords.TryGet(out var KeywordsItem))
+                && item.Keywords is {} KeywordsItem)
             {
                 fg.AppendLine("Keywords =>");
                 fg.AppendLine("[");
@@ -2528,7 +2528,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Items?.Overall ?? true)
-                && item.Items.TryGet(out var ItemsItem))
+                && item.Items is {} ItemsItem)
             {
                 fg.AppendLine("Items =>");
                 fg.AppendLine("[");
@@ -2761,38 +2761,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var hash = new HashCode();
             hash.Add(item.ID);
             hash.Add(item.Type);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.AliasIndexToForceIntoWhenFilled.TryGet(out var AliasIndexToForceIntoWhenFilleditem))
+            if (item.AliasIndexToForceIntoWhenFilled is {} AliasIndexToForceIntoWhenFilleditem)
             {
                 hash.Add(AliasIndexToForceIntoWhenFilleditem);
             }
             hash.Add(item.SpecificLocation);
             hash.Add(item.ForcedReference);
             hash.Add(item.UniqueActor);
-            if (item.Location.TryGet(out var Locationitem))
+            if (item.Location is {} Locationitem)
             {
                 hash.Add(Locationitem);
             }
-            if (item.External.TryGet(out var Externalitem))
+            if (item.External is {} Externalitem)
             {
                 hash.Add(Externalitem);
             }
-            if (item.CreateReferenceToObject.TryGet(out var CreateReferenceToObjectitem))
+            if (item.CreateReferenceToObject is {} CreateReferenceToObjectitem)
             {
                 hash.Add(CreateReferenceToObjectitem);
             }
-            if (item.FindMatchingRefNearAlias.TryGet(out var FindMatchingRefNearAliasitem))
+            if (item.FindMatchingRefNearAlias is {} FindMatchingRefNearAliasitem)
             {
                 hash.Add(FindMatchingRefNearAliasitem);
             }
-            if (item.FindMatchingRefFromEvent.TryGet(out var FindMatchingRefFromEventitem))
+            if (item.FindMatchingRefFromEvent is {} FindMatchingRefFromEventitem)
             {
                 hash.Add(FindMatchingRefFromEventitem);
             }
@@ -2834,21 +2834,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.UniqueActor);
             }
-            if (obj.Location.TryGet(out var LocationItems))
+            if (obj.Location is {} LocationItems)
             {
                 foreach (var item in LocationItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.External.TryGet(out var ExternalItems))
+            if (obj.External is {} ExternalItems)
             {
                 foreach (var item in ExternalItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.CreateReferenceToObject.TryGet(out var CreateReferenceToObjectItems))
+            if (obj.CreateReferenceToObject is {} CreateReferenceToObjectItems)
             {
                 foreach (var item in CreateReferenceToObjectItems.ContainedFormLinks)
                 {
@@ -2860,14 +2860,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Keywords.TryGet(out var KeywordsItem))
+            if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Items.TryGet(out var ItemsItem))
+            if (obj.Items is {} ItemsItem)
             {
                 foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))
@@ -2966,7 +2966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)QuestAlias_FieldIndex.Location);
                 try
                 {
-                    if(rhs.Location.TryGet(out var rhsLocation))
+                    if(rhs.Location is {} rhsLocation)
                     {
                         item.Location = rhsLocation.DeepCopy(
                             errorMask: errorMask,
@@ -2992,7 +2992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)QuestAlias_FieldIndex.External);
                 try
                 {
-                    if(rhs.External.TryGet(out var rhsExternal))
+                    if(rhs.External is {} rhsExternal)
                     {
                         item.External = rhsExternal.DeepCopy(
                             errorMask: errorMask,
@@ -3018,7 +3018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)QuestAlias_FieldIndex.CreateReferenceToObject);
                 try
                 {
-                    if(rhs.CreateReferenceToObject.TryGet(out var rhsCreateReferenceToObject))
+                    if(rhs.CreateReferenceToObject is {} rhsCreateReferenceToObject)
                     {
                         item.CreateReferenceToObject = rhsCreateReferenceToObject.DeepCopy(
                             errorMask: errorMask,
@@ -3044,7 +3044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias);
                 try
                 {
-                    if(rhs.FindMatchingRefNearAlias.TryGet(out var rhsFindMatchingRefNearAlias))
+                    if(rhs.FindMatchingRefNearAlias is {} rhsFindMatchingRefNearAlias)
                     {
                         item.FindMatchingRefNearAlias = rhsFindMatchingRefNearAlias.DeepCopy(
                             errorMask: errorMask,
@@ -3070,7 +3070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent);
                 try
                 {
-                    if(rhs.FindMatchingRefFromEvent.TryGet(out var rhsFindMatchingRefFromEvent))
+                    if(rhs.FindMatchingRefFromEvent is {} rhsFindMatchingRefFromEvent)
                     {
                         item.FindMatchingRefFromEvent = rhsFindMatchingRefFromEvent.DeepCopy(
                             errorMask: errorMask,
@@ -3387,35 +3387,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.UniqueActor,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALUA));
-            if (item.Location.TryGet(out var LocationItem))
+            if (item.Location is {} LocationItem)
             {
                 ((LocationAliasReferenceBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
                     item: LocationItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.External.TryGet(out var ExternalItem))
+            if (item.External is {} ExternalItem)
             {
                 ((ExternalAliasReferenceBinaryWriteTranslation)((IBinaryItem)ExternalItem).BinaryWriteTranslator).Write(
                     item: ExternalItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.CreateReferenceToObject.TryGet(out var CreateReferenceToObjectItem))
+            if (item.CreateReferenceToObject is {} CreateReferenceToObjectItem)
             {
                 ((CreateReferenceToObjectBinaryWriteTranslation)((IBinaryItem)CreateReferenceToObjectItem).BinaryWriteTranslator).Write(
                     item: CreateReferenceToObjectItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.FindMatchingRefNearAlias.TryGet(out var FindMatchingRefNearAliasItem))
+            if (item.FindMatchingRefNearAlias is {} FindMatchingRefNearAliasItem)
             {
                 ((FindMatchingRefNearAliasBinaryWriteTranslation)((IBinaryItem)FindMatchingRefNearAliasItem).BinaryWriteTranslator).Write(
                     item: FindMatchingRefNearAliasItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.FindMatchingRefFromEvent.TryGet(out var FindMatchingRefFromEventItem))
+            if (item.FindMatchingRefFromEvent is {} FindMatchingRefFromEventItem)
             {
                 ((FindMatchingRefFromEventBinaryWriteTranslation)((IBinaryItem)FindMatchingRefFromEventItem).BinaryWriteTranslator).Write(
                     item: FindMatchingRefFromEventItem,

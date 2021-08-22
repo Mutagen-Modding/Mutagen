@@ -94,21 +94,21 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Priority { get; set; } = default;
         #endregion
         #region Branch
-        private IFormLinkNullable<IDialogBranchGetter> _Branch = new FormLinkNullable<IDialogBranchGetter>();
+        private readonly IFormLinkNullable<IDialogBranchGetter> _Branch = new FormLinkNullable<IDialogBranchGetter>();
         public IFormLinkNullable<IDialogBranchGetter> Branch
         {
             get => _Branch;
-            set => _Branch = value.AsNullable();
+            set => _Branch.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogBranchGetter> IDialogTopicGetter.Branch => this.Branch;
         #endregion
         #region Quest
-        private IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
         public IFormLinkNullable<IQuestGetter> Quest
         {
             get => _Quest;
-            set => _Quest = value.AsNullable();
+            set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IDialogTopicGetter.Quest => this.Quest;
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.Responses?.Overall ?? true)
-                        && Responses.TryGet(out var ResponsesItem))
+                        && Responses is {} ResponsesItem)
                     {
                         fg.AppendLine("Responses =>");
                         fg.AppendLine("[");
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(SubtypeName, "SubtypeName");
                 fg.AppendItem(Timestamp, "Timestamp");
                 fg.AppendItem(Unknown, "Unknown");
-                if (Responses.TryGet(out var ResponsesItem))
+                if (Responses is {} ResponsesItem)
                 {
                     fg.AppendLine("Responses =>");
                     fg.AppendLine("[");
@@ -1008,8 +1008,8 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new TranslatedString? Name { get; set; }
         new Single Priority { get; set; }
-        new IFormLinkNullable<IDialogBranchGetter> Branch { get; }
-        new IFormLinkNullable<IQuestGetter> Quest { get; }
+        new IFormLinkNullable<IDialogBranchGetter> Branch { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
         new DialogTopic.TopicFlag TopicFlags { get; set; }
         new DialogTopic.CategoryEnum Category { get; set; }
         new DialogTopic.SubtypeEnum Subtype { get; set; }
@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1962,7 +1962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IDialogTopicGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }

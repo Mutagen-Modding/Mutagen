@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Event, "Event");
                     }
                     if ((printMask?.TextDisplayGlobals?.Overall ?? true)
-                        && TextDisplayGlobals.TryGet(out var TextDisplayGlobalsItem))
+                        && TextDisplayGlobals is {} TextDisplayGlobalsItem)
                     {
                         fg.AppendLine("TextDisplayGlobals =>");
                         fg.AppendLine("[");
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(ObjectWindowFilter, "ObjectWindowFilter");
                     }
                     if ((printMask?.DialogConditions?.Overall ?? true)
-                        && DialogConditions.TryGet(out var DialogConditionsItem))
+                        && DialogConditions is {} DialogConditionsItem)
                     {
                         fg.AppendLine("DialogConditions =>");
                         fg.AppendLine("[");
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.UnusedConditions?.Overall ?? true)
-                        && UnusedConditions.TryGet(out var UnusedConditionsItem))
+                        && UnusedConditions is {} UnusedConditionsItem)
                     {
                         fg.AppendLine("UnusedConditions =>");
                         fg.AppendLine("[");
@@ -824,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Stages?.Overall ?? true)
-                        && Stages.TryGet(out var StagesItem))
+                        && Stages is {} StagesItem)
                     {
                         fg.AppendLine("Stages =>");
                         fg.AppendLine("[");
@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Objectives?.Overall ?? true)
-                        && Objectives.TryGet(out var ObjectivesItem))
+                        && Objectives is {} ObjectivesItem)
                     {
                         fg.AppendLine("Objectives =>");
                         fg.AppendLine("[");
@@ -870,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Aliases?.Overall ?? true)
-                        && Aliases.TryGet(out var AliasesItem))
+                        && Aliases is {} AliasesItem)
                     {
                         fg.AppendLine("Aliases =>");
                         fg.AppendLine("[");
@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(Type, "Type");
                 fg.AppendItem(Event, "Event");
-                if (TextDisplayGlobals.TryGet(out var TextDisplayGlobalsItem))
+                if (TextDisplayGlobals is {} TextDisplayGlobalsItem)
                 {
                     fg.AppendLine("TextDisplayGlobals =>");
                     fg.AppendLine("[");
@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(ObjectWindowFilter, "ObjectWindowFilter");
-                if (DialogConditions.TryGet(out var DialogConditionsItem))
+                if (DialogConditions is {} DialogConditionsItem)
                 {
                     fg.AppendLine("DialogConditions =>");
                     fg.AppendLine("[");
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (UnusedConditions.TryGet(out var UnusedConditionsItem))
+                if (UnusedConditions is {} UnusedConditionsItem)
                 {
                     fg.AppendLine("UnusedConditions =>");
                     fg.AppendLine("[");
@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Stages.TryGet(out var StagesItem))
+                if (Stages is {} StagesItem)
                 {
                     fg.AppendLine("Stages =>");
                     fg.AppendLine("[");
@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Objectives.TryGet(out var ObjectivesItem))
+                if (Objectives is {} ObjectivesItem)
                 {
                     fg.AppendLine("Objectives =>");
                     fg.AppendLine("[");
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Aliases.TryGet(out var AliasesItem))
+                if (Aliases is {} AliasesItem)
                 {
                     fg.AppendLine("Aliases =>");
                     fg.AppendLine("[");
@@ -2090,12 +2090,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -2120,7 +2120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Type, "Type");
             }
             if ((printMask?.Event ?? true)
-                && item.Event.TryGet(out var EventItem))
+                && item.Event is {} EventItem)
             {
                 fg.AppendItem(EventItem, "Event");
             }
@@ -2143,7 +2143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.ObjectWindowFilter ?? true)
-                && item.ObjectWindowFilter.TryGet(out var ObjectWindowFilterItem))
+                && item.ObjectWindowFilter is {} ObjectWindowFilterItem)
             {
                 fg.AppendItem(ObjectWindowFilterItem, "ObjectWindowFilter");
             }
@@ -2238,7 +2238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
@@ -2394,11 +2394,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IQuestGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
@@ -2407,12 +2407,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.QuestFormVersion);
             hash.Add(item.Unknown);
             hash.Add(item.Type);
-            if (item.Event.TryGet(out var Eventitem))
+            if (item.Event is {} Eventitem)
             {
                 hash.Add(Eventitem);
             }
             hash.Add(item.TextDisplayGlobals);
-            if (item.ObjectWindowFilter.TryGet(out var ObjectWindowFilteritem))
+            if (item.ObjectWindowFilter is {} ObjectWindowFilteritem)
             {
                 hash.Add(ObjectWindowFilteritem);
             }
@@ -2421,7 +2421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Stages);
             hash.Add(item.Objectives);
             hash.Add(item.Aliases);
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
@@ -2568,7 +2568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -2934,7 +2934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((QuestAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,

@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static partial void WriteBinaryScriptFragmentsCustom(MutagenWriter writer, IDialogResponsesAdapterGetter item)
             {
-                if (!item.ScriptFragments.TryGet(out var frags)) return;
+                if (item.ScriptFragments is not { } frags) return;
                 frags.WriteToBinary(writer);
             }
         }

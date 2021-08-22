@@ -115,11 +115,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region ImageSpaceModifier
-        private IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
         public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
         {
             get => _ImageSpaceModifier;
-            set => _ImageSpaceModifier = value.AsNullable();
+            set => _ImageSpaceModifier.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> ICameraShotGetter.ImageSpaceModifier => this.ImageSpaceModifier;
@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single MinTime { get; set; }
         new Single TargetPercentBetweenActors { get; set; }
         new Single NearTargetDistance { get; set; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
         new CameraShot.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1423,7 +1423,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1615,7 +1615,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ICameraShotGetter item)
         {
             var hash = new HashCode();
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1661,7 +1661,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -1751,7 +1751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)CameraShot_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

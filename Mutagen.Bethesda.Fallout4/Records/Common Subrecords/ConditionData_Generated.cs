@@ -56,11 +56,11 @@ namespace Mutagen.Bethesda.Fallout4
         public UInt16 Unknown2 { get; set; } = default;
         #endregion
         #region ParameterOneRecord
-        private IFormLink<IFallout4MajorRecordGetter> _ParameterOneRecord = new FormLink<IFallout4MajorRecordGetter>();
+        private readonly IFormLink<IFallout4MajorRecordGetter> _ParameterOneRecord = new FormLink<IFallout4MajorRecordGetter>();
         public IFormLink<IFallout4MajorRecordGetter> ParameterOneRecord
         {
             get => _ParameterOneRecord;
-            set => _ParameterOneRecord = value.AsSetter();
+            set => _ParameterOneRecord.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFallout4MajorRecordGetter> IConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
@@ -74,11 +74,11 @@ namespace Mutagen.Bethesda.Fallout4
         String? IConditionDataGetter.ParameterOneString => this.ParameterOneString;
         #endregion
         #region ParameterTwoRecord
-        private IFormLink<IFallout4MajorRecordGetter> _ParameterTwoRecord = new FormLink<IFallout4MajorRecordGetter>();
+        private readonly IFormLink<IFallout4MajorRecordGetter> _ParameterTwoRecord = new FormLink<IFallout4MajorRecordGetter>();
         public IFormLink<IFallout4MajorRecordGetter> ParameterTwoRecord
         {
             get => _ParameterTwoRecord;
-            set => _ParameterTwoRecord = value.AsSetter();
+            set => _ParameterTwoRecord.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFallout4MajorRecordGetter> IConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
@@ -759,10 +759,10 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new Condition.FunctionType Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new IFormLink<IFallout4MajorRecordGetter> ParameterOneRecord { get; }
+        new IFormLink<IFallout4MajorRecordGetter> ParameterOneRecord { get; set; }
         new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
-        new IFormLink<IFallout4MajorRecordGetter> ParameterTwoRecord { get; }
+        new IFormLink<IFallout4MajorRecordGetter> ParameterTwoRecord { get; set; }
         new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
         new Condition.RunOnType RunOnType { get; set; }
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.ParameterOneNumber, "ParameterOneNumber");
             }
             if ((printMask?.ParameterOneString ?? true)
-                && item.ParameterOneString.TryGet(out var ParameterOneStringItem))
+                && item.ParameterOneString is {} ParameterOneStringItem)
             {
                 fg.AppendItem(ParameterOneStringItem, "ParameterOneString");
             }
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.ParameterTwoNumber, "ParameterTwoNumber");
             }
             if ((printMask?.ParameterTwoString ?? true)
-                && item.ParameterTwoString.TryGet(out var ParameterTwoStringItem))
+                && item.ParameterTwoString is {} ParameterTwoStringItem)
             {
                 fg.AppendItem(ParameterTwoStringItem, "ParameterTwoString");
             }
@@ -1290,13 +1290,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Unknown2);
             hash.Add(item.ParameterOneRecord);
             hash.Add(item.ParameterOneNumber);
-            if (item.ParameterOneString.TryGet(out var ParameterOneStringitem))
+            if (item.ParameterOneString is {} ParameterOneStringitem)
             {
                 hash.Add(ParameterOneStringitem);
             }
             hash.Add(item.ParameterTwoRecord);
             hash.Add(item.ParameterTwoNumber);
-            if (item.ParameterTwoString.TryGet(out var ParameterTwoStringitem))
+            if (item.ParameterTwoString is {} ParameterTwoStringitem)
             {
                 hash.Add(ParameterTwoStringitem);
             }

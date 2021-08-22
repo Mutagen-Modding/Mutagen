@@ -1678,82 +1678,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ForceNames, "ForceNames");
             }
             if ((printMask?.Aah_LipBigAah?.Overall ?? true)
-                && item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahItem))
+                && item.Aah_LipBigAah is {} Aah_LipBigAahItem)
             {
                 Aah_LipBigAahItem?.ToString(fg, "Aah_LipBigAah");
             }
             if ((printMask?.BigAah_LipDST?.Overall ?? true)
-                && item.BigAah_LipDST.TryGet(out var BigAah_LipDSTItem))
+                && item.BigAah_LipDST is {} BigAah_LipDSTItem)
             {
                 BigAah_LipDSTItem?.ToString(fg, "BigAah_LipDST");
             }
             if ((printMask?.BMP_LipEee?.Overall ?? true)
-                && item.BMP_LipEee.TryGet(out var BMP_LipEeeItem))
+                && item.BMP_LipEee is {} BMP_LipEeeItem)
             {
                 BMP_LipEeeItem?.ToString(fg, "BMP_LipEee");
             }
             if ((printMask?.ChJSh_LipFV?.Overall ?? true)
-                && item.ChJSh_LipFV.TryGet(out var ChJSh_LipFVItem))
+                && item.ChJSh_LipFV is {} ChJSh_LipFVItem)
             {
                 ChJSh_LipFVItem?.ToString(fg, "ChJSh_LipFV");
             }
             if ((printMask?.DST_LipK?.Overall ?? true)
-                && item.DST_LipK.TryGet(out var DST_LipKItem))
+                && item.DST_LipK is {} DST_LipKItem)
             {
                 DST_LipKItem?.ToString(fg, "DST_LipK");
             }
             if ((printMask?.Eee_LipL?.Overall ?? true)
-                && item.Eee_LipL.TryGet(out var Eee_LipLItem))
+                && item.Eee_LipL is {} Eee_LipLItem)
             {
                 Eee_LipLItem?.ToString(fg, "Eee_LipL");
             }
             if ((printMask?.Eh_LipR?.Overall ?? true)
-                && item.Eh_LipR.TryGet(out var Eh_LipRItem))
+                && item.Eh_LipR is {} Eh_LipRItem)
             {
                 Eh_LipRItem?.ToString(fg, "Eh_LipR");
             }
             if ((printMask?.FV_LipTh?.Overall ?? true)
-                && item.FV_LipTh.TryGet(out var FV_LipThItem))
+                && item.FV_LipTh is {} FV_LipThItem)
             {
                 FV_LipThItem?.ToString(fg, "FV_LipTh");
             }
             if ((printMask?.I?.Overall ?? true)
-                && item.I.TryGet(out var IItem))
+                && item.I is {} IItem)
             {
                 IItem?.ToString(fg, "I");
             }
             if ((printMask?.K?.Overall ?? true)
-                && item.K.TryGet(out var KItem))
+                && item.K is {} KItem)
             {
                 KItem?.ToString(fg, "K");
             }
             if ((printMask?.N?.Overall ?? true)
-                && item.N.TryGet(out var NItem))
+                && item.N is {} NItem)
             {
                 NItem?.ToString(fg, "N");
             }
             if ((printMask?.Oh?.Overall ?? true)
-                && item.Oh.TryGet(out var OhItem))
+                && item.Oh is {} OhItem)
             {
                 OhItem?.ToString(fg, "Oh");
             }
             if ((printMask?.OohQ?.Overall ?? true)
-                && item.OohQ.TryGet(out var OohQItem))
+                && item.OohQ is {} OohQItem)
             {
                 OohQItem?.ToString(fg, "OohQ");
             }
             if ((printMask?.R?.Overall ?? true)
-                && item.R.TryGet(out var RItem))
+                && item.R is {} RItem)
             {
                 RItem?.ToString(fg, "R");
             }
             if ((printMask?.Th?.Overall ?? true)
-                && item.Th.TryGet(out var ThItem))
+                && item.Th is {} ThItem)
             {
                 ThItem?.ToString(fg, "Th");
             }
             if ((printMask?.W?.Overall ?? true)
-                && item.W.TryGet(out var WItem))
+                && item.W is {} WItem)
             {
                 WItem?.ToString(fg, "W");
             }
@@ -1905,67 +1905,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ForceNames);
-            if (item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahitem))
+            if (item.Aah_LipBigAah is {} Aah_LipBigAahitem)
             {
                 hash.Add(Aah_LipBigAahitem);
             }
-            if (item.BigAah_LipDST.TryGet(out var BigAah_LipDSTitem))
+            if (item.BigAah_LipDST is {} BigAah_LipDSTitem)
             {
                 hash.Add(BigAah_LipDSTitem);
             }
-            if (item.BMP_LipEee.TryGet(out var BMP_LipEeeitem))
+            if (item.BMP_LipEee is {} BMP_LipEeeitem)
             {
                 hash.Add(BMP_LipEeeitem);
             }
-            if (item.ChJSh_LipFV.TryGet(out var ChJSh_LipFVitem))
+            if (item.ChJSh_LipFV is {} ChJSh_LipFVitem)
             {
                 hash.Add(ChJSh_LipFVitem);
             }
-            if (item.DST_LipK.TryGet(out var DST_LipKitem))
+            if (item.DST_LipK is {} DST_LipKitem)
             {
                 hash.Add(DST_LipKitem);
             }
-            if (item.Eee_LipL.TryGet(out var Eee_LipLitem))
+            if (item.Eee_LipL is {} Eee_LipLitem)
             {
                 hash.Add(Eee_LipLitem);
             }
-            if (item.Eh_LipR.TryGet(out var Eh_LipRitem))
+            if (item.Eh_LipR is {} Eh_LipRitem)
             {
                 hash.Add(Eh_LipRitem);
             }
-            if (item.FV_LipTh.TryGet(out var FV_LipThitem))
+            if (item.FV_LipTh is {} FV_LipThitem)
             {
                 hash.Add(FV_LipThitem);
             }
-            if (item.I.TryGet(out var Iitem))
+            if (item.I is {} Iitem)
             {
                 hash.Add(Iitem);
             }
-            if (item.K.TryGet(out var Kitem))
+            if (item.K is {} Kitem)
             {
                 hash.Add(Kitem);
             }
-            if (item.N.TryGet(out var Nitem))
+            if (item.N is {} Nitem)
             {
                 hash.Add(Nitem);
             }
-            if (item.Oh.TryGet(out var Ohitem))
+            if (item.Oh is {} Ohitem)
             {
                 hash.Add(Ohitem);
             }
-            if (item.OohQ.TryGet(out var OohQitem))
+            if (item.OohQ is {} OohQitem)
             {
                 hash.Add(OohQitem);
             }
-            if (item.R.TryGet(out var Ritem))
+            if (item.R is {} Ritem)
             {
                 hash.Add(Ritem);
             }
-            if (item.Th.TryGet(out var Thitem))
+            if (item.Th is {} Thitem)
             {
                 hash.Add(Thitem);
             }
-            if (item.W.TryGet(out var Witem))
+            if (item.W is {} Witem)
             {
                 hash.Add(Witem);
             }
@@ -2010,7 +2010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah);
                 try
                 {
-                    if(rhs.Aah_LipBigAah.TryGet(out var rhsAah_LipBigAah))
+                    if(rhs.Aah_LipBigAah is {} rhsAah_LipBigAah)
                     {
                         item.Aah_LipBigAah = rhsAah_LipBigAah.DeepCopy(
                             errorMask: errorMask,
@@ -2036,7 +2036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST);
                 try
                 {
-                    if(rhs.BigAah_LipDST.TryGet(out var rhsBigAah_LipDST))
+                    if(rhs.BigAah_LipDST is {} rhsBigAah_LipDST)
                     {
                         item.BigAah_LipDST = rhsBigAah_LipDST.DeepCopy(
                             errorMask: errorMask,
@@ -2062,7 +2062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.BMP_LipEee);
                 try
                 {
-                    if(rhs.BMP_LipEee.TryGet(out var rhsBMP_LipEee))
+                    if(rhs.BMP_LipEee is {} rhsBMP_LipEee)
                     {
                         item.BMP_LipEee = rhsBMP_LipEee.DeepCopy(
                             errorMask: errorMask,
@@ -2088,7 +2088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV);
                 try
                 {
-                    if(rhs.ChJSh_LipFV.TryGet(out var rhsChJSh_LipFV))
+                    if(rhs.ChJSh_LipFV is {} rhsChJSh_LipFV)
                     {
                         item.ChJSh_LipFV = rhsChJSh_LipFV.DeepCopy(
                             errorMask: errorMask,
@@ -2114,7 +2114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.DST_LipK);
                 try
                 {
-                    if(rhs.DST_LipK.TryGet(out var rhsDST_LipK))
+                    if(rhs.DST_LipK is {} rhsDST_LipK)
                     {
                         item.DST_LipK = rhsDST_LipK.DeepCopy(
                             errorMask: errorMask,
@@ -2140,7 +2140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Eee_LipL);
                 try
                 {
-                    if(rhs.Eee_LipL.TryGet(out var rhsEee_LipL))
+                    if(rhs.Eee_LipL is {} rhsEee_LipL)
                     {
                         item.Eee_LipL = rhsEee_LipL.DeepCopy(
                             errorMask: errorMask,
@@ -2166,7 +2166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Eh_LipR);
                 try
                 {
-                    if(rhs.Eh_LipR.TryGet(out var rhsEh_LipR))
+                    if(rhs.Eh_LipR is {} rhsEh_LipR)
                     {
                         item.Eh_LipR = rhsEh_LipR.DeepCopy(
                             errorMask: errorMask,
@@ -2192,7 +2192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.FV_LipTh);
                 try
                 {
-                    if(rhs.FV_LipTh.TryGet(out var rhsFV_LipTh))
+                    if(rhs.FV_LipTh is {} rhsFV_LipTh)
                     {
                         item.FV_LipTh = rhsFV_LipTh.DeepCopy(
                             errorMask: errorMask,
@@ -2218,7 +2218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.I);
                 try
                 {
-                    if(rhs.I.TryGet(out var rhsI))
+                    if(rhs.I is {} rhsI)
                     {
                         item.I = rhsI.DeepCopy(
                             errorMask: errorMask,
@@ -2244,7 +2244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.K);
                 try
                 {
-                    if(rhs.K.TryGet(out var rhsK))
+                    if(rhs.K is {} rhsK)
                     {
                         item.K = rhsK.DeepCopy(
                             errorMask: errorMask,
@@ -2270,7 +2270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.N);
                 try
                 {
-                    if(rhs.N.TryGet(out var rhsN))
+                    if(rhs.N is {} rhsN)
                     {
                         item.N = rhsN.DeepCopy(
                             errorMask: errorMask,
@@ -2296,7 +2296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Oh);
                 try
                 {
-                    if(rhs.Oh.TryGet(out var rhsOh))
+                    if(rhs.Oh is {} rhsOh)
                     {
                         item.Oh = rhsOh.DeepCopy(
                             errorMask: errorMask,
@@ -2322,7 +2322,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.OohQ);
                 try
                 {
-                    if(rhs.OohQ.TryGet(out var rhsOohQ))
+                    if(rhs.OohQ is {} rhsOohQ)
                     {
                         item.OohQ = rhsOohQ.DeepCopy(
                             errorMask: errorMask,
@@ -2348,7 +2348,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.R);
                 try
                 {
-                    if(rhs.R.TryGet(out var rhsR))
+                    if(rhs.R is {} rhsR)
                     {
                         item.R = rhsR.DeepCopy(
                             errorMask: errorMask,
@@ -2374,7 +2374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Th);
                 try
                 {
-                    if(rhs.Th.TryGet(out var rhsTh))
+                    if(rhs.Th is {} rhsTh)
                     {
                         item.Th = rhsTh.DeepCopy(
                             errorMask: errorMask,
@@ -2400,7 +2400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.W);
                 try
                 {
-                    if(rhs.W.TryGet(out var rhsW))
+                    if(rhs.W is {} rhsW)
                     {
                         item.W = rhsW.DeepCopy(
                             errorMask: errorMask,

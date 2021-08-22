@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Mesh
-        private IFormLink<IANavigationMeshGetter> _Mesh = new FormLink<IANavigationMeshGetter>();
+        private readonly IFormLink<IANavigationMeshGetter> _Mesh = new FormLink<IANavigationMeshGetter>();
         public IFormLink<IANavigationMeshGetter> Mesh
         {
             get => _Mesh;
-            set => _Mesh = value.AsSetter();
+            set => _Mesh.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IANavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEdgeLink>
     {
         new Int32 Unknown { get; set; }
-        new IFormLink<IANavigationMeshGetter> Mesh { get; }
+        new IFormLink<IANavigationMeshGetter> Mesh { get; set; }
         new Int16 TriangleIndex { get; set; }
     }
 

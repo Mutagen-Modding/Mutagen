@@ -853,12 +853,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FindMatchingRefFromEvent.Mask<bool>? printMask = null)
         {
             if ((printMask?.FromEvent ?? true)
-                && item.FromEvent.TryGet(out var FromEventItem))
+                && item.FromEvent is {} FromEventItem)
             {
                 fg.AppendItem(FromEventItem, "FromEvent");
             }
             if ((printMask?.EventData ?? true)
-                && item.EventData.TryGet(out var EventDataItem))
+                && item.EventData is {} EventDataItem)
             {
                 fg.AppendLine($"EventData => {SpanExt.ToHexString(EventDataItem)}");
             }
@@ -885,11 +885,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IFindMatchingRefFromEventGetter item)
         {
             var hash = new HashCode();
-            if (item.FromEvent.TryGet(out var FromEventitem))
+            if (item.FromEvent is {} FromEventitem)
             {
                 hash.Add(FromEventitem);
             }
-            if (item.EventData.TryGet(out var EventDataItem))
+            if (item.EventData is {} EventDataItem)
             {
                 hash.Add(EventDataItem);
             }
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FindMatchingRefFromEvent_FieldIndex.EventData) ?? true))
             {
-                if(rhs.EventData.TryGet(out var EventDatarhs))
+                if(rhs.EventData is {} EventDatarhs)
                 {
                     item.EventData = EventDatarhs.ToArray();
                 }

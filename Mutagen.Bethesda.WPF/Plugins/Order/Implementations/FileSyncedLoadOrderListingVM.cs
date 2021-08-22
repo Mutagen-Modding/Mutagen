@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reactive.Linq;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Noggog;
@@ -25,13 +26,15 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations
         private readonly ObservableAsPropertyHelper<bool> _Ghosted;
         public bool Ghosted => _Ghosted.Value;
 
-        public FileSyncedLoadOrderListingVM(FileSyncedLoadOrderVM loadOrder, IModListingGetter listing)
+        public FileSyncedLoadOrderListingVM(
+            IDataDirectoryProvider dataDirectoryContext,
+            IModListingGetter listing)
         {
             ModKey = listing.ModKey;
             Enabled = listing.Enabled;
             GhostSuffix = listing.GhostSuffix;
             
-            var path = Path.Combine(loadOrder.DataFolderPath, listing.ModKey.FileName);
+            var path = Path.Combine(dataDirectoryContext.Path, listing.ModKey.FileName);
             var exists = File.Exists(path);
             _Exists = Observable.Defer(() =>
                     Noggog.ObservableExt.WatchFile(path)
@@ -48,7 +51,7 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations
 
         public override string ToString()
         {
-            return IModListingExt.ToString(this);
+            return IModListingGetter.ToString(this);
         }
     }
 }

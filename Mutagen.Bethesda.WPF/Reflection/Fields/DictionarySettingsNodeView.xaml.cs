@@ -19,32 +19,32 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.FocusSettingCommand)
-                    .BindToStrict(this, x => x.SettingNameButton.Command)
+                    .BindTo(this, x => x.SettingNameButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
-                    .BindToStrict(this, x => x.SettingsNameBlock.Text)
+                    .BindTo(this, x => x.SettingsNameBlock.Text)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Items)
-                    .BindToStrict(this, x => x.TabControl.ItemsSource)
+                    .BindTo(this, x => x.TabControl.ItemsSource)
                     .DisposeWith(disposable);
-                this.BindStrict(this.ViewModel, vm => vm.Selected, v => v.TabControl.SelectedItem)
+                this.Bind(this.ViewModel, vm => vm.Selected, v => v.TabControl.SelectedItem)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.AddCommand)
-                    .BindToStrict(this, x => x.AddButton.Command)
+                    .BindTo(this, x => x.AddButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.DeleteCommand)
-                    .BindToStrict(this, x => x.DeleteButton.Command)
+                    .BindTo(this, x => x.DeleteButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.ConfirmCommand)
-                    .BindToStrict(this, x => x.ConfirmButton.Command)
+                    .BindTo(this, x => x.ConfirmButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.MidDelete)
                     .Select(x => x ? Visibility.Visible : Visibility.Collapsed)
-                    .BindToStrict(this, x => x.ConfirmButton.Visibility)
+                    .BindTo(this, x => x.ConfirmButton.Visibility)
                     .DisposeWith(disposable);
 
-                this.BindStrict(this.ViewModel, vm => vm.AddPaneText, v => v.AddNewPaneBox.Text)
+                this.Bind(this.ViewModel, vm => vm.AddPaneText, v => v.AddNewPaneBox.Text)
                     .DisposeWith(disposable);
             });
         }

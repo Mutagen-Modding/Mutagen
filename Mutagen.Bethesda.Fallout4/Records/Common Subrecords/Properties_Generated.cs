@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Fallout4
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.PropertyList?.Overall ?? true)
-                        && PropertyList.TryGet(out var PropertyListItem))
+                        && PropertyList is {} PropertyListItem)
                     {
                         fg.AppendLine("PropertyList =>");
                         fg.AppendLine("[");
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                if (PropertyList.TryGet(out var PropertyListItem))
+                if (PropertyList is {} PropertyListItem)
                 {
                     fg.AppendLine("PropertyList =>");
                     fg.AppendLine("[");

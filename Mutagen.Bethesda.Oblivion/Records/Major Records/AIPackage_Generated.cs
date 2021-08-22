@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
                         Target?.ToString(fg);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Location?.ToString(fg);
                 Schedule?.ToString(fg);
                 Target?.ToString(fg);
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1184,22 +1184,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.Location?.Overall ?? true)
-                && item.Location.TryGet(out var LocationItem))
+                && item.Location is {} LocationItem)
             {
                 LocationItem?.ToString(fg, "Location");
             }
             if ((printMask?.Schedule?.Overall ?? true)
-                && item.Schedule.TryGet(out var ScheduleItem))
+                && item.Schedule is {} ScheduleItem)
             {
                 ScheduleItem?.ToString(fg, "Schedule");
             }
             if ((printMask?.Target?.Overall ?? true)
-                && item.Target.TryGet(out var TargetItem))
+                && item.Target is {} TargetItem)
             {
                 TargetItem?.ToString(fg, "Target");
             }
@@ -1331,19 +1331,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IAIPackageGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.Location.TryGet(out var Locationitem))
+            if (item.Location is {} Locationitem)
             {
                 hash.Add(Locationitem);
             }
-            if (item.Schedule.TryGet(out var Scheduleitem))
+            if (item.Schedule is {} Scheduleitem)
             {
                 hash.Add(Scheduleitem);
             }
-            if (item.Target.TryGet(out var Targetitem))
+            if (item.Target is {} Targetitem)
             {
                 hash.Add(Targetitem);
             }
@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Location.TryGet(out var LocationItems))
+            if (obj.Location is {} LocationItems)
             {
                 foreach (var item in LocationItems.ContainedFormLinks)
                 {
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1489,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Location);
                 try
                 {
-                    if(rhs.Location.TryGet(out var rhsLocation))
+                    if(rhs.Location is {} rhsLocation)
                     {
                         item.Location = rhsLocation.DeepCopy(
                             errorMask: errorMask,
@@ -1515,7 +1515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Schedule);
                 try
                 {
-                    if(rhs.Schedule.TryGet(out var rhsSchedule))
+                    if(rhs.Schedule is {} rhsSchedule)
                     {
                         item.Schedule = rhsSchedule.DeepCopy(
                             errorMask: errorMask,
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Target);
                 try
                 {
-                    if(rhs.Target.TryGet(out var rhsTarget))
+                    if(rhs.Target is {} rhsTarget)
                     {
                         item.Target = rhsTarget.DeepCopy(
                             errorMask: errorMask,
@@ -1743,28 +1743,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((AIPackageDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Location.TryGet(out var LocationItem))
+            if (item.Location is {} LocationItem)
             {
                 ((AIPackageLocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
                     item: LocationItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Schedule.TryGet(out var ScheduleItem))
+            if (item.Schedule is {} ScheduleItem)
             {
                 ((AIPackageScheduleBinaryWriteTranslation)((IBinaryItem)ScheduleItem).BinaryWriteTranslator).Write(
                     item: ScheduleItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Target.TryGet(out var TargetItem))
+            if (item.Target is {} TargetItem)
             {
                 ((AIPackageTargetBinaryWriteTranslation)((IBinaryItem)TargetItem).BinaryWriteTranslator).Write(
                     item: TargetItem,

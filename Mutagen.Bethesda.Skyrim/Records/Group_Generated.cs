@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.RecordCache.Items,
                 transl: (MutagenWriter r, T dictSubItem) =>
                 {
-                    if (dictSubItem.TryGet(out var Item))
+                    if (dictSubItem is {} Item)
                     {
                         ((SkyrimMajorRecordBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,

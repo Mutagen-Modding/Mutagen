@@ -96,11 +96,11 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundMarkerGetter.SNDD => this.SNDD;
         #endregion
         #region SoundDescriptor
-        private IFormLinkNullable<ISoundDescriptorGetter> _SoundDescriptor = new FormLinkNullable<ISoundDescriptorGetter>();
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _SoundDescriptor = new FormLinkNullable<ISoundDescriptorGetter>();
         public IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor
         {
             get => _SoundDescriptor;
-            set => _SoundDescriptor = value.AsNullable();
+            set => _SoundDescriptor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundMarkerGetter.SoundDescriptor => this.SoundDescriptor;
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new MemorySlice<Byte>? SNDD { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; set; }
     }
 
     public partial interface ISoundMarkerInternal :
@@ -1071,12 +1071,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.FNAM ?? true)
-                && item.FNAM.TryGet(out var FNAMItem))
+                && item.FNAM is {} FNAMItem)
             {
                 fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
             if ((printMask?.SNDD ?? true)
-                && item.SNDD.TryGet(out var SNDDItem))
+                && item.SNDD is {} SNDDItem)
             {
                 fg.AppendLine($"SNDD => {SpanExt.ToHexString(SNDDItem)}");
             }
@@ -1181,11 +1181,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.FNAM.TryGet(out var FNAMItem))
+            if (item.FNAM is {} FNAMItem)
             {
                 hash.Add(FNAMItem);
             }
-            if (item.SNDD.TryGet(out var SNDDItem))
+            if (item.SNDD is {} SNDDItem)
             {
                 hash.Add(SNDDItem);
             }
@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.FNAM) ?? true))
             {
-                if(rhs.FNAM.TryGet(out var FNAMrhs))
+                if(rhs.FNAM is {} FNAMrhs)
                 {
                     item.FNAM = FNAMrhs.ToArray();
                 }
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.SNDD) ?? true))
             {
-                if(rhs.SNDD.TryGet(out var SNDDrhs))
+                if(rhs.SNDD is {} SNDDrhs)
                 {
                     item.SNDD = SNDDrhs.ToArray();
                 }

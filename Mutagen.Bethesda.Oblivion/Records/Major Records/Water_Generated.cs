@@ -73,11 +73,11 @@ namespace Mutagen.Bethesda.Oblivion
         String? IWaterGetter.MaterialID => this.MaterialID;
         #endregion
         #region Sound
-        private IFormLinkNullable<ISoundGetter> _Sound = new FormLinkNullable<ISoundGetter>();
+        private readonly IFormLinkNullable<ISoundGetter> _Sound = new FormLinkNullable<ISoundGetter>();
         public IFormLinkNullable<ISoundGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsNullable();
+            set => _Sound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IWaterGetter.Sound => this.Sound;
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte? Opacity { get; set; }
         new Water.Flag? Flags { get; set; }
         new String? MaterialID { get; set; }
-        new IFormLinkNullable<ISoundGetter> Sound { get; }
+        new IFormLinkNullable<ISoundGetter> Sound { get; set; }
         new WaterData? Data { get; set; }
         new RelatedWaters? RelatedWaters { get; set; }
     }
@@ -1145,22 +1145,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Texture ?? true)
-                && item.Texture.TryGet(out var TextureItem))
+                && item.Texture is {} TextureItem)
             {
                 fg.AppendItem(TextureItem, "Texture");
             }
             if ((printMask?.Opacity ?? true)
-                && item.Opacity.TryGet(out var OpacityItem))
+                && item.Opacity is {} OpacityItem)
             {
                 fg.AppendItem(OpacityItem, "Opacity");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.MaterialID ?? true)
-                && item.MaterialID.TryGet(out var MaterialIDItem))
+                && item.MaterialID is {} MaterialIDItem)
             {
                 fg.AppendItem(MaterialIDItem, "MaterialID");
             }
@@ -1169,12 +1169,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.RelatedWaters?.Overall ?? true)
-                && item.RelatedWaters.TryGet(out var RelatedWatersItem))
+                && item.RelatedWaters is {} RelatedWatersItem)
             {
                 RelatedWatersItem?.ToString(fg, "RelatedWaters");
             }
@@ -1288,28 +1288,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IWaterGetter item)
         {
             var hash = new HashCode();
-            if (item.Texture.TryGet(out var Textureitem))
+            if (item.Texture is {} Textureitem)
             {
                 hash.Add(Textureitem);
             }
-            if (item.Opacity.TryGet(out var Opacityitem))
+            if (item.Opacity is {} Opacityitem)
             {
                 hash.Add(Opacityitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.MaterialID.TryGet(out var MaterialIDitem))
+            if (item.MaterialID is {} MaterialIDitem)
             {
                 hash.Add(MaterialIDitem);
             }
             hash.Add(item.Sound);
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.RelatedWaters.TryGet(out var RelatedWatersitem))
+            if (item.RelatedWaters is {} RelatedWatersitem)
             {
                 hash.Add(RelatedWatersitem);
             }
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Sound);
             }
-            if (obj.RelatedWaters.TryGet(out var RelatedWatersItems))
+            if (obj.RelatedWaters is {} RelatedWatersItems)
             {
                 foreach (var item in RelatedWatersItems.ContainedFormLinks)
                 {
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1478,7 +1478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
                 try
                 {
-                    if(rhs.RelatedWaters.TryGet(out var rhsRelatedWaters))
+                    if(rhs.RelatedWaters is {} rhsRelatedWaters)
                     {
                         item.RelatedWaters = rhsRelatedWaters.DeepCopy(
                             errorMask: errorMask,
@@ -1682,7 +1682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WaterBinaryWriteTranslation.WriteBinaryData(
                 writer: writer,
                 item: item);
-            if (item.RelatedWaters.TryGet(out var RelatedWatersItem))
+            if (item.RelatedWaters is {} RelatedWatersItem)
             {
                 ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)RelatedWatersItem).BinaryWriteTranslator).Write(
                     item: RelatedWatersItem,

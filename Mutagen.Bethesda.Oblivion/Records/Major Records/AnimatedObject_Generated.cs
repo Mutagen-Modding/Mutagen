@@ -72,11 +72,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region IdleAnimation
-        private IFormLinkNullable<IIdleAnimationGetter> _IdleAnimation = new FormLinkNullable<IIdleAnimationGetter>();
+        private readonly IFormLinkNullable<IIdleAnimationGetter> _IdleAnimation = new FormLinkNullable<IIdleAnimationGetter>();
         public IFormLinkNullable<IIdleAnimationGetter> IdleAnimation
         {
             get => _IdleAnimation;
-            set => _IdleAnimation = value.AsNullable();
+            set => _IdleAnimation.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IAnimatedObjectGetter.IdleAnimation => this.IdleAnimation;
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; }
+        new IFormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; set; }
     }
 
     public partial interface IAnimatedObjectInternal :
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IAnimatedObjectGetter item)
         {
             var hash = new HashCode();
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AnimatedObject_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

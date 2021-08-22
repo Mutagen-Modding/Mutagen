@@ -64,11 +64,11 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte> ILockInformationGetter.Unused => this.Unused;
         #endregion
         #region Key
-        private IFormLink<IKeyGetter> _Key = new FormLink<IKeyGetter>();
+        private readonly IFormLink<IKeyGetter> _Key = new FormLink<IKeyGetter>();
         public IFormLink<IKeyGetter> Key
         {
             get => _Key;
-            set => _Key = value.AsSetter();
+            set => _Key.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeyGetter> ILockInformationGetter.Key => this.Key;
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte LockLevel { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
-        new IFormLink<IKeyGetter> Key { get; }
+        new IFormLink<IKeyGetter> Key { get; set; }
         new LockInformation.Flag Flags { get; set; }
     }
 

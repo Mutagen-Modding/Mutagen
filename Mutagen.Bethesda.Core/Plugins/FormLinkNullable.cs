@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Plugins
         /// <summary>
         /// True if unlinked and ID points to Null
         /// </summary>
-        public bool IsNull => this._formKey?.IsNull ?? true;
+        public bool IsNull => _formKey?.IsNull ?? true;
 
         /// <summary>
         /// Default Equality
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Plugins
         /// Returns hash code
         /// </summary>
         /// <returns>Hash code evaluated from FormKey member</returns>
-        public override int GetHashCode() => this._formKey?.GetHashCode() ?? 0;
+        public override int GetHashCode() => _formKey?.GetHashCode() ?? 0;
 
         /// <summary>
         /// Returns string representation of link
@@ -115,12 +115,12 @@ namespace Mutagen.Bethesda.Plugins
         /// <returns>True if FormKey is not null</returns> 
         public bool TryResolveFormKey(ILinkCache cache, [MaybeNullWhen(false)] out FormKey formKey)
         {
-            if (this._formKey == null)
+            if (_formKey == null)
             {
                 formKey = default!;
                 return false;
             }
-            formKey = this._formKey.Value;
+            formKey = _formKey.Value;
             return true;
         }
 
@@ -129,9 +129,9 @@ namespace Mutagen.Bethesda.Plugins
         /// </summary> 
         /// <param name="modKey">ModKey if found</param> 
         /// <returns>True if FormKey is not null</returns> 
-        public bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
+        public bool TryGetModKey(out ModKey modKey)
         {
-            if (this._formKey.TryGet(out var formKey))
+            if (_formKey is {} formKey)
             {
                 modKey = formKey.ModKey;
                 return true;
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Plugins
         /// </summary>
         public FormLinkNullable(FormKey? formKey)
         {
-            this._formKey = formKey;
+            _formKey = formKey;
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Plugins
         /// </summary>
         public FormLinkNullable(TMajorGetter? record)
         {
-            this._formKey = record?.FormKey;
+            _formKey = record?.FormKey;
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Plugins
         /// <param name="formKey">Target FormKey to link to</param>
         public void SetTo(FormKey? formKey)
         {
-            this._formKey = formKey;
+            _formKey = formKey;
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Plugins
         /// <param name="record">Target record to link to</param>
         public void SetTo(TMajorGetter? record)
         {
-            this._formKey = record?.FormKey;
+            _formKey = record?.FormKey;
         }
 
         /// <summary>
@@ -230,17 +230,17 @@ namespace Mutagen.Bethesda.Plugins
         /// <param name="link">Target link to set to</param>
         public void SetTo(IFormLinkNullableGetter<TMajorGetter> link)
         {
-            this._formKey = link.FormKeyNullable;
+            _formKey = link.FormKeyNullable;
         }
 
         public void Clear()
         {
-            this._formKey = null;
+            _formKey = null;
         }
 
         public void SetToNull()
         {
-            this._formKey = null;
+            _formKey = null;
         }
 
         public static implicit operator FormLinkNullable<TMajorGetter>(TMajorGetter? major)

@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Ability
-        private IFormLink<ISpellGetter> _Ability = new FormLink<ISpellGetter>();
+        private readonly IFormLink<ISpellGetter> _Ability = new FormLink<ISpellGetter>();
         public IFormLink<ISpellGetter> Ability
         {
             get => _Ability;
-            set => _Ability = value.AsSetter();
+            set => _Ability.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> IPerkAbilityEffectGetter.Ability => this.Ability;
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkAbilityEffect>,
         IPerkAbilityEffectGetter
     {
-        new IFormLink<ISpellGetter> Ability { get; }
+        new IFormLink<ISpellGetter> Ability { get; set; }
     }
 
     public partial interface IPerkAbilityEffectGetter :

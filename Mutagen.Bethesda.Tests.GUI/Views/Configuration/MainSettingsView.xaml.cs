@@ -21,26 +21,26 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.BindStrict(this.ViewModel, x => x.TestNormal, x => x.TestNormal.IsChecked)
+                this.Bind(this.ViewModel, x => x.TestNormal, x => x.TestNormal.IsChecked)
                     .DisposeWith(disposable);
-                this.BindStrict(this.ViewModel, x => x.TestOverlay, x => x.TestOverlay.IsChecked)
+                this.Bind(this.ViewModel, x => x.TestOverlay, x => x.TestOverlay.IsChecked)
                     .DisposeWith(disposable);
-                this.BindStrict(this.ViewModel, x => x.TestImport, x => x.TestImport.IsChecked)
+                this.Bind(this.ViewModel, x => x.TestImport, x => x.TestImport.IsChecked)
                     .DisposeWith(disposable);
-                this.BindStrict(this.ViewModel, x => x.TestCopyIn, x => x.TestCopyIn.IsChecked)
+                this.Bind(this.ViewModel, x => x.TestCopyIn, x => x.TestCopyIn.IsChecked)
                     .DisposeWith(disposable);
-                this.BindStrict(this.ViewModel, x => x.TestEquals, x => x.TestEquals.IsChecked)
+                this.Bind(this.ViewModel, x => x.TestEquals, x => x.TestEquals.IsChecked)
                     .DisposeWith(disposable);
 
-                this.BindStrict(this.ViewModel, x => x.CacheDecompression, x => x.CacheDecompression.IsChecked)
+                this.Bind(this.ViewModel, x => x.CacheDecompression, x => x.CacheDecompression.IsChecked)
                     .DisposeWith(disposable);
-                this.BindStrict(this.ViewModel, x => x.CacheAlignment, x => x.CacheAlignment.IsChecked)
+                this.Bind(this.ViewModel, x => x.CacheAlignment, x => x.CacheAlignment.IsChecked)
                     .DisposeWith(disposable);
-                this.BindStrict(this.ViewModel, x => x.CacheProcessing, x => x.CacheProcessing.IsChecked)
+                this.Bind(this.ViewModel, x => x.CacheProcessing, x => x.CacheProcessing.IsChecked)
                     .DisposeWith(disposable);
 
                 this.WhenAnyFallback(x => x.ViewModel!.DataFoldersDisplay)
-                    .BindToStrict(this, x => x.DataFolders.ItemsSource)
+                    .BindTo(this, x => x.DataFolders.ItemsSource)
                     .DisposeWith(disposable);
             });
         }

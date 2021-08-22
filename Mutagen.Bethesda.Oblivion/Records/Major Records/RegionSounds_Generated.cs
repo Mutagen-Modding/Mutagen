@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(MusicType, "MusicType");
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
-                        && Sounds.TryGet(out var SoundsItem))
+                        && Sounds is {} SoundsItem)
                     {
                         fg.AppendLine("Sounds =>");
                         fg.AppendLine("[");
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(MusicType, "MusicType");
-                if (Sounds.TryGet(out var SoundsItem))
+                if (Sounds is {} SoundsItem)
                 {
                     fg.AppendLine("Sounds =>");
                     fg.AppendLine("[");
@@ -916,12 +916,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.MusicType ?? true)
-                && item.MusicType.TryGet(out var MusicTypeItem))
+                && item.MusicType is {} MusicTypeItem)
             {
                 fg.AppendItem(MusicTypeItem, "MusicType");
             }
             if ((printMask?.Sounds?.Overall ?? true)
-                && item.Sounds.TryGet(out var SoundsItem))
+                && item.Sounds is {} SoundsItem)
             {
                 fg.AppendLine("Sounds =>");
                 fg.AppendLine("[");
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IRegionSoundsGetter item)
         {
             var hash = new HashCode();
-            if (item.MusicType.TryGet(out var MusicTypeitem))
+            if (item.MusicType is {} MusicTypeitem)
             {
                 hash.Add(MusicTypeitem);
             }
@@ -1014,7 +1014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Sounds.TryGet(out var SoundsItem))
+            if (obj.Sounds is {} SoundsItem)
             {
                 foreach (var item in SoundsItem.SelectMany(f => f.ContainedFormLinks))
                 {

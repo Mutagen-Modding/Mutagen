@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendItem(FunctionType, "FunctionType");
                     }
                     if ((printMask?.Instructions?.Overall ?? true)
-                        && Instructions.TryGet(out var InstructionsItem))
+                        && Instructions is {} InstructionsItem)
                     {
                         fg.AppendLine("Instructions =>");
                         fg.AppendLine("[");
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Pex
                 fg.AppendItem(StateName, "StateName");
                 fg.AppendItem(FunctionName, "FunctionName");
                 fg.AppendItem(FunctionType, "FunctionType");
-                if (Instructions.TryGet(out var InstructionsItem))
+                if (Instructions is {} InstructionsItem)
                 {
                     fg.AppendLine("Instructions =>");
                     fg.AppendLine("[");

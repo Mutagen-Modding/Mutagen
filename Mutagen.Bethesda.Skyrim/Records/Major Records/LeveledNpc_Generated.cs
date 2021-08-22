@@ -80,11 +80,11 @@ namespace Mutagen.Bethesda.Skyrim
         public LeveledNpc.Flag Flags { get; set; } = default;
         #endregion
         #region Global
-        private IFormLinkNullable<IGlobalGetter> _Global = new FormLinkNullable<IGlobalGetter>();
+        private readonly IFormLinkNullable<IGlobalGetter> _Global = new FormLinkNullable<IGlobalGetter>();
         public IFormLinkNullable<IGlobalGetter> Global
         {
             get => _Global;
-            set => _Global = value.AsNullable();
+            set => _Global.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> ILeveledNpcGetter.Global => this.Global;
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Global, "Global");
                     }
                     if ((printMask?.Entries?.Overall ?? true)
-                        && Entries.TryGet(out var EntriesItem))
+                        && Entries is {} EntriesItem)
                     {
                         fg.AppendLine("Entries =>");
                         fg.AppendLine("[");
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(ChanceNone, "ChanceNone");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Global, "Global");
-                if (Entries.TryGet(out var EntriesItem))
+                if (Entries is {} EntriesItem)
                 {
                     fg.AppendLine("Entries =>");
                     fg.AppendLine("[");
@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
         new LeveledNpc.Flag Flags { get; set; }
-        new IFormLinkNullable<IGlobalGetter> Global { get; }
+        new IFormLinkNullable<IGlobalGetter> Global { get; set; }
         new ExtendedList<LeveledNpcEntry>? Entries { get; set; }
         /// <summary>
         /// Aspects: IModeled
@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Global.FormKeyNullable, "Global");
             }
             if ((printMask?.Entries?.Overall ?? true)
-                && item.Entries.TryGet(out var EntriesItem))
+                && item.Entries is {} EntriesItem)
             {
                 fg.AppendLine("Entries =>");
                 fg.AppendLine("[");
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Flags);
             hash.Add(item.Global);
             hash.Add(item.Entries);
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1437,7 +1437,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Global);
             }
-            if (obj.Entries.TryGet(out var EntriesItem))
+            if (obj.Entries is {} EntriesItem)
             {
                 foreach (var item in EntriesItem.WhereCastable<ILeveledNpcEntryGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))
@@ -1445,7 +1445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -1597,7 +1597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)LeveledNpc_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

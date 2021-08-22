@@ -900,17 +900,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Rank.Mask<bool>? printMask = null)
         {
             if ((printMask?.Number ?? true)
-                && item.Number.TryGet(out var NumberItem))
+                && item.Number is {} NumberItem)
             {
                 fg.AppendItem(NumberItem, "Number");
             }
             if ((printMask?.Title?.Overall ?? true)
-                && item.Title.TryGet(out var TitleItem))
+                && item.Title is {} TitleItem)
             {
                 TitleItem?.ToString(fg, "Title");
             }
             if ((printMask?.InsigniaUnused ?? true)
-                && item.InsigniaUnused.TryGet(out var InsigniaUnusedItem))
+                && item.InsigniaUnused is {} InsigniaUnusedItem)
             {
                 fg.AppendItem(InsigniaUnusedItem, "InsigniaUnused");
             }
@@ -941,15 +941,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IRankGetter item)
         {
             var hash = new HashCode();
-            if (item.Number.TryGet(out var Numberitem))
+            if (item.Number is {} Numberitem)
             {
                 hash.Add(Numberitem);
             }
-            if (item.Title.TryGet(out var Titleitem))
+            if (item.Title is {} Titleitem)
             {
                 hash.Add(HashCode.Combine(Titleitem.Male, Titleitem.Female));
             }
-            if (item.InsigniaUnused.TryGet(out var InsigniaUnuseditem))
+            if (item.InsigniaUnused is {} InsigniaUnuseditem)
             {
                 hash.Add(InsigniaUnuseditem);
             }
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.Number = rhs.Number;
             }
-            if (!rhs.Title.TryGet(out var rhsTitleitem))
+            if (rhs.Title is not {} rhsTitleitem)
             {
                 item.Title = null;
             }

@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Owner
-        private IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
+        private readonly IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
         public IFormLinkNullable<IOwnerGetter> Owner
         {
             get => _Owner;
-            set => _Owner = value.AsNullable();
+            set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOwnerGetter> IOwnershipGetter.Owner => this.Owner;
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IOwnership>,
         IOwnershipGetter
     {
-        new IFormLinkNullable<IOwnerGetter> Owner { get; }
+        new IFormLinkNullable<IOwnerGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
     }
 
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
-                && item.FactionRank.TryGet(out var FactionRankItem))
+                && item.FactionRank is {} FactionRankItem)
             {
                 fg.AppendItem(FactionRankItem, "FactionRank");
             }
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Owner);
-            if (item.FactionRank.TryGet(out var FactionRankitem))
+            if (item.FactionRank is {} FactionRankitem)
             {
                 hash.Add(FactionRankitem);
             }

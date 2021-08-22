@@ -55,11 +55,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        private IFormLinkNullable<IMaterialTypeGetter> _Parent = new FormLinkNullable<IMaterialTypeGetter>();
+        private readonly IFormLinkNullable<IMaterialTypeGetter> _Parent = new FormLinkNullable<IMaterialTypeGetter>();
         public IFormLinkNullable<IMaterialTypeGetter> Parent
         {
             get => _Parent;
-            set => _Parent = value.AsNullable();
+            set => _Parent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IMaterialTypeGetter.Parent => this.Parent;
@@ -98,11 +98,11 @@ namespace Mutagen.Bethesda.Skyrim
         MaterialType.Flag? IMaterialTypeGetter.Flags => this.Flags;
         #endregion
         #region HavokImpactDataSet
-        private IFormLinkNullable<IImpactDataSetGetter> _HavokImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>();
+        private readonly IFormLinkNullable<IImpactDataSetGetter> _HavokImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>();
         public IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet
         {
             get => _HavokImpactDataSet;
-            set => _HavokImpactDataSet = value.AsNullable();
+            set => _HavokImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IMaterialTypeGetter.HavokImpactDataSet => this.HavokImpactDataSet;
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         ISkyrimMajorRecordInternal
     {
-        new IFormLinkNullable<IMaterialTypeGetter> Parent { get; }
+        new IFormLinkNullable<IMaterialTypeGetter> Parent { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired
         /// </summary>
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Color? HavokDisplayColor { get; set; }
         new Single? Buoyancy { get; set; }
         new MaterialType.Flag? Flags { get; set; }
-        new IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; }
+        new IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; set; }
     }
 
     public partial interface IMaterialTypeInternal :
@@ -1129,22 +1129,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.HavokDisplayColor ?? true)
-                && item.HavokDisplayColor.TryGet(out var HavokDisplayColorItem))
+                && item.HavokDisplayColor is {} HavokDisplayColorItem)
             {
                 fg.AppendItem(HavokDisplayColorItem, "HavokDisplayColor");
             }
             if ((printMask?.Buoyancy ?? true)
-                && item.Buoyancy.TryGet(out var BuoyancyItem))
+                && item.Buoyancy is {} BuoyancyItem)
             {
                 fg.AppendItem(BuoyancyItem, "Buoyancy");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1253,19 +1253,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Parent);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.HavokDisplayColor.TryGet(out var HavokDisplayColoritem))
+            if (item.HavokDisplayColor is {} HavokDisplayColoritem)
             {
                 hash.Add(HavokDisplayColoritem);
             }
-            if (item.Buoyancy.TryGet(out var Buoyancyitem))
+            if (item.Buoyancy is {} Buoyancyitem)
             {
                 hash.Add(Buoyancyitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }

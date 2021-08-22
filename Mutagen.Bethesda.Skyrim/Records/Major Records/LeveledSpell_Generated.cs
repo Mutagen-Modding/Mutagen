@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Entries?.Overall ?? true)
-                        && Entries.TryGet(out var EntriesItem))
+                        && Entries is {} EntriesItem)
                     {
                         fg.AppendLine("Entries =>");
                         fg.AppendLine("[");
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ObjectBounds?.ToString(fg);
                 fg.AppendItem(ChanceNone, "ChanceNone");
                 fg.AppendItem(Flags, "Flags");
-                if (Entries.TryGet(out var EntriesItem))
+                if (Entries is {} EntriesItem)
                 {
                     fg.AppendLine("Entries =>");
                     fg.AppendLine("[");
@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.ChanceNone ?? true)
-                && item.ChanceNone.TryGet(out var ChanceNoneItem))
+                && item.ChanceNone is {} ChanceNoneItem)
             {
                 fg.AppendItem(ChanceNoneItem, "ChanceNone");
             }
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.Entries?.Overall ?? true)
-                && item.Entries.TryGet(out var EntriesItem))
+                && item.Entries is {} EntriesItem)
             {
                 fg.AppendLine("Entries =>");
                 fg.AppendLine("[");
@@ -1261,7 +1261,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.ChanceNone.TryGet(out var ChanceNoneitem))
+            if (item.ChanceNone is {} ChanceNoneitem)
             {
                 hash.Add(ChanceNoneitem);
             }
@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Entries.TryGet(out var EntriesItem))
+            if (obj.Entries is {} EntriesItem)
             {
                 foreach (var item in EntriesItem.WhereCastable<ILeveledSpellEntryGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))

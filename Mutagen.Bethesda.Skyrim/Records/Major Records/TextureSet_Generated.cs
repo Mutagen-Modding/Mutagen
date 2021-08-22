@@ -1329,52 +1329,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Diffuse ?? true)
-                && item.Diffuse.TryGet(out var DiffuseItem))
+                && item.Diffuse is {} DiffuseItem)
             {
                 fg.AppendItem(DiffuseItem, "Diffuse");
             }
             if ((printMask?.NormalOrGloss ?? true)
-                && item.NormalOrGloss.TryGet(out var NormalOrGlossItem))
+                && item.NormalOrGloss is {} NormalOrGlossItem)
             {
                 fg.AppendItem(NormalOrGlossItem, "NormalOrGloss");
             }
             if ((printMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
-                && item.EnvironmentMaskOrSubsurfaceTint.TryGet(out var EnvironmentMaskOrSubsurfaceTintItem))
+                && item.EnvironmentMaskOrSubsurfaceTint is {} EnvironmentMaskOrSubsurfaceTintItem)
             {
                 fg.AppendItem(EnvironmentMaskOrSubsurfaceTintItem, "EnvironmentMaskOrSubsurfaceTint");
             }
             if ((printMask?.GlowOrDetailMap ?? true)
-                && item.GlowOrDetailMap.TryGet(out var GlowOrDetailMapItem))
+                && item.GlowOrDetailMap is {} GlowOrDetailMapItem)
             {
                 fg.AppendItem(GlowOrDetailMapItem, "GlowOrDetailMap");
             }
             if ((printMask?.Height ?? true)
-                && item.Height.TryGet(out var HeightItem))
+                && item.Height is {} HeightItem)
             {
                 fg.AppendItem(HeightItem, "Height");
             }
             if ((printMask?.Environment ?? true)
-                && item.Environment.TryGet(out var EnvironmentItem))
+                && item.Environment is {} EnvironmentItem)
             {
                 fg.AppendItem(EnvironmentItem, "Environment");
             }
             if ((printMask?.Multilayer ?? true)
-                && item.Multilayer.TryGet(out var MultilayerItem))
+                && item.Multilayer is {} MultilayerItem)
             {
                 fg.AppendItem(MultilayerItem, "Multilayer");
             }
             if ((printMask?.BacklightMaskOrSpecular ?? true)
-                && item.BacklightMaskOrSpecular.TryGet(out var BacklightMaskOrSpecularItem))
+                && item.BacklightMaskOrSpecular is {} BacklightMaskOrSpecularItem)
             {
                 fg.AppendItem(BacklightMaskOrSpecularItem, "BacklightMaskOrSpecular");
             }
             if ((printMask?.Decal?.Overall ?? true)
-                && item.Decal.TryGet(out var DecalItem))
+                && item.Decal is {} DecalItem)
             {
                 DecalItem?.ToString(fg, "Decal");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
@@ -1507,43 +1507,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Diffuse.TryGet(out var Diffuseitem))
+            if (item.Diffuse is {} Diffuseitem)
             {
                 hash.Add(Diffuseitem);
             }
-            if (item.NormalOrGloss.TryGet(out var NormalOrGlossitem))
+            if (item.NormalOrGloss is {} NormalOrGlossitem)
             {
                 hash.Add(NormalOrGlossitem);
             }
-            if (item.EnvironmentMaskOrSubsurfaceTint.TryGet(out var EnvironmentMaskOrSubsurfaceTintitem))
+            if (item.EnvironmentMaskOrSubsurfaceTint is {} EnvironmentMaskOrSubsurfaceTintitem)
             {
                 hash.Add(EnvironmentMaskOrSubsurfaceTintitem);
             }
-            if (item.GlowOrDetailMap.TryGet(out var GlowOrDetailMapitem))
+            if (item.GlowOrDetailMap is {} GlowOrDetailMapitem)
             {
                 hash.Add(GlowOrDetailMapitem);
             }
-            if (item.Height.TryGet(out var Heightitem))
+            if (item.Height is {} Heightitem)
             {
                 hash.Add(Heightitem);
             }
-            if (item.Environment.TryGet(out var Environmentitem))
+            if (item.Environment is {} Environmentitem)
             {
                 hash.Add(Environmentitem);
             }
-            if (item.Multilayer.TryGet(out var Multilayeritem))
+            if (item.Multilayer is {} Multilayeritem)
             {
                 hash.Add(Multilayeritem);
             }
-            if (item.BacklightMaskOrSpecular.TryGet(out var BacklightMaskOrSpecularitem))
+            if (item.BacklightMaskOrSpecular is {} BacklightMaskOrSpecularitem)
             {
                 hash.Add(BacklightMaskOrSpecularitem);
             }
-            if (item.Decal.TryGet(out var Decalitem))
+            if (item.Decal is {} Decalitem)
             {
                 hash.Add(Decalitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
                 try
                 {
-                    if(rhs.Decal.TryGet(out var rhsDecal))
+                    if(rhs.Decal is {} rhsDecal)
                     {
                         item.Decal = rhsDecal.DeepCopy(
                             errorMask: errorMask,
@@ -1936,7 +1936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.BacklightMaskOrSpecular,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TX07),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Decal.TryGet(out var DecalItem))
+            if (item.Decal is {} DecalItem)
             {
                 ((DecalBinaryWriteTranslation)((IBinaryItem)DecalItem).BinaryWriteTranslator).Write(
                     item: DecalItem,

@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.Relations?.Overall ?? true)
-                        && Relations.TryGet(out var RelationsItem))
+                        && Relations is {} RelationsItem)
                     {
                         fg.AppendLine("Relations =>");
                         fg.AppendLine("[");
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(CrimeGoldMultiplier, "CrimeGoldMultiplier");
                     }
                     if ((printMask?.Ranks?.Overall ?? true)
-                        && Ranks.TryGet(out var RanksItem))
+                        && Ranks is {} RanksItem)
                     {
                         fg.AppendLine("Ranks =>");
                         fg.AppendLine("[");
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Name, "Name");
-                if (Relations.TryGet(out var RelationsItem))
+                if (Relations is {} RelationsItem)
                 {
                     fg.AppendLine("Relations =>");
                     fg.AppendLine("[");
@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(CrimeGoldMultiplier, "CrimeGoldMultiplier");
-                if (Ranks.TryGet(out var RanksItem))
+                if (Ranks is {} RanksItem)
                 {
                     fg.AppendLine("Ranks =>");
                     fg.AppendLine("[");
@@ -1231,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1254,12 +1254,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.CrimeGoldMultiplier ?? true)
-                && item.CrimeGoldMultiplier.TryGet(out var CrimeGoldMultiplierItem))
+                && item.CrimeGoldMultiplier is {} CrimeGoldMultiplierItem)
             {
                 fg.AppendItem(CrimeGoldMultiplierItem, "CrimeGoldMultiplier");
             }
@@ -1375,16 +1375,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IFactionGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.Relations);
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.CrimeGoldMultiplier.TryGet(out var CrimeGoldMultiplieritem))
+            if (item.CrimeGoldMultiplier is {} CrimeGoldMultiplieritem)
             {
                 hash.Add(CrimeGoldMultiplieritem);
             }

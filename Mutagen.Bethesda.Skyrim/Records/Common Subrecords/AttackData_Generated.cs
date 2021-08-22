@@ -56,11 +56,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Chance { get; set; } = default;
         #endregion
         #region Spell
-        private IFormLink<ISpellRecordGetter> _Spell = new FormLink<ISpellRecordGetter>();
+        private readonly IFormLink<ISpellRecordGetter> _Spell = new FormLink<ISpellRecordGetter>();
         public IFormLink<ISpellRecordGetter> Spell
         {
             get => _Spell;
-            set => _Spell = value.AsSetter();
+            set => _Spell.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellRecordGetter> IAttackDataGetter.Spell => this.Spell;
@@ -78,11 +78,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Stagger { get; set; } = default;
         #endregion
         #region AttackType
-        private IFormLink<IKeywordGetter> _AttackType = new FormLink<IKeywordGetter>();
+        private readonly IFormLink<IKeywordGetter> _AttackType = new FormLink<IKeywordGetter>();
         public IFormLink<IKeywordGetter> AttackType
         {
             get => _AttackType;
-            set => _AttackType = value.AsSetter();
+            set => _AttackType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType;
@@ -756,12 +756,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Single DamageMult { get; set; }
         new Single Chance { get; set; }
-        new IFormLink<ISpellRecordGetter> Spell { get; }
+        new IFormLink<ISpellRecordGetter> Spell { get; set; }
         new AttackData.Flag Flags { get; set; }
         new Single AttackAngle { get; set; }
         new Single StrikeAngle { get; set; }
         new Single Stagger { get; set; }
-        new IFormLink<IKeywordGetter> AttackType { get; }
+        new IFormLink<IKeywordGetter> AttackType { get; set; }
         new Single Knockdown { get; set; }
         new Single RecoveryTime { get; set; }
         new Single StaminaMult { get; set; }

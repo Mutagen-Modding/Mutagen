@@ -51,11 +51,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Target
-        private IFormLink<IPlacedGetter> _Target = new FormLink<IPlacedGetter>();
+        private readonly IFormLink<IPlacedGetter> _Target = new FormLink<IPlacedGetter>();
         public IFormLink<IPlacedGetter> Target
         {
             get => _Target;
-            set => _Target = value.AsSetter();
+            set => _Target.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedGetter> IQuestTargetGetter.Target => this.Target;
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 fg.AppendItem(Target, "Target");
                 fg.AppendItem(Flags, "Flags");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IQuestTarget>,
         IQuestTargetGetter
     {
-        new IFormLink<IPlacedGetter> Target { get; }
+        new IFormLink<IPlacedGetter> Target { get; set; }
         new Quest.TargetFlag Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new QuestTarget.QSTADataType QSTADataTypeState { get; set; }

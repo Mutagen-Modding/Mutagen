@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sound
-        private IFormLink<ISoundDescriptorGetter> _Sound = new FormLink<ISoundDescriptorGetter>();
+        private readonly IFormLink<ISoundDescriptorGetter> _Sound = new FormLink<ISoundDescriptorGetter>();
         public IFormLink<ISoundDescriptorGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsSetter();
+            set => _Sound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IRegionSoundGetter.Sound => this.Sound;
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionSound>,
         IRegionSoundGetter
     {
-        new IFormLink<ISoundDescriptorGetter> Sound { get; }
+        new IFormLink<ISoundDescriptorGetter> Sound { get; set; }
         new RegionSound.Flag Flags { get; set; }
         new Single Chance { get; set; }
     }

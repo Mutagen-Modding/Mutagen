@@ -53,21 +53,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        private IFormLinkNullable<ICreatureGetter> _Base = new FormLinkNullable<ICreatureGetter>();
+        private readonly IFormLinkNullable<ICreatureGetter> _Base = new FormLinkNullable<ICreatureGetter>();
         public IFormLinkNullable<ICreatureGetter> Base
         {
             get => _Base;
-            set => _Base = value.AsNullable();
+            set => _Base.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICreatureGetter> IPlacedCreatureGetter.Base => this.Base;
         #endregion
         #region Owner
-        private IFormLinkNullable<IFactionGetter> _Owner = new FormLinkNullable<IFactionGetter>();
+        private readonly IFormLinkNullable<IFactionGetter> _Owner = new FormLinkNullable<IFactionGetter>();
         public IFormLinkNullable<IFactionGetter> Owner
         {
             get => _Owner;
-            set => _Owner = value.AsNullable();
+            set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> IPlacedCreatureGetter.Owner => this.Owner;
@@ -78,11 +78,11 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IPlacedCreatureGetter.FactionRank => this.FactionRank;
         #endregion
         #region GlobalVariable
-        private IFormLinkNullable<IGlobalGetter> _GlobalVariable = new FormLinkNullable<IGlobalGetter>();
+        private readonly IFormLinkNullable<IGlobalGetter> _GlobalVariable = new FormLinkNullable<IGlobalGetter>();
         public IFormLinkNullable<IGlobalGetter> GlobalVariable
         {
             get => _GlobalVariable;
-            set => _GlobalVariable = value.AsNullable();
+            set => _GlobalVariable.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> IPlacedCreatureGetter.GlobalVariable => this.GlobalVariable;
@@ -745,10 +745,10 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaced,
         IPlacedCreatureGetter
     {
-        new IFormLinkNullable<ICreatureGetter> Base { get; }
-        new IFormLinkNullable<IFactionGetter> Owner { get; }
+        new IFormLinkNullable<ICreatureGetter> Base { get; set; }
+        new IFormLinkNullable<IFactionGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
-        new IFormLinkNullable<IGlobalGetter> GlobalVariable { get; }
+        new IFormLinkNullable<IGlobalGetter> GlobalVariable { get; set; }
         new EnableParent? EnableParent { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
-                && item.FactionRank.TryGet(out var FactionRankItem))
+                && item.FactionRank is {} FactionRankItem)
             {
                 fg.AppendItem(FactionRankItem, "FactionRank");
             }
@@ -1220,22 +1220,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
-                && item.EnableParent.TryGet(out var EnableParentItem))
+                && item.EnableParent is {} EnableParentItem)
             {
                 EnableParentItem?.ToString(fg, "EnableParent");
             }
             if ((printMask?.RagdollData ?? true)
-                && item.RagdollData.TryGet(out var RagdollDataItem))
+                && item.RagdollData is {} RagdollDataItem)
             {
                 fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
             if ((printMask?.Scale ?? true)
-                && item.Scale.TryGet(out var ScaleItem))
+                && item.Scale is {} ScaleItem)
             {
                 fg.AppendItem(ScaleItem, "Scale");
             }
             if ((printMask?.Location?.Overall ?? true)
-                && item.Location.TryGet(out var LocationItem))
+                && item.Location is {} LocationItem)
             {
                 LocationItem?.ToString(fg, "Location");
             }
@@ -1355,24 +1355,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var hash = new HashCode();
             hash.Add(item.Base);
             hash.Add(item.Owner);
-            if (item.FactionRank.TryGet(out var FactionRankitem))
+            if (item.FactionRank is {} FactionRankitem)
             {
                 hash.Add(FactionRankitem);
             }
             hash.Add(item.GlobalVariable);
-            if (item.EnableParent.TryGet(out var EnableParentitem))
+            if (item.EnableParent is {} EnableParentitem)
             {
                 hash.Add(EnableParentitem);
             }
-            if (item.RagdollData.TryGet(out var RagdollDataItem))
+            if (item.RagdollData is {} RagdollDataItem)
             {
                 hash.Add(RagdollDataItem);
             }
-            if (item.Scale.TryGet(out var Scaleitem))
+            if (item.Scale is {} Scaleitem)
             {
                 hash.Add(Scaleitem);
             }
-            if (item.Location.TryGet(out var Locationitem))
+            if (item.Location is {} Locationitem)
             {
                 hash.Add(Locationitem);
             }
@@ -1417,7 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(obj.GlobalVariable);
             }
-            if (obj.EnableParent.TryGet(out var EnableParentItems))
+            if (obj.EnableParent is {} EnableParentItems)
             {
                 foreach (var item in EnableParentItems.ContainedFormLinks)
                 {
@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedCreature_FieldIndex.EnableParent);
                 try
                 {
-                    if(rhs.EnableParent.TryGet(out var rhsEnableParent))
+                    if(rhs.EnableParent is {} rhsEnableParent)
                     {
                         item.EnableParent = rhsEnableParent.DeepCopy(
                             errorMask: errorMask,
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.RagdollData) ?? true))
             {
-                if(rhs.RagdollData.TryGet(out var RagdollDatarhs))
+                if(rhs.RagdollData is {} RagdollDatarhs)
                 {
                     item.RagdollData = RagdollDatarhs.ToArray();
                 }
@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Location);
                 try
                 {
-                    if(rhs.Location.TryGet(out var rhsLocation))
+                    if(rhs.Location is {} rhsLocation)
                     {
                         item.Location = rhsLocation.DeepCopy(
                             errorMask: errorMask,
@@ -1754,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.GlobalVariable,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XGLB));
-            if (item.EnableParent.TryGet(out var EnableParentItem))
+            if (item.EnableParent is {} EnableParentItem)
             {
                 ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
                     item: EnableParentItem,
@@ -1769,7 +1769,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Scale,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XSCL));
-            if (item.Location.TryGet(out var LocationItem))
+            if (item.Location is {} LocationItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
                 {

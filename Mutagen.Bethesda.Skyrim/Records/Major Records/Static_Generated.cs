@@ -97,11 +97,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
         #endregion
         #region Material
-        private IFormLink<IMaterialObjectGetter> _Material = new FormLink<IMaterialObjectGetter>();
+        private readonly IFormLink<IMaterialObjectGetter> _Material = new FormLink<IMaterialObjectGetter>();
         public IFormLink<IMaterialObjectGetter> Material
         {
             get => _Material;
-            set => _Material = value.AsSetter();
+            set => _Material.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IMaterialObjectGetter> IStaticGetter.Material => this.Material;
@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new Model? Model { get; set; }
         new Single MaxAngle { get; set; }
-        new IFormLink<IMaterialObjectGetter> Material { get; }
+        new IFormLink<IMaterialObjectGetter> Material { get; set; }
         new Static.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
         new Lod? Lod { get; set; }
@@ -1293,7 +1293,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1314,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if ((printMask?.Lod?.Overall ?? true)
-                && item.Lod.TryGet(out var LodItem))
+                && item.Lod is {} LodItem)
             {
                 LodItem?.ToString(fg, "Lod");
             }
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Material);
             hash.Add(item.Flags);
             hash.Add(item.Unused);
-            if (item.Lod.TryGet(out var Loditem))
+            if (item.Lod is {} Loditem)
             {
                 hash.Add(Loditem);
             }
@@ -1485,7 +1485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Static_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1636,7 +1636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Static_FieldIndex.Lod);
                 try
                 {
-                    if(rhs.Lod.TryGet(out var rhsLod))
+                    if(rhs.Lod is {} rhsLod)
                     {
                         item.Lod = rhsLod.DeepCopy(
                             errorMask: errorMask,
@@ -1832,7 +1832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
@@ -1858,7 +1858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: item.Unused);
                 }
             }
-            if (item.Lod.TryGet(out var LodItem))
+            if (item.Lod is {} LodItem)
             {
                 ((LodBinaryWriteTranslation)((IBinaryItem)LodItem).BinaryWriteTranslator).Write(
                     item: LodItem,

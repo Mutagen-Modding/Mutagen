@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Environments;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -35,6 +36,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             {
                 fg.AppendLine($"using Mutagen.Bethesda.{modObj.ProtoGen.Protocol.Namespace};");
             }
+            fg.AppendLine($"using Mutagen.Bethesda.Environments;");
             fg.AppendLine($"using Mutagen.Bethesda.Plugins.Cache;");
             fg.AppendLine();
 
@@ -49,7 +51,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     foreach (var modObj in mods)
                     {
                         var relStr = modObj.GetObjectData().HasMultipleReleases ? $"{modObj.GetObjectData().GameCategory}Release gameRelease" : string.Empty;
-                        var retType = $"GameEnvironmentState<I{modObj.Name}, I{modObj.Name}Getter>";
+                        var retType = $"IGameEnvironmentState<I{modObj.Name}, I{modObj.Name}Getter>";
                         using (var args = new FunctionWrapper(fg,
                             $"public static {retType} {modObj.ProtoGen.Protocol.Namespace}"))
                         {

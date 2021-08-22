@@ -72,31 +72,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Parent
-        private IFormLinkNullable<IWorldspaceGetter> _Parent = new FormLinkNullable<IWorldspaceGetter>();
+        private readonly IFormLinkNullable<IWorldspaceGetter> _Parent = new FormLinkNullable<IWorldspaceGetter>();
         public IFormLinkNullable<IWorldspaceGetter> Parent
         {
             get => _Parent;
-            set => _Parent = value.AsNullable();
+            set => _Parent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWorldspaceGetter> IWorldspaceGetter.Parent => this.Parent;
         #endregion
         #region Climate
-        private IFormLinkNullable<IClimateGetter> _Climate = new FormLinkNullable<IClimateGetter>();
+        private readonly IFormLinkNullable<IClimateGetter> _Climate = new FormLinkNullable<IClimateGetter>();
         public IFormLinkNullable<IClimateGetter> Climate
         {
             get => _Climate;
-            set => _Climate = value.AsNullable();
+            set => _Climate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClimateGetter> IWorldspaceGetter.Climate => this.Climate;
         #endregion
         #region Water
-        private IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
+        private readonly IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
         public IFormLinkNullable<IWaterGetter> Water
         {
             get => _Water;
-            set => _Water = value.AsNullable();
+            set => _Water.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
                     }
                     if ((printMask?.SubCells?.Overall ?? true)
-                        && SubCells.TryGet(out var SubCellsItem))
+                        && SubCells is {} SubCellsItem)
                     {
                         fg.AppendLine("SubCells =>");
                         fg.AppendLine("[");
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Road?.ToString(fg);
                 TopCell?.ToString(fg);
                 fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
-                if (SubCells.TryGet(out var SubCellsItem))
+                if (SubCells is {} SubCellsItem)
                 {
                     fg.AppendLine("SubCells =>");
                     fg.AppendLine("[");
@@ -1125,9 +1125,9 @@ namespace Mutagen.Bethesda.Oblivion
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
-        new IFormLinkNullable<IWorldspaceGetter> Parent { get; }
-        new IFormLinkNullable<IClimateGetter> Climate { get; }
-        new IFormLinkNullable<IWaterGetter> Water { get; }
+        new IFormLinkNullable<IWorldspaceGetter> Parent { get; set; }
+        new IFormLinkNullable<IClimateGetter> Climate { get; set; }
+        new IFormLinkNullable<IWaterGetter> Water { get; set; }
         new String? Icon { get; set; }
         new MapData? MapData { get; set; }
         new Worldspace.Flag? Flags { get; set; }
@@ -1770,7 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRoad":
                 case "IRoadInternal":
                     {
-                        if (obj.Road.TryGet(out var Roaditem))
+                        if (obj.Road is {} Roaditem)
                         {
                             Roaditem.Remove(keys, type, throwIfUnknown);
                         }
@@ -1781,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICell":
                 case "ICellInternal":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -1804,7 +1804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPathGrid":
                 case "IPathGridInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PathGridTopCellitem))
+                        if (obj.TopCell is {} PathGridTopCellitem)
                         {
                             PathGridTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -1819,7 +1819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.TopCell.TryGet(out var LandscapeTopCellitem))
+                        if (obj.TopCell is {} LandscapeTopCellitem)
                         {
                             LandscapeTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -1834,7 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedCreature":
                 case "IPlacedCreatureInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PlacedCreatureTopCellitem))
+                        if (obj.TopCell is {} PlacedCreatureTopCellitem)
                         {
                             PlacedCreatureTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -1849,7 +1849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PlacedNpcTopCellitem))
+                        if (obj.TopCell is {} PlacedNpcTopCellitem)
                         {
                             PlacedNpcTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -1864,7 +1864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PlacedObjectTopCellitem))
+                        if (obj.TopCell is {} PlacedObjectTopCellitem)
                         {
                             PlacedObjectTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlaced":
                 case "IPlacedGetter":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -2078,47 +2078,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Water.FormKeyNullable, "Water");
             }
             if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+                && item.Icon is {} IconItem)
             {
                 fg.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.MapData?.Overall ?? true)
-                && item.MapData.TryGet(out var MapDataItem))
+                && item.MapData is {} MapDataItem)
             {
                 MapDataItem?.ToString(fg, "MapData");
             }
             if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.ObjectBoundsMin ?? true)
-                && item.ObjectBoundsMin.TryGet(out var ObjectBoundsMinItem))
+                && item.ObjectBoundsMin is {} ObjectBoundsMinItem)
             {
                 fg.AppendItem(ObjectBoundsMinItem, "ObjectBoundsMin");
             }
             if ((printMask?.ObjectBoundsMax ?? true)
-                && item.ObjectBoundsMax.TryGet(out var ObjectBoundsMaxItem))
+                && item.ObjectBoundsMax is {} ObjectBoundsMaxItem)
             {
                 fg.AppendItem(ObjectBoundsMaxItem, "ObjectBoundsMax");
             }
             if ((printMask?.Music ?? true)
-                && item.Music.TryGet(out var MusicItem))
+                && item.Music is {} MusicItem)
             {
                 fg.AppendItem(MusicItem, "Music");
             }
             if ((printMask?.OffsetData ?? true)
-                && item.OffsetData.TryGet(out var OffsetDataItem))
+                && item.OffsetData is {} OffsetDataItem)
             {
                 fg.AppendLine($"OffsetData => {SpanExt.ToHexString(OffsetDataItem)}");
             }
             if ((printMask?.Road?.Overall ?? true)
-                && item.Road.TryGet(out var RoadItem))
+                && item.Road is {} RoadItem)
             {
                 RoadItem?.ToString(fg, "Road");
             }
             if ((printMask?.TopCell?.Overall ?? true)
-                && item.TopCell.TryGet(out var TopCellItem))
+                && item.TopCell is {} TopCellItem)
             {
                 TopCellItem?.ToString(fg, "TopCell");
             }
@@ -2320,46 +2320,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IWorldspaceGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.Parent);
             hash.Add(item.Climate);
             hash.Add(item.Water);
-            if (item.Icon.TryGet(out var Iconitem))
+            if (item.Icon is {} Iconitem)
             {
                 hash.Add(Iconitem);
             }
-            if (item.MapData.TryGet(out var MapDataitem))
+            if (item.MapData is {} MapDataitem)
             {
                 hash.Add(MapDataitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.ObjectBoundsMin.TryGet(out var ObjectBoundsMinitem))
+            if (item.ObjectBoundsMin is {} ObjectBoundsMinitem)
             {
                 hash.Add(ObjectBoundsMinitem);
             }
-            if (item.ObjectBoundsMax.TryGet(out var ObjectBoundsMaxitem))
+            if (item.ObjectBoundsMax is {} ObjectBoundsMaxitem)
             {
                 hash.Add(ObjectBoundsMaxitem);
             }
-            if (item.Music.TryGet(out var Musicitem))
+            if (item.Music is {} Musicitem)
             {
                 hash.Add(Musicitem);
             }
-            if (item.OffsetData.TryGet(out var OffsetDataItem))
+            if (item.OffsetData is {} OffsetDataItem)
             {
                 hash.Add(OffsetDataItem);
             }
-            if (item.Road.TryGet(out var Roaditem))
+            if (item.Road is {} Roaditem)
             {
                 hash.Add(Roaditem);
             }
-            if (item.TopCell.TryGet(out var TopCellitem))
+            if (item.TopCell is {} TopCellitem)
             {
                 hash.Add(TopCellitem);
             }
@@ -2411,7 +2411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Water);
             }
-            if (obj.TopCell.TryGet(out var TopCellItems))
+            if (obj.TopCell is {} TopCellItems)
             {
                 foreach (var item in TopCellItems.ContainedFormLinks)
                 {
@@ -2429,7 +2429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((obj.Road != null))
             {
-                if (obj.Road.TryGet(out var Roaditem))
+                if (obj.Road is {} Roaditem)
                 {
                     yield return Roaditem;
                     foreach (var item in Roaditem.EnumerateMajorRecords())
@@ -2440,7 +2440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((obj.TopCell != null))
             {
-                if (obj.TopCell.TryGet(out var TopCellitem))
+                if (obj.TopCell is {} TopCellitem)
                 {
                     yield return TopCellitem;
                     foreach (var item in TopCellitem.EnumerateMajorRecords())
@@ -2498,7 +2498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRoad":
                 case "IRoadInternal":
                     {
-                        if (obj.Road.TryGet(out var Roaditem))
+                        if (obj.Road is {} Roaditem)
                         {
                             yield return Roaditem;
                             foreach (var item in Roaditem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -2513,7 +2513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICell":
                 case "ICellInternal":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -2546,7 +2546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPathGrid":
                 case "IPathGridInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PathGridTopCellitem))
+                        if (obj.TopCell is {} PathGridTopCellitem)
                         {
                             foreach (var item in PathGridTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
@@ -2567,7 +2567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.TopCell.TryGet(out var LandscapeTopCellitem))
+                        if (obj.TopCell is {} LandscapeTopCellitem)
                         {
                             foreach (var item in LandscapeTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
@@ -2588,7 +2588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedCreature":
                 case "IPlacedCreatureInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PlacedCreatureTopCellitem))
+                        if (obj.TopCell is {} PlacedCreatureTopCellitem)
                         {
                             foreach (var item in PlacedCreatureTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
@@ -2609,7 +2609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PlacedNpcTopCellitem))
+                        if (obj.TopCell is {} PlacedNpcTopCellitem)
                         {
                             foreach (var item in PlacedNpcTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
@@ -2630,7 +2630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PlacedObjectTopCellitem))
+                        if (obj.TopCell is {} PlacedObjectTopCellitem)
                         {
                             foreach (var item in PlacedObjectTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
@@ -2650,7 +2650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -2671,7 +2671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -2716,7 +2716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 duplicateInto: duplicateInto,
                 parent: parent);
             {
-                if (obj.Road.TryGet(out var WorldspaceRoaditem))
+                if (obj.Road is {} WorldspaceRoaditem)
                 {
                     yield return new ModContext<IOblivionMod, IOblivionModGetter, IRoadInternal, IRoadGetter>(
                         modKey: modKey,
@@ -2740,7 +2740,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             {
-                if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                if (obj.TopCell is {} WorldspaceTopCellitem)
                 {
                     yield return new ModContext<IOblivionMod, IOblivionModGetter, ICellInternal, ICellGetter>(
                         modKey: modKey,
@@ -2853,7 +2853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRoad":
                 case "IRoadInternal":
                     {
-                        if (obj.Road.TryGet(out var WorldspaceRoaditem))
+                        if (obj.Road is {} WorldspaceRoaditem)
                         {
                             yield return new ModContext<IOblivionMod, IOblivionModGetter, IRoadInternal, IRoadGetter>(
                                 modKey: modKey,
@@ -2882,7 +2882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICell":
                 case "ICellInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             yield return new ModContext<IOblivionMod, IOblivionModGetter, ICellInternal, ICellGetter>(
                                 modKey: modKey,
@@ -2962,7 +2962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPathGrid":
                 case "IPathGridInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -3008,7 +3008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -3054,7 +3054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedCreature":
                 case "IPlacedCreatureInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -3100,7 +3100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -3146,7 +3146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -3191,7 +3191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -3352,7 +3352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
                 try
                 {
-                    if(rhs.MapData.TryGet(out var rhsMapData))
+                    if(rhs.MapData is {} rhsMapData)
                     {
                         item.MapData = rhsMapData.DeepCopy(
                             errorMask: errorMask,
@@ -3391,7 +3391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
-                if(rhs.OffsetData.TryGet(out var OffsetDatarhs))
+                if(rhs.OffsetData is {} OffsetDatarhs)
                 {
                     item.OffsetData = OffsetDatarhs.ToArray();
                 }
@@ -3405,7 +3405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Road);
                 try
                 {
-                    if(rhs.Road.TryGet(out var rhsRoad))
+                    if(rhs.Road is {} rhsRoad)
                     {
                         item.Road = (Road)rhsRoad.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.Road),
@@ -3431,7 +3431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.TopCell);
                 try
                 {
-                    if(rhs.TopCell.TryGet(out var rhsTopCell))
+                    if(rhs.TopCell is {} rhsTopCell)
                     {
                         item.TopCell = (Cell)rhsTopCell.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell),
@@ -3698,7 +3698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.MapData.TryGet(out var MapDataItem))
+            if (item.MapData is {} MapDataItem)
             {
                 ((MapDataBinaryWriteTranslation)((IBinaryItem)MapDataItem).BinaryWriteTranslator).Write(
                     item: MapDataItem,

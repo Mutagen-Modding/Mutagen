@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Door
-        private IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
+        private readonly IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
         public IFormLink<IPlacedObjectGetter> Door
         {
             get => _Door;
-            set => _Door = value.AsSetter();
+            set => _Door.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedObjectGetter> ITeleportDestinationGetter.Door => this.Door;
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPositionRotation,
         ITeleportDestinationGetter
     {
-        new IFormLink<IPlacedObjectGetter> Door { get; }
+        new IFormLink<IPlacedObjectGetter> Door { get; set; }
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
         new TeleportDestination.Flag Flags { get; set; }

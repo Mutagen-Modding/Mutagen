@@ -982,27 +982,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CloudLayer.Mask<bool>? printMask = null)
         {
             if ((printMask?.Enabled ?? true)
-                && item.Enabled.TryGet(out var EnabledItem))
+                && item.Enabled is {} EnabledItem)
             {
                 fg.AppendItem(EnabledItem, "Enabled");
             }
             if ((printMask?.XSpeed ?? true)
-                && item.XSpeed.TryGet(out var XSpeedItem))
+                && item.XSpeed is {} XSpeedItem)
             {
                 fg.AppendItem(XSpeedItem, "XSpeed");
             }
             if ((printMask?.YSpeed ?? true)
-                && item.YSpeed.TryGet(out var YSpeedItem))
+                && item.YSpeed is {} YSpeedItem)
             {
                 fg.AppendItem(YSpeedItem, "YSpeed");
             }
             if ((printMask?.Colors?.Overall ?? true)
-                && item.Colors.TryGet(out var ColorsItem))
+                && item.Colors is {} ColorsItem)
             {
                 ColorsItem?.ToString(fg, "Colors");
             }
             if ((printMask?.Alphas?.Overall ?? true)
-                && item.Alphas.TryGet(out var AlphasItem))
+                && item.Alphas is {} AlphasItem)
             {
                 AlphasItem?.ToString(fg, "Alphas");
             }
@@ -1049,23 +1049,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ICloudLayerGetter item)
         {
             var hash = new HashCode();
-            if (item.Enabled.TryGet(out var Enableditem))
+            if (item.Enabled is {} Enableditem)
             {
                 hash.Add(Enableditem);
             }
-            if (item.XSpeed.TryGet(out var XSpeeditem))
+            if (item.XSpeed is {} XSpeeditem)
             {
                 hash.Add(XSpeeditem);
             }
-            if (item.YSpeed.TryGet(out var YSpeeditem))
+            if (item.YSpeed is {} YSpeeditem)
             {
                 hash.Add(YSpeeditem);
             }
-            if (item.Colors.TryGet(out var Colorsitem))
+            if (item.Colors is {} Colorsitem)
             {
                 hash.Add(Colorsitem);
             }
-            if (item.Alphas.TryGet(out var Alphasitem))
+            if (item.Alphas is {} Alphasitem)
             {
                 hash.Add(Alphasitem);
             }
@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)CloudLayer_FieldIndex.Colors);
                 try
                 {
-                    if(rhs.Colors.TryGet(out var rhsColors))
+                    if(rhs.Colors is {} rhsColors)
                     {
                         item.Colors = rhsColors.DeepCopy(
                             errorMask: errorMask,
@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)CloudLayer_FieldIndex.Alphas);
                 try
                 {
-                    if(rhs.Alphas.TryGet(out var rhsAlphas))
+                    if(rhs.Alphas is {} rhsAlphas)
                     {
                         item.Alphas = rhsAlphas.DeepCopy(
                             errorMask: errorMask,

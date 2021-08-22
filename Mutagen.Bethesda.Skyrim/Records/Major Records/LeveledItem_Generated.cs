@@ -80,11 +80,11 @@ namespace Mutagen.Bethesda.Skyrim
         public LeveledItem.Flag Flags { get; set; } = default;
         #endregion
         #region Global
-        private IFormLinkNullable<IGlobalGetter> _Global = new FormLinkNullable<IGlobalGetter>();
+        private readonly IFormLinkNullable<IGlobalGetter> _Global = new FormLinkNullable<IGlobalGetter>();
         public IFormLinkNullable<IGlobalGetter> Global
         {
             get => _Global;
-            set => _Global = value.AsNullable();
+            set => _Global.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> ILeveledItemGetter.Global => this.Global;
@@ -334,7 +334,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Global, "Global");
                     }
                     if ((printMask?.Entries?.Overall ?? true)
-                        && Entries.TryGet(out var EntriesItem))
+                        && Entries is {} EntriesItem)
                     {
                         fg.AppendLine("Entries =>");
                         fg.AppendLine("[");
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(ChanceNone, "ChanceNone");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Global, "Global");
-                if (Entries.TryGet(out var EntriesItem))
+                if (Entries is {} EntriesItem)
                 {
                     fg.AppendLine("Entries =>");
                     fg.AppendLine("[");
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
         new LeveledItem.Flag Flags { get; set; }
-        new IFormLinkNullable<IGlobalGetter> Global { get; }
+        new IFormLinkNullable<IGlobalGetter> Global { get; set; }
         new ExtendedList<LeveledItemEntry>? Entries { get; set; }
     }
 
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Global.FormKeyNullable, "Global");
             }
             if ((printMask?.Entries?.Overall ?? true)
-                && item.Entries.TryGet(out var EntriesItem))
+                && item.Entries is {} EntriesItem)
             {
                 fg.AppendLine("Entries =>");
                 fg.AppendLine("[");
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Global);
             }
-            if (obj.Entries.TryGet(out var EntriesItem))
+            if (obj.Entries is {} EntriesItem)
             {
                 foreach (var item in EntriesItem.WhereCastable<ILeveledItemEntryGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))

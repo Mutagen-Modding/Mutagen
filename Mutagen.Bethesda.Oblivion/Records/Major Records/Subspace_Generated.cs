@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Point ?? true)
-                && item.Point.TryGet(out var PointItem))
+                && item.Point is {} PointItem)
             {
                 fg.AppendItem(PointItem, "Point");
             }
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ISubspaceGetter item)
         {
             var hash = new HashCode();
-            if (item.Point.TryGet(out var Pointitem))
+            if (item.Point is {} Pointitem)
             {
                 hash.Add(Pointitem);
             }

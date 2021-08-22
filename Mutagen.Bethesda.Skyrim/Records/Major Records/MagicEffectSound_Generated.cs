@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         public MagicEffect.SoundType Type { get; set; } = default;
         #endregion
         #region Sound
-        private IFormLink<ISoundDescriptorGetter> _Sound = new FormLink<ISoundDescriptorGetter>();
+        private readonly IFormLink<ISoundDescriptorGetter> _Sound = new FormLink<ISoundDescriptorGetter>();
         public IFormLink<ISoundDescriptorGetter> Sound
         {
             get => _Sound;
-            set => _Sound = value.AsSetter();
+            set => _Sound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IMagicEffectSoundGetter.Sound => this.Sound;
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectSoundGetter
     {
         new MagicEffect.SoundType Type { get; set; }
-        new IFormLink<ISoundDescriptorGetter> Sound { get; }
+        new IFormLink<ISoundDescriptorGetter> Sound { get; set; }
     }
 
     public partial interface IMagicEffectSoundGetter :

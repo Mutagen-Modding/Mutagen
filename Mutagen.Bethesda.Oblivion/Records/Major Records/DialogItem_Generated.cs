@@ -64,21 +64,21 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogItemDataGetter? IDialogItemGetter.Data => this.Data;
         #endregion
         #region Quest
-        private IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
         public IFormLinkNullable<IQuestGetter> Quest
         {
             get => _Quest;
-            set => _Quest = value.AsNullable();
+            set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IDialogItemGetter.Quest => this.Quest;
         #endregion
         #region PreviousTopic
-        private IFormLinkNullable<IDialogItemGetter> _PreviousTopic = new FormLinkNullable<IDialogItemGetter>();
+        private readonly IFormLinkNullable<IDialogItemGetter> _PreviousTopic = new FormLinkNullable<IDialogItemGetter>();
         public IFormLinkNullable<IDialogItemGetter> PreviousTopic
         {
             get => _PreviousTopic;
-            set => _PreviousTopic = value.AsNullable();
+            set => _PreviousTopic.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogItemGetter> IDialogItemGetter.PreviousTopic => this.PreviousTopic;
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(PreviousTopic, "PreviousTopic");
                     }
                     if ((printMask?.Topics?.Overall ?? true)
-                        && Topics.TryGet(out var TopicsItem))
+                        && Topics is {} TopicsItem)
                     {
                         fg.AppendLine("Topics =>");
                         fg.AppendLine("[");
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Responses?.Overall ?? true)
-                        && Responses.TryGet(out var ResponsesItem))
+                        && Responses is {} ResponsesItem)
                     {
                         fg.AppendLine("Responses =>");
                         fg.AppendLine("[");
@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Choices?.Overall ?? true)
-                        && Choices.TryGet(out var ChoicesItem))
+                        && Choices is {} ChoicesItem)
                     {
                         fg.AppendLine("Choices =>");
                         fg.AppendLine("[");
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendLine("]");
                     }
                     if ((printMask?.LinkFrom?.Overall ?? true)
-                        && LinkFrom.TryGet(out var LinkFromItem))
+                        && LinkFrom is {} LinkFromItem)
                     {
                         fg.AppendLine("LinkFrom =>");
                         fg.AppendLine("[");
@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Data?.ToString(fg);
                 fg.AppendItem(Quest, "Quest");
                 fg.AppendItem(PreviousTopic, "PreviousTopic");
-                if (Topics.TryGet(out var TopicsItem))
+                if (Topics is {} TopicsItem)
                 {
                     fg.AppendLine("Topics =>");
                     fg.AppendLine("[");
@@ -882,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (Responses.TryGet(out var ResponsesItem))
+                if (Responses is {} ResponsesItem)
                 {
                     fg.AppendLine("Responses =>");
                     fg.AppendLine("[");
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (Choices.TryGet(out var ChoicesItem))
+                if (Choices is {} ChoicesItem)
                 {
                     fg.AppendLine("Choices =>");
                     fg.AppendLine("[");
@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                if (LinkFrom.TryGet(out var LinkFromItem))
+                if (LinkFrom is {} LinkFromItem)
                 {
                     fg.AppendLine("LinkFrom =>");
                     fg.AppendLine("[");
@@ -1177,8 +1177,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordInternal
     {
         new DialogItemData? Data { get; set; }
-        new IFormLinkNullable<IQuestGetter> Quest { get; }
-        new IFormLinkNullable<IDialogItemGetter> PreviousTopic { get; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IDialogItemGetter> PreviousTopic { get; set; }
         new ExtendedList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; }
         new ExtendedList<DialogResponse> Responses { get; }
         new ExtendedList<Condition> Conditions { get; }
@@ -1651,7 +1651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1875,7 +1875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IDialogItemGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -2333,7 +2333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((DialogItemDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

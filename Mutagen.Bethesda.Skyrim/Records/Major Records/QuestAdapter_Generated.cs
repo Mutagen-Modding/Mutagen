@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(FileName, "FileName");
                     }
                     if ((printMask?.Fragments?.Overall ?? true)
-                        && Fragments.TryGet(out var FragmentsItem))
+                        && Fragments is {} FragmentsItem)
                     {
                         fg.AppendLine("Fragments =>");
                         fg.AppendLine("[");
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Aliases?.Overall ?? true)
-                        && Aliases.TryGet(out var AliasesItem))
+                        && Aliases is {} AliasesItem)
                     {
                         fg.AppendLine("Aliases =>");
                         fg.AppendLine("[");
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(FileName, "FileName");
-                if (Fragments.TryGet(out var FragmentsItem))
+                if (Fragments is {} FragmentsItem)
                 {
                     fg.AppendLine("Fragments =>");
                     fg.AppendLine("[");
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Aliases.TryGet(out var AliasesItem))
+                if (Aliases is {} AliasesItem)
                 {
                     fg.AppendLine("Aliases =>");
                     fg.AppendLine("[");

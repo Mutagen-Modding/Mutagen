@@ -145,31 +145,31 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region TextureSet
-        private IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
+        private readonly IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
         public IFormLinkNullable<ITextureSetGetter> TextureSet
         {
             get => _TextureSet;
-            set => _TextureSet = value.AsNullable();
+            set => _TextureSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IHeadPartGetter.TextureSet => this.TextureSet;
         #endregion
         #region Color
-        private IFormLinkNullable<IColorRecordGetter> _Color = new FormLinkNullable<IColorRecordGetter>();
+        private readonly IFormLinkNullable<IColorRecordGetter> _Color = new FormLinkNullable<IColorRecordGetter>();
         public IFormLinkNullable<IColorRecordGetter> Color
         {
             get => _Color;
-            set => _Color = value.AsNullable();
+            set => _Color.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> IHeadPartGetter.Color => this.Color;
         #endregion
         #region ValidRaces
-        private IFormLinkNullable<IFormListGetter> _ValidRaces = new FormLinkNullable<IFormListGetter>();
+        private readonly IFormLinkNullable<IFormListGetter> _ValidRaces = new FormLinkNullable<IFormListGetter>();
         public IFormLinkNullable<IFormListGetter> ValidRaces
         {
             get => _ValidRaces;
-            set => _ValidRaces = value.AsNullable();
+            set => _ValidRaces.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IHeadPartGetter.ValidRaces => this.ValidRaces;
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Type, "Type");
                     }
                     if ((printMask?.ExtraParts?.Overall ?? true)
-                        && ExtraParts.TryGet(out var ExtraPartsItem))
+                        && ExtraParts is {} ExtraPartsItem)
                     {
                         fg.AppendLine("ExtraParts =>");
                         fg.AppendLine("[");
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Parts?.Overall ?? true)
-                        && Parts.TryGet(out var PartsItem))
+                        && Parts is {} PartsItem)
                     {
                         fg.AppendLine("Parts =>");
                         fg.AppendLine("[");
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Model?.ToString(fg);
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Type, "Type");
-                if (ExtraParts.TryGet(out var ExtraPartsItem))
+                if (ExtraParts is {} ExtraPartsItem)
                 {
                     fg.AppendLine("ExtraParts =>");
                     fg.AppendLine("[");
@@ -732,7 +732,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Parts.TryGet(out var PartsItem))
+                if (Parts is {} PartsItem)
                 {
                     fg.AppendLine("Parts =>");
                     fg.AppendLine("[");
@@ -1003,9 +1003,9 @@ namespace Mutagen.Bethesda.Skyrim
         new HeadPart.TypeEnum? Type { get; set; }
         new ExtendedList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
         new ExtendedList<Part> Parts { get; }
-        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        new IFormLinkNullable<IColorRecordGetter> Color { get; }
-        new IFormLinkNullable<IFormListGetter> ValidRaces { get; }
+        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new IFormLinkNullable<IColorRecordGetter> Color { get; set; }
+        new IFormLinkNullable<IFormListGetter> ValidRaces { get; set; }
         #region Mutagen
         new HeadPart.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1486,12 +1486,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.Type ?? true)
-                && item.Type.TryGet(out var TypeItem))
+                && item.Type is {} TypeItem)
             {
                 fg.AppendItem(TypeItem, "Type");
             }
@@ -1668,16 +1668,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IHeadPartGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
             hash.Add(item.Flags);
-            if (item.Type.TryGet(out var Typeitem))
+            if (item.Type is {} Typeitem)
             {
                 hash.Add(Typeitem);
             }
@@ -1715,7 +1715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -1821,7 +1821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)HeadPart_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -2068,7 +2068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

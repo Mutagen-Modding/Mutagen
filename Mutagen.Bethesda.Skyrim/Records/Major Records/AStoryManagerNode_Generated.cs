@@ -56,21 +56,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        private IFormLinkNullable<IAStoryManagerNodeGetter> _Parent = new FormLinkNullable<IAStoryManagerNodeGetter>();
+        private readonly IFormLinkNullable<IAStoryManagerNodeGetter> _Parent = new FormLinkNullable<IAStoryManagerNodeGetter>();
         public IFormLinkNullable<IAStoryManagerNodeGetter> Parent
         {
             get => _Parent;
-            set => _Parent = value.AsNullable();
+            set => _Parent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAStoryManagerNodeGetter> IAStoryManagerNodeGetter.Parent => this.Parent;
         #endregion
         #region PreviousSibling
-        private IFormLinkNullable<IAStoryManagerNodeGetter> _PreviousSibling = new FormLinkNullable<IAStoryManagerNodeGetter>();
+        private readonly IFormLinkNullable<IAStoryManagerNodeGetter> _PreviousSibling = new FormLinkNullable<IAStoryManagerNodeGetter>();
         public IFormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling
         {
             get => _PreviousSibling;
-            set => _PreviousSibling = value.AsNullable();
+            set => _PreviousSibling.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAStoryManagerNodeGetter> IAStoryManagerNodeGetter.PreviousSibling => this.PreviousSibling;
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(PreviousSibling, "PreviousSibling");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Parent, "Parent");
                 fg.AppendItem(PreviousSibling, "PreviousSibling");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -624,8 +624,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IAStoryManagerNodeInternal>,
         ISkyrimMajorRecordInternal
     {
-        new IFormLinkNullable<IAStoryManagerNodeGetter> Parent { get; }
-        new IFormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling { get; }
+        new IFormLinkNullable<IAStoryManagerNodeGetter> Parent { get; set; }
+        new IFormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling { get; set; }
         new ExtendedList<Condition> Conditions { get; }
     }
 

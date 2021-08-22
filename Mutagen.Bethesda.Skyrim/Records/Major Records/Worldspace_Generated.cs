@@ -121,31 +121,31 @@ namespace Mutagen.Bethesda.Skyrim
         P2Int16? IWorldspaceGetter.FixedDimensionsCenterCell => this.FixedDimensionsCenterCell;
         #endregion
         #region InteriorLighting
-        private IFormLinkNullable<ILightingTemplateGetter> _InteriorLighting = new FormLinkNullable<ILightingTemplateGetter>();
+        private readonly IFormLinkNullable<ILightingTemplateGetter> _InteriorLighting = new FormLinkNullable<ILightingTemplateGetter>();
         public IFormLinkNullable<ILightingTemplateGetter> InteriorLighting
         {
             get => _InteriorLighting;
-            set => _InteriorLighting = value.AsNullable();
+            set => _InteriorLighting.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILightingTemplateGetter> IWorldspaceGetter.InteriorLighting => this.InteriorLighting;
         #endregion
         #region EncounterZone
-        private IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
+        private readonly IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
         public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
         {
             get => _EncounterZone;
-            set => _EncounterZone = value.AsNullable();
+            set => _EncounterZone.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> IWorldspaceGetter.EncounterZone => this.EncounterZone;
         #endregion
         #region Location
-        private IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
+        private readonly IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
         public IFormLinkNullable<ILocationGetter> Location
         {
             get => _Location;
-            set => _Location = value.AsNullable();
+            set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> IWorldspaceGetter.Location => this.Location;
@@ -162,31 +162,31 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceParentGetter? IWorldspaceGetter.Parent => this.Parent;
         #endregion
         #region Climate
-        private IFormLinkNullable<IClimateGetter> _Climate = new FormLinkNullable<IClimateGetter>();
+        private readonly IFormLinkNullable<IClimateGetter> _Climate = new FormLinkNullable<IClimateGetter>();
         public IFormLinkNullable<IClimateGetter> Climate
         {
             get => _Climate;
-            set => _Climate = value.AsNullable();
+            set => _Climate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClimateGetter> IWorldspaceGetter.Climate => this.Climate;
         #endregion
         #region Water
-        private IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
+        private readonly IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
         public IFormLinkNullable<IWaterGetter> Water
         {
             get => _Water;
-            set => _Water = value.AsNullable();
+            set => _Water.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;
         #endregion
         #region LodWater
-        private IFormLinkNullable<IWaterGetter> _LodWater = new FormLinkNullable<IWaterGetter>();
+        private readonly IFormLinkNullable<IWaterGetter> _LodWater = new FormLinkNullable<IWaterGetter>();
         public IFormLinkNullable<IWaterGetter> LodWater
         {
             get => _LodWater;
-            set => _LodWater = value.AsNullable();
+            set => _LodWater.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.LodWater => this.LodWater;
@@ -259,11 +259,11 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceObjectBoundsGetter? IWorldspaceGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #region Music
-        private IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
+        private readonly IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
         public IFormLinkNullable<IMusicTypeGetter> Music
         {
             get => _Music;
-            set => _Music = value.AsNullable();
+            set => _Music.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMusicTypeGetter> IWorldspaceGetter.Music => this.Music;
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (new DepthWrapper(fg))
                 {
                     if ((printMask?.LargeReferences?.Overall ?? true)
-                        && LargeReferences.TryGet(out var LargeReferencesItem))
+                        && LargeReferences is {} LargeReferencesItem)
                     {
                         fg.AppendLine("LargeReferences =>");
                         fg.AppendLine("[");
@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(SubCellsUnknown, "SubCellsUnknown");
                     }
                     if ((printMask?.SubCells?.Overall ?? true)
-                        && SubCells.TryGet(out var SubCellsItem))
+                        && SubCells is {} SubCellsItem)
                     {
                         fg.AppendLine("SubCells =>");
                         fg.AppendLine("[");
@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (LargeReferences.TryGet(out var LargeReferencesItem))
+                if (LargeReferences is {} LargeReferencesItem)
                 {
                     fg.AppendLine("LargeReferences =>");
                     fg.AppendLine("[");
@@ -1483,7 +1483,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TopCell?.ToString(fg);
                 fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
                 fg.AppendItem(SubCellsUnknown, "SubCellsUnknown");
-                if (SubCells.TryGet(out var SubCellsItem))
+                if (SubCells is {} SubCellsItem)
                 {
                     fg.AppendLine("SubCells =>");
                     fg.AppendLine("[");
@@ -1861,13 +1861,13 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new TranslatedString? Name { get; set; }
         new P2Int16? FixedDimensionsCenterCell { get; set; }
-        new IFormLinkNullable<ILightingTemplateGetter> InteriorLighting { get; }
-        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
-        new IFormLinkNullable<ILocationGetter> Location { get; }
+        new IFormLinkNullable<ILightingTemplateGetter> InteriorLighting { get; set; }
+        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
+        new IFormLinkNullable<ILocationGetter> Location { get; set; }
         new WorldspaceParent? Parent { get; set; }
-        new IFormLinkNullable<IClimateGetter> Climate { get; }
-        new IFormLinkNullable<IWaterGetter> Water { get; }
-        new IFormLinkNullable<IWaterGetter> LodWater { get; }
+        new IFormLinkNullable<IClimateGetter> Climate { get; set; }
+        new IFormLinkNullable<IWaterGetter> Water { get; set; }
+        new IFormLinkNullable<IWaterGetter> LodWater { get; set; }
         new Single? LodWaterHeight { get; set; }
         new WorldspaceLandDefaults? LandDefaults { get; set; }
         new String? MapImage { get; set; }
@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single? DistantLodMultiplier { get; set; }
         new Worldspace.Flag Flags { get; set; }
         new WorldspaceObjectBounds? ObjectBounds { get; set; }
-        new IFormLinkNullable<IMusicTypeGetter> Music { get; }
+        new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new String? CanopyShadow { get; set; }
         new String? WaterNoiseTexture { get; set; }
         new String? HdLodDiffuseTexture { get; set; }
@@ -2581,7 +2581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICell":
                 case "ICellInternal":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2604,7 +2604,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.TopCell.TryGet(out var LandscapeTopCellitem))
+                        if (obj.TopCell is {} LandscapeTopCellitem)
                         {
                             LandscapeTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2619,7 +2619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMesh":
                 case "IANavigationMeshInternal":
                     {
-                        if (obj.TopCell.TryGet(out var ANavigationMeshTopCellitem))
+                        if (obj.TopCell is {} ANavigationMeshTopCellitem)
                         {
                             ANavigationMeshTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2634,7 +2634,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PlacedNpcTopCellitem))
+                        if (obj.TopCell is {} PlacedNpcTopCellitem)
                         {
                             PlacedNpcTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2649,7 +2649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PlacedObjectTopCellitem))
+                        if (obj.TopCell is {} PlacedObjectTopCellitem)
                         {
                             PlacedObjectTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2664,7 +2664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
                     {
-                        if (obj.TopCell.TryGet(out var APlacedTrapTopCellitem))
+                        if (obj.TopCell is {} APlacedTrapTopCellitem)
                         {
                             APlacedTrapTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2684,7 +2684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationTargetable":
                 case "ILocationTargetableGetter":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2697,7 +2697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IOwner":
                 case "IOwnerGetter":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2710,7 +2710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2723,7 +2723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILinkedReference":
                 case "ILinkedReferenceGetter":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2736,7 +2736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlaced":
                 case "IPlacedGetter":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2749,7 +2749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedSimple":
                 case "IPlacedSimpleGetter":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2762,7 +2762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
@@ -2988,17 +2988,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.MaxHeight?.Overall ?? true)
-                && item.MaxHeight.TryGet(out var MaxHeightItem))
+                && item.MaxHeight is {} MaxHeightItem)
             {
                 MaxHeightItem?.ToString(fg, "MaxHeight");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.FixedDimensionsCenterCell ?? true)
-                && item.FixedDimensionsCenterCell.TryGet(out var FixedDimensionsCenterCellItem))
+                && item.FixedDimensionsCenterCell is {} FixedDimensionsCenterCellItem)
             {
                 fg.AppendItem(FixedDimensionsCenterCellItem, "FixedDimensionsCenterCell");
             }
@@ -3015,7 +3015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Location.FormKeyNullable, "Location");
             }
             if ((printMask?.Parent?.Overall ?? true)
-                && item.Parent.TryGet(out var ParentItem))
+                && item.Parent is {} ParentItem)
             {
                 ParentItem?.ToString(fg, "Parent");
             }
@@ -3032,27 +3032,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.LodWater.FormKeyNullable, "LodWater");
             }
             if ((printMask?.LodWaterHeight ?? true)
-                && item.LodWaterHeight.TryGet(out var LodWaterHeightItem))
+                && item.LodWaterHeight is {} LodWaterHeightItem)
             {
                 fg.AppendItem(LodWaterHeightItem, "LodWaterHeight");
             }
             if ((printMask?.LandDefaults?.Overall ?? true)
-                && item.LandDefaults.TryGet(out var LandDefaultsItem))
+                && item.LandDefaults is {} LandDefaultsItem)
             {
                 LandDefaultsItem?.ToString(fg, "LandDefaults");
             }
             if ((printMask?.MapImage ?? true)
-                && item.MapImage.TryGet(out var MapImageItem))
+                && item.MapImage is {} MapImageItem)
             {
                 fg.AppendItem(MapImageItem, "MapImage");
             }
             if ((printMask?.CloudModel?.Overall ?? true)
-                && item.CloudModel.TryGet(out var CloudModelItem))
+                && item.CloudModel is {} CloudModelItem)
             {
                 CloudModelItem?.ToString(fg, "CloudModel");
             }
             if ((printMask?.MapData?.Overall ?? true)
-                && item.MapData.TryGet(out var MapDataItem))
+                && item.MapData is {} MapDataItem)
             {
                 MapDataItem?.ToString(fg, "MapData");
             }
@@ -3061,7 +3061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.MapOffset?.ToString(fg, "MapOffset");
             }
             if ((printMask?.DistantLodMultiplier ?? true)
-                && item.DistantLodMultiplier.TryGet(out var DistantLodMultiplierItem))
+                && item.DistantLodMultiplier is {} DistantLodMultiplierItem)
             {
                 fg.AppendItem(DistantLodMultiplierItem, "DistantLodMultiplier");
             }
@@ -3070,7 +3070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.ObjectBounds?.Overall ?? true)
-                && item.ObjectBounds.TryGet(out var ObjectBoundsItem))
+                && item.ObjectBounds is {} ObjectBoundsItem)
             {
                 ObjectBoundsItem?.ToString(fg, "ObjectBounds");
             }
@@ -3079,37 +3079,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Music.FormKeyNullable, "Music");
             }
             if ((printMask?.CanopyShadow ?? true)
-                && item.CanopyShadow.TryGet(out var CanopyShadowItem))
+                && item.CanopyShadow is {} CanopyShadowItem)
             {
                 fg.AppendItem(CanopyShadowItem, "CanopyShadow");
             }
             if ((printMask?.WaterNoiseTexture ?? true)
-                && item.WaterNoiseTexture.TryGet(out var WaterNoiseTextureItem))
+                && item.WaterNoiseTexture is {} WaterNoiseTextureItem)
             {
                 fg.AppendItem(WaterNoiseTextureItem, "WaterNoiseTexture");
             }
             if ((printMask?.HdLodDiffuseTexture ?? true)
-                && item.HdLodDiffuseTexture.TryGet(out var HdLodDiffuseTextureItem))
+                && item.HdLodDiffuseTexture is {} HdLodDiffuseTextureItem)
             {
                 fg.AppendItem(HdLodDiffuseTextureItem, "HdLodDiffuseTexture");
             }
             if ((printMask?.HdLodNormalTexture ?? true)
-                && item.HdLodNormalTexture.TryGet(out var HdLodNormalTextureItem))
+                && item.HdLodNormalTexture is {} HdLodNormalTextureItem)
             {
                 fg.AppendItem(HdLodNormalTextureItem, "HdLodNormalTexture");
             }
             if ((printMask?.WaterEnvironmentMap ?? true)
-                && item.WaterEnvironmentMap.TryGet(out var WaterEnvironmentMapItem))
+                && item.WaterEnvironmentMap is {} WaterEnvironmentMapItem)
             {
                 fg.AppendItem(WaterEnvironmentMapItem, "WaterEnvironmentMap");
             }
             if ((printMask?.OffsetData ?? true)
-                && item.OffsetData.TryGet(out var OffsetDataItem))
+                && item.OffsetData is {} OffsetDataItem)
             {
                 fg.AppendLine($"OffsetData => {SpanExt.ToHexString(OffsetDataItem)}");
             }
             if ((printMask?.TopCell?.Overall ?? true)
-                && item.TopCell.TryGet(out var TopCellItem))
+                && item.TopCell is {} TopCellItem)
             {
                 TopCellItem?.ToString(fg, "TopCell");
             }
@@ -3372,84 +3372,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.LargeReferences);
-            if (item.MaxHeight.TryGet(out var MaxHeightitem))
+            if (item.MaxHeight is {} MaxHeightitem)
             {
                 hash.Add(MaxHeightitem);
             }
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.FixedDimensionsCenterCell.TryGet(out var FixedDimensionsCenterCellitem))
+            if (item.FixedDimensionsCenterCell is {} FixedDimensionsCenterCellitem)
             {
                 hash.Add(FixedDimensionsCenterCellitem);
             }
             hash.Add(item.InteriorLighting);
             hash.Add(item.EncounterZone);
             hash.Add(item.Location);
-            if (item.Parent.TryGet(out var Parentitem))
+            if (item.Parent is {} Parentitem)
             {
                 hash.Add(Parentitem);
             }
             hash.Add(item.Climate);
             hash.Add(item.Water);
             hash.Add(item.LodWater);
-            if (item.LodWaterHeight.TryGet(out var LodWaterHeightitem))
+            if (item.LodWaterHeight is {} LodWaterHeightitem)
             {
                 hash.Add(LodWaterHeightitem);
             }
-            if (item.LandDefaults.TryGet(out var LandDefaultsitem))
+            if (item.LandDefaults is {} LandDefaultsitem)
             {
                 hash.Add(LandDefaultsitem);
             }
-            if (item.MapImage.TryGet(out var MapImageitem))
+            if (item.MapImage is {} MapImageitem)
             {
                 hash.Add(MapImageitem);
             }
-            if (item.CloudModel.TryGet(out var CloudModelitem))
+            if (item.CloudModel is {} CloudModelitem)
             {
                 hash.Add(CloudModelitem);
             }
-            if (item.MapData.TryGet(out var MapDataitem))
+            if (item.MapData is {} MapDataitem)
             {
                 hash.Add(MapDataitem);
             }
             hash.Add(item.MapOffset);
-            if (item.DistantLodMultiplier.TryGet(out var DistantLodMultiplieritem))
+            if (item.DistantLodMultiplier is {} DistantLodMultiplieritem)
             {
                 hash.Add(DistantLodMultiplieritem);
             }
             hash.Add(item.Flags);
-            if (item.ObjectBounds.TryGet(out var ObjectBoundsitem))
+            if (item.ObjectBounds is {} ObjectBoundsitem)
             {
                 hash.Add(ObjectBoundsitem);
             }
             hash.Add(item.Music);
-            if (item.CanopyShadow.TryGet(out var CanopyShadowitem))
+            if (item.CanopyShadow is {} CanopyShadowitem)
             {
                 hash.Add(CanopyShadowitem);
             }
-            if (item.WaterNoiseTexture.TryGet(out var WaterNoiseTextureitem))
+            if (item.WaterNoiseTexture is {} WaterNoiseTextureitem)
             {
                 hash.Add(WaterNoiseTextureitem);
             }
-            if (item.HdLodDiffuseTexture.TryGet(out var HdLodDiffuseTextureitem))
+            if (item.HdLodDiffuseTexture is {} HdLodDiffuseTextureitem)
             {
                 hash.Add(HdLodDiffuseTextureitem);
             }
-            if (item.HdLodNormalTexture.TryGet(out var HdLodNormalTextureitem))
+            if (item.HdLodNormalTexture is {} HdLodNormalTextureitem)
             {
                 hash.Add(HdLodNormalTextureitem);
             }
-            if (item.WaterEnvironmentMap.TryGet(out var WaterEnvironmentMapitem))
+            if (item.WaterEnvironmentMap is {} WaterEnvironmentMapitem)
             {
                 hash.Add(WaterEnvironmentMapitem);
             }
-            if (item.OffsetData.TryGet(out var OffsetDataItem))
+            if (item.OffsetData is {} OffsetDataItem)
             {
                 hash.Add(OffsetDataItem);
             }
-            if (item.TopCell.TryGet(out var TopCellitem))
+            if (item.TopCell is {} TopCellitem)
             {
                 hash.Add(TopCellitem);
             }
@@ -3501,7 +3501,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Location);
             }
-            if (obj.Parent.TryGet(out var ParentItems))
+            if (obj.Parent is {} ParentItems)
             {
                 foreach (var item in ParentItems.ContainedFormLinks)
                 {
@@ -3520,7 +3520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.LodWater);
             }
-            if (obj.CloudModel.TryGet(out var CloudModelItems))
+            if (obj.CloudModel is {} CloudModelItems)
             {
                 foreach (var item in CloudModelItems.ContainedFormLinks)
                 {
@@ -3531,7 +3531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Music);
             }
-            if (obj.TopCell.TryGet(out var TopCellItems))
+            if (obj.TopCell is {} TopCellItems)
             {
                 foreach (var item in TopCellItems.ContainedFormLinks)
                 {
@@ -3549,7 +3549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((obj.TopCell != null))
             {
-                if (obj.TopCell.TryGet(out var TopCellitem))
+                if (obj.TopCell is {} TopCellitem)
                 {
                     yield return TopCellitem;
                     foreach (var item in TopCellitem.EnumerateMajorRecords())
@@ -3611,7 +3611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICell":
                 case "ICellInternal":
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3644,7 +3644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.TopCell.TryGet(out var LandscapeTopCellitem))
+                        if (obj.TopCell is {} LandscapeTopCellitem)
                         {
                             foreach (var item in LandscapeTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
@@ -3665,7 +3665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMesh":
                 case "IANavigationMeshInternal":
                     {
-                        if (obj.TopCell.TryGet(out var ANavigationMeshTopCellitem))
+                        if (obj.TopCell is {} ANavigationMeshTopCellitem)
                         {
                             foreach (var item in ANavigationMeshTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
@@ -3686,7 +3686,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PlacedNpcTopCellitem))
+                        if (obj.TopCell is {} PlacedNpcTopCellitem)
                         {
                             foreach (var item in PlacedNpcTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
@@ -3707,7 +3707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
                     {
-                        if (obj.TopCell.TryGet(out var PlacedObjectTopCellitem))
+                        if (obj.TopCell is {} PlacedObjectTopCellitem)
                         {
                             foreach (var item in PlacedObjectTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
@@ -3728,7 +3728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
                     {
-                        if (obj.TopCell.TryGet(out var APlacedTrapTopCellitem))
+                        if (obj.TopCell is {} APlacedTrapTopCellitem)
                         {
                             foreach (var item in APlacedTrapTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
@@ -3771,7 +3771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3792,7 +3792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationTargetableGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3814,7 +3814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3835,7 +3835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IOwnerGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3857,7 +3857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3878,7 +3878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeywordLinkedReferenceGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3900,7 +3900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3921,7 +3921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILinkedReferenceGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3943,7 +3943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3964,7 +3964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3986,7 +3986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -4007,7 +4007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedSimpleGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -4029,7 +4029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -4050,7 +4050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedThingGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        if (obj.TopCell is {} TopCellitem)
                         {
                             yield return TopCellitem;
                             foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -4095,7 +4095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 duplicateInto: duplicateInto,
                 parent: parent);
             {
-                if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                if (obj.TopCell is {} WorldspaceTopCellitem)
                 {
                     yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICellInternal, ICellGetter>(
                         modKey: modKey,
@@ -4212,7 +4212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICell":
                 case "ICellInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICellInternal, ICellGetter>(
                                 modKey: modKey,
@@ -4292,7 +4292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscape":
                 case "ILandscapeInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4338,7 +4338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMesh":
                 case "IANavigationMeshInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4384,7 +4384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4430,7 +4430,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4476,7 +4476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4537,7 +4537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationTargetableGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4583,7 +4583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IOwnerGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4629,7 +4629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeywordLinkedReferenceGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4675,7 +4675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILinkedReferenceGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4721,7 +4721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4767,7 +4767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedSimpleGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4813,7 +4813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedThingGetter":
                 {
                     {
-                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
@@ -4967,7 +4967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.MaxHeight);
                 try
                 {
-                    if(rhs.MaxHeight.TryGet(out var rhsMaxHeight))
+                    if(rhs.MaxHeight is {} rhsMaxHeight)
                     {
                         item.MaxHeight = rhsMaxHeight.DeepCopy(
                             errorMask: errorMask,
@@ -5013,7 +5013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Parent);
                 try
                 {
-                    if(rhs.Parent.TryGet(out var rhsParent))
+                    if(rhs.Parent is {} rhsParent)
                     {
                         item.Parent = rhsParent.DeepCopy(
                             errorMask: errorMask,
@@ -5055,7 +5055,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.LandDefaults);
                 try
                 {
-                    if(rhs.LandDefaults.TryGet(out var rhsLandDefaults))
+                    if(rhs.LandDefaults is {} rhsLandDefaults)
                     {
                         item.LandDefaults = rhsLandDefaults.DeepCopy(
                             errorMask: errorMask,
@@ -5085,7 +5085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.CloudModel);
                 try
                 {
-                    if(rhs.CloudModel.TryGet(out var rhsCloudModel))
+                    if(rhs.CloudModel is {} rhsCloudModel)
                     {
                         item.CloudModel = rhsCloudModel.DeepCopy(
                             errorMask: errorMask,
@@ -5111,7 +5111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
                 try
                 {
-                    if(rhs.MapData.TryGet(out var rhsMapData))
+                    if(rhs.MapData is {} rhsMapData)
                     {
                         item.MapData = rhsMapData.DeepCopy(
                             errorMask: errorMask,
@@ -5167,7 +5167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBounds);
                 try
                 {
-                    if(rhs.ObjectBounds.TryGet(out var rhsObjectBounds))
+                    if(rhs.ObjectBounds is {} rhsObjectBounds)
                     {
                         item.ObjectBounds = rhsObjectBounds.DeepCopy(
                             errorMask: errorMask,
@@ -5214,7 +5214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
-                if(rhs.OffsetData.TryGet(out var OffsetDatarhs))
+                if(rhs.OffsetData is {} OffsetDatarhs)
                 {
                     item.OffsetData = OffsetDatarhs.ToArray();
                 }
@@ -5228,7 +5228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.TopCell);
                 try
                 {
-                    if(rhs.TopCell.TryGet(out var rhsTopCell))
+                    if(rhs.TopCell is {} rhsTopCell)
                     {
                         item.TopCell = (Cell)rhsTopCell.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell),
@@ -5458,7 +5458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.MaxHeight.TryGet(out var MaxHeightItem))
+            if (item.MaxHeight is {} MaxHeightItem)
             {
                 ((WorldspaceMaxHeightBinaryWriteTranslation)((IBinaryItem)MaxHeightItem).BinaryWriteTranslator).Write(
                     item: MaxHeightItem,
@@ -5487,7 +5487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Location,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XLCN));
-            if (item.Parent.TryGet(out var ParentItem))
+            if (item.Parent is {} ParentItem)
             {
                 ((WorldspaceParentBinaryWriteTranslation)((IBinaryItem)ParentItem).BinaryWriteTranslator).Write(
                     item: ParentItem,
@@ -5510,7 +5510,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.LodWaterHeight,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4));
-            if (item.LandDefaults.TryGet(out var LandDefaultsItem))
+            if (item.LandDefaults is {} LandDefaultsItem)
             {
                 ((WorldspaceLandDefaultsBinaryWriteTranslation)((IBinaryItem)LandDefaultsItem).BinaryWriteTranslator).Write(
                     item: LandDefaultsItem,
@@ -5522,14 +5522,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.MapImage,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.CloudModel.TryGet(out var CloudModelItem))
+            if (item.CloudModel is {} CloudModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)CloudModelItem).BinaryWriteTranslator).Write(
                     item: CloudModelItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.MapData.TryGet(out var MapDataItem))
+            if (item.MapData is {} MapDataItem)
             {
                 ((WorldspaceMapBinaryWriteTranslation)((IBinaryItem)MapDataItem).BinaryWriteTranslator).Write(
                     item: MapDataItem,
@@ -5550,7 +5550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
-            if (item.ObjectBounds.TryGet(out var ObjectBoundsItem))
+            if (item.ObjectBounds is {} ObjectBoundsItem)
             {
                 ((WorldspaceObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                     item: ObjectBoundsItem,

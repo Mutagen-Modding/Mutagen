@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Link
-        private IFormLink<IObjectIdGetter> _Link = new FormLink<IObjectIdGetter>();
+        private readonly IFormLink<IObjectIdGetter> _Link = new FormLink<IObjectIdGetter>();
         public IFormLink<IObjectIdGetter> Link
         {
             get => _Link;
-            set => _Link = value.AsSetter();
+            set => _Link.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IObjectIdGetter> ILocationObjectIdGetter.Link => this.Link;
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILocationObjectIdGetter,
         ILoquiObjectSetter<ILocationObjectId>
     {
-        new IFormLink<IObjectIdGetter> Link { get; }
+        new IFormLink<IObjectIdGetter> Link { get; set; }
     }
 
     public partial interface ILocationObjectIdGetter :

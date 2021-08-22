@@ -926,12 +926,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArmorModel.Mask<bool>? printMask = null)
         {
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
             if ((printMask?.Icons?.Overall ?? true)
-                && item.Icons.TryGet(out var IconsItem))
+                && item.Icons is {} IconsItem)
             {
                 IconsItem?.ToString(fg, "Icons");
             }
@@ -966,11 +966,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IArmorModelGetter item)
         {
             var hash = new HashCode();
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
-            if (item.Icons.TryGet(out var Iconsitem))
+            if (item.Icons is {} Iconsitem)
             {
                 hash.Add(Iconsitem);
             }
@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IArmorModelGetter obj)
         {
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ArmorModel_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ArmorModel_FieldIndex.Icons);
                 try
                 {
-                    if(rhs.Icons.TryGet(out var rhsIcons))
+                    if(rhs.Icons is {} rhsIcons)
                     {
                         item.Icons = rhsIcons.DeepCopy(
                             errorMask: errorMask,
@@ -1162,14 +1162,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Icons.TryGet(out var IconsItem))
+            if (item.Icons is {} IconsItem)
             {
                 ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
                     item: IconsItem,

@@ -9,43 +9,32 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using Mutagen.Bethesda.Archives.DI;
+using Mutagen.Bethesda.Environments.DI;
+using Stream = System.IO.Stream;
+using StreamReader = System.IO.StreamReader;
 
 namespace Mutagen.Bethesda.Archives
 {
-    /// <summary>
-    /// A readonly interface for retrieving data from a Bethesda Archive
-    /// </summary>
-    public interface IArchiveReader
-    {
-        /// <summary>
-        /// Attempts to locate and retrieve a folder from the archive
-        /// </summary>
-        /// <param name="path">Folder path to look for</param>
-        /// <param name="folder">Retrieved folder object, if successful</param>
-        /// <returns>True if folder with the given path was located in the archive</returns>
-        bool TryGetFolder(string path, [MaybeNullWhen(false)] out IArchiveFolder folder);
-        IEnumerable<IArchiveFile> Files { get; }
-    }
-
     public static class Archive
     {
-        private static readonly IniParserConfiguration Config = new IniParserConfiguration()
+        private static GetApplicableArchivePaths GetApplicableArchivePathsDi(GameRelease release, DirectoryPath dataFolderPath)
         {
-            AllowDuplicateKeys = true,
-            AllowDuplicateSections = true,
-            AllowKeysWithoutSection = true,
-            AllowCreateSectionsOnFly = true,
-            CaseInsensitive = true,
-            SkipInvalidLines = true,
-        };
-
-        // ToDo
-        // Migrate this to a more centralized/official place within Mutagen
-        internal static IFileSystem FileSystem = new FileSystem();
-
+            var gameReleaseInjection = new GameReleaseInjection(release);
+            var ext = new ArchiveExtensionProvider(gameReleaseInjection);
+            return new GetApplicableArchivePaths(
+                IFileSystemExt.DefaultFilesystem,
+                new GetArchiveIniListings(
+                    IFileSystemExt.DefaultFilesystem,
+                    gameReleaseInjection),
+                new CheckArchiveApplicability(
+                    ext),
+                new DataDirectoryInjection(dataFolderPath),
+                ext);
+        }
+        
         /// <summary>
         /// Returns the preferred extension (.bsa/.ba2) depending on the Game Release
         /// </summary>
@@ -73,18 +62,10 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>Archive reader object</returns>
         public static IArchiveReader CreateReader(GameRelease release, FilePath path)
         {
-            switch (release)
-            {
-                case GameRelease.Oblivion:
-                case GameRelease.SkyrimLE:
-                case GameRelease.SkyrimSE:
-                case GameRelease.SkyrimVR:
-                    return new BsaReader(path);
-                case GameRelease.Fallout4:
-                    return new Ba2Reader(path);
-                default:
-                    throw new NotImplementedException();
-            }
+            return new ArchiveReaderProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    new GameReleaseInjection(release))
+                .Create(path);
         }
 
         /// <summary>
@@ -95,7 +76,8 @@ namespace Mutagen.Bethesda.Archives
         /// <returns></returns>
         public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath)
         {
-            return GetApplicableArchivePathsInternal(release, dataFolderPath, default(ModKey?), GetPriorityOrderComparer(release));
+            return GetApplicableArchivePathsDi(release, dataFolderPath)
+                .Get();
         }
 
         /// <summary>
@@ -107,7 +89,8 @@ namespace Mutagen.Bethesda.Archives
         /// <returns></returns>
         public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, IEnumerable<FileName>? archiveOrdering)
         {
-            return GetApplicableArchivePathsInternal(release, dataFolderPath, default(ModKey?), GetPriorityOrderComparer(release, archiveOrdering));
+            return GetApplicableArchivePathsDi(release, dataFolderPath)
+                .Get(archiveOrdering);
         }
 
         /// <summary>
@@ -121,7 +104,8 @@ namespace Mutagen.Bethesda.Archives
         /// <returns></returns>
         public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey)
         {
-            return GetApplicableArchivePaths(release, dataFolderPath, modKey, GetPriorityOrderComparer(release));
+            return GetApplicableArchivePathsDi(release, dataFolderPath)
+                .Get(modKey);
         }
 
         /// <summary>
@@ -136,7 +120,8 @@ namespace Mutagen.Bethesda.Archives
         /// <returns></returns>
         public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IEnumerable<FileName>? archiveOrdering)
         {
-            return GetApplicableArchivePaths(release, dataFolderPath, modKey, GetPriorityOrderComparer(release, archiveOrdering));
+            return GetApplicableArchivePathsDi(release, dataFolderPath)
+                .Get(modKey, archiveOrdering);
         }
 
         /// <summary>
@@ -151,7 +136,8 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>Full paths of Archives that apply to the given mod and exist</returns>
         public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IComparer<FileName>? archiveOrdering)
         {
-            return GetApplicableArchivePathsInternal(release, dataFolderPath, modKey, archiveOrdering);
+            return GetApplicableArchivePathsDi(release, dataFolderPath)
+                .Get(modKey, archiveOrdering);
         }
 
         /// <summary>
@@ -167,42 +153,10 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>True if Archive is typically applicable to the given ModKey</returns>
         public static bool IsApplicable(GameRelease release, ModKey modKey, FileName archiveFileName)
         {
-            if (!archiveFileName.Extension.Equals(GetExtension(release), StringComparison.OrdinalIgnoreCase)) return false;
-            var nameWithoutExt = archiveFileName.NameWithoutExtension.AsSpan();
-
-            // See if the name matches straight up
-            if (modKey.Name.AsSpan().Equals(nameWithoutExt, StringComparison.OrdinalIgnoreCase)) return true;
-
-            // Trim ending "type" information and try again
-            var delimIndex = nameWithoutExt.LastIndexOf(" - ");
-            if (delimIndex == -1) return false;
-
-            return modKey.Name.AsSpan().Equals(nameWithoutExt.Slice(0, delimIndex), StringComparison.OrdinalIgnoreCase);
-        }
-        
-        private static IEnumerable<FilePath> GetApplicableArchivePathsInternal(GameRelease release, DirectoryPath dataFolderPath, ModKey? modKey, IComparer<FileName>? archiveOrdering)
-        {
-            if (modKey.HasValue && modKey.Value.IsNull)
-            {
-                return Enumerable.Empty<FilePath>();
-            }
-            
-            var ret = dataFolderPath.EnumerateFiles(searchPattern: $"*{GetExtension(release)}");
-            if (modKey != null)
-            {
-                var iniListedArchives = GetIniListings(release).ToHashSet();
-                ret = ret
-                    .Where(archive =>
-                    {
-                        if (iniListedArchives.Contains(archive.Name)) return true;
-                        return IsApplicable(release, modKey.Value, archive.Name);
-                    });
-            }
-            if (archiveOrdering != null)
-            {
-                return ret.OrderBy(x => x.Name, archiveOrdering);
-            }
-            return ret;
+            return new CheckArchiveApplicability(
+                    new ArchiveExtensionProvider(
+                        new GameReleaseInjection(release)))
+                .IsApplicable(modKey, archiveFileName);
         }
 
         /// <summary>
@@ -212,7 +166,10 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
         public static IEnumerable<FileName> GetIniListings(GameRelease release)
         {
-            return GetIniListings(release, Ini.GetTypicalPath(release));
+            return new GetArchiveIniListings(
+                    IFileSystemExt.DefaultFilesystem,
+                    new GameReleaseInjection(release))
+                .Get();
         }
 
         /// <summary>
@@ -223,7 +180,10 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
         public static IEnumerable<FileName> GetIniListings(GameRelease release, FilePath path)
         {
-            return GetIniListings(release, FileSystem.File.OpenRead(path.Path));
+            return new GetArchiveIniListings(
+                    IFileSystemExt.DefaultFilesystem,
+                    new GameReleaseInjection(release))
+                .Get(path);
         }
 
         /// <summary>
@@ -234,53 +194,10 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
         public static IEnumerable<FileName> GetIniListings(GameRelease release, Stream iniStream)
         {
-            // Release exists as parameter, in case future games need different handling
-
-            var parser = new FileIniDataParser(new IniDataParser(Config));
-            var data = parser.ReadData(new StreamReader(iniStream));
-            var basePath = data["Archive"];
-            var str1 = basePath["sResourceArchiveList"]?.Split(", ");
-            var str2 = basePath["sResourceArchiveList2"]?.Split(", ");
-            var ret = str1.EmptyIfNull().And(str2.EmptyIfNull())
-                .Select(x => new FileName(x))
-                .ToList();
-            return ret;
-        }
-
-        /// <summary>
-        /// Creates a comparer that orders Archives to priority order, based on a given listed ordering.
-        /// Any Archive not present in the listed Archives will go last <br/>
-        /// <br/>
-        /// If no order is given, then the typical ordering driven by the Ini is used.
-        /// </summary>
-        /// <param name="release">GameRelease to target</param>
-        /// <param name="listedArchiveOrdering">Listed order of Archives, with higher priority later in the list</param>
-        /// <returns>Comparer that orders Archives in priority order</returns>
-        private static IComparer<FileName>? GetPriorityOrderComparer(GameRelease release, IEnumerable<FileName>? listedArchiveOrdering = null)
-        {
-            return GetPriorityOrderComparer(listedArchiveOrdering ?? GetIniListings(release));
-        }
-
-        /// <summary>
-        /// Creates a comparer that orders Archives to priority order, based on a given listed ordering.
-        /// Any Archive not present in the listed Archives will go last
-        /// </summary>
-        /// <param name="listedArchiveOrdering">Listed order of Archives, with higher priority later in the list</param>
-        /// <returns>Comparer that orders Archives in priority order</returns>
-        private static IComparer<FileName>? GetPriorityOrderComparer(IEnumerable<FileName> listedArchiveOrdering)
-        {
-            var archiveOrderingList = listedArchiveOrdering.ToList();
-            if (archiveOrderingList.Count == 0) return null;
-            archiveOrderingList.Reverse();
-            return Comparer<FileName>.Create((a, b) =>
-            {
-                var indexA = archiveOrderingList.IndexOf(a);
-                var indexB = archiveOrderingList.IndexOf(b);
-                if (indexA == -1 && indexB == -1) return 0;
-                if (indexA == -1) return 1;
-                if (indexB == -1) return -1;
-                return indexA - indexB;
-            });
+            return new GetArchiveIniListings(
+                    IFileSystemExt.DefaultFilesystem,
+                    new GameReleaseInjection(release))
+                .Get(iniStream);
         }
     }
 }

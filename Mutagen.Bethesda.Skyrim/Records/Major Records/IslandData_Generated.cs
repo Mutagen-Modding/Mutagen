@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Max, "Max");
                     }
                     if ((printMask?.Triangles?.Overall ?? true)
-                        && Triangles.TryGet(out var TrianglesItem))
+                        && Triangles is {} TrianglesItem)
                     {
                         fg.AppendLine("Triangles =>");
                         fg.AppendLine("[");
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Vertices?.Overall ?? true)
-                        && Vertices.TryGet(out var VerticesItem))
+                        && Vertices is {} VerticesItem)
                     {
                         fg.AppendLine("Vertices =>");
                         fg.AppendLine("[");
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 fg.AppendItem(Min, "Min");
                 fg.AppendItem(Max, "Max");
-                if (Triangles.TryGet(out var TrianglesItem))
+                if (Triangles is {} TrianglesItem)
                 {
                     fg.AppendLine("Triangles =>");
                     fg.AppendLine("[");
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Vertices.TryGet(out var VerticesItem))
+                if (Vertices is {} VerticesItem)
                 {
                     fg.AppendLine("Vertices =>");
                     fg.AppendLine("[");

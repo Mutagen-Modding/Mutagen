@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavMesh
-        private IFormLink<IANavigationMeshGetter> _NavMesh = new FormLink<IANavigationMeshGetter>();
+        private readonly IFormLink<IANavigationMeshGetter> _NavMesh = new FormLink<IANavigationMeshGetter>();
         public IFormLink<IANavigationMeshGetter> NavMesh
         {
             get => _NavMesh;
-            set => _NavMesh = value.AsSetter();
+            set => _NavMesh.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IANavigationMeshGetter> INavigationDoorLinkGetter.NavMesh => this.NavMesh;
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavigationDoorLink>,
         INavigationDoorLinkGetter
     {
-        new IFormLink<IANavigationMeshGetter> NavMesh { get; }
+        new IFormLink<IANavigationMeshGetter> NavMesh { get; set; }
         new Int16 NavMeshTriangleIndex { get; set; }
         new Int16 Unused { get; set; }
     }

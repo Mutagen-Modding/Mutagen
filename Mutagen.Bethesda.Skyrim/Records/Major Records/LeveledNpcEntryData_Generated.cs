@@ -56,11 +56,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        private IFormLink<INpcSpawnGetter> _Reference = new FormLink<INpcSpawnGetter>();
+        private readonly IFormLink<INpcSpawnGetter> _Reference = new FormLink<INpcSpawnGetter>();
         public IFormLink<INpcSpawnGetter> Reference
         {
             get => _Reference;
-            set => _Reference = value.AsSetter();
+            set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcSpawnGetter> ILeveledNpcEntryDataGetter.Reference => this.Reference;
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int16 Level { get; set; }
         new Int16 Unknown { get; set; }
-        new IFormLink<INpcSpawnGetter> Reference { get; }
+        new IFormLink<INpcSpawnGetter> Reference { get; set; }
         new Int16 Count { get; set; }
         new Int16 Unknown2 { get; set; }
     }

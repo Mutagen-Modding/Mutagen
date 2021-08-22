@@ -72,11 +72,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Base
-        private IFormLinkNullable<ISkyrimMajorRecordGetter> _Base = new FormLinkNullable<ISkyrimMajorRecordGetter>();
+        private readonly IFormLinkNullable<ISkyrimMajorRecordGetter> _Base = new FormLinkNullable<ISkyrimMajorRecordGetter>();
         public IFormLinkNullable<ISkyrimMajorRecordGetter> Base
         {
             get => _Base;
-            set => _Base = value.AsNullable();
+            set => _Base.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISkyrimMajorRecordGetter> IPlacedObjectGetter.Base => this.Base;
@@ -148,21 +148,21 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region LightingTemplate
-        private IFormLinkNullable<ILightGetter> _LightingTemplate = new FormLinkNullable<ILightGetter>();
+        private readonly IFormLinkNullable<ILightGetter> _LightingTemplate = new FormLinkNullable<ILightGetter>();
         public IFormLinkNullable<ILightGetter> LightingTemplate
         {
             get => _LightingTemplate;
-            set => _LightingTemplate = value.AsNullable();
+            set => _LightingTemplate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILightGetter> IPlacedObjectGetter.LightingTemplate => this.LightingTemplate;
         #endregion
         #region ImageSpace
-        private IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
         public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace
         {
             get => _ImageSpace;
-            set => _ImageSpace = value.AsNullable();
+            set => _ImageSpace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IPlacedObjectGetter.ImageSpace => this.ImageSpace;
@@ -240,11 +240,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Emittance
-        private IFormLinkNullable<IEmittanceGetter> _Emittance = new FormLinkNullable<IEmittanceGetter>();
+        private readonly IFormLinkNullable<IEmittanceGetter> _Emittance = new FormLinkNullable<IEmittanceGetter>();
         public IFormLinkNullable<IEmittanceGetter> Emittance
         {
             get => _Emittance;
-            set => _Emittance = value.AsNullable();
+            set => _Emittance.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEmittanceGetter> IPlacedObjectGetter.Emittance => this.Emittance;
@@ -283,21 +283,21 @@ namespace Mutagen.Bethesda.Skyrim
         ITeleportDestinationGetter? IPlacedObjectGetter.TeleportDestination => this.TeleportDestination;
         #endregion
         #region TeleportMessageBox
-        private IFormLinkNullable<IMessageGetter> _TeleportMessageBox = new FormLinkNullable<IMessageGetter>();
+        private readonly IFormLinkNullable<IMessageGetter> _TeleportMessageBox = new FormLinkNullable<IMessageGetter>();
         public IFormLinkNullable<IMessageGetter> TeleportMessageBox
         {
             get => _TeleportMessageBox;
-            set => _TeleportMessageBox = value.AsNullable();
+            set => _TeleportMessageBox.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMessageGetter> IPlacedObjectGetter.TeleportMessageBox => this.TeleportMessageBox;
         #endregion
         #region MultiboundReference
-        private IFormLinkNullable<IPlacedObjectGetter> _MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>();
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>();
         public IFormLinkNullable<IPlacedObjectGetter> MultiboundReference
         {
             get => _MultiboundReference;
-            set => _MultiboundReference = value.AsNullable();
+            set => _MultiboundReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedObjectGetter.MultiboundReference => this.MultiboundReference;
@@ -347,11 +347,11 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCVL => this.XCVL;
         #endregion
         #region XCZR
-        private IFormLinkNullable<ILinkedReferenceGetter> _XCZR = new FormLinkNullable<ILinkedReferenceGetter>();
+        private readonly IFormLinkNullable<ILinkedReferenceGetter> _XCZR = new FormLinkNullable<ILinkedReferenceGetter>();
         public IFormLinkNullable<ILinkedReferenceGetter> XCZR
         {
             get => _XCZR;
-            set => _XCZR = value.AsNullable();
+            set => _XCZR.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.XCZR => this.XCZR;
@@ -368,11 +368,11 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCZA => this.XCZA;
         #endregion
         #region XCZC
-        private IFormLinkNullable<ICellGetter> _XCZC = new FormLinkNullable<ICellGetter>();
+        private readonly IFormLinkNullable<ICellGetter> _XCZC = new FormLinkNullable<ICellGetter>();
         public IFormLinkNullable<ICellGetter> XCZC
         {
             get => _XCZC;
-            set => _XCZC = value.AsNullable();
+            set => _XCZC.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICellGetter> IPlacedObjectGetter.XCZC => this.XCZC;
@@ -383,11 +383,11 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedObjectGetter.Scale => this.Scale;
         #endregion
         #region SpawnContainer
-        private IFormLinkNullable<IPlacedObjectGetter> _SpawnContainer = new FormLinkNullable<IPlacedObjectGetter>();
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _SpawnContainer = new FormLinkNullable<IPlacedObjectGetter>();
         public IFormLinkNullable<IPlacedObjectGetter> SpawnContainer
         {
             get => _SpawnContainer;
-            set => _SpawnContainer = value.AsNullable();
+            set => _SpawnContainer.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedObjectGetter.SpawnContainer => this.SpawnContainer;
@@ -404,11 +404,11 @@ namespace Mutagen.Bethesda.Skyrim
         IActivateParentsGetter? IPlacedObjectGetter.ActivateParents => this.ActivateParents;
         #endregion
         #region LeveledItemBaseObject
-        private IFormLinkNullable<ILeveledItemGetter> _LeveledItemBaseObject = new FormLinkNullable<ILeveledItemGetter>();
+        private readonly IFormLinkNullable<ILeveledItemGetter> _LeveledItemBaseObject = new FormLinkNullable<ILeveledItemGetter>();
         public IFormLinkNullable<ILeveledItemGetter> LeveledItemBaseObject
         {
             get => _LeveledItemBaseObject;
-            set => _LeveledItemBaseObject = value.AsNullable();
+            set => _LeveledItemBaseObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILeveledItemGetter> IPlacedObjectGetter.LeveledItemBaseObject => this.LeveledItemBaseObject;
@@ -419,11 +419,11 @@ namespace Mutagen.Bethesda.Skyrim
         Level? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
         #endregion
         #region PersistentLocation
-        private IFormLinkNullable<ILocationGetter> _PersistentLocation = new FormLinkNullable<ILocationGetter>();
+        private readonly IFormLinkNullable<ILocationGetter> _PersistentLocation = new FormLinkNullable<ILocationGetter>();
         public IFormLinkNullable<ILocationGetter> PersistentLocation
         {
             get => _PersistentLocation;
-            set => _PersistentLocation = value.AsNullable();
+            set => _PersistentLocation.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> IPlacedObjectGetter.PersistentLocation => this.PersistentLocation;
@@ -445,11 +445,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILockDataGetter? IPlacedObjectGetter.Lock => this.Lock;
         #endregion
         #region EncounterZone
-        private IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
+        private readonly IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
         public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
         {
             get => _EncounterZone;
-            set => _EncounterZone = value.AsNullable();
+            set => _EncounterZone.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> IPlacedObjectGetter.EncounterZone => this.EncounterZone;
@@ -504,11 +504,11 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedObjectGetter.Charge => this.Charge;
         #endregion
         #region LocationReference
-        private IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
+        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
         public IFormLinkNullable<ILocationRecordGetter> LocationReference
         {
             get => _LocationReference;
-            set => _LocationReference = value.AsNullable();
+            set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationRecordGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
@@ -579,11 +579,11 @@ namespace Mutagen.Bethesda.Skyrim
         IMapMarkerGetter? IPlacedObjectGetter.MapMarker => this.MapMarker;
         #endregion
         #region AttachRef
-        private IFormLinkNullable<IPlacedThingGetter> _AttachRef = new FormLinkNullable<IPlacedThingGetter>();
+        private readonly IFormLinkNullable<IPlacedThingGetter> _AttachRef = new FormLinkNullable<IPlacedThingGetter>();
         public IFormLinkNullable<IPlacedThingGetter> AttachRef
         {
             get => _AttachRef;
-            set => _AttachRef = value.AsNullable();
+            set => _AttachRef.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedThingGetter> IPlacedObjectGetter.AttachRef => this.AttachRef;
@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim
                         OcclusionPlane?.ToString(fg);
                     }
                     if ((printMask?.Portals?.Overall ?? true)
-                        && Portals.TryGet(out var PortalsItem))
+                        && Portals is {} PortalsItem)
                     {
                         fg.AppendLine("Portals =>");
                         fg.AppendLine("[");
@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(ImageSpace, "ImageSpace");
                     }
                     if ((printMask?.LinkedRooms?.Overall ?? true)
-                        && LinkedRooms.TryGet(out var LinkedRoomsItem))
+                        && LinkedRooms is {} LinkedRoomsItem)
                     {
                         fg.AppendLine("LinkedRooms =>");
                         fg.AppendLine("[");
@@ -1695,7 +1695,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Radius, "Radius");
                     }
                     if ((printMask?.Reflections?.Overall ?? true)
-                        && Reflections.TryGet(out var ReflectionsItem))
+                        && Reflections is {} ReflectionsItem)
                     {
                         fg.AppendLine("Reflections =>");
                         fg.AppendLine("[");
@@ -1718,7 +1718,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.LitWater?.Overall ?? true)
-                        && LitWater.TryGet(out var LitWaterItem))
+                        && LitWater is {} LitWaterItem)
                     {
                         fg.AppendLine("LitWater =>");
                         fg.AppendLine("[");
@@ -1833,7 +1833,7 @@ namespace Mutagen.Bethesda.Skyrim
                         NavigationDoorLink?.ToString(fg);
                     }
                     if ((printMask?.LocationRefTypes?.Overall ?? true)
-                        && LocationRefTypes.TryGet(out var LocationRefTypesItem))
+                        && LocationRefTypes is {} LocationRefTypesItem)
                     {
                         fg.AppendLine("LocationRefTypes =>");
                         fg.AppendLine("[");
@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Skyrim
                         EnableParent?.ToString(fg);
                     }
                     if ((printMask?.LinkedReferences?.Overall ?? true)
-                        && LinkedReferences.TryGet(out var LinkedReferencesItem))
+                        && LinkedReferences is {} LinkedReferencesItem)
                     {
                         fg.AppendLine("LinkedReferences =>");
                         fg.AppendLine("[");
@@ -2609,7 +2609,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Primitive?.ToString(fg);
                 fg.AppendItem(XORD, "XORD");
                 OcclusionPlane?.ToString(fg);
-                if (Portals.TryGet(out var PortalsItem))
+                if (Portals is {} PortalsItem)
                 {
                     fg.AppendLine("Portals =>");
                     fg.AppendLine("[");
@@ -2635,7 +2635,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(LightingTemplate, "LightingTemplate");
                 fg.AppendItem(ImageSpace, "ImageSpace");
-                if (LinkedRooms.TryGet(out var LinkedRoomsItem))
+                if (LinkedRooms is {} LinkedRoomsItem)
                 {
                     fg.AppendLine("LinkedRooms =>");
                     fg.AppendLine("[");
@@ -2661,7 +2661,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(RagdollData, "RagdollData");
                 fg.AppendItem(RagdollBipedData, "RagdollBipedData");
                 fg.AppendItem(Radius, "Radius");
-                if (Reflections.TryGet(out var ReflectionsItem))
+                if (Reflections is {} ReflectionsItem)
                 {
                     fg.AppendLine("Reflections =>");
                     fg.AppendLine("[");
@@ -2683,7 +2683,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (LitWater.TryGet(out var LitWaterItem))
+                if (LitWater is {} LitWaterItem)
                 {
                     fg.AppendLine("LitWater =>");
                     fg.AppendLine("[");
@@ -2728,7 +2728,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Lock?.ToString(fg);
                 fg.AppendItem(EncounterZone, "EncounterZone");
                 NavigationDoorLink?.ToString(fg);
-                if (LocationRefTypes.TryGet(out var LocationRefTypesItem))
+                if (LocationRefTypes is {} LocationRefTypesItem)
                 {
                     fg.AppendLine("LocationRefTypes =>");
                     fg.AppendLine("[");
@@ -2756,7 +2756,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Charge, "Charge");
                 fg.AppendItem(LocationReference, "LocationReference");
                 EnableParent?.ToString(fg);
-                if (LinkedReferences.TryGet(out var LinkedReferencesItem))
+                if (LinkedReferences is {} LinkedReferencesItem)
                 {
                     fg.AppendLine("LinkedReferences =>");
                     fg.AppendLine("[");
@@ -3201,7 +3201,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
-        new IFormLinkNullable<ISkyrimMajorRecordGetter> Base { get; }
+        new IFormLinkNullable<ISkyrimMajorRecordGetter> Base { get; set; }
         new P3Float? BoundHalfExtents { get; set; }
         new PlacedPrimitive? Primitive { get; set; }
         new MemorySlice<Byte>? XORD { get; set; }
@@ -3209,8 +3209,8 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<Portal>? Portals { get; set; }
         new Bounding? RoomPortal { get; set; }
         new Int16 Unknown { get; set; }
-        new IFormLinkNullable<ILightGetter> LightingTemplate { get; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
+        new IFormLinkNullable<ILightGetter> LightingTemplate { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         new Boolean MultiBoundPrimitive { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
@@ -3218,35 +3218,35 @@ namespace Mutagen.Bethesda.Skyrim
         new Single? Radius { get; set; }
         new ExtendedList<WaterReflection> Reflections { get; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; }
-        new IFormLinkNullable<IEmittanceGetter> Emittance { get; }
+        new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
         new LightData? LightData { get; set; }
         new Alpha? Alpha { get; set; }
         new TeleportDestination? TeleportDestination { get; set; }
-        new IFormLinkNullable<IMessageGetter> TeleportMessageBox { get; }
-        new IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; }
+        new IFormLinkNullable<IMessageGetter> TeleportMessageBox { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new MemorySlice<Byte>? XWCS { get; set; }
         new WaterVelocity? WaterVelocity { get; set; }
         new MemorySlice<Byte>? XCVL { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> XCZR { get; }
+        new IFormLinkNullable<ILinkedReferenceGetter> XCZR { get; set; }
         new MemorySlice<Byte>? XCZA { get; set; }
-        new IFormLinkNullable<ICellGetter> XCZC { get; }
+        new IFormLinkNullable<ICellGetter> XCZC { get; set; }
         new Single? Scale { get; set; }
-        new IFormLinkNullable<IPlacedObjectGetter> SpawnContainer { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> SpawnContainer { get; set; }
         new ActivateParents? ActivateParents { get; set; }
-        new IFormLinkNullable<ILeveledItemGetter> LeveledItemBaseObject { get; }
+        new IFormLinkNullable<ILeveledItemGetter> LeveledItemBaseObject { get; set; }
         new Level? LevelModifier { get; set; }
-        new IFormLinkNullable<ILocationGetter> PersistentLocation { get; }
+        new IFormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
         new UInt32? CollisionLayer { get; set; }
         new LockData? Lock { get; set; }
-        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
+        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new NavigationDoorLink? NavigationDoorLink { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Boolean IgnoredBySandbox { get; set; }
         new Ownership? Ownership { get; set; }
         new Int32? ItemCount { get; set; }
         new Single? Charge { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; }
+        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
         new EnableParent? EnableParent { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new Patrol? Patrol { get; set; }
@@ -3255,7 +3255,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single? FavorCost { get; set; }
         new Boolean OpenByDefault { get; set; }
         new MapMarker? MapMarker { get; set; }
-        new IFormLinkNullable<IPlacedThingGetter> AttachRef { get; }
+        new IFormLinkNullable<IPlacedThingGetter> AttachRef { get; set; }
         new MemorySlice<Byte>? DistantLodData { get; set; }
         new Placement? Placement { get; set; }
     }
@@ -4018,7 +4018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
@@ -4027,27 +4027,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if ((printMask?.BoundHalfExtents ?? true)
-                && item.BoundHalfExtents.TryGet(out var BoundHalfExtentsItem))
+                && item.BoundHalfExtents is {} BoundHalfExtentsItem)
             {
                 fg.AppendItem(BoundHalfExtentsItem, "BoundHalfExtents");
             }
             if ((printMask?.Primitive?.Overall ?? true)
-                && item.Primitive.TryGet(out var PrimitiveItem))
+                && item.Primitive is {} PrimitiveItem)
             {
                 PrimitiveItem?.ToString(fg, "Primitive");
             }
             if ((printMask?.XORD ?? true)
-                && item.XORD.TryGet(out var XORDItem))
+                && item.XORD is {} XORDItem)
             {
                 fg.AppendLine($"XORD => {SpanExt.ToHexString(XORDItem)}");
             }
             if ((printMask?.OcclusionPlane?.Overall ?? true)
-                && item.OcclusionPlane.TryGet(out var OcclusionPlaneItem))
+                && item.OcclusionPlane is {} OcclusionPlaneItem)
             {
                 OcclusionPlaneItem?.ToString(fg, "OcclusionPlane");
             }
             if ((printMask?.Portals?.Overall ?? true)
-                && item.Portals.TryGet(out var PortalsItem))
+                && item.Portals is {} PortalsItem)
             {
                 fg.AppendLine("Portals =>");
                 fg.AppendLine("[");
@@ -4066,7 +4066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.RoomPortal?.Overall ?? true)
-                && item.RoomPortal.TryGet(out var RoomPortalItem))
+                && item.RoomPortal is {} RoomPortalItem)
             {
                 RoomPortalItem?.ToString(fg, "RoomPortal");
             }
@@ -4105,17 +4105,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.MultiBoundPrimitive, "MultiBoundPrimitive");
             }
             if ((printMask?.RagdollData ?? true)
-                && item.RagdollData.TryGet(out var RagdollDataItem))
+                && item.RagdollData is {} RagdollDataItem)
             {
                 fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
             if ((printMask?.RagdollBipedData ?? true)
-                && item.RagdollBipedData.TryGet(out var RagdollBipedDataItem))
+                && item.RagdollBipedData is {} RagdollBipedDataItem)
             {
                 fg.AppendLine($"RagdollBipedData => {SpanExt.ToHexString(RagdollBipedDataItem)}");
             }
             if ((printMask?.Radius ?? true)
-                && item.Radius.TryGet(out var RadiusItem))
+                && item.Radius is {} RadiusItem)
             {
                 fg.AppendItem(RadiusItem, "Radius");
             }
@@ -4160,17 +4160,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
             }
             if ((printMask?.LightData?.Overall ?? true)
-                && item.LightData.TryGet(out var LightDataItem))
+                && item.LightData is {} LightDataItem)
             {
                 LightDataItem?.ToString(fg, "LightData");
             }
             if ((printMask?.Alpha?.Overall ?? true)
-                && item.Alpha.TryGet(out var AlphaItem))
+                && item.Alpha is {} AlphaItem)
             {
                 AlphaItem?.ToString(fg, "Alpha");
             }
             if ((printMask?.TeleportDestination?.Overall ?? true)
-                && item.TeleportDestination.TryGet(out var TeleportDestinationItem))
+                && item.TeleportDestination is {} TeleportDestinationItem)
             {
                 TeleportDestinationItem?.ToString(fg, "TeleportDestination");
             }
@@ -4183,22 +4183,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
             }
             if ((printMask?.XWCN ?? true)
-                && item.XWCN.TryGet(out var XWCNItem))
+                && item.XWCN is {} XWCNItem)
             {
                 fg.AppendLine($"XWCN => {SpanExt.ToHexString(XWCNItem)}");
             }
             if ((printMask?.XWCS ?? true)
-                && item.XWCS.TryGet(out var XWCSItem))
+                && item.XWCS is {} XWCSItem)
             {
                 fg.AppendLine($"XWCS => {SpanExt.ToHexString(XWCSItem)}");
             }
             if ((printMask?.WaterVelocity?.Overall ?? true)
-                && item.WaterVelocity.TryGet(out var WaterVelocityItem))
+                && item.WaterVelocity is {} WaterVelocityItem)
             {
                 WaterVelocityItem?.ToString(fg, "WaterVelocity");
             }
             if ((printMask?.XCVL ?? true)
-                && item.XCVL.TryGet(out var XCVLItem))
+                && item.XCVL is {} XCVLItem)
             {
                 fg.AppendLine($"XCVL => {SpanExt.ToHexString(XCVLItem)}");
             }
@@ -4207,7 +4207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.XCZR.FormKeyNullable, "XCZR");
             }
             if ((printMask?.XCZA ?? true)
-                && item.XCZA.TryGet(out var XCZAItem))
+                && item.XCZA is {} XCZAItem)
             {
                 fg.AppendLine($"XCZA => {SpanExt.ToHexString(XCZAItem)}");
             }
@@ -4216,7 +4216,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.XCZC.FormKeyNullable, "XCZC");
             }
             if ((printMask?.Scale ?? true)
-                && item.Scale.TryGet(out var ScaleItem))
+                && item.Scale is {} ScaleItem)
             {
                 fg.AppendItem(ScaleItem, "Scale");
             }
@@ -4225,7 +4225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.SpawnContainer.FormKeyNullable, "SpawnContainer");
             }
             if ((printMask?.ActivateParents?.Overall ?? true)
-                && item.ActivateParents.TryGet(out var ActivateParentsItem))
+                && item.ActivateParents is {} ActivateParentsItem)
             {
                 ActivateParentsItem?.ToString(fg, "ActivateParents");
             }
@@ -4234,7 +4234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.LeveledItemBaseObject.FormKeyNullable, "LeveledItemBaseObject");
             }
             if ((printMask?.LevelModifier ?? true)
-                && item.LevelModifier.TryGet(out var LevelModifierItem))
+                && item.LevelModifier is {} LevelModifierItem)
             {
                 fg.AppendItem(LevelModifierItem, "LevelModifier");
             }
@@ -4243,12 +4243,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.PersistentLocation.FormKeyNullable, "PersistentLocation");
             }
             if ((printMask?.CollisionLayer ?? true)
-                && item.CollisionLayer.TryGet(out var CollisionLayerItem))
+                && item.CollisionLayer is {} CollisionLayerItem)
             {
                 fg.AppendItem(CollisionLayerItem, "CollisionLayer");
             }
             if ((printMask?.Lock?.Overall ?? true)
-                && item.Lock.TryGet(out var LockItem))
+                && item.Lock is {} LockItem)
             {
                 LockItem?.ToString(fg, "Lock");
             }
@@ -4257,12 +4257,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
             }
             if ((printMask?.NavigationDoorLink?.Overall ?? true)
-                && item.NavigationDoorLink.TryGet(out var NavigationDoorLinkItem))
+                && item.NavigationDoorLink is {} NavigationDoorLinkItem)
             {
                 NavigationDoorLinkItem?.ToString(fg, "NavigationDoorLink");
             }
             if ((printMask?.LocationRefTypes?.Overall ?? true)
-                && item.LocationRefTypes.TryGet(out var LocationRefTypesItem))
+                && item.LocationRefTypes is {} LocationRefTypesItem)
             {
                 fg.AppendLine("LocationRefTypes =>");
                 fg.AppendLine("[");
@@ -4285,17 +4285,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.IgnoredBySandbox, "IgnoredBySandbox");
             }
             if ((printMask?.Ownership?.Overall ?? true)
-                && item.Ownership.TryGet(out var OwnershipItem))
+                && item.Ownership is {} OwnershipItem)
             {
                 OwnershipItem?.ToString(fg, "Ownership");
             }
             if ((printMask?.ItemCount ?? true)
-                && item.ItemCount.TryGet(out var ItemCountItem))
+                && item.ItemCount is {} ItemCountItem)
             {
                 fg.AppendItem(ItemCountItem, "ItemCount");
             }
             if ((printMask?.Charge ?? true)
-                && item.Charge.TryGet(out var ChargeItem))
+                && item.Charge is {} ChargeItem)
             {
                 fg.AppendItem(ChargeItem, "Charge");
             }
@@ -4304,7 +4304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.LocationReference.FormKeyNullable, "LocationReference");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
-                && item.EnableParent.TryGet(out var EnableParentItem))
+                && item.EnableParent is {} EnableParentItem)
             {
                 EnableParentItem?.ToString(fg, "EnableParent");
             }
@@ -4327,22 +4327,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Patrol?.Overall ?? true)
-                && item.Patrol.TryGet(out var PatrolItem))
+                && item.Patrol is {} PatrolItem)
             {
                 PatrolItem?.ToString(fg, "Patrol");
             }
             if ((printMask?.Action ?? true)
-                && item.Action.TryGet(out var ActionItem))
+                && item.Action is {} ActionItem)
             {
                 fg.AppendItem(ActionItem, "Action");
             }
             if ((printMask?.HeadTrackingWeight ?? true)
-                && item.HeadTrackingWeight.TryGet(out var HeadTrackingWeightItem))
+                && item.HeadTrackingWeight is {} HeadTrackingWeightItem)
             {
                 fg.AppendItem(HeadTrackingWeightItem, "HeadTrackingWeight");
             }
             if ((printMask?.FavorCost ?? true)
-                && item.FavorCost.TryGet(out var FavorCostItem))
+                && item.FavorCost is {} FavorCostItem)
             {
                 fg.AppendItem(FavorCostItem, "FavorCost");
             }
@@ -4351,7 +4351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.OpenByDefault, "OpenByDefault");
             }
             if ((printMask?.MapMarker?.Overall ?? true)
-                && item.MapMarker.TryGet(out var MapMarkerItem))
+                && item.MapMarker is {} MapMarkerItem)
             {
                 MapMarkerItem?.ToString(fg, "MapMarker");
             }
@@ -4360,12 +4360,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.AttachRef.FormKeyNullable, "AttachRef");
             }
             if ((printMask?.DistantLodData ?? true)
-                && item.DistantLodData.TryGet(out var DistantLodDataItem))
+                && item.DistantLodData is {} DistantLodDataItem)
             {
                 fg.AppendLine($"DistantLodData => {SpanExt.ToHexString(DistantLodDataItem)}");
             }
             if ((printMask?.Placement?.Overall ?? true)
-                && item.Placement.TryGet(out var PlacementItem))
+                && item.Placement is {} PlacementItem)
             {
                 PlacementItem?.ToString(fg, "Placement");
             }
@@ -4741,29 +4741,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IPlacedObjectGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.Base);
-            if (item.BoundHalfExtents.TryGet(out var BoundHalfExtentsitem))
+            if (item.BoundHalfExtents is {} BoundHalfExtentsitem)
             {
                 hash.Add(BoundHalfExtentsitem);
             }
-            if (item.Primitive.TryGet(out var Primitiveitem))
+            if (item.Primitive is {} Primitiveitem)
             {
                 hash.Add(Primitiveitem);
             }
-            if (item.XORD.TryGet(out var XORDItem))
+            if (item.XORD is {} XORDItem)
             {
                 hash.Add(XORDItem);
             }
-            if (item.OcclusionPlane.TryGet(out var OcclusionPlaneitem))
+            if (item.OcclusionPlane is {} OcclusionPlaneitem)
             {
                 hash.Add(OcclusionPlaneitem);
             }
             hash.Add(item.Portals);
-            if (item.RoomPortal.TryGet(out var RoomPortalitem))
+            if (item.RoomPortal is {} RoomPortalitem)
             {
                 hash.Add(RoomPortalitem);
             }
@@ -4772,132 +4772,132 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ImageSpace);
             hash.Add(item.LinkedRooms);
             hash.Add(item.MultiBoundPrimitive);
-            if (item.RagdollData.TryGet(out var RagdollDataItem))
+            if (item.RagdollData is {} RagdollDataItem)
             {
                 hash.Add(RagdollDataItem);
             }
-            if (item.RagdollBipedData.TryGet(out var RagdollBipedDataItem))
+            if (item.RagdollBipedData is {} RagdollBipedDataItem)
             {
                 hash.Add(RagdollBipedDataItem);
             }
-            if (item.Radius.TryGet(out var Radiusitem))
+            if (item.Radius is {} Radiusitem)
             {
                 hash.Add(Radiusitem);
             }
             hash.Add(item.Reflections);
             hash.Add(item.LitWater);
             hash.Add(item.Emittance);
-            if (item.LightData.TryGet(out var LightDataitem))
+            if (item.LightData is {} LightDataitem)
             {
                 hash.Add(LightDataitem);
             }
-            if (item.Alpha.TryGet(out var Alphaitem))
+            if (item.Alpha is {} Alphaitem)
             {
                 hash.Add(Alphaitem);
             }
-            if (item.TeleportDestination.TryGet(out var TeleportDestinationitem))
+            if (item.TeleportDestination is {} TeleportDestinationitem)
             {
                 hash.Add(TeleportDestinationitem);
             }
             hash.Add(item.TeleportMessageBox);
             hash.Add(item.MultiboundReference);
-            if (item.XWCN.TryGet(out var XWCNItem))
+            if (item.XWCN is {} XWCNItem)
             {
                 hash.Add(XWCNItem);
             }
-            if (item.XWCS.TryGet(out var XWCSItem))
+            if (item.XWCS is {} XWCSItem)
             {
                 hash.Add(XWCSItem);
             }
-            if (item.WaterVelocity.TryGet(out var WaterVelocityitem))
+            if (item.WaterVelocity is {} WaterVelocityitem)
             {
                 hash.Add(WaterVelocityitem);
             }
-            if (item.XCVL.TryGet(out var XCVLItem))
+            if (item.XCVL is {} XCVLItem)
             {
                 hash.Add(XCVLItem);
             }
             hash.Add(item.XCZR);
-            if (item.XCZA.TryGet(out var XCZAItem))
+            if (item.XCZA is {} XCZAItem)
             {
                 hash.Add(XCZAItem);
             }
             hash.Add(item.XCZC);
-            if (item.Scale.TryGet(out var Scaleitem))
+            if (item.Scale is {} Scaleitem)
             {
                 hash.Add(Scaleitem);
             }
             hash.Add(item.SpawnContainer);
-            if (item.ActivateParents.TryGet(out var ActivateParentsitem))
+            if (item.ActivateParents is {} ActivateParentsitem)
             {
                 hash.Add(ActivateParentsitem);
             }
             hash.Add(item.LeveledItemBaseObject);
-            if (item.LevelModifier.TryGet(out var LevelModifieritem))
+            if (item.LevelModifier is {} LevelModifieritem)
             {
                 hash.Add(LevelModifieritem);
             }
             hash.Add(item.PersistentLocation);
-            if (item.CollisionLayer.TryGet(out var CollisionLayeritem))
+            if (item.CollisionLayer is {} CollisionLayeritem)
             {
                 hash.Add(CollisionLayeritem);
             }
-            if (item.Lock.TryGet(out var Lockitem))
+            if (item.Lock is {} Lockitem)
             {
                 hash.Add(Lockitem);
             }
             hash.Add(item.EncounterZone);
-            if (item.NavigationDoorLink.TryGet(out var NavigationDoorLinkitem))
+            if (item.NavigationDoorLink is {} NavigationDoorLinkitem)
             {
                 hash.Add(NavigationDoorLinkitem);
             }
             hash.Add(item.LocationRefTypes);
             hash.Add(item.IgnoredBySandbox);
-            if (item.Ownership.TryGet(out var Ownershipitem))
+            if (item.Ownership is {} Ownershipitem)
             {
                 hash.Add(Ownershipitem);
             }
-            if (item.ItemCount.TryGet(out var ItemCountitem))
+            if (item.ItemCount is {} ItemCountitem)
             {
                 hash.Add(ItemCountitem);
             }
-            if (item.Charge.TryGet(out var Chargeitem))
+            if (item.Charge is {} Chargeitem)
             {
                 hash.Add(Chargeitem);
             }
             hash.Add(item.LocationReference);
-            if (item.EnableParent.TryGet(out var EnableParentitem))
+            if (item.EnableParent is {} EnableParentitem)
             {
                 hash.Add(EnableParentitem);
             }
             hash.Add(item.LinkedReferences);
-            if (item.Patrol.TryGet(out var Patrolitem))
+            if (item.Patrol is {} Patrolitem)
             {
                 hash.Add(Patrolitem);
             }
-            if (item.Action.TryGet(out var Actionitem))
+            if (item.Action is {} Actionitem)
             {
                 hash.Add(Actionitem);
             }
-            if (item.HeadTrackingWeight.TryGet(out var HeadTrackingWeightitem))
+            if (item.HeadTrackingWeight is {} HeadTrackingWeightitem)
             {
                 hash.Add(HeadTrackingWeightitem);
             }
-            if (item.FavorCost.TryGet(out var FavorCostitem))
+            if (item.FavorCost is {} FavorCostitem)
             {
                 hash.Add(FavorCostitem);
             }
             hash.Add(item.OpenByDefault);
-            if (item.MapMarker.TryGet(out var MapMarkeritem))
+            if (item.MapMarker is {} MapMarkeritem)
             {
                 hash.Add(MapMarkeritem);
             }
             hash.Add(item.AttachRef);
-            if (item.DistantLodData.TryGet(out var DistantLodDataItem))
+            if (item.DistantLodData is {} DistantLodDataItem)
             {
                 hash.Add(DistantLodDataItem);
             }
-            if (item.Placement.TryGet(out var Placementitem))
+            if (item.Placement is {} Placementitem)
             {
                 hash.Add(Placementitem);
             }
@@ -4941,7 +4941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Base);
             }
-            if (obj.Portals.TryGet(out var PortalsItem))
+            if (obj.Portals is {} PortalsItem)
             {
                 foreach (var item in PortalsItem.SelectMany(f => f.ContainedFormLinks))
                 {
@@ -4972,7 +4972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Emittance);
             }
-            if (obj.TeleportDestination.TryGet(out var TeleportDestinationItems))
+            if (obj.TeleportDestination is {} TeleportDestinationItems)
             {
                 foreach (var item in TeleportDestinationItems.ContainedFormLinks)
                 {
@@ -4999,7 +4999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.SpawnContainer);
             }
-            if (obj.ActivateParents.TryGet(out var ActivateParentsItems))
+            if (obj.ActivateParents is {} ActivateParentsItems)
             {
                 foreach (var item in ActivateParentsItems.ContainedFormLinks)
                 {
@@ -5014,7 +5014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.PersistentLocation);
             }
-            if (obj.Lock.TryGet(out var LockItems))
+            if (obj.Lock is {} LockItems)
             {
                 foreach (var item in LockItems.ContainedFormLinks)
                 {
@@ -5025,21 +5025,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.EncounterZone);
             }
-            if (obj.NavigationDoorLink.TryGet(out var NavigationDoorLinkItems))
+            if (obj.NavigationDoorLink is {} NavigationDoorLinkItems)
             {
                 foreach (var item in NavigationDoorLinkItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LocationRefTypes.TryGet(out var LocationRefTypesItem))
+            if (obj.LocationRefTypes is {} LocationRefTypesItem)
             {
                 foreach (var item in LocationRefTypesItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Ownership.TryGet(out var OwnershipItems))
+            if (obj.Ownership is {} OwnershipItems)
             {
                 foreach (var item in OwnershipItems.ContainedFormLinks)
                 {
@@ -5050,7 +5050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.LocationReference);
             }
-            if (obj.EnableParent.TryGet(out var EnableParentItems))
+            if (obj.EnableParent is {} EnableParentItems)
             {
                 foreach (var item in EnableParentItems.ContainedFormLinks)
                 {
@@ -5061,7 +5061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Patrol.TryGet(out var PatrolItems))
+            if (obj.Patrol is {} PatrolItems)
             {
                 foreach (var item in PatrolItems.ContainedFormLinks)
                 {
@@ -5151,7 +5151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -5185,7 +5185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Primitive);
                 try
                 {
-                    if(rhs.Primitive.TryGet(out var rhsPrimitive))
+                    if(rhs.Primitive is {} rhsPrimitive)
                     {
                         item.Primitive = rhsPrimitive.DeepCopy(
                             errorMask: errorMask,
@@ -5208,7 +5208,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XORD) ?? true))
             {
-                if(rhs.XORD.TryGet(out var XORDrhs))
+                if(rhs.XORD is {} XORDrhs)
                 {
                     item.XORD = XORDrhs.ToArray();
                 }
@@ -5222,7 +5222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.OcclusionPlane);
                 try
                 {
-                    if(rhs.OcclusionPlane.TryGet(out var rhsOcclusionPlane))
+                    if(rhs.OcclusionPlane is {} rhsOcclusionPlane)
                     {
                         item.OcclusionPlane = rhsOcclusionPlane.DeepCopy(
                             errorMask: errorMask,
@@ -5280,7 +5280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.RoomPortal);
                 try
                 {
-                    if(rhs.RoomPortal.TryGet(out var rhsRoomPortal))
+                    if(rhs.RoomPortal is {} rhsRoomPortal)
                     {
                         item.RoomPortal = rhsRoomPortal.DeepCopy(
                             errorMask: errorMask,
@@ -5338,7 +5338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
             {
-                if(rhs.RagdollData.TryGet(out var RagdollDatarhs))
+                if(rhs.RagdollData is {} RagdollDatarhs)
                 {
                     item.RagdollData = RagdollDatarhs.ToArray();
                 }
@@ -5349,7 +5349,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollBipedData) ?? true))
             {
-                if(rhs.RagdollBipedData.TryGet(out var RagdollBipedDatarhs))
+                if(rhs.RagdollBipedData is {} RagdollBipedDatarhs)
                 {
                     item.RagdollBipedData = RagdollBipedDatarhs.ToArray();
                 }
@@ -5414,7 +5414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightData);
                 try
                 {
-                    if(rhs.LightData.TryGet(out var rhsLightData))
+                    if(rhs.LightData is {} rhsLightData)
                     {
                         item.LightData = rhsLightData.DeepCopy(
                             errorMask: errorMask,
@@ -5440,7 +5440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Alpha);
                 try
                 {
-                    if(rhs.Alpha.TryGet(out var rhsAlpha))
+                    if(rhs.Alpha is {} rhsAlpha)
                     {
                         item.Alpha = rhsAlpha.DeepCopy(
                             errorMask: errorMask,
@@ -5466,7 +5466,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.TeleportDestination);
                 try
                 {
-                    if(rhs.TeleportDestination.TryGet(out var rhsTeleportDestination))
+                    if(rhs.TeleportDestination is {} rhsTeleportDestination)
                     {
                         item.TeleportDestination = rhsTeleportDestination.DeepCopy(
                             errorMask: errorMask,
@@ -5497,7 +5497,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
-                if(rhs.XWCN.TryGet(out var XWCNrhs))
+                if(rhs.XWCN is {} XWCNrhs)
                 {
                     item.XWCN = XWCNrhs.ToArray();
                 }
@@ -5508,7 +5508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCS) ?? true))
             {
-                if(rhs.XWCS.TryGet(out var XWCSrhs))
+                if(rhs.XWCS is {} XWCSrhs)
                 {
                     item.XWCS = XWCSrhs.ToArray();
                 }
@@ -5522,7 +5522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.WaterVelocity);
                 try
                 {
-                    if(rhs.WaterVelocity.TryGet(out var rhsWaterVelocity))
+                    if(rhs.WaterVelocity is {} rhsWaterVelocity)
                     {
                         item.WaterVelocity = rhsWaterVelocity.DeepCopy(
                             errorMask: errorMask,
@@ -5545,7 +5545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCVL) ?? true))
             {
-                if(rhs.XCVL.TryGet(out var XCVLrhs))
+                if(rhs.XCVL is {} XCVLrhs)
                 {
                     item.XCVL = XCVLrhs.ToArray();
                 }
@@ -5560,7 +5560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
             {
-                if(rhs.XCZA.TryGet(out var XCZArhs))
+                if(rhs.XCZA is {} XCZArhs)
                 {
                     item.XCZA = XCZArhs.ToArray();
                 }
@@ -5586,7 +5586,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.ActivateParents);
                 try
                 {
-                    if(rhs.ActivateParents.TryGet(out var rhsActivateParents))
+                    if(rhs.ActivateParents is {} rhsActivateParents)
                     {
                         item.ActivateParents = rhsActivateParents.DeepCopy(
                             errorMask: errorMask,
@@ -5628,7 +5628,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Lock);
                 try
                 {
-                    if(rhs.Lock.TryGet(out var rhsLock))
+                    if(rhs.Lock is {} rhsLock)
                     {
                         item.Lock = rhsLock.DeepCopy(
                             errorMask: errorMask,
@@ -5658,7 +5658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.NavigationDoorLink);
                 try
                 {
-                    if(rhs.NavigationDoorLink.TryGet(out var rhsNavigationDoorLink))
+                    if(rhs.NavigationDoorLink is {} rhsNavigationDoorLink)
                     {
                         item.NavigationDoorLink = rhsNavigationDoorLink.DeepCopy(
                             errorMask: errorMask,
@@ -5715,7 +5715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Ownership);
                 try
                 {
-                    if(rhs.Ownership.TryGet(out var rhsOwnership))
+                    if(rhs.Ownership is {} rhsOwnership)
                     {
                         item.Ownership = rhsOwnership.DeepCopy(
                             errorMask: errorMask,
@@ -5753,7 +5753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.EnableParent);
                 try
                 {
-                    if(rhs.EnableParent.TryGet(out var rhsEnableParent))
+                    if(rhs.EnableParent is {} rhsEnableParent)
                     {
                         item.EnableParent = rhsEnableParent.DeepCopy(
                             errorMask: errorMask,
@@ -5803,7 +5803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Patrol);
                 try
                 {
-                    if(rhs.Patrol.TryGet(out var rhsPatrol))
+                    if(rhs.Patrol is {} rhsPatrol)
                     {
                         item.Patrol = rhsPatrol.DeepCopy(
                             errorMask: errorMask,
@@ -5845,7 +5845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.MapMarker);
                 try
                 {
-                    if(rhs.MapMarker.TryGet(out var rhsMapMarker))
+                    if(rhs.MapMarker is {} rhsMapMarker)
                     {
                         item.MapMarker = rhsMapMarker.DeepCopy(
                             errorMask: errorMask,
@@ -5872,7 +5872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLodData) ?? true))
             {
-                if(rhs.DistantLodData.TryGet(out var DistantLodDatarhs))
+                if(rhs.DistantLodData is {} DistantLodDatarhs)
                 {
                     item.DistantLodData = DistantLodDatarhs.ToArray();
                 }
@@ -5886,7 +5886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Placement);
                 try
                 {
-                    if(rhs.Placement.TryGet(out var rhsPlacement))
+                    if(rhs.Placement is {} rhsPlacement)
                     {
                         item.Placement = rhsPlacement.DeepCopy(
                             errorMask: errorMask,
@@ -6073,7 +6073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
@@ -6088,7 +6088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.BoundHalfExtents,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XMBO));
-            if (item.Primitive.TryGet(out var PrimitiveItem))
+            if (item.Primitive is {} PrimitiveItem)
             {
                 ((PlacedPrimitiveBinaryWriteTranslation)((IBinaryItem)PrimitiveItem).BinaryWriteTranslator).Write(
                     item: PrimitiveItem,
@@ -6099,7 +6099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.XORD,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XORD));
-            if (item.OcclusionPlane.TryGet(out var OcclusionPlaneItem))
+            if (item.OcclusionPlane is {} OcclusionPlaneItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.XOCP))
                 {
@@ -6121,7 +6121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.RoomPortal.TryGet(out var RoomPortalItem))
+            if (item.RoomPortal is {} RoomPortalItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.XPTL))
                 {
@@ -6175,21 +6175,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Emittance,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XEMI));
-            if (item.LightData.TryGet(out var LightDataItem))
+            if (item.LightData is {} LightDataItem)
             {
                 ((LightDataBinaryWriteTranslation)((IBinaryItem)LightDataItem).BinaryWriteTranslator).Write(
                     item: LightDataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Alpha.TryGet(out var AlphaItem))
+            if (item.Alpha is {} AlphaItem)
             {
                 ((AlphaBinaryWriteTranslation)((IBinaryItem)AlphaItem).BinaryWriteTranslator).Write(
                     item: AlphaItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.TeleportDestination.TryGet(out var TeleportDestinationItem))
+            if (item.TeleportDestination is {} TeleportDestinationItem)
             {
                 ((TeleportDestinationBinaryWriteTranslation)((IBinaryItem)TeleportDestinationItem).BinaryWriteTranslator).Write(
                     item: TeleportDestinationItem,
@@ -6212,7 +6212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.XWCS,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XWCS));
-            if (item.WaterVelocity.TryGet(out var WaterVelocityItem))
+            if (item.WaterVelocity is {} WaterVelocityItem)
             {
                 ((WaterVelocityBinaryWriteTranslation)((IBinaryItem)WaterVelocityItem).BinaryWriteTranslator).Write(
                     item: WaterVelocityItem,
@@ -6243,7 +6243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.SpawnContainer,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XSPC));
-            if (item.ActivateParents.TryGet(out var ActivateParentsItem))
+            if (item.ActivateParents is {} ActivateParentsItem)
             {
                 ((ActivateParentsBinaryWriteTranslation)((IBinaryItem)ActivateParentsItem).BinaryWriteTranslator).Write(
                     item: ActivateParentsItem,
@@ -6267,7 +6267,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.CollisionLayer,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XTRI));
-            if (item.Lock.TryGet(out var LockItem))
+            if (item.Lock is {} LockItem)
             {
                 ((LockDataBinaryWriteTranslation)((IBinaryItem)LockItem).BinaryWriteTranslator).Write(
                     item: LockItem,
@@ -6278,7 +6278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.EncounterZone,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XEZN));
-            if (item.NavigationDoorLink.TryGet(out var NavigationDoorLinkItem))
+            if (item.NavigationDoorLink is {} NavigationDoorLinkItem)
             {
                 ((NavigationDoorLinkBinaryWriteTranslation)((IBinaryItem)NavigationDoorLinkItem).BinaryWriteTranslator).Write(
                     item: NavigationDoorLinkItem,
@@ -6299,7 +6299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.IgnoredBySandbox,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XIS2));
-            if (item.Ownership.TryGet(out var OwnershipItem))
+            if (item.Ownership is {} OwnershipItem)
             {
                 ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
                     item: OwnershipItem,
@@ -6318,7 +6318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.LocationReference,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XLRL));
-            if (item.EnableParent.TryGet(out var EnableParentItem))
+            if (item.EnableParent is {} EnableParentItem)
             {
                 ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
                     item: EnableParentItem,
@@ -6336,7 +6336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.Patrol.TryGet(out var PatrolItem))
+            if (item.Patrol is {} PatrolItem)
             {
                 ((PatrolBinaryWriteTranslation)((IBinaryItem)PatrolItem).BinaryWriteTranslator).Write(
                     item: PatrolItem,
@@ -6360,7 +6360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.OpenByDefault,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM));
-            if (item.MapMarker.TryGet(out var MapMarkerItem))
+            if (item.MapMarker is {} MapMarkerItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.XMRK)) { }
                 ((MapMarkerBinaryWriteTranslation)((IBinaryItem)MapMarkerItem).BinaryWriteTranslator).Write(
@@ -6376,7 +6376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.DistantLodData,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XLOD));
-            if (item.Placement.TryGet(out var PlacementItem))
+            if (item.Placement is {} PlacementItem)
             {
                 ((PlacementBinaryWriteTranslation)((IBinaryItem)PlacementItem).BinaryWriteTranslator).Write(
                     item: PlacementItem,

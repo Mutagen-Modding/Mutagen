@@ -91,11 +91,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region MenuDisplayObject
-        private IFormLinkNullable<IStaticGetter> _MenuDisplayObject = new FormLinkNullable<IStaticGetter>();
+        private readonly IFormLinkNullable<IStaticGetter> _MenuDisplayObject = new FormLinkNullable<IStaticGetter>();
         public IFormLinkNullable<IStaticGetter> MenuDisplayObject
         {
             get => _MenuDisplayObject;
-            set => _MenuDisplayObject = value.AsNullable();
+            set => _MenuDisplayObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IShoutGetter.MenuDisplayObject => this.MenuDisplayObject;
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.WordsOfPower?.Overall ?? true)
-                        && WordsOfPower.TryGet(out var WordsOfPowerItem))
+                        && WordsOfPower is {} WordsOfPowerItem)
                     {
                         fg.AppendLine("WordsOfPower =>");
                         fg.AppendLine("[");
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(MenuDisplayObject, "MenuDisplayObject");
                 fg.AppendItem(Description, "Description");
-                if (WordsOfPower.TryGet(out var WordsOfPowerItem))
+                if (WordsOfPower is {} WordsOfPowerItem)
                 {
                     fg.AppendLine("WordsOfPower =>");
                     fg.AppendLine("[");
@@ -721,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
+        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
         new TranslatedString? Description { get; set; }
         new ExtendedList<ShoutWord> WordsOfPower { get; }
         #region Mutagen
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.MenuDisplayObject.FormKeyNullable, "MenuDisplayObject");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
@@ -1293,12 +1293,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IShoutGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.MenuDisplayObject);
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }

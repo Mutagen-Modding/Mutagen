@@ -1024,14 +1024,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj)
             {
-                if (obj.ParameterOneString.TryGet(out var param1))
+                if (obj.ParameterOneString is { } param1)
                 {
                     using (HeaderExport.Subrecord(writer, Condition_Registration.CIS1))
                     {
                         StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate);
                     }
                 }
-                if (obj.ParameterTwoString.TryGet(out var param2))
+                if (obj.ParameterTwoString is { } param2)
                 {
                     using (HeaderExport.Subrecord(writer, Condition_Registration.CIS2))
                     {

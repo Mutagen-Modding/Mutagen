@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Pex
                         DebugInfo?.ToString(fg);
                     }
                     if ((printMask?.Objects?.Overall ?? true)
-                        && Objects.TryGet(out var ObjectsItem))
+                        && Objects is {} ObjectsItem)
                     {
                         fg.AppendLine("Objects =>");
                         fg.AppendLine("[");
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendLine("]");
                     }
                     if ((printMask?.UserFlags?.Overall ?? true)
-                        && UserFlags.TryGet(out var UserFlagsItem))
+                        && UserFlags is {} UserFlagsItem)
                     {
                         fg.AppendLine("UserFlags =>");
                         fg.AppendLine("[");
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Pex
                 fg.AppendItem(Username, "Username");
                 fg.AppendItem(MachineName, "MachineName");
                 DebugInfo?.ToString(fg);
-                if (Objects.TryGet(out var ObjectsItem))
+                if (Objects is {} ObjectsItem)
                 {
                     fg.AppendLine("Objects =>");
                     fg.AppendLine("[");
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Pex
                     }
                     fg.AppendLine("]");
                 }
-                if (UserFlags.TryGet(out var UserFlagsItem))
+                if (UserFlags is {} UserFlagsItem)
                 {
                     fg.AppendLine("UserFlags =>");
                     fg.AppendLine("[");
@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 fg.AppendItem(item.MachineName, "MachineName");
             }
             if ((printMask?.DebugInfo?.Overall ?? true)
-                && item.DebugInfo.TryGet(out var DebugInfoItem))
+                && item.DebugInfo is {} DebugInfoItem)
             {
                 DebugInfoItem?.ToString(fg, "DebugInfo");
             }
@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             hash.Add(item.SourceFileName);
             hash.Add(item.Username);
             hash.Add(item.MachineName);
-            if (item.DebugInfo.TryGet(out var DebugInfoitem))
+            if (item.DebugInfo is {} DebugInfoitem)
             {
                 hash.Add(DebugInfoitem);
             }
@@ -1416,7 +1416,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 errorMask?.PushIndex((int)PexFile_FieldIndex.DebugInfo);
                 try
                 {
-                    if(rhs.DebugInfo.TryGet(out var rhsDebugInfo))
+                    if(rhs.DebugInfo is {} rhsDebugInfo)
                     {
                         item.DebugInfo = rhsDebugInfo.DeepCopy(
                             errorMask: errorMask,

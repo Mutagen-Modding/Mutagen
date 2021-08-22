@@ -50,21 +50,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Material
-        private IFormLink<IMaterialTypeGetter> _Material = new FormLink<IMaterialTypeGetter>();
+        private readonly IFormLink<IMaterialTypeGetter> _Material = new FormLink<IMaterialTypeGetter>();
         public IFormLink<IMaterialTypeGetter> Material
         {
             get => _Material;
-            set => _Material = value.AsSetter();
+            set => _Material.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IMaterialTypeGetter> IImpactDataGetter.Material => this.Material;
         #endregion
         #region Impact
-        private IFormLink<IImpactGetter> _Impact = new FormLink<IImpactGetter>();
+        private readonly IFormLink<IImpactGetter> _Impact = new FormLink<IImpactGetter>();
         public IFormLink<IImpactGetter> Impact
         {
             get => _Impact;
-            set => _Impact = value.AsSetter();
+            set => _Impact.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactGetter> IImpactDataGetter.Impact => this.Impact;
@@ -475,8 +475,8 @@ namespace Mutagen.Bethesda.Skyrim
         IImpactDataGetter,
         ILoquiObjectSetter<IImpactData>
     {
-        new IFormLink<IMaterialTypeGetter> Material { get; }
-        new IFormLink<IImpactGetter> Impact { get; }
+        new IFormLink<IMaterialTypeGetter> Material { get; set; }
+        new IFormLink<IImpactGetter> Impact { get; set; }
     }
 
     public partial interface IImpactDataGetter :

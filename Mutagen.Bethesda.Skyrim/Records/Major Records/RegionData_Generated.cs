@@ -885,12 +885,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RegionData.Mask<bool>? printMask = null)
         {
             if ((printMask?.Header?.Overall ?? true)
-                && item.Header.TryGet(out var HeaderItem))
+                && item.Header is {} HeaderItem)
             {
                 HeaderItem?.ToString(fg, "Header");
             }
             if ((printMask?.Icons?.Overall ?? true)
-                && item.Icons.TryGet(out var IconsItem))
+                && item.Icons is {} IconsItem)
             {
                 IconsItem?.ToString(fg, "Icons");
             }
@@ -925,11 +925,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IRegionDataGetter item)
         {
             var hash = new HashCode();
-            if (item.Header.TryGet(out var Headeritem))
+            if (item.Header is {} Headeritem)
             {
                 hash.Add(Headeritem);
             }
-            if (item.Icons.TryGet(out var Iconsitem))
+            if (item.Icons is {} Iconsitem)
             {
                 hash.Add(Iconsitem);
             }
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)RegionData_FieldIndex.Header);
                 try
                 {
-                    if(rhs.Header.TryGet(out var rhsHeader))
+                    if(rhs.Header is {} rhsHeader)
                     {
                         item.Header = rhsHeader.DeepCopy(
                             errorMask: errorMask,
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)RegionData_FieldIndex.Icons);
                 try
                 {
-                    if(rhs.Icons.TryGet(out var rhsIcons))
+                    if(rhs.Icons is {} rhsIcons)
                     {
                         item.Icons = rhsIcons.DeepCopy(
                             errorMask: errorMask,
@@ -1114,14 +1114,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            if (item.Header.TryGet(out var HeaderItem))
+            if (item.Header is {} HeaderItem)
             {
                 ((RegionDataHeaderBinaryWriteTranslation)((IBinaryItem)HeaderItem).BinaryWriteTranslator).Write(
                     item: HeaderItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Icons.TryGet(out var IconsItem))
+            if (item.Icons is {} IconsItem)
             {
                 ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
                     item: IconsItem,

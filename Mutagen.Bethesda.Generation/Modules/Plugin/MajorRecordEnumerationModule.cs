@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                                 else
                                 {
-                                    fieldFg.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {loqui.Name}item))");
+                                    fieldFg.AppendLine($"if ({accessor}.{loqui.Name} is {{}} {loqui.Name}item)");
                                     using (new BraceWrapper(fieldFg))
                                     {
                                         fieldFg.AppendLines(subFg);
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     using (new BraceWrapper(fieldGen))
                     {
-                        fieldGen.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {fieldAccessor}))");
+                        fieldGen.AppendLine($"if ({accessor}.{loqui.Name} is {{}} {fieldAccessor})");
                         using (new BraceWrapper(fieldGen))
                         {
                             fieldGen.AppendLines(subFg);

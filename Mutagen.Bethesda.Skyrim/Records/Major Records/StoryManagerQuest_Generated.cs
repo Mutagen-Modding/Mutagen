@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        private IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
         public IFormLinkNullable<IQuestGetter> Quest
         {
             get => _Quest;
-            set => _Quest = value.AsNullable();
+            set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IStoryManagerQuestGetter.Quest => this.Quest;
@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IStoryManagerQuest>,
         IStoryManagerQuestGetter
     {
-        new IFormLinkNullable<IQuestGetter> Quest { get; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new Single? HoursUntilReset { get; set; }
     }
@@ -910,12 +910,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
             if ((printMask?.FNAM ?? true)
-                && item.FNAM.TryGet(out var FNAMItem))
+                && item.FNAM is {} FNAMItem)
             {
                 fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
             if ((printMask?.HoursUntilReset ?? true)
-                && item.HoursUntilReset.TryGet(out var HoursUntilResetItem))
+                && item.HoursUntilReset is {} HoursUntilResetItem)
             {
                 fg.AppendItem(HoursUntilResetItem, "HoursUntilReset");
             }
@@ -947,11 +947,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Quest);
-            if (item.FNAM.TryGet(out var FNAMItem))
+            if (item.FNAM is {} FNAMItem)
             {
                 hash.Add(FNAMItem);
             }
-            if (item.HoursUntilReset.TryGet(out var HoursUntilResetitem))
+            if (item.HoursUntilReset is {} HoursUntilResetitem)
             {
                 hash.Add(HoursUntilResetitem);
             }
@@ -997,7 +997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
             {
-                if(rhs.FNAM.TryGet(out var FNAMrhs))
+                if(rhs.FNAM is {} FNAMrhs)
                 {
                     item.FNAM = FNAMrhs.ToArray();
                 }

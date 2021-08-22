@@ -23,29 +23,29 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.FocusSettingCommand)
-                    .BindToStrict(this, x => x.SettingNameButton.Command)
+                    .BindTo(this, x => x.SettingNameButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
-                    .BindToStrict(this, x => x.SettingNameBlock.Text)
+                    .BindTo(this, x => x.SettingNameBlock.Text)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Values.Count)
-                    .BindToStrict(this, x => x.SettingsListBox.AlternationCount)
+                    .BindTo(this, x => x.SettingsListBox.AlternationCount)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Values)
-                    .BindToStrict(this, x => x.SettingsListBox.ItemsSource)
+                    .BindTo(this, x => x.SettingsListBox.ItemsSource)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.AddCommand)
-                    .BindToStrict(this, x => x.AddButton.Command)
+                    .BindTo(this, x => x.AddButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.DeleteCommand)
-                    .BindToStrict(this, x => x.DeleteButton.Command)
+                    .BindTo(this, x => x.DeleteButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.DeleteCommand.CanExecute)
                     .Switch()
                     .CombineLatest(this.WhenAnyValue(x => x.ViewModel!.IsFocused),
                         (canExecute, focused) => canExecute && focused)
                     .Select(x => x ? Visibility.Visible : Visibility.Collapsed)
-                    .BindToStrict(this, x => x.DeleteButton.Visibility)
+                    .BindTo(this, x => x.DeleteButton.Visibility)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.SettingsListBox.SelectedItems)
                     .BindTo(this, x => x.ViewModel!.SelectedValues)
@@ -72,11 +72,11 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.IsFocused)
                     .Select((sel) => sel ? Visibility.Visible : Visibility.Collapsed)
-                    .BindToStrict(this, x => x.SettingsListBox.Visibility)
+                    .BindTo(this, x => x.SettingsListBox.Visibility)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.IsFocused)
                     .Select((sel) => sel ? Visibility.Visible : Visibility.Collapsed)
-                    .BindToStrict(this, x => x.AddButton.Visibility)
+                    .BindTo(this, x => x.AddButton.Visibility)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Values.Count)
                     .Select(x =>
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
                         if (x == 0) return "No Items";
                         return $"{x} Items";
                     })
-                    .BindToStrict(this, x => x.NumItemsBlock.Text)
+                    .BindTo(this, x => x.NumItemsBlock.Text)
                     .DisposeWith(disposable);
             });
         }

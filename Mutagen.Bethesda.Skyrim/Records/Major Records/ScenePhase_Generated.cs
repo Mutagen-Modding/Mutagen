@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.StartConditions?.Overall ?? true)
-                        && StartConditions.TryGet(out var StartConditionsItem))
+                        && StartConditions is {} StartConditionsItem)
                     {
                         fg.AppendLine("StartConditions =>");
                         fg.AppendLine("[");
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.CompletionConditions?.Overall ?? true)
-                        && CompletionConditions.TryGet(out var CompletionConditionsItem))
+                        && CompletionConditions is {} CompletionConditionsItem)
                     {
                         fg.AppendLine("CompletionConditions =>");
                         fg.AppendLine("[");
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Name, "Name");
-                if (StartConditions.TryGet(out var StartConditionsItem))
+                if (StartConditions is {} StartConditionsItem)
                 {
                     fg.AppendLine("StartConditions =>");
                     fg.AppendLine("[");
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (CompletionConditions.TryGet(out var CompletionConditionsItem))
+                if (CompletionConditions is {} CompletionConditionsItem)
                 {
                     fg.AppendLine("CompletionConditions =>");
                     fg.AppendLine("[");
@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScenePhase.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -1275,17 +1275,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Unused?.Overall ?? true)
-                && item.Unused.TryGet(out var UnusedItem))
+                && item.Unused is {} UnusedItem)
             {
                 UnusedItem?.ToString(fg, "Unused");
             }
             if ((printMask?.Unused2?.Overall ?? true)
-                && item.Unused2.TryGet(out var Unused2Item))
+                && item.Unused2 is {} Unused2Item)
             {
                 Unused2Item?.ToString(fg, "Unused2");
             }
             if ((printMask?.EditorWidth ?? true)
-                && item.EditorWidth.TryGet(out var EditorWidthItem))
+                && item.EditorWidth is {} EditorWidthItem)
             {
                 fg.AppendItem(EditorWidthItem, "EditorWidth");
             }
@@ -1336,21 +1336,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IScenePhaseGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
             hash.Add(item.StartConditions);
             hash.Add(item.CompletionConditions);
-            if (item.Unused.TryGet(out var Unuseditem))
+            if (item.Unused is {} Unuseditem)
             {
                 hash.Add(Unuseditem);
             }
-            if (item.Unused2.TryGet(out var Unused2item))
+            if (item.Unused2 is {} Unused2item)
             {
                 hash.Add(Unused2item);
             }
-            if (item.EditorWidth.TryGet(out var EditorWidthitem))
+            if (item.EditorWidth is {} EditorWidthitem)
             {
                 hash.Add(EditorWidthitem);
             }
@@ -1453,7 +1453,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ScenePhase_FieldIndex.Unused);
                 try
                 {
-                    if(rhs.Unused.TryGet(out var rhsUnused))
+                    if(rhs.Unused is {} rhsUnused)
                     {
                         item.Unused = rhsUnused.DeepCopy(
                             errorMask: errorMask,
@@ -1479,7 +1479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ScenePhase_FieldIndex.Unused2);
                 try
                 {
-                    if(rhs.Unused2.TryGet(out var rhsUnused2))
+                    if(rhs.Unused2 is {} rhsUnused2)
                     {
                         item.Unused2 = rhsUnused2.DeepCopy(
                             errorMask: errorMask,
@@ -1613,14 +1613,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScenePhaseBinaryWriteTranslation.WriteBinaryCompletionConditions(
                 writer: writer,
                 item: item);
-            if (item.Unused.TryGet(out var UnusedItem))
+            if (item.Unused is {} UnusedItem)
             {
                 ((ScenePhaseUnusedDataBinaryWriteTranslation)((IBinaryItem)UnusedItem).BinaryWriteTranslator).Write(
                     item: UnusedItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.Unused2.TryGet(out var Unused2Item))
+            if (item.Unused2 is {} Unused2Item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
                 ((ScenePhaseUnusedDataBinaryWriteTranslation)((IBinaryItem)Unused2Item).BinaryWriteTranslator).Write(

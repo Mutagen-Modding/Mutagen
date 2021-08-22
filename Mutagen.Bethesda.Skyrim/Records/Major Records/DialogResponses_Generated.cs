@@ -87,21 +87,21 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogResponseFlagsGetter? IDialogResponsesGetter.Flags => this.Flags;
         #endregion
         #region Topic
-        private IFormLinkNullable<IDialogTopicGetter> _Topic = new FormLinkNullable<IDialogTopicGetter>();
+        private readonly IFormLinkNullable<IDialogTopicGetter> _Topic = new FormLinkNullable<IDialogTopicGetter>();
         public IFormLinkNullable<IDialogTopicGetter> Topic
         {
             get => _Topic;
-            set => _Topic = value.AsNullable();
+            set => _Topic.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogTopicGetter> IDialogResponsesGetter.Topic => this.Topic;
         #endregion
         #region PreviousDialog
-        private IFormLinkNullable<IDialogResponsesGetter> _PreviousDialog = new FormLinkNullable<IDialogResponsesGetter>();
+        private readonly IFormLinkNullable<IDialogResponsesGetter> _PreviousDialog = new FormLinkNullable<IDialogResponsesGetter>();
         public IFormLinkNullable<IDialogResponsesGetter> PreviousDialog
         {
             get => _PreviousDialog;
-            set => _PreviousDialog = value.AsNullable();
+            set => _PreviousDialog.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponsesGetter.PreviousDialog => this.PreviousDialog;
@@ -126,11 +126,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region ResponseData
-        private IFormLinkNullable<IDialogResponsesGetter> _ResponseData = new FormLinkNullable<IDialogResponsesGetter>();
+        private readonly IFormLinkNullable<IDialogResponsesGetter> _ResponseData = new FormLinkNullable<IDialogResponsesGetter>();
         public IFormLinkNullable<IDialogResponsesGetter> ResponseData
         {
             get => _ResponseData;
-            set => _ResponseData = value.AsNullable();
+            set => _ResponseData.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponsesGetter.ResponseData => this.ResponseData;
@@ -183,31 +183,31 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter? IDialogResponsesGetter.Prompt => this.Prompt;
         #endregion
         #region Speaker
-        private IFormLinkNullable<INpcGetter> _Speaker = new FormLinkNullable<INpcGetter>();
+        private readonly IFormLinkNullable<INpcGetter> _Speaker = new FormLinkNullable<INpcGetter>();
         public IFormLinkNullable<INpcGetter> Speaker
         {
             get => _Speaker;
-            set => _Speaker = value.AsNullable();
+            set => _Speaker.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> IDialogResponsesGetter.Speaker => this.Speaker;
         #endregion
         #region WalkAwayTopic
-        private IFormLinkNullable<IDialogTopicGetter> _WalkAwayTopic = new FormLinkNullable<IDialogTopicGetter>();
+        private readonly IFormLinkNullable<IDialogTopicGetter> _WalkAwayTopic = new FormLinkNullable<IDialogTopicGetter>();
         public IFormLinkNullable<IDialogTopicGetter> WalkAwayTopic
         {
             get => _WalkAwayTopic;
-            set => _WalkAwayTopic = value.AsNullable();
+            set => _WalkAwayTopic.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogTopicGetter> IDialogResponsesGetter.WalkAwayTopic => this.WalkAwayTopic;
         #endregion
         #region AudioOutputOverride
-        private IFormLinkNullable<ISoundOutputModelGetter> _AudioOutputOverride = new FormLinkNullable<ISoundOutputModelGetter>();
+        private readonly IFormLinkNullable<ISoundOutputModelGetter> _AudioOutputOverride = new FormLinkNullable<ISoundOutputModelGetter>();
         public IFormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride
         {
             get => _AudioOutputOverride;
-            set => _AudioOutputOverride = value.AsNullable();
+            set => _AudioOutputOverride.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundOutputModelGetter> IDialogResponsesGetter.AudioOutputOverride => this.AudioOutputOverride;
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(FavorLevel, "FavorLevel");
                     }
                     if ((printMask?.LinkTo?.Overall ?? true)
-                        && LinkTo.TryGet(out var LinkToItem))
+                        && LinkTo is {} LinkToItem)
                     {
                         fg.AppendLine("LinkTo =>");
                         fg.AppendLine("[");
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(ResponseData, "ResponseData");
                     }
                     if ((printMask?.Responses?.Overall ?? true)
-                        && Responses.TryGet(out var ResponsesItem))
+                        && Responses is {} ResponsesItem)
                     {
                         fg.AppendLine("Responses =>");
                         fg.AppendLine("[");
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendLine("]");
                     }
                     if ((printMask?.UnknownData?.Overall ?? true)
-                        && UnknownData.TryGet(out var UnknownDataItem))
+                        && UnknownData is {} UnknownDataItem)
                     {
                         fg.AppendLine("UnknownData =>");
                         fg.AppendLine("[");
@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Topic, "Topic");
                 fg.AppendItem(PreviousDialog, "PreviousDialog");
                 fg.AppendItem(FavorLevel, "FavorLevel");
-                if (LinkTo.TryGet(out var LinkToItem))
+                if (LinkTo is {} LinkToItem)
                 {
                     fg.AppendLine("LinkTo =>");
                     fg.AppendLine("[");
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(ResponseData, "ResponseData");
-                if (Responses.TryGet(out var ResponsesItem))
+                if (Responses is {} ResponsesItem)
                 {
                     fg.AppendLine("Responses =>");
                     fg.AppendLine("[");
@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                if (UnknownData.TryGet(out var UnknownDataItem))
+                if (UnknownData is {} UnknownDataItem)
                 {
                     fg.AppendLine("UnknownData =>");
                     fg.AppendLine("[");
@@ -1353,18 +1353,18 @@ namespace Mutagen.Bethesda.Skyrim
         new DialogResponsesAdapter? VirtualMachineAdapter { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
         new DialogResponseFlags? Flags { get; set; }
-        new IFormLinkNullable<IDialogTopicGetter> Topic { get; }
-        new IFormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; }
+        new IFormLinkNullable<IDialogTopicGetter> Topic { get; set; }
+        new IFormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; set; }
         new FavorLevel? FavorLevel { get; set; }
         new ExtendedList<IFormLinkGetter<IDialogGetter>> LinkTo { get; }
-        new IFormLinkNullable<IDialogResponsesGetter> ResponseData { get; }
+        new IFormLinkNullable<IDialogResponsesGetter> ResponseData { get; set; }
         new ExtendedList<DialogResponse> Responses { get; }
         new ExtendedList<Condition> Conditions { get; }
         new ExtendedList<DialogResponsesUnknownData> UnknownData { get; }
         new TranslatedString? Prompt { get; set; }
-        new IFormLinkNullable<INpcGetter> Speaker { get; }
-        new IFormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; }
-        new IFormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; }
+        new IFormLinkNullable<INpcGetter> Speaker { get; set; }
+        new IFormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; set; }
+        new IFormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; set; }
         #region Mutagen
         new DialogResponses.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1871,17 +1871,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
             if ((printMask?.DATA ?? true)
-                && item.DATA.TryGet(out var DATAItem))
+                && item.DATA is {} DATAItem)
             {
                 fg.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
             }
             if ((printMask?.Flags?.Overall ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+                && item.Flags is {} FlagsItem)
             {
                 FlagsItem?.ToString(fg, "Flags");
             }
@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.PreviousDialog.FormKeyNullable, "PreviousDialog");
             }
             if ((printMask?.FavorLevel ?? true)
-                && item.FavorLevel.TryGet(out var FavorLevelItem))
+                && item.FavorLevel is {} FavorLevelItem)
             {
                 fg.AppendItem(FavorLevelItem, "FavorLevel");
             }
@@ -1975,7 +1975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendLine("]");
             }
             if ((printMask?.Prompt ?? true)
-                && item.Prompt.TryGet(out var PromptItem))
+                && item.Prompt is {} PromptItem)
             {
                 fg.AppendItem(PromptItem, "Prompt");
             }
@@ -2135,21 +2135,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IDialogResponsesGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
-            if (item.DATA.TryGet(out var DATAItem))
+            if (item.DATA is {} DATAItem)
             {
                 hash.Add(DATAItem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
             hash.Add(item.Topic);
             hash.Add(item.PreviousDialog);
-            if (item.FavorLevel.TryGet(out var FavorLevelitem))
+            if (item.FavorLevel is {} FavorLevelitem)
             {
                 hash.Add(FavorLevelitem);
             }
@@ -2158,7 +2158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Responses);
             hash.Add(item.Conditions);
             hash.Add(item.UnknownData);
-            if (item.Prompt.TryGet(out var Promptitem))
+            if (item.Prompt is {} Promptitem)
             {
                 hash.Add(Promptitem);
             }
@@ -2321,7 +2321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)DialogResponses_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -2344,7 +2344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.DATA) ?? true))
             {
-                if(rhs.DATA.TryGet(out var DATArhs))
+                if(rhs.DATA is {} DATArhs)
                 {
                     item.DATA = DATArhs.ToArray();
                 }
@@ -2358,7 +2358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)DialogResponses_FieldIndex.Flags);
                 try
                 {
-                    if(rhs.Flags.TryGet(out var rhsFlags))
+                    if(rhs.Flags is {} rhsFlags)
                     {
                         item.Flags = rhsFlags.DeepCopy(
                             errorMask: errorMask,
@@ -2659,7 +2659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((DialogResponsesAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
@@ -2670,7 +2670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.DATA,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
-            if (item.Flags.TryGet(out var FlagsItem))
+            if (item.Flags is {} FlagsItem)
             {
                 ((DialogResponseFlagsBinaryWriteTranslation)((IBinaryItem)FlagsItem).BinaryWriteTranslator).Write(
                     item: FlagsItem,

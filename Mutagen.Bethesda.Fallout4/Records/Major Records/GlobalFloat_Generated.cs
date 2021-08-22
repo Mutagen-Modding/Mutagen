@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Data ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 fg.AppendItem(DataItem, "Data");
             }
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IGlobalFloatGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }

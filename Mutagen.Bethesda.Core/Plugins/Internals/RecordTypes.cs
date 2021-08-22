@@ -6,9 +6,9 @@ namespace Mutagen.Bethesda.Plugins.Internals
 {
     public static class RecordTypes
     {
-        public static readonly RecordType MAST = new RecordType("MAST");
-        public static readonly RecordType DATA = new RecordType("DATA");
-        public static readonly RecordType EDID = new RecordType("EDID");
-        public static readonly RecordType XXXX = new RecordType("XXXX");
+        public static readonly RecordType MAST = new("MAST");
+        public static readonly RecordType DATA = new("DATA");
+        public static readonly RecordType EDID = new("EDID");
+        public static readonly RecordType XXXX = new("XXXX");
     }
 }

@@ -833,12 +833,12 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObjectVariable.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.TypeName ?? true)
-                && item.TypeName.TryGet(out var TypeNameItem))
+                && item.TypeName is {} TypeNameItem)
             {
                 fg.AppendItem(TypeNameItem, "TypeName");
             }
@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 fg.AppendItem(item.RawUserFlags, "RawUserFlags");
             }
             if ((printMask?.VariableData?.Overall ?? true)
-                && item.VariableData.TryGet(out var VariableDataItem))
+                && item.VariableData is {} VariableDataItem)
             {
                 VariableDataItem?.ToString(fg, "VariableData");
             }
@@ -886,16 +886,16 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IPexObjectVariableGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.TypeName.TryGet(out var TypeNameitem))
+            if (item.TypeName is {} TypeNameitem)
             {
                 hash.Add(TypeNameitem);
             }
             hash.Add(item.RawUserFlags);
-            if (item.VariableData.TryGet(out var VariableDataitem))
+            if (item.VariableData is {} VariableDataitem)
             {
                 hash.Add(VariableDataitem);
             }
@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 errorMask?.PushIndex((int)PexObjectVariable_FieldIndex.VariableData);
                 try
                 {
-                    if(rhs.VariableData.TryGet(out var rhsVariableData))
+                    if(rhs.VariableData is {} rhsVariableData)
                     {
                         item.VariableData = rhsVariableData.DeepCopy(
                             errorMask: errorMask,

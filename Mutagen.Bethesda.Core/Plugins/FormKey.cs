@@ -6,8 +6,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Plugins
 {
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Plugins
         /// <param name="masterReferences">Master reference list to refer to</param>
         /// <param name="idWithModID">Mod index and Record ID to use</param>
         /// <returns>Converted FormID</returns>
-        public static FormKey Factory(MasterReferenceReader masterReferences, uint idWithModID)
+        public static FormKey Factory(IMasterReferenceReader masterReferences, uint idWithModID)
         {
             var modID = ModIndex.GetModIndexByteFromUInt(idWithModID);
 

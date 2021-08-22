@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Pex
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.Members?.Overall ?? true)
-                        && Members.TryGet(out var MembersItem))
+                        && Members is {} MembersItem)
                     {
                         fg.AppendLine("Members =>");
                         fg.AppendLine("[");
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Pex
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Name, "Name");
-                if (Members.TryGet(out var MembersItem))
+                if (Members is {} MembersItem)
                 {
                     fg.AppendLine("Members =>");
                     fg.AppendLine("[");
@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObjectStructInfo.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IPexObjectStructInfoGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }

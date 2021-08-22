@@ -17,6 +17,7 @@
     <Copyright>2021</Copyright>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Mutagen.Bethesda</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,27 +26,19 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="GameFinder" Version="1.5.3" />
-    <PackageReference Include="GameFinder.StoreHandlers.GOG" Version="1.5.3" />
-    <PackageReference Include="GameFinder.StoreHandlers.Steam" Version="1.5.3" />
+    <PackageReference Include="GameFinder" Version="1.7.0" />
+    <PackageReference Include="GameFinder.StoreHandlers.GOG" Version="1.7.0" />
+    <PackageReference Include="GameFinder.StoreHandlers.Steam" Version="1.7.0" />
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.23.0" />
-    <PackageReference Include="NuGetizer" Version="0.7.0">
+    <PackageReference Include="Noggog.CSharpExt" Version="2.27.0" />
+    <PackageReference Include="NuGetizer" Version="0.7.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Compile Update="TestingPermissions.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
   </ItemGroup>
 
 </Project>

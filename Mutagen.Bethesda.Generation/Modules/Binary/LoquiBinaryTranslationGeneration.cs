@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 && loquiGen.TargetObjectGeneration.GetObjectData().ObjectType == ObjectType.Group;
             if (typeGen.Nullable)
             {
-                fg.AppendLine($"if ({itemAccessor}.TryGet(out var {typeGen.Name}Item))");
+                fg.AppendLine($"if ({itemAccessor} is {{}} {typeGen.Name}Item)");
                 itemAccessor = $"{typeGen.Name}Item";
             }
             else

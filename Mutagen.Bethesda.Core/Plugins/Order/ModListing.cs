@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
@@ -51,7 +53,7 @@ namespace Mutagen.Bethesda.Plugins.Order
 
         public override string ToString()
         {
-            return $"[{(Enabled ? "X" : "_")}] {ModKey}{(Ghosted ? " (ghosted)" : null)}";
+            return IModListingGetter.ToString(this);
         }
 
         public static implicit operator ModListing(ModKey modKey)
@@ -59,6 +61,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return new ModListing(modKey, enabled: true);
         }
 
+        /// <inheritdoc cref="IModListingParser" />
         public static bool TryFromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing, [MaybeNullWhen(false)] out ModListing listing)
         {
             str = str.Trim();
@@ -91,7 +94,7 @@ namespace Mutagen.Bethesda.Plugins.Order
 
             if (ModKey.TryFromNameAndExtension(str, out key))
             {
-                listing = CreateGhosted(key, ghostTerm.ToString());
+                listing = ModListing.CreateGhosted(key, ghostTerm.ToString());
                 return true;
             }
 
@@ -99,25 +102,28 @@ namespace Mutagen.Bethesda.Plugins.Order
             return false;
         }
 
+        /// <inheritdoc cref="IModListingParser" />
         public static bool TryFromFileName(FileName fileName, bool enabledMarkerProcessing, [MaybeNullWhen(false)] out ModListing listing)
         {
             return TryFromString(fileName.String, enabledMarkerProcessing, out listing);
         }
 
+        /// <inheritdoc cref="IModListingParser" />
         public static ModListing FromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing)
         {
             if (!TryFromString(str, enabledMarkerProcessing, out var listing))
             {
-                throw new ArgumentException($"Load order file had malformed line: {str.ToString()}");
+                throw new InvalidDataException($"Load order file had malformed line: {str.ToString()}");
             }
             return listing;
         }
 
+        /// <inheritdoc cref="IModListingParser" />
         public static ModListing FromFileName(FileName name, bool enabledMarkerProcessing)
         {
             if (!TryFromFileName(name, enabledMarkerProcessing, out var listing))
             {
-                throw new ArgumentException($"Load order file had malformed line: {name}");
+                throw new InvalidDataException($"Load order file had malformed line: {name}");
             }
             return listing;
         }
@@ -178,7 +184,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <inheritdoc/>
         public override string ToString()
         {
-            return IModListingExt.ToString(this);
+            return IModListingGetter<TMod>.ToString(this);
         }
 
         public void Dispose()
@@ -203,6 +209,11 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// Mod object
         /// </summary>
         TMod? Mod { get; }
+        
+        public static string ToString(IModListingGetter<TMod> getter)
+        {
+            return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Mod == null ? " (missing)" : null)}{(getter.Ghosted ? " (ghosted)" : null)}";
+        }
     }
 
     /// <inheritdoc />
@@ -239,6 +250,11 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// the mods differently depending on the context
         /// </summary>
         string GhostSuffix { get; }
+        
+        public static string ToString(IModListingGetter getter)
+        {
+            return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Ghosted ? " (ghosted)" : null)}";
+        }
     }
 
     /// <inheritdoc cref="IModListingGetter" />
@@ -255,19 +271,5 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// the mods differently depending on the context
         /// </summary>
         new string GhostSuffix { get; set; }
-    }
-
-    public static class IModListingExt
-    {
-        public static string ToString(IModListingGetter getter)
-        {
-            return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Ghosted ? " (ghosted)" : null)}";
-        }
-        
-        public static string ToString<TMod>(IModListing<TMod> getter)
-            where TMod : class, IModGetter
-        {
-            return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Mod == null ? " (missing)" : null)}{(getter.Ghosted ? " (ghosted)" : null)}";
-        }
     }
 }

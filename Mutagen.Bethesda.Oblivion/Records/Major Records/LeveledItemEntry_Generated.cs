@@ -56,11 +56,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        private IFormLink<IItemGetter> _Reference = new FormLink<IItemGetter>();
+        private readonly IFormLink<IItemGetter> _Reference = new FormLink<IItemGetter>();
         public IFormLink<IItemGetter> Reference
         {
             get => _Reference;
-            set => _Reference = value.AsSetter();
+            set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IItemGetter> ILeveledItemEntryGetter.Reference => this.Reference;
@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Int16 Level { get; set; }
         new Int16 Unknown { get; set; }
-        new IFormLink<IItemGetter> Reference { get; }
+        new IFormLink<IItemGetter> Reference { get; set; }
         new Int16? Count { get; set; }
         new Int16? Unknown2 { get; set; }
     }
@@ -975,12 +975,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg.AppendItem(item.Reference.FormKey, "Reference");
             }
             if ((printMask?.Count ?? true)
-                && item.Count.TryGet(out var CountItem))
+                && item.Count is {} CountItem)
             {
                 fg.AppendItem(CountItem, "Count");
             }
             if ((printMask?.Unknown2 ?? true)
-                && item.Unknown2.TryGet(out var Unknown2Item))
+                && item.Unknown2 is {} Unknown2Item)
             {
                 fg.AppendItem(Unknown2Item, "Unknown2");
             }
@@ -1022,11 +1022,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.Level);
             hash.Add(item.Unknown);
             hash.Add(item.Reference);
-            if (item.Count.TryGet(out var Countitem))
+            if (item.Count is {} Countitem)
             {
                 hash.Add(Countitem);
             }
-            if (item.Unknown2.TryGet(out var Unknown2item))
+            if (item.Unknown2 is {} Unknown2item)
             {
                 hash.Add(Unknown2item);
             }

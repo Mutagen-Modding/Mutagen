@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Generation
             }
             if (this.Nullable)
             {
-                fg.AppendLine($"if (!{rhs}.TryGet(out var rhs{this.Name}item))");
+                fg.AppendLine($"if ({rhs} is not {{}} rhs{this.Name}item)");
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine($"{accessor} = null;");
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (this.Nullable)
             {
-                fg.AppendLine($"if ({accessor}.TryGet(out var {this.Name}item))");
+                fg.AppendLine($"if ({accessor} is {{}} {this.Name}item)");
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine($"{hashResultAccessor}.Add(HashCode.Combine({this.Name}item.Male, {this.Name}item.Female));");

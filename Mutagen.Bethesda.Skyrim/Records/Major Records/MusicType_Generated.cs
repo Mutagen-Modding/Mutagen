@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(FadeDuration, "FadeDuration");
                     }
                     if ((printMask?.Tracks?.Overall ?? true)
-                        && Tracks.TryGet(out var TracksItem))
+                        && Tracks is {} TracksItem)
                     {
                         fg.AppendLine("Tracks =>");
                         fg.AppendLine("[");
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Flags, "Flags");
                 Data?.ToString(fg);
                 fg.AppendItem(FadeDuration, "FadeDuration");
-                if (Tracks.TryGet(out var TracksItem))
+                if (Tracks is {} TracksItem)
                 {
                     fg.AppendLine("Tracks =>");
                     fg.AppendLine("[");
@@ -1115,17 +1115,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.FadeDuration ?? true)
-                && item.FadeDuration.TryGet(out var FadeDurationItem))
+                && item.FadeDuration is {} FadeDurationItem)
             {
                 fg.AppendItem(FadeDurationItem, "FadeDuration");
             }
             if ((printMask?.Tracks?.Overall ?? true)
-                && item.Tracks.TryGet(out var TracksItem))
+                && item.Tracks is {} TracksItem)
             {
                 fg.AppendLine("Tracks =>");
                 fg.AppendLine("[");
@@ -1240,11 +1240,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Flags);
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
-            if (item.FadeDuration.TryGet(out var FadeDurationitem))
+            if (item.FadeDuration is {} FadeDurationitem)
             {
                 hash.Add(FadeDurationitem);
             }
@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Tracks.TryGet(out var TracksItem))
+            if (obj.Tracks is {} TracksItem)
             {
                 foreach (var item in TracksItem)
                 {
@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)MusicType_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Flags,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((MusicTypeDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

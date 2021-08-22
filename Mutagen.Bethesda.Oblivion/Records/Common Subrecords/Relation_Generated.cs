@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        private IFormLink<IFactionGetter> _Faction = new FormLink<IFactionGetter>();
+        private readonly IFormLink<IFactionGetter> _Faction = new FormLink<IFactionGetter>();
         public IFormLink<IFactionGetter> Faction
         {
             get => _Faction;
-            set => _Faction = value.AsSetter();
+            set => _Faction.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFactionGetter> IRelationGetter.Faction => this.Faction;
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRelation>,
         IRelationGetter
     {
-        new IFormLink<IFactionGetter> Faction { get; }
+        new IFormLink<IFactionGetter> Faction { get; set; }
         new Int32 Modifier { get; set; }
     }
 

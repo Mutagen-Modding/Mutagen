@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(SoundType, "SoundType");
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
-                        && Sounds.TryGet(out var SoundsItem))
+                        && Sounds is {} SoundsItem)
                     {
                         fg.AppendLine("Sounds =>");
                         fg.AppendLine("[");
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(SoundType, "SoundType");
-                if (Sounds.TryGet(out var SoundsItem))
+                if (Sounds is {} SoundsItem)
                 {
                     fg.AppendLine("Sounds =>");
                     fg.AppendLine("[");
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureSound.Mask<bool>? printMask = null)
         {
             if ((printMask?.SoundType ?? true)
-                && item.SoundType.TryGet(out var SoundTypeItem))
+                && item.SoundType is {} SoundTypeItem)
             {
                 fg.AppendItem(SoundTypeItem, "SoundType");
             }
@@ -990,7 +990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ICreatureSoundGetter item)
         {
             var hash = new HashCode();
-            if (item.SoundType.TryGet(out var SoundTypeitem))
+            if (item.SoundType is {} SoundTypeitem)
             {
                 hash.Add(SoundTypeitem);
             }

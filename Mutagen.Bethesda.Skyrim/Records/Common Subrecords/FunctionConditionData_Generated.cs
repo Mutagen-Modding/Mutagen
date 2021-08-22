@@ -58,11 +58,11 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 Unknown2 { get; set; } = default;
         #endregion
         #region ParameterOneRecord
-        private IFormLink<ISkyrimMajorRecordGetter> _ParameterOneRecord = new FormLink<ISkyrimMajorRecordGetter>();
+        private readonly IFormLink<ISkyrimMajorRecordGetter> _ParameterOneRecord = new FormLink<ISkyrimMajorRecordGetter>();
         public IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord
         {
             get => _ParameterOneRecord;
-            set => _ParameterOneRecord = value.AsSetter();
+            set => _ParameterOneRecord.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
@@ -76,11 +76,11 @@ namespace Mutagen.Bethesda.Skyrim
         String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
         #endregion
         #region ParameterTwoRecord
-        private IFormLink<ISkyrimMajorRecordGetter> _ParameterTwoRecord = new FormLink<ISkyrimMajorRecordGetter>();
+        private readonly IFormLink<ISkyrimMajorRecordGetter> _ParameterTwoRecord = new FormLink<ISkyrimMajorRecordGetter>();
         public IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord
         {
             get => _ParameterTwoRecord;
-            set => _ParameterTwoRecord = value.AsSetter();
+            set => _ParameterTwoRecord.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
@@ -661,10 +661,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Condition.Function Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; set; }
         new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; set; }
         new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
     }
@@ -1080,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ParameterOneNumber, "ParameterOneNumber");
             }
             if ((printMask?.ParameterOneString ?? true)
-                && item.ParameterOneString.TryGet(out var ParameterOneStringItem))
+                && item.ParameterOneString is {} ParameterOneStringItem)
             {
                 fg.AppendItem(ParameterOneStringItem, "ParameterOneString");
             }
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.ParameterTwoNumber, "ParameterTwoNumber");
             }
             if ((printMask?.ParameterTwoString ?? true)
-                && item.ParameterTwoString.TryGet(out var ParameterTwoStringItem))
+                && item.ParameterTwoString is {} ParameterTwoStringItem)
             {
                 fg.AppendItem(ParameterTwoStringItem, "ParameterTwoString");
             }
@@ -1175,13 +1175,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Unknown2);
             hash.Add(item.ParameterOneRecord);
             hash.Add(item.ParameterOneNumber);
-            if (item.ParameterOneString.TryGet(out var ParameterOneStringitem))
+            if (item.ParameterOneString is {} ParameterOneStringitem)
             {
                 hash.Add(ParameterOneStringitem);
             }
             hash.Add(item.ParameterTwoRecord);
             hash.Add(item.ParameterTwoNumber);
-            if (item.ParameterTwoString.TryGet(out var ParameterTwoStringitem))
+            if (item.ParameterTwoString is {} ParameterTwoStringitem)
             {
                 hash.Add(ParameterTwoStringitem);
             }

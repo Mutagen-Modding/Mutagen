@@ -132,21 +132,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region MenuDisplayObject
-        private IFormLinkNullable<IStaticGetter> _MenuDisplayObject = new FormLinkNullable<IStaticGetter>();
+        private readonly IFormLinkNullable<IStaticGetter> _MenuDisplayObject = new FormLinkNullable<IStaticGetter>();
         public IFormLinkNullable<IStaticGetter> MenuDisplayObject
         {
             get => _MenuDisplayObject;
-            set => _MenuDisplayObject = value.AsNullable();
+            set => _MenuDisplayObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> ISpellGetter.MenuDisplayObject => this.MenuDisplayObject;
         #endregion
         #region EquipmentType
-        private IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
+        private readonly IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
         public IFormLinkNullable<IEquipTypeGetter> EquipmentType
         {
             get => _EquipmentType;
-            set => _EquipmentType = value.AsNullable();
+            set => _EquipmentType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> ISpellGetter.EquipmentType => this.EquipmentType;
@@ -180,11 +180,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Range { get; set; } = default;
         #endregion
         #region HalfCostPerk
-        private IFormLink<IPerkGetter> _HalfCostPerk = new FormLink<IPerkGetter>();
+        private readonly IFormLink<IPerkGetter> _HalfCostPerk = new FormLink<IPerkGetter>();
         public IFormLink<IPerkGetter> HalfCostPerk
         {
             get => _HalfCostPerk;
-            set => _HalfCostPerk = value.AsSetter();
+            set => _HalfCostPerk.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> ISpellGetter.HalfCostPerk => this.HalfCostPerk;
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Name, "Name");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords.TryGet(out var KeywordsItem))
+                        && Keywords is {} KeywordsItem)
                     {
                         fg.AppendLine("Keywords =>");
                         fg.AppendLine("[");
@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(HalfCostPerk, "HalfCostPerk");
                     }
                     if ((printMask?.Effects?.Overall ?? true)
-                        && Effects.TryGet(out var EffectsItem))
+                        && Effects is {} EffectsItem)
                     {
                         fg.AppendLine("Effects =>");
                         fg.AppendLine("[");
@@ -924,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.ToString_FillInternal(fg);
                 ObjectBounds?.ToString(fg);
                 fg.AppendItem(Name, "Name");
-                if (Keywords.TryGet(out var KeywordsItem))
+                if (Keywords is {} KeywordsItem)
                 {
                     fg.AppendLine("Keywords =>");
                     fg.AppendLine("[");
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(CastDuration, "CastDuration");
                 fg.AppendItem(Range, "Range");
                 fg.AppendItem(HalfCostPerk, "HalfCostPerk");
-                if (Effects.TryGet(out var EffectsItem))
+                if (Effects is {} EffectsItem)
                 {
                     fg.AppendLine("Effects =>");
                     fg.AppendLine("[");
@@ -1263,8 +1263,8 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
-        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
+        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
+        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new TranslatedString Description { get; set; }
         new UInt32 BaseCost { get; set; }
         new SpellDataFlag Flags { get; set; }
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new Single CastDuration { get; set; }
         new Single Range { get; set; }
-        new IFormLink<IPerkGetter> HalfCostPerk { get; }
+        new IFormLink<IPerkGetter> HalfCostPerk { get; set; }
         new ExtendedList<Effect> Effects { get; }
         new Spell.SPITDataType SPITDataTypeState { get; set; }
     }
@@ -1791,12 +1791,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Keywords?.Overall ?? true)
-                && item.Keywords.TryGet(out var KeywordsItem))
+                && item.Keywords is {} KeywordsItem)
             {
                 fg.AppendLine("Keywords =>");
                 fg.AppendLine("[");
@@ -2033,7 +2033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
@@ -2081,7 +2081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Keywords.TryGet(out var KeywordsItem))
+            if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
                 {

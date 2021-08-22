@@ -147,81 +147,81 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ObjectEffect
-        private IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
+        private readonly IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
         public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
         {
             get => _ObjectEffect;
-            set => _ObjectEffect = value.AsNullable();
+            set => _ObjectEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEffectRecordGetter> IExplosionGetter.ObjectEffect => this.ObjectEffect;
         #endregion
         #region ImageSpaceModifier
-        private IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
         public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
         {
             get => _ImageSpaceModifier;
-            set => _ImageSpaceModifier = value.AsNullable();
+            set => _ImageSpaceModifier.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IExplosionGetter.ImageSpaceModifier => this.ImageSpaceModifier;
         #endregion
         #region Light
-        private IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
+        private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
         public IFormLink<ILightGetter> Light
         {
             get => _Light;
-            set => _Light = value.AsSetter();
+            set => _Light.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IExplosionGetter.Light => this.Light;
         #endregion
         #region Sound1
-        private IFormLink<ISoundDescriptorGetter> _Sound1 = new FormLink<ISoundDescriptorGetter>();
+        private readonly IFormLink<ISoundDescriptorGetter> _Sound1 = new FormLink<ISoundDescriptorGetter>();
         public IFormLink<ISoundDescriptorGetter> Sound1
         {
             get => _Sound1;
-            set => _Sound1 = value.AsSetter();
+            set => _Sound1.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IExplosionGetter.Sound1 => this.Sound1;
         #endregion
         #region Sound2
-        private IFormLink<ISoundDescriptorGetter> _Sound2 = new FormLink<ISoundDescriptorGetter>();
+        private readonly IFormLink<ISoundDescriptorGetter> _Sound2 = new FormLink<ISoundDescriptorGetter>();
         public IFormLink<ISoundDescriptorGetter> Sound2
         {
             get => _Sound2;
-            set => _Sound2 = value.AsSetter();
+            set => _Sound2.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IExplosionGetter.Sound2 => this.Sound2;
         #endregion
         #region ImpactDataSet
-        private IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        private readonly IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
         public IFormLink<IImpactDataSetGetter> ImpactDataSet
         {
             get => _ImpactDataSet;
-            set => _ImpactDataSet = value.AsSetter();
+            set => _ImpactDataSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IExplosionGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion
         #region PlacedObject
-        private IFormLink<ISkyrimMajorRecordGetter> _PlacedObject = new FormLink<ISkyrimMajorRecordGetter>();
+        private readonly IFormLink<ISkyrimMajorRecordGetter> _PlacedObject = new FormLink<ISkyrimMajorRecordGetter>();
         public IFormLink<ISkyrimMajorRecordGetter> PlacedObject
         {
             get => _PlacedObject;
-            set => _PlacedObject = value.AsSetter();
+            set => _PlacedObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IExplosionGetter.PlacedObject => this.PlacedObject;
         #endregion
         #region SpawnProjectile
-        private IFormLink<IProjectileGetter> _SpawnProjectile = new FormLink<IProjectileGetter>();
+        private readonly IFormLink<IProjectileGetter> _SpawnProjectile = new FormLink<IProjectileGetter>();
         public IFormLink<IProjectileGetter> SpawnProjectile
         {
             get => _SpawnProjectile;
-            set => _SpawnProjectile = value.AsSetter();
+            set => _SpawnProjectile.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IExplosionGetter.SpawnProjectile => this.SpawnProjectile;
@@ -1295,14 +1295,14 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
-        new IFormLink<ILightGetter> Light { get; }
-        new IFormLink<ISoundDescriptorGetter> Sound1 { get; }
-        new IFormLink<ISoundDescriptorGetter> Sound2 { get; }
-        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
-        new IFormLink<ISkyrimMajorRecordGetter> PlacedObject { get; }
-        new IFormLink<IProjectileGetter> SpawnProjectile { get; }
+        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new IFormLink<ILightGetter> Light { get; set; }
+        new IFormLink<ISoundDescriptorGetter> Sound1 { get; set; }
+        new IFormLink<ISoundDescriptorGetter> Sound2 { get; set; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> PlacedObject { get; set; }
+        new IFormLink<IProjectileGetter> SpawnProjectile { get; set; }
         new Single Force { get; set; }
         new Single Damage { get; set; }
         new Single Radius { get; set; }
@@ -1843,7 +1843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
-                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
@@ -1852,12 +1852,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
-                && item.Model.TryGet(out var ModelItem))
+                && item.Model is {} ModelItem)
             {
                 ModelItem?.ToString(fg, "Model");
             }
@@ -2093,16 +2093,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IExplosionGetter item)
         {
             var hash = new HashCode();
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.ObjectBounds);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Model.TryGet(out var Modelitem))
+            if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
@@ -2158,7 +2158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Model.TryGet(out var ModelItems))
+            if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.ContainedFormLinks)
                 {
@@ -2258,7 +2258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Explosion_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
@@ -2310,7 +2310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Explosion_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model.TryGet(out var rhsModel))
+                    if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
@@ -2561,7 +2561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
@@ -2579,7 +2579,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            if (item.Model.TryGet(out var ModelItem))
+            if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,

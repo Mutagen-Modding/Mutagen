@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (effect)
                         {
                             case PerkEntryPointModifyValue modVal:
-                                if (modVal.Value.TryGet(out var f))
+                                if (modVal.Value is {} f)
                                 {
                                     using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                                     {

@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Object
-        private IFormLink<ISkyrimMajorRecordGetter> _Object = new FormLink<ISkyrimMajorRecordGetter>();
+        private readonly IFormLink<ISkyrimMajorRecordGetter> _Object = new FormLink<ISkyrimMajorRecordGetter>();
         public IFormLink<ISkyrimMajorRecordGetter> Object
         {
             get => _Object;
-            set => _Object = value.AsSetter();
+            set => _Object.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object;
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<ICreateReferenceToObject>
     {
-        new IFormLink<ISkyrimMajorRecordGetter> Object { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> Object { get; set; }
         new Int16 AliasIndex { get; set; }
         new CreateReferenceToObject.CreateEnum Create { get; set; }
         new Level Level { get; set; }

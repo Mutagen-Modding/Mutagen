@@ -91,11 +91,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region LoadingScreenNif
-        private IFormLink<IStaticGetter> _LoadingScreenNif = new FormLink<IStaticGetter>();
+        private readonly IFormLink<IStaticGetter> _LoadingScreenNif = new FormLink<IStaticGetter>();
         public IFormLink<IStaticGetter> LoadingScreenNif
         {
             get => _LoadingScreenNif;
-            set => _LoadingScreenNif = value.AsSetter();
+            set => _LoadingScreenNif.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IStaticGetter> ILoadScreenGetter.LoadingScreenNif => this.LoadingScreenNif;
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
                         fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                        && Conditions is {} ConditionsItem)
                     {
                         fg.AppendLine("Conditions =>");
                         fg.AppendLine("[");
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.ToString_FillInternal(fg);
                 Icons?.ToString(fg);
                 fg.AppendItem(Description, "Description");
-                if (Conditions.TryGet(out var ConditionsItem))
+                if (Conditions is {} ConditionsItem)
                 {
                     fg.AppendLine("Conditions =>");
                     fg.AppendLine("[");
@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new IFormLink<IStaticGetter> LoadingScreenNif { get; }
+        new IFormLink<IStaticGetter> LoadingScreenNif { get; set; }
         new Single? InitialScale { get; set; }
         new P3Int16? InitialRotation { get; set; }
         new Int16MinMax? RotationOffsetConstraints { get; set; }
@@ -1359,7 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Icons?.Overall ?? true)
-                && item.Icons.TryGet(out var IconsItem))
+                && item.Icons is {} IconsItem)
             {
                 IconsItem?.ToString(fg, "Icons");
             }
@@ -1390,27 +1390,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.LoadingScreenNif.FormKey, "LoadingScreenNif");
             }
             if ((printMask?.InitialScale ?? true)
-                && item.InitialScale.TryGet(out var InitialScaleItem))
+                && item.InitialScale is {} InitialScaleItem)
             {
                 fg.AppendItem(InitialScaleItem, "InitialScale");
             }
             if ((printMask?.InitialRotation ?? true)
-                && item.InitialRotation.TryGet(out var InitialRotationItem))
+                && item.InitialRotation is {} InitialRotationItem)
             {
                 fg.AppendItem(InitialRotationItem, "InitialRotation");
             }
             if ((printMask?.RotationOffsetConstraints?.Overall ?? true)
-                && item.RotationOffsetConstraints.TryGet(out var RotationOffsetConstraintsItem))
+                && item.RotationOffsetConstraints is {} RotationOffsetConstraintsItem)
             {
                 RotationOffsetConstraintsItem?.ToString(fg, "RotationOffsetConstraints");
             }
             if ((printMask?.InitialTranslationOffset ?? true)
-                && item.InitialTranslationOffset.TryGet(out var InitialTranslationOffsetItem))
+                && item.InitialTranslationOffset is {} InitialTranslationOffsetItem)
             {
                 fg.AppendItem(InitialTranslationOffsetItem, "InitialTranslationOffset");
             }
             if ((printMask?.CameraPath ?? true)
-                && item.CameraPath.TryGet(out var CameraPathItem))
+                && item.CameraPath is {} CameraPathItem)
             {
                 fg.AppendItem(CameraPathItem, "CameraPath");
             }
@@ -1534,30 +1534,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ILoadScreenGetter item)
         {
             var hash = new HashCode();
-            if (item.Icons.TryGet(out var Iconsitem))
+            if (item.Icons is {} Iconsitem)
             {
                 hash.Add(Iconsitem);
             }
             hash.Add(item.Description);
             hash.Add(item.Conditions);
             hash.Add(item.LoadingScreenNif);
-            if (item.InitialScale.TryGet(out var InitialScaleitem))
+            if (item.InitialScale is {} InitialScaleitem)
             {
                 hash.Add(InitialScaleitem);
             }
-            if (item.InitialRotation.TryGet(out var InitialRotationitem))
+            if (item.InitialRotation is {} InitialRotationitem)
             {
                 hash.Add(InitialRotationitem);
             }
-            if (item.RotationOffsetConstraints.TryGet(out var RotationOffsetConstraintsitem))
+            if (item.RotationOffsetConstraints is {} RotationOffsetConstraintsitem)
             {
                 hash.Add(RotationOffsetConstraintsitem);
             }
-            if (item.InitialTranslationOffset.TryGet(out var InitialTranslationOffsetitem))
+            if (item.InitialTranslationOffset is {} InitialTranslationOffsetitem)
             {
                 hash.Add(InitialTranslationOffsetitem);
             }
-            if (item.CameraPath.TryGet(out var CameraPathitem))
+            if (item.CameraPath is {} CameraPathitem)
             {
                 hash.Add(CameraPathitem);
             }
@@ -1675,7 +1675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.Icons);
                 try
                 {
-                    if(rhs.Icons.TryGet(out var rhsIcons))
+                    if(rhs.Icons is {} rhsIcons)
                     {
                         item.Icons = rhsIcons.DeepCopy(
                             errorMask: errorMask,
@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.RotationOffsetConstraints);
                 try
                 {
-                    if(rhs.RotationOffsetConstraints.TryGet(out var rhsRotationOffsetConstraints))
+                    if(rhs.RotationOffsetConstraints is {} rhsRotationOffsetConstraints)
                     {
                         item.RotationOffsetConstraints = rhsRotationOffsetConstraints.DeepCopy(
                             errorMask: errorMask,
@@ -1927,7 +1927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Icons.TryGet(out var IconsItem))
+            if (item.Icons is {} IconsItem)
             {
                 ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
                     item: IconsItem,
@@ -1963,7 +1963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.InitialRotation,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
-            if (item.RotationOffsetConstraints.TryGet(out var RotationOffsetConstraintsItem))
+            if (item.RotationOffsetConstraints is {} RotationOffsetConstraintsItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.ONAM))
                 {

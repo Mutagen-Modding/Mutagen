@@ -926,22 +926,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TintLayer.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
-                && item.Index.TryGet(out var IndexItem))
+                && item.Index is {} IndexItem)
             {
                 fg.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.Color ?? true)
-                && item.Color.TryGet(out var ColorItem))
+                && item.Color is {} ColorItem)
             {
                 fg.AppendItem(ColorItem, "Color");
             }
             if ((printMask?.InterpolationValue ?? true)
-                && item.InterpolationValue.TryGet(out var InterpolationValueItem))
+                && item.InterpolationValue is {} InterpolationValueItem)
             {
                 fg.AppendItem(InterpolationValueItem, "InterpolationValue");
             }
             if ((printMask?.Preset ?? true)
-                && item.Preset.TryGet(out var PresetItem))
+                && item.Preset is {} PresetItem)
             {
                 fg.AppendItem(PresetItem, "Preset");
             }
@@ -976,19 +976,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ITintLayerGetter item)
         {
             var hash = new HashCode();
-            if (item.Index.TryGet(out var Indexitem))
+            if (item.Index is {} Indexitem)
             {
                 hash.Add(Indexitem);
             }
-            if (item.Color.TryGet(out var Coloritem))
+            if (item.Color is {} Coloritem)
             {
                 hash.Add(Coloritem);
             }
-            if (item.InterpolationValue.TryGet(out var InterpolationValueitem))
+            if (item.InterpolationValue is {} InterpolationValueitem)
             {
                 hash.Add(InterpolationValueitem);
             }
-            if (item.Preset.TryGet(out var Presetitem))
+            if (item.Preset is {} Presetitem)
             {
                 hash.Add(Presetitem);
             }

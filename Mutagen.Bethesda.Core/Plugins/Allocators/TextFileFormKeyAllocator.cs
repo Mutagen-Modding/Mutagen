@@ -1,7 +1,13 @@
 using Mutagen.Bethesda.Plugins.Records;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Abstractions;
+using Noggog;
+using Path = System.IO.Path;
+using DirectoryNotFoundException = System.IO.DirectoryNotFoundException;
+using StreamReader = System.IO.StreamReader;
+using StreamWriter = System.IO.StreamWriter;
+using FileMode = System.IO.FileMode;
 
 namespace Mutagen.Bethesda.Plugins.Allocators
 {
@@ -16,6 +22,7 @@ namespace Mutagen.Bethesda.Plugins.Allocators
         private readonly uint _initialNextFormID;
         private Lazy<InternalState> _state;
         private readonly bool _preload;
+        private readonly IFileSystem _fileSystem;
         private readonly ModKey _modKey;
 
         class InternalState
@@ -24,12 +31,13 @@ namespace Mutagen.Bethesda.Plugins.Allocators
             public readonly HashSet<uint> FormIDSet = new();
         }
 
-        public TextFileFormKeyAllocator(IMod mod, string saveLocation, bool preload = false) 
+        public TextFileFormKeyAllocator(IMod mod, string saveLocation, bool preload = false, IFileSystem? fileSystem = null) 
             : base(mod, saveLocation)
         {
+            _fileSystem = fileSystem ?? IFileSystemExt.DefaultFilesystem;
             _initialNextFormID = mod.NextFormID;
             _modKey = mod.ModKey;
-            if (!Directory.Exists(Path.GetDirectoryName(_saveLocation))) throw new DirectoryNotFoundException();
+            if (!_fileSystem.Directory.Exists(Path.GetDirectoryName(_saveLocation))) throw new DirectoryNotFoundException();
             _preload = preload;
             _state = GetLazyInternalState();
         }
@@ -49,8 +57,8 @@ namespace Mutagen.Bethesda.Plugins.Allocators
         private InternalState GetInternalState()
         {
             InternalState ret = new();
-            if (!File.Exists(_saveLocation)) return ret;
-            using var streamReader = new StreamReader(_saveLocation);
+            if (!_fileSystem.File.Exists(_saveLocation)) return ret;
+            using var streamReader = new StreamReader(_fileSystem.FileStream.Create(_saveLocation, FileMode.Open));
             while (true)
             {
                 var edidStr = streamReader.ReadLine();
@@ -116,21 +124,23 @@ namespace Mutagen.Bethesda.Plugins.Allocators
             }
         }
 
-        internal static void WriteToFile(string saveLocation, IEnumerable<KeyValuePair<string, FormKey>> data)
+        internal static void WriteToFile(string saveLocation, IEnumerable<KeyValuePair<string, FormKey>> data, IFileSystem? fileSystem = null)
         {
+            fileSystem ??= IFileSystemExt.DefaultFilesystem;
             var tempFile = saveLocation + ".tmp";
             {
-                using var streamWriter = new StreamWriter(tempFile);
+                using var fs = fileSystem.FileStream.Create(tempFile, FileMode.Create);
+                using var streamWriter = new StreamWriter(fs);
                 foreach (var pair in data)
                 {
                     streamWriter.WriteLine(pair.Key);
                     streamWriter.WriteLine(pair.Value.ID);
                 }
             }
-            if (File.Exists(saveLocation))
-                File.Replace(tempFile, saveLocation, null);
+            if (fileSystem.File.Exists(saveLocation))
+                fileSystem.File.Replace(tempFile, saveLocation, null);
             else
-                File.Move(tempFile, saveLocation);
+                fileSystem.File.Move(tempFile, saveLocation);
         }
 
         public override void Commit()
@@ -138,7 +148,7 @@ namespace Mutagen.Bethesda.Plugins.Allocators
             lock (this._lock)
             {
                 if (!_state.IsValueCreated) return;
-                WriteToFile(_saveLocation, _state.Value.Cache);
+                WriteToFile(_saveLocation, _state.Value.Cache, _fileSystem);
             }
         }
 

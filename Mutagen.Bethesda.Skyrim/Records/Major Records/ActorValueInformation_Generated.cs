@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Skyrim
                         Skill?.ToString(fg);
                     }
                     if ((printMask?.PerkTree?.Overall ?? true)
-                        && PerkTree.TryGet(out var PerkTreeItem))
+                        && PerkTree is {} PerkTreeItem)
                     {
                         fg.AppendLine("PerkTree =>");
                         fg.AppendLine("[");
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Abbreviation, "Abbreviation");
                 fg.AppendItem(CNAM, "CNAM");
                 Skill?.ToString(fg);
-                if (PerkTree.TryGet(out var PerkTreeItem))
+                if (PerkTree is {} PerkTreeItem)
                 {
                     fg.AppendLine("PerkTree =>");
                     fg.AppendLine("[");
@@ -1246,27 +1246,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+                && item.Description is {} DescriptionItem)
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
             if ((printMask?.Abbreviation ?? true)
-                && item.Abbreviation.TryGet(out var AbbreviationItem))
+                && item.Abbreviation is {} AbbreviationItem)
             {
                 fg.AppendItem(AbbreviationItem, "Abbreviation");
             }
             if ((printMask?.CNAM ?? true)
-                && item.CNAM.TryGet(out var CNAMItem))
+                && item.CNAM is {} CNAMItem)
             {
                 fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
             if ((printMask?.Skill?.Overall ?? true)
-                && item.Skill.TryGet(out var SkillItem))
+                && item.Skill is {} SkillItem)
             {
                 SkillItem?.ToString(fg, "Skill");
             }
@@ -1392,23 +1392,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IActorValueInformationGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Description.TryGet(out var Descriptionitem))
+            if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
             }
-            if (item.Abbreviation.TryGet(out var Abbreviationitem))
+            if (item.Abbreviation is {} Abbreviationitem)
             {
                 hash.Add(Abbreviationitem);
             }
-            if (item.CNAM.TryGet(out var CNAMItem))
+            if (item.CNAM is {} CNAMItem)
             {
                 hash.Add(CNAMItem);
             }
-            if (item.Skill.TryGet(out var Skillitem))
+            if (item.Skill is {} Skillitem)
             {
                 hash.Add(Skillitem);
             }
@@ -1534,7 +1534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.CNAM) ?? true))
             {
-                if(rhs.CNAM.TryGet(out var CNAMrhs))
+                if(rhs.CNAM is {} CNAMrhs)
                 {
                     item.CNAM = CNAMrhs.ToArray();
                 }
@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ActorValueInformation_FieldIndex.Skill);
                 try
                 {
-                    if(rhs.Skill.TryGet(out var rhsSkill))
+                    if(rhs.Skill is {} rhsSkill)
                     {
                         item.Skill = rhsSkill.DeepCopy(
                             errorMask: errorMask,
@@ -1771,7 +1771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.CNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
-            if (item.Skill.TryGet(out var SkillItem))
+            if (item.Skill is {} SkillItem)
             {
                 ((ActorValueSkillBinaryWriteTranslation)((IBinaryItem)SkillItem).BinaryWriteTranslator).Write(
                     item: SkillItem,

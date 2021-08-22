@@ -926,12 +926,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.File ?? true)
-                && item.File.TryGet(out var FileItem))
+                && item.File is {} FileItem)
             {
                 fg.AppendItem(FileItem, "File");
             }
             if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+                && item.Data is {} DataItem)
             {
                 DataItem?.ToString(fg, "Data");
             }
@@ -1021,11 +1021,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ISoundGetter item)
         {
             var hash = new HashCode();
-            if (item.File.TryGet(out var Fileitem))
+            if (item.File is {} Fileitem)
             {
                 hash.Add(Fileitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
+            if (item.Data is {} Dataitem)
             {
                 hash.Add(Dataitem);
             }
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Sound_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if(rhs.Data is {} rhsData)
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
@@ -1324,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.File,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Data is {} DataItem)
             {
                 ((SoundDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,

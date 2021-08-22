@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fg.AppendItem(LastModified, "LastModified");
                     }
                     if ((printMask?.Cells?.Overall ?? true)
-                        && Cells.TryGet(out var CellsItem))
+                        && Cells is {} CellsItem)
                     {
                         fg.AppendLine("Cells =>");
                         fg.AppendLine("[");
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(BlockNumber, "BlockNumber");
                 fg.AppendItem(GroupType, "GroupType");
                 fg.AppendItem(LastModified, "LastModified");
-                if (Cells.TryGet(out var CellsItem))
+                if (Cells is {} CellsItem)
                 {
                     fg.AppendLine("Cells =>");
                     fg.AppendLine("[");

@@ -847,12 +847,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FindMatchingRefNearAlias.Mask<bool>? printMask = null)
         {
             if ((printMask?.AliasIndex ?? true)
-                && item.AliasIndex.TryGet(out var AliasIndexItem))
+                && item.AliasIndex is {} AliasIndexItem)
             {
                 fg.AppendItem(AliasIndexItem, "AliasIndex");
             }
             if ((printMask?.Type ?? true)
-                && item.Type.TryGet(out var TypeItem))
+                && item.Type is {} TypeItem)
             {
                 fg.AppendItem(TypeItem, "Type");
             }
@@ -879,11 +879,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IFindMatchingRefNearAliasGetter item)
         {
             var hash = new HashCode();
-            if (item.AliasIndex.TryGet(out var AliasIndexitem))
+            if (item.AliasIndex is {} AliasIndexitem)
             {
                 hash.Add(AliasIndexitem);
             }
-            if (item.Type.TryGet(out var Typeitem))
+            if (item.Type is {} Typeitem)
             {
                 hash.Add(Typeitem);
             }

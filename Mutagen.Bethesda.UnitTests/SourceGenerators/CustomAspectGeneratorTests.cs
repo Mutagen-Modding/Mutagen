@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Testing;
+using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.SourceGenerators.CustomAspectInterface;
 using Xunit;
 using VerifyCS = Mutagen.Bethesda.UnitTests.SourceGenerators.CSharpSourceGeneratorVerifier<Mutagen.Bethesda.SourceGenerators.CustomAspectInterface.CustomAspectInterfaceGenerator>;

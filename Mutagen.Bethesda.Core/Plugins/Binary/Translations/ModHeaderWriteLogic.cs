@@ -1,13 +1,13 @@
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations
 {
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             }
         }
 
-        private MasterReferenceReader ConstructWriteMasters(IModGetter mod)
+        private IMasterReferenceReader ConstructWriteMasters(IModGetter mod)
         {
             MasterReferenceReader ret = new MasterReferenceReader(mod.ModKey);
             _modKeys.Remove(mod.ModKey);
@@ -107,11 +107,11 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         {
             writer.MetaData.MasterReferences = ConstructWriteMasters(mod);
             modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
-            if (_params.RecordCount != BinaryWriteParameters.RecordCountOption.NoCheck)
+            if (_params.RecordCount != RecordCountOption.NoCheck)
             {
                 modHeader.NumRecords = _numRecords;
             }
-            if (_params.NextFormID != BinaryWriteParameters.NextFormIDOption.NoCheck)
+            if (_params.NextFormID != NextFormIDOption.NoCheck)
             {
                 modHeader.NextFormID = _nextFormID + 1;
             }
@@ -127,10 +127,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         {
             switch (_params.MastersListContent)
             {
-                case BinaryWriteParameters.MastersListContentOption.NoCheck:
+                case MastersListContentOption.NoCheck:
                     _modKeys.Set(mod.MasterReferences.Select(m => new KeyValuePair<ModKey, FormKey>(m.Master, FormKey.Null)));
                     break;
-                case BinaryWriteParameters.MastersListContentOption.Iterate:
+                case MastersListContentOption.Iterate:
                     _recordIterationActions.Add(maj =>
                     {
                         var formKey = maj.FormKey;
@@ -157,9 +157,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         {
             switch (_params.RecordCount)
             {
-                case BinaryWriteParameters.RecordCountOption.NoCheck:
+                case RecordCountOption.NoCheck:
                     break;
-                case BinaryWriteParameters.RecordCountOption.Iterate:
+                case RecordCountOption.Iterate:
                     _recordIterationActions.Add(maj => _numRecords++);
                     break;
                 default:
@@ -173,9 +173,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         {
             switch (_params.FormIDUniqueness)
             {
-                case BinaryWriteParameters.FormIDUniquenessOption.NoCheck:
+                case FormIDUniquenessOption.NoCheck:
                     break;
-                case BinaryWriteParameters.FormIDUniquenessOption.Iterate:
+                case FormIDUniquenessOption.Iterate:
                     _recordIterationActions.Add(maj =>
                     {
                         if (!_formKeyUniqueness.Add(maj.FormKey))
@@ -195,9 +195,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         {
             switch (_params.NextFormID)
             {
-                case BinaryWriteParameters.NextFormIDOption.NoCheck:
+                case NextFormIDOption.NoCheck:
                     break;
-                case BinaryWriteParameters.NextFormIDOption.Iterate:
+                case NextFormIDOption.Iterate:
                     _recordIterationActions.Add(maj =>
                     {
                         var fk = maj.FormKey;
@@ -219,18 +219,18 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         {
             switch (_params.MastersListOrdering)
             {
-                case BinaryWriteParameters.MastersListOrderingEnumOption e:
+                case MastersListOrderingEnumOption e:
                     switch (e.Option)
                     {
-                        case BinaryWriteParameters.MastersListOrderingOption.NoCheck:
+                        case MastersListOrderingOption.NoCheck:
                             return;
-                        case BinaryWriteParameters.MastersListOrderingOption.MastersFirst:
+                        case MastersListOrderingOption.MastersFirst:
                             modKeys.Sort(ModKey.AlphabeticalAndMastersFirst);
                             return;
                         default:
                             throw new NotImplementedException();
                     }
-                case BinaryWriteParameters.MastersListOrderingByLoadOrder lo:
+                case MastersListOrderingByLoadOrder lo:
                     try
                     {
                         modKeys.Sort(ModKey.LoadOrderComparer(lo.LoadOrder));
@@ -255,16 +255,16 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         {
             switch (_params.MasterFlag)
             {
-                case BinaryWriteParameters.MasterFlagOption.NoCheck:
+                case MasterFlagOption.NoCheck:
                     break;
-                case BinaryWriteParameters.MasterFlagOption.ChangeToMatchModKey:
+                case MasterFlagOption.ChangeToMatchModKey:
                     header.RawFlags = EnumExt.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, _modKey.Type == ModType.Master);
                     if (_modKey.Type != ModType.Plugin)
                     {
                         header.RawFlags = EnumExt.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, true);
                     }
                     break;
-                case BinaryWriteParameters.MasterFlagOption.ExceptionOnMismatch:
+                case MasterFlagOption.ExceptionOnMismatch:
                     if ((_modKey.Type == ModType.Master) != EnumExt.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master))
                     {
                         throw new ArgumentException($"Master flag did not match ModKey type. ({_modKey})");

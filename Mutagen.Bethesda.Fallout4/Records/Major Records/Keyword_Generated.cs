@@ -74,11 +74,11 @@ namespace Mutagen.Bethesda.Fallout4
         Keyword.TypeEnum? IKeywordGetter.Type => this.Type;
         #endregion
         #region AttractionRule
-        private IFormLinkNullable<IAttractionRuleGetter> _AttractionRule = new FormLinkNullable<IAttractionRuleGetter>();
+        private readonly IFormLinkNullable<IAttractionRuleGetter> _AttractionRule = new FormLinkNullable<IAttractionRuleGetter>();
         public IFormLinkNullable<IAttractionRuleGetter> AttractionRule
         {
             get => _AttractionRule;
-            set => _AttractionRule = value.AsNullable();
+            set => _AttractionRule.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAttractionRuleGetter> IKeywordGetter.AttractionRule => this.AttractionRule;
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Color? Color { get; set; }
         new String? Notes { get; set; }
         new Keyword.TypeEnum? Type { get; set; }
-        new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
+        new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
@@ -1148,17 +1148,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg: fg,
                 printMask: printMask);
             if ((printMask?.Color ?? true)
-                && item.Color.TryGet(out var ColorItem))
+                && item.Color is {} ColorItem)
             {
                 fg.AppendItem(ColorItem, "Color");
             }
             if ((printMask?.Notes ?? true)
-                && item.Notes.TryGet(out var NotesItem))
+                && item.Notes is {} NotesItem)
             {
                 fg.AppendItem(NotesItem, "Notes");
             }
             if ((printMask?.Type ?? true)
-                && item.Type.TryGet(out var TypeItem))
+                && item.Type is {} TypeItem)
             {
                 fg.AppendItem(TypeItem, "Type");
             }
@@ -1167,12 +1167,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fg.AppendItem(item.AttractionRule.FormKeyNullable, "AttractionRule");
             }
             if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+                && item.Name is {} NameItem)
             {
                 fg.AppendItem(NameItem, "Name");
             }
             if ((printMask?.DisplayName ?? true)
-                && item.DisplayName.TryGet(out var DisplayNameItem))
+                && item.DisplayName is {} DisplayNameItem)
             {
                 fg.AppendItem(DisplayNameItem, "DisplayName");
             }
@@ -1276,24 +1276,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IKeywordGetter item)
         {
             var hash = new HashCode();
-            if (item.Color.TryGet(out var Coloritem))
+            if (item.Color is {} Coloritem)
             {
                 hash.Add(Coloritem);
             }
-            if (item.Notes.TryGet(out var Notesitem))
+            if (item.Notes is {} Notesitem)
             {
                 hash.Add(Notesitem);
             }
-            if (item.Type.TryGet(out var Typeitem))
+            if (item.Type is {} Typeitem)
             {
                 hash.Add(Typeitem);
             }
             hash.Add(item.AttractionRule);
-            if (item.Name.TryGet(out var Nameitem))
+            if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.DisplayName.TryGet(out var DisplayNameitem))
+            if (item.DisplayName is {} DisplayNameitem)
             {
                 hash.Add(DisplayNameitem);
             }

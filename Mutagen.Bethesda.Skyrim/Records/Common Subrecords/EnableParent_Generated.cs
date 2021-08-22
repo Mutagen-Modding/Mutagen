@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         public EnableParent.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region Reference
-        private IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
+        private readonly IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
         public IFormLink<ILinkedReferenceGetter> Reference
         {
             get => _Reference;
-            set => _Reference = value.AsSetter();
+            set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference;
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEnableParent>
     {
         new EnableParent.VersioningBreaks Versioning { get; set; }
-        new IFormLink<ILinkedReferenceGetter> Reference { get; }
+        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
         new EnableParent.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }

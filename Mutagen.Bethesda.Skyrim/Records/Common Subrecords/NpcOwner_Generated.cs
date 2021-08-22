@@ -52,21 +52,21 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Npc
-        private IFormLink<INpcGetter> _Npc = new FormLink<INpcGetter>();
+        private readonly IFormLink<INpcGetter> _Npc = new FormLink<INpcGetter>();
         public IFormLink<INpcGetter> Npc
         {
             get => _Npc;
-            set => _Npc = value.AsSetter();
+            set => _Npc.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcGetter> INpcOwnerGetter.Npc => this.Npc;
         #endregion
         #region Global
-        private IFormLink<IGlobalGetter> _Global = new FormLink<IGlobalGetter>();
+        private readonly IFormLink<IGlobalGetter> _Global = new FormLink<IGlobalGetter>();
         public IFormLink<IGlobalGetter> Global
         {
             get => _Global;
-            set => _Global = value.AsSetter();
+            set => _Global.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGlobalGetter> INpcOwnerGetter.Global => this.Global;
@@ -463,8 +463,8 @@ namespace Mutagen.Bethesda.Skyrim
         INpcOwnerGetter,
         IOwnerTarget
     {
-        new IFormLink<INpcGetter> Npc { get; }
-        new IFormLink<IGlobalGetter> Global { get; }
+        new IFormLink<INpcGetter> Npc { get; set; }
+        new IFormLink<IGlobalGetter> Global { get; set; }
     }
 
     public partial interface INpcOwnerGetter :

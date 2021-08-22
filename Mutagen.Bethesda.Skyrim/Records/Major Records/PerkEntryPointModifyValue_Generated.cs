@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fg.AppendItem(item.Modification, "Modification");
             }
             if ((printMask?.Value ?? true)
-                && item.Value.TryGet(out var ValueItem))
+                && item.Value is {} ValueItem)
             {
                 fg.AppendItem(ValueItem, "Value");
             }
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Modification);
-            if (item.Value.TryGet(out var Valueitem))
+            if (item.Value is {} Valueitem)
             {
                 hash.Add(Valueitem);
             }
