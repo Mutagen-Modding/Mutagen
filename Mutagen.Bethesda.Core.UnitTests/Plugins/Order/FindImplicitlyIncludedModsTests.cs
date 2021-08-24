@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using AutoFixture;
 using FluentAssertions;
@@ -11,6 +12,7 @@ using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Core.UnitTests.AutoData;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Noggog;
 using NSubstitute;
 using Xunit;
@@ -27,13 +29,16 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         record Listing(ModKey Mod, params ModKey[] Masters);
         
         private void SetReaderFactory(
+            MockFileSystem mockFileSystem,
+            DirectoryPath directoryPath,
             FindImplicitlyIncludedMods includedMods,
             params Listing[] listings)
         {
             foreach (var listing in listings)
             {
+                mockFileSystem.File.WriteAllText(Path.Combine(directoryPath.Path, listing.Mod.FileName), string.Empty);
                 includedMods.ReaderFactory
-                    .FromPath(Path.Combine(includedMods.DirectoryProvider.Path, listing.Mod.FileName.String))
+                    .FromPath(Path.Combine(directoryPath.Path, listing.Mod.FileName.String))
                     .Returns(_ =>
                     {
                         var reader = Substitute.For<IMasterReferenceReader>();
@@ -53,11 +58,18 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         }
         
         [Theory, MutagenAutoData]
-        public void NothingToDo(FindImplicitlyIncludedMods sut)
+        public void NothingToDo(
+            MockFileSystem mockFileSystem,
+            IDataDirectoryProvider dataDirectoryProvider,
+            FindImplicitlyIncludedMods sut)
         {
-            SetReaderFactory(sut,
+            SetReaderFactory(
+                mockFileSystem,
+                dataDirectoryProvider.Path,
+                sut,
                 new Listing(ModA),
-                new Listing(ModB, ModA, ModC));
+                new Listing(ModB, ModA, ModC),
+                new Listing(ModC));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
@@ -70,11 +82,18 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         }
         
         [Theory, MutagenAutoData]
-        public void EnableOne(FindImplicitlyIncludedMods sut)
+        public void EnableOne(
+            MockFileSystem mockFileSystem,
+            IDataDirectoryProvider dataDirectoryProvider,
+            FindImplicitlyIncludedMods sut)
         {
-            SetReaderFactory(sut,
+            SetReaderFactory(
+                mockFileSystem,
+                dataDirectoryProvider.Path,
+                sut,
                 new Listing(ModA),
-                new Listing(ModB, ModA, ModC));
+                new Listing(ModB, ModA, ModC),
+                new Listing(ModC));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
@@ -88,9 +107,15 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         }
         
         [Theory, MutagenAutoData]
-        public void SkipUnreferenced(FindImplicitlyIncludedMods sut)
+        public void SkipUnreferenced(
+            MockFileSystem mockFileSystem,
+            IDataDirectoryProvider dataDirectoryProvider,
+            FindImplicitlyIncludedMods sut)
         {
-            SetReaderFactory(sut,
+            SetReaderFactory(
+                mockFileSystem,
+                dataDirectoryProvider.Path,
+                sut,
                 new Listing(ModA),
                 new Listing(ModB, ModA));
             var list = new List<IModListingGetter>()
@@ -105,12 +130,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         }
         
         [Theory, MutagenAutoData]
-        public void RecursiveEnable(FindImplicitlyIncludedMods sut)
+        public void RecursiveEnable(
+            MockFileSystem mockFileSystem,
+            IDataDirectoryProvider dataDirectoryProvider,
+            FindImplicitlyIncludedMods sut)
         {
-            SetReaderFactory(sut,
+            SetReaderFactory(
+                mockFileSystem,
+                dataDirectoryProvider.Path,
+                sut,
                 new Listing(ModA),
                 new Listing(ModB, ModA, ModC),
-                new Listing(ModC, ModD));
+                new Listing(ModC, ModD),
+                new Listing(ModD));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
@@ -127,12 +159,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         }
         
         [Theory, MutagenAutoData]
-        public void RecursiveEnableBadLo(FindImplicitlyIncludedMods sut)
+        public void RecursiveEnableBadLo(
+            MockFileSystem mockFileSystem,
+            IDataDirectoryProvider dataDirectoryProvider,
+            FindImplicitlyIncludedMods sut)
         {
-            SetReaderFactory(sut,
+            SetReaderFactory(
+                mockFileSystem,
+                dataDirectoryProvider.Path,
+                sut,
                 new Listing(ModA),
                 new Listing(ModB, ModA, ModC),
-                new Listing(ModC, ModD));
+                new Listing(ModC, ModD),
+                new Listing(ModD));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
@@ -149,11 +188,18 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         }
 
         [Theory, MutagenAutoData]
-        public void UnlistedReference(FindImplicitlyIncludedMods sut)
+        public void UnlistedReference(
+            MockFileSystem mockFileSystem,
+            IDataDirectoryProvider dataDirectoryProvider,
+            FindImplicitlyIncludedMods sut)
         {
-            SetReaderFactory(sut,
+            SetReaderFactory(
+                mockFileSystem,
+                dataDirectoryProvider.Path,
+                sut,
                 new Listing(ModA),
-                new Listing(ModB, ModA, ModC));
+                new Listing(ModB, ModA, ModC),
+                new Listing(ModC));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
@@ -162,6 +208,68 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var found = sut.Find(list)
                 .ToList();
             found.Should().BeEmpty();
+        }
+
+        [Theory, MutagenAutoData]
+        public void MissingModThrows(
+            MockFileSystem mockFileSystem,
+            IDataDirectoryProvider dataDirectoryProvider,
+            FindImplicitlyIncludedMods sut)
+        {
+            SetReaderFactory(
+                mockFileSystem,
+                dataDirectoryProvider.Path,
+                sut,
+                new Listing(ModA),
+                new Listing(ModB, ModA, ModC),
+                new Listing(ModC, ModD),
+                new Listing(ModD));
+            
+            mockFileSystem.File.Delete(Path.Combine(dataDirectoryProvider.Path, ModB.FileName));
+            
+            var list = new List<IModListingGetter>()
+            {
+                new ModListing(ModA, true),
+                new ModListing(ModC, false),
+                new ModListing(ModB, true),
+                new ModListing(ModD, false),
+            };
+            
+            Assert.Throws<MissingModException>(() =>
+            {
+                sut.Find(list, skipMissingMods: false)
+                    .ToArray();
+            });
+        }
+
+        [Theory, MutagenAutoData]
+        public void MissingModSkipsIfAsked(
+            MockFileSystem mockFileSystem,
+            IDataDirectoryProvider dataDirectoryProvider,
+            FindImplicitlyIncludedMods sut)
+        {
+            SetReaderFactory(
+                mockFileSystem,
+                dataDirectoryProvider.Path,
+                sut,
+                new Listing(ModA, ModD),
+                new Listing(ModB, ModC),
+                new Listing(ModC),
+                new Listing(ModD));
+            
+            mockFileSystem.File.Delete(Path.Combine(dataDirectoryProvider.Path, ModB.FileName));
+            
+            var list = new List<IModListingGetter>()
+            {
+                new ModListing(ModA, true),
+                new ModListing(ModC, false),
+                new ModListing(ModB, true),
+                new ModListing(ModD, false),
+            };
+            
+            var found = sut.Find(list, skipMissingMods: true)
+                .ToArray();
+            found.Should().Equal(ModD);
         }
     }
 }
