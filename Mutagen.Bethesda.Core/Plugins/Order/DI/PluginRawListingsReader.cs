@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         {
             if (!_fileSystem.File.Exists(pluginPath))
             {
-                throw new FileNotFoundException("Could not locate plugins file");
+                throw new FileNotFoundException("Could not locate plugins file", pluginPath);
             }
             using var stream = _fileSystem.FileStream.Create(pluginPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
             return Parser.Parse(stream).ToList();
