@@ -3200,7 +3200,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.CRVA:
                 {
-                    _CrimeValuesLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _CrimeValuesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Faction_FieldIndex.CrimeValues;
                 }
                 case RecordTypeInts.RNAM:
@@ -3227,7 +3227,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.VENV:
                 {
-                    _VendorValuesLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VendorValuesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Faction_FieldIndex.VendorValues;
                 }
                 case RecordTypeInts.PLVD:

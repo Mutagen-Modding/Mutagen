@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
             if (!loqui.TargetObjectGeneration.IsTypelessStruct() && (loqui.GetFieldData()?.HasTrigger ?? false))
             {
-                fg.AppendLine($"_{typeGen.Name}Location = new {GetLocationObjectString(objGen)}({locationAccessor}, finalPos);");
+                fg.AppendLine($"_{typeGen.Name}Location = new {GetLocationObjectString(objGen)}({locationAccessor}, finalPos - offset);");
                 var severalSubTypes = data.GenerationTypes
                     .Select(i => i.Value)
                     .WhereCastable<TypeGeneration, LoquiType>()

@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RDAT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Header) return ParseResult.Stop;
-                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)RegionData_FieldIndex.Header;
                 }
                 case RecordTypeInts.ICON:

@@ -4063,7 +4063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.VMAD:
                 {
-                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedNpc_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.NAME:
@@ -4143,7 +4143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XCLP:
                 {
-                    _LinkedReferenceColorLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _LinkedReferenceColorLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedNpc_FieldIndex.LinkedReferenceColor;
                 }
                 case RecordTypeInts.XLCN:
@@ -4190,7 +4190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XESP:
                 {
-                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedNpc_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XOWN:
@@ -4224,7 +4224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _PlacementLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _PlacementLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedNpc_FieldIndex.Placement;
                 }
                 default:

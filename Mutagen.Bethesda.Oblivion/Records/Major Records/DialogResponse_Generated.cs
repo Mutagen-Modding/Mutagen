@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.TRDT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Data) return ParseResult.Stop;
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)DialogResponse_FieldIndex.Data;
                 }
                 case RecordTypeInts.NAM1:

@@ -2715,7 +2715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)DialogItem_FieldIndex.Data;
                 }
                 case RecordTypeInts.QSTI:

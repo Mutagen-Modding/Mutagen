@@ -24862,7 +24862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.TES4:
                 {
-                    _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     _package.MetaData.MasterReferences!.SetTo(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
@@ -24874,567 +24874,567 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.GMST:
                 {
-                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.KYWD:
                 {
-                    _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.LCRT:
                 {
-                    _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.LocationReferenceTypes;
                 }
                 case RecordTypeInts.AACT:
                 {
-                    _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Actions;
                 }
                 case RecordTypeInts.TXST:
                 {
-                    _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.TextureSets;
                 }
                 case RecordTypeInts.GLOB:
                 {
-                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
-                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
-                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HDPT:
                 {
-                    _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HAIR:
                 {
-                    _HairsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _HairsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
-                    _EyesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _EyesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
-                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
-                    _SoundMarkersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SoundMarkersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.SoundMarkers;
                 }
                 case RecordTypeInts.ASPC:
                 {
-                    _AcousticSpacesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AcousticSpacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.AcousticSpaces;
                 }
                 case RecordTypeInts.MGEF:
                 {
-                    _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.LTEX:
                 {
-                    _LandscapeTexturesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LandscapeTexturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.LandscapeTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
-                    _ObjectEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ObjectEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.ObjectEffects;
                 }
                 case RecordTypeInts.SPEL:
                 {
-                    _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.SCRL:
                 {
-                    _ScrollsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ScrollsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Scrolls;
                 }
                 case RecordTypeInts.ACTI:
                 {
-                    _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.TACT:
                 {
-                    _TalkingActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _TalkingActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.TalkingActivators;
                 }
                 case RecordTypeInts.ARMO:
                 {
-                    _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
-                    _BooksLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _BooksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CONT:
                 {
-                    _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
-                    _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
-                    _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
-                    _LightsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LightsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
-                    _MiscItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MiscItemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.MiscItems;
                 }
                 case RecordTypeInts.APPA:
                 {
-                    _AlchemicalApparatusesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AlchemicalApparatusesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.AlchemicalApparatuses;
                 }
                 case RecordTypeInts.STAT:
                 {
-                    _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.MSTT:
                 {
-                    _MoveableStaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MoveableStaticsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.MoveableStatics;
                 }
                 case RecordTypeInts.GRAS:
                 {
-                    _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
-                    _TreesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _TreesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
-                    _FloraeLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FloraeLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Florae;
                 }
                 case RecordTypeInts.FURN:
                 {
-                    _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
-                    _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
-                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
-                    _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.LVLN:
                 {
-                    _LeveledNpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LeveledNpcsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.LeveledNpcs;
                 }
                 case RecordTypeInts.KEYM:
                 {
-                    _KeysLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _KeysLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
-                    _IngestiblesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _IngestiblesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Ingestibles;
                 }
                 case RecordTypeInts.IDLM:
                 {
-                    _IdleMarkersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _IdleMarkersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.IdleMarkers;
                 }
                 case RecordTypeInts.COBJ:
                 {
-                    _ConstructibleObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ConstructibleObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.ConstructibleObjects;
                 }
                 case RecordTypeInts.PROJ:
                 {
-                    _ProjectilesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ProjectilesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Projectiles;
                 }
                 case RecordTypeInts.HAZD:
                 {
-                    _HazardsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _HazardsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Hazards;
                 }
                 case RecordTypeInts.SLGM:
                 {
-                    _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.LVLI:
                 {
-                    _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
-                    _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
-                    _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.SPGD:
                 {
-                    _ShaderParticleGeometriesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ShaderParticleGeometriesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.ShaderParticleGeometries;
                 }
                 case RecordTypeInts.RFCT:
                 {
-                    _VisualEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _VisualEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.VisualEffects;
                 }
                 case RecordTypeInts.REGN:
                 {
-                    _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.NAVI:
                 {
-                    _NavigationMeshInfoMapsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _NavigationMeshInfoMapsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps;
                 }
                 case RecordTypeInts.CELL:
                 {
-                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:
                 {
-                    _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
-                    _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
-                    _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
-                    _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
-                    _PackagesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _PackagesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Packages;
                 }
                 case RecordTypeInts.CSTY:
                 {
-                    _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
-                    _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
-                    _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
-                    _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
-                    _WatersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WatersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
-                    _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.EffectShaders;
                 }
                 case RecordTypeInts.EXPL:
                 {
-                    _ExplosionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ExplosionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Explosions;
                 }
                 case RecordTypeInts.DEBR:
                 {
-                    _DebrisLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DebrisLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Debris;
                 }
                 case RecordTypeInts.IMGS:
                 {
-                    _ImageSpacesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ImageSpacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.ImageSpaces;
                 }
                 case RecordTypeInts.IMAD:
                 {
-                    _ImageSpaceAdaptersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ImageSpaceAdaptersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.ImageSpaceAdapters;
                 }
                 case RecordTypeInts.FLST:
                 {
-                    _FormListsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FormListsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.FormLists;
                 }
                 case RecordTypeInts.PERK:
                 {
-                    _PerksLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _PerksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Perks;
                 }
                 case RecordTypeInts.BPTD:
                 {
-                    _BodyPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _BodyPartsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.BodyParts;
                 }
                 case RecordTypeInts.ADDN:
                 {
-                    _AddonNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AddonNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.AddonNodes;
                 }
                 case RecordTypeInts.AVIF:
                 {
-                    _ActorValueInformationLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ActorValueInformationLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.ActorValueInformation;
                 }
                 case RecordTypeInts.CAMS:
                 {
-                    _CameraShotsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _CameraShotsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.CameraShots;
                 }
                 case RecordTypeInts.CPTH:
                 {
-                    _CameraPathsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _CameraPathsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.CameraPaths;
                 }
                 case RecordTypeInts.VTYP:
                 {
-                    _VoiceTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _VoiceTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.MATT:
                 {
-                    _MaterialTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MaterialTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.MaterialTypes;
                 }
                 case RecordTypeInts.IPCT:
                 {
-                    _ImpactsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ImpactsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Impacts;
                 }
                 case RecordTypeInts.IPDS:
                 {
-                    _ImpactDataSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ImpactDataSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.ImpactDataSets;
                 }
                 case RecordTypeInts.ARMA:
                 {
-                    _ArmorAddonsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ArmorAddonsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.ArmorAddons;
                 }
                 case RecordTypeInts.ECZN:
                 {
-                    _EncounterZonesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _EncounterZonesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.EncounterZones;
                 }
                 case RecordTypeInts.LCTN:
                 {
-                    _LocationsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LocationsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Locations;
                 }
                 case RecordTypeInts.MESG:
                 {
-                    _MessagesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MessagesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Messages;
                 }
                 case RecordTypeInts.DOBJ:
                 {
-                    _DefaultObjectManagersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DefaultObjectManagersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.DefaultObjectManagers;
                 }
                 case RecordTypeInts.LGTM:
                 {
-                    _LightingTemplatesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LightingTemplatesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.LightingTemplates;
                 }
                 case RecordTypeInts.MUSC:
                 {
-                    _MusicTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MusicTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.MusicTypes;
                 }
                 case RecordTypeInts.FSTP:
                 {
-                    _FootstepsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FootstepsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Footsteps;
                 }
                 case RecordTypeInts.FSTS:
                 {
-                    _FootstepSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FootstepSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.FootstepSets;
                 }
                 case RecordTypeInts.SMBN:
                 {
-                    _StoryManagerBranchNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _StoryManagerBranchNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.StoryManagerBranchNodes;
                 }
                 case RecordTypeInts.SMQN:
                 {
-                    _StoryManagerQuestNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _StoryManagerQuestNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.StoryManagerQuestNodes;
                 }
                 case RecordTypeInts.SMEN:
                 {
-                    _StoryManagerEventNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _StoryManagerEventNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.StoryManagerEventNodes;
                 }
                 case RecordTypeInts.DLBR:
                 {
-                    _DialogBranchesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DialogBranchesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.DialogBranches;
                 }
                 case RecordTypeInts.MUST:
                 {
-                    _MusicTracksLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MusicTracksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.MusicTracks;
                 }
                 case RecordTypeInts.DLVW:
                 {
-                    _DialogViewsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DialogViewsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.DialogViews;
                 }
                 case RecordTypeInts.WOOP:
                 {
-                    _WordsOfPowerLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WordsOfPowerLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.WordsOfPower;
                 }
                 case RecordTypeInts.SHOU:
                 {
-                    _ShoutsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ShoutsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Shouts;
                 }
                 case RecordTypeInts.EQUP:
                 {
-                    _EquipTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _EquipTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.EquipTypes;
                 }
                 case RecordTypeInts.RELA:
                 {
-                    _RelationshipsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _RelationshipsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Relationships;
                 }
                 case RecordTypeInts.SCEN:
                 {
-                    _ScenesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ScenesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Scenes;
                 }
                 case RecordTypeInts.ASTP:
                 {
-                    _AssociationTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AssociationTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.AssociationTypes;
                 }
                 case RecordTypeInts.OTFT:
                 {
-                    _OutfitsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _OutfitsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Outfits;
                 }
                 case RecordTypeInts.ARTO:
                 {
-                    _ArtObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ArtObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.ArtObjects;
                 }
                 case RecordTypeInts.MATO:
                 {
-                    _MaterialObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MaterialObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.MaterialObjects;
                 }
                 case RecordTypeInts.MOVT:
                 {
-                    _MovementTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MovementTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.MovementTypes;
                 }
                 case RecordTypeInts.SNDR:
                 {
-                    _SoundDescriptorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SoundDescriptorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.SoundDescriptors;
                 }
                 case RecordTypeInts.DUAL:
                 {
-                    _DualCastDataLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DualCastDataLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.DualCastData;
                 }
                 case RecordTypeInts.SNCT:
                 {
-                    _SoundCategoriesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SoundCategoriesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.SoundCategories;
                 }
                 case RecordTypeInts.SOPM:
                 {
-                    _SoundOutputModelsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SoundOutputModelsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.SoundOutputModels;
                 }
                 case RecordTypeInts.COLL:
                 {
-                    _CollisionLayersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _CollisionLayersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.CollisionLayers;
                 }
                 case RecordTypeInts.CLFM:
                 {
-                    _ColorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ColorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.Colors;
                 }
                 case RecordTypeInts.REVB:
                 {
-                    _ReverbParametersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ReverbParametersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.ReverbParameters;
                 }
                 case RecordTypeInts.VOLI:
                 {
-                    _VolumetricLightingsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _VolumetricLightingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)SkyrimMod_FieldIndex.VolumetricLightings;
                 }
                 default:

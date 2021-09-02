@@ -2752,12 +2752,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.CSME:
                 {
-                    _MeleeLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _MeleeLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)CombatStyle_FieldIndex.Melee;
                 }
                 case RecordTypeInts.CSCR:
                 {
-                    _CloseRangeLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _CloseRangeLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)CombatStyle_FieldIndex.CloseRange;
                 }
                 case RecordTypeInts.CSLR:
@@ -2767,7 +2767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.CSFL:
                 {
-                    _FlightLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _FlightLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)CombatStyle_FieldIndex.Flight;
                 }
                 case RecordTypeInts.DATA:

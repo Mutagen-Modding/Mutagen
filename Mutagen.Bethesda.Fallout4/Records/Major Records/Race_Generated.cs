@@ -5011,7 +5011,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.BOD2:
                 {
-                    _BipedBodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _BipedBodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Race_FieldIndex.BipedBodyTemplate;
                 }
                 case RecordTypeInts.KWDA:
@@ -5029,7 +5029,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    _PropertiesLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _PropertiesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Race_FieldIndex.Properties;
                 }
                 case RecordTypeInts.APPR:

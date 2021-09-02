@@ -6381,17 +6381,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.VMAD:
                 {
-                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Npc_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
-                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Npc_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.ACBS:
                 {
-                    _ConfigurationLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ConfigurationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Npc_FieldIndex.Configuration;
                 }
                 case RecordTypeInts.SNAM:
@@ -6526,7 +6526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.AIDT:
                 {
-                    _AIDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _AIDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Npc_FieldIndex.AIData;
                 }
                 case RecordTypeInts.PKID:
@@ -6580,7 +6580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _PlayerSkillsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _PlayerSkillsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Npc_FieldIndex.PlayerSkills;
                 }
                 case RecordTypeInts.PNAM:
@@ -6682,12 +6682,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAM9:
                 {
-                    _FaceMorphLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _FaceMorphLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Npc_FieldIndex.FaceMorph;
                 }
                 case RecordTypeInts.NAMA:
                 {
-                    _FacePartsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _FacePartsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Npc_FieldIndex.FaceParts;
                 }
                 case RecordTypeInts.TINI:

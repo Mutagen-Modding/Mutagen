@@ -1607,12 +1607,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.CSTD:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)CombatStyle_FieldIndex.Data;
                 }
                 case RecordTypeInts.CSAD:
                 {
-                    _AdvancedLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _AdvancedLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)CombatStyle_FieldIndex.Advanced;
                 }
                 default:

@@ -4543,7 +4543,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 case RecordTypeInts.TES4:
                 {
-                    _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     _package.MetaData.MasterReferences!.SetTo(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
@@ -4555,62 +4555,62 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.GMST:
                 {
-                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.KYWD:
                 {
-                    _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.LCRT:
                 {
-                    _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.LocationReferenceTypes;
                 }
                 case RecordTypeInts.AACT:
                 {
-                    _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Actions;
                 }
                 case RecordTypeInts.TRNS:
                 {
-                    _TransformsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _TransformsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Transforms;
                 }
                 case RecordTypeInts.CMPO:
                 {
-                    _ComponentsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ComponentsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Components;
                 }
                 case RecordTypeInts.TXST:
                 {
-                    _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.TextureSets;
                 }
                 case RecordTypeInts.GLOB:
                 {
-                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.DMGT:
                 {
-                    _DamageTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DamageTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.DamageTypes;
                 }
                 case RecordTypeInts.CLAS:
                 {
-                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
-                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HDPT:
                 {
-                    _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.HeadParts;
                 }
                 default:

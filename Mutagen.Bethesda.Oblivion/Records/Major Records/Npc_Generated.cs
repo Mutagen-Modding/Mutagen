@@ -4072,7 +4072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.ACBS:
                 {
-                    _ConfigurationLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ConfigurationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Npc_FieldIndex.Configuration;
                 }
                 case RecordTypeInts.SNAM:
@@ -4134,7 +4134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.AIDT:
                 {
-                    _AIDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _AIDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Npc_FieldIndex.AIData;
                 }
                 case RecordTypeInts.PKID:
@@ -4169,7 +4169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _StatsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Npc_FieldIndex.Stats;
                 }
                 case RecordTypeInts.HNAM:

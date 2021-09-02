@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCIT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Data) return ParseResult.Stop;
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ScriptEffect_FieldIndex.Data;
                 }
                 case RecordTypeInts.FULL:

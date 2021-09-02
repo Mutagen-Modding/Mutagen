@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.NAM1:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)SoundOutputModel_FieldIndex.Data;
                 }
                 case RecordTypeInts.FNAM:
@@ -2086,12 +2086,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _OutputChannelsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _OutputChannelsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)SoundOutputModel_FieldIndex.OutputChannels;
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _AttenuationLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _AttenuationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)SoundOutputModel_FieldIndex.Attenuation;
                 }
                 default:

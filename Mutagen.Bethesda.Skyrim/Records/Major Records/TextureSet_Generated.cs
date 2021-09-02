@@ -2288,7 +2288,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.OBND:
                 {
-                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)TextureSet_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.TX00:
@@ -2333,7 +2333,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DODT:
                 {
-                    _DecalLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DecalLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)TextureSet_FieldIndex.Decal;
                 }
                 case RecordTypeInts.DNAM:

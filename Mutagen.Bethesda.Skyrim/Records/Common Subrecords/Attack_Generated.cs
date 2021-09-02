@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ATKD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackData) return ParseResult.Stop;
-                    _AttackDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _AttackDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Attack_FieldIndex.AttackData;
                 }
                 case RecordTypeInts.ATKE:

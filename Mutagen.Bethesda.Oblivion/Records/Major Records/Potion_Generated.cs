@@ -2177,7 +2177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.ENIT:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Potion_FieldIndex.Data;
                 }
                 case RecordTypeInts.EFID:

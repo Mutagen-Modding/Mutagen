@@ -2623,7 +2623,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 case RecordTypeInts.HEDR:
                 {
-                    _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _StatsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4ModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:

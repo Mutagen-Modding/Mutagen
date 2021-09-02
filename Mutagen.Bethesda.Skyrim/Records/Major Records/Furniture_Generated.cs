@@ -3099,12 +3099,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.VMAD:
                 {
-                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Furniture_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
-                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Furniture_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
@@ -3170,7 +3170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.WBDT:
                 {
-                    _WorkbenchDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _WorkbenchDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Furniture_FieldIndex.WorkbenchData;
                 }
                 case RecordTypeInts.NAM1:

@@ -2595,7 +2595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DODT:
                 {
-                    _DecalLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DecalLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Impact_FieldIndex.Decal;
                 }
                 case RecordTypeInts.DNAM:

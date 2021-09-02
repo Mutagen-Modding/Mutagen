@@ -4149,7 +4149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _MapDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _MapDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Worldspace_FieldIndex.MapData;
                 }
                 case RecordTypeInts.DATA:

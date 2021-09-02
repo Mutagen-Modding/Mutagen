@@ -1944,22 +1944,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HdrLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _HdrLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ImageSpace_FieldIndex.Hdr;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CinematicLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _CinematicLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ImageSpace_FieldIndex.Cinematic;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TintLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _TintLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ImageSpace_FieldIndex.Tint;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DepthOfFieldLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DepthOfFieldLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ImageSpace_FieldIndex.DepthOfField;
                 }
                 default:

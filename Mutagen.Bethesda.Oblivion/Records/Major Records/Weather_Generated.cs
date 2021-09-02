@@ -2435,17 +2435,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FogDistanceLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _FogDistanceLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Weather_FieldIndex.FogDistance;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HDRDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _HDRDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Weather_FieldIndex.HDRData;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Weather_FieldIndex.Data;
                 }
                 case RecordTypeInts.SNAM:

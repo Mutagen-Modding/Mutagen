@@ -1379,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DSTD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DestructionStage_FieldIndex.Data) return ParseResult.Stop;
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)DestructionStage_FieldIndex.Data;
                 }
                 case RecordTypeInts.DMDL:

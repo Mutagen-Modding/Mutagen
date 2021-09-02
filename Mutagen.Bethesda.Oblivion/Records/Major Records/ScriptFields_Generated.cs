@@ -1796,7 +1796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
-                    _MetadataSummaryLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _MetadataSummaryLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ScriptFields_FieldIndex.MetadataSummary;
                 }
                 case RecordTypeInts.SCDA:

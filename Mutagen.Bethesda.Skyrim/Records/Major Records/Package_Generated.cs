@@ -4008,7 +4008,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.VMAD:
                 {
-                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Package_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.PKDT:

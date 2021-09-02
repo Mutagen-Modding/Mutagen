@@ -1871,7 +1871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.HEDR:
                 {
-                    _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _StatsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)OblivionModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:

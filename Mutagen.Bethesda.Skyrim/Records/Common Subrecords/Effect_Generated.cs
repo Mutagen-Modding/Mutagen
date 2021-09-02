@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.EFIT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Effect_FieldIndex.Data;
                 }
                 case RecordTypeInts.CTDA:

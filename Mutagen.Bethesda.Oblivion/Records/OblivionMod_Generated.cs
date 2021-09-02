@@ -12905,7 +12905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.TES4:
                 {
-                    _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     _package.MetaData.MasterReferences!.SetTo(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
@@ -12917,282 +12917,282 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.GMST:
                 {
-                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.GLOB:
                 {
-                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
-                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
-                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HAIR:
                 {
-                    _HairsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _HairsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
-                    _EyesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _EyesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
-                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
-                    _SoundsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SoundsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.SKIL:
                 {
-                    _SkillsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SkillsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Skills;
                 }
                 case RecordTypeInts.MGEF:
                 {
-                    _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.SCPT:
                 {
-                    _ScriptsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ScriptsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Scripts;
                 }
                 case RecordTypeInts.LTEX:
                 {
-                    _LandTexturesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LandTexturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.LandTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
-                    _EnchantmentsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _EnchantmentsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Enchantments;
                 }
                 case RecordTypeInts.SPEL:
                 {
-                    _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.BSGN:
                 {
-                    _BirthsignsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _BirthsignsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Birthsigns;
                 }
                 case RecordTypeInts.ACTI:
                 {
-                    _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.APPA:
                 {
-                    _AlchemicalApparatusLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AlchemicalApparatusLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.AlchemicalApparatus;
                 }
                 case RecordTypeInts.ARMO:
                 {
-                    _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
-                    _BooksLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _BooksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CLOT:
                 {
-                    _ClothesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ClothesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Clothes;
                 }
                 case RecordTypeInts.CONT:
                 {
-                    _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
-                    _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
-                    _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
-                    _LightsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LightsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
-                    _MiscellaneousLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MiscellaneousLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Miscellaneous;
                 }
                 case RecordTypeInts.STAT:
                 {
-                    _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.GRAS:
                 {
-                    _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
-                    _TreesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _TreesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
-                    _FloraLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FloraLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Flora;
                 }
                 case RecordTypeInts.FURN:
                 {
-                    _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
-                    _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
-                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
-                    _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.CREA:
                 {
-                    _CreaturesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _CreaturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Creatures;
                 }
                 case RecordTypeInts.LVLC:
                 {
-                    _LeveledCreaturesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LeveledCreaturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.LeveledCreatures;
                 }
                 case RecordTypeInts.SLGM:
                 {
-                    _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.KEYM:
                 {
-                    _KeysLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _KeysLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
-                    _PotionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _PotionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Potions;
                 }
                 case RecordTypeInts.SBSP:
                 {
-                    _SubspacesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SubspacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Subspaces;
                 }
                 case RecordTypeInts.SGST:
                 {
-                    _SigilStonesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SigilStonesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.SigilStones;
                 }
                 case RecordTypeInts.LVLI:
                 {
-                    _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
-                    _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
-                    _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.REGN:
                 {
-                    _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.CELL:
                 {
-                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:
                 {
-                    _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
-                    _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
-                    _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
-                    _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
-                    _AIPackagesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AIPackagesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.AIPackages;
                 }
                 case RecordTypeInts.CSTY:
                 {
-                    _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
-                    _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
-                    _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
-                    _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
-                    _WatersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WatersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
-                    _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.EffectShaders;
                 }
                 default:

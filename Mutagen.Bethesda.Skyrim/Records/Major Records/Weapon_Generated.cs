@@ -4418,12 +4418,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.VMAD:
                 {
-                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Weapon_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
-                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Weapon_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
@@ -4570,17 +4570,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _BasicStatsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _BasicStatsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Weapon_FieldIndex.BasicStats;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Weapon_FieldIndex.Data;
                 }
                 case RecordTypeInts.CRDT:
                 {
-                    _CriticalLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _CriticalLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Weapon_FieldIndex.Critical;
                 }
                 case RecordTypeInts.VNAM:

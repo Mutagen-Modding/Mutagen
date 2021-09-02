@@ -7038,12 +7038,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.IMSP:
                 {
-                    _ImageSpacesLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ImageSpacesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Weather_FieldIndex.ImageSpaces;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _VolumetricLightingLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VolumetricLightingLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Weather_FieldIndex.VolumetricLighting;
                 }
                 case RecordTypeInts.DALC:

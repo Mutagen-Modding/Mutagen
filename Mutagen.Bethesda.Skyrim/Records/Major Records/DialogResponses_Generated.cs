@@ -3135,7 +3135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.VMAD:
                 {
-                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)DialogResponses_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.DATA:
@@ -3145,7 +3145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _FlagsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _FlagsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)DialogResponses_FieldIndex.Flags;
                 }
                 case RecordTypeInts.TPIC:

@@ -3446,12 +3446,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.XTEL:
                 {
-                    _TeleportDestinationLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _TeleportDestinationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.TeleportDestination;
                 }
                 case RecordTypeInts.XLOC:
                 {
-                    _LockLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _LockLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.Lock;
                 }
                 case RecordTypeInts.XOWN:
@@ -3471,7 +3471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.XESP:
                 {
-                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XTRG:
@@ -3486,7 +3486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.XLOD:
                 {
-                    _DistantLODDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DistantLODDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.DistantLODData;
                 }
                 case RecordTypeInts.XCHG:

@@ -1835,7 +1835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HavokLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _HavokLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)LandTexture_FieldIndex.Havok;
                 }
                 case RecordTypeInts.SNAM:

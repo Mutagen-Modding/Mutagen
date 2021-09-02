@@ -2293,12 +2293,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.XLOD:
                 {
-                    _DistantLODDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DistantLODDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedNpc_FieldIndex.DistantLODData;
                 }
                 case RecordTypeInts.XESP:
                 {
-                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedNpc_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XMRC:

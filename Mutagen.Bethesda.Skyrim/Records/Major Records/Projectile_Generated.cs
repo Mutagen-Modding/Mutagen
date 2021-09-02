@@ -3706,7 +3706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.OBND:
                 {
-                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Projectile_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:

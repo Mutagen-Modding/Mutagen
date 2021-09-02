@@ -1483,7 +1483,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.EPF3:
                 {
-                    _FlagsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _FlagsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PerkEntryPointAddActivateChoice_FieldIndex.Flags;
                 }
                 default:

@@ -1812,7 +1812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.SPIT:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)SpellUnleveled_FieldIndex.Data;
                 }
                 case RecordTypeInts.EFID:

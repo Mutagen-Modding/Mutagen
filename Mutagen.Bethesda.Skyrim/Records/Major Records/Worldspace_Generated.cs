@@ -6158,7 +6158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MHDT:
                 {
-                    _MaxHeightLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _MaxHeightLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Worldspace_FieldIndex.MaxHeight;
                 }
                 case RecordTypeInts.FULL:
@@ -6216,7 +6216,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _LandDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _LandDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Worldspace_FieldIndex.LandDefaults;
                 }
                 case RecordTypeInts.ICON:
@@ -6234,12 +6234,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _MapDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _MapDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Worldspace_FieldIndex.MapData;
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _MapOffsetLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _MapOffsetLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Worldspace_FieldIndex.MapOffset;
                 }
                 case RecordTypeInts.NAMA:

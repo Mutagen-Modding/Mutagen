@@ -1297,7 +1297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SPED:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.Overrides) return ParseResult.Stop;
-                    _OverridesLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _OverridesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)RaceMovementType_FieldIndex.Overrides;
                 }
                 default:

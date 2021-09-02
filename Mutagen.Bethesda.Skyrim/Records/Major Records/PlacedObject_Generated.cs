@@ -7149,7 +7149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.VMAD:
                 {
-                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.NAME:
@@ -7164,7 +7164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XPRM:
                 {
-                    _PrimitiveLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _PrimitiveLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.Primitive;
                 }
                 case RecordTypeInts.XORD:
@@ -7264,17 +7264,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XLIG:
                 {
-                    _LightDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _LightDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.LightData;
                 }
                 case RecordTypeInts.XALP:
                 {
-                    _AlphaLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _AlphaLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.Alpha;
                 }
                 case RecordTypeInts.XTEL:
                 {
-                    _TeleportDestinationLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _TeleportDestinationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.TeleportDestination;
                 }
                 case RecordTypeInts.XTNM:
@@ -7299,7 +7299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XWCU:
                 {
-                    _WaterVelocityLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _WaterVelocityLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.WaterVelocity;
                 }
                 case RecordTypeInts.XCVL:
@@ -7362,7 +7362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XLOC:
                 {
-                    _LockLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _LockLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.Lock;
                 }
                 case RecordTypeInts.XEZN:
@@ -7372,7 +7372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XNDP:
                 {
-                    _NavigationDoorLinkLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _NavigationDoorLinkLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.NavigationDoorLink;
                 }
                 case RecordTypeInts.XLRT:
@@ -7418,7 +7418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XESP:
                 {
-                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XLKR:
@@ -7484,7 +7484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _PlacementLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _PlacementLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.Placement;
                 }
                 default:

@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NVPP:
                 {
-                    _PreferredPathingLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _PreferredPathingLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)NavigationMeshInfoMap_FieldIndex.PreferredPathing;
                 }
                 case RecordTypeInts.NVSI:

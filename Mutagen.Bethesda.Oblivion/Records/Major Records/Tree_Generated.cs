@@ -2024,12 +2024,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Tree_FieldIndex.Data;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _BillboardDimensionsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _BillboardDimensionsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Tree_FieldIndex.BillboardDimensions;
                 }
                 default:

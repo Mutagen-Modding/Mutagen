@@ -2099,7 +2099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.AVSK:
                 {
-                    _SkillLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _SkillLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ActorValueInformation_FieldIndex.Skill;
                 }
                 case RecordTypeInts.PNAM:

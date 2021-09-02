@@ -6126,12 +6126,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XCLC:
                 {
-                    _GridLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _GridLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Cell_FieldIndex.Grid;
                 }
                 case RecordTypeInts.XCLL:
                 {
-                    _LightingLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _LightingLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Cell_FieldIndex.Lighting;
                 }
                 case RecordTypeInts.TVDT:
@@ -6193,7 +6193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XWCU:
                 {
-                    _WaterVelocityLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _WaterVelocityLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Cell_FieldIndex.WaterVelocity;
                 }
                 case RecordTypeInts.XCWT:

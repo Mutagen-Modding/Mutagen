@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _RelatedWatersLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _RelatedWatersLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Water_FieldIndex.RelatedWaters;
                 }
                 default:

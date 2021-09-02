@@ -1313,12 +1313,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNTO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ContainerEntry_FieldIndex.Item) return ParseResult.Stop;
-                    _ItemLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ItemLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ContainerEntry_FieldIndex.Item;
                 }
                 case RecordTypeInts.COED:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ContainerEntry_FieldIndex.Data;
                 }
                 default:

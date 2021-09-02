@@ -2044,22 +2044,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.PKDT:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)AIPackage_FieldIndex.Data;
                 }
                 case RecordTypeInts.PLDT:
                 {
-                    _LocationLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _LocationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)AIPackage_FieldIndex.Location;
                 }
                 case RecordTypeInts.PSDT:
                 {
-                    _ScheduleLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ScheduleLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)AIPackage_FieldIndex.Schedule;
                 }
                 case RecordTypeInts.PTDT:
                 {
-                    _TargetLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _TargetLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)AIPackage_FieldIndex.Target;
                 }
                 case RecordTypeInts.CTDA:

@@ -2696,7 +2696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LoopAndRumbleLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _LoopAndRumbleLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)SoundDescriptor_FieldIndex.LoopAndRumble;
                 }
                 case RecordTypeInts.BNAM:

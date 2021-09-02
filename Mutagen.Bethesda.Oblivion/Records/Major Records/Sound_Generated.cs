@@ -1591,13 +1591,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SNDD:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     _DataType = type;
                     return (int)Sound_FieldIndex.Data;
                 }
                 case RecordTypeInts.SNDX:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     _DataType = type;
                     return (int)Sound_FieldIndex.Data;
                 }

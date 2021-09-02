@@ -3416,7 +3416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.VMAD:
                 {
-                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)APlacedTrap_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.NAME:
@@ -3488,7 +3488,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XESP:
                 {
-                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)APlacedTrap_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XEMI:
@@ -3542,7 +3542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _PlacementLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _PlacementLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)APlacedTrap_FieldIndex.Placement;
                 }
                 default:

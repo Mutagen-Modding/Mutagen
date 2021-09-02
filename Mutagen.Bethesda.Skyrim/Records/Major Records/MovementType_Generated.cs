@@ -2371,7 +2371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _AnimationChangeThresholdsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _AnimationChangeThresholdsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)MovementType_FieldIndex.AnimationChangeThresholds;
                 }
                 default:

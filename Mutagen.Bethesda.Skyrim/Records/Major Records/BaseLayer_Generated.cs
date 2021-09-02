@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BTXT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return ParseResult.Stop;
-                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)BaseLayer_FieldIndex.Header;
                 }
                 default:

@@ -2511,7 +2511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LoopDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _LoopDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)MusicTrack_FieldIndex.LoopData;
                 }
                 case RecordTypeInts.FNAM:

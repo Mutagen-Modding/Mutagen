@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    _PropertiesLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _PropertiesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Class_FieldIndex.Properties;
                 }
                 case RecordTypeInts.DATA:

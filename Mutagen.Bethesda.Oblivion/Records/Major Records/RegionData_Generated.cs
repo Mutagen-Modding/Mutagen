@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.RDAT:
                 {
-                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)RegionData_FieldIndex.Header;
                 }
                 default:

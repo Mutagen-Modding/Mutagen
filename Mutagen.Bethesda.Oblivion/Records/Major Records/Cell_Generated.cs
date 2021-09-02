@@ -4826,7 +4826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.XCLL:
                 {
-                    _LightingLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _LightingLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Cell_FieldIndex.Lighting;
                 }
                 case RecordTypeInts.XCLR:

@@ -1904,7 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.PFPC:
                 {
-                    _SeasonalIngredientProductionLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _SeasonalIngredientProductionLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Flora_FieldIndex.SeasonalIngredientProduction;
                 }
                 default:

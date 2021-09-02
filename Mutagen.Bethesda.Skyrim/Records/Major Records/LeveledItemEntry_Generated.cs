@@ -1346,13 +1346,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LVLO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledItemEntry_FieldIndex.Data) return ParseResult.Stop;
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)LeveledItemEntry_FieldIndex.Data;
                 }
                 case RecordTypeInts.COED:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledItemEntry_FieldIndex.ExtraData) return ParseResult.Stop;
-                    _ExtraDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ExtraDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)LeveledItemEntry_FieldIndex.ExtraData;
                 }
                 default:

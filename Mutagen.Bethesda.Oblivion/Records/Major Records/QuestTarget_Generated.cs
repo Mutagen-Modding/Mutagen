@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.QSTA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Data) return ParseResult.Stop;
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)QuestTarget_FieldIndex.Data;
                 }
                 case RecordTypeInts.CTDA:

@@ -2582,7 +2582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.BMDT:
                 {
-                    _ClothingFlagsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ClothingFlagsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Clothing_FieldIndex.ClothingFlags;
                 }
                 case RecordTypeInts.MODL:
@@ -2629,7 +2629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Clothing_FieldIndex.Data;
                 }
                 default:
