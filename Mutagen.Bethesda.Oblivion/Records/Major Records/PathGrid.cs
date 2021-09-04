@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool PGAG_IsSet => _PGAGLocation.HasValue;
         public ReadOnlyMemorySlice<byte>? PGAG => _PGAGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PGAGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
 
-        partial void PointToPointConnectionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
+        partial void PointToPointConnectionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
         {
             var dataFrame = stream.ReadSubrecordFrame();
             uint ptCount = BinaryPrimitives.ReadUInt16LittleEndian(dataFrame.Content);

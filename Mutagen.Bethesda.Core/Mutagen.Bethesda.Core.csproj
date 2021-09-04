@@ -143,7 +143,7 @@
     <Compile Include="Plugins\Binary\Parameters\ModKeyOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\NextFormIDOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\RecordCountOption.cs" />
-    <Compile Include="Plugins\Binary\Translations\PreviousSubrecordParse.cs" />
+    <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />
     <Compile Include="Plugins\Cache\IIdentifierLinkCache.cs" />
     <Compile Include="Plugins\Cache\ResolveTarget.cs" />
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />

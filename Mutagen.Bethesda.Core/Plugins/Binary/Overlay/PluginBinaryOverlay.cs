@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             int finalPos,
             int offset,
             RecordType type,
-            PreviousSubrecordParse lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter);
         public delegate ParseResult ModTypeFillWrapper(
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             long finalPos,
             int offset,
             RecordType type,
-            PreviousSubrecordParse lastParsed,
+            PreviousParse lastParsed,
             RecordTypeConverter? recordTypeConverter);
 
         protected ReadOnlyMemorySlice<byte> _data;
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             ModTypeFillWrapper fill,
             BinaryOverlayFactoryPackage package)
         {
-            var lastParsed = new PreviousSubrecordParse();
+            var lastParsed = new PreviousParse();
             ModHeader headerMeta = stream.GetModHeader(package);
             var minimumFinalPos = checked((int)(stream.Position + headerMeta.TotalLength));
             fill(
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
-            var lastParsed = new PreviousSubrecordParse();
+            var lastParsed = new PreviousParse();
             Dictionary<RecordType, int>? recordParseCount = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
-            var lastParsed = new PreviousSubrecordParse();
+            var lastParsed = new PreviousParse();
             Dictionary<RecordType, int>? recordParseCount = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
-            var lastParsed = new PreviousSubrecordParse();
+            var lastParsed = new PreviousParse();
             Dictionary<RecordType, int>? recordParseCount = null;
             RecordType? lastParsedType = null;
             while (!stream.Complete && stream.Position < finalPos)
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
-            var lastParsed = new PreviousSubrecordParse();
+            var lastParsed = new PreviousParse();
             Dictionary<RecordType, int>? recordParseCount = null;
             while (!stream.Complete && stream.Position < finalPos)
             {

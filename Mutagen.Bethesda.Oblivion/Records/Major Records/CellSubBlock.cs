@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public IReadOnlyList<ICellGetter> Cells { get; private set; } = ListExt.Empty<ICellGetter>();
 
-            partial void CellsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
+            partial void CellsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 this.Cells = BinaryOverlayList.FactoryByArray<CellBinaryOverlay>(
                     mem: stream.RemainingMemory,

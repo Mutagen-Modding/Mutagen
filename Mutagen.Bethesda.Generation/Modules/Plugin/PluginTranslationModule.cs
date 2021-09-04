@@ -757,9 +757,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add($"{ReaderClass} {ReaderMemberName}");
-                    if (obj.GetObjectType() == ObjectType.Subrecord)
+                    if (obj.GetObjectType() == ObjectType.Subrecord
+                        || obj.GetObjectType() == ObjectType.Record)
                     {
-                        args.Add($"{nameof(PreviousSubrecordParse)} lastParsed");
+                        args.Add($"{nameof(PreviousParse)} lastParsed");
                     }
                     if (obj.GetObjectType() != ObjectType.Mod)
                     {
@@ -786,7 +787,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             nonIntegrated: true))
                         {
                             var fieldData = field.Field.GetFieldData();
-                            if (fieldData.GenerationTypes.Count() == 0) continue;
+                            if (!fieldData.GenerationTypes.Any()) continue;
                             if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                             if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
@@ -983,7 +984,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 {
                                     args.AddPassArg($"item");
                                     args.AddPassArg(ReaderMemberName);
-                                    if (obj.GetObjectType() == ObjectType.Subrecord)
+                                    if (obj.GetObjectType() == ObjectType.Subrecord
+                                        || obj.BaseClass.GetObjectType() == ObjectType.Record)
                                     {
                                         args.AddPassArg($"lastParsed");
                                     }
@@ -1000,7 +1002,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 {
                                     args.AddPassArg("item");
                                     args.AddPassArg(ReaderMemberName);
-                                    if (obj.BaseClass.GetObjectType() == ObjectType.Subrecord)
+                                    if (obj.BaseClass.GetObjectType() == ObjectType.Subrecord
+                                        || obj.BaseClass.GetObjectType() == ObjectType.Record)
                                     {
                                         args.AddPassArg($"lastParsed");
                                     }
@@ -1262,7 +1265,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             {
                 if (dataSet != null)
                 {
-                    fg.AppendLine($"if (lastParsed.{nameof(PreviousSubrecordParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousSubrecordParse.ParsedIndex)}.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                    fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                 }
                 else if (field.Field is CustomLogic)
                 {
@@ -1271,16 +1274,16 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     var prevField = objFields.LastOrDefault((i) => i.InternalIndex < field.InternalIndex);
                     if (nextField.Field != null)
                     {
-                        fg.AppendLine($"if (lastParsed.{nameof(PreviousSubrecordParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousSubrecordParse.ParsedIndex)}.Value >= (int){nextField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                        fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){nextField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                     }
                     else if (prevField.Field != null)
                     {
-                        fg.AppendLine($"if (lastParsed.{nameof(PreviousSubrecordParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousSubrecordParse.ParsedIndex)}.Value >= (int){prevField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                        fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){prevField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                     }
                 }
                 else if (!(field.Field is MarkerType))
                 {
-                    fg.AppendLine($"if (lastParsed.{nameof(PreviousSubrecordParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousSubrecordParse.ParsedIndex)}.Value >= (int){field.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                    fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){field.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                 }
             }
             await toDo();
@@ -1337,7 +1340,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "long" : "int")} finalPos");
                     args.Add($"int offset");
                     args.Add("RecordType type");
-                    args.Add($"{nameof(PreviousSubrecordParse)} lastParsed");
+                    args.Add($"{nameof(PreviousParse)} lastParsed");
                     if (obj.GetObjectType() != ObjectType.Mod)
                     {
                         args.Add("Dictionary<RecordType, int>? recordParseCount");

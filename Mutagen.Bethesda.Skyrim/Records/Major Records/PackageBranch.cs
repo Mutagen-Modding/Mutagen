@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
             private IPackageFlagsOverrideGetter? _flagsOverride;
             public IPackageFlagsOverrideGetter? GetFlagsOverrideCustom() => _flagsOverride;
 
-            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
+            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayCountedList(stream, _package);
             }

@@ -52,10 +52,19 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             int contentLength,
             RecordTypeConverter? recordTypeConverter);
 
+        public delegate ParseResult MajorRecordFill<R>(
+            R record,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter);
+
         public delegate ParseResult SubrecordFill<R>(
             R record,
             MutagenFrame frame,
-            PreviousSubrecordParse previousSubrecordParse,
+            PreviousParse previousSubrecordParse,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -74,7 +83,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
-            RecordTypeFill<M> fillTyped)
+            MajorRecordFill<M> fillTyped)
             where M : IMajorRecordCommonGetter
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(frame.Reader));
@@ -91,6 +100,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
                 Dictionary<RecordType, int>? recordParseCount = null;
                 frame.MetaData.FormVersion = record.FormVersion;
+                var lastParsed = new PreviousParse();
                 while (!targetFrame.Complete)
                 {
                     var subMeta = targetFrame.GetSubrecord();
@@ -101,6 +111,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                         parsed = fillTyped(
                             record: record,
                             frame: targetFrame,
+                            lastParsed: lastParsed,
                             recordParseCount: recordParseCount,
                             nextRecordType: subMeta.RecordType,
                             contentLength: subMeta.ContentLength,
@@ -133,6 +144,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         targetFrame.Position = finalPos;
                     }
+
+                    lastParsed = parsed;
                 }
 
                 frame.SetToFinalPosition();
@@ -162,12 +175,13 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
-            RecordTypeFill<M> fillTyped)
+            MajorRecordFill<M> fillTyped)
         {
             fillStructs?.Invoke(
                 record: record,
                 frame: frame);
             Dictionary<RecordType, int>? recordParseCount = null;
+            var previousParse = new PreviousParse();
             while (!frame.Complete)
             {
                 var subMeta = frame.GetSubrecord();
@@ -175,6 +189,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 var parsed = fillTyped(
                     record: record,
                     frame: frame,
+                    lastParsed: previousParse,
                     recordParseCount: recordParseCount,
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
@@ -195,6 +210,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 {
                     frame.Position = finalPos;
                 }
+
+                previousParse = parsed;
             }
 
             return record;
@@ -222,7 +239,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             fillStructs?.Invoke(
                 record: record,
                 frame: frame);
-            var lastParsed = new PreviousSubrecordParse();
+            var lastParsed = new PreviousParse();
             Dictionary<RecordType, int>? recordParseCount = null;
             while (!frame.Complete)
             {
@@ -274,7 +291,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
             frame.Position += groupMeta.TypeAndLengthLength;
             frame = frame.ReadAndReframe(checked((int)(groupMeta.TotalLength - groupMeta.TypeAndLengthLength)));
-
+            
             fillStructs?.Invoke(
                 record: record,
                 frame: frame);

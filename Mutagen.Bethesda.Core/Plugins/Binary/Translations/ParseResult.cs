@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 dupParse: null);
         }
 
-        public static implicit operator ParseResult(PreviousSubrecordParse lastParsed)
+        public static implicit operator ParseResult(PreviousParse lastParsed)
         {
             return new ParseResult(
                 parsedIndex: lastParsed.ParsedIndex,

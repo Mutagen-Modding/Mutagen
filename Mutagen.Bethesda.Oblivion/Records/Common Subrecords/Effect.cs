@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class EffectBinaryCreateTranslation
         {
-            public static partial ParseResult FillBinaryEffectInitialCustom(MutagenFrame frame, IEffect item, PreviousSubrecordParse lastParsed)
+            public static partial ParseResult FillBinaryEffectInitialCustom(MutagenFrame frame, IEffect item, PreviousParse lastParsed)
             {
                 var subMeta = frame.ReadSubrecord();
                 if (subMeta.ContentLength != Plugins.Internals.Constants.HeaderLength)
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class EffectBinaryOverlay
         {
-            public partial ParseResult EffectInitialCustomParse(OverlayStream stream, int offset, PreviousSubrecordParse lastParsed)
+            public partial ParseResult EffectInitialCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
             {
                 return lastParsed;
             }

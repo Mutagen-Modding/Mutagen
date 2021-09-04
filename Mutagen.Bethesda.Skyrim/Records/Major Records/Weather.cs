@@ -194,6 +194,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static ParseResult CustomRecordFallback(
                 IWeatherInternal item,
                 MutagenFrame frame,
+                PreviousParse lastParsed,
                 Dictionary<RecordType, int>? recordParseCount,
                 RecordType nextRecordType,
                 int contentLength,
@@ -204,6 +205,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
@@ -409,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             int? _directionalLoc;
 
-            partial void CloudsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
+            partial void CloudsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 WeatherBinaryCreateTranslation.FillBinaryCloudYSpeeds(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
@@ -466,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int finalPos,
                 int offset,
                 RecordType type,
-                PreviousSubrecordParse lastParsed,
+                PreviousParse lastParsed,
                 RecordTypeConverter? recordTypeConverter = null)
             {
                 if (type.TypeInt == 0x44494445) // EDID

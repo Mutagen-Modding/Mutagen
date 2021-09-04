@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         public static ParseResult FillBinaryRecordTypes(
             IMasterReference item,
             MutagenFrame frame,
-            PreviousSubrecordParse lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             int finalPos,
             int offset,
             RecordType type,
-            PreviousSubrecordParse lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {

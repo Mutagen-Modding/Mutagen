@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PatrolBinaryCreateTranslation
         {
-            public static partial ParseResult FillBinaryPatrolScriptMarkerCustom(MutagenFrame frame, IPatrol item, PreviousSubrecordParse lastParsed)
+            public static partial ParseResult FillBinaryPatrolScriptMarkerCustom(MutagenFrame frame, IPatrol item, PreviousParse lastParsed)
             {
                 if (frame.ReadSubrecordFrame().Content.Length != 0)
                 {
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public IReadOnlyList<IATopicReferenceGetter> Topics { get; private set; } = ListExt.Empty<IATopicReferenceGetter>();
 
-            public partial ParseResult PatrolScriptMarkerCustomParse(OverlayStream stream, int offset, PreviousSubrecordParse lastParsed)
+            public partial ParseResult PatrolScriptMarkerCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
             {
                 if (stream.ReadSubrecordFrame().Content.Length != 0)
                 {
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
                 long finalPos,
                 int offset,
                 RecordType type,
-                PreviousSubrecordParse lastParsed)
+                PreviousParse lastParsed)
             {
                 Topics = new List<IATopicReferenceGetter>(
                     ATopicReferenceBinaryCreateTranslation.Factory(

@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public IReadOnlyList<IRoadPointGetter>? Points { get; private set; }
 
-        partial void PointsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
+        partial void PointsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
         {
             if (stream.Complete) return;
             var subMeta = stream.GetSubrecord();

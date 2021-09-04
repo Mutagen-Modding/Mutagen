@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "int? lastParsed";
+            string testString = "return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordT";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

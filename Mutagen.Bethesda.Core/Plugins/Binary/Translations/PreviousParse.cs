@@ -1,17 +1,17 @@
 ﻿namespace Mutagen.Bethesda.Plugins.Binary.Translations
 {
-    public struct PreviousSubrecordParse
+    public struct PreviousParse
     {
         public readonly int? ParsedIndex;
 
-        public PreviousSubrecordParse(int? parsedIndex)
+        public PreviousParse(int? parsedIndex)
         {
             ParsedIndex = parsedIndex;
         }
 
-        public static implicit operator PreviousSubrecordParse(ParseResult lastParsed)
+        public static implicit operator PreviousParse(ParseResult lastParsed)
         {
-            return new PreviousSubrecordParse(
+            return new PreviousParse(
                 parsedIndex: lastParsed.ParsedIndex);
         }
     }

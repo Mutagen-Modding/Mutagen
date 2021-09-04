@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ParseResult FillBinaryRecordTypes(
             IEffect item,
             MutagenFrame frame,
-            PreviousSubrecordParse lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static partial ParseResult FillBinaryEffectInitialCustom(
             MutagenFrame frame,
             IEffect item,
-            PreviousSubrecordParse lastParsed);
+            PreviousParse lastParsed);
 
     }
 
@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public partial ParseResult EffectInitialCustomParse(
             OverlayStream stream,
             int offset,
-            PreviousSubrecordParse lastParsed);
+            PreviousParse lastParsed);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset,
             RecordType type,
-            PreviousSubrecordParse lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {

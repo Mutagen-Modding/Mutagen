@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             IAPerkEntryPointEffect item,
             MutagenFrame frame,
-            PreviousSubrecordParse lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static partial ParseResult FillBinaryFunctionParametersCustom(
             MutagenFrame frame,
             IAPerkEntryPointEffect item,
-            PreviousSubrecordParse lastParsed);
+            PreviousParse lastParsed);
 
     }
 
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public partial ParseResult FunctionParametersCustomParse(
             OverlayStream stream,
             int offset,
-            PreviousSubrecordParse lastParsed);
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            PreviousSubrecordParse lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {

@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Skyrim
                 long finalPos,
                 int offset,
                 RecordType type,
-                PreviousSubrecordParse lastParsed)
+                PreviousParse lastParsed)
             {
                 Topics = new List<IATopicReferenceGetter>(
                     ATopicReferenceBinaryCreateTranslation.Factory(

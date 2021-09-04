@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class QuestAliasBinaryCreateTranslation
         {
-            public static partial ParseResult FillBinaryIDParseCustom(MutagenFrame frame, IQuestAlias item, PreviousSubrecordParse lastParsed)
+            public static partial ParseResult FillBinaryIDParseCustom(MutagenFrame frame, IQuestAlias item, PreviousParse lastParsed)
             {
                 var subMeta = frame.ReadSubrecord();
                 item.Type = subMeta.RecordTypeInt switch
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return lastParsed;
             }
 
-            public static partial ParseResult FillBinaryEndCustom(MutagenFrame frame, IQuestAlias item, PreviousSubrecordParse lastParsed)
+            public static partial ParseResult FillBinaryEndCustom(MutagenFrame frame, IQuestAlias item, PreviousParse lastParsed)
             {
                 // Skip
                 frame.ReadSubrecordFrame();
@@ -95,12 +95,12 @@ namespace Mutagen.Bethesda.Skyrim
             public uint ID { get; private set; }
             public QuestAlias.TypeEnum Type { get; private set; }
 
-            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
+            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }
 
-            public partial ParseResult IDParseCustomParse(OverlayStream stream, int offset, PreviousSubrecordParse lastParsed)
+            public partial ParseResult IDParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
             {
                 var subMeta = stream.ReadSubrecord();
                 this.Type = subMeta.RecordTypeInt switch
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return lastParsed;
             }
 
-            public partial ParseResult EndCustomParse(OverlayStream stream, int offset, PreviousSubrecordParse lastParsed)
+            public partial ParseResult EndCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
             {
                 stream.ReadSubrecordFrame();
                 return lastParsed;
