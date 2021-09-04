@@ -81,7 +81,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             fillStructs(
                 record: record,
                 frame: frame);
-            if (fillTyped == null) return record;
             try
             {
                 MutagenFrame targetFrame = frame;
