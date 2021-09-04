@@ -23,15 +23,18 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             [MaybeNullWhen(false)] out TItem item,
             RecordTypeConverter? recordTypeConverter);
+
         public delegate bool BinarySubParseRecordDelegate<TItem>(
             MutagenFrame reader,
             RecordType header,
             [MaybeNullWhen(false)] out TItem item);
+
         public delegate bool BinaryMasterParseRecordDelegate<TItem>(
             MutagenFrame reader,
             RecordType header,
             [MaybeNullWhen(false)] out TItem item,
             RecordTypeConverter? recordTypeConverter);
+
         public delegate void BinaryMasterWriteDelegate<TItem>(
             MutagenWriter writer,
             TItem item,
@@ -84,50 +87,56 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 MutagenFrame targetFrame = frame;
                 if (record.IsCompressed)
                 {
-                targetFrame = frame.Decompress();
-            }
-            Dictionary<RecordType, int>? recordParseCount = null;
-            frame.MetaData.FormVersion = record.FormVersion;
-            while (!targetFrame.Complete)
-            {
-                var subMeta = targetFrame.GetSubrecord();
-                var finalPos = targetFrame.Position + subMeta.TotalLength;
-                ParseResult parsed;
-                try
-                {
-                    parsed = fillTyped(
-                        record: record,
-                        frame: targetFrame,
-                        recordParseCount: recordParseCount,
-                        nextRecordType: subMeta.RecordType,
-                        contentLength: subMeta.ContentLength,
-                        recordTypeConverter: recordTypeConverter);
+                    targetFrame = frame.Decompress();
                 }
-                catch (Exception ex)
+
+                Dictionary<RecordType, int>? recordParseCount = null;
+                frame.MetaData.FormVersion = record.FormVersion;
+                while (!targetFrame.Complete)
                 {
-                    throw new SubrecordException(
-                        subMeta.RecordType, 
-                        record.FormKey,
-                        majorRecordType: record.Registration.ClassType,
-                        modKey: frame.Reader.MetaData.ModKey,
-                        edid: record.EditorID,
-                        innerException: ex);
-                }
-                if (!parsed.KeepParsing) break;
-                if (parsed.DuplicateParseMarker != null)
-                {
-                    if (recordParseCount == null)
+                    var subMeta = targetFrame.GetSubrecord();
+                    var finalPos = targetFrame.Position + subMeta.TotalLength;
+                    ParseResult parsed;
+                    try
                     {
-                        recordParseCount = new Dictionary<RecordType, int>();
+                        parsed = fillTyped(
+                            record: record,
+                            frame: targetFrame,
+                            recordParseCount: recordParseCount,
+                            nextRecordType: subMeta.RecordType,
+                            contentLength: subMeta.ContentLength,
+                            recordTypeConverter: recordTypeConverter);
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
+                    catch (Exception ex)
+                    {
+                        throw new SubrecordException(
+                            subMeta.RecordType,
+                            record.FormKey,
+                            majorRecordType: record.Registration.ClassType,
+                            modKey: frame.Reader.MetaData.ModKey,
+                            edid: record.EditorID,
+                            innerException: ex);
+                    }
+
+                    if (!parsed.KeepParsing) break;
+                    if (parsed.DuplicateParseMarker != null)
+                    {
+                        if (recordParseCount == null)
+                        {
+                            recordParseCount = new Dictionary<RecordType, int>();
+                        }
+
+                        recordParseCount[parsed.DuplicateParseMarker!.Value] =
+                            recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
+                    }
+
+                    if (targetFrame.Position < finalPos)
+                    {
+                        targetFrame.Position = finalPos;
+                    }
                 }
-                if (targetFrame.Position < finalPos)
-                {
-                    targetFrame.Position = finalPos;
-                }
-            }
-            frame.SetToFinalPosition();
+
+                frame.SetToFinalPosition();
                 frame.MetaData.FormVersion = null;
                 return record;
             }
@@ -178,13 +187,17 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
+
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] =
+                        recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
+
                 if (frame.Position < finalPos)
                 {
                     frame.Position = finalPos;
                 }
             }
+
             return record;
         }
 
@@ -229,16 +242,21 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 {
                     frame.Position = finalPos;
                 }
+
                 if (parsed.DuplicateParseMarker != null)
                 {
                     if (recordParseCount == null)
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
+
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] =
+                        recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
+
                 lastParsed = parsed.ParsedIndex;
             }
+
             return record;
         }
 
@@ -254,6 +272,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             {
                 throw new ArgumentException($"Expected GRUP header was not read in: {frame.Position}");
             }
+
             frame.Position += groupMeta.TypeAndLengthLength;
             frame = frame.ReadAndReframe(checked((int)(groupMeta.TotalLength - groupMeta.TypeAndLengthLength)));
 
@@ -279,6 +298,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     frame.Position = finalPos;
                 }
             }
+
             frame.SetToFinalPosition();
             return record;
         }
@@ -307,6 +327,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");
                 }
+
                 var len = checked((int)groupHeader.ContentLength);
                 var finalPos = frame.Position + groupHeader.TotalLength;
                 if (len == 0)
@@ -314,6 +335,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     frame.Position = finalPos;
                     continue;
                 }
+
                 var parsed = fillTyped(
                     record: record,
                     frame: frame,
@@ -327,6 +349,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     frame.Position = finalPos;
                 }
             }
+
             frame.SetToFinalPosition();
             return record;
         }
@@ -341,16 +364,21 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 // Copy major meta bytes over
                 slice.Span.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
                 // Set length bytes
-                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
+                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength),
+                    uncompressedLength);
                 // Remove compression flag
-                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(meta.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
+                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(meta.MajorConstants.FlagLocationOffset),
+                    majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
                 // Copy uncompressed data over
-                using (var stream = new ZlibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
+                using (var stream = new ZlibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)),
+                    CompressionMode.Decompress))
                 {
                     stream.Read(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
                 }
+
                 slice = new MemorySlice<byte>(buf);
             }
+
             return slice;
         }
 
@@ -359,22 +387,30 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             var majorMeta = stream.GetMajorRecord();
             if (majorMeta.IsCompressed)
             {
-                uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(stream.RemainingSpan.Slice(majorMeta.HeaderLength));
+                uint uncompressedLength =
+                    BinaryPrimitives.ReadUInt32LittleEndian(stream.RemainingSpan.Slice(majorMeta.HeaderLength));
                 byte[] buf = new byte[majorMeta.HeaderLength + checked((int)uncompressedLength)];
                 // Copy major meta bytes over
                 stream.RemainingSpan.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
                 // Set length bytes
-                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
+                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength),
+                    uncompressedLength);
                 // Remove compression flag
-                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(stream.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
+                BinaryPrimitives.WriteInt32LittleEndian(
+                    buf.AsSpan().Slice(stream.MetaData.Constants.MajorConstants.FlagLocationOffset),
+                    majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
                 // Copy uncompressed data over
-                using (var compessionStream = new ZlibStream(new ByteMemorySliceStream(stream.RemainingMemory.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
+                using (var compessionStream =
+                    new ZlibStream(new ByteMemorySliceStream(stream.RemainingMemory.Slice(majorMeta.HeaderLength + 4)),
+                        CompressionMode.Decompress))
                 {
                     compessionStream.Read(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
                 }
+
                 stream.Position += checked((int)majorMeta.TotalLength);
                 stream = new OverlayStream(buf, stream.MetaData);
             }
+
             return stream;
         }
 
@@ -386,7 +422,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <param name="span">Bytes containing subrecords</param>
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <returns>Enumerable of KeyValue pairs of encountered RecordTypes and their locations relative to the input span</returns>
-        public static IEnumerable<KeyValuePair<RecordType, int>> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span, GameConstants meta)
+        public static IEnumerable<KeyValuePair<RecordType, int>> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span,
+            GameConstants meta)
         {
             int loc = 0;
             while (span.Length > loc)
@@ -408,7 +445,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <param name="recordType">Repeating type to locate</param>
         /// <param name="lenParsed">The amount of data located subrecords cover</param>
         /// <returns>Array of locations of located target types</returns>
-        public static int[] ParseRepeatingSubrecord(ReadOnlyMemorySlice<byte> span, GameConstants meta, RecordType recordType, out int lenParsed)
+        public static int[] ParseRepeatingSubrecord(ReadOnlyMemorySlice<byte> span, GameConstants meta,
+            RecordType recordType, out int lenParsed)
         {
             lenParsed = 0;
             List<int> list = new List<int>();
@@ -419,6 +457,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 list.Add(lenParsed);
                 lenParsed += subMeta.TotalLength;
             }
+
             return list.ToArray();
         }
 
@@ -432,7 +471,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <param name="recordTypes">Record types to locate</param>
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <returns>Array of found record locations</returns>
-        public static int?[] FindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, params RecordType[] recordTypes)
+        public static int?[] FindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta,
+            params RecordType[] recordTypes)
         {
             int loc = 0;
             int?[] ret = new int?[recordTypes.Length];
@@ -456,6 +496,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                                 break;
                             }
                         }
+
                         if (breakOut)
                         {
                             break;
@@ -465,8 +506,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                         return ret;
                     }
                 }
+
                 loc += subMeta.TotalLength;
             }
+
             return ret;
         }
 
@@ -482,7 +525,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <param name="lenParsed">Amount of data contained in located records</param>
         /// <returns>Array of found record locations</returns>
-        public static int?[] FindNextSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed, params RecordType[] recordTypes)
+        public static int?[] FindNextSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed,
+            params RecordType[] recordTypes)
         {
             return FindNextSubrecords(
                 data: data,
@@ -537,6 +581,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                                     break;
                                 }
                             }
+
                             if (!moreToFind)
                             {
                                 lenParsed += subMeta.TotalLength;
@@ -548,15 +593,19 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                         {
                             breakOut = true;
                         }
+
                         break;
                     }
                 }
+
                 if (breakOut)
                 {
                     return ret;
                 }
+
                 lenParsed += subMeta.TotalLength;
             }
+
             return ret;
         }
 
@@ -577,10 +626,13 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         loc += meta.SubConstants.HeaderLength;
                     }
+
                     return loc;
                 }
+
                 loc += subMeta.TotalLength;
             }
+
             return null;
         }
 
@@ -601,10 +653,13 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         loc += meta.SubConstants.HeaderLength;
                     }
+
                     return loc;
                 }
+
                 loc += subMeta.TotalLength;
             }
+
             return null;
         }
 
@@ -630,8 +685,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                         ret.Add(lenParsed);
                     }
                 }
+
                 lenParsed += subMeta.TotalLength;
             }
+
             return ret.ToArray();
         }
 
@@ -657,8 +714,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                         ret.Add(lenParsed);
                     }
                 }
+
                 lenParsed += subMeta.TotalLength;
             }
+
             return ret.ToArray();
         }
 
@@ -732,7 +791,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             }
         }
 
-        public static int SkipPastAll(ReadOnlyMemorySlice<byte> data, GameConstants constants, RecordType toSkip, out int numRecordsPassed)
+        public static int SkipPastAll(ReadOnlyMemorySlice<byte> data, GameConstants constants, RecordType toSkip,
+            out int numRecordsPassed)
         {
             var pos = 0;
             numRecordsPassed = 0;
@@ -743,12 +803,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 pos += subHeader.TotalLength;
                 numRecordsPassed++;
             }
+
             return pos;
         }
 
         public static RecordType GetRecordType<T>()
         {
-            return (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Constants.TriggeringRecordTypeMember)!.GetValue(null)!;
+            return (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType()
+                .GetField(Constants.TriggeringRecordTypeMember)!.GetValue(null)!;
         }
 
         public static ReadOnlyMemorySlice<byte>? ReadByteArrayWithOverflow(
