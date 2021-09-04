@@ -5949,10 +5949,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    NpcBinaryCreateTranslation.FillBinaryDataMarkerCustom(
+                    return NpcBinaryCreateTranslation.FillBinaryDataMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -6097,7 +6096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static partial void FillBinaryDataMarkerCustom(
+        public static partial ParseResult FillBinaryDataMarkerCustom(
             MutagenFrame frame,
             INpcInternal item);
 
@@ -6242,7 +6241,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region DataMarker
-        partial void DataMarkerCustomParse(
+        public partial ParseResult DataMarkerCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -6573,10 +6572,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    DataMarkerCustomParse(
+                    return DataMarkerCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.DNAM:
                 {

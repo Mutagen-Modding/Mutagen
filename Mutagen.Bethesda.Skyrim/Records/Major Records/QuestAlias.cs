@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class QuestAliasBinaryCreateTranslation
         {
-            public static partial void FillBinaryIDParseCustom(MutagenFrame frame, IQuestAlias item)
+            public static partial ParseResult FillBinaryIDParseCustom(MutagenFrame frame, IQuestAlias item, int? lastParsed)
             {
                 var subMeta = frame.ReadSubrecord();
                 item.Type = subMeta.RecordTypeInt switch
@@ -56,12 +56,14 @@ namespace Mutagen.Bethesda.Skyrim
                     _ => throw new NotImplementedException(),
                 };
                 item.ID = frame.ReadUInt32();
+                return lastParsed;
             }
 
-            public static partial void FillBinaryEndCustom(MutagenFrame frame, IQuestAlias item)
+            public static partial ParseResult FillBinaryEndCustom(MutagenFrame frame, IQuestAlias item, int? lastParsed)
             {
                 // Skip
                 frame.ReadSubrecordFrame();
+                return lastParsed;
             }
         }
 
@@ -98,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }
 
-            partial void IDParseCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult IDParseCustomParse(OverlayStream stream, int offset, int? lastParsed)
             {
                 var subMeta = stream.ReadSubrecord();
                 this.Type = subMeta.RecordTypeInt switch
@@ -110,11 +112,13 @@ namespace Mutagen.Bethesda.Skyrim
                     _ => throw new NotImplementedException(),
                 };
                 this.ID = stream.ReadUInt32();
+                return lastParsed;
             }
 
-            partial void EndCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult EndCustomParse(OverlayStream stream, int offset, int? lastParsed)
             {
                 stream.ReadSubrecordFrame();
+                return lastParsed;
             }
         }
     }    

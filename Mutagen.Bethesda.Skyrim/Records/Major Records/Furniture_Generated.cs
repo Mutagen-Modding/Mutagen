@@ -2849,10 +2849,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    FurnitureBinaryCreateTranslation.FillBinaryFlags2Custom(
+                    return FurnitureBinaryCreateTranslation.FillBinaryFlags2Custom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.WBDT:
                 {
@@ -2867,10 +2866,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkersCustom(
+                    return FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.FNPR:
                 {
@@ -2901,11 +2899,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IFurnitureInternal item);
 
-        public static partial void FillBinaryFlags2Custom(
+        public static partial ParseResult FillBinaryFlags2Custom(
             MutagenFrame frame,
             IFurnitureInternal item);
 
-        public static partial void FillBinaryDisabledMarkersCustom(
+        public static partial ParseResult FillBinaryDisabledMarkersCustom(
             MutagenFrame frame,
             IFurnitureInternal item);
 
@@ -3002,7 +3000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => _InteractionKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InteractionKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
         #endregion
         #region Flags2
-        partial void Flags2CustomParse(
+        public partial ParseResult Flags2CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -3015,7 +3013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<ISpellGetter> AssociatedSpell => _AssociatedSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedSpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
         #endregion
         #region DisabledMarkers
-        partial void DisabledMarkersCustomParse(
+        public partial ParseResult DisabledMarkersCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -3163,10 +3161,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    Flags2CustomParse(
+                    return Flags2CustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.WBDT:
                 {
@@ -3180,10 +3177,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    DisabledMarkersCustomParse(
+                    return DisabledMarkersCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.FNPR:
                 {

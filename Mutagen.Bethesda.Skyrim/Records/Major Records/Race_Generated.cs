@@ -7920,17 +7920,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PHTN:
                 {
-                    RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesListingParsingCustom(
+                    return RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesListingParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.PHWT:
                 {
-                    RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesRawParsingCustom(
+                    return RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesRawParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.WKMV:
                 {
@@ -8017,11 +8015,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IRaceInternal item);
 
-        public static partial void FillBinaryFaceFxPhonemesListingParsingCustom(
+        public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(
             MutagenFrame frame,
             IRaceInternal item);
 
-        public static partial void FillBinaryFaceFxPhonemesRawParsingCustom(
+        public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(
             MutagenFrame frame,
             IRaceInternal item);
 
@@ -8283,7 +8281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single AngularTolerance => _AngularTolerance_IsSet ? _data.Slice(_AngularToleranceLocation, 4).Float() : default;
         #endregion
         #region Flags2
-        partial void Flags2CustomParse(
+         partial void Flags2CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -8368,7 +8366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
         #endregion
         #region ExtraNAM2
-        partial void ExtraNAM2CustomParse(
+         partial void ExtraNAM2CustomParse(
             OverlayStream stream,
             int offset);
         protected int ExtraNAM2EndingPos;
@@ -8408,12 +8406,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<IEquipTypeGetter> UnarmedEquipSlot => _UnarmedEquipSlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnarmedEquipSlotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region FaceFxPhonemesListingParsing
-        partial void FaceFxPhonemesListingParsingCustomParse(
+        public partial ParseResult FaceFxPhonemesListingParsingCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region FaceFxPhonemesRawParsing
-        partial void FaceFxPhonemesRawParsingCustomParse(
+        public partial ParseResult FaceFxPhonemesRawParsingCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -8772,17 +8770,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PHTN:
                 {
-                    FaceFxPhonemesListingParsingCustomParse(
+                    return FaceFxPhonemesListingParsingCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.PHWT:
                 {
-                    FaceFxPhonemesRawParsingCustomParse(
+                    return FaceFxPhonemesRawParsingCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.WKMV:
                 {

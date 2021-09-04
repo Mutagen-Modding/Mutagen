@@ -1376,19 +1376,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MPAI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
-                    AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustom(
+                    return AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return lastParsed;
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return ParseResult.Stop;
             }
         }
 
-        public static partial void FillBinaryParseCustom(
+        public static partial ParseResult FillBinaryParseCustom(
             MutagenFrame frame,
-            IAvailableMorphs item);
+            IAvailableMorphs item,
+            int? lastParsed);
 
     }
 
@@ -1454,9 +1455,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Parse
-        partial void ParseCustomParse(
+        public partial ParseResult ParseCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            int? lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1518,10 +1520,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MPAI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
-                    ParseCustomParse(
+                    return ParseCustomParse(
                         stream,
-                        offset);
-                    return lastParsed;
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return ParseResult.Stop;

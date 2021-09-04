@@ -52,8 +52,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class GlobalBinaryCreateTranslation
         {
-            public static partial void FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
+            public static partial ParseResult FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
             {
+                return null;
             }
         }
 
@@ -99,6 +100,11 @@ namespace Mutagen.Bethesda.Skyrim
                     default:
                         throw new ArgumentException($"Unknown trigger char: {globalChar}");
                 }
+            }
+
+            public partial ParseResult TypeCharCustomParse(OverlayStream stream, int offset)
+            {
+                return null;
             }
         }
     }

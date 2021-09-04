@@ -69,9 +69,10 @@ namespace Mutagen.Bethesda.Skyrim
                 textures[layer] = BinaryStringUtility.ProcessWholeToZString(subRec.Content);
             }
 
-            public static partial void FillBinaryCloudAlphasCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial ParseResult FillBinaryCloudAlphasCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryCloudAlphas(frame, item.Clouds);
+                return null;
             }
 
             public static void FillBinaryCloudAlphas(MutagenFrame frame, CloudLayer[] clouds)
@@ -89,9 +90,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static partial void FillBinaryCloudColorsCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial ParseResult FillBinaryCloudColorsCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryCloudColors(frame, item.Clouds);
+                return null;
             }
 
             public static void FillBinaryCloudColors(MutagenFrame frame, CloudLayer[] clouds)
@@ -125,9 +127,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static partial void FillBinaryCloudXSpeedsCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial ParseResult FillBinaryCloudXSpeedsCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryCloudXSpeeds(frame, item.Clouds);
+                return null;
             }
 
             public static void FillBinaryCloudXSpeeds(MutagenFrame frame, CloudLayer[] clouds)
@@ -139,9 +142,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static partial void FillBinaryDisabledCloudLayersCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial ParseResult FillBinaryDisabledCloudLayersCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryDisabledCloudLayers(frame, item.Clouds);
+                return null;
             }
 
             public static void FillBinaryDisabledCloudLayers(MutagenFrame frame, CloudLayer[] clouds)
@@ -412,32 +416,36 @@ namespace Mutagen.Bethesda.Skyrim
                     _clouds);
             }
 
-            partial void CloudXSpeedsCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult CloudXSpeedsCustomParse(OverlayStream stream, int offset)
             {
                 WeatherBinaryCreateTranslation.FillBinaryCloudXSpeeds(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
                     _clouds);
+                return null;
             }
 
-            partial void CloudAlphasCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult CloudAlphasCustomParse(OverlayStream stream, int offset)
             {
                 WeatherBinaryCreateTranslation.FillBinaryCloudAlphas(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
                     _clouds);
+                return null;
             }
 
-            partial void CloudColorsCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult CloudColorsCustomParse(OverlayStream stream, int offset)
             {
                 WeatherBinaryCreateTranslation.FillBinaryCloudColors(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
                     _clouds);
+                return null;
             }
 
-            partial void DisabledCloudLayersCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult DisabledCloudLayersCustomParse(OverlayStream stream, int offset)
             {
                 WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayers(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
                     _clouds);
+                return null;
             }
 
             partial void DirectionalAmbientLightingColorsCustomParse(OverlayStream stream, long finalPos, int offset)

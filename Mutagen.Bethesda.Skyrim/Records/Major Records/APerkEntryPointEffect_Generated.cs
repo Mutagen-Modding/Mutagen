@@ -1142,10 +1142,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.EPFT:
                 {
-                    APerkEntryPointEffectBinaryCreateTranslation.FillBinaryFunctionParametersCustom(
+                    return APerkEntryPointEffectBinaryCreateTranslation.FillBinaryFunctionParametersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return lastParsed;
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return APerkEffectBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1158,9 +1158,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static partial void FillBinaryFunctionParametersCustom(
+        public static partial ParseResult FillBinaryFunctionParametersCustom(
             MutagenFrame frame,
-            IAPerkEntryPointEffect item);
+            IAPerkEntryPointEffect item,
+            int? lastParsed);
 
     }
 
@@ -1210,9 +1211,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public APerkEntryPointEffect.EntryType EntryPoint => (APerkEntryPointEffect.EntryType)_data.Span.Slice(0x0, 0x1)[0];
         public Byte PerkConditionTabCount => _data.Span[0x1];
         #region FunctionParameters
-        partial void FunctionParametersCustomParse(
+        public partial ParseResult FunctionParametersCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            int? lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1245,10 +1247,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.EPFT:
                 {
-                    FunctionParametersCustomParse(
+                    return FunctionParametersCustomParse(
                         stream,
-                        offset);
-                    return lastParsed;
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(

@@ -1567,10 +1567,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCHD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
-                    ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustom(
+                    return ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return lastParsed;
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.SCHR:
                 {
@@ -1640,9 +1640,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static partial void FillBinaryMetadataSummaryOldCustom(
+        public static partial ParseResult FillBinaryMetadataSummaryOldCustom(
             MutagenFrame frame,
-            IScriptFields item);
+            IScriptFields item,
+            int? lastParsed);
 
     }
 
@@ -1709,9 +1710,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region MetadataSummaryOld
-        partial void MetadataSummaryOldCustomParse(
+        public partial ParseResult MetadataSummaryOldCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            int? lastParsed);
         #endregion
         #region MetadataSummary
         private RangeInt32? _MetadataSummaryLocation;
@@ -1788,10 +1790,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCHD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
-                    MetadataSummaryOldCustomParse(
+                    return MetadataSummaryOldCustomParse(
                         stream,
-                        offset);
-                    return lastParsed;
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.SCHR:
                 {

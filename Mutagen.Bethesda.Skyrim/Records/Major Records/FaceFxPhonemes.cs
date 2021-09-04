@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static void ParseFaceFxPhonemes(MutagenFrame frame, IFaceFxPhonemes item)
+            public static ParseResult ParseFaceFxPhonemes(MutagenFrame frame, IFaceFxPhonemes item)
             {
                 var meta = frame.Reader.GetSubrecord();
                 IReadOnlyList<(Target Target, string Name)>? targets;
@@ -329,6 +329,8 @@ namespace Mutagen.Bethesda.Skyrim
                         phoneme.Set(slot, mem.Slice(i * 4, 4).Float());
                     }
                 }
+
+                return null;
             }
         }
 

@@ -56,8 +56,9 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public partial class GlobalBinaryCreateTranslation
         {
-            public static partial void FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
+            public static partial ParseResult FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
             {
+                return null;
             }
         }
 
@@ -113,6 +114,13 @@ namespace Mutagen.Bethesda.Fallout4
                     default:
                         throw new ArgumentException($"Unknown trigger char: {globalChar}");
                 }
+            }
+
+            public partial ParseResult TypeCharCustomParse(
+                OverlayStream stream,
+                int offset)
+            {
+                return null;
             }
         }
     }

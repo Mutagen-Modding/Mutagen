@@ -103,9 +103,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static partial void FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
+            public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
-            public static partial void FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
+            public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
             public static partial void FillBinaryFlags2Custom(MutagenFrame frame, IRaceInternal item)
             {
@@ -165,12 +165,13 @@ namespace Mutagen.Bethesda.Skyrim
                 PluginUtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.NAME);
             }
 
-            partial void FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset)
             {
                 FaceFxPhonemesRawParsingCustomParse(stream, offset);
+                return null;
             }
 
-            partial void FaceFxPhonemesRawParsingCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult FaceFxPhonemesRawParsingCustomParse(OverlayStream stream, int offset)
             {
                 if (_faceFxPhonemesLoc == null)
                 {
@@ -178,6 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 PluginUtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.PHTN);
                 PluginUtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.PHWT);
+                return null;
             }
 
             private FaceFxPhonemes GetFaceFx()

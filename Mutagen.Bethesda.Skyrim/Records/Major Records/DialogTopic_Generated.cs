@@ -2741,10 +2741,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.TIFC:
                 {
-                    DialogTopicBinaryCreateTranslation.FillBinaryResponseCountCustom(
+                    return DialogTopicBinaryCreateTranslation.FillBinaryResponseCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2756,7 +2755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static partial void FillBinaryResponseCountCustom(
+        public static partial ParseResult FillBinaryResponseCountCustom(
             MutagenFrame frame,
             IDialogTopicInternal item);
 
@@ -2868,7 +2867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public RecordType SubtypeName => _SubtypeNameLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SubtypeNameLocation.Value, _package.MetaData.Constants))) : RecordType.Null;
         #endregion
         #region ResponseCount
-        partial void ResponseCountCustomParse(
+        public partial ParseResult ResponseCountCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -2979,10 +2978,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.TIFC:
                 {
-                    ResponseCountCustomParse(
+                    return ResponseCountCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 default:
                     return base.FillRecordType(

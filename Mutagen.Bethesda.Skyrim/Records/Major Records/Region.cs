@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static readonly RecordType RDSA = new RecordType("RDSA");
             public static readonly RecordType RDMO = new RecordType("RDMO");
 
-            public static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
+            public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
             {
                 var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
                 while (rdat.Equals(RecordTypes.RDAT))
@@ -37,6 +37,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (frame.Complete) break;
                     rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out rdatType);
                 }
+
+                return null;
             }
 
             public static bool IsExpected(RegionData.RegionDataType dataType, RecordType recordType)
@@ -146,7 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
             private ReadOnlyMemorySlice<byte>? _LandSpan;
             public IRegionLandGetter? Land => _LandSpan.HasValue ? RegionLandBinaryOverlay.RegionLandFactory(new OverlayStream(_LandSpan.Value, _package), _package) : default;
 
-            partial void RegionAreaLogicCustomParse(
+            public partial ParseResult RegionAreaLogicCustomParse(
                 OverlayStream stream,
                 int offset)
             {
@@ -157,6 +159,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (stream.Complete) break;
                     rdat = stream.GetSubrecord();
                 }
+
+                return null;
             }
 
             private void ParseRegionData(OverlayStream stream, int offset)

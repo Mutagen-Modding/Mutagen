@@ -64,9 +64,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static partial void FillBinaryParseCustom(MutagenFrame frame, IAvailableMorphs item)
+            public static partial ParseResult FillBinaryParseCustom(MutagenFrame frame, IAvailableMorphs item, int? lastParsed)
             {
                 FillBinaryParse(frame, item);
+                return lastParsed;
             }
         }
 
@@ -106,12 +107,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             public IMorphGetter? Lip => morphs.Lip;
 
-            partial void ParseCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult ParseCustomParse(OverlayStream stream, int offset, int? lastParsed)
             {
                 morphs = new AvailableMorphs();
                 AvailableMorphsBinaryCreateTranslation.FillBinaryParse(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream: stream, metaData: _package.MetaData)),
                     morphs);
+                return lastParsed;
             }
         }
     }

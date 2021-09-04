@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class LeveledItemBinaryCreateTranslation
         {
-            public static partial void FillBinaryVestigialCustom(MutagenFrame frame, ILeveledItemInternal item)
+            public static partial ParseResult FillBinaryVestigialCustom(MutagenFrame frame, ILeveledItemInternal item)
             {
                 var rec = HeaderTranslation.ReadNextSubrecordType(frame.Reader, out var length);
                 if (length != 1)
@@ -28,6 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     item.Flags |= LeveledFlag.CalculateForEachItemInCount;
                 }
+
+                return null;
             }
         }
 
@@ -65,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
                 _FlagsLocation = (ushort)(stream.Position - offset);
             }
 
-            partial void VestigialCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult VestigialCustomParse(OverlayStream stream, int offset)
             {
                 var subMeta = stream.ReadSubrecord();
                 if (subMeta.ContentLength != 1)
@@ -76,6 +78,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     this._vestigialMarker = true;
                 }
+
+                return null;
             }
         }
     }

@@ -1890,10 +1890,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.IDLC:
                 {
-                    IdleMarkerBinaryCreateTranslation.FillBinaryAnimationCountCustom(
+                    return IdleMarkerBinaryCreateTranslation.FillBinaryAnimationCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.IDLT:
                 {
@@ -1925,7 +1924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static partial void FillBinaryAnimationCountCustom(
+        public static partial ParseResult FillBinaryAnimationCountCustom(
             MutagenFrame frame,
             IIdleMarkerInternal item);
 
@@ -1989,7 +1988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IdleMarker.Flag? Flags => _FlagsLocation.HasValue ? (IdleMarker.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(IdleMarker.Flag?);
         #endregion
         #region AnimationCount
-        partial void AnimationCountCustomParse(
+        public partial ParseResult AnimationCountCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -2084,10 +2083,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.IDLC:
                 {
-                    AnimationCountCustomParse(
+                    return AnimationCountCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.IDLT:
                 {

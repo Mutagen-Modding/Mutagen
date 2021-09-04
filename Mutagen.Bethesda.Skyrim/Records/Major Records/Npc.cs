@@ -18,10 +18,11 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class NpcBinaryCreateTranslation
         {
-            public static partial void FillBinaryDataMarkerCustom(MutagenFrame frame, INpcInternal item)
+            public static partial ParseResult FillBinaryDataMarkerCustom(MutagenFrame frame, INpcInternal item)
             {
                 // Skip marker
                 frame.ReadSubrecordFrame();
+                return null;
             }
         }
 
@@ -35,10 +36,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class NpcBinaryOverlay
         {
-            partial void DataMarkerCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult DataMarkerCustomParse(OverlayStream stream, int offset)
             {
                 // Skip marker
                 stream.ReadSubrecordFrame();
+                return null;
             }
         }
     }

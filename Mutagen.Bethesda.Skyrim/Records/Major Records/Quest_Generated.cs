@@ -3219,10 +3219,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    QuestBinaryCreateTranslation.FillBinaryUnusedConditionsLogicCustom(
+                    return QuestBinaryCreateTranslation.FillBinaryUnusedConditionsLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -3246,10 +3245,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    QuestBinaryCreateTranslation.FillBinaryNextAliasIDCustom(
+                    return QuestBinaryCreateTranslation.FillBinaryNextAliasIDCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
@@ -3285,11 +3283,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IQuestInternal item);
 
-        public static partial void FillBinaryUnusedConditionsLogicCustom(
+        public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(
             MutagenFrame frame,
             IQuestInternal item);
 
-        public static partial void FillBinaryNextAliasIDCustom(
+        public static partial ParseResult FillBinaryNextAliasIDCustom(
             MutagenFrame frame,
             IQuestInternal item);
 
@@ -3399,14 +3397,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int? lastParsed);
         #endregion
         #region UnusedConditionsLogic
-        partial void UnusedConditionsLogicCustomParse(
+        public partial ParseResult UnusedConditionsLogicCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = ListExt.Empty<QuestStageBinaryOverlay>();
         public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = ListExt.Empty<QuestObjectiveBinaryOverlay>();
         #region NextAliasID
-        partial void NextAliasIDCustomParse(
+        public partial ParseResult NextAliasIDCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -3532,10 +3530,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    UnusedConditionsLogicCustomParse(
+                    return UnusedConditionsLogicCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -3557,10 +3554,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    NextAliasIDCustomParse(
+                    return NextAliasIDCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:

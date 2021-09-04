@@ -39,20 +39,22 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ANavigationMeshBinaryCreateTranslation
         {
-            public static partial void FillBinaryLengthLogicCustom(MutagenFrame frame, IANavigationMeshInternal item)
+            public static partial ParseResult FillBinaryLengthLogicCustom(MutagenFrame frame, IANavigationMeshInternal item)
             {
                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 var xxxxSize = frame.ReadInt32();
                 HeaderTranslation.ReadNextSubrecordType(frame, out var len);
                 frame = frame.SpawnWithLength(xxxxSize, checkFraming: false);
                 GetSetData(frame, item);
+                return null;
             }
 
-            public static partial void FillBinaryDataLogicCustom(MutagenFrame frame, IANavigationMeshInternal item)
+            public static partial ParseResult FillBinaryDataLogicCustom(MutagenFrame frame, IANavigationMeshInternal item)
             {
                 HeaderTranslation.ReadNextSubrecordType(frame, out var len);
                 frame = frame.SpawnWithLength(len);
                 GetSetData(frame, item);
+                return null;
             }
 
             public static void GetSetData(MutagenFrame frame, IANavigationMeshInternal item)
@@ -116,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected ReadOnlyMemorySlice<byte>? _dataSpan;
 
-            partial void LengthLogicCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult LengthLogicCustomParse(OverlayStream stream, int offset)
             {
                 var xxxxHeader = stream.ReadSubrecordFrame();
                 if (xxxxHeader.Content.Length != 4)
@@ -127,14 +129,16 @@ namespace Mutagen.Bethesda.Skyrim
                 stream.ReadSubrecord();
                 _dataSpan = _data.Slice(stream.Position - offset, len);
                 stream.Position += checked((int)len);
+                return null;
             }
 
-            partial void DataLogicCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult DataLogicCustomParse(OverlayStream stream, int offset)
             {
                 var subHeader = stream.ReadSubrecord();
                 var contentLength = subHeader.ContentLength;
                 _dataSpan = _data.Slice(stream.Position - offset, contentLength);
                 stream.Position += contentLength;
+                return null;
             }
         }
     }

@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Skyrim
             public const byte HasImageSpaceFlag = 0x40;
             public const byte HasLightingTemplateFlag = 0x80;
 
-            public static partial void FillBinaryBoundDataCustom(MutagenFrame frame, IPlacedObjectInternal item)
+            public static partial ParseResult FillBinaryBoundDataCustom(MutagenFrame frame, IPlacedObjectInternal item)
             {
                 var header = frame.ReadSubrecordFrame();
                 if (header.Content.Length != 4)
@@ -198,9 +198,11 @@ namespace Mutagen.Bethesda.Skyrim
                             break;
                         default:
                             frame.Reader.Position -= subHeader.HeaderLength;
-                            return;
+                            return null;
                     }
                 }
+
+                return null;
             }
         }
 
@@ -263,7 +265,7 @@ namespace Mutagen.Bethesda.Skyrim
             int? _imageSpaceLoc;
             public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
 
-            partial void BoundDataCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult BoundDataCustomParse(OverlayStream stream, int offset)
             {
                 _boundDataLoc = stream.Position - offset;
                 var header = stream.ReadSubrecordFrame();
@@ -297,9 +299,11 @@ namespace Mutagen.Bethesda.Skyrim
                                     skipHeader: true));
                             break;
                         default:
-                            return;
+                            return null;
                     }
                 }
+
+                return null;
             }
         }
     }

@@ -3596,10 +3596,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALLS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
-                    QuestAliasBinaryCreateTranslation.FillBinaryIDParseCustom(
+                    return QuestAliasBinaryCreateTranslation.FillBinaryIDParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return lastParsed;
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.ALID:
                 {
@@ -3783,23 +3783,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ALED:
                 {
-                    QuestAliasBinaryCreateTranslation.FillBinaryEndCustom(
+                    return QuestAliasBinaryCreateTranslation.FillBinaryEndCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return lastParsed;
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return ParseResult.Stop;
             }
         }
 
-        public static partial void FillBinaryIDParseCustom(
+        public static partial ParseResult FillBinaryIDParseCustom(
             MutagenFrame frame,
-            IQuestAlias item);
+            IQuestAlias item,
+            int? lastParsed);
 
-        public static partial void FillBinaryEndCustom(
+        public static partial ParseResult FillBinaryEndCustom(
             MutagenFrame frame,
-            IQuestAlias item);
+            IQuestAlias item,
+            int? lastParsed);
 
     }
 
@@ -3866,9 +3868,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region IDParse
-        partial void IDParseCustomParse(
+        public partial ParseResult IDParseCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            int? lastParsed);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -3944,9 +3947,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<IAliasVoiceTypeGetter> VoiceTypes => _VoiceTypesLocation.HasValue ? new FormLinkNullable<IAliasVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceTypesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAliasVoiceTypeGetter>.Null;
         #endregion
         #region End
-        partial void EndCustomParse(
+        public partial ParseResult EndCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            int? lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4009,10 +4013,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALLS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
-                    IDParseCustomParse(
+                    return IDParseCustomParse(
                         stream,
-                        offset);
-                    return lastParsed;
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.ALID:
                 {
@@ -4200,10 +4204,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ALED:
                 {
-                    EndCustomParse(
+                    return EndCustomParse(
                         stream,
-                        offset);
-                    return lastParsed;
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return ParseResult.Stop;

@@ -3152,10 +3152,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAME:
                 {
-                    APlacedTrapBinaryCreateTranslation.FillBinaryTrapFormCustom(
+                    return APlacedTrapBinaryCreateTranslation.FillBinaryTrapFormCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.XEZN:
                 {
@@ -3280,7 +3279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static partial void FillBinaryTrapFormCustom(
+        public static partial ParseResult FillBinaryTrapFormCustom(
             MutagenFrame frame,
             IAPlacedTrapInternal item);
 
@@ -3335,7 +3334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
         #endregion
         #region TrapForm
-        partial void TrapFormCustomParse(
+        public partial ParseResult TrapFormCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -3421,10 +3420,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAME:
                 {
-                    TrapFormCustomParse(
+                    return TrapFormCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.XEZN:
                 {

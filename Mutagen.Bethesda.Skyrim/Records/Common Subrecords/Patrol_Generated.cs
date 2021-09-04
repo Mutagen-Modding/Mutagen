@@ -1439,10 +1439,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XPPA:
                 {
-                    PatrolBinaryCreateTranslation.FillBinaryPatrolScriptMarkerCustom(
+                    return PatrolBinaryCreateTranslation.FillBinaryPatrolScriptMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return lastParsed;
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -1474,9 +1474,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static partial void FillBinaryPatrolScriptMarkerCustom(
+        public static partial ParseResult FillBinaryPatrolScriptMarkerCustom(
             MutagenFrame frame,
-            IPatrol item);
+            IPatrol item,
+            int? lastParsed);
 
         public static partial void FillBinaryTopicsCustom(
             MutagenFrame frame,
@@ -1551,9 +1552,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region PatrolScriptMarker
-        partial void PatrolScriptMarkerCustomParse(
+        public partial ParseResult PatrolScriptMarkerCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            int? lastParsed);
         #endregion
         #region Idle
         private int? _IdleLocation;
@@ -1640,10 +1642,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XPPA:
                 {
-                    PatrolScriptMarkerCustomParse(
+                    return PatrolScriptMarkerCustomParse(
                         stream,
-                        offset);
-                    return lastParsed;
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.INAM:
                 {

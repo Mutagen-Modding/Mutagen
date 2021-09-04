@@ -4,7 +4,9 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
@@ -38,9 +40,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         {
             GenerateFill(
                 fg: fg,
+                objGen: objGen,
                 field: typeGen,
                 frameAccessor: readerAccessor,
-                isAsync: false);
+                isAsync: false,
+                useReturnValue: true);
         }
 
         public override void GenerateCopyInRet(
@@ -81,18 +85,25 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             FileGeneration fg,
             ObjectGeneration obj,
             TypeGeneration field,
-            bool isAsync)
+            bool isAsync,
+            bool useReturnValue)
         {
+            var fieldData = field.GetFieldData();
+            var returningParseResult = useReturnValue && fieldData.HasTrigger;
             if (!isAsync)
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static partial void FillBinary{field.Name}Custom")
+                    $"public static partial {(returningParseResult ? nameof(ParseResult) : "void")} FillBinary{field.Name}Custom")
                 {
                     SemiColon = true
                 })
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
+                    if (returningParseResult && obj.GetObjectType() == ObjectType.Subrecord)
+                    {
+                        args.Add("int? lastParsed");
+                    }
                 }
                 fg.AppendLine();
             }
@@ -148,16 +159,23 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
         public void GenerateFill(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration field,
             Accessor frameAccessor,
-            bool isAsync)
+            bool isAsync,
+            bool useReturnValue)
         {
             var data = field.GetFieldData();
+            var returningParseValue = useReturnValue && data.HasTrigger;
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationCreateClass(field.ObjectGen)}.FillBinary{field.Name}Custom"))
+                $"{(returningParseValue ? "return " : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationCreateClass(field.ObjectGen)}.FillBinary{field.Name}Custom"))
             {
                 args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength)" : frameAccessor)}");
-                args.Add("item: item");
+                args.AddPassArg("item");
+                if (returningParseValue && objGen.GetObjectType() == ObjectType.Subrecord)
+                {
+                    args.AddPassArg("lastParsed");
+                }
             }
         }
 
@@ -220,11 +238,17 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             string passedLengthAccessor,
             DataType data = null)
         {
+            var fieldData = typeGen.GetFieldData();
+            var returningParseValue = fieldData.HasTrigger;
             using (var args = new ArgsWrapper(fg,
-                $"partial void {(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
+                $"{(returningParseValue ? "public" : null)} partial {(returningParseValue ? nameof(ParseResult) : "void")} {(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
             {
                 args.Add($"{nameof(OverlayStream)} stream");
                 args.Add($"int offset");
+                if (returningParseValue && objGen.GetObjectType() == ObjectType.Subrecord)
+                {
+                    args.Add("int? lastParsed");
+                }
             }
         }
 
@@ -236,11 +260,17 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             Accessor packageAccessor, 
             Accessor converterAccessor)
         {
+            var fieldData = typeGen.GetFieldData();
+            var returningParseValue = fieldData.HasTrigger;
             using (var args = new ArgsWrapper(fg,
-                $"{(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
+                $"{(returningParseValue ? "return " : null)}{(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
             {
                 args.Add("stream");
                 args.Add("offset");
+                if (returningParseValue && objGen.GetObjectType() == ObjectType.Subrecord)
+                {
+                    args.AddPassArg("lastParsed");
+                }
             }
         }
 

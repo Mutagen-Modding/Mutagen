@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType RDSD = new RecordType("RDSD");
         public static readonly RecordType RDMD = new RecordType("RDMD");
 
-        public static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
+        public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
         {
             var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
             while (rdat.Equals(RecordTypes.RDAT))
@@ -27,6 +27,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (frame.Complete) break;
                 rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out rdatType);
             }
+
+            return null;
         }
 
         public static bool IsExpected(RegionData.RegionDataType dataType, RecordType recordType)
@@ -155,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private ReadOnlyMemorySlice<byte>? _SoundsSpan;
         public IRegionSoundsGetter? Sounds => _SoundsSpan.HasValue ? RegionSoundsBinaryOverlay.RegionSoundsFactory(new OverlayStream(_SoundsSpan.Value, _package), _package) : default;
 
-        partial void RegionAreaLogicCustomParse(
+        public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,
             int offset)
         {
@@ -166,6 +168,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (stream.Complete) break;
                 rdat = stream.GetSubrecord();
             }
+
+            return null;
         }
 
         partial void IconCustomParse(OverlayStream stream, long finalPos, int offset)

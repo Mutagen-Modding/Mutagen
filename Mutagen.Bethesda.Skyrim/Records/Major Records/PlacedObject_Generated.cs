@@ -6539,10 +6539,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XRMR:
                 {
-                    PlacedObjectBinaryCreateTranslation.FillBinaryBoundDataCustom(
+                    return PlacedObjectBinaryCreateTranslation.FillBinaryBoundDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.XMBP:
                 {
@@ -6844,7 +6843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static partial void FillBinaryBoundDataCustom(
+        public static partial ParseResult FillBinaryBoundDataCustom(
             MutagenFrame frame,
             IPlacedObjectInternal item);
 
@@ -6917,7 +6916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IPortalGetter>? Portals { get; private set; }
         public IBoundingGetter? RoomPortal { get; private set; }
         #region BoundData
-        partial void BoundDataCustomParse(
+        public partial ParseResult BoundDataCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -7204,10 +7203,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XRMR:
                 {
-                    BoundDataCustomParse(
+                    return BoundDataCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.XMBP:
                 {

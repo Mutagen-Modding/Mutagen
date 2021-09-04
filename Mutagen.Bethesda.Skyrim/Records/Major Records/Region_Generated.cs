@@ -2268,10 +2268,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.RDAT:
                 {
-                    RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustom(
+                    return RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2283,7 +2282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static partial void FillBinaryRegionAreaLogicCustom(
+        public static partial ParseResult FillBinaryRegionAreaLogicCustom(
             MutagenFrame frame,
             IRegionInternal item);
 
@@ -2343,7 +2342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = ListExt.Empty<RegionAreaBinaryOverlay>();
         #region RegionAreaLogic
-        partial void RegionAreaLogicCustomParse(
+        public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -2435,10 +2434,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.RDAT:
                 {
-                    RegionAreaLogicCustomParse(
+                    return RegionAreaLogicCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 default:
                     return base.FillRecordType(

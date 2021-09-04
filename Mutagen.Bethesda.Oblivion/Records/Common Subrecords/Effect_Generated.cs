@@ -1193,10 +1193,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.EFID:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
-                    EffectBinaryCreateTranslation.FillBinaryEffectInitialCustom(
+                    return EffectBinaryCreateTranslation.FillBinaryEffectInitialCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return lastParsed;
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.EFIT:
                 {
@@ -1217,9 +1217,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static partial void FillBinaryEffectInitialCustom(
+        public static partial ParseResult FillBinaryEffectInitialCustom(
             MutagenFrame frame,
-            IEffect item);
+            IEffect item,
+            int? lastParsed);
 
     }
 
@@ -1286,9 +1287,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region EffectInitial
-        partial void EffectInitialCustomParse(
+        public partial ParseResult EffectInitialCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            int? lastParsed);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
@@ -1356,10 +1358,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.EFID:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
-                    EffectInitialCustomParse(
+                    return EffectInitialCustomParse(
                         stream,
-                        offset);
-                    return lastParsed;
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.EFIT:
                 {

@@ -153,7 +153,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     fg: fg,
                     obj: obj,
                     field: field,
-                    isAsync: false);
+                    isAsync: false,
+                    useReturnValue: field is CustomLogic);
             }
         }
 

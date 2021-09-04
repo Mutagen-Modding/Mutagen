@@ -1159,9 +1159,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 case BinaryGenerationType.Custom:
                     CustomLogic.GenerateFill(
                         fg,
+                        obj,
                         field,
                         frameAccessor,
-                        isAsync: false);
+                        isAsync: false,
+                        useReturnValue: false);
                     return;
                 default:
                     throw new NotImplementedException();
@@ -1253,6 +1255,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             Accessor nextRecAccessor,
             Func<Task> toDo)
         {
+            var fieldData = field.Field.GetFieldData();
             var dataSet = field.Field as DataType;
             var typelessStruct = obj.IsTypelessStruct();
             if (typelessStruct && field.Field.GetFieldData().IsTriggerForObject)
@@ -1287,7 +1290,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             else if (field.Field is CustomLogic)
             {
-                fg.AppendLine($"return {(typelessStruct ? "lastParsed" : "null")};");
+                if (!fieldData.HasTrigger)
+                {
+                    fg.AppendLine($"return {(typelessStruct ? "lastParsed" : "null")};");
+                }
             }
             else if (field.Field is MarkerType marker)
             {

@@ -1226,10 +1226,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.FNAM:
                 {
-                    GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
+                    return GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1241,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static partial void FillBinaryTypeCharCustom(
+        public static partial ParseResult FillBinaryTypeCharCustom(
             MutagenFrame frame,
             IGlobalInternal item);
 
@@ -1290,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region TypeChar
-        partial void TypeCharCustomParse(
+        public partial ParseResult TypeCharCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -1325,10 +1324,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.FNAM:
                 {
-                    TypeCharCustomParse(
+                    return TypeCharCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 default:
                     return base.FillRecordType(

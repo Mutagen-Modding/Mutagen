@@ -1512,17 +1512,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XXXX:
                 {
-                    ANavigationMeshBinaryCreateTranslation.FillBinaryLengthLogicCustom(
+                    return ANavigationMeshBinaryCreateTranslation.FillBinaryLengthLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.NVNM:
                 {
-                    ANavigationMeshBinaryCreateTranslation.FillBinaryDataLogicCustom(
+                    return ANavigationMeshBinaryCreateTranslation.FillBinaryDataLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -1552,11 +1550,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static partial void FillBinaryLengthLogicCustom(
+        public static partial ParseResult FillBinaryLengthLogicCustom(
             MutagenFrame frame,
             IANavigationMeshInternal item);
 
-        public static partial void FillBinaryDataLogicCustom(
+        public static partial ParseResult FillBinaryDataLogicCustom(
             MutagenFrame frame,
             IANavigationMeshInternal item);
 
@@ -1607,12 +1605,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ANavigationMesh.MajorFlag MajorFlags => (ANavigationMesh.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region LengthLogic
-        partial void LengthLogicCustomParse(
+        public partial ParseResult LengthLogicCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region DataLogic
-        partial void DataLogicCustomParse(
+        public partial ParseResult DataLogicCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -1659,17 +1657,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XXXX:
                 {
-                    LengthLogicCustomParse(
+                    return LengthLogicCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.NVNM:
                 {
-                    DataLogicCustomParse(
+                    return DataLogicCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.ONAM:
                 {

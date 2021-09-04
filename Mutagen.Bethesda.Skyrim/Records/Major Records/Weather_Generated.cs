@@ -6239,24 +6239,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    WeatherBinaryCreateTranslation.FillBinaryCloudXSpeedsCustom(
+                    return WeatherBinaryCreateTranslation.FillBinaryCloudXSpeedsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    WeatherBinaryCreateTranslation.FillBinaryCloudColorsCustom(
+                    return WeatherBinaryCreateTranslation.FillBinaryCloudColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    WeatherBinaryCreateTranslation.FillBinaryCloudAlphasCustom(
+                    return WeatherBinaryCreateTranslation.FillBinaryCloudAlphasCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -6360,10 +6357,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayersCustom(
+                    return WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -6451,19 +6447,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IWeatherInternal item);
 
-        public static partial void FillBinaryCloudXSpeedsCustom(
+        public static partial ParseResult FillBinaryCloudXSpeedsCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        public static partial void FillBinaryCloudColorsCustom(
+        public static partial ParseResult FillBinaryCloudColorsCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        public static partial void FillBinaryCloudAlphasCustom(
+        public static partial ParseResult FillBinaryCloudAlphasCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        public static partial void FillBinaryDisabledCloudLayersCustom(
+        public static partial ParseResult FillBinaryDisabledCloudLayersCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
@@ -6517,7 +6513,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region CloudTexturesParse
-        partial void CloudTexturesParseCustomParse(
+         partial void CloudTexturesParseCustomParse(
             OverlayStream stream,
             int offset);
         protected int CloudTexturesParseEndingPos;
@@ -6563,17 +6559,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int? lastParsed);
         #endregion
         #region CloudXSpeeds
-        partial void CloudXSpeedsCustomParse(
+        public partial ParseResult CloudXSpeedsCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region CloudColors
-        partial void CloudColorsCustomParse(
+        public partial ParseResult CloudColorsCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region CloudAlphas
-        partial void CloudAlphasCustomParse(
+        public partial ParseResult CloudAlphasCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -6806,7 +6802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single WindDirectionRange => _WindDirectionRange_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_WindDirectionRangeLocation, 1), FloatIntegerType.Byte, 0.005555555555555556) : default;
         #endregion
         #region DisabledCloudLayers
-        partial void DisabledCloudLayersCustomParse(
+        public partial ParseResult DisabledCloudLayersCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -6958,24 +6954,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    CloudXSpeedsCustomParse(
+                    return CloudXSpeedsCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    CloudColorsCustomParse(
+                    return CloudColorsCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    CloudAlphasCustomParse(
+                    return CloudAlphasCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -7003,10 +6996,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    DisabledCloudLayersCustomParse(
+                    return DisabledCloudLayersCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.SNAM:
                 {

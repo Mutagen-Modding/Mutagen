@@ -1613,10 +1613,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    LeveledItemBinaryCreateTranslation.FillBinaryVestigialCustom(
+                    return LeveledItemBinaryCreateTranslation.FillBinaryVestigialCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1628,7 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static partial void FillBinaryVestigialCustom(
+        public static partial ParseResult FillBinaryVestigialCustom(
             MutagenFrame frame,
             ILeveledItemInternal item);
 
@@ -1690,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlyList<ILeveledItemEntryGetter> Entries { get; private set; } = ListExt.Empty<LeveledItemEntryBinaryOverlay>();
         #region Vestigial
-        partial void VestigialCustomParse(
+        public partial ParseResult VestigialCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -1789,10 +1788,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    VestigialCustomParse(
+                    return VestigialCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 default:
                     return base.FillRecordType(

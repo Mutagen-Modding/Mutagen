@@ -2161,10 +2161,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XCNT:
                 {
-                    FootstepSetBinaryCreateTranslation.FillBinaryCountCustom(
+                    return FootstepSetBinaryCreateTranslation.FillBinaryCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2176,7 +2175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static partial void FillBinaryCountCustom(
+        public static partial ParseResult FillBinaryCountCustom(
             MutagenFrame frame,
             IFootstepSetInternal item);
 
@@ -2226,7 +2225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Count
-        partial void CountCustomParse(
+        public partial ParseResult CountCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -2298,10 +2297,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XCNT:
                 {
-                    CountCustomParse(
+                    return CountCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 default:
                     return base.FillRecordType(
