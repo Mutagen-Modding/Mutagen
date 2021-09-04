@@ -5875,16 +5875,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)Worldspace_FieldIndex.WaterEnvironmentMap;
                 }
                 case RecordTypeInts.OFST:
-                case RecordTypeInts.XXXX:
                 {
-                    if (nextRecordType == RecordTypes.XXXX)
-                    {
-                        var overflowHeader = frame.ReadSubrecordFrame();
-                        contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
-                    }
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OffsetData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.OffsetData;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecordFrame();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -6063,11 +6062,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region OffsetData
         private int? _OffsetDataLocation;
+        private int? _OffsetDataLengthOverride;
         public ReadOnlyMemorySlice<Byte>? OffsetData => PluginUtilityTranslation.ReadByteArrayWithOverflow(
             _data,
             _package.MetaData.Constants,
             _OffsetDataLocation,
-            RecordTypes.XXXX);
+            _OffsetDataLengthOverride);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -6294,15 +6294,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)Worldspace_FieldIndex.WaterEnvironmentMap;
                 }
                 case RecordTypeInts.OFST:
+                {
+                    _OffsetDataLocation = (stream.Position - offset);
+                    _OffsetDataLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Worldspace_FieldIndex.OffsetData;
+                }
                 case RecordTypeInts.XXXX:
                 {
-                    _OffsetDataLocation = PluginUtilityTranslation.HandleOverlayRecordOverflow(
-                        existingLoc: _OffsetDataLocation,
-                        stream: stream,
-                        offset: offset,
-                        data: _data,
-                        constants: _package.MetaData.Constants);
-                    return (int)Worldspace_FieldIndex.OffsetData;
+                    var overflowHeader = stream.ReadSubrecordFrame();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

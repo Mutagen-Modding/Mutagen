@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordT";
+            string testString = "public ReadOnlyMemorySlice<Byte>? OffsetData => PluginUtilityTranslation.ReadByteArrayWithOverflo";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

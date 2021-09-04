@@ -932,6 +932,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             }
                         }
 
+                        AttachOverflowCases(fg, fields, "frame");
+
                         if (data.EndMarkerType.HasValue)
                         {
                             fg.AppendLine($"case RecordTypeInts.{data.EndMarkerType}: // End Marker");
@@ -1083,6 +1085,28 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
         }
 
+        private static void AttachOverflowCases(FileGeneration fg, List<(int, int, TypeGeneration Field)> fields, Accessor streamAccessor)
+        {
+            var overflowGroups = fields.Select(x => x.Field)
+                .Where(x => x.GetFieldData().OverflowRecordType != null)
+                .GroupBy(x => x.GetFieldData().OverflowRecordType.Value)
+                .ToArray();
+            if (overflowGroups.Length > 0)
+            {
+                foreach (var overflows in overflowGroups)
+                {
+                    fg.AppendLine($"case RecordTypeInts.{overflows.Key}:");
+                }
+
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"var overflowHeader = {streamAccessor}.ReadSubrecordFrame();");
+                    fg.AppendLine(
+                        $"return {nameof(ParseResult)}.{nameof(ParseResult.OverrideLength)}(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));");
+                }
+            }
+        }
+
         protected override async Task GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
         {
             if (field is DataType set)
@@ -1207,16 +1231,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 // Return if it's not there 
                 fg.AppendLine($"if (nextRec.RecordType != {obj.RecordTypeHeaderName(data.RecordType.Value)}) throw new ArgumentException(\"Marker was read but not followed by expected subrecord.\");");
                 fg.AppendLine("contentLength = nextRec.RecordLength;");
-            }
-
-            if (data.OverflowRecordType.HasValue)
-            {
-                fg.AppendLine($"if (nextRecordType == {obj.RecordTypeHeaderName(data.OverflowRecordType.Value)})");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"var overflowHeader = {ReaderMemberName}.ReadSubrecordFrame();");
-                    fg.AppendLine("contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));");
-                }
             }
 
             if (data.HasVersioning)
@@ -1539,6 +1553,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                             }
                         }
+                        
+                        AttachOverflowCases(fg, fields, "stream");
+                        
                         var endMarkerType = obj.GetObjectData().EndMarkerType;
                         if (endMarkerType.HasValue)
                         {

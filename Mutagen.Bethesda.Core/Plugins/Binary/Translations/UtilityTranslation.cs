@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                             lastParsed: lastParsed,
                             recordParseCount: recordParseCount,
                             nextRecordType: subMeta.RecordType,
-                            contentLength: subMeta.ContentLength,
+                            contentLength: lastParsed.LengthOverride ?? subMeta.ContentLength,
                             recordTypeConverter: recordTypeConverter);
                     }
                     catch (Exception ex)
@@ -833,15 +833,15 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             ReadOnlyMemorySlice<byte> bytes,
             GameConstants constants,
             int? loc,
-            RecordType overflowType)
+            int? lengthOverride)
         {
             if (!loc.HasValue) return null;
             var header = constants.SubrecordFrame(bytes[loc.Value..]);
-            if (header.RecordType == overflowType)
+            if (lengthOverride != null)
             {
                 return bytes.Slice(
-                    loc.Value + header.TotalLength + header.HeaderLength,
-                    checked((int)BinaryPrimitives.ReadUInt32LittleEndian(header.Content)));
+                    loc.Value + header.HeaderLength,
+                    lengthOverride.Value);
             }
             else
             {

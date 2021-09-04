@@ -2128,13 +2128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)SkyrimModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
-                case RecordTypeInts.XXXX:
                 {
-                    if (nextRecordType == RecordTypes.XXXX)
-                    {
-                        var overflowHeader = frame.ReadSubrecordFrame();
-                        contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
-                    }
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Parse(
@@ -2154,6 +2148,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INCC = frame.ReadInt32();
                     return (int)SkyrimModHeader_FieldIndex.INCC;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecordFrame();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2363,7 +2362,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)SkyrimModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
-                case RecordTypeInts.XXXX:
                 {
                     var subMeta = stream.ReadSubrecord();
                     int subLen;
@@ -2393,6 +2391,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _INCCLocation = (stream.Position - offset);
                     return (int)SkyrimModHeader_FieldIndex.INCC;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecordFrame();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return default(int?);
