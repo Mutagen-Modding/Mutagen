@@ -1417,7 +1417,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public SByte Unknown => (sbyte)_data.Slice(0x0, 0x1)[0];
         #region FlagsParse
-        partial void FlagsParseCustomParse(
+         partial void FlagsParseCustomParse(
             OverlayStream stream,
             int offset);
         protected int FlagsParseEndingPos;

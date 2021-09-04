@@ -2471,7 +2471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single RangeMax => _data.Slice(0x20, 0x4).Float();
         public WeaponData.OnHitType OnHit => (WeaponData.OnHitType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x24, 0x4));
         #region Flags2
-        partial void Flags2CustomParse(
+         partial void Flags2CustomParse(
             OverlayStream stream,
             int offset);
         #endregion

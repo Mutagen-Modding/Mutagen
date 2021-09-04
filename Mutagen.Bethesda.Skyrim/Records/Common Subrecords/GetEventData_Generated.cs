@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 EventMember => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         public IFormLinkGetter<ISkyrimMajorRecordGetter> Parameter3 => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         #region ParameterParsing
-        partial void ParameterParsingCustomParse(
+         partial void ParameterParsingCustomParse(
             OverlayStream stream,
             int offset);
         protected int ParameterParsingEndingPos;

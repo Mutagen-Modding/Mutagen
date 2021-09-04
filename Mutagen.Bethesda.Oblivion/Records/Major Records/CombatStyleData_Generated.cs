@@ -3086,7 +3086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte RushingAttackPercentChance => _data.Span[0x70];
         public Single RushingAttackDistanceMult => _data.Slice(0x74, 0x4).Float();
         #region SecondaryFlags
-        partial void SecondaryFlagsCustomParse(
+         partial void SecondaryFlagsCustomParse(
             OverlayStream stream,
             int offset);
         #endregion

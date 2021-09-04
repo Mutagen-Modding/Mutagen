@@ -1669,7 +1669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public QuestAdapter.VersioningBreaks Versioning { get; private set; }
         public Byte Unknown => _data.Span[ScriptsEndingPos + 0x0];
         #region FragmentCount
-        partial void FragmentCountCustomParse(
+         partial void FragmentCountCustomParse(
             OverlayStream stream,
             int offset);
         #endregion

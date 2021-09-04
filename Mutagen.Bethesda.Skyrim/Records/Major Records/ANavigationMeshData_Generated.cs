@@ -2232,7 +2232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt32 NavmeshVersion => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
         public UInt32 Magic => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         #region ParentLogic
-        partial void ParentLogicCustomParse(
+         partial void ParentLogicCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -2253,7 +2253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected int DoorTrianglesEndingPos;
         #endregion
         #region CoverTrianglesLogic
-        partial void CoverTrianglesLogicCustomParse(
+         partial void CoverTrianglesLogicCustomParse(
             OverlayStream stream,
             int offset);
         protected int CoverTrianglesLogicEndingPos;
