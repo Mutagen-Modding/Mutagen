@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ParseResult FillBinaryRecordTypes(
             IScriptVariableReference item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.SCRV:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VariableIndex = frame.ReadInt32();
                     return (int)ScriptVariableReference_FieldIndex.VariableIndex;
@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.SCRV:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return ParseResult.Stop;
                     _VariableIndexLocation = (stream.Position - offset);
                     return (int)ScriptVariableReference_FieldIndex.VariableIndex;
                 }

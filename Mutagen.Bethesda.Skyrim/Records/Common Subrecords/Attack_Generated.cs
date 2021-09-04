@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             IAttack item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1146,13 +1146,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ATKD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackData) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackData) return ParseResult.Stop;
                     item.AttackData = Mutagen.Bethesda.Skyrim.AttackData.CreateFromBinary(frame: frame);
                     return (int)Attack_FieldIndex.AttackData;
                 }
                 case RecordTypeInts.ATKE:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackEvent) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackEvent) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttackEvent = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1286,7 +1286,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1295,13 +1295,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ATKD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackData) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackData) return ParseResult.Stop;
                     _AttackDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Attack_FieldIndex.AttackData;
                 }
                 case RecordTypeInts.ATKE:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackEvent) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Attack_FieldIndex.AttackEvent) return ParseResult.Stop;
                     _AttackEventLocation = (stream.Position - offset);
                     return (int)Attack_FieldIndex.AttackEvent;
                 }

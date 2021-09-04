@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         partial class APerkEntryPointEffectBinaryCreateTranslation
         {
-            public static partial ParseResult FillBinaryFunctionParametersCustom(MutagenFrame frame, IAPerkEntryPointEffect item, int? lastParsed)
+            public static partial ParseResult FillBinaryFunctionParametersCustom(MutagenFrame frame, IAPerkEntryPointEffect item, PreviousSubrecordParse lastParsed)
             {
                 return lastParsed;
             }
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class APerkEntryPointEffectBinaryOverlay
         {
-            public partial ParseResult FunctionParametersCustomParse(OverlayStream stream, int offset, int? lastParsed)
+            public partial ParseResult FunctionParametersCustomParse(OverlayStream stream, int offset, PreviousSubrecordParse lastParsed)
             {
                 return lastParsed;
             }

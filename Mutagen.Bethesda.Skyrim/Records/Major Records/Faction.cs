@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using System;
 using System.Collections.Generic;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -32,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
 
-            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayCountedList(stream, _package);
             }

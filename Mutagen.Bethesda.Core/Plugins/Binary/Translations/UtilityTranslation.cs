@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public delegate ParseResult SubrecordFill<R>(
             R record,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse previousSubrecordParse,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             fillStructs?.Invoke(
                 record: record,
                 frame: frame);
-            int? lastParsed = null;
+            var lastParsed = new PreviousSubrecordParse();
             Dictionary<RecordType, int>? recordParseCount = null;
             while (!frame.Complete)
             {
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 var parsed = fillTyped(
                     record: record,
                     frame: frame,
-                    lastParsed: lastParsed,
+                    previousSubrecordParse: lastParsed,
                     recordParseCount: recordParseCount,
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                         recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
 
-                lastParsed = parsed.ParsedIndex;
+                lastParsed = parsed;
             }
 
             return record;

@@ -2166,7 +2166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             ISceneAction item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -2180,7 +2180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                     {
                         case 0:
-                            if (lastParsed.HasValue && lastParsed.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                            if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
                             frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                             item.Type = EnumBinaryTranslation<SceneAction.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                                 reader: frame,
@@ -2492,7 +2492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2504,7 +2504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     switch (recordParseCount?.GetOrAdd(type) ?? 0)
                     {
                         case 0:
-                            if (lastParsed.HasValue && lastParsed.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                            if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
                             _TypeLocation = (stream.Position - offset);
                             return new ParseResult((int)SceneAction_FieldIndex.Type, type);
                         case 1:

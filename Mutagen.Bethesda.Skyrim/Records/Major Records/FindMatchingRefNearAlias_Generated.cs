@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             IFindMatchingRefNearAlias item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALNA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) return ParseResult.Stop;
                     FindMatchingRefNearAliasBinaryCreateTranslation.FillBinaryAliasIndexCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ALNT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALNA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) return ParseResult.Stop;
                     AliasIndexCustomParse(
                         stream: stream,
                         finalPos: finalPos,
@@ -1261,7 +1261,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ALNT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return ParseResult.Stop;
                     _TypeLocation = (stream.Position - offset);
                     return (int)FindMatchingRefNearAlias_FieldIndex.Type;
                 }

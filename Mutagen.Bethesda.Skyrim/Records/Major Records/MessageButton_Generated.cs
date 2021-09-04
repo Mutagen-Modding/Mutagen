@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             IMessageButton item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ITXT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Text) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MessageButton_FieldIndex.Text) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Text = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MessageButton_FieldIndex.Conditions) return ParseResult.Stop;
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1383,13 +1383,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ITXT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Text) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MessageButton_FieldIndex.Text) return ParseResult.Stop;
                     _TextLocation = (stream.Position - offset);
                     return (int)MessageButton_FieldIndex.Text;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MessageButton_FieldIndex.Conditions) return ParseResult.Stop;
                     ConditionsCustomParse(
                         stream: stream,
                         finalPos: finalPos,

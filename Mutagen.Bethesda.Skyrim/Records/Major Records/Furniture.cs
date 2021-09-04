@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return null;
             }
 
-            partial void MarkersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void MarkersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
             {
                 FurnitureBinaryCreateTranslation.FillBinaryMarkers(
                     stream,

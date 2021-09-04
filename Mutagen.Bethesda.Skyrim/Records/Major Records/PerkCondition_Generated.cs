@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             IPerkCondition item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.PRKC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PerkCondition_FieldIndex.RunOnTabIndex) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PerkCondition_FieldIndex.RunOnTabIndex) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RunOnTabIndex = frame.ReadUInt8();
                     return (int)PerkCondition_FieldIndex.RunOnTabIndex;
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1360,7 +1360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.PRKC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PerkCondition_FieldIndex.RunOnTabIndex) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PerkCondition_FieldIndex.RunOnTabIndex) return ParseResult.Stop;
                     _RunOnTabIndexLocation = (stream.Position - offset);
                     return (int)PerkCondition_FieldIndex.RunOnTabIndex;
                 }

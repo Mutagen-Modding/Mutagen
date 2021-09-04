@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         public static ParseResult FillBinaryRecordTypes(
             IMasterReference item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             {
                 case RecordTypeInts.MAST:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MasterReference_FieldIndex.Master) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Master = ModKeyBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)MasterReference_FieldIndex.Master;
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             {
                 case RecordTypeInts.MAST:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MasterReference_FieldIndex.Master) return ParseResult.Stop;
                     _MasterLocation = (stream.Position - offset);
                     return (int)MasterReference_FieldIndex.Master;
                 }

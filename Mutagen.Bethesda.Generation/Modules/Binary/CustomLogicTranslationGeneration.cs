@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     if (returningParseResult && obj.GetObjectType() == ObjectType.Subrecord)
                     {
-                        args.Add("int? lastParsed");
+                        args.Add($"{nameof(PreviousSubrecordParse)} lastParsed");
                     }
                 }
                 fg.AppendLine();
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 args.Add($"int offset");
                 if (returningParseValue && objGen.GetObjectType() == ObjectType.Subrecord)
                 {
-                    args.Add("int? lastParsed");
+                    args.Add($"{nameof(PreviousSubrecordParse)} lastParsed");
                 }
             }
         }

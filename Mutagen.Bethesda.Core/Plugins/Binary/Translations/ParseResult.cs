@@ -6,9 +6,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 {
     public struct ParseResult
     {
-        public bool KeepParsing;
-        public int? ParsedIndex;
-        public RecordType? DuplicateParseMarker;
+        public readonly bool KeepParsing;
+        public readonly int? ParsedIndex;
+        public readonly RecordType? DuplicateParseMarker;
 
         public ParseResult(
             int? parsedIndex,
@@ -41,6 +41,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         {
             return new ParseResult(
                 parsedIndex: lastParsed,
+                keepParsing: true,
+                dupParse: null);
+        }
+
+        public static implicit operator ParseResult(PreviousSubrecordParse lastParsed)
+        {
+            return new ParseResult(
+                parsedIndex: lastParsed.ParsedIndex,
                 keepParsing: true,
                 dupParse: null);
         }

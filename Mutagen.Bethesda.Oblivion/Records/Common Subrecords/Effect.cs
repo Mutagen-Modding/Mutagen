@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class EffectBinaryCreateTranslation
         {
-            public static partial ParseResult FillBinaryEffectInitialCustom(MutagenFrame frame, IEffect item, int? lastParsed)
+            public static partial ParseResult FillBinaryEffectInitialCustom(MutagenFrame frame, IEffect item, PreviousSubrecordParse lastParsed)
             {
                 var subMeta = frame.ReadSubrecord();
                 if (subMeta.ContentLength != Plugins.Internals.Constants.HeaderLength)
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Magic effect names did not match. {BinaryStringUtility.ToZString(magicEffName)} != {BinaryStringUtility.ToZString(magicEffName2)}");
                 }
 
-                return lastParsed;
+                return lastParsed.ParsedIndex;
             }
         }
 
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class EffectBinaryOverlay
         {
-            public partial ParseResult EffectInitialCustomParse(OverlayStream stream, int offset, int? lastParsed)
+            public partial ParseResult EffectInitialCustomParse(OverlayStream stream, int offset, PreviousSubrecordParse lastParsed)
             {
                 return lastParsed;
             }

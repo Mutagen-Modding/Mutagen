@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             IAvailableMorphs item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
                     return AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -1389,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static partial ParseResult FillBinaryParseCustom(
             MutagenFrame frame,
             IAvailableMorphs item,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
 
     }
 
@@ -1458,7 +1458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public partial ParseResult ParseCustomParse(
             OverlayStream stream,
             int offset,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1510,7 +1510,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
                     return ParseCustomParse(
                         stream,
                         offset,

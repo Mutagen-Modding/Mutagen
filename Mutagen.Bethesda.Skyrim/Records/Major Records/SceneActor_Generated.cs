@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             ISceneActor item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALID:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)SceneActor_FieldIndex.ID) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneActor_FieldIndex.ID) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ID = frame.ReadUInt32();
                     return (int)SceneActor_FieldIndex.ID;
@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALID:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)SceneActor_FieldIndex.ID) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneActor_FieldIndex.ID) return ParseResult.Stop;
                     _IDLocation = (stream.Position - offset);
                     return (int)SceneActor_FieldIndex.ID;
                 }

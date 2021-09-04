@@ -12897,7 +12897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);

@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             IPatrol item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XPRD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Patrol_FieldIndex.IdleTime) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.IdleTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Patrol_FieldIndex.IdleTime;
@@ -1477,7 +1477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static partial ParseResult FillBinaryPatrolScriptMarkerCustom(
             MutagenFrame frame,
             IPatrol item,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
 
         public static partial void FillBinaryTopicsCustom(
             MutagenFrame frame,
@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public partial ParseResult PatrolScriptMarkerCustomParse(
             OverlayStream stream,
             int offset,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
         #endregion
         #region Idle
         private int? _IdleLocation;
@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1627,7 +1627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1636,7 +1636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XPRD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Patrol_FieldIndex.IdleTime) return ParseResult.Stop;
                     _IdleTimeLocation = (stream.Position - offset);
                     return (int)Patrol_FieldIndex.IdleTime;
                 }

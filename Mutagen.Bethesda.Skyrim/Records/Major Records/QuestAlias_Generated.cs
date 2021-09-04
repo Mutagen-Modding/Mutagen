@@ -3583,7 +3583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             IQuestAlias item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -3595,7 +3595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
                     return QuestAliasBinaryCreateTranslation.FillBinaryIDParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -3796,12 +3796,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static partial ParseResult FillBinaryIDParseCustom(
             MutagenFrame frame,
             IQuestAlias item,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
 
         public static partial ParseResult FillBinaryEndCustom(
             MutagenFrame frame,
             IQuestAlias item,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
 
     }
 
@@ -3871,7 +3871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public partial ParseResult IDParseCustomParse(
             OverlayStream stream,
             int offset,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -3912,7 +3912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -3950,7 +3950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public partial ParseResult EndCustomParse(
             OverlayStream stream,
             int offset,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4002,7 +4002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -4012,7 +4012,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
                     return IDParseCustomParse(
                         stream,
                         offset,

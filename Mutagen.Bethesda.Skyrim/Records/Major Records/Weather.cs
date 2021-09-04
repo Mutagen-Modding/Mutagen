@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             int? _directionalLoc;
 
-            partial void CloudsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void CloudsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
             {
                 WeatherBinaryCreateTranslation.FillBinaryCloudYSpeeds(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int finalPos,
                 int offset,
                 RecordType type,
-                int? lastParsed,
+                PreviousSubrecordParse lastParsed,
                 RecordTypeConverter? recordTypeConverter = null)
             {
                 if (type.TypeInt == 0x44494445) // EDID

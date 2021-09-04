@@ -4535,7 +4535,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);

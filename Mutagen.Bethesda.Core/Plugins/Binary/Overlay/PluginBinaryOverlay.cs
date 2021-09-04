@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter);
         public delegate ParseResult ModTypeFillWrapper(
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             RecordTypeConverter? recordTypeConverter);
 
         protected ReadOnlyMemorySlice<byte> _data;
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             ModTypeFillWrapper fill,
             BinaryOverlayFactoryPackage package)
         {
-            int? lastParsed = null;
+            var lastParsed = new PreviousSubrecordParse();
             ModHeader headerMeta = stream.GetModHeader(package);
             var minimumFinalPos = checked((int)(stream.Position + headerMeta.TotalLength));
             fill(
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 {
                     stream.Position = checked((int)minimumFinalPos);
                 }
-                lastParsed = parsed.ParsedIndex;
+                lastParsed = parsed;
             }
         }
 
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
-            int? lastParsed = null;
+            var lastParsed = new PreviousSubrecordParse();
             Dictionary<RecordType, int>? recordParseCount = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 {
                     stream.Position = checked((int)minimumFinalPos);
                 }
-                lastParsed = parsed.ParsedIndex;
+                lastParsed = parsed;
             }
         }
 
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
-            int? lastParsed = null;
+            var lastParsed = new PreviousSubrecordParse();
             Dictionary<RecordType, int>? recordParseCount = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     }
                     recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
-                lastParsed = parsed.ParsedIndex;
+                lastParsed = parsed;
             }
         }
 
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
-            int? lastParsed = null;
+            var lastParsed = new PreviousSubrecordParse();
             Dictionary<RecordType, int>? recordParseCount = null;
             RecordType? lastParsedType = null;
             while (!stream.Complete && stream.Position < finalPos)
@@ -199,7 +199,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                         }
                         recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                     }
-                    lastParsed = parsed.ParsedIndex;
+
+                    lastParsed = parsed;
                 }
                 catch (Exception e)
                 when (lastParsedType != null)
@@ -239,7 +240,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
-            int? lastParsed = null;
+            var lastParsed = new PreviousSubrecordParse();
             Dictionary<RecordType, int>? recordParseCount = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
@@ -266,7 +267,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     }
                     recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
-                lastParsed = parsed.ParsedIndex;
+                lastParsed = parsed;
             }
         }
 

@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Skyrim
                 long finalPos,
                 int offset,
                 RecordType type,
-                int? lastParsed)
+                PreviousSubrecordParse lastParsed)
             {
                 byte? count = null;
                 for (int i = 0; i < 3; i++)

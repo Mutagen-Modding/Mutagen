@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             ILocationAliasReference item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1162,21 +1162,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALFA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AliasIndex = frame.ReadInt32();
                     return (int)LocationAliasReference_FieldIndex.AliasIndex;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LocationAliasReference_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.ALRT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.RefType) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.RefType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LocationAliasReference_FieldIndex.RefType;
@@ -1312,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1321,19 +1321,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALFA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
                     _AliasIndexLocation = (stream.Position - offset);
                     return (int)LocationAliasReference_FieldIndex.AliasIndex;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return ParseResult.Stop;
                     _KeywordLocation = (stream.Position - offset);
                     return (int)LocationAliasReference_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.ALRT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.RefType) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LocationAliasReference_FieldIndex.RefType) return ParseResult.Stop;
                     _RefTypeLocation = (stream.Position - offset);
                     return (int)LocationAliasReference_FieldIndex.RefType;
                 }

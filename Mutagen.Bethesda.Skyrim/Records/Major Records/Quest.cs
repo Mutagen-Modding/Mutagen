@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
             public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = ListExt.Empty<IConditionGetter>();
             public IReadOnlyList<IConditionGetter> UnusedConditions { get; private set; } = ListExt.Empty<IConditionGetter>();
 
-            partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
             {
                 DialogConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }

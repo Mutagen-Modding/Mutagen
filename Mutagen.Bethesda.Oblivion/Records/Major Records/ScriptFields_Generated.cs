@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ParseResult FillBinaryRecordTypes(
             IScriptFields item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
@@ -1566,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.SCHD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
                     return ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
                     item.MetadataSummary.CopyInFromBinary(
                         frame: frame,
                         recordTypeConverter: null);
@@ -1643,7 +1643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static partial ParseResult FillBinaryMetadataSummaryOldCustom(
             MutagenFrame frame,
             IScriptFields item,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
 
     }
 
@@ -1713,7 +1713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public partial ParseResult MetadataSummaryOldCustomParse(
             OverlayStream stream,
             int offset,
-            int? lastParsed);
+            PreviousSubrecordParse lastParsed);
         #endregion
         #region MetadataSummary
         private RangeInt32? _MetadataSummaryLocation;
@@ -1780,7 +1780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousSubrecordParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1789,7 +1789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.SCHD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
                     return MetadataSummaryOldCustomParse(
                         stream,
                         offset,
@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
                     _MetadataSummaryLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ScriptFields_FieldIndex.MetadataSummary;
                 }

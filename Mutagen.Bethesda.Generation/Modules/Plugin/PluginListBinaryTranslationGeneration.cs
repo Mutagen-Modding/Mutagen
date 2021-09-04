@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             args.Add($"long finalPos");
                             args.Add($"int offset");
                             args.Add($"{nameof(RecordType)} type");
-                            args.Add($"int? lastParsed");
+                            args.Add($"{nameof(PreviousSubrecordParse)} lastParsed");
                         }
                     }
                     return;

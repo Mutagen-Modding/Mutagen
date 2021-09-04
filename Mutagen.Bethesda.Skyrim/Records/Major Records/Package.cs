@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
                     new MutagenInterfaceReadStream(stream, _package.MetaData), _packageData);
             }
 
-            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }

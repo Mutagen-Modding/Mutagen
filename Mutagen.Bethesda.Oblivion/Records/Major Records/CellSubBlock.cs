@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Noggog;
 using System.Collections.Generic;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -11,7 +12,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public IReadOnlyList<ICellGetter> Cells { get; private set; } = ListExt.Empty<ICellGetter>();
 
-            partial void CellsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void CellsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousSubrecordParse lastParsed)
             {
                 this.Cells = BinaryOverlayList.FactoryByArray<CellBinaryOverlay>(
                     mem: stream.RemainingMemory,
