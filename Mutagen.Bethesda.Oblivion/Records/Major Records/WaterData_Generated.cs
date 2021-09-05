@@ -1636,7 +1636,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.DATA)));
+                translationParams.ConvertToCustom(RecordTypes.DATA),
+                translationParams?.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,

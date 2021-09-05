@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda.Core.UnitTests
         public static ModPath SkyrimTestMod = ModPath.FromPath("../../../Plugins/Records/Files/skyrim_test.esp");
         public static ModPath SkyrimOverrideMod = ModPath.FromPath("../../../Plugins/Records/Files/skyrim_override.esp");
         public static ModPath SizeOverflow = ModPath.FromPath("../../../Plugins/Records/Files/size_overflow_test.esp");
+        public static ModPath SubObjectSizeOverflow = ModPath.FromPath("../../../Plugins/Records/Files/subobject_size_overflow_test.esp");
         
         public static readonly string TempFolderPath = "MutagenUnitTests";
 

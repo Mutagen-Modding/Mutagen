@@ -31,11 +31,25 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             throw new NotImplementedException();
         }
         
-        public static TypedParseParams With(this TypedParseParams? converter, RecordTypeConverter conv)
+        public static TypedParseParams With(this TypedParseParams? param, RecordTypeConverter conv)
         {
             return new TypedParseParams(
-                lengthOverride: converter?.LengthOverride,
+                lengthOverride: param?.LengthOverride,
                 recordTypeConverter: conv);
+        }
+
+        public static TypedParseParams With(this TypedParseParams? param, RecordTypeConverter conv, int? lengthOverride)
+        {
+            return new TypedParseParams(
+                lengthOverride: lengthOverride,
+                recordTypeConverter: conv);
+        }
+
+        public static TypedParseParams With(this TypedParseParams? param, int? lengthOverride)
+        {
+            return new TypedParseParams(
+                lengthOverride: lengthOverride,
+                recordTypeConverter: param?.RecordTypeConverter);
         }
 
         public static RecordType ConvertToStandard(this TypedParseParams? converter, RecordType rec)

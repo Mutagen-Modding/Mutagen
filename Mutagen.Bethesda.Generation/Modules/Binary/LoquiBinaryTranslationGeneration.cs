@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -189,10 +190,22 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                         $"{itemAccessor} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeNameInternal(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
                     {
                         args.Add($"frame: {frameAccessor}");
+                        var trans = new List<string>();
+                        
                         if (data?.RecordTypeConverter != null
                             && data.RecordTypeConverter.FromConversions.Count > 0)
                         {
-                            args.Add($"translationParams: translationParams.With({objGen.RegistrationName}.{typeGen.Name}Converter)");
+                            trans.Add($"{objGen.RegistrationName}.{typeGen.Name}Converter");
+                        }
+
+                        if (data.OverflowRecordType.HasValue)
+                        {
+                            trans.Add($"lastParsed.{nameof(PreviousParse.LengthOverride)}");
+                        }
+
+                        if (trans.Count > 0)
+                        {
+                            args.Add($"translationParams: translationParams.With({string.Join(", ", trans)})");
                         }
                         else if (await NeedsRecordTypeConverter(loqui))
                         {
@@ -332,6 +345,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                         {
                             fg.AppendLine($"private {nameof(RecordType)} _{typeGen.Name}Type;");
                         }
+
+                        if (data.OverflowRecordType.HasValue)
+                        {
+                            fg.AppendLine($"private int? _{typeGen.Name}LengthOverride;");
+                        }
                         fg.AppendLine($"private {GetLocationObjectString(objGen)}? _{typeGen.Name}Location;");
                         using (new LineWrapper(fg))
                         {
@@ -353,7 +371,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                             if (!severalSubTypes)
                             {
                                 fg.Append($" => _{typeGen.Name}Location.HasValue ? ");
-                                fg.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location!.Value.Min", $"_{typeGen.Name}Location!.Value.Max")}, _package), _package");
+                                fg.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location!.Value.Min", $"_{typeGen.Name}Location!.Value.Max")}, _package), _package{(data.OverflowRecordType.HasValue ? $", new {nameof(TypedParseParams)}(_{typeGen.Name}LengthOverride, null)" : null)}");
                                 if (!recConverter.StartsWith("default("))
                                 {
                                     fg.Append($", {recConverter}");
@@ -536,6 +554,16 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 if (severalSubTypes)
                 {
                     fg.AppendLine($"_{typeGen.Name}Type = type;");
+                }
+                if (data.OverflowRecordType.HasValue
+                    && data.BinaryOverlayFallback != BinaryGenerationType.Custom)
+                {
+                    fg.AppendLine($"_{typeGen.Name}LengthOverride = lastParsed.{nameof(PreviousParse.LengthOverride)};");
+                    fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.LengthOverride)}.HasValue)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"stream.Position += lastParsed.{nameof(PreviousParse.LengthOverride)}.Value;");
+                    }
                 }
             }
             else

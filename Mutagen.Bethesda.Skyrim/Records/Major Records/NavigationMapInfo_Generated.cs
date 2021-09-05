@@ -1405,7 +1405,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.NVMI)));
+                translationParams.ConvertToCustom(RecordTypes.NVMI),
+                translationParams?.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2216,7 +2217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedParseParams? parseParams = null)
         {
             var ret = new NavigationMapInfoBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;

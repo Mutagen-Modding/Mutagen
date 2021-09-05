@@ -1692,6 +1692,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                             "translationParams",
                                             $"{ReaderMemberName}.MetaData.Constants.Release",
                                             $"{ReaderMemberName}.MetaData.FormVersion"));
+                                        args.Add("translationParams?.LengthOverride");
                                     }
                                 }
                             }
@@ -2314,7 +2315,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                         args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractGroupMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})");
                                         break;
                                     case ObjectType.Subrecord:
-                                        args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})");
+                                        args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}, parseParams)");
                                         break;
                                     case ObjectType.Mod:
                                         args.AddPassArg($"stream");

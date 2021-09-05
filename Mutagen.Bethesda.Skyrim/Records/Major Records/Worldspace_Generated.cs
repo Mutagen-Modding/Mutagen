@@ -5709,7 +5709,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MHDT:
                 {
-                    item.MaxHeight = Mutagen.Bethesda.Skyrim.WorldspaceMaxHeight.CreateFromBinary(frame: frame);
+                    item.MaxHeight = Mutagen.Bethesda.Skyrim.WorldspaceMaxHeight.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride));
                     return (int)Worldspace_FieldIndex.MaxHeight;
                 }
                 case RecordTypeInts.FULL:
@@ -5961,8 +5963,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = ListExt.Empty<WorldspaceGridReferenceBinaryOverlay>();
         #region MaxHeight
+        private int? _MaxHeightLengthOverride;
         private RangeInt32? _MaxHeightLocation;
-        public IWorldspaceMaxHeightGetter? MaxHeight => _MaxHeightLocation.HasValue ? WorldspaceMaxHeightBinaryOverlay.WorldspaceMaxHeightFactory(new OverlayStream(_data.Slice(_MaxHeightLocation!.Value.Min), _package), _package) : default;
+        public IWorldspaceMaxHeightGetter? MaxHeight => _MaxHeightLocation.HasValue ? WorldspaceMaxHeightBinaryOverlay.WorldspaceMaxHeightFactory(new OverlayStream(_data.Slice(_MaxHeightLocation!.Value.Min), _package), _package, new TypedParseParams(_MaxHeightLengthOverride, null)) : default;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -6161,6 +6164,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MHDT:
                 {
                     _MaxHeightLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _MaxHeightLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Worldspace_FieldIndex.MaxHeight;
                 }
                 case RecordTypeInts.FULL:

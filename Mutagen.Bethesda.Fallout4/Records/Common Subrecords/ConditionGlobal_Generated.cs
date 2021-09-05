@@ -745,7 +745,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.CTDA)));
+                translationParams.ConvertToCustom(RecordTypes.CTDA),
+                translationParams?.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1267,7 +1268,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedParseParams? parseParams = null)
         {
             var ret = new ConditionGlobalBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
