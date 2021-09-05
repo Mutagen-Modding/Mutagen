@@ -411,13 +411,13 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region Binary Create
         public static MasterReference CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new MasterReference();
             ((MasterReferenceSetterCommon)((IMasterReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -426,12 +426,12 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MasterReference item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -623,12 +623,12 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static void CopyInFromBinary(
             this IMasterReference item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -748,12 +748,12 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         public virtual void CopyInFromBinary(
             IMasterReference item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: MasterReferenceBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: MasterReferenceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -1055,9 +1055,9 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MAST:

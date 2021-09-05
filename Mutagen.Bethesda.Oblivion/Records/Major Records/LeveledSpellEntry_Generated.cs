@@ -519,13 +519,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LeveledSpellEntry CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new LeveledSpellEntry();
             ((LeveledSpellEntrySetterCommon)((ILeveledSpellEntryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -534,12 +534,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LeveledSpellEntry item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -739,12 +739,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILeveledSpellEntry item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((LeveledSpellEntrySetterCommon)((ILeveledSpellEntryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -871,15 +871,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ILeveledSpellEntry item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(RecordTypes.LVLO)));
+                translationParams.ConvertToCustom(RecordTypes.LVLO)));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: LeveledSpellEntryBinaryCreateTranslation.FillBinaryStructs);
         }
         

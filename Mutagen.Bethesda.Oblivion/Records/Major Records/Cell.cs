@@ -148,14 +148,14 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     obj.PathGrid = PathGrid.CreateFromBinary(
                         frame.SpawnWithLength(majorMeta.TotalLength),
-                        recordTypeConverter: null);
+                        translationParams: null);
                     return true;
                 }
                 else if (nextHeader.Equals(RecordTypes.LAND))
                 {
                     obj.Landscape = Landscape.CreateFromBinary(
                         frame.SpawnWithLength(majorMeta.TotalLength),
-                        recordTypeConverter: null);
+                        translationParams: null);
                     return true;
                 }
                 return false;

@@ -642,13 +642,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static LeveledSpell CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new LeveledSpell();
             ((LeveledSpellSetterCommon)((ILeveledSpellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -657,12 +657,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LeveledSpell item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -866,12 +866,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILeveledSpellInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((LeveledSpellSetterCommon)((ILeveledSpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -1014,12 +1014,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILeveledSpellInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.MajorRecordParse<ILeveledSpellInternal>(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: LeveledSpellBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: LeveledSpellBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -1027,23 +1027,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (LeveledSpell)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (LeveledSpell)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         #endregion
@@ -1711,9 +1711,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.OBND:
@@ -1745,7 +1745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countLengthLength: 1,
                             countRecord: RecordTypes.LLCT,
                             triggeringRecord: LeveledSpellEntry_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: LeveledSpellEntry.TryCreateFromBinary)
                         .CastExtendedList<LeveledSpellEntry>();
                     return (int)LeveledSpell_FieldIndex.Entries;

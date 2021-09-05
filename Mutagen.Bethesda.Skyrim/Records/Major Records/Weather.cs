@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Dictionary<RecordType, int>? recordParseCount,
                 RecordType nextRecordType,
                 int contentLength,
-                RecordTypeConverter? recordTypeConverter = null)
+                TypedParseParams? translationParams = null)
             {
                 if (nextRecordType.TypeInt == 0x44494445) // EDID
                 {
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Skyrim
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
                 WeatherBinaryCreateTranslation.FillCloudTexture(frame, nextRecordType, item.CloudTextures);
                 return default(int?);

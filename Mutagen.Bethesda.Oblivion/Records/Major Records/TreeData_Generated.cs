@@ -597,13 +597,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static TreeData CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new TreeData();
             ((TreeDataSetterCommon)((ITreeDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -612,12 +612,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TreeData item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -821,12 +821,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ITreeData item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((TreeDataSetterCommon)((ITreeDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -958,15 +958,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ITreeData item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(RecordTypes.CNAM)));
+                translationParams.ConvertToCustom(RecordTypes.CNAM)));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: TreeDataBinaryCreateTranslation.FillBinaryStructs);
         }
         

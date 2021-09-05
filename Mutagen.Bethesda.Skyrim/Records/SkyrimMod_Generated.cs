@@ -22445,16 +22445,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType nextRecordType,
             int contentLength,
             GroupMask? importMask,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.TES4:
                 {
                     item.ModHeader.CopyInFromBinary(
                         frame: frame,
-                        recordTypeConverter: null);
+                        translationParams: null);
                     return (int)SkyrimMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:
@@ -22463,7 +22463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.GameSettings.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22477,7 +22477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22491,7 +22491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LocationReferenceTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22505,7 +22505,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Actions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22519,7 +22519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.TextureSets.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22533,7 +22533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Globals.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22547,7 +22547,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Classes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22561,7 +22561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Factions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22575,7 +22575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.HeadParts.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22589,7 +22589,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Hairs.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22603,7 +22603,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Eyes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22617,7 +22617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Races.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22631,7 +22631,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.SoundMarkers.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22645,7 +22645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.AcousticSpaces.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22659,7 +22659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.MagicEffects.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22673,7 +22673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LandscapeTextures.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22687,7 +22687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ObjectEffects.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22701,7 +22701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Spells.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22715,7 +22715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Scrolls.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22729,7 +22729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Activators.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22743,7 +22743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.TalkingActivators.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22757,7 +22757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Armors.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22771,7 +22771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Books.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22785,7 +22785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Containers.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22799,7 +22799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Doors.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22813,7 +22813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Ingredients.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22827,7 +22827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Lights.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22841,7 +22841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.MiscItems.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22855,7 +22855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.AlchemicalApparatuses.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22869,7 +22869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Statics.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22883,7 +22883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.MoveableStatics.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22897,7 +22897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Grasses.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22911,7 +22911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Trees.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22925,7 +22925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Florae.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22939,7 +22939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Furniture.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22953,7 +22953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Weapons.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22967,7 +22967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Ammunitions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22981,7 +22981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Npcs.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -22995,7 +22995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LeveledNpcs.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23009,7 +23009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keys.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23023,7 +23023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Ingestibles.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23037,7 +23037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.IdleMarkers.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23051,7 +23051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ConstructibleObjects.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23065,7 +23065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Projectiles.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23079,7 +23079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Hazards.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23093,7 +23093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.SoulGems.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23107,7 +23107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LeveledItems.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23121,7 +23121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Weathers.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23135,7 +23135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Climates.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23149,7 +23149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ShaderParticleGeometries.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23163,7 +23163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.VisualEffects.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23177,7 +23177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Regions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23191,7 +23191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.NavigationMeshInfoMaps.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23205,7 +23205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Cells.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23219,7 +23219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Worldspaces.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23233,7 +23233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.DialogTopics.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23247,7 +23247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Quests.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23261,7 +23261,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.IdleAnimations.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23275,7 +23275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Packages.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23289,7 +23289,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.CombatStyles.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23303,7 +23303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LoadScreens.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23317,7 +23317,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LeveledSpells.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23331,7 +23331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.AnimatedObjects.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23345,7 +23345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Waters.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23359,7 +23359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.EffectShaders.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23373,7 +23373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Explosions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23387,7 +23387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Debris.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23401,7 +23401,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ImageSpaces.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23415,7 +23415,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ImageSpaceAdapters.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23429,7 +23429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.FormLists.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23443,7 +23443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Perks.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23457,7 +23457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.BodyParts.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23471,7 +23471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.AddonNodes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23485,7 +23485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ActorValueInformation.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23499,7 +23499,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.CameraShots.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23513,7 +23513,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.CameraPaths.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23527,7 +23527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.VoiceTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23541,7 +23541,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.MaterialTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23555,7 +23555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Impacts.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23569,7 +23569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ImpactDataSets.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23583,7 +23583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ArmorAddons.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23597,7 +23597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.EncounterZones.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23611,7 +23611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Locations.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23625,7 +23625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Messages.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23639,7 +23639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.DefaultObjectManagers.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23653,7 +23653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LightingTemplates.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23667,7 +23667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.MusicTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23681,7 +23681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Footsteps.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23695,7 +23695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.FootstepSets.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23709,7 +23709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.StoryManagerBranchNodes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23723,7 +23723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.StoryManagerQuestNodes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23737,7 +23737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.StoryManagerEventNodes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23751,7 +23751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.DialogBranches.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23765,7 +23765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.MusicTracks.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23779,7 +23779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.DialogViews.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23793,7 +23793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.WordsOfPower.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23807,7 +23807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Shouts.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23821,7 +23821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.EquipTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23835,7 +23835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Relationships.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23849,7 +23849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Scenes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23863,7 +23863,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.AssociationTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23877,7 +23877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Outfits.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23891,7 +23891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ArtObjects.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23905,7 +23905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.MaterialObjects.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23919,7 +23919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.MovementTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23933,7 +23933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.SoundDescriptors.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23947,7 +23947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.DualCastData.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23961,7 +23961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.SoundCategories.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23975,7 +23975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.SoundOutputModels.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -23989,7 +23989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.CollisionLayers.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -24003,7 +24003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Colors.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -24017,7 +24017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ReverbParameters.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -24031,7 +24031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.VolumetricLightings.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {

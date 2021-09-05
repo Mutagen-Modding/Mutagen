@@ -365,13 +365,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PackageTargetUnknown CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new PackageTargetUnknown();
             ((PackageTargetUnknownSetterCommon)((IPackageTargetUnknownGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -380,12 +380,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PackageTargetUnknown item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -545,12 +545,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPackageTargetUnknown item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((PackageTargetUnknownSetterCommon)((IPackageTargetUnknownGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -675,24 +675,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPackageTargetUnknown item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: PackageTargetUnknownBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
             IAPackageTarget item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (PackageTargetUnknown)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         #endregion

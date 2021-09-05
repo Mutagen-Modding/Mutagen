@@ -4054,16 +4054,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType nextRecordType,
             int contentLength,
             GroupMask? importMask,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.TES4:
                 {
                     item.ModHeader.CopyInFromBinary(
                         frame: frame,
-                        recordTypeConverter: null);
+                        translationParams: null);
                     return (int)Fallout4Mod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:
@@ -4072,7 +4072,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.GameSettings.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4086,7 +4086,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Keywords.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4100,7 +4100,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.LocationReferenceTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4114,7 +4114,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Actions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4128,7 +4128,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Transforms.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4142,7 +4142,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Components.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4156,7 +4156,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.TextureSets.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4170,7 +4170,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Globals.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4184,7 +4184,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.DamageTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4198,7 +4198,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Classes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4212,7 +4212,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Factions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4226,7 +4226,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.HeadParts.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {

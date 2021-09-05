@@ -2712,13 +2712,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Location CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new Location();
             ((LocationSetterCommon)((ILocationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -2727,12 +2727,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Location item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -2992,12 +2992,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILocationInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((LocationSetterCommon)((ILocationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -3203,12 +3203,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILocationInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.MajorRecordParse<ILocationInternal>(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: LocationBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: LocationBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -3216,23 +3216,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Location)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Location)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         #endregion
@@ -5188,9 +5188,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.ACPR:
@@ -5290,7 +5290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             triggeringRecord: RecordTypes.ACEC,
                             skipHeader: true,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: LocationCoordinate.TryCreateFromBinary));
                     return (int)Location_FieldIndex.ActorCellEncounterCell;
                 }
@@ -5301,7 +5301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             triggeringRecord: RecordTypes.LCEC,
                             skipHeader: true,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: LocationCoordinate.TryCreateFromBinary));
                     return (int)Location_FieldIndex.LocationCellEncounterCell;
                 }
@@ -5312,7 +5312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             triggeringRecord: RecordTypes.RCEC,
                             skipHeader: true,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: LocationCoordinate.TryCreateFromBinary));
                     return (int)Location_FieldIndex.ReferenceCellEncounterCell;
                 }
@@ -5372,8 +5372,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             reader: frame,
                             countLengthLength: 4,
-                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Location_FieldIndex.Keywords;

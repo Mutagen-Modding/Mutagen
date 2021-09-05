@@ -1645,12 +1645,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAPlacedTrapInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((APlacedTrapSetterCommon)((IAPlacedTrapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -1865,30 +1865,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IAPlacedTrapInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
         }
         
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (APlacedTrap)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (APlacedTrap)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         #endregion
@@ -3141,9 +3141,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -3168,7 +3168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)APlacedTrap_FieldIndex.Ownership;
                 }
                 case RecordTypeInts.XHTW:
@@ -3189,7 +3189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WaterReflection>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.XPWR,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: WaterReflection.TryCreateFromBinary));
                     return (int)APlacedTrap_FieldIndex.Reflections;
                 }
@@ -3199,7 +3199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.XLKR,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: LinkedReferences.TryCreateFromBinary));
                     return (int)APlacedTrap_FieldIndex.LinkedReferences;
                 }
@@ -3207,7 +3207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ActivateParents = Mutagen.Bethesda.Skyrim.ActivateParents.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)APlacedTrap_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XESP:

@@ -3143,13 +3143,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PlacedObject CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new PlacedObject();
             ((PlacedObjectSetterCommon)((IPlacedObjectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -3158,12 +3158,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedObject item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -3483,12 +3483,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPlacedObjectInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -3766,12 +3766,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPlacedObjectInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.MajorRecordParse<IPlacedObjectInternal>(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: PlacedObjectBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: PlacedObjectBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -3779,23 +3779,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (PlacedObject)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (PlacedObject)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         #endregion
@@ -6483,9 +6483,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -6573,7 +6573,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WaterReflection>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.XPWR,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: WaterReflection.TryCreateFromBinary));
                     return (int)PlacedObject_FieldIndex.Reflections;
                 }
@@ -6582,7 +6582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LitWater.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedObjectGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.XLTW),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.XLTW),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)PlacedObject_FieldIndex.LitWater;
                 }
@@ -6676,7 +6676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ActivateParents = Mutagen.Bethesda.Skyrim.ActivateParents.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XLIB:
@@ -6741,7 +6741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.Ownership;
                 }
                 case RecordTypeInts.XCNT:
@@ -6773,7 +6773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.XLKR,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: LinkedReferences.TryCreateFromBinary));
                     return (int)PlacedObject_FieldIndex.LinkedReferences;
                 }
@@ -6781,7 +6781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Patrol = Mutagen.Bethesda.Skyrim.Patrol.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.Patrol;
                 }
                 case RecordTypeInts.XACT:
@@ -6814,7 +6814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.MapMarker = Mutagen.Bethesda.Skyrim.MapMarker.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)PlacedObject_FieldIndex.MapMarker;
                 }
                 case RecordTypeInts.XATR:

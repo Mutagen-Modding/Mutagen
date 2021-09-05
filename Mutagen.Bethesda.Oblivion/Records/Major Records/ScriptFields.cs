@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.MetadataSummary.CopyInFromBinary(
                     frame: frame,
-                    recordTypeConverter: metaConverter);
+                    translationParams: metaConverter);
                 return lastParsed;
             }
         }

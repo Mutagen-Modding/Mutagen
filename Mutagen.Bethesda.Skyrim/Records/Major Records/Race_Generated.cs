@@ -3975,13 +3975,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Race CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new Race();
             ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -3990,12 +3990,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Race item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -4369,12 +4369,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IRaceInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -4705,12 +4705,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IRaceInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: RaceBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RaceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -4718,23 +4718,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Race)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Race)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         #endregion
@@ -7587,9 +7587,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -7617,8 +7617,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.ParsePerItem(
                             reader: frame,
                             countLengthLength: 4,
-                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.SPCT),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     return (int)Race_FieldIndex.ActorEffect;
@@ -7644,8 +7644,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             reader: frame,
                             countLengthLength: 4,
-                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Race_FieldIndex.Keywords;
@@ -7732,7 +7732,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MovementTypeNames.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MTNM),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.MTNM),
                             transl: (MutagenFrame r, out String listSubItem) =>
                             {
                                 return StringBinaryTranslation.Instance.Parse(
@@ -7798,7 +7798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Attack>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: Attack.TryCreateFromBinary));
                     return (int)Race_FieldIndex.Attacks;
                 }
@@ -7892,7 +7892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RaceMovementType>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RaceMovementType_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: RaceMovementType.TryCreateFromBinary));
                     return (int)Race_FieldIndex.MovementTypes;
                 }
@@ -7909,7 +7909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EquipmentSlots.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IEquipTypeGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.QNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Race_FieldIndex.EquipmentSlots;
                 }

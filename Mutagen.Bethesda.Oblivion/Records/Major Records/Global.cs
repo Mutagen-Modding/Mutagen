@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Global CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter recordTypeConverter)
+            TypedParseParams? translationParams)
         {
             return GlobalCustomParsing.Create<Global>(
                 frame,

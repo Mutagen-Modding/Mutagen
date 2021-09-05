@@ -884,13 +884,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Clothing CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new Clothing();
             ((ClothingSetterCommon)((IClothingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -899,12 +899,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Clothing item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -1124,12 +1124,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IClothingInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((ClothingSetterCommon)((IClothingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -1318,12 +1318,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IClothingInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.MajorRecordParse<IClothingInternal>(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: ClothingBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: ClothingBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -1331,23 +1331,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Clothing)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Clothing)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         #endregion
@@ -2315,9 +2315,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -2355,14 +2355,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)Clothing_FieldIndex.MaleBipedModel;
                 }
                 case RecordTypeInts.MOD2:
                 {
                     item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: Clothing_Registration.MaleWorldModelConverter);
+                        translationParams: translationParams.With(Clothing_Registration.MaleWorldModelConverter));
                     return (int)Clothing_FieldIndex.MaleWorldModel;
                 }
                 case RecordTypeInts.ICON:
@@ -2377,14 +2377,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: Clothing_Registration.FemaleBipedModelConverter);
+                        translationParams: translationParams.With(Clothing_Registration.FemaleBipedModelConverter));
                     return (int)Clothing_FieldIndex.FemaleBipedModel;
                 }
                 case RecordTypeInts.MOD4:
                 {
                     item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: Clothing_Registration.FemaleWorldModelConverter);
+                        translationParams: translationParams.With(Clothing_Registration.FemaleWorldModelConverter));
                     return (int)Clothing_FieldIndex.FemaleWorldModel;
                 }
                 case RecordTypeInts.ICO2:

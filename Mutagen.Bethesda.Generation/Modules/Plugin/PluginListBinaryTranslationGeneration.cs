@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                                 else
                                 {
-                                    args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                                    args.Add($"triggeringRecord: translationParams.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                                 }
                                 if (list.SubTypeGeneration is LoquiType loqui
                                     && !loqui.TargetObjectGeneration.Abstract
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     }
                                     else
                                     {
-                                        args.Add($"countRecord: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(counterRecType)})");
+                                        args.Add($"countRecord: translationParams.ConvertToCustom({objGen.RecordTypeHeaderName(counterRecType)})");
                                     }
                                 }
                                 if (data.RecordType != null)
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     }
                                     else
                                     {
-                                        args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                                        args.Add($"triggeringRecord: translationParams.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                                     }
                                 }
                                 else if (subData.HasTrigger)
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     }
                                     else
                                     {
-                                        args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                                        args.Add($"triggeringRecord: translationParams.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                                     }
                                 }
                                 if (list.CustomData.TryGetValue(NullIfCounterZero, out var nullIf)
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     }
                     if (needsRecordConv)
                     {
-                        args.AddPassArg($"recordTypeConverter");
+                        args.AddPassArg($"translationParams");
                     }
                     var subGenTypes = subData.GenerationTypes.ToList();
                     var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                                 else
                                 {
-                                    gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                                    gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(TypedParseParams)}? translationParams" : null)}) =>");
                                     using (new BraceWrapper(gen))
                                     {
                                         subGen.GenerateCopyInRet(
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             }
                             else
                             {
-                                gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                                gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(TypedParseParams)}? translationParams" : null)}) =>");
                                 using (new BraceWrapper(gen))
                                 {
                                     gen.AppendLine("switch (header.TypeInt)");
@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                                     outItemAccessor: new Accessor("listSubItem"),
                                                     asyncMode: AsyncMode.Async,
                                                     errorMaskAccessor: $"listErrMask",
-                                                    converterAccessor: "conv",
+                                                    converterAccessor: "translationParams",
                                                     inline: false);
                                             }
                                         }

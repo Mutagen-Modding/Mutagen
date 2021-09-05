@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Skyrim
                     ListBinaryTranslation<PackageBranch>.Instance.Parse(
                         reader: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.ANAM,
-                        transl: (MutagenFrame r, out PackageBranch listSubItem, RecordTypeConverter? conv) =>
+                        transl: (MutagenFrame r, out PackageBranch listSubItem, TypedParseParams? translationParams) =>
                         {
                             listSubItem = PackageBranch.CreateFromBinary(r);
                             return true;

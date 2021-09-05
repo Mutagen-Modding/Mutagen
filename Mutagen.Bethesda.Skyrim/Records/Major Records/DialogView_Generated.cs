@@ -751,13 +751,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static DialogView CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new DialogView();
             ((DialogViewSetterCommon)((IDialogViewGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -766,12 +766,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DialogView item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -963,12 +963,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDialogViewInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((DialogViewSetterCommon)((IDialogViewGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -1114,12 +1114,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IDialogViewInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.MajorRecordParse<IDialogViewInternal>(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: DialogViewBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: DialogViewBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -1127,23 +1127,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (DialogView)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (DialogView)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         #endregion
@@ -1836,9 +1836,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.QNAM:
@@ -1852,7 +1852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Branches.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogBranchGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.BNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)DialogView_FieldIndex.Branches;
                 }
@@ -1861,7 +1861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TNAMs.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.TNAM),
                             transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
                     return (int)DialogView_FieldIndex.TNAMs;
                 }

@@ -601,19 +601,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static Condition CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var nextRecord = HeaderTranslation.GetNextSubrecordType(
                 reader: frame.Reader,
                 contentLength: out var customLen);
-            nextRecord = recordTypeConverter.ConvertToCustom(nextRecord);
+            nextRecord = translationParams.ConvertToCustom(nextRecord);
             switch (nextRecord.TypeInt)
             {
                 case 1413764163: // CTDT
                     return CustomRecordTypeTrigger(
                         frame: frame.SpawnWithLength(customLen + frame.MetaData.Constants.SubConstants.HeaderLength),
                         recordType: nextRecord,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 default:
                     break;
             }
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ConditionSetterCommon)((IConditionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -630,12 +630,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Condition item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -839,12 +839,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICondition item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -987,15 +987,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ICondition item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(RecordTypes.CTDA)));
+                translationParams.ConvertToCustom(RecordTypes.CTDA)));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: ConditionBinaryCreateTranslation.FillBinaryStructs);
         }
         

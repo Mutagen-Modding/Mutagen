@@ -1154,13 +1154,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Scene CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new Scene();
             ((SceneSetterCommon)((ISceneGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -1169,12 +1169,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Scene item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -1378,12 +1378,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISceneInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((SceneSetterCommon)((ISceneGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -1544,12 +1544,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ISceneInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.MajorRecordParse<ISceneInternal>(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: SceneBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: SceneBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -1557,23 +1557,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Scene)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Scene)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         #endregion
@@ -2609,9 +2609,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -2633,7 +2633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ScenePhase>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.HNAM,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: ScenePhase.TryCreateFromBinary));
                     return (int)Scene_FieldIndex.Phases;
                 }
@@ -2643,7 +2643,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SceneActor>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.ALID,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: SceneActor.TryCreateFromBinary));
                     return (int)Scene_FieldIndex.Actors;
                 }
@@ -2653,7 +2653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SceneAction>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.ANAM,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: SceneAction.TryCreateFromBinary));
                     return (int)Scene_FieldIndex.Actions;
                 }
@@ -2665,7 +2665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Unused = Mutagen.Bethesda.Skyrim.ScenePhaseUnusedData.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)Scene_FieldIndex.Unused;
                 }
                 case RecordTypeInts.NEXT:
@@ -2673,7 +2673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.Unused2 = Mutagen.Bethesda.Skyrim.ScenePhaseUnusedData.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)Scene_FieldIndex.Unused2;
                 }
                 case RecordTypeInts.PNAM:
@@ -2700,7 +2700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary));
                     return (int)Scene_FieldIndex.Conditions;
                 }

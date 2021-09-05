@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Oblivion
         static Condition CustomRecordTypeTrigger(
             MutagenFrame frame,
             RecordType recordType, 
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? translationParams)
         {
             var pos = frame.PositionWithOffset;
             var span = frame.ReadSpan(0x1A);
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
             LoquiBinaryTranslation<Condition>.Instance.Parse(
                 frame: new MutagenFrame(new MutagenMemoryReadStream(newBytes, frame.MetaData, offsetReference: pos)),
                 item: out var item,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return item;
         }
     }

@@ -1070,13 +1070,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static HeadData CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new HeadData();
             ((HeadDataSetterCommon)((IHeadDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -1085,12 +1085,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out HeadData item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -1306,12 +1306,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IHeadData item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((HeadDataSetterCommon)((IHeadDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -1474,12 +1474,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IHeadData item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: HeadDataBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: HeadDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -2196,9 +2196,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.INDX:
@@ -2209,7 +2209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<HeadPartReference>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: HeadPartReference_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: HeadPartReference.TryCreateFromBinary));
                     return (int)HeadData_FieldIndex.HeadParts;
                 }
@@ -2225,7 +2225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.RacePresets.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.RPRM),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.RPRM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)HeadData_FieldIndex.RacePresets;
                 }
@@ -2235,7 +2235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AvailableHairColors.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.AHCM),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.AHCM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)HeadData_FieldIndex.AvailableHairColors;
                 }
@@ -2245,7 +2245,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FaceDetails.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.FTSM),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.FTSM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)HeadData_FieldIndex.FaceDetails;
                 }
@@ -2269,7 +2269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintAssets>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: TintAssets_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: TintAssets.TryCreateFromBinary));
                     return (int)HeadData_FieldIndex.TintMasks;
                 }
@@ -2278,7 +2278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.Model) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)HeadData_FieldIndex.Model;
                 }
                 default:

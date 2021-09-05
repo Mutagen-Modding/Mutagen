@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? translationParams)
         {
             if (!frame.Reader.TryGetSubrecord(Mutagen.Bethesda.Skyrim.Internals.RecordTypes.CTDA, out var subRecMeta))
             {
@@ -734,9 +734,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Condition condition,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? translationParams)
         {
-            condition = CreateFromBinary(frame, recordTypeConverter);
+            condition = CreateFromBinary(frame, translationParams);
             return true;
         }
     }

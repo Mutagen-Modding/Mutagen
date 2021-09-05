@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams
@@ -78,6 +79,25 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         }
 
         /// <summary>
+        /// Extension method to retrieve the record type to use in a standard context.
+        /// If the converter is null, or a standard alternative is not registered, the input record type is returned.
+        /// </summary>
+        /// <param name="converter">Optional record type mapping</param>
+        /// <param name="rec">Custom RecordType to query</param>
+        /// <returns>Standard RecordType if one is registered in converter.  Otherwise the input RecordType.</returns>
+        public static RecordType ConvertToStandard(this TypedParseParams? converter, RecordType rec)
+        {
+            if (converter == null) return rec;
+            return converter.Value.RecordTypeConverter.ConvertToStandard(rec);
+        }
+        
+        public static RecordType ConvertToCustom(this TypedParseParams? converter, RecordType rec)
+        {
+            if (converter == null) return rec;
+            return converter.Value.RecordTypeConverter.ConvertToCustom(rec);
+        }
+
+        /// <summary>
         /// Merges two converter mappings into a single one
         /// </summary>
         public static RecordTypeConverter? Combine(this RecordTypeConverter? lhs, RecordTypeConverter? rhs)
@@ -85,6 +105,20 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
             if (lhs == null) return rhs;
             if (rhs == null) return null;
             throw new NotImplementedException();
+        }
+        
+        public static RecordTypeConverter? Combine(this TypedParseParams? lhs, RecordTypeConverter? rhs)
+        {
+            if (lhs?.RecordTypeConverter == null) return rhs;
+            if (rhs == null) return null;
+            throw new NotImplementedException();
+        }
+        
+        public static TypedParseParams With(this TypedParseParams? converter, RecordTypeConverter conv)
+        {
+            return new TypedParseParams(
+                lengthOverride: converter?.LengthOverride,
+                recordTypeConverter: conv);
         }
     }
 }

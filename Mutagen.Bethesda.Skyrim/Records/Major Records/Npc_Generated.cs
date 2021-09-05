@@ -2898,13 +2898,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Npc CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new Npc();
             ((NpcSetterCommon)((INpcGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -2913,12 +2913,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Npc item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -3254,12 +3254,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INpcInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((NpcSetterCommon)((INpcGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -3514,12 +3514,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             INpcInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.MajorRecordParse<INpcInternal>(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: NpcBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: NpcBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -3527,23 +3527,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Npc)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Npc)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         #endregion
@@ -5740,9 +5740,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -5766,7 +5766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RankPlacement>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.SNAM,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: RankPlacement.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.Factions;
                 }
@@ -5801,8 +5801,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.ParsePerItem(
                             reader: frame,
                             countLengthLength: 4,
-                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.SPCT),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     return (int)Npc_FieldIndex.ActorEffect;
@@ -5813,7 +5813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)Npc_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.WNAM:
@@ -5841,7 +5841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Attack>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: Attack.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.Attacks;
                 }
@@ -5878,7 +5878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countLengthLength: 4,
                             countRecord: RecordTypes.PRKZ,
                             triggeringRecord: RecordTypes.PRKR,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: PerkPlacement.TryCreateFromBinary)
                         .CastExtendedList<PerkPlacement>();
                     return (int)Npc_FieldIndex.Perks;
@@ -5892,7 +5892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countLengthLength: 4,
                             countRecord: RecordTypes.COCT,
                             triggeringRecord: RecordTypes.CNTO,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: ContainerEntry.TryCreateFromBinary)
                         .CastExtendedList<ContainerEntry>();
                     return (int)Npc_FieldIndex.Items;
@@ -5907,7 +5907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Packages.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKID),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.PKID),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Npc_FieldIndex.Packages;
                 }
@@ -5918,8 +5918,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             reader: frame,
                             countLengthLength: 4,
-                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Npc_FieldIndex.Keywords;
@@ -5964,7 +5964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HeadParts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.PNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Npc_FieldIndex.HeadParts;
                 }
@@ -6016,7 +6016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Sound = Mutagen.Bethesda.Skyrim.NpcInheritSound.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDT:
@@ -6025,7 +6025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Sound = Mutagen.Bethesda.Skyrim.NpcSoundTypes.CreateFromBinary(
                         frame: frame,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DOFT:
@@ -6083,7 +6083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintLayer>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: TintLayer_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: TintLayer.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.TintLayers;
                 }

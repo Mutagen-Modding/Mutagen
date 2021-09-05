@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public delegate bool BinaryMasterParseDelegate<TItem>(
             MutagenFrame reader,
             [MaybeNullWhen(false)] out TItem item,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? translationParams);
 
         public delegate bool BinarySubParseRecordDelegate<TItem>(
             MutagenFrame reader,
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             RecordType header,
             [MaybeNullWhen(false)] out TItem item,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? translationParams);
 
         public delegate void BinaryMasterWriteDelegate<TItem>(
             MutagenWriter writer,
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? translationParams);
 
         public delegate ParseResult MajorRecordFill<R>(
             R record,
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? translationParams);
 
         public delegate ParseResult SubrecordFill<R>(
             R record,
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? translationParams);
 
         public delegate ParseResult ModRecordTypeFill<TRecord, TImportMask>(
             TRecord record,
@@ -76,12 +76,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType nextRecordType,
             int contentLength,
             TImportMask importMask,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? translationParams);
 
         public static M MajorRecordParse<M>(
             M record,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? translationParams,
             RecordStructFill<M> fillStructs,
             MajorRecordFill<M> fillTyped)
             where M : IMajorRecordCommonGetter
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                             recordParseCount: recordParseCount,
                             nextRecordType: subMeta.RecordType,
                             contentLength: lastParsed.LengthOverride ?? subMeta.ContentLength,
-                            recordTypeConverter: recordTypeConverter);
+                            translationParams: translationParams);
                     }
                     catch (Exception ex)
                     {
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public static M RecordParse<M>(
             M record,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? translationParams,
             RecordStructFill<M> fillStructs,
             MajorRecordFill<M> fillTyped)
         {
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     recordParseCount: recordParseCount,
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
                 if (!parsed.KeepParsing) break;
                 if (parsed.DuplicateParseMarker != null)
                 {
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public static M SubrecordParse<M>(
             M record,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? translationParams,
             RecordStructFill<M> fillStructs)
         {
             fillStructs?.Invoke(
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public static M SubrecordParse<M>(
             M record,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? translationParams,
             RecordStructFill<M> fillStructs,
             SubrecordFill<M> fillTyped)
         {
@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     recordParseCount: recordParseCount,
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
                 if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public static G GroupParse<G>(
             G record,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? translationParams,
             RecordStructFill<G> fillStructs,
             RecordTypeFill<G> fillTyped)
         {
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     recordParseCount: null,
                     nextRecordType: nextRecordType,
                     contentLength: contentLength,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
                 if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {
@@ -334,7 +334,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 importMask: importMask,
                 nextRecordType: modHeader.RecordType,
                 contentLength: checked((int)modHeader.ContentLength),
-                recordTypeConverter: null);
+                translationParams: null);
             frame.Reader.MetaData.MasterReferences.SetTo(record.MasterReferences);
             while (!frame.Complete)
             {
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     importMask: importMask,
                     nextRecordType: groupHeader.ContainedRecordType,
                     contentLength: len,
-                    recordTypeConverter: null);
+                    translationParams: null);
                 if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {

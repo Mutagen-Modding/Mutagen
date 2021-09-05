@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                         $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor}.{this.Module.CopyInFromPrefix}{TranslationTerm}"))
                     {
                         args.Add($"frame: {frameAccessor}");
-                        args.Add($"recordTypeConverter: null");
+                        args.Add($"translationParams: null");
                     }
                 }
                 else
@@ -192,11 +192,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                         if (data?.RecordTypeConverter != null
                             && data.RecordTypeConverter.FromConversions.Count > 0)
                         {
-                            args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                            args.Add($"translationParams: translationParams.With({objGen.RegistrationName}.{typeGen.Name}Converter)");
                         }
                         else if (await NeedsRecordTypeConverter(loqui))
                         {
-                            args.AddPassArg($"recordTypeConverter");
+                            args.AddPassArg($"translationParams");
                         }
                     }
                 }

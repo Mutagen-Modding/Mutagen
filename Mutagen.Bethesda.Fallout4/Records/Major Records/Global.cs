@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static Global CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter recordTypeConverter)
+            TypedParseParams? translationParams)
         {
             return GlobalCustomParsing.Create<Global>(
                 frame,

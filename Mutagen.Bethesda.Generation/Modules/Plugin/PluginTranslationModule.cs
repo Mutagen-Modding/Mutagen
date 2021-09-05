@@ -177,13 +177,23 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 $"{nameof(RecordTypeConverter)}? recordTypeConverter = null",
                 when: (obj, dir) =>
                 {
-                    return obj.GetObjectType() != ObjectType.Mod;
+                    return dir == TranslationDirection.Writer 
+                           && obj.GetObjectType() != ObjectType.Mod;
+                });
+            var typedRecordtranslationParams = new APILine(
+                "TypedRecordtranslationParams",
+                $"{nameof(TypedParseParams)}? translationParams = null",
+                when: (obj, dir) =>
+                {
+                    return dir == TranslationDirection.Reader
+                        && obj.GetObjectType() != ObjectType.Mod;
                 });
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
                     majorAPI: new APILine[] { new APILine(WriterClass, $"{WriterClass} {WriterMemberName}") },
                     optionalAPI: modAPILines
                         .And(recTypeConverter)
+                        .And(typedRecordtranslationParams)
                         .And(writeParamOptional)
                         .ToArray(),
                     customAPI: new CustomMethodAPI[]
@@ -195,6 +205,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     majorAPI: new APILine[] { new APILine(ReaderClass, $"{ReaderClass} {ReaderMemberName}") },
                     optionalAPI: modAPILines
                         .And(recTypeConverter)
+                        .And(typedRecordtranslationParams)
                         .And(writeParamOptional)
                         .ToArray(),
                     customAPI: new CustomMethodAPI[]
@@ -772,12 +783,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     {
                         args.Add($"GroupMask? importMask");
                     }
-                    args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
+                    args.Add($"{nameof(TypedParseParams)}? translationParams = null");
                 }
                 using (new BraceWrapper(fg))
                 {
                     var mutaObjType = obj.GetObjectType();
-                    fg.AppendLine($"nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);");
+                    fg.AppendLine($"nextRecordType = translationParams.ConvertToStandard(nextRecordType);");
                     fg.AppendLine("switch (nextRecordType.TypeInt)");
                     using (new BraceWrapper(fg))
                     {
@@ -994,7 +1005,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     args.AddPassArg("recordParseCount");
                                     args.AddPassArg("nextRecordType");
                                     args.AddPassArg("contentLength");
-                                    args.AddPassArg($"recordTypeConverter");
+                                    args.AddPassArg($"translationParams");
                                 }
                             }
                             else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
@@ -1017,7 +1028,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     args.AddPassArg("contentLength");
                                     if (data.BaseRecordTypeConverter?.FromConversions.Count > 0)
                                     {
-                                        args.Add($"recordTypeConverter: {obj.RegistrationName}.BaseConverter");
+                                        args.Add($"translationParams: translationParams.With({obj.RegistrationName}.BaseConverter)");
                                     }
                                 }
                             }
@@ -1639,7 +1650,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     args.Add($"record: {accessor}");
                     args.AddPassArg(ReaderMemberName);
-                    args.Add($"recordTypeConverter: recordTypeConverter");
+                    args.AddPassArg($"translationParams");
                     args.Add($"fillStructs: {TranslationCreateClass(obj)}.FillBinaryStructs");
                     args.Add($"fillTyped: {TranslationCreateClass(obj)}.FillBinaryRecordTypes");
                 }
@@ -1676,7 +1687,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                         suffixLine: ")"))
                                     {
                                         args.Add($"{ReaderMemberName}.Reader");
-                                        args.Add(GetRecordTypeString(obj, $"{ReaderMemberName}.MetaData.Constants.Release", $"{ReaderMemberName}.MetaData.FormVersion"));
+                                        args.Add(GetRecordTypeString(
+                                            obj, 
+                                            "translationParams",
+                                            $"{ReaderMemberName}.MetaData.Constants.Release",
+                                            $"{ReaderMemberName}.MetaData.FormVersion"));
                                     }
                                 }
                             }
@@ -1687,7 +1702,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 suffixLine: ")"))
                             {
                                 args.Add($"{ReaderMemberName}.Reader");
-                                args.Add(GetRecordTypeString(obj, $"{ReaderMemberName}.MetaData.Constants.Release", $"{ReaderMemberName}.MetaData.FormVersion"));
+                                args.Add(GetRecordTypeString(
+                                    obj, 
+                                    "translationParams",
+                                    $"{ReaderMemberName}.MetaData.Constants.Release", 
+                                    $"{ReaderMemberName}.MetaData.FormVersion"));
                             }
                             break;
                         case ObjectType.Group:
@@ -1707,8 +1726,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                         {
                             args.Add($"record: {accessor}");
-                            args.Add("frame: frame");
-                            args.Add("recordTypeConverter: recordTypeConverter");
+                            args.AddPassArg("frame");
+                            args.AddPassArg("translationParams");
                             args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj)
                                 || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
@@ -1724,7 +1743,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         {
                             args.Add($"record: {accessor}");
                             args.AddPassArg(ReaderMemberName);
-                            args.Add("recordTypeConverter: recordTypeConverter");
+                            args.AddPassArg("translationParams");
                             args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj)
                                 || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
@@ -1740,7 +1759,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         {
                             args.Add($"record: {accessor}");
                             args.AddPassArg(ReaderMemberName);
-                            args.AddPassArg("recordTypeConverter");
+                            args.AddPassArg($"translationParams");
                             args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj)
                                 || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
@@ -2706,7 +2725,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     semiColon: false))
                 {
                     args.AddPassArg(WriterMemberName);
-                    args.Add($"record: {GetRecordTypeString(obj, "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
+                    args.Add($"record: {GetRecordTypeString(obj, "recordTypeConverter", "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
                     args.Add($"type: {nameof(ObjectType)}.{obj.GetObjectType()}");
                 }
             }

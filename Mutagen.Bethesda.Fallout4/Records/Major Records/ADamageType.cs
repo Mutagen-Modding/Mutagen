@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Fallout4
 {
@@ -8,16 +9,16 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public static ADamageType CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter recordTypeConverter)
+            TypedParseParams? translationParams)
         {
             var majorMeta = frame.GetMajorRecordFrame();
             if (majorMeta.FormVersion >= 78)
             {
-                return DamageType.CreateFromBinary(frame, recordTypeConverter); 
+                return DamageType.CreateFromBinary(frame, translationParams); 
             }
             else
             {
-                return DamageTypeIndexed.CreateFromBinary(frame, recordTypeConverter);
+                return DamageTypeIndexed.CreateFromBinary(frame, translationParams);
             }
         }
     }
