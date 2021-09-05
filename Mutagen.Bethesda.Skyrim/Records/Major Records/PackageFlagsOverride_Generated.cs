@@ -533,12 +533,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PackageFlagsOverrideBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static PackageFlagsOverride CreateFromBinary(
@@ -1237,11 +1237,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPackageFlagsOverrideGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.PFO2),
+                record: translationParams.ConvertToCustom(RecordTypes.PFO2),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1253,12 +1253,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IPackageFlagsOverrideGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1300,12 +1300,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPackageFlagsOverrideGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PackageFlagsOverrideBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1344,12 +1344,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PackageFlagsOverrideBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public Package.Flag SetFlags => (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));

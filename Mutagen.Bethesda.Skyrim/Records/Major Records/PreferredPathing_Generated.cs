@@ -578,12 +578,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PreferredPathingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static PreferredPathing CreateFromBinary(
@@ -1272,36 +1272,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.NavmeshSets,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshSetGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, INavmeshSetGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((NavmeshSetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshNodeGetter>.Instance.Write(
                 writer: writer,
                 items: item.NavmeshTree,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshNodeGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, INavmeshNodeGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((NavmeshNodeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
         }
 
         public void Write(
             MutagenWriter writer,
             IPreferredPathingGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.NVPP),
+                record: translationParams.ConvertToCustom(RecordTypes.NVPP),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1313,12 +1313,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IPreferredPathingGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1354,12 +1354,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPreferredPathingGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PreferredPathingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1399,12 +1399,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PreferredPathingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region NavmeshSets

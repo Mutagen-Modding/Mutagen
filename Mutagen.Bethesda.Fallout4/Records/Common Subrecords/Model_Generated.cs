@@ -375,12 +375,12 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Model CreateFromBinary(
@@ -1023,49 +1023,49 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static void WriteRecordTypes(
             IModelGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             SimpleModelBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.MODF));
+                header: translationParams.ConvertToCustom(RecordTypes.MODF));
         }
 
         public void Write(
             MutagenWriter writer,
             IModelGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IModelGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISimpleModelGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IModelGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1139,12 +1139,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Unknown

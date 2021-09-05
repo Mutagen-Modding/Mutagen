@@ -2722,12 +2722,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Water CreateFromBinary(
@@ -4871,57 +4871,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IWaterGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.WritePerItem(
                 writer: writer,
                 items: item.UnusedNoisemaps,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
+                recordType: translationParams.ConvertToCustom(RecordTypes.NNAM),
                 transl: StringBinaryTranslation.Instance.Write);
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Opacity,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
             EnumBinaryTranslation<Water.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Material,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.OpenSound,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Spell,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.XNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ImageSpace,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
             UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.DamagePerSecond,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
@@ -5072,45 +5072,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.GNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
             P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.LinearVelocity,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0));
             P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.AngularVelocity,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NoiseLayerOneTexture,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NoiseLayerTwoTexture,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM3),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM3),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NoiseLayerThreeTexture,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM4),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FlowNormalsNoiseTexture,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM5),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM5),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
             IWaterGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.WATR),
+                record: translationParams.ConvertToCustom(RecordTypes.WATR),
                 type: ObjectType.Record))
             {
                 try
@@ -5122,7 +5122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -5135,34 +5135,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWaterGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWaterGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWaterGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -5420,12 +5420,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Name

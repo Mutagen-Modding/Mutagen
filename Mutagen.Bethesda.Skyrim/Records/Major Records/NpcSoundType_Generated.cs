@@ -493,12 +493,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((NpcSoundTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static NpcSoundType CreateFromBinary(
@@ -1154,46 +1154,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             INpcSoundTypeGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             EnumBinaryTranslation<NpcSoundType.SoundType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Type,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CSDT));
+                header: translationParams.ConvertToCustom(RecordTypes.CSDT));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INpcSoundGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
-                transl: (MutagenWriter subWriter, INpcSoundGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, INpcSoundGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((NpcSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
         }
 
         public void Write(
             MutagenWriter writer,
             INpcSoundTypeGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (INpcSoundTypeGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1257,12 +1257,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this INpcSoundTypeGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((NpcSoundTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1302,12 +1302,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((NpcSoundTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Type

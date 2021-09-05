@@ -515,12 +515,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PerkScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static PerkScriptFragments CreateFromBinary(
@@ -1179,20 +1179,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Fragments,
                 countLengthLength: 2,
-                transl: (MutagenWriter subWriter, IIndexedScriptFragmentGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IIndexedScriptFragmentGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((IndexedScriptFragmentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
         }
 
         public void Write(
             MutagenWriter writer,
             IPerkScriptFragmentsGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
                 item: item,
@@ -1202,12 +1202,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IPerkScriptFragmentsGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1242,12 +1242,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPerkScriptFragmentsGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PerkScriptFragmentsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1286,12 +1286,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PerkScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public SByte Unknown => (sbyte)_data.Slice(0x0, 0x1)[0];

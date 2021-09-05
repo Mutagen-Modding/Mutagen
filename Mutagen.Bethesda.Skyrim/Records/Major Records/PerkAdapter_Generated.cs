@@ -379,12 +379,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PerkAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static PerkAdapter CreateFromBinary(
@@ -1074,11 +1074,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPerkAdapterGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.VMAD),
+                record: translationParams.ConvertToCustom(RecordTypes.VMAD),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1090,23 +1090,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IPerkAdapterGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IAVirtualMachineAdapterGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IPerkAdapterGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1168,12 +1168,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => PerkAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PerkAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region ScriptFragments

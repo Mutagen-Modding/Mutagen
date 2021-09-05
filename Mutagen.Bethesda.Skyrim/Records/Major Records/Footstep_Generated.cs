@@ -464,12 +464,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => FootstepBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((FootstepBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Footstep CreateFromBinary(
@@ -1294,31 +1294,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IFootstepGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ImpactDataSet,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Tag,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
             IFootstepGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.FSTP),
+                record: translationParams.ConvertToCustom(RecordTypes.FSTP),
                 type: ObjectType.Record))
             {
                 try
@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1343,34 +1343,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IFootstepGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IFootstepGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IFootstepGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1463,12 +1463,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => FootstepBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((FootstepBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region ImpactDataSet

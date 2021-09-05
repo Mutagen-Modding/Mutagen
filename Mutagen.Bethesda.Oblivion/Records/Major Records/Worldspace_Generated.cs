@@ -1061,12 +1061,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Worldspace CreateFromBinary(
@@ -3670,63 +3670,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             IWorldspaceGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Parent,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.WNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Climate,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Water,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.MapData is {} MapDataItem)
             {
                 ((MapDataBinaryWriteTranslation)((IBinaryItem)MapDataItem).BinaryWriteTranslator).Write(
                     item: MapDataItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
             P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectBoundsMin,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0));
             P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectBoundsMax,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM9));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM9));
             EnumBinaryTranslation<MusicType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Music,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.OffsetData,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST),
+                header: translationParams.ConvertToCustom(RecordTypes.OFST),
                 overflowRecord: RecordTypes.XXXX);
         }
 
@@ -3744,11 +3744,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IWorldspaceGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.WRLD),
+                record: translationParams.ConvertToCustom(RecordTypes.WRLD),
                 type: ObjectType.Record))
             {
                 try
@@ -3760,7 +3760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -3776,45 +3776,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWorldspaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IPlaceGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWorldspaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWorldspaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWorldspaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -3988,12 +3988,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Name

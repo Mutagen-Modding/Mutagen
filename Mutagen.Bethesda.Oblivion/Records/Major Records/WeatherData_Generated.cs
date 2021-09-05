@@ -743,12 +743,12 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WeatherDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static WeatherData CreateFromBinary(
@@ -1569,11 +1569,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IWeatherDataGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.DATA),
+                record: translationParams.ConvertToCustom(RecordTypes.DATA),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1585,12 +1585,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWeatherDataGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1631,12 +1631,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IWeatherDataGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WeatherDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1675,12 +1675,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WeatherDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public Byte WindSpeed => _data.Span[0x0];

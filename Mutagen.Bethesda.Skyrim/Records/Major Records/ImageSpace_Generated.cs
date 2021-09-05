@@ -615,12 +615,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ImageSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ImageSpaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static ImageSpace CreateFromBinary(
@@ -1642,54 +1642,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IImageSpaceGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ENAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
             if (item.Hdr is {} HdrItem)
             {
                 ((ImageSpaceHdrBinaryWriteTranslation)((IBinaryItem)HdrItem).BinaryWriteTranslator).Write(
                     item: HdrItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             if (item.Cinematic is {} CinematicItem)
             {
                 ((ImageSpaceCinematicBinaryWriteTranslation)((IBinaryItem)CinematicItem).BinaryWriteTranslator).Write(
                     item: CinematicItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             if (item.Tint is {} TintItem)
             {
                 ((ImageSpaceTintBinaryWriteTranslation)((IBinaryItem)TintItem).BinaryWriteTranslator).Write(
                     item: TintItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             if (item.DepthOfField is {} DepthOfFieldItem)
             {
                 ((ImageSpaceDepthOfFieldBinaryWriteTranslation)((IBinaryItem)DepthOfFieldItem).BinaryWriteTranslator).Write(
                     item: DepthOfFieldItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             IImageSpaceGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.IMGS),
+                record: translationParams.ConvertToCustom(RecordTypes.IMGS),
                 type: ObjectType.Record))
             {
                 try
@@ -1701,7 +1701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1714,34 +1714,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IImageSpaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IImageSpaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IImageSpaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1845,12 +1845,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => ImageSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ImageSpaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region ENAM

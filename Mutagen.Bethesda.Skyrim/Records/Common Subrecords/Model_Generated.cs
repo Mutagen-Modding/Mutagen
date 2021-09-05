@@ -452,12 +452,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Model CreateFromBinary(
@@ -1139,58 +1139,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IModelGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             SimpleModelBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAlternateTextureGetter>.Instance.Write(
                 writer: writer,
                 items: item.AlternateTextures,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.MODS),
+                recordType: translationParams.ConvertToCustom(RecordTypes.MODS),
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IAlternateTextureGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IAlternateTextureGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((AlternateTextureBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
         }
 
         public void Write(
             MutagenWriter writer,
             IModelGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IModelGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISimpleModelGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IModelGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1270,12 +1270,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; private set; }

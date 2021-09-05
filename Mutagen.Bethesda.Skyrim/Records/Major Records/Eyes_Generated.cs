@@ -514,12 +514,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => EyesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((EyesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Eyes CreateFromBinary(
@@ -1378,38 +1378,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IEyesGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             EnumBinaryTranslation<Eyes.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
         }
 
         public void Write(
             MutagenWriter writer,
             IEyesGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.EYES),
+                record: translationParams.ConvertToCustom(RecordTypes.EYES),
                 type: ObjectType.Record))
             {
                 try
@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1434,34 +1434,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IEyesGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IEyesGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IEyesGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1564,12 +1564,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => EyesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((EyesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         public Eyes.MajorFlag MajorFlags => (Eyes.MajorFlag)this.MajorRecordFlagsRaw;
 

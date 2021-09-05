@@ -387,12 +387,12 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((RegionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #endregion
 
@@ -980,43 +980,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             IRegionDataGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             if (item.Header is {} HeaderItem)
             {
                 ((RegionDataHeaderBinaryWriteTranslation)((IBinaryItem)HeaderItem).BinaryWriteTranslator).Write(
                     item: HeaderItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public virtual void Write(
             MutagenWriter writer,
             IRegionDataGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.RDAT),
+                record: translationParams.ConvertToCustom(RecordTypes.RDAT),
                 type: ObjectType.Subrecord))
             {
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IRegionDataGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1058,12 +1058,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IRegionDataGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((RegionDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1103,12 +1103,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((RegionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Header

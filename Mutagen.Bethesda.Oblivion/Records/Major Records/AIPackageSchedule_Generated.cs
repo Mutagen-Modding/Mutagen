@@ -494,12 +494,12 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((AIPackageScheduleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static AIPackageSchedule CreateFromBinary(
@@ -1168,11 +1168,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IAIPackageScheduleGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.PSDT),
+                record: translationParams.ConvertToCustom(RecordTypes.PSDT),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1184,12 +1184,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IAIPackageScheduleGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1224,12 +1224,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IAIPackageScheduleGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((AIPackageScheduleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1268,12 +1268,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((AIPackageScheduleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public Month Month => (Month)_data.Span.Slice(0x0, 0x1)[0];

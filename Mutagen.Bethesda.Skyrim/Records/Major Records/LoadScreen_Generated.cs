@@ -820,12 +820,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LoadScreenBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((LoadScreenBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static LoadScreen CreateFromBinary(
@@ -1921,48 +1921,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ILoadScreenGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             if (item.Icons is {} IconsItem)
             {
                 ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
                     item: IconsItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LoadingScreenNif,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialScale,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialRotation,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
             if (item.RotationOffsetConstraints is {} RotationOffsetConstraintsItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.ONAM))
@@ -1970,28 +1970,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((Int16MinMaxBinaryWriteTranslation)((IBinaryItem)RotationOffsetConstraintsItem).BinaryWriteTranslator).Write(
                         item: RotationOffsetConstraintsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialTranslationOffset,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.XNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CameraPath,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.MOD2),
+                header: translationParams.ConvertToCustom(RecordTypes.MOD2),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
             ILoadScreenGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.LSCR),
+                record: translationParams.ConvertToCustom(RecordTypes.LSCR),
                 type: ObjectType.Record))
             {
                 try
@@ -2003,7 +2003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -2016,34 +2016,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILoadScreenGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILoadScreenGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILoadScreenGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2186,12 +2186,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => LoadScreenBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((LoadScreenBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         public LoadScreen.MajorFlag MajorFlags => (LoadScreen.MajorFlag)this.MajorRecordFlagsRaw;
 

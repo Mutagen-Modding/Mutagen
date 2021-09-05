@@ -1020,12 +1020,12 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => HeadPartBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((HeadPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static HeadPart CreateFromBinary(
@@ -2204,88 +2204,88 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static void WriteRecordTypes(
             IHeadPartGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             EnumBinaryTranslation<HeadPart.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
             EnumBinaryTranslation<HeadPart.TypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Type,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Write(
                 writer: writer,
                 items: item.ExtraParts,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM));
+                        header: translationParams.ConvertToCustom(RecordTypes.HNAM));
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPartGetter>.Instance.Write(
                 writer: writer,
                 items: item.Parts,
-                transl: (MutagenWriter subWriter, IPartGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IPartGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((PartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TextureSet,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Color,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ValidRaces,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
         }
 
         public void Write(
             MutagenWriter writer,
             IHeadPartGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.HDPT),
+                record: translationParams.ConvertToCustom(RecordTypes.HDPT),
                 type: ObjectType.Record))
             {
                 try
@@ -2297,7 +2297,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -2310,34 +2310,34 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IHeadPartGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IHeadPartGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IHeadPartGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2495,12 +2495,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override object BinaryWriteTranslator => HeadPartBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((HeadPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         public HeadPart.MajorFlag MajorFlags => (HeadPart.MajorFlag)this.MajorRecordFlagsRaw;
 

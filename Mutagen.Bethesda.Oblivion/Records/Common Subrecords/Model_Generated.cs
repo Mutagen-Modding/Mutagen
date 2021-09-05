@@ -441,12 +441,12 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static Model CreateFromBinary(
@@ -1071,43 +1071,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             IModelGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.File,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
+                header: translationParams.ConvertToCustom(RecordTypes.MODL),
                 binaryType: StringBinaryType.NullTerminate);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.BoundRadius,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.MODB));
+                header: translationParams.ConvertToCustom(RecordTypes.MODB));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Hashes,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.MODT));
+                header: translationParams.ConvertToCustom(RecordTypes.MODT));
         }
 
         public void Write(
             MutagenWriter writer,
             IModelGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IModelGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1171,12 +1171,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IModelGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1215,12 +1215,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region File

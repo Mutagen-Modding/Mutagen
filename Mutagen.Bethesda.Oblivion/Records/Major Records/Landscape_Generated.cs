@@ -764,12 +764,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((LandscapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Landscape CreateFromBinary(
@@ -1798,44 +1798,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             ILandscapeGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DATA,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.VertexNormals,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.VNML));
+                header: translationParams.ConvertToCustom(RecordTypes.VNML));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.VertexHeightMap,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.VHGT));
+                header: translationParams.ConvertToCustom(RecordTypes.VHGT));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.VertexColors,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.VCLR));
+                header: translationParams.ConvertToCustom(RecordTypes.VCLR));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBaseLayerGetter>.Instance.Write(
                 writer: writer,
                 items: item.Layers,
-                transl: (MutagenWriter subWriter, IBaseLayerGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IBaseLayerGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((BaseLayerBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Textures,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.VTEX),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandTextureGetter> subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.VTEX),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandTextureGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1846,11 +1846,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ILandscapeGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.LAND),
+                record: translationParams.ConvertToCustom(RecordTypes.LAND),
                 type: ObjectType.Record))
             {
                 try
@@ -1862,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1875,34 +1875,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILandscapeGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILandscapeGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILandscapeGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2045,12 +2045,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((LandscapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region DATA

@@ -402,12 +402,12 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static Part CreateFromBinary(
@@ -1022,40 +1022,40 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static void WriteRecordTypes(
             IPartGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             EnumBinaryTranslation<Part.PartTypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.PartType,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FileName,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
             IPartGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IPartGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1116,12 +1116,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IPartGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PartBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1160,12 +1160,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region PartType

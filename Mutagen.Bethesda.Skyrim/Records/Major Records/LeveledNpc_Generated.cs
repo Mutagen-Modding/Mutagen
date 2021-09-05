@@ -721,12 +721,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LeveledNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((LeveledNpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static LeveledNpc CreateFromBinary(
@@ -1769,60 +1769,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ILeveledNpcGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                 item: ObjectBoundsItem,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ChanceNone,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLD));
+                header: translationParams.ConvertToCustom(RecordTypes.LVLD));
             EnumBinaryTranslation<LeveledNpc.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLF));
+                header: translationParams.ConvertToCustom(RecordTypes.LVLF));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Global,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLG));
+                header: translationParams.ConvertToCustom(RecordTypes.LVLG));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILeveledNpcEntryGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Entries,
                 counterType: RecordTypes.LLCT,
                 counterLength: 1,
-                transl: (MutagenWriter subWriter, ILeveledNpcEntryGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, ILeveledNpcEntryGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((LeveledNpcEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             ILeveledNpcGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.LVLN),
+                record: translationParams.ConvertToCustom(RecordTypes.LVLN),
                 type: ObjectType.Record))
             {
                 try
@@ -1834,7 +1834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1847,34 +1847,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILeveledNpcGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILeveledNpcGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILeveledNpcGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2000,12 +2000,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => LeveledNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((LeveledNpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region ObjectBounds

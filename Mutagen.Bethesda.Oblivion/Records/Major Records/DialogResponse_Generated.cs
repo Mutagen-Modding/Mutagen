@@ -449,12 +449,12 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((DialogResponseBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static DialogResponse CreateFromBinary(
@@ -1122,47 +1122,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             IDialogResponseGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             if (item.Data is {} DataItem)
             {
                 ((DialogResponseDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ResponseText,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ActorNotes,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
             IDialogResponseGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IDialogResponseGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1229,12 +1229,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IDialogResponseGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((DialogResponseBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1273,12 +1273,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((DialogResponseBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Data

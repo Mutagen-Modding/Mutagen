@@ -2888,12 +2888,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Npc CreateFromBinary(
@@ -5356,64 +5356,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             INpcGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                 item: ObjectBoundsItem,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             var ConfigurationItem = item.Configuration;
             ((NpcConfigurationBinaryWriteTranslation)((IBinaryItem)ConfigurationItem).BinaryWriteTranslator).Write(
                 item: ConfigurationItem,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRankPlacementGetter>.Instance.Write(
                 writer: writer,
                 items: item.Factions,
-                transl: (MutagenWriter subWriter, IRankPlacementGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IRankPlacementGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((RankPlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DeathItem,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Voice,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.VTCK));
+                header: translationParams.ConvertToCustom(RecordTypes.VTCK));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Template,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TPLT));
+                header: translationParams.ConvertToCustom(RecordTypes.TPLT));
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Race,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.ActorEffect,
                 counterType: RecordTypes.SPCT,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
+                recordType: translationParams.ConvertToCustom(RecordTypes.SPLO),
                 subRecordPerItem: true,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5424,95 +5424,95 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
                     item: DestructibleItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WornArmor,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.WNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FarAwayModel,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AttackRace,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ATKR));
+                header: translationParams.ConvertToCustom(RecordTypes.ATKR));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAttackGetter>.Instance.Write(
                 writer: writer,
                 items: item.Attacks,
-                transl: (MutagenWriter subWriter, IAttackGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SpectatorOverridePackageList,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SPOR));
+                header: translationParams.ConvertToCustom(RecordTypes.SPOR));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObserveDeadBodyOverridePackageList,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.OCOR));
+                header: translationParams.ConvertToCustom(RecordTypes.OCOR));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.GuardWarnOverridePackageList,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.GWOR));
+                header: translationParams.ConvertToCustom(RecordTypes.GWOR));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CombatOverridePackageList,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ECOR));
+                header: translationParams.ConvertToCustom(RecordTypes.ECOR));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPerkPlacementGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Perks,
                 counterType: RecordTypes.PRKZ,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IPerkPlacementGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IPerkPlacementGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((PerkPlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IContainerEntryGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Items,
                 counterType: RecordTypes.COCT,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((ContainerEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             var AIDataItem = item.AIData;
             ((AIDataBinaryWriteTranslation)((IBinaryItem)AIDataItem).BinaryWriteTranslator).Write(
                 item: AIDataItem,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Packages,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(RecordTypes.PKID));
+                        header: translationParams.ConvertToCustom(RecordTypes.PKID));
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5521,17 +5521,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Class,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ShortName,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SHRT),
+                header: translationParams.ConvertToCustom(RecordTypes.SHRT),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             NpcBinaryWriteTranslation.WriteBinaryDataMarker(
@@ -5542,103 +5542,103 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((PlayerSkillsBinaryWriteTranslation)((IBinaryItem)PlayerSkillsItem).BinaryWriteTranslator).Write(
                     item: PlayerSkillsItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Write(
                 writer: writer,
                 items: item.HeadParts,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
+                        header: translationParams.ConvertToCustom(RecordTypes.PNAM));
                 });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HairColor,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.HCLF));
+                header: translationParams.ConvertToCustom(RecordTypes.HCLF));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CombatStyle,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.GiftFilter,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
             UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NAM5,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM5));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM5));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Height,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM6));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM6));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Weight,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM7));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM7));
             EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.SoundLevel,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM8));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM8));
             if (item.Sound is {} SoundItem)
             {
                 ((ANpcSoundDefinitionBinaryWriteTranslation)((IBinaryItem)SoundItem).BinaryWriteTranslator).Write(
                     item: SoundItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultOutfit,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DOFT));
+                header: translationParams.ConvertToCustom(RecordTypes.DOFT));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SleepingOutfit,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SOFT));
+                header: translationParams.ConvertToCustom(RecordTypes.SOFT));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultPackageList,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DPLT));
+                header: translationParams.ConvertToCustom(RecordTypes.DPLT));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CrimeFaction,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CRIF));
+                header: translationParams.ConvertToCustom(RecordTypes.CRIF));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HeadTexture,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FTST));
+                header: translationParams.ConvertToCustom(RecordTypes.FTST));
             ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TextureLighting,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.QNAM),
                 binaryType: ColorBinaryType.NoAlphaFloat);
             if (item.FaceMorph is {} FaceMorphItem)
             {
                 ((NpcFaceMorphBinaryWriteTranslation)((IBinaryItem)FaceMorphItem).BinaryWriteTranslator).Write(
                     item: FaceMorphItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             if (item.FaceParts is {} FacePartsItem)
             {
                 ((NpcFacePartsBinaryWriteTranslation)((IBinaryItem)FacePartsItem).BinaryWriteTranslator).Write(
                     item: FacePartsItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITintLayerGetter>.Instance.Write(
                 writer: writer,
                 items: item.TintLayers,
-                transl: (MutagenWriter subWriter, ITintLayerGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, ITintLayerGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((TintLayerBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
         }
 
@@ -5658,11 +5658,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             INpcGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.NPC_),
+                record: translationParams.ConvertToCustom(RecordTypes.NPC_),
                 type: ObjectType.Record))
             {
                 try
@@ -5674,7 +5674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -5687,34 +5687,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (INpcGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (INpcGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (INpcGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -6139,12 +6139,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         public Npc.MajorFlag MajorFlags => (Npc.MajorFlag)this.MajorRecordFlagsRaw;
 

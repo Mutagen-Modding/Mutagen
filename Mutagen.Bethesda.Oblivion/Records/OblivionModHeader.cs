@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                     writer: writer,
                     items: item.MasterReferences,
-                    transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, RecordTypeConverter? conv) =>
+                    transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, TypedWriteParams? conv) =>
                     {
                         var Item = subItem;
                         ((MasterReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            recordTypeConverter: conv);
+                            translationParams: conv);
                     });
             }
         }

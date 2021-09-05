@@ -937,12 +937,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => TalkingActivatorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((TalkingActivatorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static TalkingActivator CreateFromBinary(
@@ -2194,28 +2194,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ITalkingActivatorGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                 item: ObjectBoundsItem,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             if (item.Model is {} ModelItem)
@@ -2223,22 +2223,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             if (item.Destructible is {} DestructibleItem)
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
                     item: DestructibleItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2247,29 +2247,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.PNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LoopingSound,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNDR));
+                header: translationParams.ConvertToCustom(RecordTypes.SNDR));
             Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.FNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.VoiceType,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.VNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.VNAM));
         }
 
         public void Write(
             MutagenWriter writer,
             ITalkingActivatorGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.TACT),
+                record: translationParams.ConvertToCustom(RecordTypes.TACT),
                 type: ObjectType.Record))
             {
                 try
@@ -2281,7 +2281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -2294,34 +2294,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ITalkingActivatorGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ITalkingActivatorGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ITalkingActivatorGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2472,12 +2472,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => TalkingActivatorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((TalkingActivatorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         public TalkingActivator.MajorFlag MajorFlags => (TalkingActivator.MajorFlag)this.MajorRecordFlagsRaw;
 

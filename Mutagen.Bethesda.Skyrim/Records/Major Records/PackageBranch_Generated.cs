@@ -926,12 +926,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PackageBranchBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static PackageBranch CreateFromBinary(
@@ -1870,25 +1870,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IPackageBranchGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BranchType,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Conditions,
                 counterType: RecordTypes.CITC,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             if (item.Root is {} RootItem)
             {
@@ -1897,23 +1897,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((PackageRootBinaryWriteTranslation)((IBinaryItem)RootItem).BinaryWriteTranslator).Write(
                         item: RootItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ProcedureType,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM),
                 binaryType: StringBinaryType.NullTerminate);
             EnumBinaryTranslation<PackageBranch.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Byte>.Instance.WritePerItem(
                 writer: writer,
                 items: item.DataInputIndices,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PKC2),
+                recordType: translationParams.ConvertToCustom(RecordTypes.PKC2),
                 transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             PackageBranchBinaryWriteTranslation.WriteBinaryFlagsOverride(
                 writer: writer,
@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ReadOnlyMemorySlice<Byte>>.Instance.WritePerItem(
                 writer: writer,
                 items: item.Unknown,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PFOR),
+                recordType: translationParams.ConvertToCustom(RecordTypes.PFOR),
                 transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
@@ -1941,23 +1941,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPackageBranchGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IPackageBranchGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2073,12 +2073,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPackageBranchGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PackageBranchBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2118,12 +2118,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PackageBranchBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region BranchType

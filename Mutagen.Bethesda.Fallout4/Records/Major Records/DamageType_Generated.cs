@@ -503,12 +503,12 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => DamageTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((DamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static DamageType CreateFromBinary(
@@ -1456,17 +1456,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static void WriteRecordTypes(
             IDamageTypeGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDamageTypeTargetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.DamageTypes,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDamageTypeTargetGetter> subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.DNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDamageTypeTargetGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1477,11 +1477,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             IDamageTypeGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.DMGT),
+                record: translationParams.ConvertToCustom(RecordTypes.DMGT),
                 type: ObjectType.Record))
             {
                 try
@@ -1493,7 +1493,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1506,45 +1506,45 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IDamageTypeGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IADamageTypeGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IDamageTypeGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IDamageTypeGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IDamageTypeGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1633,12 +1633,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override object BinaryWriteTranslator => DamageTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((DamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public IReadOnlyList<IFormLinkGetter<IDamageTypeTargetGetter>>? DamageTypes { get; private set; }

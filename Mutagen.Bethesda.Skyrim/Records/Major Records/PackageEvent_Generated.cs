@@ -693,12 +693,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PackageEventBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static PackageEvent CreateFromBinary(
@@ -1505,32 +1505,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IPackageEventGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Idle,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.SCHR,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCHR));
+                header: translationParams.ConvertToCustom(RecordTypes.SCHR));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.SCDA,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCDA));
+                header: translationParams.ConvertToCustom(RecordTypes.SCDA));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.SCTX,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX));
+                header: translationParams.ConvertToCustom(RecordTypes.SCTX));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.QNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.QNAM));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             PackageEventBinaryWriteTranslation.WriteBinaryTopics(
                 writer: writer,
                 item: item);
@@ -1552,23 +1552,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPackageEventGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IPackageEventGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1665,12 +1665,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPackageEventGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PackageEventBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1710,12 +1710,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PackageEventBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Idle

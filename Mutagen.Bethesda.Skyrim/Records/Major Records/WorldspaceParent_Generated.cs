@@ -412,12 +412,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static WorldspaceParent CreateFromBinary(
@@ -1017,39 +1017,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IWorldspaceParentGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Worldspace,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.WNAM));
             EnumBinaryTranslation<WorldspaceParent.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
         }
 
         public void Write(
             MutagenWriter writer,
             IWorldspaceParentGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWorldspaceParentGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1107,12 +1107,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWorldspaceParentGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceParentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1152,12 +1152,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Worldspace

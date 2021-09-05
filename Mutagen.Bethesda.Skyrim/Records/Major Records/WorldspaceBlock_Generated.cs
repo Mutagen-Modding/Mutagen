@@ -650,12 +650,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static WorldspaceBlock CreateFromBinary(
@@ -2109,29 +2109,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IWorldspaceBlockGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWorldspaceSubBlockGetter>.Instance.Write(
                 writer: writer,
                 items: item.Items,
-                transl: (MutagenWriter subWriter, IWorldspaceSubBlockGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IWorldspaceSubBlockGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((WorldspaceSubBlockBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
         }
 
         public void Write(
             MutagenWriter writer,
             IWorldspaceBlockGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.GRUP),
+                record: translationParams.ConvertToCustom(RecordTypes.GRUP),
                 type: ObjectType.Group))
             {
                 WriteEmbedded(
@@ -2140,19 +2140,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWorldspaceBlockGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2213,12 +2213,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWorldspaceBlockGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2264,12 +2264,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));

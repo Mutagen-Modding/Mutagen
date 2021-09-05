@@ -650,12 +650,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => SkillRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SkillRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static SkillRecord CreateFromBinary(
@@ -1643,64 +1643,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             ISkillRecordGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Skill,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.INDX));
+                header: translationParams.ConvertToCustom(RecordTypes.INDX));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Data is {} DataItem)
             {
                 ((SkillDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ApprenticeText,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.JourneymanText,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.JNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.JNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ExpertText,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM),
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MasterText,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
             ISkillRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.SKIL),
+                record: translationParams.ConvertToCustom(RecordTypes.SKIL),
                 type: ObjectType.Record))
             {
                 try
@@ -1712,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1725,34 +1725,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ISkillRecordGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ISkillRecordGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ISkillRecordGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1891,12 +1891,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => SkillRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SkillRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Skill

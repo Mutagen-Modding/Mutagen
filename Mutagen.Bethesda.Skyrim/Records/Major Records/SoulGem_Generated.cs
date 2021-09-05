@@ -1066,12 +1066,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => SoulGemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SoulGemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static SoulGem CreateFromBinary(
@@ -2409,23 +2409,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ISoulGemGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             if (item.ObjectBounds is {} ObjectBoundsItem)
             {
                 ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                     item: ObjectBoundsItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             if (item.Model is {} ModelItem)
@@ -2433,43 +2433,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             if (item.Icons is {} IconsItem)
             {
                 ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
                     item: IconsItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             if (item.Destructible is {} DestructibleItem)
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
                     item: DestructibleItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PickUpSound,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.YNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.YNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PutDownSound,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Value);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -2480,26 +2480,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.ContainedSoul,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SOUL));
+                header: translationParams.ConvertToCustom(RecordTypes.SOUL));
             EnumBinaryTranslation<SoulGem.Level, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.MaximumCapacity,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SLCP));
+                header: translationParams.ConvertToCustom(RecordTypes.SLCP));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LinkedTo,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0));
         }
 
         public void Write(
             MutagenWriter writer,
             ISoulGemGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.SLGM),
+                record: translationParams.ConvertToCustom(RecordTypes.SLGM),
                 type: ObjectType.Record))
             {
                 try
@@ -2511,7 +2511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -2524,34 +2524,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ISoulGemGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ISoulGemGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ISoulGemGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2722,12 +2722,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => SoulGemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SoulGemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         public SoulGem.MajorFlag MajorFlags => (SoulGem.MajorFlag)this.MajorRecordFlagsRaw;
 

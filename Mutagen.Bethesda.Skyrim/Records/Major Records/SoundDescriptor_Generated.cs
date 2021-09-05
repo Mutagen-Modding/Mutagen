@@ -1049,12 +1049,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => SoundDescriptorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SoundDescriptorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static SoundDescriptor CreateFromBinary(
@@ -2241,57 +2241,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ISoundDescriptorGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Category,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AlternateSoundFor,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.WritePerItem(
                 writer: writer,
                 items: item.SoundFiles,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
+                recordType: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 transl: StringBinaryTranslation.Instance.Write);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.OutputModel,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ONAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.String,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             if (item.LoopAndRumble is {} LoopAndRumbleItem)
             {
                 ((SoundLoopAndRumbleBinaryWriteTranslation)((IBinaryItem)LoopAndRumbleItem).BinaryWriteTranslator).Write(
                     item: LoopAndRumbleItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.BNAM)))
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.BNAM)))
             {
                 writer.Write(item.PercentFrequencyShift);
                 writer.Write(item.PercentFrequencyVariance);
@@ -2308,11 +2308,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ISoundDescriptorGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.SNDR),
+                record: translationParams.ConvertToCustom(RecordTypes.SNDR),
                 type: ObjectType.Record))
             {
                 try
@@ -2324,7 +2324,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -2337,34 +2337,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ISoundDescriptorGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ISoundDescriptorGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ISoundDescriptorGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2513,12 +2513,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => SoundDescriptorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SoundDescriptorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region CNAM

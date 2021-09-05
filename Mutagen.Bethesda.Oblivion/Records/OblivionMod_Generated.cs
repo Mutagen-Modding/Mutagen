@@ -10927,7 +10927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (importMask?.GameSettings ?? true)
             {
@@ -10937,7 +10937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
                         item: GameSettingsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Globals ?? true)
@@ -10948,7 +10948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Classes ?? true)
@@ -10959,7 +10959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Factions ?? true)
@@ -10970,7 +10970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: FactionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Hairs ?? true)
@@ -10981,7 +10981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
                         item: HairsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Eyes ?? true)
@@ -10992,7 +10992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyeGetter>(
                         item: EyesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Races ?? true)
@@ -11003,7 +11003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
                         item: RacesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Sounds ?? true)
@@ -11014,7 +11014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SoundsItem).BinaryWriteTranslator).Write<ISoundGetter>(
                         item: SoundsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Skills ?? true)
@@ -11025,7 +11025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SkillsItem).BinaryWriteTranslator).Write<ISkillRecordGetter>(
                         item: SkillsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.MagicEffects ?? true)
@@ -11036,7 +11036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)MagicEffectsItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
                         item: MagicEffectsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Scripts ?? true)
@@ -11047,7 +11047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ScriptsItem).BinaryWriteTranslator).Write<IScriptGetter>(
                         item: ScriptsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LandTextures ?? true)
@@ -11058,7 +11058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LandTexturesItem).BinaryWriteTranslator).Write<ILandTextureGetter>(
                         item: LandTexturesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Enchantments ?? true)
@@ -11069,7 +11069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)EnchantmentsItem).BinaryWriteTranslator).Write<IEnchantmentGetter>(
                         item: EnchantmentsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Spells ?? true)
@@ -11080,7 +11080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SpellsItem).BinaryWriteTranslator).Write<ISpellUnleveledGetter>(
                         item: SpellsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Birthsigns ?? true)
@@ -11091,7 +11091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)BirthsignsItem).BinaryWriteTranslator).Write<IBirthsignGetter>(
                         item: BirthsignsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Activators ?? true)
@@ -11102,7 +11102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ActivatorsItem).BinaryWriteTranslator).Write<IActivatorGetter>(
                         item: ActivatorsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.AlchemicalApparatus ?? true)
@@ -11113,7 +11113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)AlchemicalApparatusItem).BinaryWriteTranslator).Write<IAlchemicalApparatusGetter>(
                         item: AlchemicalApparatusItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Armors ?? true)
@@ -11124,7 +11124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
                         item: ArmorsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Books ?? true)
@@ -11135,7 +11135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)BooksItem).BinaryWriteTranslator).Write<IBookGetter>(
                         item: BooksItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Clothes ?? true)
@@ -11146,7 +11146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClothesItem).BinaryWriteTranslator).Write<IClothingGetter>(
                         item: ClothesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Containers ?? true)
@@ -11157,7 +11157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ContainersItem).BinaryWriteTranslator).Write<IContainerGetter>(
                         item: ContainersItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Doors ?? true)
@@ -11168,7 +11168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)DoorsItem).BinaryWriteTranslator).Write<IDoorGetter>(
                         item: DoorsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Ingredients ?? true)
@@ -11179,7 +11179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)IngredientsItem).BinaryWriteTranslator).Write<IIngredientGetter>(
                         item: IngredientsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Lights ?? true)
@@ -11190,7 +11190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LightsItem).BinaryWriteTranslator).Write<ILightGetter>(
                         item: LightsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Miscellaneous ?? true)
@@ -11201,7 +11201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)MiscellaneousItem).BinaryWriteTranslator).Write<IMiscellaneousGetter>(
                         item: MiscellaneousItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Statics ?? true)
@@ -11212,7 +11212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)StaticsItem).BinaryWriteTranslator).Write<IStaticGetter>(
                         item: StaticsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Grasses ?? true)
@@ -11223,7 +11223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GrassesItem).BinaryWriteTranslator).Write<IGrassGetter>(
                         item: GrassesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Trees ?? true)
@@ -11234,7 +11234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)TreesItem).BinaryWriteTranslator).Write<ITreeGetter>(
                         item: TreesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Flora ?? true)
@@ -11245,7 +11245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FloraItem).BinaryWriteTranslator).Write<IFloraGetter>(
                         item: FloraItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Furniture ?? true)
@@ -11256,7 +11256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FurnitureItem).BinaryWriteTranslator).Write<IFurnitureGetter>(
                         item: FurnitureItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Weapons ?? true)
@@ -11267,7 +11267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)WeaponsItem).BinaryWriteTranslator).Write<IWeaponGetter>(
                         item: WeaponsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Ammunitions ?? true)
@@ -11278,7 +11278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)AmmunitionsItem).BinaryWriteTranslator).Write<IAmmunitionGetter>(
                         item: AmmunitionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Npcs ?? true)
@@ -11289,7 +11289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)NpcsItem).BinaryWriteTranslator).Write<INpcGetter>(
                         item: NpcsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Creatures ?? true)
@@ -11300,7 +11300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)CreaturesItem).BinaryWriteTranslator).Write<ICreatureGetter>(
                         item: CreaturesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LeveledCreatures ?? true)
@@ -11311,7 +11311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledCreaturesItem).BinaryWriteTranslator).Write<ILeveledCreatureGetter>(
                         item: LeveledCreaturesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.SoulGems ?? true)
@@ -11322,7 +11322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SoulGemsItem).BinaryWriteTranslator).Write<ISoulGemGetter>(
                         item: SoulGemsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Keys ?? true)
@@ -11333,7 +11333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)KeysItem).BinaryWriteTranslator).Write<IKeyGetter>(
                         item: KeysItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Potions ?? true)
@@ -11344,7 +11344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)PotionsItem).BinaryWriteTranslator).Write<IPotionGetter>(
                         item: PotionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Subspaces ?? true)
@@ -11355,7 +11355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SubspacesItem).BinaryWriteTranslator).Write<ISubspaceGetter>(
                         item: SubspacesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.SigilStones ?? true)
@@ -11366,7 +11366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SigilStonesItem).BinaryWriteTranslator).Write<ISigilStoneGetter>(
                         item: SigilStonesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LeveledItems ?? true)
@@ -11377,7 +11377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledItemsItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
                         item: LeveledItemsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Weathers ?? true)
@@ -11388,7 +11388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
                         item: WeathersItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Climates ?? true)
@@ -11399,7 +11399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClimatesItem).BinaryWriteTranslator).Write<IClimateGetter>(
                         item: ClimatesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Regions ?? true)
@@ -11410,7 +11410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)RegionsItem).BinaryWriteTranslator).Write<IRegionGetter>(
                         item: RegionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Cells ?? true)
@@ -11421,7 +11421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((ListGroupBinaryWriteTranslation)((IBinaryItem)CellsItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
                         item: CellsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Worldspaces ?? true)
@@ -11432,7 +11432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)WorldspacesItem).BinaryWriteTranslator).Write<IWorldspaceGetter>(
                         item: WorldspacesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.DialogTopics ?? true)
@@ -11443,7 +11443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)DialogTopicsItem).BinaryWriteTranslator).Write<IDialogTopicGetter>(
                         item: DialogTopicsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Quests ?? true)
@@ -11454,7 +11454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
                         item: QuestsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.IdleAnimations ?? true)
@@ -11465,7 +11465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
                         item: IdleAnimationsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.AIPackages ?? true)
@@ -11476,7 +11476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)AIPackagesItem).BinaryWriteTranslator).Write<IAIPackageGetter>(
                         item: AIPackagesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.CombatStyles ?? true)
@@ -11487,7 +11487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)CombatStylesItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
                         item: CombatStylesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LoadScreens ?? true)
@@ -11498,7 +11498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LoadScreensItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
                         item: LoadScreensItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LeveledSpells ?? true)
@@ -11509,7 +11509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledSpellsItem).BinaryWriteTranslator).Write<ILeveledSpellGetter>(
                         item: LeveledSpellsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.AnimatedObjects ?? true)
@@ -11520,7 +11520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
                         item: AnimatedObjectsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Waters ?? true)
@@ -11531,7 +11531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)WatersItem).BinaryWriteTranslator).Write<IWaterGetter>(
                         item: WatersItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.EffectShaders ?? true)
@@ -11542,7 +11542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
                         item: EffectShadersItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
         }

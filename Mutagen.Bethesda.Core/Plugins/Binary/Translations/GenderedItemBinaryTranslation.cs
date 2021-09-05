@@ -630,12 +630,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         if (markerWrap)
                         {
-                            transl(writer, male, recordTypeConverter: null);
+                            transl(writer, male, translationParams: null);
                         }
                     }
                     if (!markerWrap)
                     {
-                        transl(writer, male, recordTypeConverter: null);
+                        transl(writer, male, translationParams: null);
                     }
                 }
             }

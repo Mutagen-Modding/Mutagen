@@ -635,12 +635,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((LeveledCreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static LeveledCreature CreateFromBinary(
@@ -1576,50 +1576,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             ILeveledCreatureGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.ChanceNone,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLD));
+                header: translationParams.ConvertToCustom(RecordTypes.LVLD));
             EnumBinaryTranslation<LeveledFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLF));
+                header: translationParams.ConvertToCustom(RecordTypes.LVLF));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILeveledCreatureEntryGetter>.Instance.Write(
                 writer: writer,
                 items: item.Entries,
-                transl: (MutagenWriter subWriter, ILeveledCreatureEntryGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, ILeveledCreatureEntryGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((LeveledCreatureEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
+                header: translationParams.ConvertToCustom(RecordTypes.SCRI));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Template,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
         }
 
         public void Write(
             MutagenWriter writer,
             ILeveledCreatureGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.LVLC),
+                record: translationParams.ConvertToCustom(RecordTypes.LVLC),
                 type: ObjectType.Record))
             {
                 try
@@ -1631,7 +1631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1644,34 +1644,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILeveledCreatureGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILeveledCreatureGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILeveledCreatureGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1786,12 +1786,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((LeveledCreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region ChanceNone

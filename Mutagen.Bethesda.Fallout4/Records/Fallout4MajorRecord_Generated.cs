@@ -447,12 +447,12 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => Fallout4MajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((Fallout4MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #endregion
 
@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             try
             {
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             catch (Exception ex)
             {
@@ -1181,23 +1181,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IFallout4MajorRecordGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IFallout4MajorRecordGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1255,12 +1255,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override object BinaryWriteTranslator => Fallout4MajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((Fallout4MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xC, 0x2));

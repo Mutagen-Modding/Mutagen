@@ -747,12 +747,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LandscapeTextureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((LandscapeTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static LandscapeTexture CreateFromBinary(
@@ -1742,21 +1742,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ILandscapeTextureGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TextureSet,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaterialType,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.HNAM)))
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.HNAM)))
             {
                 writer.Write(item.HavokFriction);
                 writer.Write(item.HavokRestitution);
@@ -1764,16 +1764,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TextureSpecularExponent,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Grasses,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
+                        header: translationParams.ConvertToCustom(RecordTypes.GNAM));
                 });
             if (writer.MetaData.FormVersion!.Value >= 43)
             {
@@ -1781,18 +1781,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Flags,
                     length: 4,
-                    header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
+                    header: translationParams.ConvertToCustom(RecordTypes.INAM));
             }
         }
 
         public void Write(
             MutagenWriter writer,
             ILandscapeTextureGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.LTEX),
+                record: translationParams.ConvertToCustom(RecordTypes.LTEX),
                 type: ObjectType.Record))
             {
                 try
@@ -1804,7 +1804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1817,34 +1817,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILandscapeTextureGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILandscapeTextureGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ILandscapeTextureGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1969,12 +1969,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => LandscapeTextureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((LandscapeTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region TextureSet

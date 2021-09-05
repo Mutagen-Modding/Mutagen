@@ -1070,12 +1070,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ANavigationMeshDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #endregion
 
@@ -1992,37 +1992,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Triangles,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshTriangleGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, INavmeshTriangleGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((NavmeshTriangleBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEdgeLinkGetter>.Instance.Write(
                 writer: writer,
                 items: item.EdgeLinks,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IEdgeLinkGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IEdgeLinkGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((EdgeLinkBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDoorTriangleGetter>.Instance.Write(
                 writer: writer,
                 items: item.DoorTriangles,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IDoorTriangleGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IDoorTriangleGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((DoorTriangleBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             ANavigationMeshDataBinaryWriteTranslation.WriteBinaryCoverTrianglesLogic(
                 writer: writer,
@@ -2087,7 +2087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Write(
             MutagenWriter writer,
             IANavigationMeshDataGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
                 item: item,
@@ -2097,12 +2097,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IANavigationMeshDataGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2176,12 +2176,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IANavigationMeshDataGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ANavigationMeshDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2221,12 +2221,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ANavigationMeshDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public UInt32 NavmeshVersion => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));

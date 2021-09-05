@@ -687,12 +687,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => PlacedCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PlacedCreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static PlacedCreature CreateFromBinary(
@@ -1732,43 +1732,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             IPlacedCreatureGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Base,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAME));
+                header: translationParams.ConvertToCustom(RecordTypes.NAME));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Owner,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XOWN));
+                header: translationParams.ConvertToCustom(RecordTypes.XOWN));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.FactionRank,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XRNK));
+                header: translationParams.ConvertToCustom(RecordTypes.XRNK));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.GlobalVariable,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XGLB));
+                header: translationParams.ConvertToCustom(RecordTypes.XGLB));
             if (item.EnableParent is {} EnableParentItem)
             {
                 ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
                     item: EnableParentItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RagdollData,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XRGD));
+                header: translationParams.ConvertToCustom(RecordTypes.XRGD));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Scale,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XSCL));
+                header: translationParams.ConvertToCustom(RecordTypes.XSCL));
             if (item.Location is {} LocationItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((LocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
                         item: LocationItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
         }
@@ -1784,11 +1784,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IPlacedCreatureGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.ACRE),
+                record: translationParams.ConvertToCustom(RecordTypes.ACRE),
                 type: ObjectType.Record))
             {
                 try
@@ -1800,7 +1800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1813,34 +1813,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IPlacedCreatureGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IPlacedCreatureGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IPlacedCreatureGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1966,12 +1966,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => PlacedCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((PlacedCreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Base

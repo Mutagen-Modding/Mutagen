@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(gendered.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(gendered.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{gendered.SubTypeGeneration.NullChar} subItem{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{gendered.SubTypeGeneration.NullChar} subItem{(needsMasters ? $", {nameof(TypedWriteParams)}? conv" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(

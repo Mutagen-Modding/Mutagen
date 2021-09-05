@@ -630,12 +630,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => NavigationMeshInfoMapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((NavigationMeshInfoMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static NavigationMeshInfoMap CreateFromBinary(
@@ -1593,48 +1593,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             INavigationMeshInfoMapGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.NavMeshVersion,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NVER));
+                header: translationParams.ConvertToCustom(RecordTypes.NVER));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavigationMapInfoGetter>.Instance.Write(
                 writer: writer,
                 items: item.MapInfos,
-                transl: (MutagenWriter subWriter, INavigationMapInfoGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, INavigationMapInfoGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((NavigationMapInfoBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             if (item.PreferredPathing is {} PreferredPathingItem)
             {
                 ((PreferredPathingBinaryWriteTranslation)((IBinaryItem)PreferredPathingItem).BinaryWriteTranslator).Write(
                     item: PreferredPathingItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NVSI,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NVSI));
+                header: translationParams.ConvertToCustom(RecordTypes.NVSI));
         }
 
         public void Write(
             MutagenWriter writer,
             INavigationMeshInfoMapGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.NAVI),
+                record: translationParams.ConvertToCustom(RecordTypes.NAVI),
                 type: ObjectType.Record))
             {
                 try
@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1659,34 +1659,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (INavigationMeshInfoMapGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (INavigationMeshInfoMapGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (INavigationMeshInfoMapGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1792,12 +1792,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => NavigationMeshInfoMapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((NavigationMeshInfoMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region NavMeshVersion

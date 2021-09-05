@@ -791,12 +791,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static TextureSet CreateFromBinary(
@@ -1885,79 +1885,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ITextureSetGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                 item: ObjectBoundsItem,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Diffuse,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX00),
+                header: translationParams.ConvertToCustom(RecordTypes.TX00),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NormalOrGloss,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX01),
+                header: translationParams.ConvertToCustom(RecordTypes.TX01),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EnvironmentMaskOrSubsurfaceTint,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX02),
+                header: translationParams.ConvertToCustom(RecordTypes.TX02),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.GlowOrDetailMap,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX03),
+                header: translationParams.ConvertToCustom(RecordTypes.TX03),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Height,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX04),
+                header: translationParams.ConvertToCustom(RecordTypes.TX04),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Environment,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX05),
+                header: translationParams.ConvertToCustom(RecordTypes.TX05),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Multilayer,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX06),
+                header: translationParams.ConvertToCustom(RecordTypes.TX06),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BacklightMaskOrSpecular,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX07),
+                header: translationParams.ConvertToCustom(RecordTypes.TX07),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Decal is {} DecalItem)
             {
                 ((DecalBinaryWriteTranslation)((IBinaryItem)DecalItem).BinaryWriteTranslator).Write(
                     item: DecalItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             EnumBinaryTranslation<TextureSet.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 2,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
         }
 
         public void Write(
             MutagenWriter writer,
             ITextureSetGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.TXST),
+                record: translationParams.ConvertToCustom(RecordTypes.TXST),
                 type: ObjectType.Record))
             {
                 try
@@ -1969,7 +1969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1982,34 +1982,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ITextureSetGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ITextureSetGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ITextureSetGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2169,12 +2169,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region ObjectBounds

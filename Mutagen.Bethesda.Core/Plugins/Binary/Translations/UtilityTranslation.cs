@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public delegate void BinaryMasterWriteDelegate<TItem>(
             MutagenWriter writer,
             TItem item,
-            RecordTypeConverter? recordTypeConverter);
+            TypedWriteParams? translationParams);
 
         public delegate void RecordStructFill<R>(
             R record,

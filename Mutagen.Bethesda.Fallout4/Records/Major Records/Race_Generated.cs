@@ -2269,12 +2269,12 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Race CreateFromBinary(
@@ -4203,25 +4203,25 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static void WriteRecordTypes(
             IRaceGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AnimationSound,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.STCP));
+                header: translationParams.ConvertToCustom(RecordTypes.STCP));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.WriteWithCounter(
@@ -4229,9 +4229,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 items: item.ActorEffect,
                 counterType: RecordTypes.SPCT,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
+                recordType: translationParams.ConvertToCustom(RecordTypes.SPLO),
                 subRecordPerItem: true,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4240,21 +4240,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Skin,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.WNAM));
             if (item.BipedBodyTemplate is {} BipedBodyTemplateItem)
             {
                 ((BipedBodyTemplateBinaryWriteTranslation)((IBinaryItem)BipedBodyTemplateItem).BinaryWriteTranslator).Write(
                     item: BipedBodyTemplateItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4265,19 +4265,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 ((PropertiesBinaryWriteTranslation)((IBinaryItem)PropertiesItem).BinaryWriteTranslator).Write(
                     item: PropertiesItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AttachParentSlots,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.APPR),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.APPR),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
                 GenderedItemBinaryTranslation.Write(
                     writer: writer,
@@ -4391,11 +4391,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             IRaceGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.RACE),
+                record: translationParams.ConvertToCustom(RecordTypes.RACE),
                 type: ObjectType.Record))
             {
                 try
@@ -4407,7 +4407,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -4420,34 +4420,34 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IRaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IRaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IRaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -4662,12 +4662,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         public Race.MajorFlag MajorFlags => (Race.MajorFlag)this.MajorRecordFlagsRaw;
 

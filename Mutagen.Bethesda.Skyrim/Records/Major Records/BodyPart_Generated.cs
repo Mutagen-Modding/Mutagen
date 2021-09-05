@@ -1446,12 +1446,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((BodyPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static BodyPart CreateFromBinary(
@@ -2652,35 +2652,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IBodyPartGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.BPTN),
+                header: translationParams.ConvertToCustom(RecordTypes.BPTN),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PoseMatching,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.PartNode,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.BPNN),
+                header: translationParams.ConvertToCustom(RecordTypes.BPNN),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.VatsTarget,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.BPNT),
+                header: translationParams.ConvertToCustom(RecordTypes.BPNT),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.IkStartNode,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.BPNI),
+                header: translationParams.ConvertToCustom(RecordTypes.BPNI),
                 binaryType: StringBinaryType.NullTerminate);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.BPND)))
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.BPND)))
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
@@ -2745,23 +2745,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LimbReplacementModel,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GoreTargetBone,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM4),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TextureFilesHashes,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM5));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM5));
         }
 
         public void Write(
             MutagenWriter writer,
             IBodyPartGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
                 item: item,
@@ -2769,18 +2769,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IBodyPartGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2923,12 +2923,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IBodyPartGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((BodyPartBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2968,12 +2968,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((BodyPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Name

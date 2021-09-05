@@ -1791,12 +1791,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Worldspace CreateFromBinary(
@@ -5441,155 +5441,155 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IWorldspaceGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWorldspaceGridReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.LargeReferences,
-                transl: (MutagenWriter subWriter, IWorldspaceGridReferenceGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IWorldspaceGridReferenceGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((WorldspaceGridReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             if (item.MaxHeight is {} MaxHeightItem)
             {
                 ((WorldspaceMaxHeightBinaryWriteTranslation)((IBinaryItem)MaxHeightItem).BinaryWriteTranslator).Write(
                     item: MaxHeightItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.FixedDimensionsCenterCell,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.WCTR));
+                header: translationParams.ConvertToCustom(RecordTypes.WCTR));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InteriorLighting,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.LTMP));
+                header: translationParams.ConvertToCustom(RecordTypes.LTMP));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EncounterZone,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XEZN));
+                header: translationParams.ConvertToCustom(RecordTypes.XEZN));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Location,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XLCN));
+                header: translationParams.ConvertToCustom(RecordTypes.XLCN));
             if (item.Parent is {} ParentItem)
             {
                 ((WorldspaceParentBinaryWriteTranslation)((IBinaryItem)ParentItem).BinaryWriteTranslator).Write(
                     item: ParentItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Climate,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Water,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LodWater,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM3));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM3));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.LodWaterHeight,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM4));
             if (item.LandDefaults is {} LandDefaultsItem)
             {
                 ((WorldspaceLandDefaultsBinaryWriteTranslation)((IBinaryItem)LandDefaultsItem).BinaryWriteTranslator).Write(
                     item: LandDefaultsItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MapImage,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.CloudModel is {} CloudModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)CloudModelItem).BinaryWriteTranslator).Write(
                     item: CloudModelItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             if (item.MapData is {} MapDataItem)
             {
                 ((WorldspaceMapBinaryWriteTranslation)((IBinaryItem)MapDataItem).BinaryWriteTranslator).Write(
                     item: MapDataItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             var MapOffsetItem = item.MapOffset;
             ((WorldspaceMapOffsetBinaryWriteTranslation)((IBinaryItem)MapOffsetItem).BinaryWriteTranslator).Write(
                 item: MapOffsetItem,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.DistantLodMultiplier,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAMA));
+                header: translationParams.ConvertToCustom(RecordTypes.NAMA));
             EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
             if (item.ObjectBounds is {} ObjectBoundsItem)
             {
                 ((WorldspaceObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                     item: ObjectBoundsItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Music,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CanopyShadow,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WaterNoiseTexture,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.XNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HdLodDiffuseTexture,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HdLodNormalTexture,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.UNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.UNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WaterEnvironmentMap,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XWEM),
+                header: translationParams.ConvertToCustom(RecordTypes.XWEM),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.OffsetData,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST),
+                header: translationParams.ConvertToCustom(RecordTypes.OFST),
                 overflowRecord: RecordTypes.XXXX);
         }
 
@@ -5607,11 +5607,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWorldspaceGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.WRLD),
+                record: translationParams.ConvertToCustom(RecordTypes.WRLD),
                 type: ObjectType.Record))
             {
                 try
@@ -5623,7 +5623,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -5639,34 +5639,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWorldspaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWorldspaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWorldspaceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -5950,12 +5950,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         public Worldspace.MajorFlag MajorFlags => (Worldspace.MajorFlag)this.MajorRecordFlagsRaw;
 

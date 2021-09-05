@@ -509,12 +509,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((CreateReferenceToObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static CreateReferenceToObject CreateFromBinary(
@@ -1174,13 +1174,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ICreateReferenceToObjectGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Object,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALCO));
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.ALCA)))
+                header: translationParams.ConvertToCustom(RecordTypes.ALCO));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ALCA)))
             {
                 writer.Write(item.AliasIndex);
                 EnumBinaryTranslation<CreateReferenceToObject.CreateEnum, MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1192,13 +1192,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Level,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALCL));
+                header: translationParams.ConvertToCustom(RecordTypes.ALCL));
         }
 
         public void Write(
             MutagenWriter writer,
             ICreateReferenceToObjectGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
                 item: item,
@@ -1206,18 +1206,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ICreateReferenceToObjectGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1285,12 +1285,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICreateReferenceToObjectGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((CreateReferenceToObjectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1330,12 +1330,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((CreateReferenceToObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Object

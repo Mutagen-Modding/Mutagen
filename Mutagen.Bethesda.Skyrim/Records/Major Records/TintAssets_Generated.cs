@@ -597,12 +597,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((TintAssetsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static TintAssets CreateFromBinary(
@@ -1329,59 +1329,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ITintAssetsGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Index,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINI));
+                header: translationParams.ConvertToCustom(RecordTypes.TINI));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FileName,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINT),
+                header: translationParams.ConvertToCustom(RecordTypes.TINT),
                 binaryType: StringBinaryType.NullTerminate);
             EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.MaskType,
                 length: 2,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINP));
+                header: translationParams.ConvertToCustom(RecordTypes.TINP));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PresetDefault,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TIND));
+                header: translationParams.ConvertToCustom(RecordTypes.TIND));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITintPresetGetter>.Instance.Write(
                 writer: writer,
                 items: item.Presets,
-                transl: (MutagenWriter subWriter, ITintPresetGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, ITintPresetGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((TintPresetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
         }
 
         public void Write(
             MutagenWriter writer,
             ITintAssetsGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ITintAssetsGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1469,12 +1469,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ITintAssetsGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((TintAssetsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1514,12 +1514,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((TintAssetsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Index

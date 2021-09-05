@@ -450,12 +450,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((DialogResponsesUnknownDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static DialogResponsesUnknownData CreateFromBinary(
@@ -1099,42 +1099,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IDialogResponsesUnknownDataGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.SCHR,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCHR));
+                header: translationParams.ConvertToCustom(RecordTypes.SCHR));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.QNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.QNAM));
             BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.NEXT,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NEXT));
+                header: translationParams.ConvertToCustom(RecordTypes.NEXT));
         }
 
         public void Write(
             MutagenWriter writer,
             IDialogResponsesUnknownDataGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IDialogResponsesUnknownDataGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1197,12 +1197,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDialogResponsesUnknownDataGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((DialogResponsesUnknownDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1242,12 +1242,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((DialogResponsesUnknownDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region SCHR

@@ -981,12 +981,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SkyrimModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static SkyrimModHeader CreateFromBinary(
@@ -1963,30 +1963,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ISkyrimModHeaderGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             var StatsItem = item.Stats;
             ((ModStatsBinaryWriteTranslation)((IBinaryItem)StatsItem).BinaryWriteTranslator).Write(
                 item: StatsItem,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TypeOffsets,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST));
+                header: translationParams.ConvertToCustom(RecordTypes.OFST));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Deleted,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DELE));
+                header: translationParams.ConvertToCustom(RecordTypes.DELE));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Author,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             SkyrimModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
@@ -1994,9 +1994,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM),
+                recordType: translationParams.ConvertToCustom(RecordTypes.ONAM),
                 overflowRecord: RecordTypes.XXXX,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISkyrimMajorRecordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISkyrimMajorRecordGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2005,11 +2005,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.INTV,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.INTV));
+                header: translationParams.ConvertToCustom(RecordTypes.INTV));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.INCC,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.INCC));
+                header: translationParams.ConvertToCustom(RecordTypes.INCC));
         }
 
         public static partial void WriteBinaryMasterReferencesCustom(
@@ -2028,11 +2028,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ISkyrimModHeaderGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.TES4),
+                record: translationParams.ConvertToCustom(RecordTypes.TES4),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2041,19 +2041,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ISkyrimModHeaderGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2175,12 +2175,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISkyrimModHeaderGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SkyrimModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2220,12 +2220,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SkyrimModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public SkyrimModHeader.HeaderFlag Flags => (SkyrimModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));

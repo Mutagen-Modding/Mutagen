@@ -492,12 +492,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceGridReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static WorldspaceGridReference CreateFromBinary(
@@ -1147,24 +1147,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.References,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IWorldspaceReferenceGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IWorldspaceReferenceGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((WorldspaceReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
         }
 
         public void Write(
             MutagenWriter writer,
             IWorldspaceGridReferenceGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
+                record: translationParams.ConvertToCustom(RecordTypes.RNAM),
                 type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1176,12 +1176,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IWorldspaceGridReferenceGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1213,12 +1213,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWorldspaceGridReferenceGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceGridReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1258,12 +1258,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((WorldspaceGridReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public P2Int16 GridPosition => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x4));

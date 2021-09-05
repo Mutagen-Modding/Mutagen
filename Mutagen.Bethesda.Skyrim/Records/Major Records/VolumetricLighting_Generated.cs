@@ -792,12 +792,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => VolumetricLightingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((VolumetricLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static VolumetricLighting CreateFromBinary(
@@ -1846,70 +1846,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IVolumetricLightingGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Intensity,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.CustomColorContribution,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.ColorR,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.ColorG,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.ColorB,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.DensityContribution,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.HNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.DensitySize,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.DensityWindSpeed,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.JNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.JNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.DensityFallingSpeed,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.KNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.KNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.PhaseFunctionContribution,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.LNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.PhaseFunctionScattering,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.SamplingRepartitionRangeFactor,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM));
         }
 
         public void Write(
             MutagenWriter writer,
             IVolumetricLightingGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.VOLI),
+                record: translationParams.ConvertToCustom(RecordTypes.VOLI),
                 type: ObjectType.Record))
             {
                 try
@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -1934,34 +1934,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IVolumetricLightingGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IVolumetricLightingGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IVolumetricLightingGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2111,12 +2111,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => VolumetricLightingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((VolumetricLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Intensity

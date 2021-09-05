@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
                             WorldspaceBinaryWriteTranslation.WriteRecordTypes(
                                 item: worldspace,
                                 writer: writer,
-                                recordTypeConverter: null);
+                                translationParams: null);
                         }
                     }
                     var road = worldspace.Road;

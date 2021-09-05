@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
                             WorldspaceBinaryWriteTranslation.WriteRecordTypes(
                                 item: worldspace,
                                 writer: writer,
-                                recordTypeConverter: null);
+                                translationParams: null);
                         }
                     }
                     var topCell = worldspace.TopCell;

@@ -682,12 +682,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenWriter writer,
             IEnumerable<T>? items,
             BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null) return;
             foreach (var item in items)
             {
-                transl(writer, item, recordTypeConverter);
+                transl(writer, item, translationParams);
             }
         }
 
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType recordType,
             RecordType overflowRecord,
             BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null) return;
             try
@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         foreach (var item in items)
                         {
-                            transl(header.PrepWriter, item, recordTypeConverter);
+                            transl(header.PrepWriter, item, translationParams);
                         }
                     }
                 }
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             IReadOnlyList<T>? items,
             RecordType recordType,
             BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null) return;
             try
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         foreach (var item in items)
                         {
-                            transl(writer, item, recordTypeConverter);
+                            transl(writer, item, translationParams);
                         }
                     }
                 }
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType recordType,
             int countLengthLength,
             BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null) return;
             try
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                         }
                         foreach (var item in items)
                         {
-                            transl(writer, item, recordTypeConverter);
+                            transl(writer, item, translationParams);
                         }
                     }
                 }
@@ -840,7 +840,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             IReadOnlyList<T>? items,
             int countLengthLength,
             BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null) return;
             try
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             }
             foreach (var item in items)
             {
-                transl(writer, item, recordTypeConverter);
+                transl(writer, item, translationParams);
             }
         }
 
@@ -957,7 +957,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             byte counterLength,
             bool subRecordPerItem = false,
             bool writeCounterIfNull = false,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null)
             {
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         using (HeaderExport.Subrecord(writer, recordType))
                         {
-                            transl(writer, item, recordTypeConverter);
+                            transl(writer, item, translationParams);
                         }
                     }
                 }
@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                         {
                             foreach (var item in items)
                             {
-                                transl(writer, item, recordTypeConverter);
+                                transl(writer, item, translationParams);
                             }
                         }
                     }

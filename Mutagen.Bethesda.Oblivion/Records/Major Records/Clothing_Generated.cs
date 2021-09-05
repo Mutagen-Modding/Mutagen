@@ -874,12 +874,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => ClothingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ClothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Clothing CreateFromBinary(
@@ -2153,91 +2153,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             IClothingGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
+                header: translationParams.ConvertToCustom(RecordTypes.SCRI));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Enchantment,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
             UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.EnchantmentPoints,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
             if (item.ClothingFlags is {} ClothingFlagsItem)
             {
                 ((ClothingFlagsBinaryWriteTranslation)((IBinaryItem)ClothingFlagsItem).BinaryWriteTranslator).Write(
                     item: ClothingFlagsItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             if (item.MaleBipedModel is {} MaleBipedModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)MaleBipedModelItem).BinaryWriteTranslator).Write(
                     item: MaleBipedModelItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             if (item.MaleWorldModel is {} MaleWorldModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)MaleWorldModelItem).BinaryWriteTranslator).Write(
                     item: MaleWorldModelItem,
                     writer: writer,
-                    recordTypeConverter: Clothing_Registration.MaleWorldModelConverter);
+                    translationParams: Clothing_Registration.MaleWorldModelConverter);
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MaleIcon,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.FemaleBipedModel is {} FemaleBipedModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)FemaleBipedModelItem).BinaryWriteTranslator).Write(
                     item: FemaleBipedModelItem,
                     writer: writer,
-                    recordTypeConverter: Clothing_Registration.FemaleBipedModelConverter);
+                    translationParams: Clothing_Registration.FemaleBipedModelConverter);
             }
             if (item.FemaleWorldModel is {} FemaleWorldModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)FemaleWorldModelItem).BinaryWriteTranslator).Write(
                     item: FemaleWorldModelItem,
                     writer: writer,
-                    recordTypeConverter: Clothing_Registration.FemaleWorldModelConverter);
+                    translationParams: Clothing_Registration.FemaleWorldModelConverter);
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FemaleIcon,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICO2),
+                header: translationParams.ConvertToCustom(RecordTypes.ICO2),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Data is {} DataItem)
             {
                 ((ClothingDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             IClothingGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.CLOT),
+                record: translationParams.ConvertToCustom(RecordTypes.CLOT),
                 type: ObjectType.Record))
             {
                 try
@@ -2249,7 +2249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -2262,34 +2262,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IClothingGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IClothingGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IClothingGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2448,12 +2448,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => ClothingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ClothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Name

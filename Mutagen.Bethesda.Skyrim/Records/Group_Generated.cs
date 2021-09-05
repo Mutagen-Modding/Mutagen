@@ -153,12 +153,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static Group<T> CreateFromBinary(
@@ -1294,7 +1294,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes<T>(
             IGroupGetter<T> item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Write(
@@ -1329,12 +1329,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.GRUP),
+                record: translationParams.ConvertToCustom(RecordTypes.GRUP),
                 type: ObjectType.Group))
             {
                 WriteEmbedded(
@@ -1343,14 +1343,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             throw new NotImplementedException();
         }
@@ -1417,14 +1417,14 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary<T, T_ErrMask>(
             this IGroupGetter<T> item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
             ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1469,12 +1469,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region ContainedRecordTypeParse

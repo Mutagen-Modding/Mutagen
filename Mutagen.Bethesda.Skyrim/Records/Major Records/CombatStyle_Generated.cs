@@ -1069,12 +1069,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((CombatStyleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static CombatStyle CreateFromBinary(
@@ -2303,13 +2303,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ICombatStyleGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.CSGD)))
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSGD)))
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
@@ -2351,47 +2351,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CSMD,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CSMD));
+                header: translationParams.ConvertToCustom(RecordTypes.CSMD));
             if (item.Melee is {} MeleeItem)
             {
                 ((CombatStyleMeleeBinaryWriteTranslation)((IBinaryItem)MeleeItem).BinaryWriteTranslator).Write(
                     item: MeleeItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             if (item.CloseRange is {} CloseRangeItem)
             {
                 ((CombatStyleCloseRangeBinaryWriteTranslation)((IBinaryItem)CloseRangeItem).BinaryWriteTranslator).Write(
                     item: CloseRangeItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.LongRangeStrafeMult,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CSLR));
+                header: translationParams.ConvertToCustom(RecordTypes.CSLR));
             if (item.Flight is {} FlightItem)
             {
                 ((CombatStyleFlightBinaryWriteTranslation)((IBinaryItem)FlightItem).BinaryWriteTranslator).Write(
                     item: FlightItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             EnumBinaryTranslation<CombatStyle.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
         }
 
         public void Write(
             MutagenWriter writer,
             ICombatStyleGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.CSTY),
+                record: translationParams.ConvertToCustom(RecordTypes.CSTY),
                 type: ObjectType.Record))
             {
                 try
@@ -2403,7 +2403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -2416,34 +2416,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ICombatStyleGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ICombatStyleGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ICombatStyleGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2582,12 +2582,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((CombatStyleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         public CombatStyle.MajorFlag MajorFlags => (CombatStyle.MajorFlag)this.MajorRecordFlagsRaw;
 

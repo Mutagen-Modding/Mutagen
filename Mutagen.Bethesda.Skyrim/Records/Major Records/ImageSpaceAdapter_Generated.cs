@@ -7017,12 +7017,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ImageSpaceAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ImageSpaceAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static ImageSpaceAdapter CreateFromBinary(
@@ -11444,13 +11444,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IImageSpaceAdapterGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
                 EnumBinaryTranslation<ImageSpaceAdapter.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
@@ -11483,662 +11483,662 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.BlurRadius,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.BNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.DoubleVisionStrength,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.VNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.VNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IColorFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.TintColor,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
-                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.TNAM),
+                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((ColorFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IColorFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.FadeColor,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM3),
-                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.NAM3),
+                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((ColorFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.RadialBlurStrength,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.RNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.RadialBlurRampUp,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.SNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.RadialBlurStart,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.UNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.UNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.RadialBlurRampDown,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.NAM1),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.RadialBlurDownStart,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.NAM2),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.DepthOfFieldStrength,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.WNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.DepthOfFieldDistance,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.XNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.DepthOfFieldRange,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.YNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.YNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.MotionBlurStrength,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.NAM4),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrEyeAdaptSpeedMult,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._0_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._0_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrEyeAdaptSpeedAdd,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.@IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.@IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomBlurRadiusMult,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._1_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._1_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomBlurRadiusAdd,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.AIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.AIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomThresholdMult,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._2_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._2_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomThresholdAdd,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.BIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.BIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomScaleMult,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._3_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._3_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomScaleAdd,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.CIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.CIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrTargetLumMinMult,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._4_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._4_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrTargetLumMinAdd,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.DIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrTargetLumMaxMult,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._5_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._5_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrTargetLumMaxAdd,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.EIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.EIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrSunlightScaleMult,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._6_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._6_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrSunlightScaleAdd,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.FIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.FIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrSkyScaleMult,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._7_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._7_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrSkyScaleAdd,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.GIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.GIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown08,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._8_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._8_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown48,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.HIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.HIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown09,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._9_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._9_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown49,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.IIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.IIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0A,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._A_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._A_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4A,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.JIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.JIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0B,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._B_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._B_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4B,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.KIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0C,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._C_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._C_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4C,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.LIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.LIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0D,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._D_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._D_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4D,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.MIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.MIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0E,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._E_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._E_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4E,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.NIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0F,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._F_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._F_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4F,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.OIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.OIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown10,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._10_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._10_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown50,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.PIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicSaturationMult,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._11_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._11_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicSaturationAdd,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.QIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.QIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicBrightnessMult,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._12_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._12_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicBrightnessAdd,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.RIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicContrastMult,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._13_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._13_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicContrastAdd,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.SIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown14,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._14_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes._14_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown54,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.TIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.TIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
         }
 
@@ -12184,11 +12184,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IImageSpaceAdapterGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.IMAD),
+                record: translationParams.ConvertToCustom(RecordTypes.IMAD),
                 type: ObjectType.Record))
             {
                 try
@@ -12200,7 +12200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -12213,34 +12213,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IImageSpaceAdapterGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IImageSpaceAdapterGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IImageSpaceAdapterGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -12906,12 +12906,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => ImageSpaceAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((ImageSpaceAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         private int? _DNAMLocation;

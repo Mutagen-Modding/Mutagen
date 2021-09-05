@@ -1023,12 +1023,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SceneActionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static SceneAction CreateFromBinary(
@@ -2043,88 +2043,88 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ISceneActionGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             EnumBinaryTranslation<SceneAction.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 2,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0),
                 binaryType: StringBinaryType.NullTerminate);
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.ActorID,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALID));
+                header: translationParams.ConvertToCustom(RecordTypes.ALID));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.LNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.LNAM));
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Index,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
             EnumBinaryTranslation<SceneAction.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.StartPhase,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.EndPhase,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.TimerSeconds,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Packages,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
+                        header: translationParams.ConvertToCustom(RecordTypes.PNAM));
                 });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Topic,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.HeadtrackActorID,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.HTID));
+                header: translationParams.ConvertToCustom(RecordTypes.HTID));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.LoopingMax,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DMAX));
+                header: translationParams.ConvertToCustom(RecordTypes.DMAX));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.LoopingMin,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DMIN));
+                header: translationParams.ConvertToCustom(RecordTypes.DMIN));
             EnumBinaryTranslation<Emotion, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Emotion,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DEMO));
+                header: translationParams.ConvertToCustom(RecordTypes.DEMO));
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.EmotionValue,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DEVA));
+                header: translationParams.ConvertToCustom(RecordTypes.DEVA));
             if (item.Unused is {} UnusedItem)
             {
                 ((ScenePhaseUnusedDataBinaryWriteTranslation)((IBinaryItem)UnusedItem).BinaryWriteTranslator).Write(
                     item: UnusedItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             using (HeaderExport.Subrecord(writer, RecordTypes.ANAM)) { }
         }
@@ -2132,23 +2132,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ISceneActionGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ISceneActionGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2323,12 +2323,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISceneActionGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SceneActionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2368,12 +2368,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((SceneActionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Type

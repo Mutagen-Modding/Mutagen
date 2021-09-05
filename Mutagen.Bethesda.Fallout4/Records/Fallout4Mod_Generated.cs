@@ -3866,7 +3866,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4ModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (importMask?.GameSettings ?? true)
             {
@@ -3876,7 +3876,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
                         item: GameSettingsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Keywords ?? true)
@@ -3887,7 +3887,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
                         item: KeywordsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LocationReferenceTypes ?? true)
@@ -3898,7 +3898,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LocationReferenceTypesItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
                         item: LocationReferenceTypesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Actions ?? true)
@@ -3909,7 +3909,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
                         item: ActionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Transforms ?? true)
@@ -3920,7 +3920,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write<ITransformGetter>(
                         item: TransformsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Components ?? true)
@@ -3931,7 +3931,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ComponentsItem).BinaryWriteTranslator).Write<IComponentGetter>(
                         item: ComponentsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.TextureSets ?? true)
@@ -3942,7 +3942,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
                         item: TextureSetsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Globals ?? true)
@@ -3953,7 +3953,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.DamageTypes ?? true)
@@ -3964,7 +3964,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)DamageTypesItem).BinaryWriteTranslator).Write<IADamageTypeGetter>(
                         item: DamageTypesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Classes ?? true)
@@ -3975,7 +3975,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Factions ?? true)
@@ -3986,7 +3986,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: FactionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.HeadParts ?? true)
@@ -3997,7 +3997,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
                         item: HeadPartsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
         }

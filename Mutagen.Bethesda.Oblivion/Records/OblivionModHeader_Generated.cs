@@ -735,12 +735,12 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((OblivionModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static OblivionModHeader CreateFromBinary(
@@ -1566,30 +1566,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             IOblivionModHeaderGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             var StatsItem = item.Stats;
             ((ModStatsBinaryWriteTranslation)((IBinaryItem)StatsItem).BinaryWriteTranslator).Write(
                 item: StatsItem,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TypeOffsets,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST));
+                header: translationParams.ConvertToCustom(RecordTypes.OFST));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Deleted,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DELE));
+                header: translationParams.ConvertToCustom(RecordTypes.DELE));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Author,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             OblivionModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
@@ -1612,11 +1612,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IOblivionModHeaderGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.TES4),
+                record: translationParams.ConvertToCustom(RecordTypes.TES4),
                 type: ObjectType.Record))
             {
                 WriteEmbedded(
@@ -1625,19 +1625,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IOblivionModHeaderGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1730,12 +1730,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IOblivionModHeaderGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((OblivionModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1774,12 +1774,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((OblivionModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public OblivionModHeader.HeaderFlag Flags => (OblivionModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));

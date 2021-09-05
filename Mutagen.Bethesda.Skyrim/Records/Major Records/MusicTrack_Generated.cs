@@ -951,12 +951,12 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((MusicTrackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static MusicTrack CreateFromBinary(
@@ -2099,65 +2099,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IMusicTrackGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             EnumBinaryTranslation<MusicTrack.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Duration,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FLTV));
+                header: translationParams.ConvertToCustom(RecordTypes.FLTV));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.FadeOut,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TrackFilename,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FinaleFilename,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.LoopData is {} LoopDataItem)
             {
                 ((MusicTrackLoopDataBinaryWriteTranslation)((IBinaryItem)LoopDataItem).BinaryWriteTranslator).Write(
                     item: LoopDataItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Write(
                 writer: writer,
                 items: item.CuePoints,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM),
+                recordType: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Conditions,
                 counterType: RecordTypes.CITC,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMusicTrackGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Tracks,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IMusicTrackGetter> subItem, RecordTypeConverter? conv) =>
+                recordType: translationParams.ConvertToCustom(RecordTypes.SNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMusicTrackGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2168,11 +2168,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IMusicTrackGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.MUST),
+                record: translationParams.ConvertToCustom(RecordTypes.MUST),
                 type: ObjectType.Record))
             {
                 try
@@ -2184,7 +2184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -2197,34 +2197,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IMusicTrackGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IMusicTrackGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IMusicTrackGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2378,12 +2378,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((MusicTrackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Type

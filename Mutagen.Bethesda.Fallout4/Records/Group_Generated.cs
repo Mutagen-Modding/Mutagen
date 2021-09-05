@@ -153,12 +153,12 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static Group<T> CreateFromBinary(
@@ -1294,7 +1294,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static void WriteRecordTypes<T>(
             IGroupGetter<T> item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Write(
@@ -1329,12 +1329,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.GRUP),
+                record: translationParams.ConvertToCustom(RecordTypes.GRUP),
                 type: ObjectType.Group))
             {
                 WriteEmbedded(
@@ -1343,14 +1343,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             throw new NotImplementedException();
         }
@@ -1417,14 +1417,14 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary<T, T_ErrMask>(
             this IGroupGetter<T> item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_ErrMask : Fallout4MajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
             ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1469,12 +1469,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region ContainedRecordTypeParse

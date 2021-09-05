@@ -1060,12 +1060,12 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((HeadDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static HeadData CreateFromBinary(
@@ -2081,100 +2081,100 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IHeadDataGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IHeadPartReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.HeadParts,
-                transl: (MutagenWriter subWriter, IHeadPartReferenceGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IHeadPartReferenceGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((HeadPartReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             if (item.AvailableMorphs is {} AvailableMorphsItem)
             {
                 ((AvailableMorphsBinaryWriteTranslation)((IBinaryItem)AvailableMorphsItem).BinaryWriteTranslator).Write(
                     item: AvailableMorphsItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RacePresets,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(RecordTypes.RPRM));
+                        header: translationParams.ConvertToCustom(RecordTypes.RPRM));
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AvailableHairColors,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(RecordTypes.AHCM));
+                        header: translationParams.ConvertToCustom(RecordTypes.AHCM));
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.FaceDetails,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ITextureSetGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ITextureSetGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(RecordTypes.FTSM));
+                        header: translationParams.ConvertToCustom(RecordTypes.FTSM));
                 });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultFaceTexture,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DFTM));
+                header: translationParams.ConvertToCustom(RecordTypes.DFTM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITintAssetsGetter>.Instance.Write(
                 writer: writer,
                 items: item.TintMasks,
-                transl: (MutagenWriter subWriter, ITintAssetsGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, ITintAssetsGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((TintAssetsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             IHeadDataGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IHeadDataGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2297,12 +2297,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IHeadDataGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((HeadDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2342,12 +2342,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((HeadDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = ListExt.Empty<HeadPartReferenceBinaryOverlay>();
