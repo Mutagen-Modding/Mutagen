@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static RegionGrassBinaryOverlay RegionGrassFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new RegionGrassBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1158,12 +1158,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static RegionGrassBinaryOverlay RegionGrassFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return RegionGrassFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

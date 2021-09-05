@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ImageSpaceCinematicBinaryOverlay ImageSpaceCinematicFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new ImageSpaceCinematicBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1210,12 +1210,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ImageSpaceCinematicBinaryOverlay ImageSpaceCinematicFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return ImageSpaceCinematicFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

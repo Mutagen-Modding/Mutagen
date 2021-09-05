@@ -2056,7 +2056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static NpcFaceMorphBinaryOverlay NpcFaceMorphFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new NpcFaceMorphBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -2074,12 +2074,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static NpcFaceMorphBinaryOverlay NpcFaceMorphFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return NpcFaceMorphFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

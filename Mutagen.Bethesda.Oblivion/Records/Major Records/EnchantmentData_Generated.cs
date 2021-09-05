@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static EnchantmentDataBinaryOverlay EnchantmentDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new EnchantmentDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1266,12 +1266,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static EnchantmentDataBinaryOverlay EnchantmentDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return EnchantmentDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

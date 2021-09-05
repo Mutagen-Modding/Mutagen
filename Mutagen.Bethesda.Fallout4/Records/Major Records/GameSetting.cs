@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Fallout4
             public static GameSettingBinaryOverlay GameSettingFactory(
                 OverlayStream stream,
                 BinaryOverlayFactoryPackage package,
-                RecordTypeConverter recordTypeConverter)
+                TypedParseParams? translationParams)
             {
                 var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingMemory, package.MetaData.Constants);
                 if (settingType.Failed)

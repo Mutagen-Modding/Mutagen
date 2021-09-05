@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static BookSpellBinaryOverlay BookSpellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new BookSpellBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1121,12 +1121,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static BookSpellBinaryOverlay BookSpellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return BookSpellFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

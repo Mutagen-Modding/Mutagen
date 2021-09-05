@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static LocationCellStaticReferenceBinaryOverlay LocationCellStaticReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new LocationCellStaticReferenceBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1289,12 +1289,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static LocationCellStaticReferenceBinaryOverlay LocationCellStaticReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return LocationCellStaticReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

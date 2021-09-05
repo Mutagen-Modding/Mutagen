@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 }
             }
 
-            string recConverter = $"default({nameof(RecordTypeConverter)})";
+            string recConverter = $"default({nameof(TypedParseParams)})";
             if (loqui.GetFieldData()?.RecordTypeConverter != null
                 && loqui.GetFieldData().RecordTypeConverter.FromConversions.Count > 0)
             {
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     {
                         args.AddPassArg($"finalPos");
                     }
-                    args.Add($"recordTypeConverter: {converterAccessor}");
+                    args.Add($"parseParams: {converterAccessor}");
                 }
             }
         }

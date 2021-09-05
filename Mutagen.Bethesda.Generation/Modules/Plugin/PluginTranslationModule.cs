@@ -1370,11 +1370,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     {
                         args.Add("Dictionary<RecordType, int>? recordParseCount");
                     }
-                    args.Add("RecordTypeConverter? recordTypeConverter = null");
+                    args.Add($"{nameof(TypedParseParams)}? parseParams = null");
                 }
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"type = recordTypeConverter.ConvertToStandard(type);");
+                    fg.AppendLine($"type = parseParams.ConvertToStandard(type);");
                     fg.AppendLine("switch (type.TypeInt)");
                     using (new BraceWrapper(fg))
                     {
@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                             nextRecAccessor: "type",
                                             toDo: async () =>
                                             {
-                                                string recConverter = "recordTypeConverter";
+                                                string recConverter = "parseParams";
                                                 if (fieldData?.RecordTypeConverter != null
                                                     && fieldData.RecordTypeConverter.FromConversions.Count > 0)
                                                 {
@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                                         nextRecAccessor: "type",
                                                         toDo: async () =>
                                                         {
-                                                            string recConverter = "recordTypeConverter";
+                                                            string recConverter = "parseParams";
                                                             if (doublesFieldData.RecordTypeConverter != null
                                                                 && doublesFieldData.RecordTypeConverter.FromConversions.Count > 0)
                                                             {
@@ -1592,7 +1592,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     args.AddPassArg("lastParsed");
                                     if (obj.GetObjectData().BaseRecordTypeConverter?.FromConversions.Count > 0)
                                     {
-                                        args.Add($"recordTypeConverter: {obj.RegistrationName}.BaseConverter");
+                                        args.Add($"parseParams: {obj.RegistrationName}.BaseConverter");
                                     }
                                 }
                             }
@@ -1609,7 +1609,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     args.AddPassArg("recordParseCount");
                                     if (obj.GetObjectData().BaseRecordTypeConverter?.FromConversions.Count > 0)
                                     {
-                                        args.Add($"recordTypeConverter: {obj.RegistrationName}.BaseConverter");
+                                        args.Add($"parseParams: {obj.RegistrationName}.BaseConverter");
                                     }
                                 }
                             }
@@ -2242,7 +2242,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             {
                                 args.Add($"int finalPos");
                             }
-                            args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
+                            args.Add($"{nameof(TypedParseParams)}? parseParams = null");
                         }
                     }
                     using (new BraceWrapper(fg))
@@ -2257,7 +2257,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
                         {
-                            fg.AppendLine($"var nextRecord = recordTypeConverter.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "MajorRecord")}().RecordType);");
+                            fg.AppendLine($"var nextRecord = parseParams.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "MajorRecord")}().RecordType);");
                             fg.AppendLine($"switch (nextRecord.TypeInt)");
                             using (new BraceWrapper(fg))
                             {
@@ -2273,7 +2273,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                         args.AddPassArg($"stream");
                                         args.Add("recordType: nextRecord");
                                         args.AddPassArg("package");
-                                        args.AddPassArg("recordTypeConverter");
+                                        args.AddPassArg("parseParams");
                                     }
                                 }
                                 fg.AppendLine("default:");
@@ -2514,7 +2514,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                         args.AddPassArg($"finalPos");
                                     }
                                     args.Add($"offset: offset");
-                                    args.AddPassArg($"recordTypeConverter");
+                                    args.AddPassArg($"parseParams");
                                 }
                                 else
                                 {
@@ -2660,7 +2660,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         {
                             args.Add($"ReadOnlyMemorySlice<byte> slice");
                             args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
-                            args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
+                            args.Add($"{nameof(TypedParseParams)}? parseParams = null");
                         }
                         using (new BraceWrapper(fg))
                         {
@@ -2673,7 +2673,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 {
                                     args.Add($"finalPos: slice.Length");
                                 }
-                                args.AddPassArg("recordTypeConverter");
+                                args.AddPassArg("parseParams");
                             }
                         }
                     }

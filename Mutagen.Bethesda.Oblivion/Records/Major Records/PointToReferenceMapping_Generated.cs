@@ -1275,7 +1275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static PointToReferenceMappingBinaryOverlay PointToReferenceMappingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new PointToReferenceMappingBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1293,12 +1293,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static PointToReferenceMappingBinaryOverlay PointToReferenceMappingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return PointToReferenceMappingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

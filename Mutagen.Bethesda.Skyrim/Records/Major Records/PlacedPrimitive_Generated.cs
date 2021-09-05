@@ -1270,7 +1270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PlacedPrimitiveBinaryOverlay PlacedPrimitiveFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new PlacedPrimitiveBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1288,12 +1288,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PlacedPrimitiveBinaryOverlay PlacedPrimitiveFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return PlacedPrimitiveFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

@@ -3961,7 +3961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PackageBinaryOverlay PackageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new PackageBinaryOverlay(
@@ -3980,7 +3980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3988,12 +3988,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PackageBinaryOverlay PackageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return PackageFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public override ParseResult FillRecordType(
@@ -4003,9 +4003,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -4043,7 +4043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.IdleAnimations = PackageIdlesBinaryOverlay.PackageIdlesFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                     return (int)Package_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.CNAM:
@@ -4078,7 +4078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.OnBegin = PackageEventBinaryOverlay.PackageEventFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                     return (int)Package_FieldIndex.OnBegin;
                 }
                 case RecordTypeInts.POEA:
@@ -4087,7 +4087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.OnEnd = PackageEventBinaryOverlay.PackageEventFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                     return (int)Package_FieldIndex.OnEnd;
                 }
                 case RecordTypeInts.POCA:
@@ -4096,7 +4096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.OnChange = PackageEventBinaryOverlay.PackageEventFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                     return (int)Package_FieldIndex.OnChange;
                 }
                 default:

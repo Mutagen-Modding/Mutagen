@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static LocationCoordinateBinaryOverlay LocationCoordinateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new LocationCoordinateBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1294,12 +1294,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static LocationCoordinateBinaryOverlay LocationCoordinateFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return LocationCoordinateFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

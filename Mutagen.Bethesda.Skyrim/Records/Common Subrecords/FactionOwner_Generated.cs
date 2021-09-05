@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static FactionOwnerBinaryOverlay FactionOwnerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new FactionOwnerBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1180,12 +1180,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static FactionOwnerBinaryOverlay FactionOwnerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return FactionOwnerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

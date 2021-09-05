@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ColorFrameBinaryOverlay ColorFrameFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new ColorFrameBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x14),
@@ -1143,12 +1143,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ColorFrameBinaryOverlay ColorFrameFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return ColorFrameFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

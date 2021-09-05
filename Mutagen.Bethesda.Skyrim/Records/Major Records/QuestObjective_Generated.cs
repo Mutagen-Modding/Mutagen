@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static QuestObjectiveBinaryOverlay QuestObjectiveFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new QuestObjectiveBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1470,7 +1470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1478,12 +1478,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static QuestObjectiveBinaryOverlay QuestObjectiveFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return QuestObjectiveFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public ParseResult FillRecordType(
@@ -1493,9 +1493,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.QOBJ:
@@ -1518,9 +1518,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this.Targets = this.ParseRepeatedTypelessSubrecord<QuestObjectiveTargetBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: RecordTypes.QSTA,
-                        factory:  QuestObjectiveTargetBinaryOverlay.QuestObjectiveTargetFactory);
+                        factory: QuestObjectiveTargetBinaryOverlay.QuestObjectiveTargetFactory);
                     return (int)QuestObjective_FieldIndex.Targets;
                 }
                 default:

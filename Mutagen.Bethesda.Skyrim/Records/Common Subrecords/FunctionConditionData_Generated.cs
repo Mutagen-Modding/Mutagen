@@ -1531,7 +1531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static FunctionConditionDataBinaryOverlay FunctionConditionDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new FunctionConditionDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1548,12 +1548,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static FunctionConditionDataBinaryOverlay FunctionConditionDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return FunctionConditionDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

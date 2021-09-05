@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ScriptFloatPropertyBinaryOverlay ScriptFloatPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new ScriptFloatPropertyBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1128,12 +1128,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ScriptFloatPropertyBinaryOverlay ScriptFloatPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return ScriptFloatPropertyFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

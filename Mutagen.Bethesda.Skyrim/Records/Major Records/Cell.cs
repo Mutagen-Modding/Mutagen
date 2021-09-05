@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
                     stream: stream,
                     finalPos: finalPos,
                     offset: offset,
-                    recordTypeConverter: null,
+                    parseParams: null,
                     fill: ret.FillRecordType);
                 try
                 {

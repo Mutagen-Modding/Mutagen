@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static MusicTrackLoopDataBinaryOverlay MusicTrackLoopDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new MusicTrackLoopDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1208,12 +1208,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static MusicTrackLoopDataBinaryOverlay MusicTrackLoopDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return MusicTrackLoopDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

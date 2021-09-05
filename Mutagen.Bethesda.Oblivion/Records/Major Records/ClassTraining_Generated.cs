@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ClassTrainingBinaryOverlay ClassTrainingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new ClassTrainingBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1195,12 +1195,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ClassTrainingBinaryOverlay ClassTrainingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return ClassTrainingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

@@ -697,11 +697,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 $"this.{typeGen.Name} = this.{nameof(PluginBinaryOverlay.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
                             {
                                 args.AddPassArg("stream");
-                                args.Add($"recordTypeConverter: {converterAccessor}");
+                                args.Add($"parseParams: {converterAccessor}");
                                 args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                                 if (subGenTypes.Count <= 1)
                                 {
-                                    args.Add($"factory:  {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory");
+                                    args.Add($"factory: {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory");
                                 }
                                 else
                                 {
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             {
                                 args.Add($"mem: stream.RemainingMemory");
                                 args.Add($"package: _package");
-                                args.Add($"recordTypeConverter: {converterAccessor}");
+                                args.Add($"parseParams: {converterAccessor}");
                                 args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                                 args.Add(subFg =>
                                 {
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: true");
-                                    subArgs.Add($"recordTypeConverter: {converterAccessor}");
+                                    subArgs.Add($"parseParams: {converterAccessor}");
                                 }
                             });
                         }
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: false");
-                                    subArgs.Add($"recordTypeConverter: {converterAccessor}");
+                                    subArgs.Add($"parseParams: {converterAccessor}");
                                 }
                             });
                         }
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             args.Add($"countLength: {counterLen}");
                             args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");
                             args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
-                            args.Add($"recordTypeConverter: {converterAccessor}");
+                            args.Add($"parseParams: {converterAccessor}");
                             args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                             args.Add("skipHeader: false");
                         }

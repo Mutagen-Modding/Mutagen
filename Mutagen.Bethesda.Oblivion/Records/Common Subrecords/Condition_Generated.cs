@@ -1506,9 +1506,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ConditionBinaryOverlay ConditionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            var nextRecord = recordTypeConverter.ConvertToCustom(stream.GetSubrecord().RecordType);
+            var nextRecord = parseParams.ConvertToCustom(stream.GetSubrecord().RecordType);
             switch (nextRecord.TypeInt)
             {
                 case 1413764163: // CTDT
@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         recordType: nextRecord,
                         package: package,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                 default:
                     break;
             }
@@ -1536,12 +1536,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ConditionBinaryOverlay ConditionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return ConditionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

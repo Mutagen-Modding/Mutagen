@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static WeatherColorBinaryOverlay WeatherColorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new WeatherColorBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1250,12 +1250,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static WeatherColorBinaryOverlay WeatherColorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return WeatherColorFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

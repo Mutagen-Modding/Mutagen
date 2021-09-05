@@ -2515,7 +2515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ClothingBinaryOverlay ClothingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new ClothingBinaryOverlay(
@@ -2534,7 +2534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2542,12 +2542,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ClothingBinaryOverlay ClothingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return ClothingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2557,9 +2557,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -2592,7 +2592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.MaleBipedModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                     return (int)Clothing_FieldIndex.MaleBipedModel;
                 }
                 case RecordTypeInts.MOD2:
@@ -2600,7 +2600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.MaleWorldModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: Clothing_Registration.MaleWorldModelConverter);
+                        parseParams: Clothing_Registration.MaleWorldModelConverter);
                     return (int)Clothing_FieldIndex.MaleWorldModel;
                 }
                 case RecordTypeInts.ICON:
@@ -2613,7 +2613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.FemaleBipedModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: Clothing_Registration.FemaleBipedModelConverter);
+                        parseParams: Clothing_Registration.FemaleBipedModelConverter);
                     return (int)Clothing_FieldIndex.FemaleBipedModel;
                 }
                 case RecordTypeInts.MOD4:
@@ -2621,7 +2621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.FemaleWorldModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: Clothing_Registration.FemaleWorldModelConverter);
+                        parseParams: Clothing_Registration.FemaleWorldModelConverter);
                     return (int)Clothing_FieldIndex.FemaleWorldModel;
                 }
                 case RecordTypeInts.ICO2:

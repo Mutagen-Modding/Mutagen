@@ -19,14 +19,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? parseParams);
         public delegate ParseResult ModTypeFillWrapper(
             IBinaryReadStream stream,
             long finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? parseParams);
 
         protected ReadOnlyMemorySlice<byte> _data;
         protected BinaryOverlayFactoryPackage _package;
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 offset: 0,
                 type: headerMeta.RecordType,
                 lastParsed: lastParsed,
-                recordTypeConverter: null);
+                parseParams: null);
             stream.Position = (int)headerMeta.TotalLength;
             while (!stream.Complete)
             {
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     offset: 0,
                     type: groupMeta.ContainedRecordType,
                     lastParsed: lastParsed,
-                    recordTypeConverter: null);
+                    parseParams: null);
                 if (!parsed.KeepParsing) break;
                 if (!parsed.KeepParsing) break;
                 if (minimumFinalPos > stream.Position)
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             int finalPos,
             int offset,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? parseParams,
             RecordTypeFillWrapper fill)
         {
             var lastParsed = new PreviousParse();
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     recordParseCount: recordParseCount,
                     type: majorMeta.RecordType,
                     lastParsed: lastParsed,
-                    recordTypeConverter: recordTypeConverter);
+                    parseParams: parseParams);
                 if (!parsed.KeepParsing) break;
                 if (parsed.DuplicateParseMarker != null)
                 {
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             int finalPos,
             int offset,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? parseParams,
             RecordTypeFillWrapper fill)
         {
             var lastParsed = new PreviousParse();
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     recordParseCount: recordParseCount,
                     type: groupMeta.RecordType,
                     lastParsed: lastParsed,
-                    recordTypeConverter: recordTypeConverter);
+                    parseParams: parseParams);
                 stream.Position += subStream.Position;
                 if (!parsed.KeepParsing) break;
                 if (parsed.DuplicateParseMarker != null)
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             int finalPos,
             int offset,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? parseParams,
             RecordTypeFillWrapper fill)
         {
             var lastParsed = new PreviousParse();
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                         offset: offset,
                         type: lastParsedType.Value,
                         lastParsed: lastParsed,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                     if (!parsed.KeepParsing) break;
                     if (minimumFinalPos > stream.Position)
                     {
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             int finalPos,
             int offset,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? parseParams,
             RecordTypeFillWrapper fill)
         {
             try
@@ -224,7 +224,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     stream: stream,
                     finalPos: finalPos,
                     offset: offset,
-                    recordTypeConverter: recordTypeConverter,
+                    parseParams: parseParams,
                     fill: fill);
             }
             catch (Exception ex)
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             int finalPos,
             int offset,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? parseParams,
             RecordTypeFillWrapper fill)
         {
             var lastParsed = new PreviousParse();
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     recordParseCount: recordParseCount,
                     type: subMeta.RecordType,
                     lastParsed: lastParsed,
-                    recordTypeConverter: recordTypeConverter);
+                    parseParams: parseParams);
                 if (!parsed.KeepParsing) break;
                 if (minimumFinalPos > stream.Position)
                 {
@@ -276,14 +276,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             RecordType trigger,
             RecordHeaderConstants constants,
             bool skipHeader,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             List<int> ret = new List<int>();
             var startingPos = stream.Position;
             while (!stream.Complete)
             {
                 var varMeta = constants.GetVariableMeta(stream);
-                var recType = recordTypeConverter.ConvertToStandard(varMeta.RecordType);
+                var recType = parseParams.ConvertToStandard(varMeta.RecordType);
                 if (recType != trigger) break;
                 if (skipHeader)
                 {
@@ -305,14 +305,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             ICollectionGetter<RecordType> triggers,
             RecordHeaderConstants constants,
             bool skipHeader,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             List<int> ret = new List<int>();
             var startingPos = stream.Position;
             while (!stream.Complete)
             {
                 var varMeta = constants.GetVariableMeta(stream);
-                var recType = recordTypeConverter.ConvertToStandard(varMeta.RecordType);
+                var recType = parseParams.ConvertToStandard(varMeta.RecordType);
                 if (!triggers.Contains(recType)) break;
                 if (skipHeader)
                 {
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         public delegate T ConverterFactory<T>(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? parseParams);
 
         public delegate T StreamFactory<T>(
             OverlayStream stream,
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             RecordType recordType,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? parseParams);
 
         public delegate T SpanFactory<T>(
             ReadOnlyMemorySlice<byte> span,
@@ -609,13 +609,13 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         public delegate T SpanRecordFactory<T>(
             ReadOnlyMemorySlice<byte> span,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? parseParams);
 
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
             OverlayStream stream,
             ICollectionGetter<RecordType> trigger,
             StreamTypedFactory<T> factory,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? parseParams)
         {
             var ret = new List<T>();
             while (!stream.Complete)
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 var recType = subMeta.RecordType;
                 if (!trigger.Contains(recType)) break;
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
-                ret.Add(factory(stream, recType, _package, recordTypeConverter));
+                ret.Add(factory(stream, recType, _package, parseParams));
                 if (stream.Position < minimumFinalPos)
                 {
                     stream.Position = minimumFinalPos;
@@ -637,20 +637,20 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             ICollectionGetter<RecordType> trigger,
             ConverterFactory<T> factory,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? parseParams)
         {
             return ParseRepeatedTypelessSubrecord(
                 stream,
                 trigger,
                 (s, r, p, recConv) => factory(s, p, recConv),
-                recordTypeConverter);
+                parseParams);
         }
 
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
             OverlayStream stream,
             RecordType trigger,
             StreamTypedFactory<T> factory,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? parseParams)
         {
             var ret = new List<T>();
             while (!stream.Complete)
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 var recType = subMeta.RecordType;
                 if (trigger != recType) break;
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
-                ret.Add(factory(stream, recType, _package, recordTypeConverter));
+                ret.Add(factory(stream, recType, _package, parseParams));
                 if (stream.Position < minimumFinalPos)
                 {
                     stream.Position = minimumFinalPos;
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             RecordType trigger,
             SpanRecordFactory<T> factory,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? parseParams,
             bool skipHeader)
         {
             var ret = new List<T>();
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 {
                     stream.Position += subMeta.HeaderLength;
                 }
-                ret.Add(factory(stream.ReadMemory(skipHeader ? subMeta.ContentLength : subMeta.TotalLength), _package, recordTypeConverter));
+                ret.Add(factory(stream.ReadMemory(skipHeader ? subMeta.ContentLength : subMeta.TotalLength), _package, parseParams));
                 if (stream.Position < minimumFinalPos)
                 {
                     stream.Position = minimumFinalPos;
@@ -699,13 +699,13 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             RecordType trigger,
             ConverterFactory<T> factory,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? parseParams)
         {
             return ParseRepeatedTypelessSubrecord(
                 stream,
                 trigger,
                 (s, r, p, recConv) => factory(s, p, recConv),
-                recordTypeConverter);
+                parseParams);
         }
 
         public static ReadOnlyMemorySlice<byte> LockExtractMemory(IBinaryReadStream stream, long min, long max)

@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static Int16MinMaxBinaryOverlay Int16MinMaxFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new Int16MinMaxBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1137,12 +1137,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static Int16MinMaxBinaryOverlay Int16MinMaxFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return Int16MinMaxFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

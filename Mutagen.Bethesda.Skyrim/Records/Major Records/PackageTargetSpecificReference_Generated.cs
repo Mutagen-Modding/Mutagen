@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PackageTargetSpecificReferenceBinaryOverlay PackageTargetSpecificReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new PackageTargetSpecificReferenceBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1138,12 +1138,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PackageTargetSpecificReferenceBinaryOverlay PackageTargetSpecificReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return PackageTargetSpecificReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

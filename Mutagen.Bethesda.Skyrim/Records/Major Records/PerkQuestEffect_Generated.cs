@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PerkQuestEffectBinaryOverlay PerkQuestEffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new PerkQuestEffectBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1276,12 +1276,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PerkQuestEffectBinaryOverlay PerkQuestEffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return PerkQuestEffectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

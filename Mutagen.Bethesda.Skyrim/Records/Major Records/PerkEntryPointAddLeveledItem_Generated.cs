@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PerkEntryPointAddLeveledItemBinaryOverlay PerkEntryPointAddLeveledItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new PerkEntryPointAddLeveledItemBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1248,12 +1248,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PerkEntryPointAddLeveledItemBinaryOverlay PerkEntryPointAddLeveledItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return PerkEntryPointAddLeveledItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

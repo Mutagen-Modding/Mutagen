@@ -1384,7 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static NavmeshTriangleBinaryOverlay NavmeshTriangleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new NavmeshTriangleBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1401,12 +1401,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static NavmeshTriangleBinaryOverlay NavmeshTriangleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return NavmeshTriangleFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

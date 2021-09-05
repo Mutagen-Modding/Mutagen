@@ -1635,7 +1635,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static ConditionDataBinaryOverlay ConditionDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new ConditionDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1652,12 +1652,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static ConditionDataBinaryOverlay ConditionDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return ConditionDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

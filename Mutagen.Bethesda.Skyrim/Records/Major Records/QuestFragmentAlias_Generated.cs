@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static QuestFragmentAliasBinaryOverlay QuestFragmentAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new QuestFragmentAliasBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1470,12 +1470,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static QuestFragmentAliasBinaryOverlay QuestFragmentAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return QuestFragmentAliasFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

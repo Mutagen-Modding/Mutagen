@@ -1478,7 +1478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static IslandDataBinaryOverlay IslandDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new IslandDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1497,12 +1497,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static IslandDataBinaryOverlay IslandDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return IslandDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

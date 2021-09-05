@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static LocationCellBinaryOverlay LocationCellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new LocationCellBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x4),
@@ -1121,12 +1121,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static LocationCellBinaryOverlay LocationCellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return LocationCellFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

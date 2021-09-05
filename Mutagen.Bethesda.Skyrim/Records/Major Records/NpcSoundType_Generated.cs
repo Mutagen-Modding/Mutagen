@@ -1334,7 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static NpcSoundTypeBinaryOverlay NpcSoundTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new NpcSoundTypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1344,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1352,12 +1352,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static NpcSoundTypeBinaryOverlay NpcSoundTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return NpcSoundTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public ParseResult FillRecordType(
@@ -1367,9 +1367,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.CSDT:
@@ -1384,9 +1384,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSoundType_FieldIndex.Sounds) return ParseResult.Stop;
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<NpcSoundBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: NpcSound_Registration.TriggeringRecordTypes,
-                        factory:  NpcSoundBinaryOverlay.NpcSoundFactory);
+                        factory: NpcSoundBinaryOverlay.NpcSoundFactory);
                     return (int)NpcSoundType_FieldIndex.Sounds;
                 }
                 default:

@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static CloudLayerBinaryOverlay CloudLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new CloudLayerBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1394,12 +1394,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static CloudLayerBinaryOverlay CloudLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return CloudLayerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

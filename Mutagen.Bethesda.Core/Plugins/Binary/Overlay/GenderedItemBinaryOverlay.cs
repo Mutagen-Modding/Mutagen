@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
-            Func<OverlayStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
-            RecordTypeConverter? recordTypeConverter = null)
+            Func<OverlayStream, BinaryOverlayFactoryPackage, TypedParseParams?, T> creator,
+            TypedParseParams? parseParams = null)
             where T : class
         {
             var initialPos = stream.Position;
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 if (recType == male)
                 {
                     var startPos = stream.Position;
-                    maleObj = creator(stream, package, recordTypeConverter);
+                    maleObj = creator(stream, package, parseParams);
                     if (startPos == stream.Position)
                     {
                         maleObj = null;
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 else if (recType == female)
                 {
                     var startPos = stream.Position;
-                    femaleObj = creator(stream, package, recordTypeConverter);
+                    femaleObj = creator(stream, package, parseParams);
                     if (startPos == stream.Position)
                     {
                         femaleObj = null;

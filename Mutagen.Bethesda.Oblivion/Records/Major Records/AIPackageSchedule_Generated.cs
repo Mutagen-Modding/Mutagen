@@ -1300,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static AIPackageScheduleBinaryOverlay AIPackageScheduleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new AIPackageScheduleBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1318,12 +1318,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static AIPackageScheduleBinaryOverlay AIPackageScheduleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return AIPackageScheduleFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

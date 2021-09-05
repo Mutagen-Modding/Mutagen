@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static NavmeshSetBinaryOverlay NavmeshSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new NavmeshSetBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1227,12 +1227,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static NavmeshSetBinaryOverlay NavmeshSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return NavmeshSetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static LocationCellEnablePointBinaryOverlay LocationCellEnablePointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new LocationCellEnablePointBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xC),
@@ -1226,12 +1226,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static LocationCellEnablePointBinaryOverlay LocationCellEnablePointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return LocationCellEnablePointFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

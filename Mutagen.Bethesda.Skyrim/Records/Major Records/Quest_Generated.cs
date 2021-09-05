@@ -3434,7 +3434,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static QuestBinaryOverlay QuestFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new QuestBinaryOverlay(
@@ -3453,7 +3453,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3461,12 +3461,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static QuestBinaryOverlay QuestFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return QuestFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3476,9 +3476,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -3512,7 +3512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            recordTypeConverter: recordTypeConverter));
+                            parseParams: parseParams));
                     return (int)Quest_FieldIndex.TextDisplayGlobals;
                 }
                 case RecordTypeInts.FLTR:
@@ -3540,18 +3540,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: RecordTypes.INDX,
-                        factory:  QuestStageBinaryOverlay.QuestStageFactory);
+                        factory: QuestStageBinaryOverlay.QuestStageFactory);
                     return (int)Quest_FieldIndex.Stages;
                 }
                 case RecordTypeInts.QOBJ:
                 {
                     this.Objectives = this.ParseRepeatedTypelessSubrecord<QuestObjectiveBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: RecordTypes.QOBJ,
-                        factory:  QuestObjectiveBinaryOverlay.QuestObjectiveFactory);
+                        factory: QuestObjectiveBinaryOverlay.QuestObjectiveFactory);
                     return (int)Quest_FieldIndex.Objectives;
                 }
                 case RecordTypeInts.ANAM:
@@ -3565,9 +3565,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this.Aliases = this.ParseRepeatedTypelessSubrecord<QuestAliasBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: QuestAlias_Registration.TriggeringRecordTypes,
-                        factory:  QuestAliasBinaryOverlay.QuestAliasFactory);
+                        factory: QuestAliasBinaryOverlay.QuestAliasFactory);
                     return (int)Quest_FieldIndex.Aliases;
                 }
                 case RecordTypeInts.NNAM:

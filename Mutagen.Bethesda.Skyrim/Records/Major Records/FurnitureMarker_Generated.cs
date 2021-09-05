@@ -1338,9 +1338,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Boolean Enabled => _data.Slice(0x0, 0x1)[0] == 1;
-        public IEntryPointsGetter DisabledEntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x1), _package), _package, default(RecordTypeConverter));
+        public IEntryPointsGetter DisabledEntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x1), _package), _package, default(TypedParseParams));
         public IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5, 0x4))));
-        public IEntryPointsGetter EntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x9), _package), _package, default(RecordTypeConverter));
+        public IEntryPointsGetter EntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x9), _package), _package, default(TypedParseParams));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1360,7 +1360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static FurnitureMarkerBinaryOverlay FurnitureMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new FurnitureMarkerBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0xD),
@@ -1377,12 +1377,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static FurnitureMarkerBinaryOverlay FurnitureMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return FurnitureMarkerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

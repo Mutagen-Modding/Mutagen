@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SkillBoostBinaryOverlay SkillBoostFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new SkillBoostBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x2),
@@ -1143,12 +1143,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SkillBoostBinaryOverlay SkillBoostFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return SkillBoostFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

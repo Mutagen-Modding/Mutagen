@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static WorldspaceNavigationMeshDataBinaryOverlay WorldspaceNavigationMeshDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new WorldspaceNavigationMeshDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1238,12 +1238,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static WorldspaceNavigationMeshDataBinaryOverlay WorldspaceNavigationMeshDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return WorldspaceNavigationMeshDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

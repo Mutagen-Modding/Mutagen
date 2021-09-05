@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PackageTargetUnknownBinaryOverlay PackageTargetUnknownFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new PackageTargetUnknownBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x10),
@@ -1117,12 +1117,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PackageTargetUnknownBinaryOverlay PackageTargetUnknownFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return PackageTargetUnknownFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

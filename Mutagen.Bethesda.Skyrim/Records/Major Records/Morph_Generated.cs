@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static MorphBinaryOverlay MorphFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new MorphBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x20),
@@ -1089,12 +1089,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static MorphBinaryOverlay MorphFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return MorphFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

@@ -30,16 +30,16 @@ namespace Mutagen.Bethesda.Fallout4
             public static ADamageTypeBinaryOverlay ADamageTypeFactory(
                 OverlayStream stream,
                 BinaryOverlayFactoryPackage package,
-                RecordTypeConverter recordTypeConverter)
+                TypedParseParams? translationParams)
             {
                 var majorFrame = package.MetaData.Constants.MajorRecordFrame(stream.RemainingMemory);
                 if (majorFrame.FormVersion >= 78)
                 {
-                    return DamageTypeBinaryOverlay.DamageTypeFactory(stream, package, recordTypeConverter);
+                    return DamageTypeBinaryOverlay.DamageTypeFactory(stream, package, translationParams);
                 }
                 else
                 {
-                    return  DamageTypeIndexedBinaryOverlay.DamageTypeIndexedFactory(stream, package, recordTypeConverter);
+                    return  DamageTypeIndexedBinaryOverlay.DamageTypeIndexedFactory(stream, package, translationParams);
                 }
             }
         }

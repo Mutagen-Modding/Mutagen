@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Fallout4
                 conditions.Clear();
                 for (int i = 0; i < count; i++)
                 {
-                    conditions.Add(Condition.CreateFromBinary(frame, default(RecordTypeConverter)));
+                    conditions.Add(Condition.CreateFromBinary(frame, default(TypedParseParams)));
                 }
             }
 
@@ -971,7 +971,7 @@ namespace Mutagen.Bethesda.Fallout4
                 conditions.Clear();
                 while (frame.Reader.TryGetSubrecord(RecordTypes.CTDA, out var subMeta))
                 {
-                    conditions.Add(Condition.CreateFromBinary(frame, default(RecordTypeConverter)));
+                    conditions.Add(Condition.CreateFromBinary(frame, default(TypedParseParams)));
                 }
             }
 

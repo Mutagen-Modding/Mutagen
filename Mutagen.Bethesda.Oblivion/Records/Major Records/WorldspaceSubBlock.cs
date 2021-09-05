@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Items = BinaryOverlayList.FactoryByArray<CellBinaryOverlay>(
                 mem: stream.RemainingMemory,
                 package: _package,
-                recordTypeConverter: null,
+                parseParams: null,
                 getter: (s, p, recConv) => CellBinaryOverlay.CellFactory(new OverlayStream(s, p), p, recConv),
                 locs: CellBinaryOverlay.ParseRecordLocations(
                     stream: stream,

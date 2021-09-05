@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PcLevelMultBinaryOverlay PcLevelMultFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new PcLevelMultBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1120,12 +1120,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PcLevelMultBinaryOverlay PcLevelMultFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return PcLevelMultFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

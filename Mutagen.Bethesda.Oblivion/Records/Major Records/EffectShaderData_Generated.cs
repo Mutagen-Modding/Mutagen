@@ -4146,7 +4146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static EffectShaderDataBinaryOverlay EffectShaderDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new EffectShaderDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -4167,12 +4167,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static EffectShaderDataBinaryOverlay EffectShaderDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return EffectShaderDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

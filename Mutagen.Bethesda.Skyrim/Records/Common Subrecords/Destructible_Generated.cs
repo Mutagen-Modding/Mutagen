@@ -1376,7 +1376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static DestructibleBinaryOverlay DestructibleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new DestructibleBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1394,12 +1394,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static DestructibleBinaryOverlay DestructibleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return DestructibleFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public ParseResult FillRecordType(
@@ -1409,9 +1409,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DEST:
@@ -1426,9 +1426,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Stages) return ParseResult.Stop;
                     this.Stages = this.ParseRepeatedTypelessSubrecord<DestructionStageBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: DestructionStage_Registration.TriggeringRecordTypes,
-                        factory:  DestructionStageBinaryOverlay.DestructionStageFactory);
+                        factory: DestructionStageBinaryOverlay.DestructionStageFactory);
                     return (int)Destructible_FieldIndex.Stages;
                 }
                 default:

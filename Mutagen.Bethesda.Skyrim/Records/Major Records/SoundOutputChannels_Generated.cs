@@ -1267,9 +1267,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public ISoundOutputChannelGetter Channel0 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(new OverlayStream(_data.Slice(0x0), _package), _package, default(RecordTypeConverter));
-        public ISoundOutputChannelGetter Channel1 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(new OverlayStream(_data.Slice(0x8), _package), _package, default(RecordTypeConverter));
-        public ISoundOutputChannelGetter Channel2 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(new OverlayStream(_data.Slice(0x10), _package), _package, default(RecordTypeConverter));
+        public ISoundOutputChannelGetter Channel0 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(new OverlayStream(_data.Slice(0x0), _package), _package, default(TypedParseParams));
+        public ISoundOutputChannelGetter Channel1 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(new OverlayStream(_data.Slice(0x8), _package), _package, default(TypedParseParams));
+        public ISoundOutputChannelGetter Channel2 => SoundOutputChannelBinaryOverlay.SoundOutputChannelFactory(new OverlayStream(_data.Slice(0x10), _package), _package, default(TypedParseParams));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SoundOutputChannelsBinaryOverlay SoundOutputChannelsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new SoundOutputChannelsBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1307,12 +1307,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SoundOutputChannelsBinaryOverlay SoundOutputChannelsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return SoundOutputChannelsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

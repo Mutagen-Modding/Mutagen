@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
             public static GlobalBinaryOverlay GlobalFactory(
                 OverlayStream stream,
                 BinaryOverlayFactoryPackage package,
-                RecordTypeConverter recordTypeConverter)
+                TypedParseParams? translationParams)
             {
                 var majorFrame = package.MetaData.Constants.MajorRecordFrame(stream.RemainingMemory);
                 var globalChar = GlobalCustomParsing.GetGlobalChar(majorFrame);

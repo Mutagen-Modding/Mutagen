@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         public static MasterReferenceBinaryOverlay MasterReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new MasterReferenceBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1186,12 +1186,12 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         public static MasterReferenceBinaryOverlay MasterReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return MasterReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public ParseResult FillRecordType(
@@ -1201,9 +1201,9 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MAST:

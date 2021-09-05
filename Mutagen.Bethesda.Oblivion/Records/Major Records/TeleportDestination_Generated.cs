@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static TeleportDestinationBinaryOverlay TeleportDestinationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new TeleportDestinationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1226,12 +1226,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static TeleportDestinationBinaryOverlay TeleportDestinationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return TeleportDestinationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

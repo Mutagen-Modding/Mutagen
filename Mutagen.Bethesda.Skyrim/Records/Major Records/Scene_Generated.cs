@@ -2812,7 +2812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SceneBinaryOverlay SceneFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new SceneBinaryOverlay(
@@ -2831,7 +2831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2839,12 +2839,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SceneBinaryOverlay SceneFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return SceneFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2854,9 +2854,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -2873,27 +2873,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this.Phases = this.ParseRepeatedTypelessSubrecord<ScenePhaseBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: RecordTypes.HNAM,
-                        factory:  ScenePhaseBinaryOverlay.ScenePhaseFactory);
+                        factory: ScenePhaseBinaryOverlay.ScenePhaseFactory);
                     return (int)Scene_FieldIndex.Phases;
                 }
                 case RecordTypeInts.ALID:
                 {
                     this.Actors = this.ParseRepeatedTypelessSubrecord<SceneActorBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: RecordTypes.ALID,
-                        factory:  SceneActorBinaryOverlay.SceneActorFactory);
+                        factory: SceneActorBinaryOverlay.SceneActorFactory);
                     return (int)Scene_FieldIndex.Actors;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     this.Actions = this.ParseRepeatedTypelessSubrecord<SceneActionBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: RecordTypes.ANAM,
-                        factory:  SceneActionBinaryOverlay.SceneActionFactory);
+                        factory: SceneActionBinaryOverlay.SceneActionFactory);
                     return (int)Scene_FieldIndex.Actions;
                 }
                 case RecordTypeInts.SCHR:
@@ -2905,7 +2905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Unused = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                     return (int)Scene_FieldIndex.Unused;
                 }
                 case RecordTypeInts.NEXT:
@@ -2914,7 +2914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                     return (int)Scene_FieldIndex.Unused2;
                 }
                 case RecordTypeInts.PNAM:

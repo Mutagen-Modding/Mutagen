@@ -1749,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ScriptFieldsBinaryOverlay ScriptFieldsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new ScriptFieldsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1759,7 +1759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1767,12 +1767,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ScriptFieldsBinaryOverlay ScriptFieldsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return ScriptFieldsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public ParseResult FillRecordType(
@@ -1782,9 +1782,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.SCHD:
@@ -1816,9 +1816,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.LocalVariables = this.ParseRepeatedTypelessSubrecord<LocalVariableBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: LocalVariable_Registration.TriggeringRecordTypes,
-                        factory:  LocalVariableBinaryOverlay.LocalVariableFactory);
+                        factory: LocalVariableBinaryOverlay.LocalVariableFactory);
                     return (int)ScriptFields_FieldIndex.LocalVariables;
                 }
                 case RecordTypeInts.SCRV:
@@ -1826,7 +1826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.References = this.ParseRepeatedTypelessSubrecord<AScriptReferenceBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: AScriptReference_Registration.TriggeringRecordTypes,
                         factory: (s, r, p, recConv) =>
                         {

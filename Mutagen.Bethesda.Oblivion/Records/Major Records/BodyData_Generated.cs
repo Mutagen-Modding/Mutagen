@@ -1379,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static BodyDataBinaryOverlay BodyDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new BodyDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1389,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1397,12 +1397,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static BodyDataBinaryOverlay BodyDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return BodyDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public ParseResult FillRecordType(
@@ -1412,9 +1412,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
@@ -1423,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                     return (int)BodyData_FieldIndex.Model;
                 }
                 case RecordTypeInts.INDX:
@@ -1432,9 +1432,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyData_FieldIndex.BodyParts) return ParseResult.Stop;
                     this.BodyParts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: BodyPart_Registration.TriggeringRecordTypes,
-                        factory:  BodyPartBinaryOverlay.BodyPartFactory);
+                        factory: BodyPartBinaryOverlay.BodyPartFactory);
                     return (int)BodyData_FieldIndex.BodyParts;
                 }
                 default:

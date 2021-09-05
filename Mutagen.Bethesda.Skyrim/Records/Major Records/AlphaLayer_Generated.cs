@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static AlphaLayerBinaryOverlay AlphaLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new AlphaLayerBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1177,12 +1177,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static AlphaLayerBinaryOverlay AlphaLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return AlphaLayerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1192,9 +1192,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VTXT:
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         type: type,
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
-                        recordTypeConverter: AlphaLayer_Registration.BaseConverter);
+                        parseParams: AlphaLayer_Registration.BaseConverter);
             }
         }
         #region To String

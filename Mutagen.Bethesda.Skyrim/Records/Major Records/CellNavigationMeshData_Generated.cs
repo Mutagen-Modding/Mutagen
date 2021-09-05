@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static CellNavigationMeshDataBinaryOverlay CellNavigationMeshDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new CellNavigationMeshDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1247,12 +1247,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static CellNavigationMeshDataBinaryOverlay CellNavigationMeshDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return CellNavigationMeshDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

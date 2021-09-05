@@ -1511,9 +1511,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 switch (_DataType.TypeInt)
                 {
                     case 0x44444E53: // SNDD
-                        return SoundDataBinaryOverlay.SoundDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package, default(RecordTypeConverter));
+                        return SoundDataBinaryOverlay.SoundDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package, default(TypedParseParams));
                     case 0x58444E53: // SNDX
-                        return SoundDataExtendedBinaryOverlay.SoundDataExtendedFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package, default(RecordTypeConverter));
+                        return SoundDataExtendedBinaryOverlay.SoundDataExtendedFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package, default(TypedParseParams));
                     default:
                         throw new ArgumentException();
                 }
@@ -1539,7 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static SoundBinaryOverlay SoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new SoundBinaryOverlay(
@@ -1558,7 +1558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1566,12 +1566,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static SoundBinaryOverlay SoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return SoundFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1581,9 +1581,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FNAM:

@@ -2033,7 +2033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static SigilStoneBinaryOverlay SigilStoneFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new SigilStoneBinaryOverlay(
@@ -2052,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2060,12 +2060,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static SigilStoneBinaryOverlay SigilStoneFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return SigilStoneFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2075,9 +2075,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -2090,7 +2090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                     return (int)SigilStone_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
@@ -2108,9 +2108,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: Effect_Registration.TriggeringRecordTypes,
-                        factory:  EffectBinaryOverlay.EffectFactory);
+                        factory: EffectBinaryOverlay.EffectFactory);
                     return (int)SigilStone_FieldIndex.Effects;
                 }
                 case RecordTypeInts.DATA:

@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int finalPos,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new AmbientColorsBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position),
@@ -1539,13 +1539,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static AmbientColorsBinaryOverlay AmbientColorsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return AmbientColorsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 finalPos: slice.Length,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

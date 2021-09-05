@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static WeatherTypeBinaryOverlay WeatherTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new WeatherTypeBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1158,12 +1158,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static WeatherTypeBinaryOverlay WeatherTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return WeatherTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

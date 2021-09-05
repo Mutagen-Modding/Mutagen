@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RoadPointBinaryOverlay RoadPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new RoadPointBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1325,12 +1325,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RoadPointBinaryOverlay RoadPointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return RoadPointFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

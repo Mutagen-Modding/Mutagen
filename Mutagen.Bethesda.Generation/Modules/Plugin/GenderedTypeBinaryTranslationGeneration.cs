@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     if (subData?.RecordTypeConverter != null
                         && subData.RecordTypeConverter.FromConversions.Count > 0)
                     {
-                        args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                        args.Add($"parseParams: {objGen.RegistrationName}.{typeGen.Name}Converter");
                     }
                 }
                 if (gender.FemaleConversions != null)
@@ -424,13 +424,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 if (subData?.RecordTypeConverter != null
                                     && subData.RecordTypeConverter.FromConversions.Count > 0)
                                 {
-                                    args.Add($"recordTypeConverter: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
+                                    args.Add($"parseParams: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
                                 }
                                 else if (converterAccessor != null
                                     && gendered.FemaleConversions == null
                                     && gendered.MaleConversions == null)
                                 {
-                                    args.Add($"recordTypeConverter: {converterAccessor}");
+                                    args.Add($"parseParams: {converterAccessor}");
                                 }
                             }
                             else

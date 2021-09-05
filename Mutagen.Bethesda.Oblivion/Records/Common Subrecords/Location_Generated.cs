@@ -1124,7 +1124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LocationBinaryOverlay LocationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new LocationBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x18),
@@ -1141,12 +1141,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LocationBinaryOverlay LocationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return LocationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

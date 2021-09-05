@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SoundOutputChannelBinaryOverlay SoundOutputChannelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new SoundOutputChannelBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1449,12 +1449,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SoundOutputChannelBinaryOverlay SoundOutputChannelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return SoundOutputChannelFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

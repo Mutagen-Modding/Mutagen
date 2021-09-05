@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
                 OverlayStream stream,
                 RecordType recordType,
                 BinaryOverlayFactoryPackage package,
-                RecordTypeConverter? recordTypeConverter)
+                TypedParseParams? parseParams)
             {
                 var rawBytes = stream.ReadSpan(0x1A);
                 byte[] newBytes = new byte[rawBytes.Length + 4];
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return ConditionBinaryOverlay.ConditionFactory(
                     stream: new OverlayStream(newBytes, package),
                     package: package,
-                    recordTypeConverter: recordTypeConverter);
+                    parseParams: parseParams);
             }
         }
     }

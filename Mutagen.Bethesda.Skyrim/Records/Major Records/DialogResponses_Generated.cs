@@ -3088,7 +3088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static DialogResponsesBinaryOverlay DialogResponsesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new DialogResponsesBinaryOverlay(
@@ -3107,7 +3107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3115,12 +3115,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static DialogResponsesBinaryOverlay DialogResponsesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return DialogResponsesFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3130,9 +3130,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -3176,7 +3176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            recordTypeConverter: recordTypeConverter));
+                            parseParams: parseParams));
                     return (int)DialogResponses_FieldIndex.LinkTo;
                 }
                 case RecordTypeInts.DNAM:
@@ -3188,9 +3188,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: RecordTypes.TRDT,
-                        factory:  DialogResponseBinaryOverlay.DialogResponseFactory);
+                        factory: DialogResponseBinaryOverlay.DialogResponseFactory);
                     return (int)DialogResponses_FieldIndex.Responses;
                 }
                 case RecordTypeInts.CTDA:
@@ -3209,9 +3209,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     this.UnknownData = this.ParseRepeatedTypelessSubrecord<DialogResponsesUnknownDataBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: DialogResponsesUnknownData_Registration.TriggeringRecordTypes,
-                        factory:  DialogResponsesUnknownDataBinaryOverlay.DialogResponsesUnknownDataFactory);
+                        factory: DialogResponsesUnknownDataBinaryOverlay.DialogResponsesUnknownDataFactory);
                     return (int)DialogResponses_FieldIndex.UnknownData;
                 }
                 case RecordTypeInts.RNAM:

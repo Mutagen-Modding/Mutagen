@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Fallout4
             public static GlobalBinaryOverlay GlobalFactory(
                 OverlayStream stream,
                 BinaryOverlayFactoryPackage package,
-                RecordTypeConverter recordTypeConverter)
+                TypedParseParams? translationParams)
             {
                 var majorFrame = package.MetaData.Constants.MajorRecordFrame(stream.RemainingMemory);
                 var globalChar = GlobalCustomParsing.GetGlobalChar(majorFrame);

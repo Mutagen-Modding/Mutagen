@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
                 _xnam = xnam.Content;
                 this.ProcedureTree = this.ParseRepeatedTypelessSubrecord<PackageBranchBinaryOverlay>(
                     stream: stream,
-                    recordTypeConverter: null,
+                    parseParams: null,
                     trigger: RecordTypes.ANAM,
                     factory: PackageBranchBinaryOverlay.PackageBranchFactory);
                 PackageBinaryCreateTranslation.AbsorbPackageData(

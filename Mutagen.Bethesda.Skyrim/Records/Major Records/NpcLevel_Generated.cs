@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static NpcLevelBinaryOverlay NpcLevelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new NpcLevelBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x2),
@@ -1095,12 +1095,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static NpcLevelBinaryOverlay NpcLevelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return NpcLevelFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PerkScriptFragmentsBinaryOverlay PerkScriptFragmentsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new PerkScriptFragmentsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1341,12 +1341,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PerkScriptFragmentsBinaryOverlay PerkScriptFragmentsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return PerkScriptFragmentsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

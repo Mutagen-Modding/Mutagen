@@ -2562,7 +2562,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static HeadPartBinaryOverlay HeadPartFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new HeadPartBinaryOverlay(
@@ -2581,7 +2581,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2589,12 +2589,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static HeadPartBinaryOverlay HeadPartFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return HeadPartFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2604,9 +2604,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -2619,7 +2619,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                     return (int)HeadPart_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
@@ -2643,7 +2643,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            recordTypeConverter: recordTypeConverter));
+                            parseParams: parseParams));
                     return (int)HeadPart_FieldIndex.ExtraParts;
                 }
                 case RecordTypeInts.NAM0:
@@ -2651,9 +2651,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     this.Parts = this.ParseRepeatedTypelessSubrecord<PartBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: Part_Registration.TriggeringRecordTypes,
-                        factory:  PartBinaryOverlay.PartFactory);
+                        factory: PartBinaryOverlay.PartFactory);
                     return (int)HeadPart_FieldIndex.Parts;
                 }
                 case RecordTypeInts.TNAM:

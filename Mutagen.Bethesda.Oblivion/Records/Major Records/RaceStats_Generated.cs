@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RaceStatsBinaryOverlay RaceStatsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new RaceStatsBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
@@ -1449,12 +1449,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RaceStatsBinaryOverlay RaceStatsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return RaceStatsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

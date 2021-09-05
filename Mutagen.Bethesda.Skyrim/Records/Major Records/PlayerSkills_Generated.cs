@@ -1784,7 +1784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PlayerSkillsBinaryOverlay PlayerSkillsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new PlayerSkillsBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1802,12 +1802,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static PlayerSkillsBinaryOverlay PlayerSkillsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return PlayerSkillsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

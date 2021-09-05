@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static MagicEffectNpcArchetypeBinaryOverlay MagicEffectNpcArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new MagicEffectNpcArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1066,12 +1066,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static MagicEffectNpcArchetypeBinaryOverlay MagicEffectNpcArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return MagicEffectNpcArchetypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String

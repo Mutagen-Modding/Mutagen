@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int offset,
                 RecordType type,
                 PreviousParse lastParsed,
-                RecordTypeConverter? recordTypeConverter = null)
+                TypedParseParams? parseParams = null)
             {
                 if (type.TypeInt == 0x44494445) // EDID
                 {
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
                         type: type,
                         recordParseCount: null,
                         lastParsed: lastParsed,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                 }
                 WeatherBinaryCreateTranslation.FillCloudTexture(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),

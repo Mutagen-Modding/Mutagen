@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ScriptMetaSummaryBinaryOverlay ScriptMetaSummaryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new ScriptMetaSummaryBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1328,12 +1328,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ScriptMetaSummaryBinaryOverlay ScriptMetaSummaryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return ScriptMetaSummaryFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         #region To String
