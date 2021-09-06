@@ -5463,7 +5463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((WorldspaceMaxHeightBinaryWriteTranslation)((IBinaryItem)MaxHeightItem).BinaryWriteTranslator).Write(
                     item: MaxHeightItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -5609,10 +5609,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.WRLD),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.WRLD)))
             {
                 try
                 {

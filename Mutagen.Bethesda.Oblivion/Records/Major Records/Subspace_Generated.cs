@@ -1232,10 +1232,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISubspaceGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SBSP),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.SBSP)))
             {
                 try
                 {

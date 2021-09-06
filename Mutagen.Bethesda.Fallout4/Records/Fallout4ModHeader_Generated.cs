@@ -2303,10 +2303,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4ModHeaderGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.TES4),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.TES4)))
             {
                 WriteEmbedded(
                     item: item,

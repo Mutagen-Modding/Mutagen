@@ -1564,10 +1564,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBirthsignGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.BSGN),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.BSGN)))
             {
                 try
                 {

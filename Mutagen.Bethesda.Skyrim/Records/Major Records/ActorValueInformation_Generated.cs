@@ -1796,10 +1796,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IActorValueInformationGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.AVIF),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.AVIF)))
             {
                 try
                 {

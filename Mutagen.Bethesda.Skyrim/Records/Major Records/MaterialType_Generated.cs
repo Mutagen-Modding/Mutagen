@@ -1596,10 +1596,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMaterialTypeGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.MATT),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.MATT)))
             {
                 try
                 {

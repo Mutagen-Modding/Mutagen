@@ -1257,10 +1257,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IActionRecordGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.AACT),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.AACT)))
             {
                 try
                 {

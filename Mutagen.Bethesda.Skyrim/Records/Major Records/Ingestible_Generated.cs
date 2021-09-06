@@ -2860,10 +2860,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIngestibleGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ALCH),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.ALCH)))
             {
                 try
                 {

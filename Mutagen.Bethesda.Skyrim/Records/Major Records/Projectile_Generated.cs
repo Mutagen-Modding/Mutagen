@@ -3252,10 +3252,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IProjectileGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PROJ),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.PROJ)))
             {
                 try
                 {

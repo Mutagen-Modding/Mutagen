@@ -736,11 +736,15 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             {
                 try
                 {
-                    using (var header = HeaderExport.Subrecord(writer, recordType, overflowRecord: overflowRecord))
+                    using (var header = HeaderExport.Subrecord(
+                        writer,
+                        recordType, 
+                        overflowRecord: overflowRecord,
+                        out var writerToUse))
                     {
                         foreach (var item in items)
                         {
-                            transl(header.PrepWriter, item, translationParams);
+                            transl(writerToUse, item, translationParams);
                         }
                     }
                 }

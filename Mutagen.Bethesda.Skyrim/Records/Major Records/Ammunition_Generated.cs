@@ -2620,10 +2620,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAmmunitionGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.AMMO),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.AMMO)))
             {
                 try
                 {

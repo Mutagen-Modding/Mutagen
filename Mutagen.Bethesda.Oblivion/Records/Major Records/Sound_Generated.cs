@@ -1338,10 +1338,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SOUN),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.SOUN)))
             {
                 try
                 {

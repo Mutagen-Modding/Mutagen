@@ -1115,14 +1115,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDestructableDataGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DEST),
-                type: ObjectType.Subrecord))
+                overflowRecord: translationParams?.OverflowRecordType,
+                out var writerToUse))
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer);
+                    writer: writerToUse);
             }
         }
 

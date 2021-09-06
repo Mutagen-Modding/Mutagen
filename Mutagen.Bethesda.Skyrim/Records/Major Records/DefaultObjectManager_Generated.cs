@@ -1401,10 +1401,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDefaultObjectManagerGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.DOBJ),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.DOBJ)))
             {
                 try
                 {

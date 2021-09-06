@@ -1452,10 +1452,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEquipTypeGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.EQUP),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.EQUP)))
             {
                 try
                 {

@@ -2002,10 +2002,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ITextureSetGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.TXST),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.TXST)))
             {
                 try
                 {

@@ -1391,10 +1391,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAnimatedObjectGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ANIO),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.ANIO)))
             {
                 try
                 {

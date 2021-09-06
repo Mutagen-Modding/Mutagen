@@ -1869,10 +1869,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceBlockGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Group(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.GRUP),
-                type: ObjectType.Group))
+                record: translationParams.ConvertToCustom(RecordTypes.GRUP)))
             {
                 WriteEmbedded(
                     item: item,

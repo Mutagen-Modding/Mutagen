@@ -1086,14 +1086,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestinationGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XTEL),
-                type: ObjectType.Subrecord))
+                overflowRecord: translationParams?.OverflowRecordType,
+                out var writerToUse))
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer);
+                    writer: writerToUse);
             }
         }
 

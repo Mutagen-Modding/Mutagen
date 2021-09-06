@@ -1677,10 +1677,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IStoryManagerQuestNodeGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SMQN),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.SMQN)))
             {
                 try
                 {

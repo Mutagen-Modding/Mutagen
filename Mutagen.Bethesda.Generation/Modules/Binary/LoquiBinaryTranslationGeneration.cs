@@ -118,10 +118,23 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                         {
                             args.Add($"item: {itemAccessor}");
                             args.Add($"writer: {writerAccessor}");
+
+                            var translArgs = new List<string>();
+
                             if (data?.RecordTypeConverter != null
                                 && data.RecordTypeConverter.FromConversions.Count > 0)
                             {
-                                args.Add($"translationParams: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
+                                translArgs.Add($"{objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
+                            }
+
+                            if (data.OverflowRecordType.HasValue)
+                            {
+                                translArgs.Add($"RecordTypes.{data.OverflowRecordType}");
+                            }
+
+                            if (translArgs.Count > 0)
+                            {
+                                args.Add($"translationParams: {converterAccessor}.With({string.Join(", ", translArgs)})");
                             }
                             else if (converterAccessor != null)
                             {

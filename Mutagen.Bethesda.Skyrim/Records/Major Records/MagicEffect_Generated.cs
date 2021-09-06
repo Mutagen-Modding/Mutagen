@@ -4538,10 +4538,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMagicEffectGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.MGEF),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.MGEF)))
             {
                 try
                 {

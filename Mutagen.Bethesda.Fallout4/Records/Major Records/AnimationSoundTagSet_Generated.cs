@@ -1162,10 +1162,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IAnimationSoundTagSetGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.STAG),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.STAG)))
             {
                 try
                 {

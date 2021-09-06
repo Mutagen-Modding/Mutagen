@@ -996,14 +996,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.RDAT),
-                type: ObjectType.Subrecord))
+                overflowRecord: translationParams?.OverflowRecordType,
+                out var writerToUse))
             {
                 WriteRecordTypes(
                     item: item,
-                    writer: writer,
+                    writer: writerToUse,
                     translationParams: translationParams);
             }
         }

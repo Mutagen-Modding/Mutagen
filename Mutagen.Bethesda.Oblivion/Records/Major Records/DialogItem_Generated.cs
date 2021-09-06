@@ -2412,10 +2412,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogItemGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.INFO),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.INFO)))
             {
                 try
                 {

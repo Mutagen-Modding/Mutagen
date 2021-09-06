@@ -1149,14 +1149,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyTemplateGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.Combine(BodyTemplate_Registration.Get(writer.MetaData.FormVersion)).ConvertToCustom(RecordTypes.BODT),
-                type: ObjectType.Subrecord))
+                overflowRecord: translationParams?.OverflowRecordType,
+                out var writerToUse))
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer);
+                    writer: writerToUse);
             }
         }
 

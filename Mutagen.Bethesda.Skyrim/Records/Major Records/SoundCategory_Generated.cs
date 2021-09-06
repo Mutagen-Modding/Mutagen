@@ -1557,10 +1557,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundCategoryGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SNCT),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.SNCT)))
             {
                 try
                 {

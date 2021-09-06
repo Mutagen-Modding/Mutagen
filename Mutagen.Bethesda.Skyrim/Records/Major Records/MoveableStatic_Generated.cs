@@ -1801,10 +1801,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMoveableStaticGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.MSTT),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.MSTT)))
             {
                 try
                 {

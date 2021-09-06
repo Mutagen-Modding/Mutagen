@@ -2377,10 +2377,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PERK),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.PERK)))
             {
                 try
                 {

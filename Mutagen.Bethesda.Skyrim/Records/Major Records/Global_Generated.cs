@@ -1184,10 +1184,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGlobalGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.GLOB),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.GLOB)))
             {
                 try
                 {

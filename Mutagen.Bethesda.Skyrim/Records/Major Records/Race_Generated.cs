@@ -7181,7 +7181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         ((SimpleModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
-                            translationParams: Race_Registration.SkeletalModelConverter);
+                            translationParams: conv.With(Race_Registration.SkeletalModelConverter));
                     }
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Write(
@@ -7504,10 +7504,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRaceGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.RACE),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.RACE)))
             {
                 try
                 {

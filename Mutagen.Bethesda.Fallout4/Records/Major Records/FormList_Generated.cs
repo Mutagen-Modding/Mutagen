@@ -1162,10 +1162,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFormListGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.FLST),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.FLST)))
             {
                 try
                 {

@@ -1360,10 +1360,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGameSettingBoolGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.GMST),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.GMST)))
             {
                 try
                 {

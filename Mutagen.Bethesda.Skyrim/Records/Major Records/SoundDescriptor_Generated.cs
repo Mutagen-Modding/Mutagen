@@ -2310,10 +2310,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundDescriptorGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SNDR),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.SNDR)))
             {
                 try
                 {

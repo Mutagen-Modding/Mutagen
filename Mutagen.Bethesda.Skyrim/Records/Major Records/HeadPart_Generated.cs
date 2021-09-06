@@ -2125,10 +2125,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IHeadPartGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.HDPT),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.HDPT)))
             {
                 try
                 {

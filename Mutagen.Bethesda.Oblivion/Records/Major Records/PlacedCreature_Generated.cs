@@ -1786,10 +1786,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedCreatureGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ACRE),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.ACRE)))
             {
                 try
                 {

@@ -1820,10 +1820,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILeveledNpcGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LVLN),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.LVLN)))
             {
                 try
                 {

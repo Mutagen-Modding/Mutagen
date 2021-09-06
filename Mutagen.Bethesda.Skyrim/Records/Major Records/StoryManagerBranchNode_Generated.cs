@@ -1436,10 +1436,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IStoryManagerBranchNodeGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SMBN),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.SMBN)))
             {
                 try
                 {

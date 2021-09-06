@@ -1632,10 +1632,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationMeshInfoMapGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.NAVI),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.NAVI)))
             {
                 try
                 {

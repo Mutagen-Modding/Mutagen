@@ -1332,10 +1332,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Group(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.GRUP),
-                type: ObjectType.Group))
+                record: translationParams.ConvertToCustom(RecordTypes.GRUP)))
             {
                 WriteEmbedded(
                     item: item,

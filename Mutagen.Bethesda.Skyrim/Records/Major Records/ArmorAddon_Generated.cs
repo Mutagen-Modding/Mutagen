@@ -2510,10 +2510,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IArmorAddonGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ARMA),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.ARMA)))
             {
                 try
                 {

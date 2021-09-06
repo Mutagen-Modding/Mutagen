@@ -2075,10 +2075,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFootstepSetGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.FSTS),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.FSTS)))
             {
                 try
                 {

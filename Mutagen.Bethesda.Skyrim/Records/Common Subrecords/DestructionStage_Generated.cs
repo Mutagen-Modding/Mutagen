@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
-                    translationParams: DestructionStage_Registration.ModelConverter);
+                    translationParams: translationParams.With(DestructionStage_Registration.ModelConverter));
             }
             using (HeaderExport.Subrecord(writer, RecordTypes.DSTF)) { } // End Marker
         }

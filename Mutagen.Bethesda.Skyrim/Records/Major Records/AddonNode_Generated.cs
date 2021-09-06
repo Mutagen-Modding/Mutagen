@@ -1741,10 +1741,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAddonNodeGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ADDN),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.ADDN)))
             {
                 try
                 {

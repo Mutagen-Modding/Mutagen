@@ -2195,7 +2195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)MaleWorldModelItem).BinaryWriteTranslator).Write(
                     item: MaleWorldModelItem,
                     writer: writer,
-                    translationParams: Armor_Registration.MaleWorldModelConverter);
+                    translationParams: translationParams.With(Armor_Registration.MaleWorldModelConverter));
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2207,14 +2207,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)FemaleBipedModelItem).BinaryWriteTranslator).Write(
                     item: FemaleBipedModelItem,
                     writer: writer,
-                    translationParams: Armor_Registration.FemaleBipedModelConverter);
+                    translationParams: translationParams.With(Armor_Registration.FemaleBipedModelConverter));
             }
             if (item.FemaleWorldModel is {} FemaleWorldModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)FemaleWorldModelItem).BinaryWriteTranslator).Write(
                     item: FemaleWorldModelItem,
                     writer: writer,
-                    translationParams: Armor_Registration.FemaleWorldModelConverter);
+                    translationParams: translationParams.With(Armor_Registration.FemaleWorldModelConverter));
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2235,10 +2235,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IArmorGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ARMO),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.ARMO)))
             {
                 try
                 {

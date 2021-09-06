@@ -2845,10 +2845,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIngredientGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.INGR),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.INGR)))
             {
                 try
                 {

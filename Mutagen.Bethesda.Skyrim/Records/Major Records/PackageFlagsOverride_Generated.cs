@@ -1240,14 +1240,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageFlagsOverrideGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PFO2),
-                type: ObjectType.Subrecord))
+                overflowRecord: translationParams?.OverflowRecordType,
+                out var writerToUse))
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer);
+                    writer: writerToUse);
             }
         }
 

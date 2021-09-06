@@ -2051,10 +2051,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICameraShotGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.CAMS),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.CAMS)))
             {
                 try
                 {

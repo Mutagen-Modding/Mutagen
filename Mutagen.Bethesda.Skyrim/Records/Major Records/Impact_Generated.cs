@@ -2244,10 +2244,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImpactGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.IPCT),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.IPCT)))
             {
                 try
                 {

@@ -1383,10 +1383,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.CSTY),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.CSTY)))
             {
                 try
                 {

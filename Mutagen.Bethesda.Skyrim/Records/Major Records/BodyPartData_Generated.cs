@@ -1519,10 +1519,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyPartDataGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.BPTD),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.BPTD)))
             {
                 try
                 {

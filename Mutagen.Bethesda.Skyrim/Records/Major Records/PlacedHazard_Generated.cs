@@ -1438,10 +1438,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedHazardGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PHZD),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.PHZD)))
             {
                 try
                 {

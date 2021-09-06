@@ -102,9 +102,10 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var header = HeaderExport.Subrecord(
                     writer,
                     RecordTypes.NVNM,
-                    overflowRecord: RecordTypes.XXXX))
+                    overflowRecord: RecordTypes.XXXX,
+                    out var writerToUse))
                 {
-                    data.WriteToBinary(header.PrepWriter);
+                    data.WriteToBinary(writerToUse);
                 }
             }
         }

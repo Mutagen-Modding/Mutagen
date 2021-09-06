@@ -1192,14 +1192,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataExtendedInternalGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SNDX),
-                type: ObjectType.Subrecord))
+                overflowRecord: translationParams?.OverflowRecordType,
+                out var writerToUse))
             {
                 WriteEmbedded(
                     item: item,
-                    writer: writer);
+                    writer: writerToUse);
             }
         }
 

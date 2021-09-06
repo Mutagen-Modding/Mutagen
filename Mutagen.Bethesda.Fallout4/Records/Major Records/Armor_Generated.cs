@@ -1162,10 +1162,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IArmorGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ARMO),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.ARMO)))
             {
                 try
                 {

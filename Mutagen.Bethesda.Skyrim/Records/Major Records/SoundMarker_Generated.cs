@@ -1526,10 +1526,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundMarkerGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SOUN),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.SOUN)))
             {
                 try
                 {

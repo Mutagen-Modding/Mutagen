@@ -1166,10 +1166,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IDoorGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.DOOR),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.DOOR)))
             {
                 try
                 {

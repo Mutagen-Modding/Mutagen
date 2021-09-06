@@ -2040,10 +2040,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMovementTypeGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.MOVT),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.MOVT)))
             {
                 try
                 {

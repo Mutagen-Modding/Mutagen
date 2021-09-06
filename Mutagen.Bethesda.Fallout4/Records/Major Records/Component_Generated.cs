@@ -1645,10 +1645,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IComponentGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.CMPO),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.CMPO)))
             {
                 try
                 {

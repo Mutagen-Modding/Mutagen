@@ -3746,10 +3746,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.WRLD),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.WRLD)))
             {
                 try
                 {

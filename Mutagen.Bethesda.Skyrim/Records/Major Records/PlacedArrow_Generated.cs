@@ -1438,10 +1438,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedArrowGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PARW),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.PARW)))
             {
                 try
                 {

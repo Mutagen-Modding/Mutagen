@@ -1687,10 +1687,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.IMGS),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.IMGS)))
             {
                 try
                 {

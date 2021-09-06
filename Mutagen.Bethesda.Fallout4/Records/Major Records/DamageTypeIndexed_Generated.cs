@@ -1460,10 +1460,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IDamageTypeIndexedGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.DMGT),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.DMGT)))
             {
                 try
                 {

@@ -1508,10 +1508,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAcousticSpaceGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ASPC),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.ASPC)))
             {
                 try
                 {

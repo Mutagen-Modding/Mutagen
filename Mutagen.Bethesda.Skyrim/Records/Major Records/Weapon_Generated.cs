@@ -3808,7 +3808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ScopeModelItem).BinaryWriteTranslator).Write(
                     item: ScopeModelItem,
                     writer: writer,
-                    translationParams: Weapon_Registration.ScopeModelConverter);
+                    translationParams: translationParams.With(Weapon_Registration.ScopeModelConverter));
             }
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -3887,10 +3887,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeaponGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.WEAP),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.WEAP)))
             {
                 try
                 {

@@ -1989,10 +1989,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILoadScreenGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LSCR),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.LSCR)))
             {
                 try
                 {

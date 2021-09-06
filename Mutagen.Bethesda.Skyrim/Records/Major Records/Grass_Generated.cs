@@ -2182,10 +2182,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGrassGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.GRAS),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.GRAS)))
             {
                 try
                 {

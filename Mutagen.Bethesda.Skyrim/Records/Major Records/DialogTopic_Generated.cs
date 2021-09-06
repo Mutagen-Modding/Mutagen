@@ -2602,10 +2602,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogTopicGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.DIAL),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.DIAL)))
             {
                 try
                 {

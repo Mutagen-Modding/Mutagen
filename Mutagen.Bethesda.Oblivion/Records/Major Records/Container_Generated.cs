@@ -1874,10 +1874,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IContainerGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.CONT),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.CONT)))
             {
                 try
                 {

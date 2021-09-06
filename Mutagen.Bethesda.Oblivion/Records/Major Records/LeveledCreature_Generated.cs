@@ -1617,10 +1617,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledCreatureGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LVLC),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.LVLC)))
             {
                 try
                 {

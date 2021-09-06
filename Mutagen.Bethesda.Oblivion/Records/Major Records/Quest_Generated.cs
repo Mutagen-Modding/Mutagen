@@ -2054,10 +2054,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.QUST),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.QUST)))
             {
                 try
                 {

@@ -2267,10 +2267,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITreeGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.TREE),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.TREE)))
             {
                 try
                 {

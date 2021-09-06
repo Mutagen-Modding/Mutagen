@@ -1802,10 +1802,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBookGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.BOOK),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.BOOK)))
             {
                 try
                 {

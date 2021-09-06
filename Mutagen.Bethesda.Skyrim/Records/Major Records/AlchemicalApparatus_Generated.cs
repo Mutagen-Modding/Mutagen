@@ -2341,10 +2341,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAlchemicalApparatusGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.APPA),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.APPA)))
             {
                 try
                 {

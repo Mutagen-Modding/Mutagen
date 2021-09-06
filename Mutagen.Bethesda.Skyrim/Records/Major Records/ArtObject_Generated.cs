@@ -1503,10 +1503,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IArtObjectGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ARTO),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.ARTO)))
             {
                 try
                 {

@@ -2718,16 +2718,34 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             var data = obj.GetObjectData();
             var isMajor = await obj.IsMajorRecord();
             var hasRecType = obj.TryGetRecordType(out var recType);
+            var writerNameToUse = WriterMemberName;
             if (hasRecType)
             {
-                using (var args = new ArgsWrapper(fg,
-                    $"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Header)}",
-                    ")",
-                    semiColon: false))
+                if (obj.GetObjectType() == ObjectType.Subrecord)
                 {
-                    args.AddPassArg(WriterMemberName);
-                    args.Add($"record: {GetRecordTypeString(obj, "translationParams", "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
-                    args.Add($"type: {nameof(ObjectType)}.{obj.GetObjectType()}");
+                    using (var args = new ArgsWrapper(fg,
+                        $"using ({nameof(HeaderExport)}.Subrecord",
+                        ")",
+                        semiColon: false))
+                    {
+                        args.AddPassArg(writerNameToUse);
+                        args.Add($"record: {GetRecordTypeString(obj, "translationParams", "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
+                        args.Add($"overflowRecord: translationParams?.{nameof(TypedWriteParams.OverflowRecordType)}");
+                        args.Add("out var writerToUse");
+                    }
+
+                    writerNameToUse = "writerToUse";
+                }
+                else
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"using ({nameof(HeaderExport)}.{obj.GetObjectType()}",
+                        ")",
+                        semiColon: false))
+                    {
+                        args.AddPassArg(writerNameToUse);
+                        args.Add($"record: {GetRecordTypeString(obj, "translationParams", "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
+                    }
                 }
             }
             using (new BraceWrapper(fg, doIt: hasRecType))
@@ -2742,7 +2760,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
                     {
                         args.AddPassArg("param");
-                        args.AddPassArg(WriterMemberName);
+                        args.Add($"writer: {writerNameToUse}");
                         args.Add("mod: item");
                         args.Add("modHeader: item.ModHeader.DeepCopy()");
                         args.AddPassArg("modKey");
@@ -2756,7 +2774,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             $"WriteEmbedded"))
                         {
                             args.AddPassArg($"item");
-                            args.AddPassArg(WriterMemberName);
+                            args.Add($"writer: {writerNameToUse}");
                         }
                     }
                     else
@@ -2768,7 +2786,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 $"{this.TranslationWriteClass(firstBase)}.WriteEmbedded"))
                             {
                                 args.AddPassArg($"item");
-                                args.AddPassArg(WriterMemberName);
+                                args.Add($"writer: {writerNameToUse}");
                             }
                         }
                     }
@@ -2776,13 +2794,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     {
                         if (await obj.IsMajorRecord())
                         {
-                            fg.AppendLine($"{WriterMemberName}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
+                            fg.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
                         }
                         using (var args = new ArgsWrapper(fg,
                             $"WriteRecordTypes"))
                         {
                             args.AddPassArg($"item");
-                            args.AddPassArg(WriterMemberName);
+                            args.Add($"writer: {writerNameToUse}");
                             if (obj.GetObjectType() == ObjectType.Mod)
                             {
                                 args.AddPassArg($"importMask");
@@ -2794,7 +2812,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         if (await obj.IsMajorRecord())
                         {
-                            fg.AppendLine($"{WriterMemberName}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
+                            fg.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
                         }
                     }
                     else
@@ -2806,7 +2824,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             $"{this.TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                             {
                                 args.AddPassArg($"item");
-                                args.AddPassArg(WriterMemberName);
+                                args.Add($"writer: {writerNameToUse}");
                                 args.AddPassArg($"translationParams");
                             }
                         }

@@ -1618,10 +1618,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IKeyGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.KEYM),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.KEYM)))
             {
                 try
                 {

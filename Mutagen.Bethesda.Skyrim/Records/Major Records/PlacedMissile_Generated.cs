@@ -1438,10 +1438,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedMissileGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PMIS),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.PMIS)))
             {
                 try
                 {

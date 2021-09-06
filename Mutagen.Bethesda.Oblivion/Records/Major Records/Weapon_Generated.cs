@@ -1742,10 +1742,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeaponGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.WEAP),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.WEAP)))
             {
                 try
                 {

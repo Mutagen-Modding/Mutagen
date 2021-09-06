@@ -1781,10 +1781,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IConstructibleObjectGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.COBJ),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.COBJ)))
             {
                 try
                 {

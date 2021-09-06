@@ -1864,10 +1864,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IReverbParametersGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.REVB),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.REVB)))
             {
                 try
                 {

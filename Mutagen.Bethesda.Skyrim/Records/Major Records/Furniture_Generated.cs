@@ -2696,10 +2696,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFurnitureGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.FURN),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.FURN)))
             {
                 try
                 {

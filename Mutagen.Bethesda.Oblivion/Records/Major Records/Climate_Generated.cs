@@ -1727,10 +1727,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.CLMT),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.CLMT)))
             {
                 try
                 {

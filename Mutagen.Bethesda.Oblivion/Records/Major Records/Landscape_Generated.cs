@@ -1848,10 +1848,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandscapeGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LAND),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.LAND)))
             {
                 try
                 {

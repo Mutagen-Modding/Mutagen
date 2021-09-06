@@ -1501,10 +1501,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHairGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.HAIR),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.HAIR)))
             {
                 try
                 {

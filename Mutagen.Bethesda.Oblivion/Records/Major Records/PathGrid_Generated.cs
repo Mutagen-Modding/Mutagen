@@ -1824,10 +1824,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PGRD),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.PGRD)))
             {
                 try
                 {

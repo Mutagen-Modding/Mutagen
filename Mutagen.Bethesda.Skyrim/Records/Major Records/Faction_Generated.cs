@@ -2790,10 +2790,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.FACT),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.FACT)))
             {
                 try
                 {
