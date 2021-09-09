@@ -13,25 +13,64 @@
                 <ControlTemplate TargetType="{x:Type local:ModKeyBox}">
                     <ControlTemplate.Resources>
                         <conv:ModTypeStringConverter x:Key="ModTypeStringConverter" />
+                        <Style x:Key="MahApps.Styles.ToggleButton.ComboBoxDropDown" TargetType="{x:Type ToggleButton}">
+                            <Setter Property="ClickMode" Value="Press" />
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="IsTabStop" Value="False" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Grid Name="ToggleButtonRootGrid" Background="{TemplateBinding Background}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Name="TextColumn" Width="*" />
+                                                <ColumnDefinition Name="ButtonColumn" Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="1"
+                                                Name="PART_ClearText"
+                                                Focusable="False"
+                                                IsTabStop="False"
+                                                Style="{DynamicResource MahApps.Styles.Button.Chromeless}"
+                                                Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}, Path=(mahapps:TextBoxHelper.ClearTextButton), Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger SourceName="PART_ClearText" Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="PART_ClearText" Property="Background" Value="{DynamicResource MahApps.Brushes.Gray8}" />
+                                                <Setter TargetName="PART_ClearText" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}" />
+                                            </Trigger>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsPressed}" Value="True">
+                                                <Setter TargetName="ToggleButtonRootGrid" Property="Background" Value="{DynamicResource MahApps.Brushes.Gray7}" />
+                                            </DataTrigger>
+                                            <Trigger SourceName="PART_ClearText" Property="IsPressed" Value="True">
+                                                <Setter TargetName="PART_ClearText" Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                                                <Setter TargetName="PART_ClearText" Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+                                                <Setter TargetName="ToggleButtonRootGrid" Property="Background" Value="{DynamicResource MahApps.Brushes.Gray7}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
                     </ControlTemplate.Resources>
                     <Border
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid>
+                        <Grid x:Name="PART_MainGrid" Background="{StaticResource MahApps.Brushes.Control.Background}">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="3" />
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="75" />
                             </Grid.ColumnDefinitions>
                             <TextBox Grid.Column="0"
                                 x:Name="PART_FileNameBox"
-                                Margin="0,0,-1,0"
+                                Margin="0,0,-8,0"
+                                HorizontalContentAlignment="Right"
                                 mahapps:TextBoxHelper.Watermark="{TemplateBinding Watermark}"
-                                noggog:ControlsHelper.ErrorTooltip="{Binding Error.Reason, RelativeSource={RelativeSource TemplatedParent}}"
-                                noggog:ControlsHelper.InError="{Binding Error.Failed, RelativeSource={RelativeSource TemplatedParent}}"
-                                Style="{StaticResource Noggog.Styles.TextBox.ErrorState}"
+                                Background="Transparent"
                                 Text="{Binding FileName, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
-                            <ComboBox Grid.Column="1"
+                            <ComboBox Grid.Column="2"
+                                x:Name="PART_ModTypeBox"
                                 Height="{Binding Height, ElementName=PART_FileNameBox, Mode=OneWay}"
                                 BorderThickness="0"
                                 ItemsSource="{Binding ModTypes, RelativeSource={RelativeSource TemplatedParent}}"
@@ -41,9 +80,35 @@
                                         <TextBlock Text="{Binding Converter={StaticResource ModTypeStringConverter}}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
+                                <ComboBox.Style>
+                                    <Style BasedOn="{StaticResource Noggog.Styles.ComboBox}" TargetType="ComboBox">
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=PART_MainGrid}" Value="True" />
+                                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="False" />
+                                                </MultiDataTrigger.Conditions>
+                                                <MultiDataTrigger.Setters>
+                                                    <Setter Property="Background" Value="{DynamicResource Noggog.Brushes.Focused.Background}" />
+                                                </MultiDataTrigger.Setters>
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ComboBox.Style>
                             </ComboBox>
+                            <TextBlock Grid.Column="1"
+                                Margin="0,0,-3,4"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                FontWeight="Bold"
+                                Text="." />
                         </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="PART_MainGrid" Property="Background" Value="{DynamicResource Noggog.Brushes.Focused.Background}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
