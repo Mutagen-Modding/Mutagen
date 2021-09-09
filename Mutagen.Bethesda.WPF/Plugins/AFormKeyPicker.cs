@@ -31,17 +31,17 @@ namespace Mutagen.Bethesda.WPF.Plugins
     {
         private bool _updating;
 
-        public ILinkCache LinkCache
+        public ILinkCache? LinkCache
         {
-            get => (ILinkCache)GetValue(LinkCacheProperty);
+            get => (ILinkCache?)GetValue(LinkCacheProperty);
             set => SetValue(LinkCacheProperty, value);
         }
         public static readonly DependencyProperty LinkCacheProperty = DependencyProperty.Register(nameof(LinkCache), typeof(ILinkCache), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(ILinkCache)));
 
-        public IEnumerable ScopedTypes
+        public IEnumerable? ScopedTypes
         {
-            get => (IEnumerable)GetValue(ScopedTypesProperty);
+            get => (IEnumerable?)GetValue(ScopedTypesProperty);
             set => SetValue(ScopedTypesProperty, value);
         }
         public static readonly DependencyProperty ScopedTypesProperty = DependencyProperty.Register(nameof(ScopedTypes), typeof(IEnumerable), typeof(AFormKeyPicker),
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
                 .Skip(1)
                 .Select(x => x.Trim())
                 .DistinctUntilChanged()
-                .Where(x => !_updating)
+                .Where(_ => !_updating)
                 .CombineLatest(
                     this.WhenAnyValue(
                         x => x.LinkCache,
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
                 .DisposeWith(_unloadDisposable);
         }
 
-        protected IEnumerable<Type> ScopedTypesInternal(IEnumerable types)
+        protected IEnumerable<Type> ScopedTypesInternal(IEnumerable? types)
         {
             var scopedTypes = types as IEnumerable<Type>;
             if (scopedTypes == null || !scopedTypes.Any())
