@@ -1,50 +1,37 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
-using Noggog.WPF;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Noggog;
+using Noggog.WPF;
 
 namespace Mutagen.Bethesda.WPF.Plugins
 {
-    public class FormKeyItemViewModel : ViewModel
-    {
-        [Reactive]
-        public bool IsSelected { get; set; }
-
-        public FormKey FormKey { get; }
-
-        public FormKeyItemViewModel(FormKey formKey)
-        {
-            FormKey = formKey;
-        }
-    }
-
     [TemplatePart(Name = "PART_AddedFormKeyListBox", Type = typeof(ListBox))]
     public class FormKeyMultiPicker : AFormKeyPicker
     {
-        public ICollection<FormKeyItemViewModel> FormKeys
+        private ListBox? _formKeyListBox;
+
+        public ICollection<FormKey>? FormKeys
         {
-            get => (ICollection<FormKeyItemViewModel>)GetValue(FormKeysProperty);
+            get => (ICollection<FormKey>)GetValue(FormKeysProperty);
             set => SetValue(FormKeysProperty, value);
         }
-        public static readonly DependencyProperty FormKeysProperty = DependencyProperty.Register(nameof(FormKeys), typeof(ICollection<FormKeyItemViewModel>), typeof(FormKeyMultiPicker),
-             new FrameworkPropertyMetadata(default(ICollection<FormKeyItemViewModel>)));
+        public static readonly DependencyProperty FormKeysProperty = DependencyProperty.Register(nameof(FormKeys), typeof(ICollection<FormKey>), typeof(FormKeyMultiPicker),
+             new FrameworkPropertyMetadata(default(ICollection<FormKey>?)));
 
-        public FormKeyItemViewModel SelectedFormKey
+        public FormKey? SelectedFormKey
         {
-            get => (FormKeyItemViewModel)GetValue(SelectedFormKeyProperty);
+            get => (FormKey?)GetValue(SelectedFormKeyProperty);
             set => SetValue(SelectedFormKeyProperty, value);
         }
-        public static readonly DependencyProperty SelectedFormKeyProperty = DependencyProperty.Register(nameof(SelectedFormKey), typeof(FormKeyItemViewModel), typeof(FormKeyMultiPicker),
-             new FrameworkPropertyMetadata(default(FormKeyItemViewModel), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public static readonly DependencyProperty SelectedFormKeyProperty = DependencyProperty.Register(nameof(SelectedFormKey), typeof(FormKey?), typeof(FormKeyMultiPicker),
+             new FrameworkPropertyMetadata(default(FormKey?), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Brush SelectedForegroundBrush
         {
@@ -95,10 +82,11 @@ namespace Mutagen.Bethesda.WPF.Plugins
         {
             PickerClickCommand = ReactiveCommand.Create((object o) =>
             {
+                if (FormKeys == null) return;
                 switch (o)
                 {
                     case IMajorRecordIdentifier identifier:
-                        FormKeys.Add(new FormKeyItemViewModel(identifier.FormKey));
+                        FormKeys.Add(identifier.FormKey);
                         break;
                     default:
                         break;
@@ -109,28 +97,22 @@ namespace Mutagen.Bethesda.WPF.Plugins
                     .Select(x => !x.IsNull),
                 execute: () =>
                 {
-                    FormKeys.Add(new FormKeyItemViewModel(FormKey));
+                    if (FormKeys == null) return;
+                    FormKeys.Add(FormKey);
                 });
             DeleteSelectedItemsCommand = ReactiveCommand.Create(
                 canExecute: this.WhenAnyValue(x => x.SelectedFormKey)
                     .Select(x => x != null),
-                execute: () =>
-                {
-                    var toDelete = FormKeys.Where(f => f.IsSelected).ToArray();
-                    foreach (var item in toDelete)
-                    {
-                        FormKeys.Remove(item);
-                    }
-                });
+                execute: () => _formKeyListBox?.TryRemoveSelected());
         }
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            var formKeyBox = GetTemplateChild("PART_AddedFormKeyListBox") as ListBox;
-            if (formKeyBox != null)
+            _formKeyListBox = GetTemplateChild("PART_AddedFormKeyListBox") as ListBox;
+            if (_formKeyListBox != null)
             {
-                Noggog.WPF.Drag.ListBoxDragDrop(formKeyBox, () => this.FormKeys as IList<FormKeyItemViewModel>)
+                Noggog.WPF.Drag.ListBoxDragDrop(_formKeyListBox, () => this.FormKeys as IList<FormKey>)
                     .DisposeWith(_templateDisposable);
             }
         }

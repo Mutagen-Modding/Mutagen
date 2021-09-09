@@ -200,7 +200,7 @@
                                         <Style BasedOn="{StaticResource Noggog.Styles.Button}" TargetType="Button">
                                             <Setter Property="Visibility" Value="Collapsed" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding ModKey.IsNull, RelativeSource={RelativeSource TemplatedParent}}" Value="False">
+                                                <DataTrigger Binding="{Binding IsNull, RelativeSource={RelativeSource TemplatedParent}}" Value="False">
                                                     <Setter Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -292,7 +292,7 @@
                                             </Border>
                                             <TextBlock Grid.Column="1"
                                                 VerticalAlignment="Center"
-                                                Text="{Binding ModKey}"
+                                                Text="{Binding Mode=OneWay}"
                                                 TextTrimming="CharacterEllipsis" />
                                         </Grid>
                                     </DataTemplate>
@@ -759,7 +759,7 @@
                                                 TextTrimming="CharacterEllipsis">
                                                 <TextBlock.Text>
                                                     <MultiBinding Converter="{StaticResource FormKeyLookupConverter}">
-                                                        <Binding Path="FormKey" />
+                                                        <Binding Path="" Mode="OneWay" />
                                                         <Binding
                                                             Mode="OneWay"
                                                             Path="LinkCache"
