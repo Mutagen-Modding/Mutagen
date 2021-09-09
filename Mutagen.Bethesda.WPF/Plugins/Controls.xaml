@@ -624,19 +624,10 @@
                                 mahapps:TextBoxHelper.Watermark="FormKey"
                                 Text="{Binding FormKeyStr, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
                             <Button Grid.Row="0" Grid.Column="2"
+                                x:Name="AddFormKeyButton"
                                 Margin="0,0,5,0"
                                 HorizontalAlignment="Right"
-                                Command="{TemplateBinding AddFormKeyCommand}">
-                                <Button.Style>
-                                    <Style BasedOn="{StaticResource Noggog.Styles.Button}" TargetType="Button">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding FormKey.IsNull, RelativeSource={RelativeSource TemplatedParent}}" Value="False">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
+                                Command="{TemplateBinding AddFormKeyCommand}" >
                                 <icon:PackIconMaterial
                                     Width="10"
                                     Height="10"
