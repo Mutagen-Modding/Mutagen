@@ -25,6 +25,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBox Grid.Column="0"
                                 x:Name="PART_FileNameBox"
+                                Margin="0,0,-1,0"
                                 mahapps:TextBoxHelper.Watermark="{TemplateBinding Watermark}"
                                 noggog:ControlsHelper.ErrorTooltip="{Binding Error.Reason, RelativeSource={RelativeSource TemplatedParent}}"
                                 noggog:ControlsHelper.InError="{Binding Error.Failed, RelativeSource={RelativeSource TemplatedParent}}"
@@ -32,6 +33,7 @@
                                 Text="{Binding FileName, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
                             <ComboBox Grid.Column="1"
                                 Height="{Binding Height, ElementName=PART_FileNameBox, Mode=OneWay}"
+                                BorderThickness="0"
                                 ItemsSource="{Binding ModTypes, RelativeSource={RelativeSource TemplatedParent}}"
                                 SelectedValue="{Binding ModType, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}">
                                 <ComboBox.ItemTemplate>
