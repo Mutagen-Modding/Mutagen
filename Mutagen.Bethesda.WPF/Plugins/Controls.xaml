@@ -251,7 +251,9 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                                x:Name="PART_MainGrid"
+                                Background="{StaticResource MahApps.Brushes.Control.Background}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
@@ -263,16 +265,6 @@
                                 <Button Grid.Column="1"
                                     Margin="5,0"
                                     Command="{TemplateBinding AddModKeyCommand}">
-                                    <Button.Style>
-                                        <Style BasedOn="{StaticResource Noggog.Styles.Button}" TargetType="Button">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsNull, RelativeSource={RelativeSource TemplatedParent}}" Value="False">
-                                                    <Setter Property="Visibility" Value="Visible" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Style>
                                     <icon:PackIconMaterial
                                         Width="10"
                                         Height="10"
@@ -464,6 +456,11 @@
                             </Border>
                         </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="PART_MainGrid" Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="PART_MainGrid" Property="Background" Value="{DynamicResource Noggog.Brushes.Focused.Background}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -694,7 +691,7 @@
                                 x:Name="AddFormKeyButton"
                                 Margin="0,0,5,0"
                                 HorizontalAlignment="Right"
-                                Command="{TemplateBinding AddFormKeyCommand}" >
+                                Command="{TemplateBinding AddFormKeyCommand}">
                                 <icon:PackIconMaterial
                                     Width="10"
                                     Height="10"
@@ -817,7 +814,7 @@
                                                 TextTrimming="CharacterEllipsis">
                                                 <TextBlock.Text>
                                                     <MultiBinding Converter="{StaticResource FormKeyLookupConverter}">
-                                                        <Binding Path="" Mode="OneWay" />
+                                                        <Binding Mode="OneWay" Path="" />
                                                         <Binding
                                                             Mode="OneWay"
                                                             Path="LinkCache"
