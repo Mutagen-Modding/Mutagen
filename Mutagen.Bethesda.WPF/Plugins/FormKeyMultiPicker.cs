@@ -76,12 +76,11 @@ namespace Mutagen.Bethesda.WPF.Plugins
         static FormKeyMultiPicker()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(FormKeyMultiPicker), new FrameworkPropertyMetadata(typeof(FormKeyMultiPicker)));
+            MissingMeansNullProperty.OverrideMetadata(typeof(FormKeyMultiPicker), new FrameworkPropertyMetadata(false));
         }
 
         public FormKeyMultiPicker()
         {
-            MissingMeansNullProperty.OverrideMetadata(typeof(FormKeyMultiPicker), new FrameworkPropertyMetadata(false));
-
             PickerClickCommand = ReactiveCommand.Create((object o) =>
             {
                 if (FormKeys == null) return;
