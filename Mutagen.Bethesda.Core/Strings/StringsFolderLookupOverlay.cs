@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Strings
             return new TranslatedString()
             {
                 StringsLookup = this,
-                Key = key,
+                StringsKey = key,
                 StringsSource = source,
             };
         }

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Strings
 {
@@ -11,7 +10,7 @@ namespace Mutagen.Bethesda.Strings
     /// A string that can be represented in multiple different languages.<br/>
     /// Threadsafe.
     /// </summary>
-    public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>
+    public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>, IOptionalStringsKeyGetter
     {
         /// <summary>
         /// Whether to only consider the DefaultLanguage in equality/hash comparisons.
@@ -36,7 +35,7 @@ namespace Mutagen.Bethesda.Strings
 
         // Alternate way of populating a Translated String
         // Will cause it to act in a lazy lookup fashion
-        internal uint Key;
+        public uint? StringsKey { get; internal set; }
         internal IStringsFolderLookup? StringsLookup;
         internal StringsSource StringsSource;
 
@@ -68,7 +67,7 @@ namespace Mutagen.Bethesda.Strings
             }
         }
 
-        private readonly static TranslatedString _empty = new TranslatedString(string.Empty);
+        private static readonly TranslatedString _empty = new(string.Empty);
         public static ITranslatedStringGetter Empty => _empty;
 
         /// <summary>
@@ -151,7 +150,7 @@ namespace Mutagen.Bethesda.Strings
                     {
                         _localization = new Dictionary<Language, string?>();
                     }
-                    if (StringsLookup.TryLookup(this.StringsSource, language, this.Key, out str))
+                    if (StringsLookup.TryLookup(this.StringsSource, language, this.StringsKey!.Value, out str))
                     {
                         _localization[language] = str;
                         return true;
@@ -278,7 +277,7 @@ namespace Mutagen.Bethesda.Strings
                 foreach (var lang in StringsLookup.AvailableLanguages(StringsSource))
                 {
                     if (_localization.ContainsKey(lang)) continue;
-                    if (StringsLookup.TryLookup(StringsSource, lang, Key, out var str))
+                    if (StringsLookup.TryLookup(StringsSource, lang, StringsKey!.Value, out var str))
                     {
                         _localization[lang] = str;
                     }

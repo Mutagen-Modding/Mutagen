@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
                 return new TranslatedString()
                 {
                     StringsLookup = this,
-                    Key = key,
+                    StringsKey = key,
                     StringsSource = source
                 };
             }
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
             return new TranslatedString()
             {
                 StringsSource = StringsSource.DL,
-                Key = LookupKey,
+                StringsKey = LookupKey,
                 StringsLookup = lookup
             };
         }
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
             return new TranslatedString()
             {
                 StringsSource = StringsSource.DL,
-                Key = LookupKey,
+                StringsKey = LookupKey,
                 StringsLookup = lookup
             };
         }
