@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <param name="span">Bytes to retrieve string from</param>
         /// <param name="lengthLength">Amount of bytes containing length information</param>
         /// <returns>String of length denoted by initial bytes</returns>
-        public static string ParsePrependedString(ReadOnlyMemorySlice<byte> span, byte lengthLength)
+        public static string ParsePrependedString(ReadOnlySpan<byte> span, byte lengthLength)
         {
             return ProcessWholeToZString(ExtractPrependedString(span, lengthLength));
         }
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <param name="span">Bytes to retrieve string from</param>
         /// <param name="lengthLength">Amount of bytes containing length information</param>
         /// <returns>String of length denoted by initial bytes</returns>
-        public static ReadOnlySpan<byte> ExtractPrependedString(ReadOnlyMemorySlice<byte> span, byte lengthLength)
+        public static ReadOnlySpan<byte> ExtractPrependedString(ReadOnlySpan<byte> span, byte lengthLength)
         {
             switch (lengthLength)
             {
