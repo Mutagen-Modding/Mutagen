@@ -328,6 +328,7 @@
     <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\PrimitiveBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\TypicalBinaryTranslationExt.cs" />
+    <Compile Include="Strings\MutagenEncoding.cs" />
     <Compile Include="Translations\Binary\BooleanBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteArrayBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteBinaryTranslation.cs" />

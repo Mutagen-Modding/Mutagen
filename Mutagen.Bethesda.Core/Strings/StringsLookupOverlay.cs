@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Strings
     {
         private readonly Dictionary<uint, int> _locations = new();
         private ReadOnlyMemorySlice<byte> _stringData;
-        private Encoding _encoding = null!;
+        private IMutagenEncoding _encoding = null!;
         
         public StringsFileFormat Type { get; private set; }
         public int Count => _locations.Count;
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Strings
         /// <param name="data">Data to wrap</param>
         /// <param name="type">Strings file format</param>
         /// <param name="encoding">Encoding to read strings with</param>
-        public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data, StringsFileFormat type, Encoding encoding)
+        public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data, StringsFileFormat type, IMutagenEncoding encoding)
         {
             Init(data, type, encoding);
         }
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Strings
         /// <param name="data">Data to wrap</param>
         /// <param name="source">Source type</param>
         /// <param name="encoding">Encoding to read strings with</param>
-        public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data, StringsSource source, Encoding encoding)
+        public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data, StringsSource source, IMutagenEncoding encoding)
         {
             Init(data, StringsUtility.GetFormat(source), encoding);
         }
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Strings
         /// <param name="path">Path to read in</param>
         /// <param name="type">Strings file format</param>
         /// <param name="encoding">Encoding to read strings with</param>
-        public StringsLookupOverlay(string path, StringsFileFormat type, Encoding encoding)
+        public StringsLookupOverlay(string path, StringsFileFormat type, IMutagenEncoding encoding)
         {
             Init(File.ReadAllBytes(path), type, encoding);
         }
@@ -61,12 +61,12 @@ namespace Mutagen.Bethesda.Strings
         /// <param name="path">Path to read in</param>
         /// <param name="source">Source type</param>
         /// <param name="encoding">Encoding to read strings with</param>
-        public StringsLookupOverlay(string path, StringsSource source, Encoding encoding)
+        public StringsLookupOverlay(string path, StringsSource source, IMutagenEncoding encoding)
         {
             Init(File.ReadAllBytes(path), StringsUtility.GetFormat(source), encoding);
         }
 
-        private void Init(ReadOnlyMemorySlice<byte> data, StringsFileFormat type, Encoding encoding)
+        private void Init(ReadOnlyMemorySlice<byte> data, StringsFileFormat type, IMutagenEncoding encoding)
         {
             try
             {

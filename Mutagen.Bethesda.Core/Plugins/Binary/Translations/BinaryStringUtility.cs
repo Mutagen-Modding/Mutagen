@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             Write(stream, str, binaryType, Encodings.Default);
         }
 
-        public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType, Encoding encoding)
+        public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType, IMutagenEncoding encoding)
         {
             switch (binaryType)
             {
@@ -196,12 +196,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             Write(stream, str, Encodings.Default);
         }
 
-        public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, Encoding encoding)
+        public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, IMutagenEncoding encoding)
         {
             Write(stream, str, encoding, encoding.GetByteCount(str));
         }
 
-        public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, Encoding encoding, int byteCount)
+        public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, IMutagenEncoding encoding, int byteCount)
         {
             Span<byte> bytes = stackalloc byte[byteCount];
             encoding.GetBytes(str, bytes);

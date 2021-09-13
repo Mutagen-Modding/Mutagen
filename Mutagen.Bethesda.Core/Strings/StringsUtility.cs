@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Strings
             return TryGetLanguage(languageFormat, languageSpan, out language);
         }
 
-        public static Encoding GetEncoding(GameRelease release, Language language)
+        public static IMutagenEncoding GetEncoding(GameRelease release, Language language)
             => Encodings.Get(release, language);
     }
 }

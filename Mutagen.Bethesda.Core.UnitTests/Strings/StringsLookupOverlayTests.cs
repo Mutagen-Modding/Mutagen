@@ -35,11 +35,11 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
             FrenchStringsFormat = CreateNormalStrings(
                 new string[] { FrenchString }, 
                 Encodings.Get(GameRelease.SkyrimSE, Language.French));
-            StringsFormat = CreateNormalStrings(Strs, Encoding.ASCII);
-            IlStringsFormat = CreateIlStrings(Strs, Encoding.ASCII);
+            StringsFormat = CreateNormalStrings(Strs, Encodings.Get(GameRelease.SkyrimSE, Language.English));
+            IlStringsFormat = CreateIlStrings(Strs, Encodings.Get(GameRelease.SkyrimSE, Language.English));
         }
 
-        private static byte[] CreateIlStrings(IReadOnlyList<string> strs, Encoding encoding)
+        private static byte[] CreateIlStrings(IReadOnlyList<string> strs, IMutagenEncoding encoding)
         {
             var ret = new byte[100];
             var writer = new MutagenWriter(
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
             return ret;
         }
 
-        private static byte[] CreateNormalStrings(IReadOnlyList<string> strs, Encoding encoding)
+        private static byte[] CreateNormalStrings(IReadOnlyList<string> strs, IMutagenEncoding encoding)
         {
             var ret = new byte[100];
             var writer = new MutagenWriter(
