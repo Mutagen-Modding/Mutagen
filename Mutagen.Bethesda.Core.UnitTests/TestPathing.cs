@@ -7,13 +7,6 @@ namespace Mutagen.Bethesda.Core.UnitTests
 {
     public static class TestPathing
     {
-        public static ModPath OblivionTestMod = new ModPath(ModKey.FromNameAndExtension("test.esp"), "../../../Plugins/Records/Files/oblivion_test.esp");
-        public static ModPath OblivionOverrideMod = new ModPath(ModKey.FromNameAndExtension("override.esp"), "../../../Plugins/Records/Files/oblivion_override.esp");
-        public static ModPath SkyrimTestMod = ModPath.FromPath("../../../Plugins/Records/Files/skyrim_test.esp");
-        public static ModPath SkyrimOverrideMod = ModPath.FromPath("../../../Plugins/Records/Files/skyrim_override.esp");
-        public static ModPath SizeOverflow = ModPath.FromPath("../../../Plugins/Records/Files/size_overflow_test.esp");
-        public static ModPath SubObjectSizeOverflow = ModPath.FromPath("../../../Plugins/Records/Files/subobject_size_overflow_test.esp");
-        
         public static readonly string TempFolderPath = "MutagenUnitTests";
 
         public static TempFolder GetTempFolder(string folderName, [CallerMemberName] string? testName = null)

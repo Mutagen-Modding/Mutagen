@@ -1,13 +1,7 @@
-using FluentAssertions;
 using Mutagen.Bethesda.Fallout4;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests.Plugins.Records
+namespace Mutagen.Bethesda.UnitTests.Fallout4.Records
 {
     public class BipedObjectConverter_Tests
     {

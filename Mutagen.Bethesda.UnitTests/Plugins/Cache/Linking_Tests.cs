@@ -1,9 +1,7 @@
 using FluentAssertions;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Cache.Implementations;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Noggog.Utility;
@@ -50,8 +48,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache
 
         public static FormKey UnusedFormKey = new FormKey(TestConstants.PluginModKey, 123456);
         public static string UnusedEditorID = "Unused";
-        public static FormKey TestFileFormKey = new FormKey(TestPathing.SkyrimTestMod.ModKey, 0x800);
-        public static FormKey TestFileFormKey2 = new FormKey(TestPathing.SkyrimTestMod.ModKey, 0x801);
+        public static FormKey TestFileFormKey = new FormKey(TestDataPathing.SkyrimTestMod.ModKey, 0x800);
+        public static FormKey TestFileFormKey2 = new FormKey(TestDataPathing.SkyrimTestMod.ModKey, 0x801);
         public static string TestFileEditorID = "Record1";
         public static string TestFileEditorID2 = "Record2";
 
@@ -419,7 +417,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void Direct_ReadOnlyMechanics(LinkCacheTestTypes cacheType)
         {
-            var wrapper = SkyrimMod.CreateFromBinaryOverlay(TestPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
+            var wrapper = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
             var (style, package) = GetLinkCache(wrapper, cacheType);
             WrapPotentialThrow(cacheType, style, () =>
             {
@@ -1409,8 +1407,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void LoadOrder_ReadOnlyMechanics(LinkCacheTestTypes cacheType)
         {
-            var wrapper = SkyrimMod.CreateFromBinaryOverlay(TestPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
-            var overrideWrapper = SkyrimMod.CreateFromBinaryOverlay(TestPathing.SkyrimOverrideMod, SkyrimRelease.SkyrimSE);
+            var wrapper = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
+            var overrideWrapper = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimOverrideMod, SkyrimRelease.SkyrimSE);
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(wrapper);
             loadOrder.Add(overrideWrapper);

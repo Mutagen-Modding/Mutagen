@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                        ModKey = ModKeyOption.NoCheck,
                        MastersListContent = MastersListContentOption.Iterate,
                        MastersListOrdering = new MastersListOrderingByLoadOrder(
-                           Skyrim.Constants.Skyrim.AsEnumerable())
+                           Constants.Skyrim.AsEnumerable())
                    });
             });
         }

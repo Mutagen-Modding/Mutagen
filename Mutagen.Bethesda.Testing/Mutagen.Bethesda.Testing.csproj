@@ -38,11 +38,43 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="AutoData\ModPathMultipleBuilder.cs">
-        <CodeLanguage>cs</CodeLanguage>
-        <DefaultPackFolder>content</DefaultPackFolder>
-        <BuildAction>Compile</BuildAction>
-      </Compile>
+        <Compile Update="AutoData\ModPathMultipleBuilder.cs">
+            <CodeLanguage>cs</CodeLanguage>
+            <DefaultPackFolder>content</DefaultPackFolder>
+            <BuildAction>Compile</BuildAction>
+        </Compile>
+        <Compile Update="TestDataPathing.cs">
+            <CodeLanguage>cs</CodeLanguage>
+            <DefaultPackFolder>content</DefaultPackFolder>
+            <BuildAction>Compile</BuildAction>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Oblivion\oblivion_override.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Oblivion\oblivion_test.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\size_overflow_test.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\skyrim_override.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\skyrim_test.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\subobject_size_overflow_test.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\RaceHeadPartDanglingMarker.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\SkyrimPerkFunctionParametersTypeNone.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

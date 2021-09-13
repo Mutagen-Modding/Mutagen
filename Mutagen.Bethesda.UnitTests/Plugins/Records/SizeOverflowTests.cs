@@ -1,9 +1,7 @@
-﻿using System.IO;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using FluentAssertions;
-using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -12,6 +10,7 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Testing;
 using Noggog;
 using Xunit;
 
@@ -24,7 +23,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void WorldspaceOffsetOverflowReadTest()
         {
-            var worldspace = Get(IFileSystemExt.DefaultFilesystem, TestPathing.SizeOverflow);
+            var worldspace = Get(IFileSystemExt.DefaultFilesystem, TestDataPathing.SizeOverflow);
             worldspace.OffsetData.HasValue.Should().BeTrue();
             worldspace.OffsetData!.Value.Length.Should().Be(0x3B);
         }
@@ -32,7 +31,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void WorldspaceMaxHeightOverflowReadTest()
         {
-            var worldspace = Get(IFileSystemExt.DefaultFilesystem, TestPathing.SubObjectSizeOverflow);
+            var worldspace = Get(IFileSystemExt.DefaultFilesystem, TestDataPathing.SubObjectSizeOverflow);
             worldspace.MaxHeight.Should().NotBeNull();
             worldspace.MaxHeight!.Min.Should().Be(new P2Int16(-96, -96));
             worldspace.MaxHeight!.Max.Should().Be(new P2Int16(96, 97));

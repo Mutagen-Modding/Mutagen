@@ -1,6 +1,5 @@
 using System.IO.Abstractions;
 using Loqui;
-using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -15,14 +14,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
 {
     public class NoReleaseModInstantiator_Test : AModInstantiator_Test<OblivionMod, IOblivionMod, IOblivionModGetter, OblivionModBinaryOverlay>
     {
-        public override ModPath ModPath => TestPathing.OblivionTestMod;
+        public override ModPath ModPath => TestDataPathing.OblivionTestMod;
         public override GameRelease Release => GameRelease.Oblivion;
         public override ILoquiRegistration Registration => OblivionMod_Registration.Instance;
     }
 
     public class ReleaseModInstantiator_Test : AModInstantiator_Test<SkyrimMod, ISkyrimMod, ISkyrimModGetter, SkyrimModBinaryOverlay>
     {
-        public override ModPath ModPath => TestPathing.SkyrimTestMod;
+        public override ModPath ModPath => TestDataPathing.SkyrimTestMod;
         public override GameRelease Release => GameRelease.SkyrimSE;
         public override ILoquiRegistration Registration => SkyrimMod_Registration.Instance;
     }
