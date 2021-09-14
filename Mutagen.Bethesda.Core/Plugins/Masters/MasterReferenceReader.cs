@@ -70,6 +70,7 @@ namespace Mutagen.Bethesda.Plugins.Masters
         public MasterReferenceReader(ModKey modKey)
         {
             this.CurrentMod = modKey;
+            SetTo(Enumerable.Empty<IMasterReferenceGetter>());
         }
 
         /// <summary>
