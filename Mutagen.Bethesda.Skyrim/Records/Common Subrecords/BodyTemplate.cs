@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using System;
+using Mutagen.Bethesda.Plugins.Exceptions;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -79,13 +80,13 @@ namespace Mutagen.Bethesda.Skyrim
                     case RecordTypeInts.BODT:
                         if (version >= 44)
                         {
-                            throw new ArgumentException("BODT type not expected on versions >= 44");
+                            throw SubrecordException.Create("BODT type not expected on versions >= 44", RecordTypes.BODT);
                         }
                         return BodyTemplateBinaryOverlay.BodyTemplateFactory(stream, package);
                     case RecordTypeInts.BOD2:
                         if (version < 43)
                         {
-                            throw new ArgumentException("BOD2 type not expected on versions < 43");
+                            throw SubrecordException.Create("BOD2 type not expected on versions < 43", RecordTypes.BOD2);
                         }
                         if (version >= 44)
                         {

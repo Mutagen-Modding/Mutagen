@@ -75,6 +75,45 @@
         <None Update="Skyrim\SkyrimPerkFunctionParametersTypeNone.esp">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Skyrim\BodyTemplate\BodtLength12With43Normal.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\BodtLength12With42.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\BodtLength12With44.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\Bod2Length8With44Normal.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\Bod2Length8With43.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\Bod2Length8With42.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\Bod2Length12With42.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\Bod2Length12With43.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\Bod2Length12With44.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\Bod2Length12With43.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\BodtLength8With44.esp">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\BodtLength8With43.esp">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\BodtLength8With42.esp">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

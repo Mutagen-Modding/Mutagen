@@ -13,14 +13,10 @@ namespace Mutagen.Bethesda.UnitTests.Skyrim.Records
         [Fact]
         public void FunctionParametersTypeNone()
         {
-            var frame = new MutagenFrame(
-                new MutagenBinaryReadStream(
-                    File.OpenRead(TestDataPathing.SkyrimPerkFunctionParametersTypeNone), 
-                    new ParsingBundle(
-                        GameRelease.SkyrimSE, 
-                        new MasterReferenceReader(Constants.Skyrim))));
-
-            var perk = Perk.CreateFromBinary(frame);
+            var perk = Perk.CreateFromBinary(
+                TestDataPathing.GetReadFrame(
+                    TestDataPathing.SkyrimPerkFunctionParametersTypeNone,
+                    GameRelease.SkyrimSE));
             perk.Effects.Should().HaveCount(2);
         }
     }
