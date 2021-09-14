@@ -112,7 +112,16 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Skyrim\BodyTemplate\BodtLength8With42.esp">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\BodtTypicalOutput">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\BodtEmptyFlagsOutput">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Skyrim\BodyTemplate\Bod2TypicalOutput">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
