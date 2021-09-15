@@ -3335,20 +3335,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
-            ModKey modKey)
-        {
-            var meta = new ParsingBundle(GameRelease.Oblivion, new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(bytes, meta));
-            return OblivionModBinaryOverlay.OblivionModFactory(
-                stream: new MutagenMemoryReadStream(
-                    data: bytes,
-                    metaData: meta),
-                modKey: modKey,
-                shouldDispose: false);
-        }
-
-        public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
             IFileSystem? fileSystem = null)
         {
@@ -12833,20 +12819,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this._data = stream;
             this._package = new BinaryOverlayFactoryPackage(stream.MetaData);
             this._shouldDispose = shouldDispose;
-        }
-
-        public static OblivionModBinaryOverlay OblivionModFactory(
-            ReadOnlyMemorySlice<byte> data,
-            ModKey modKey)
-        {
-            var meta = new ParsingBundle(GameRelease.Oblivion, new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(data, meta));
-            return OblivionModFactory(
-                stream: new MutagenMemoryReadStream(
-                    data: data,
-                    metaData: meta),
-                modKey: modKey,
-                shouldDispose: false);
         }
 
         public static OblivionModBinaryOverlay OblivionModFactory(

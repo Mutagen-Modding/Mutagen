@@ -1198,22 +1198,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
-            ModKey modKey,
-            IStringsFolderLookup? stringsLookup = null)
-        {
-            var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(bytes, meta));
-            meta.StringsLookup = stringsLookup;
-            return Fallout4ModBinaryOverlay.Fallout4ModFactory(
-                stream: new MutagenMemoryReadStream(
-                    data: bytes,
-                    metaData: meta),
-                modKey: modKey,
-                shouldDispose: false);
-        }
-
-        public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
             StringsReadParameters? stringsParam = null,
             IFileSystem? fileSystem = null)
@@ -4459,22 +4443,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this._data = stream;
             this._package = new BinaryOverlayFactoryPackage(stream.MetaData);
             this._shouldDispose = shouldDispose;
-        }
-
-        public static Fallout4ModBinaryOverlay Fallout4ModFactory(
-            ReadOnlyMemorySlice<byte> data,
-            ModKey modKey,
-            IStringsFolderLookup? stringsLookup = null)
-        {
-            var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(data, meta));
-            meta.StringsLookup = stringsLookup;
-            return Fallout4ModFactory(
-                stream: new MutagenMemoryReadStream(
-                    data: data,
-                    metaData: meta),
-                modKey: modKey,
-                shouldDispose: false);
         }
 
         public static Fallout4ModBinaryOverlay Fallout4ModFactory(

@@ -63,20 +63,14 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public void CreateAndWriteBinaryOverlayToDisk()
         {
-            var bytes = File.ReadAllBytes(DataPath.Path);
-            var mod = OblivionModBinaryOverlay.OblivionModFactory(
-                new MemorySlice<byte>(bytes),
-                DataPath.ModKey);
+            var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
             mod.WriteToBinary(BinaryPath, WriteParametersNoCheck);
         }
 
         [Benchmark]
         public void CreateAndWriteBinaryOverlayToMemory()
         {
-            var bytes = File.ReadAllBytes(DataPath.Path);
-            var mod = OblivionModBinaryOverlay.OblivionModFactory(
-                new MemorySlice<byte>(bytes),
-                DataPath.ModKey);
+            var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
             DataOutput.Position = 0;
             mod.WriteToBinary(DataOutput, WriteParametersNoCheck);
         }
@@ -84,20 +78,14 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public void CreateAndWriteBinaryOverlayParallelToDisk()
         {
-            var bytes = File.ReadAllBytes(DataPath.Path);
-            var mod = OblivionModBinaryOverlay.OblivionModFactory(
-                new MemorySlice<byte>(bytes),
-                DataPath.ModKey);
+            var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
             mod.WriteToBinaryParallel(BinaryPath, WriteParametersNoCheck);
         }
 
         [Benchmark]
         public void CreateAndWriteBinaryOverlayParallelToMemory()
         {
-            var bytes = File.ReadAllBytes(DataPath.Path);
-            var mod = OblivionModBinaryOverlay.OblivionModFactory(
-                new MemorySlice<byte>(bytes),
-                DataPath.ModKey);
+            var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
             DataOutput.Position = 0;
             mod.WriteToBinaryParallel(DataOutput, WriteParametersNoCheck);
         }

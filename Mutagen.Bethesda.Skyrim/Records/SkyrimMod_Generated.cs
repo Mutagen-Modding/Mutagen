@@ -6162,24 +6162,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
-            SkyrimRelease release,
-            ModKey modKey,
-            IStringsFolderLookup? stringsLookup = null)
-        {
-            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(bytes, meta));
-            meta.StringsLookup = stringsLookup;
-            return SkyrimModBinaryOverlay.SkyrimModFactory(
-                stream: new MutagenMemoryReadStream(
-                    data: bytes,
-                    metaData: meta),
-                release: release,
-                modKey: modKey,
-                shouldDispose: false);
-        }
-
-        public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
             SkyrimRelease release,
             StringsReadParameters? stringsParam = null,
@@ -24772,24 +24754,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this._data = stream;
             this._package = new BinaryOverlayFactoryPackage(stream.MetaData);
             this._shouldDispose = shouldDispose;
-        }
-
-        public static SkyrimModBinaryOverlay SkyrimModFactory(
-            ReadOnlyMemorySlice<byte> data,
-            ModKey modKey,
-            SkyrimRelease release,
-            IStringsFolderLookup? stringsLookup = null)
-        {
-            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(data, meta));
-            meta.StringsLookup = stringsLookup;
-            return SkyrimModFactory(
-                release: release,
-                stream: new MutagenMemoryReadStream(
-                    data: data,
-                    metaData: meta),
-                modKey: modKey,
-                shouldDispose: false);
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(

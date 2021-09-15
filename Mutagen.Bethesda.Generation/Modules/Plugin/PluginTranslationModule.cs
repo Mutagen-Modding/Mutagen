@@ -464,59 +464,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
             var objData = obj.GetObjectData();
-            using (var args = new FunctionWrapper(fg,
-                $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
-            {
-                args.Add($"ReadOnlyMemorySlice<byte> bytes");
-                if (objData.GameReleaseOptions != null)
-                {
-                    args.Add($"{ModModule.ReleaseEnumName(obj)} release");
-                }
-                args.Add($"ModKey modKey");
-                if (objData.UsesStringFiles)
-                {
-                    args.Add($"{nameof(IStringsFolderLookup)}? stringsLookup = null");
-                }
-            }
-            using (new BraceWrapper(fg))
-            {
-                string gameReleaseStr;
-                if (objData.GameReleaseOptions == null)
-                {
-                    gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
-                }
-                else
-                {
-                    gameReleaseStr = $"release.ToGameRelease()";
-                }
-                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(modKey));");
-                fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenMemoryReadStream)}(bytes, meta));");
-                if (objData.UsesStringFiles)
-                {
-                    fg.AppendLine($"meta.{nameof(ParsingBundle.StringsLookup)} = stringsLookup;");
-                }
-                using (var args = new ArgsWrapper(fg,
-                    $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
-                {
-                    args.Add(subFg =>
-                    {
-                        using (var subArgs = new FunctionWrapper(subFg,
-                            $"stream: new {nameof(MutagenMemoryReadStream)}"))
-                        {
-                            subArgs.Add("data: bytes");
-                            subArgs.Add($"metaData: meta");
-                        }
-                    });
-                    if (objData.GameReleaseOptions != null)
-                    {
-                        args.AddPassArg("release");
-                    }
-                    args.AddPassArg("modKey");
-                    args.Add("shouldDispose: false");
-                }
-            }
-            fg.AppendLine();
-
+            
             using (var args = new FunctionWrapper(fg,
                 $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
@@ -2110,49 +2058,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         {
                             gameReleaseStr = "release.ToGameRelease()";
                         }
-                        using (var args = new FunctionWrapper(fg,
-                            $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
-                        {
-                            args.Add($"ReadOnlyMemorySlice<byte> data");
-                            args.Add("ModKey modKey");
-                            if (objData.GameReleaseOptions != null)
-                            {
-                                args.Add($"{ModModule.ReleaseEnumName(obj)} release");
-                            }
-                            if (objData.UsesStringFiles)
-                            {
-                                args.Add($"{nameof(IStringsFolderLookup)}? stringsLookup = null");
-                            }
-                        }
-                        using (new BraceWrapper(fg))
-                        {
-                            using (var args = new ArgsWrapper(fg,
-                                $"return {obj.Name}Factory"))
-                            {
-                                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(modKey));");
-                                fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenMemoryReadStream)}(data, meta));");
-                                if (objData.UsesStringFiles)
-                                {
-                                    fg.AppendLine($"meta.{nameof(ParsingBundle.StringsLookup)} = stringsLookup;");
-                                }
-                                if (objData.GameReleaseOptions != null)
-                                {
-                                    args.AddPassArg("release");
-                                }
-                                args.Add(subFg =>
-                                {
-                                    using (var subArgs = new FunctionWrapper(subFg,
-                                        $"stream: new {nameof(MutagenMemoryReadStream)}"))
-                                    {
-                                        subArgs.AddPassArg("data");
-                                        subArgs.Add($"metaData: meta");
-                                    }
-                                });
-                                args.AddPassArg("modKey");
-                                args.Add("shouldDispose: false");
-                            }
-                        }
-                        fg.AppendLine();
 
                         using (var args = new FunctionWrapper(fg,
                             $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
