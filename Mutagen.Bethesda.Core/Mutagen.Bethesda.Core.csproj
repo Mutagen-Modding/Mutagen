@@ -323,7 +323,7 @@
     <Compile Include="Plugins\Binary\Translations\ColorBinaryType.cs" />
     <Compile Include="Plugins\Records\DI\ModActivator.cs" />
     <Compile Include="Plugins\Records\DI\ModImporter.cs" />
-    <Compile Include="Strings\Encodings.cs" />
+    <Compile Include="Strings\DI\MutagenEncodingProvider.cs" />
     <Compile Include="Strings\IOptionalStringsKeyGetter.cs" />
     <Compile Include="Strings\Language.cs" />
     <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />

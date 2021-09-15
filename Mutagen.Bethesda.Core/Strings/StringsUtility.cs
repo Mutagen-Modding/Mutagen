@@ -1,12 +1,13 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings
 {
     public static class StringsUtility
     {
+        private static readonly MutagenEncodingProvider MutagenEncodings = new();
         public const string StringsFileExtension = "STRINGS";
         public const string ILStringsFileExtension = "ILSTRINGS";
         public const string DLStringsFileExtension = "DLSTRINGS";
@@ -180,6 +181,6 @@ namespace Mutagen.Bethesda.Strings
         }
 
         public static IMutagenEncoding GetEncoding(GameRelease release, Language language)
-            => Encodings.Get(release, language);
+            => MutagenEncodings.GetEncoding(release, language);
     }
 }

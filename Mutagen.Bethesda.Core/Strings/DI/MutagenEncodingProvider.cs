@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Text;
 
-namespace Mutagen.Bethesda.Strings
+namespace Mutagen.Bethesda.Strings.DI
 {
-    internal static class Encodings
+    public interface IMutagenEncodingProvider
+    {
+        IMutagenEncoding GetEncoding(GameRelease release, Language language);
+    }
+
+    public class MutagenEncodingProvider : IMutagenEncodingProvider
     {
         public static readonly IMutagenEncoding _1250;
         public static readonly IMutagenEncoding _1251;
         public static readonly IMutagenEncoding _1252;
         public static readonly IMutagenEncoding _utf8;
 
-        public static IMutagenEncoding Default => _1252;
+        public IMutagenEncoding Default => _1252;
         
-        static Encodings()
+        static MutagenEncodingProvider()
         {
             _1250 = new MutagenEncodingWrapper(
                 CodePagesEncodingProvider.Instance.GetEncoding(1250)!);
@@ -23,7 +28,7 @@ namespace Mutagen.Bethesda.Strings
             _utf8 = new MutagenEncodingWrapper(Encoding.UTF8);
         }
         
-        public static IMutagenEncoding Get(GameRelease release, Language language)
+        public IMutagenEncoding GetEncoding(GameRelease release, Language language)
         {
             switch (release)
             {
@@ -40,7 +45,7 @@ namespace Mutagen.Bethesda.Strings
             }
         }
 
-        public static IMutagenEncoding GetSkyrimLeEncoding(Language language)
+        private IMutagenEncoding GetSkyrimLeEncoding(Language language)
         {
             switch (language)
             {
@@ -64,7 +69,7 @@ namespace Mutagen.Bethesda.Strings
             }
         }
 
-        public static IMutagenEncoding GetSkyrimSeEncoding(Language language)
+        private IMutagenEncoding GetSkyrimSeEncoding(Language language)
         {
             switch (language)
             {

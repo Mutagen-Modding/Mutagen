@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 using Xunit;
 
 namespace Mutagen.Bethesda.Core.UnitTests.Strings
@@ -17,7 +18,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
         [Fact]
         public void ToZStringFrenchExample()
         {
-            var ret = Encodings.Get(GameRelease.SkyrimSE, Language.French)
+            var ret = new MutagenEncodingProvider().GetEncoding(GameRelease.SkyrimSE, Language.French)
                 .GetString(StringBytes);
             ret.Should().Be("Livre de sort - Paralysie générale");
         }

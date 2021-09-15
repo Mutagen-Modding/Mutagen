@@ -3,6 +3,7 @@ using System;
 using System.Buffers.Binary;
 using System.Text;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations
 {
@@ -11,6 +12,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
     /// </summary>
     public static class BinaryStringUtility
     {
+        private static readonly MutagenEncodingProvider MutagenEncodings = new();
+        
         /// <summary>
         /// Converts span to a string.
         /// </summary>
@@ -18,7 +21,18 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <returns>string containing a character for every byte in the input span</returns>
         public static string ToZString(ReadOnlySpan<byte> bytes)
         {
-            return Encodings.Default.GetString(bytes);
+            return ToZString(bytes, MutagenEncodings.Default);
+        }
+        
+        /// <summary>
+        /// Converts span to a string.
+        /// </summary>
+        /// <param name="bytes">Bytes to turn into a string</param>
+        /// <param name="encoding">Encoding to use</param>
+        /// <returns>string containing a character for every byte in the input span</returns>
+        public static string ToZString(ReadOnlySpan<byte> bytes, IMutagenEncoding encoding)
+        {
+            return (encoding ?? MutagenEncodings.Default).GetString(bytes);
         }
 
         /// <summary>
@@ -158,7 +172,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
         public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType)
         {
-            Write(stream, str, binaryType, Encodings.Default);
+            Write(stream, str, binaryType, MutagenEncodings.Default);
         }
 
         public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType, IMutagenEncoding encoding)
@@ -193,7 +207,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
         public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str)
         {
-            Write(stream, str, Encodings.Default);
+            Write(stream, str, MutagenEncodings.Default);
         }
 
         public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, IMutagenEncoding encoding)

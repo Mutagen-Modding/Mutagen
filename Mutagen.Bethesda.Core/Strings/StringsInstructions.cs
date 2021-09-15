@@ -1,5 +1,6 @@
 using Noggog;
 using System.Collections.Generic;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings
 {
@@ -19,5 +20,10 @@ namespace Mutagen.Bethesda.Strings
         /// Otherwise, given order will be treated like other load order concepts.  Later entries override earlier entries.
         /// </summary>
         public IEnumerable<FileName>? BsaOrdering;
+
+        /// <summary>
+        /// The object to retrieve the encodings to be used
+        /// </summary>
+        public IMutagenEncodingProvider? EncodingProvider;
     }
 }
