@@ -25,7 +25,8 @@ namespace Mutagen.Bethesda.Generation
             this.IsRotation = node.GetAttribute("isRotation", false);
             if (IsRotation)
             {
-                this.Multiplier = 57.29577951307854999853275233034f; //180f / Math.PI;
+                // Passthrough tests require 4 digits precision
+                this.Multiplier = 57.2958f; //180f / Math.PI;
             }
             if (this.IntegerType.HasValue)
             {
