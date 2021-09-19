@@ -30,8 +30,8 @@
     </PackageReference>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.12" />
-    <PackageReference Include="Loqui" Version="2.27.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.29.0" />
+    <PackageReference Include="Loqui" Version="2.30.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.30.0" />
     <PackageReference Include="NuGetizer" Version="0.7.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
