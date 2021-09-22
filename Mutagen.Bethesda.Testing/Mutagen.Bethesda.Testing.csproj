@@ -51,78 +51,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="Oblivion\oblivion_override.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Oblivion\oblivion_test.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\size_overflow_test.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\skyrim_override.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\skyrim_test.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\subobject_size_overflow_test.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\RaceHeadPartDanglingMarker.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\SkyrimPerkFunctionParametersTypeNone.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\BodtLength12With43Normal.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\BodtLength12With42.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\BodtLength12With44.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\Bod2Length8With44Normal.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\Bod2Length8With43.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\Bod2Length8With42.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\Bod2Length12With42.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\Bod2Length12With43.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\Bod2Length12With44.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\Bod2Length12With43.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\BodtLength8With44.esp">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\BodtLength8With43.esp">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\BodtLength8With42.esp">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\BodtTypicalOutput">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\BodtEmptyFlagsOutput">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Skyrim\BodyTemplate\Bod2TypicalOutput">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
+        <None Include="$(SolutionDir)Mutagen.Bethesda.Testing\Files\**" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>
