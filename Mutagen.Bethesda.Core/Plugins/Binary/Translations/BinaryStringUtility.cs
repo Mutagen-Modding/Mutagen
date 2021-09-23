@@ -42,6 +42,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <returns>Trimmed bytes</returns>
         public static ReadOnlySpan<byte> ProcessNullTermination(ReadOnlySpan<byte> bytes)
         {
+            if (bytes.Length == 0) return bytes;
             // If null terminated, don't include
             if (bytes[^1] == 0)
             {
