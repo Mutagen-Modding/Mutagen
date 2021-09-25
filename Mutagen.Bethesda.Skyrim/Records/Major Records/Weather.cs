@@ -69,9 +69,10 @@ namespace Mutagen.Bethesda.Skyrim
                 textures[layer] = BinaryStringUtility.ProcessWholeToZString(subRec.Content);
             }
 
-            public static partial void FillBinaryCloudAlphasCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial ParseResult FillBinaryCloudAlphasCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryCloudAlphas(frame, item.Clouds);
+                return null;
             }
 
             public static void FillBinaryCloudAlphas(MutagenFrame frame, CloudLayer[] clouds)
@@ -89,9 +90,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static partial void FillBinaryCloudColorsCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial ParseResult FillBinaryCloudColorsCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryCloudColors(frame, item.Clouds);
+                return null;
             }
 
             public static void FillBinaryCloudColors(MutagenFrame frame, CloudLayer[] clouds)
@@ -125,9 +127,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static partial void FillBinaryCloudXSpeedsCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial ParseResult FillBinaryCloudXSpeedsCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryCloudXSpeeds(frame, item.Clouds);
+                return null;
             }
 
             public static void FillBinaryCloudXSpeeds(MutagenFrame frame, CloudLayer[] clouds)
@@ -139,9 +142,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static partial void FillBinaryDisabledCloudLayersCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial ParseResult FillBinaryDisabledCloudLayersCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryDisabledCloudLayers(frame, item.Clouds);
+                return null;
             }
 
             public static void FillBinaryDisabledCloudLayers(MutagenFrame frame, CloudLayer[] clouds)
@@ -190,20 +194,22 @@ namespace Mutagen.Bethesda.Skyrim
             public static ParseResult CustomRecordFallback(
                 IWeatherInternal item,
                 MutagenFrame frame,
+                PreviousParse lastParsed,
                 Dictionary<RecordType, int>? recordParseCount,
                 RecordType nextRecordType,
                 int contentLength,
-                RecordTypeConverter? recordTypeConverter = null)
+                TypedParseParams? translationParams = null)
             {
                 if (nextRecordType.TypeInt == 0x44494445) // EDID
                 {
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
                 WeatherBinaryCreateTranslation.FillCloudTexture(frame, nextRecordType, item.CloudTextures);
                 return default(int?);
@@ -405,39 +411,43 @@ namespace Mutagen.Bethesda.Skyrim
 
             int? _directionalLoc;
 
-            partial void CloudsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void CloudsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 WeatherBinaryCreateTranslation.FillBinaryCloudYSpeeds(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
                     _clouds);
             }
 
-            partial void CloudXSpeedsCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult CloudXSpeedsCustomParse(OverlayStream stream, int offset)
             {
                 WeatherBinaryCreateTranslation.FillBinaryCloudXSpeeds(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
                     _clouds);
+                return null;
             }
 
-            partial void CloudAlphasCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult CloudAlphasCustomParse(OverlayStream stream, int offset)
             {
                 WeatherBinaryCreateTranslation.FillBinaryCloudAlphas(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
                     _clouds);
+                return null;
             }
 
-            partial void CloudColorsCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult CloudColorsCustomParse(OverlayStream stream, int offset)
             {
                 WeatherBinaryCreateTranslation.FillBinaryCloudColors(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
                     _clouds);
+                return null;
             }
 
-            partial void DisabledCloudLayersCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult DisabledCloudLayersCustomParse(OverlayStream stream, int offset)
             {
                 WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayers(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
                     _clouds);
+                return null;
             }
 
             partial void DirectionalAmbientLightingColorsCustomParse(OverlayStream stream, long finalPos, int offset)
@@ -458,8 +468,8 @@ namespace Mutagen.Bethesda.Skyrim
                 int finalPos,
                 int offset,
                 RecordType type,
-                int? lastParsed,
-                RecordTypeConverter? recordTypeConverter = null)
+                PreviousParse lastParsed,
+                TypedParseParams? parseParams = null)
             {
                 if (type.TypeInt == 0x44494445) // EDID
                 {
@@ -470,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
                         type: type,
                         recordParseCount: null,
                         lastParsed: lastParsed,
-                        recordTypeConverter: recordTypeConverter);
+                        parseParams: parseParams);
                 }
                 WeatherBinaryCreateTranslation.FillCloudTexture(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),

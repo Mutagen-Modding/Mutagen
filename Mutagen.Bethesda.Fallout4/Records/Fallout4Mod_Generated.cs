@@ -1198,22 +1198,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
-            ModKey modKey,
-            IStringsFolderLookup? stringsLookup = null)
-        {
-            var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(bytes, meta));
-            meta.StringsLookup = stringsLookup;
-            return Fallout4ModBinaryOverlay.Fallout4ModFactory(
-                stream: new MutagenMemoryReadStream(
-                    data: bytes,
-                    metaData: meta),
-                modKey: modKey,
-                shouldDispose: false);
-        }
-
-        public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
             StringsReadParameters? stringsParam = null,
             IFileSystem? fileSystem = null)
@@ -3866,7 +3850,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4ModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (importMask?.GameSettings ?? true)
             {
@@ -3876,7 +3860,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
                         item: GameSettingsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Keywords ?? true)
@@ -3887,7 +3871,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
                         item: KeywordsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LocationReferenceTypes ?? true)
@@ -3898,7 +3882,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LocationReferenceTypesItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
                         item: LocationReferenceTypesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Actions ?? true)
@@ -3909,7 +3893,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
                         item: ActionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Transforms ?? true)
@@ -3920,7 +3904,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write<ITransformGetter>(
                         item: TransformsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Components ?? true)
@@ -3931,7 +3915,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ComponentsItem).BinaryWriteTranslator).Write<IComponentGetter>(
                         item: ComponentsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.TextureSets ?? true)
@@ -3942,7 +3926,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
                         item: TextureSetsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Globals ?? true)
@@ -3953,7 +3937,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.DamageTypes ?? true)
@@ -3964,7 +3948,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)DamageTypesItem).BinaryWriteTranslator).Write<IADamageTypeGetter>(
                         item: DamageTypesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Classes ?? true)
@@ -3975,7 +3959,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Factions ?? true)
@@ -3986,7 +3970,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: FactionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.HeadParts ?? true)
@@ -3997,7 +3981,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
                         item: HeadPartsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
         }
@@ -4054,16 +4038,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType nextRecordType,
             int contentLength,
             GroupMask? importMask,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.TES4:
                 {
                     item.ModHeader.CopyInFromBinary(
                         frame: frame,
-                        recordTypeConverter: null);
+                        translationParams: null);
                     return (int)Fallout4Mod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:
@@ -4072,7 +4056,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.GameSettings.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4086,7 +4070,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Keywords.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4100,7 +4084,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.LocationReferenceTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4114,7 +4098,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Actions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4128,7 +4112,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Transforms.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4142,7 +4126,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Components.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4156,7 +4140,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.TextureSets.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4170,7 +4154,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Globals.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4184,7 +4168,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.DamageTypes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4198,7 +4182,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Classes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4212,7 +4196,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Factions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4226,7 +4210,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.HeadParts.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -4462,22 +4446,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         public static Fallout4ModBinaryOverlay Fallout4ModFactory(
-            ReadOnlyMemorySlice<byte> data,
-            ModKey modKey,
-            IStringsFolderLookup? stringsLookup = null)
-        {
-            var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(data, meta));
-            meta.StringsLookup = stringsLookup;
-            return Fallout4ModFactory(
-                stream: new MutagenMemoryReadStream(
-                    data: data,
-                    metaData: meta),
-                modKey: modKey,
-                shouldDispose: false);
-        }
-
-        public static Fallout4ModBinaryOverlay Fallout4ModFactory(
             ModPath path,
             StringsReadParameters? stringsParam = null,
             IFileSystem? fileSystem = null)
@@ -4535,15 +4503,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter = null)
+            PreviousParse lastParsed,
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.TES4:
                 {
-                    _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     _package.MetaData.MasterReferences!.SetTo(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
@@ -4555,62 +4523,62 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.GMST:
                 {
-                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.KYWD:
                 {
-                    _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.LCRT:
                 {
-                    _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.LocationReferenceTypes;
                 }
                 case RecordTypeInts.AACT:
                 {
-                    _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Actions;
                 }
                 case RecordTypeInts.TRNS:
                 {
-                    _TransformsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _TransformsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Transforms;
                 }
                 case RecordTypeInts.CMPO:
                 {
-                    _ComponentsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ComponentsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Components;
                 }
                 case RecordTypeInts.TXST:
                 {
-                    _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.TextureSets;
                 }
                 case RecordTypeInts.GLOB:
                 {
-                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.DMGT:
                 {
-                    _DamageTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DamageTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.DamageTypes;
                 }
                 case RecordTypeInts.CLAS:
                 {
-                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
-                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HDPT:
                 {
-                    _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4Mod_FieldIndex.HeadParts;
                 }
                 default:

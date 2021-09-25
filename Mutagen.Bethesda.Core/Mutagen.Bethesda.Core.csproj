@@ -30,8 +30,8 @@
     </PackageReference>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.12" />
-    <PackageReference Include="Loqui" Version="2.27.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.27.0" />
+    <PackageReference Include="Loqui" Version="2.30.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.30.0" />
     <PackageReference Include="NuGetizer" Version="0.7.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -143,6 +143,9 @@
     <Compile Include="Plugins\Binary\Parameters\ModKeyOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\NextFormIDOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\RecordCountOption.cs" />
+    <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />
+    <Compile Include="Plugins\Binary\Translations\TypedParseParams.cs" />
+    <Compile Include="Plugins\Binary\Translations\TypedWriteParams.cs" />
     <Compile Include="Plugins\Cache\IIdentifierLinkCache.cs" />
     <Compile Include="Plugins\Cache\ResolveTarget.cs" />
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
@@ -320,11 +323,13 @@
     <Compile Include="Plugins\Binary\Translations\ColorBinaryType.cs" />
     <Compile Include="Plugins\Records\DI\ModActivator.cs" />
     <Compile Include="Plugins\Records\DI\ModImporter.cs" />
-    <Compile Include="Strings\Encodings.cs" />
+    <Compile Include="Strings\DI\MutagenEncodingProvider.cs" />
+    <Compile Include="Strings\IOptionalStringsKeyGetter.cs" />
     <Compile Include="Strings\Language.cs" />
     <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\PrimitiveBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\TypicalBinaryTranslationExt.cs" />
+    <Compile Include="Strings\MutagenEncoding.cs" />
     <Compile Include="Translations\Binary\BooleanBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteArrayBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteBinaryTranslation.cs" />

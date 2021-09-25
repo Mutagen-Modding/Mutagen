@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     case ListBinaryType.SubTrigger:
                         break;
                     case ListBinaryType.Trigger:
-                        args.Add($"recordType: recordTypeConverter.ConvertToCustom({data.TriggeringRecordSetAccessor})");
+                        args.Add($"recordType: translationParams.ConvertToCustom({data.TriggeringRecordSetAccessor})");
                         if (data.OverflowRecordType.HasValue)
                         {
                             args.Add($"overflowRecord: {objGen.RecordTypeHeaderName(data.OverflowRecordType.Value)}");
@@ -155,11 +155,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         if (subData.HasTrigger
                             && !subData.HandleTrigger)
                         {
-                            args.Add($"recordType: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                            args.Add($"recordType: translationParams.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                         }
                         else if (data.RecordType != null)
                         {
-                            args.Add($"recordType: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                            args.Add($"recordType: translationParams.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                         }
                         if (subData.HasTrigger && !subData.HandleTrigger)
                         {
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     case ListBinaryType.PrependCount:
                         if (data.HasTrigger && !subData.HasTrigger)
                         {
-                            args.Add($"recordType: recordTypeConverter.ConvertToCustom({data.TriggeringRecordSetAccessor})");
+                            args.Add($"recordType: translationParams.ConvertToCustom({data.TriggeringRecordSetAccessor})");
                         }
                         byte countLen = (byte)list.CustomData[CounterByteLength];
                         switch (countLen)
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
                 if (listOfRecords)
                 {
-                    args.Add($"recordType: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                    args.Add($"recordType: translationParams.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                 }
                 if (this.Module.TranslationMaskParameter)
                 {
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     await args.Add(async (gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(list.SubTypeGeneration);
-                        gen.AppendLine($"transl: ({nameof(MutagenWriter)} subWriter, {typeName} subItem{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                        gen.AppendLine($"transl: ({nameof(MutagenWriter)} subWriter, {typeName} subItem{(needsMasters ? $", {nameof(TypedWriteParams)}? conv" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             var major = loqui != null && await loqui.TargetObjectGeneration.IsMajorRecord();
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                                 else
                                 {
-                                    args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                                    args.Add($"triggeringRecord: translationParams.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                                 }
                                 if (list.SubTypeGeneration is LoquiType loqui
                                     && !loqui.TargetObjectGeneration.Abstract
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     }
                                     else
                                     {
-                                        args.Add($"countRecord: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(counterRecType)})");
+                                        args.Add($"countRecord: translationParams.ConvertToCustom({objGen.RecordTypeHeaderName(counterRecType)})");
                                     }
                                 }
                                 if (data.RecordType != null)
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     }
                                     else
                                     {
-                                        args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                                        args.Add($"triggeringRecord: translationParams.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                                     }
                                 }
                                 else if (subData.HasTrigger)
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     }
                                     else
                                     {
-                                        args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                                        args.Add($"triggeringRecord: translationParams.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                                     }
                                 }
                                 if (list.CustomData.TryGetValue(NullIfCounterZero, out var nullIf)
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     }
                     if (needsRecordConv)
                     {
-                        args.AddPassArg($"recordTypeConverter");
+                        args.AddPassArg($"translationParams");
                     }
                     var subGenTypes = subData.GenerationTypes.ToList();
                     var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                                 else
                                 {
-                                    gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                                    gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(TypedParseParams)}? translationParams" : null)}) =>");
                                     using (new BraceWrapper(gen))
                                     {
                                         subGen.GenerateCopyInRet(
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             }
                             else
                             {
-                                gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                                gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(TypedParseParams)}? translationParams" : null)}) =>");
                                 using (new BraceWrapper(gen))
                                 {
                                     gen.AppendLine("switch (header.TypeInt)");
@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                                     outItemAccessor: new Accessor("listSubItem"),
                                                     asyncMode: AsyncMode.Async,
                                                     errorMaskAccessor: $"listErrMask",
-                                                    converterAccessor: "conv",
+                                                    converterAccessor: "translationParams",
                                                     inline: false);
                                             }
                                         }
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             args.Add($"long finalPos");
                             args.Add($"int offset");
                             args.Add($"{nameof(RecordType)} type");
-                            args.Add($"int? lastParsed");
+                            args.Add($"{nameof(PreviousParse)} lastParsed");
                         }
                     }
                     return;
@@ -697,11 +697,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 $"this.{typeGen.Name} = this.{nameof(PluginBinaryOverlay.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
                             {
                                 args.AddPassArg("stream");
-                                args.Add($"recordTypeConverter: {converterAccessor}");
+                                args.Add($"parseParams: {converterAccessor}");
                                 args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                                 if (subGenTypes.Count <= 1)
                                 {
-                                    args.Add($"factory:  {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory");
+                                    args.Add($"factory: {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory");
                                 }
                                 else
                                 {
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             {
                                 args.Add($"mem: stream.RemainingMemory");
                                 args.Add($"package: _package");
-                                args.Add($"recordTypeConverter: {converterAccessor}");
+                                args.Add($"parseParams: {converterAccessor}");
                                 args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                                 args.Add(subFg =>
                                 {
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: true");
-                                    subArgs.Add($"recordTypeConverter: {converterAccessor}");
+                                    subArgs.Add($"parseParams: {converterAccessor}");
                                 }
                             });
                         }
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: false");
-                                    subArgs.Add($"recordTypeConverter: {converterAccessor}");
+                                    subArgs.Add($"parseParams: {converterAccessor}");
                                 }
                             });
                         }
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             args.Add($"countLength: {counterLen}");
                             args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");
                             args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
-                            args.Add($"recordTypeConverter: {converterAccessor}");
+                            args.Add($"parseParams: {converterAccessor}");
                             args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                             args.Add("skipHeader: false");
                         }

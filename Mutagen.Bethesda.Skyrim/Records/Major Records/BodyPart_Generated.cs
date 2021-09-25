@@ -1446,23 +1446,23 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((BodyPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static BodyPart CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new BodyPart();
             ((BodyPartSetterCommon)((IBodyPartGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -1471,12 +1471,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BodyPart item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -1744,12 +1744,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IBodyPart item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((BodyPartSetterCommon)((IBodyPartGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -1937,12 +1937,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IBodyPart item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: BodyPartBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: BodyPartBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -2652,35 +2652,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IBodyPartGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.BPTN),
+                header: translationParams.ConvertToCustom(RecordTypes.BPTN),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PoseMatching,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.PartNode,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.BPNN),
+                header: translationParams.ConvertToCustom(RecordTypes.BPNN),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.VatsTarget,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.BPNT),
+                header: translationParams.ConvertToCustom(RecordTypes.BPNT),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.IkStartNode,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.BPNI),
+                header: translationParams.ConvertToCustom(RecordTypes.BPNI),
                 binaryType: StringBinaryType.NullTerminate);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.BPND)))
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.BPND)))
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
@@ -2745,23 +2745,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LimbReplacementModel,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GoreTargetBone,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
+                header: translationParams.ConvertToCustom(RecordTypes.NAM4),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TextureFilesHashes,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM5));
+                header: translationParams.ConvertToCustom(RecordTypes.NAM5));
         }
 
         public void Write(
             MutagenWriter writer,
             IBodyPartGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
                 item: item,
@@ -2769,18 +2769,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IBodyPartGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2798,18 +2798,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             IBodyPart item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.BPTN:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Name) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -2923,12 +2923,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IBodyPartGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((BodyPartBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2968,12 +2968,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((BodyPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Name
@@ -3153,7 +3153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static BodyPartBinaryOverlay BodyPartFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new BodyPartBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -3163,7 +3163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3171,12 +3171,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static BodyPartBinaryOverlay BodyPartFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return BodyPartFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public ParseResult FillRecordType(
@@ -3184,16 +3184,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.BPTN:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Name) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)BodyPart_FieldIndex.Name;
                 }

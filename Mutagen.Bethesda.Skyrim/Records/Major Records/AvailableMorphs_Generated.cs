@@ -525,23 +525,23 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((AvailableMorphsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static AvailableMorphs CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new AvailableMorphs();
             ((AvailableMorphsSetterCommon)((IAvailableMorphsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -550,12 +550,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AvailableMorphs item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -751,12 +751,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAvailableMorphs item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((AvailableMorphsSetterCommon)((IAvailableMorphsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -880,12 +880,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IAvailableMorphs item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: AvailableMorphsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: AvailableMorphsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IAvailableMorphsGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             AvailableMorphsBinaryWriteTranslation.WriteBinaryParse(
                 writer: writer,
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IAvailableMorphsGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
                 item: item,
@@ -1335,18 +1335,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IAvailableMorphsGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1364,31 +1364,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             IAvailableMorphs item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
-                    AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustom(
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
+                    return AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return lastParsed;
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return ParseResult.Stop;
             }
         }
 
-        public static partial void FillBinaryParseCustom(
+        public static partial ParseResult FillBinaryParseCustom(
             MutagenFrame frame,
-            IAvailableMorphs item);
+            IAvailableMorphs item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1401,12 +1402,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAvailableMorphsGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((AvailableMorphsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1445,18 +1446,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((AvailableMorphsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Parse
-        partial void ParseCustomParse(
+        public partial ParseResult ParseCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1477,7 +1479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static AvailableMorphsBinaryOverlay AvailableMorphsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new AvailableMorphsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1487,7 +1489,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1495,12 +1497,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static AvailableMorphsBinaryOverlay AvailableMorphsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return AvailableMorphsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public ParseResult FillRecordType(
@@ -1508,20 +1510,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
-                    ParseCustomParse(
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
+                    return ParseCustomParse(
                         stream,
-                        offset);
-                    return lastParsed;
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return ParseResult.Stop;

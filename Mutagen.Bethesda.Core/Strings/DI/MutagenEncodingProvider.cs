@@ -1,24 +1,34 @@
 ﻿using System;
 using System.Text;
 
-namespace Mutagen.Bethesda.Strings
+namespace Mutagen.Bethesda.Strings.DI
 {
-    internal static class Encodings
+    public interface IMutagenEncodingProvider
     {
-        private static readonly Encoding _1250;
-        private static readonly Encoding _1251;
-        private static readonly Encoding _1252;
+        IMutagenEncoding GetEncoding(GameRelease release, Language language);
+    }
 
-        public static Encoding Default => _1252;
+    public class MutagenEncodingProvider : IMutagenEncodingProvider
+    {
+        public static readonly IMutagenEncoding _1250;
+        public static readonly IMutagenEncoding _1251;
+        public static readonly IMutagenEncoding _1252;
+        public static readonly IMutagenEncoding _utf8;
+
+        public IMutagenEncoding Default => _1252;
         
-        static Encodings()
+        static MutagenEncodingProvider()
         {
-            _1250 = CodePagesEncodingProvider.Instance.GetEncoding(1250)!;
-            _1251 = CodePagesEncodingProvider.Instance.GetEncoding(1251)!;
-            _1252 = CodePagesEncodingProvider.Instance.GetEncoding(1252)!;
+            _1250 = new MutagenEncodingWrapper(
+                CodePagesEncodingProvider.Instance.GetEncoding(1250)!);
+            _1251 = new MutagenEncodingWrapper(
+                CodePagesEncodingProvider.Instance.GetEncoding(1251)!);
+            _1252 = new MutagenEncodingWrapper(
+                CodePagesEncodingProvider.Instance.GetEncoding(1252)!);
+            _utf8 = new MutagenEncodingWrapper(Encoding.UTF8);
         }
         
-        public static Encoding Get(GameRelease release, Language language)
+        public IMutagenEncoding GetEncoding(GameRelease release, Language language)
         {
             switch (release)
             {
@@ -35,7 +45,7 @@ namespace Mutagen.Bethesda.Strings
             }
         }
 
-        public static Encoding GetSkyrimLeEncoding(Language language)
+        private IMutagenEncoding GetSkyrimLeEncoding(Language language)
         {
             switch (language)
             {
@@ -53,20 +63,20 @@ namespace Mutagen.Bethesda.Strings
                     return _1252;
                 case Language.Chinese:
                 case Language.Japanese:
-                    return Encoding.UTF8;
+                    return _utf8;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(language), language, null);
             }
         }
 
-        public static Encoding GetSkyrimSeEncoding(Language language)
+        private IMutagenEncoding GetSkyrimSeEncoding(Language language)
         {
             switch (language)
             {
                 case Language.English:
-                    return Encoding.ASCII;
+                    return _1252;
                 default:
-                    return Encoding.UTF8;
+                    return _utf8;
             }
         }
     }

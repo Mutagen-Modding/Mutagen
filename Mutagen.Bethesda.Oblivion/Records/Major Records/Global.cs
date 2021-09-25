@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Global CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter recordTypeConverter)
+            TypedParseParams? translationParams)
         {
             return GlobalCustomParsing.Create<Global>(
                 frame,
@@ -60,8 +60,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class GlobalBinaryCreateTranslation
         {
-            public static partial void FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
+            public static partial ParseResult FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
             {
+                return null;
             }
         }
 
@@ -73,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
             public static GlobalBinaryOverlay GlobalFactory(
                 OverlayStream stream,
                 BinaryOverlayFactoryPackage package,
-                RecordTypeConverter recordTypeConverter)
+                TypedParseParams? translationParams)
             {
                 var majorFrame = package.MetaData.Constants.MajorRecordFrame(stream.RemainingMemory);
                 var globalChar = GlobalCustomParsing.GetGlobalChar(majorFrame);
@@ -94,6 +95,11 @@ namespace Mutagen.Bethesda.Oblivion
                     default:
                         throw new ArgumentException($"Unknown trigger char: {globalChar}");
                 }
+            }
+
+            public partial ParseResult TypeCharCustomParse(OverlayStream stream, int offset)
+            {
+                return null;
             }
         }
     }

@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static Condition CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? translationParams)
         {
             if (!frame.Reader.TryGetSubrecord(Internals.RecordTypes.CTDA, out var subRecMeta))
             {
@@ -842,9 +842,9 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Condition condition,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? translationParams)
         {
-            condition = CreateFromBinary(frame, recordTypeConverter);
+            condition = CreateFromBinary(frame, translationParams);
             return true;
         }
     }
@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Fallout4
                 conditions.Clear();
                 for (int i = 0; i < count; i++)
                 {
-                    conditions.Add(Condition.CreateFromBinary(frame, default(RecordTypeConverter)));
+                    conditions.Add(Condition.CreateFromBinary(frame, default(TypedParseParams)));
                 }
             }
 
@@ -971,7 +971,7 @@ namespace Mutagen.Bethesda.Fallout4
                 conditions.Clear();
                 while (frame.Reader.TryGetSubrecord(RecordTypes.CTDA, out var subMeta))
                 {
-                    conditions.Add(Condition.CreateFromBinary(frame, default(RecordTypeConverter)));
+                    conditions.Add(Condition.CreateFromBinary(frame, default(TypedParseParams)));
                 }
             }
 

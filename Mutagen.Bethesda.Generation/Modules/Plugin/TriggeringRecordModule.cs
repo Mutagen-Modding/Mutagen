@@ -145,6 +145,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     recordTypes.Add(fieldData.MarkerType.Value);
                 }
+                if (fieldData.OverflowRecordType.HasValue)
+                {
+                    recordTypes.Add(fieldData.OverflowRecordType.Value);
+                }
                 foreach (var subType in fieldData.SubLoquiTypes.Keys)
                 {
                     recordTypes.Add(subType);
@@ -653,11 +657,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(data.RecordType.Value));
                     data.TriggeringRecordTypes.Add(data.RecordType.Value);
-                    if (data.OverflowRecordType.HasValue)
-                    {
-                        data.TriggeringRecordTypes.Add(data.OverflowRecordType.Value);
-                        data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.RecordType.Value);
-                    }
                 }
                 else if (data.TriggeringRecordTypes.Count > 0)
                 {
@@ -741,7 +740,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     foreach (var type in recordTypes.OrderBy(r => r.Type))
                     {
-                        fg.AppendLine($"public static readonly {nameof(RecordType)} {type.CheckedType} = new {nameof(RecordType)}(0x{type.TypeInt:X});");
+                        fg.AppendLine($"public static readonly {nameof(RecordType)} {type.CheckedType} = new(0x{type.TypeInt:X});");
                     }
                 }
             }

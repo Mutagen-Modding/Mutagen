@@ -172,18 +172,28 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     if (obj.GetObjectType() != ObjectType.Mod) return false;
                     return obj.GetObjectData().GameReleaseOptions != null;
                 });
-            var recTypeConverter = new APILine(
-                "RecordTypeConverter",
-                $"{nameof(RecordTypeConverter)}? recordTypeConverter = null",
+            var typedWriteParams = new APILine(
+                "TypedWriteParams",
+                $"{nameof(TypedWriteParams)}? translationParams = null",
                 when: (obj, dir) =>
                 {
-                    return obj.GetObjectType() != ObjectType.Mod;
+                    return dir == TranslationDirection.Writer 
+                           && obj.GetObjectType() != ObjectType.Mod;
+                });
+            var typedParseParams = new APILine(
+                "TypedParseParams",
+                $"{nameof(TypedParseParams)}? translationParams = null",
+                when: (obj, dir) =>
+                {
+                    return dir == TranslationDirection.Reader
+                        && obj.GetObjectType() != ObjectType.Mod;
                 });
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
                     majorAPI: new APILine[] { new APILine(WriterClass, $"{WriterClass} {WriterMemberName}") },
                     optionalAPI: modAPILines
-                        .And(recTypeConverter)
+                        .And(typedWriteParams)
+                        .And(typedParseParams)
                         .And(writeParamOptional)
                         .ToArray(),
                     customAPI: new CustomMethodAPI[]
@@ -194,7 +204,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 readerAPI: new MethodAPI(
                     majorAPI: new APILine[] { new APILine(ReaderClass, $"{ReaderClass} {ReaderMemberName}") },
                     optionalAPI: modAPILines
-                        .And(recTypeConverter)
+                        .And(typedWriteParams)
+                        .And(typedParseParams)
                         .And(writeParamOptional)
                         .ToArray(),
                     customAPI: new CustomMethodAPI[]
@@ -453,59 +464,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
             var objData = obj.GetObjectData();
-            using (var args = new FunctionWrapper(fg,
-                $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
-            {
-                args.Add($"ReadOnlyMemorySlice<byte> bytes");
-                if (objData.GameReleaseOptions != null)
-                {
-                    args.Add($"{ModModule.ReleaseEnumName(obj)} release");
-                }
-                args.Add($"ModKey modKey");
-                if (objData.UsesStringFiles)
-                {
-                    args.Add($"{nameof(IStringsFolderLookup)}? stringsLookup = null");
-                }
-            }
-            using (new BraceWrapper(fg))
-            {
-                string gameReleaseStr;
-                if (objData.GameReleaseOptions == null)
-                {
-                    gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
-                }
-                else
-                {
-                    gameReleaseStr = $"release.ToGameRelease()";
-                }
-                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(modKey));");
-                fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenMemoryReadStream)}(bytes, meta));");
-                if (objData.UsesStringFiles)
-                {
-                    fg.AppendLine($"meta.{nameof(ParsingBundle.StringsLookup)} = stringsLookup;");
-                }
-                using (var args = new ArgsWrapper(fg,
-                    $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
-                {
-                    args.Add(subFg =>
-                    {
-                        using (var subArgs = new FunctionWrapper(subFg,
-                            $"stream: new {nameof(MutagenMemoryReadStream)}"))
-                        {
-                            subArgs.Add("data: bytes");
-                            subArgs.Add($"metaData: meta");
-                        }
-                    });
-                    if (objData.GameReleaseOptions != null)
-                    {
-                        args.AddPassArg("release");
-                    }
-                    args.AddPassArg("modKey");
-                    args.Add("shouldDispose: false");
-                }
-            }
-            fg.AppendLine();
-
+            
             using (var args = new FunctionWrapper(fg,
                 $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
@@ -757,9 +716,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add($"{ReaderClass} {ReaderMemberName}");
-                    if (obj.GetObjectType() == ObjectType.Subrecord)
+                    if (obj.GetObjectType() == ObjectType.Subrecord
+                        || obj.GetObjectType() == ObjectType.Record)
                     {
-                        args.Add($"int? lastParsed");
+                        args.Add($"{nameof(PreviousParse)} lastParsed");
                     }
                     if (obj.GetObjectType() != ObjectType.Mod)
                     {
@@ -771,12 +731,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     {
                         args.Add($"GroupMask? importMask");
                     }
-                    args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
+                    args.Add($"{nameof(TypedParseParams)}? translationParams = null");
                 }
                 using (new BraceWrapper(fg))
                 {
                     var mutaObjType = obj.GetObjectType();
-                    fg.AppendLine($"nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);");
+                    fg.AppendLine($"nextRecordType = translationParams.ConvertToStandard(nextRecordType);");
                     fg.AppendLine("switch (nextRecordType.TypeInt)");
                     using (new BraceWrapper(fg))
                     {
@@ -786,7 +746,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             nonIntegrated: true))
                         {
                             var fieldData = field.Field.GetFieldData();
-                            if (fieldData.GenerationTypes.Count() == 0) continue;
+                            if (!fieldData.GenerationTypes.Any()) continue;
                             if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                             if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
@@ -931,6 +891,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             }
                         }
 
+                        AttachOverflowCases(fg, fields, "frame");
+
                         if (data.EndMarkerType.HasValue)
                         {
                             fg.AppendLine($"case RecordTypeInts.{data.EndMarkerType}: // End Marker");
@@ -983,14 +945,15 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 {
                                     args.AddPassArg($"item");
                                     args.AddPassArg(ReaderMemberName);
-                                    if (obj.GetObjectType() == ObjectType.Subrecord)
+                                    if (obj.GetObjectType() == ObjectType.Subrecord
+                                        || obj.BaseClass.GetObjectType() == ObjectType.Record)
                                     {
                                         args.AddPassArg($"lastParsed");
                                     }
                                     args.AddPassArg("recordParseCount");
                                     args.AddPassArg("nextRecordType");
                                     args.AddPassArg("contentLength");
-                                    args.AddPassArg($"recordTypeConverter");
+                                    args.AddPassArg($"translationParams");
                                 }
                             }
                             else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
@@ -1000,7 +963,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 {
                                     args.AddPassArg("item");
                                     args.AddPassArg(ReaderMemberName);
-                                    if (obj.BaseClass.GetObjectType() == ObjectType.Subrecord)
+                                    if (obj.BaseClass.GetObjectType() == ObjectType.Subrecord
+                                        || obj.BaseClass.GetObjectType() == ObjectType.Record)
                                     {
                                         args.AddPassArg($"lastParsed");
                                     }
@@ -1012,7 +976,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     args.AddPassArg("contentLength");
                                     if (data.BaseRecordTypeConverter?.FromConversions.Count > 0)
                                     {
-                                        args.Add($"recordTypeConverter: {obj.RegistrationName}.BaseConverter");
+                                        args.Add($"translationParams: translationParams.With({obj.RegistrationName}.BaseConverter)");
                                     }
                                 }
                             }
@@ -1076,6 +1040,28 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                     }
                     fg.AppendLine();
+                }
+            }
+        }
+
+        private static void AttachOverflowCases(FileGeneration fg, List<(int, int, TypeGeneration Field)> fields, Accessor streamAccessor)
+        {
+            var overflowGroups = fields.Select(x => x.Field)
+                .Where(x => x.GetFieldData().OverflowRecordType != null)
+                .GroupBy(x => x.GetFieldData().OverflowRecordType.Value)
+                .ToArray();
+            if (overflowGroups.Length > 0)
+            {
+                foreach (var overflows in overflowGroups)
+                {
+                    fg.AppendLine($"case RecordTypeInts.{overflows.Key}:");
+                }
+
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"var overflowHeader = {streamAccessor}.ReadSubrecordFrame();");
+                    fg.AppendLine(
+                        $"return {nameof(ParseResult)}.{nameof(ParseResult.OverrideLength)}(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));");
                 }
             }
         }
@@ -1159,9 +1145,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 case BinaryGenerationType.Custom:
                     CustomLogic.GenerateFill(
                         fg,
+                        obj,
                         field,
                         frameAccessor,
-                        isAsync: false);
+                        isAsync: false,
+                        useReturnValue: false);
                     return;
                 default:
                     throw new NotImplementedException();
@@ -1204,16 +1192,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 fg.AppendLine("contentLength = nextRec.RecordLength;");
             }
 
-            if (data.OverflowRecordType.HasValue)
-            {
-                fg.AppendLine($"if (nextRecordType == {obj.RecordTypeHeaderName(data.OverflowRecordType.Value)})");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"var overflowHeader = {ReaderMemberName}.ReadSubrecordFrame();");
-                    fg.AppendLine("contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));");
-                }
-            }
-
             if (data.HasVersioning)
             {
                 fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(data, $"{ReaderMemberName}.MetaData.FormVersion!.Value")})");
@@ -1253,13 +1231,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             Accessor nextRecAccessor,
             Func<Task> toDo)
         {
+            var fieldData = field.Field.GetFieldData();
             var dataSet = field.Field as DataType;
             var typelessStruct = obj.IsTypelessStruct();
             if (typelessStruct && field.Field.GetFieldData().IsTriggerForObject)
             {
                 if (dataSet != null)
                 {
-                    fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                    fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                 }
                 else if (field.Field is CustomLogic)
                 {
@@ -1268,16 +1247,16 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     var prevField = objFields.LastOrDefault((i) => i.InternalIndex < field.InternalIndex);
                     if (nextField.Field != null)
                     {
-                        fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){nextField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                        fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){nextField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                     }
                     else if (prevField.Field != null)
                     {
-                        fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){prevField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                        fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){prevField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                     }
                 }
                 else if (!(field.Field is MarkerType))
                 {
-                    fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){field.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                    fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){field.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                 }
             }
             await toDo();
@@ -1287,7 +1266,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             else if (field.Field is CustomLogic)
             {
-                fg.AppendLine($"return {(typelessStruct ? "lastParsed" : "null")};");
+                if (!fieldData.HasTrigger)
+                {
+                    fg.AppendLine($"return {(typelessStruct ? "lastParsed" : "null")};");
+                }
             }
             else if (field.Field is MarkerType marker)
             {
@@ -1331,16 +1313,16 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "long" : "int")} finalPos");
                     args.Add($"int offset");
                     args.Add("RecordType type");
-                    args.Add("int? lastParsed");
+                    args.Add($"{nameof(PreviousParse)} lastParsed");
                     if (obj.GetObjectType() != ObjectType.Mod)
                     {
                         args.Add("Dictionary<RecordType, int>? recordParseCount");
                     }
-                    args.Add("RecordTypeConverter? recordTypeConverter = null");
+                    args.Add($"{nameof(TypedParseParams)}? parseParams = null");
                 }
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"type = recordTypeConverter.ConvertToStandard(type);");
+                    fg.AppendLine($"type = parseParams.ConvertToStandard(type);");
                     fg.AppendLine("switch (type.TypeInt)");
                     using (new BraceWrapper(fg))
                     {
@@ -1422,7 +1404,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                             nextRecAccessor: "type",
                                             toDo: async () =>
                                             {
-                                                string recConverter = "recordTypeConverter";
+                                                string recConverter = "parseParams";
                                                 if (fieldData?.RecordTypeConverter != null
                                                     && fieldData.RecordTypeConverter.FromConversions.Count > 0)
                                                 {
@@ -1482,7 +1464,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                                         nextRecAccessor: "type",
                                                         toDo: async () =>
                                                         {
-                                                            string recConverter = "recordTypeConverter";
+                                                            string recConverter = "parseParams";
                                                             if (doublesFieldData.RecordTypeConverter != null
                                                                 && doublesFieldData.RecordTypeConverter.FromConversions.Count > 0)
                                                             {
@@ -1530,6 +1512,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                             }
                         }
+                        
+                        AttachOverflowCases(fg, fields, "stream");
+                        
                         var endMarkerType = obj.GetObjectData().EndMarkerType;
                         if (endMarkerType.HasValue)
                         {
@@ -1555,7 +1540,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     args.AddPassArg("lastParsed");
                                     if (obj.GetObjectData().BaseRecordTypeConverter?.FromConversions.Count > 0)
                                     {
-                                        args.Add($"recordTypeConverter: {obj.RegistrationName}.BaseConverter");
+                                        args.Add($"parseParams: {obj.RegistrationName}.BaseConverter");
                                     }
                                 }
                             }
@@ -1572,7 +1557,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     args.AddPassArg("recordParseCount");
                                     if (obj.GetObjectData().BaseRecordTypeConverter?.FromConversions.Count > 0)
                                     {
-                                        args.Add($"recordTypeConverter: {obj.RegistrationName}.BaseConverter");
+                                        args.Add($"parseParams: {obj.RegistrationName}.BaseConverter");
                                     }
                                 }
                             }
@@ -1613,7 +1598,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     args.Add($"record: {accessor}");
                     args.AddPassArg(ReaderMemberName);
-                    args.Add($"recordTypeConverter: recordTypeConverter");
+                    args.AddPassArg($"translationParams");
                     args.Add($"fillStructs: {TranslationCreateClass(obj)}.FillBinaryStructs");
                     args.Add($"fillTyped: {TranslationCreateClass(obj)}.FillBinaryRecordTypes");
                 }
@@ -1650,7 +1635,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                         suffixLine: ")"))
                                     {
                                         args.Add($"{ReaderMemberName}.Reader");
-                                        args.Add(GetRecordTypeString(obj, $"{ReaderMemberName}.MetaData.Constants.Release", $"{ReaderMemberName}.MetaData.FormVersion"));
+                                        args.Add(GetRecordTypeString(
+                                            obj, 
+                                            "translationParams",
+                                            $"{ReaderMemberName}.MetaData.Constants.Release",
+                                            $"{ReaderMemberName}.MetaData.FormVersion"));
+                                        args.Add("translationParams?.LengthOverride");
                                     }
                                 }
                             }
@@ -1661,7 +1651,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 suffixLine: ")"))
                             {
                                 args.Add($"{ReaderMemberName}.Reader");
-                                args.Add(GetRecordTypeString(obj, $"{ReaderMemberName}.MetaData.Constants.Release", $"{ReaderMemberName}.MetaData.FormVersion"));
+                                args.Add(GetRecordTypeString(
+                                    obj, 
+                                    "translationParams",
+                                    $"{ReaderMemberName}.MetaData.Constants.Release", 
+                                    $"{ReaderMemberName}.MetaData.FormVersion"));
                             }
                             break;
                         case ObjectType.Group:
@@ -1681,8 +1675,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                         {
                             args.Add($"record: {accessor}");
-                            args.Add("frame: frame");
-                            args.Add("recordTypeConverter: recordTypeConverter");
+                            args.AddPassArg("frame");
+                            args.AddPassArg("translationParams");
                             args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj)
                                 || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
@@ -1698,7 +1692,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         {
                             args.Add($"record: {accessor}");
                             args.AddPassArg(ReaderMemberName);
-                            args.Add("recordTypeConverter: recordTypeConverter");
+                            args.AddPassArg("translationParams");
                             args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj)
                                 || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
@@ -1714,7 +1708,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         {
                             args.Add($"record: {accessor}");
                             args.AddPassArg(ReaderMemberName);
-                            args.AddPassArg("recordTypeConverter");
+                            args.AddPassArg($"translationParams");
                             args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj)
                                 || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
@@ -2064,49 +2058,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         {
                             gameReleaseStr = "release.ToGameRelease()";
                         }
-                        using (var args = new FunctionWrapper(fg,
-                            $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
-                        {
-                            args.Add($"ReadOnlyMemorySlice<byte> data");
-                            args.Add("ModKey modKey");
-                            if (objData.GameReleaseOptions != null)
-                            {
-                                args.Add($"{ModModule.ReleaseEnumName(obj)} release");
-                            }
-                            if (objData.UsesStringFiles)
-                            {
-                                args.Add($"{nameof(IStringsFolderLookup)}? stringsLookup = null");
-                            }
-                        }
-                        using (new BraceWrapper(fg))
-                        {
-                            using (var args = new ArgsWrapper(fg,
-                                $"return {obj.Name}Factory"))
-                            {
-                                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(modKey));");
-                                fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenMemoryReadStream)}(data, meta));");
-                                if (objData.UsesStringFiles)
-                                {
-                                    fg.AppendLine($"meta.{nameof(ParsingBundle.StringsLookup)} = stringsLookup;");
-                                }
-                                if (objData.GameReleaseOptions != null)
-                                {
-                                    args.AddPassArg("release");
-                                }
-                                args.Add(subFg =>
-                                {
-                                    using (var subArgs = new FunctionWrapper(subFg,
-                                        $"stream: new {nameof(MutagenMemoryReadStream)}"))
-                                    {
-                                        subArgs.AddPassArg("data");
-                                        subArgs.Add($"metaData: meta");
-                                    }
-                                });
-                                args.AddPassArg("modKey");
-                                args.Add("shouldDispose: false");
-                            }
-                        }
-                        fg.AppendLine();
 
                         using (var args = new FunctionWrapper(fg,
                             $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
@@ -2197,7 +2148,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             {
                                 args.Add($"int finalPos");
                             }
-                            args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
+                            args.Add($"{nameof(TypedParseParams)}? parseParams = null");
                         }
                     }
                     using (new BraceWrapper(fg))
@@ -2212,7 +2163,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
                         {
-                            fg.AppendLine($"var nextRecord = recordTypeConverter.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "MajorRecord")}().RecordType);");
+                            fg.AppendLine($"var nextRecord = parseParams.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "MajorRecord")}().RecordType);");
                             fg.AppendLine($"switch (nextRecord.TypeInt)");
                             using (new BraceWrapper(fg))
                             {
@@ -2228,7 +2179,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                         args.AddPassArg($"stream");
                                         args.Add("recordType: nextRecord");
                                         args.AddPassArg("package");
-                                        args.AddPassArg("recordTypeConverter");
+                                        args.AddPassArg("parseParams");
                                     }
                                 }
                                 fg.AppendLine("default:");
@@ -2269,7 +2220,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                         args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractGroupMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})");
                                         break;
                                     case ObjectType.Subrecord:
-                                        args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})");
+                                        args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}, parseParams)");
                                         break;
                                     case ObjectType.Mod:
                                         args.AddPassArg($"stream");
@@ -2469,7 +2420,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                         args.AddPassArg($"finalPos");
                                     }
                                     args.Add($"offset: offset");
-                                    args.AddPassArg($"recordTypeConverter");
+                                    args.AddPassArg($"parseParams");
                                 }
                                 else
                                 {
@@ -2615,7 +2566,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         {
                             args.Add($"ReadOnlyMemorySlice<byte> slice");
                             args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
-                            args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
+                            args.Add($"{nameof(TypedParseParams)}? parseParams = null");
                         }
                         using (new BraceWrapper(fg))
                         {
@@ -2628,7 +2579,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 {
                                     args.Add($"finalPos: slice.Length");
                                 }
-                                args.AddPassArg("recordTypeConverter");
+                                args.AddPassArg("parseParams");
                             }
                         }
                     }
@@ -2672,16 +2623,34 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             var data = obj.GetObjectData();
             var isMajor = await obj.IsMajorRecord();
             var hasRecType = obj.TryGetRecordType(out var recType);
+            var writerNameToUse = WriterMemberName;
             if (hasRecType)
             {
-                using (var args = new ArgsWrapper(fg,
-                    $"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Header)}",
-                    ")",
-                    semiColon: false))
+                if (obj.GetObjectType() == ObjectType.Subrecord)
                 {
-                    args.AddPassArg(WriterMemberName);
-                    args.Add($"record: {GetRecordTypeString(obj, "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
-                    args.Add($"type: {nameof(ObjectType)}.{obj.GetObjectType()}");
+                    using (var args = new ArgsWrapper(fg,
+                        $"using ({nameof(HeaderExport)}.Subrecord",
+                        ")",
+                        semiColon: false))
+                    {
+                        args.AddPassArg(writerNameToUse);
+                        args.Add($"record: {GetRecordTypeString(obj, "translationParams", "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
+                        args.Add($"overflowRecord: translationParams?.{nameof(TypedWriteParams.OverflowRecordType)}");
+                        args.Add("out var writerToUse");
+                    }
+
+                    writerNameToUse = "writerToUse";
+                }
+                else
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"using ({nameof(HeaderExport)}.{obj.GetObjectType()}",
+                        ")",
+                        semiColon: false))
+                    {
+                        args.AddPassArg(writerNameToUse);
+                        args.Add($"record: {GetRecordTypeString(obj, "translationParams", "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
+                    }
                 }
             }
             using (new BraceWrapper(fg, doIt: hasRecType))
@@ -2696,7 +2665,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
                     {
                         args.AddPassArg("param");
-                        args.AddPassArg(WriterMemberName);
+                        args.Add($"writer: {writerNameToUse}");
                         args.Add("mod: item");
                         args.Add("modHeader: item.ModHeader.DeepCopy()");
                         args.AddPassArg("modKey");
@@ -2710,7 +2679,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             $"WriteEmbedded"))
                         {
                             args.AddPassArg($"item");
-                            args.AddPassArg(WriterMemberName);
+                            args.Add($"writer: {writerNameToUse}");
                         }
                     }
                     else
@@ -2722,7 +2691,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 $"{this.TranslationWriteClass(firstBase)}.WriteEmbedded"))
                             {
                                 args.AddPassArg($"item");
-                                args.AddPassArg(WriterMemberName);
+                                args.Add($"writer: {writerNameToUse}");
                             }
                         }
                     }
@@ -2730,25 +2699,25 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     {
                         if (await obj.IsMajorRecord())
                         {
-                            fg.AppendLine($"{WriterMemberName}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
+                            fg.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
                         }
                         using (var args = new ArgsWrapper(fg,
                             $"WriteRecordTypes"))
                         {
                             args.AddPassArg($"item");
-                            args.AddPassArg(WriterMemberName);
+                            args.Add($"writer: {writerNameToUse}");
                             if (obj.GetObjectType() == ObjectType.Mod)
                             {
                                 args.AddPassArg($"importMask");
                             }
                             else
                             {
-                                args.AddPassArg($"recordTypeConverter");
+                                args.AddPassArg($"translationParams");
                             }
                         }
                         if (await obj.IsMajorRecord())
                         {
-                            fg.AppendLine($"{WriterMemberName}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
+                            fg.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
                         }
                     }
                     else
@@ -2760,8 +2729,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             $"{this.TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                             {
                                 args.AddPassArg($"item");
-                                args.AddPassArg(WriterMemberName);
-                                args.AddPassArg($"recordTypeConverter");
+                                args.Add($"writer: {writerNameToUse}");
+                                args.AddPassArg($"translationParams");
                             }
                         }
                     }
@@ -2894,7 +2863,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     {
                         args.Add($"GroupMask? importMask");
                     }
-                    args.Add($"RecordTypeConverter? recordTypeConverter{(obj.GetObjectType() == ObjectType.Mod ? " = null" : null)}");
+                    args.Add($"{nameof(TypedWriteParams)}? translationParams{(obj.GetObjectType() == ObjectType.Mod ? " = null" : null)}");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -2910,11 +2879,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 args.AddPassArg(WriterMemberName);
                                 if (data.BaseRecordTypeConverter?.FromConversions.Count > 0)
                                 {
-                                    args.Add($"recordTypeConverter: recordTypeConverter.Combine({obj.RegistrationName}.BaseConverter)");
+                                    args.Add($"translationParams: translationParams.Combine({obj.RegistrationName}.BaseConverter)");
                                 }
                                 else
                                 {
-                                    args.AddPassArg("recordTypeConverter");
+                                    args.AddPassArg("translationParams");
                                 }
                             }
                         }
@@ -2966,7 +2935,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                                 using (new BraceWrapper(fg, doIt: dataType.Nullable))
                                 {
-                                    fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
+                                    fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, translationParams.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
                                     using (new BraceWrapper(fg))
                                     {
                                         bool isInRange = false;
@@ -3029,7 +2998,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                                         translationAccessor: null,
                                                     itemAccessor: Accessor.FromType(subField.Field, "item"),
                                                     errorMaskAccessor: null,
-                                                    converterAccessor: "recordTypeConverter");
+                                                    converterAccessor: "translationParams");
                                             }
                                         }
                                         for (int i = 0; i < dataType.BreakIndices.Count; i++)
@@ -3075,7 +3044,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                         itemAccessor: accessor,
                                         translationAccessor: null,
                                         errorMaskAccessor: null,
-                                        converterAccessor: "recordTypeConverter");
+                                        converterAccessor: "translationParams");
                                 }
                             }
                         };

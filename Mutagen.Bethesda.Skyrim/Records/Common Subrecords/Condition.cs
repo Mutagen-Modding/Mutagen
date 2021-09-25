@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? translationParams)
         {
             if (!frame.Reader.TryGetSubrecord(Mutagen.Bethesda.Skyrim.Internals.RecordTypes.CTDA, out var subRecMeta))
             {
@@ -734,9 +734,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Condition condition,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? translationParams)
         {
-            condition = CreateFromBinary(frame, recordTypeConverter);
+            condition = CreateFromBinary(frame, translationParams);
             return true;
         }
     }
@@ -862,7 +862,7 @@ namespace Mutagen.Bethesda.Skyrim
                 conditions.Clear();
                 for (int i = 0; i < count; i++)
                 {
-                    conditions.Add(Condition.CreateFromBinary(frame, default(RecordTypeConverter)));
+                    conditions.Add(Condition.CreateFromBinary(frame, default(TypedParseParams)));
                 }
             }
 
@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim
                 conditions.Clear();
                 while (frame.Reader.TryGetSubrecord(RecordTypes.CTDA, out var subMeta))
                 {
-                    conditions.Add(Condition.CreateFromBinary(frame, default(RecordTypeConverter)));
+                    conditions.Add(Condition.CreateFromBinary(frame, default(TypedParseParams)));
                 }
             }
 
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, RecordTypeConverter? _)
+            public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, TypedParseParams? _)
             {
                 var subRecMeta = stream.GetSubrecordFrame();
                 if (subRecMeta.RecordType != RecordTypes.CTDA)

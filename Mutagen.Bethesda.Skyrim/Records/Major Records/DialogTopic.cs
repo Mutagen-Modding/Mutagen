@@ -177,10 +177,11 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static partial void FillBinaryResponseCountCustom(MutagenFrame frame, IDialogTopicInternal item)
+            public static partial ParseResult FillBinaryResponseCountCustom(MutagenFrame frame, IDialogTopicInternal item)
             {
                 // Skip counter
                 frame.ReadSubrecordFrame();
+                return null;
             }
         }
 
@@ -277,6 +278,11 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     throw RecordException.Enrich(ex, this);
                 }
+            }
+
+            public partial ParseResult ResponseCountCustomParse(OverlayStream stream, int offset)
+            {
+                return null;
             }
         }
     }

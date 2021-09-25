@@ -51,6 +51,12 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
         {
             return Enrich(ex, subRecord);
         }
+        
+        public static SubrecordException Create(string message, RecordType recordType)
+        {
+            return new SubrecordException(recordType, default(FormKey?), default(Type?), default(ModKey?),
+                default(string?), message: message);
+        }
 
         public override string ToString()
         {

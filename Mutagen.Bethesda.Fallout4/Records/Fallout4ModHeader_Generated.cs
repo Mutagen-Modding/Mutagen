@@ -1143,23 +1143,23 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((Fallout4ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static Fallout4ModHeader CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new Fallout4ModHeader();
             ((Fallout4ModHeaderSetterCommon)((IFallout4ModHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -1168,12 +1168,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Fallout4ModHeader item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -1395,12 +1395,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFallout4ModHeader item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((Fallout4ModHeaderSetterCommon)((IFallout4ModHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -1550,15 +1550,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IFallout4ModHeader item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(RecordTypes.TES4)));
+                translationParams.ConvertToCustom(RecordTypes.TES4)));
             PluginUtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: Fallout4ModHeaderBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: Fallout4ModHeaderBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -2221,30 +2221,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static void WriteRecordTypes(
             IFallout4ModHeaderGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             var StatsItem = item.Stats;
             ((ModStatsBinaryWriteTranslation)((IBinaryItem)StatsItem).BinaryWriteTranslator).Write(
                 item: StatsItem,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TypeOffsets,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST));
+                header: translationParams.ConvertToCustom(RecordTypes.OFST));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Deleted,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DELE));
+                header: translationParams.ConvertToCustom(RecordTypes.DELE));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Author,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Fallout4ModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
@@ -2252,9 +2252,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM),
+                recordType: translationParams.ConvertToCustom(RecordTypes.ONAM),
                 overflowRecord: RecordTypes.XXXX,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2263,26 +2263,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Screenshot,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRN));
+                header: translationParams.ConvertToCustom(RecordTypes.SCRN));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITransientTypeGetter>.Instance.Write(
                 writer: writer,
                 items: item.TransientTypes,
-                transl: (MutagenWriter subWriter, ITransientTypeGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, ITransientTypeGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((TransientTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.INTV,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.INTV));
+                header: translationParams.ConvertToCustom(RecordTypes.INTV));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.INCC,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.INCC));
+                header: translationParams.ConvertToCustom(RecordTypes.INCC));
         }
 
         public static partial void WriteBinaryMasterReferencesCustom(
@@ -2301,12 +2301,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             IFallout4ModHeaderGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.TES4),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.TES4)))
             {
                 WriteEmbedded(
                     item: item,
@@ -2314,19 +2313,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IFallout4ModHeaderGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2351,12 +2350,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static ParseResult FillBinaryRecordTypes(
             IFallout4ModHeader item,
             MutagenFrame frame,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.HEDR:
@@ -2400,13 +2400,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     return (int)Fallout4ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
-                case RecordTypeInts.XXXX:
                 {
-                    if (nextRecordType == RecordTypes.XXXX)
-                    {
-                        var overflowHeader = frame.ReadSubrecordFrame();
-                        contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
-                    }
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Parse(
@@ -2427,7 +2421,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TransientType>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.TNAM,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: TransientType.TryCreateFromBinary));
                     return (int)Fallout4ModHeader_FieldIndex.TransientTypes;
                 }
@@ -2442,6 +2436,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INCC = frame.ReadInt32();
                     return (int)Fallout4ModHeader_FieldIndex.INCC;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecordFrame();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2464,12 +2463,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IFallout4ModHeaderGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((Fallout4ModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -2509,12 +2508,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((Fallout4ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public Fallout4ModHeader.HeaderFlag Flags => (Fallout4ModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
@@ -2577,7 +2576,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static Fallout4ModHeaderBinaryOverlay Fallout4ModHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new Fallout4ModHeaderBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -2593,7 +2592,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -2601,12 +2600,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static Fallout4ModHeaderBinaryOverlay Fallout4ModHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return Fallout4ModHeaderFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public ParseResult FillRecordType(
@@ -2614,16 +2613,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.HEDR:
                 {
-                    _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _StatsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Fallout4ModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:
@@ -2650,13 +2649,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: RecordTypes.MAST,
-                        factory:  MasterReferenceBinaryOverlay.MasterReferenceFactory);
+                        factory: MasterReferenceBinaryOverlay.MasterReferenceFactory);
                     return (int)Fallout4ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
-                case RecordTypeInts.XXXX:
                 {
                     var subMeta = stream.ReadSubrecord();
                     int subLen;
@@ -2687,7 +2685,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.TransientTypes = BinaryOverlayList.FactoryByArray<TransientTypeBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         getter: (s, p, recConv) => TransientTypeBinaryOverlay.TransientTypeFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
@@ -2705,6 +2703,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     _INCCLocation = (stream.Position - offset);
                     return (int)Fallout4ModHeader_FieldIndex.INCC;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecordFrame();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return default(int?);

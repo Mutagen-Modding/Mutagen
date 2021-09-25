@@ -1,6 +1,9 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using System;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -20,33 +23,88 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static BodyTemplate Parse(MutagenFrame frame)
             {
-                var subFrame = frame.GetSubrecordFrame();
+                var subFrame = frame.ReadSubrecord();
                 var version = frame.MetaData.FormVersion!.Value;
                 switch (subFrame.RecordTypeInt)
                 {
                     case RecordTypeInts.BODT:
-                        if (version >= 44)
-                        {
-                            throw new ArgumentException("BODT type not expected on versions >= 44");
-                        }
-                        return BodyTemplate.CreateFromBinary(frame);
+                        return ParseBodt(version, frame, subFrame);
                     case RecordTypeInts.BOD2:
-                        if (version < 43)
-                        {
-                            throw new ArgumentException("BOD2 type not expected on versions < 43");
-                        }
-                        if (version >= 44)
-                        {
-                            return BodyTemplate.CreateFromBinary(frame);
-                        }
-                        frame.MetaData.FormVersion = 44;
-                        var template = BodyTemplate.CreateFromBinary(frame);
-                        template.ActsLike44 = true;
-                        frame.MetaData.FormVersion = 43;
-                        return template;
+                        return ParseBod2(version, frame, subFrame);
                     default:
                         throw new ArgumentException();
                 }
+            }
+
+            public static BodyTemplate ParseBod2(ushort version, IMutagenReadStream frame, SubrecordHeader subrecordHeader)
+            {
+                var len = subrecordHeader.ContentLength;
+                if (version <= 22 && len <= 8)
+                {
+                    throw SubrecordException.Create("BOD2 can not be parsed on Form Versions <= 22 with length <= 8", RecordTypes.BOD2);
+                }
+
+                var item = new BodyTemplate();
+                item.ActsLike44 = true;
+                item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag, IMutagenReadStream, MutagenWriter>.Instance.Parse(
+                    reader: frame,
+                    length: 4);
+                if (len == 8)
+                {
+                    item.ArmorType = EnumBinaryTranslation<ArmorType, IMutagenReadStream, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: 4);
+                }
+                else
+                {
+                    item.Flags = EnumBinaryTranslation<BodyTemplate.Flag, IMutagenReadStream, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: 4);
+                    item.ArmorType = EnumBinaryTranslation<ArmorType, IMutagenReadStream, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: 4);
+                }
+                return item;
+            }
+
+            public static BodyTemplate ParseBodt(ushort version, IMutagenReadStream frame, SubrecordHeader subrecordHeader)
+            {
+                var len = subrecordHeader.ContentLength;
+                if (version == 44 && len <= 8)
+                {
+                    throw SubrecordException.Create("BODT can not be parsed on versions == 44 if length is <= 8", RecordTypes.BODT);
+                }
+
+                var item = new BodyTemplate();
+
+                item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag, IMutagenReadStream, MutagenWriter>.Instance.Parse(
+                    reader: frame,
+                    length: 4);
+                if (len == 8)
+                {
+                    if (version < 22)
+                    {
+                        item.Flags = EnumBinaryTranslation<BodyTemplate.Flag, IMutagenReadStream, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            length: 4);
+                    }
+                    else
+                    {
+                        item.ArmorType = EnumBinaryTranslation<ArmorType, IMutagenReadStream, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            length: 4);
+                    }
+                }
+                else
+                {
+                    item.Flags = EnumBinaryTranslation<BodyTemplate.Flag, IMutagenReadStream, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: 4);
+                    item.ArmorType = EnumBinaryTranslation<ArmorType, IMutagenReadStream, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: 4);
+                }
+                return item;
             }
         }
 
@@ -54,8 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static void Write(MutagenWriter writer, IBodyTemplateGetter template)
             {
-                if (writer.MetaData.FormVersion != 43
-                    || !template.ActsLike44)
+                if (!template.ActsLike44)
                 {
                     template.WriteToBinary(writer);
                     return;
@@ -72,34 +129,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static IBodyTemplateGetter? CustomFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
             {
-                var subFrame = stream.GetSubrecordFrame();
+                var subFrame = stream.ReadSubrecord();
                 var version = package.FormVersion!.FormVersion!.Value;
                 switch (subFrame.RecordTypeInt)
                 {
                     case RecordTypeInts.BODT:
-                        if (version >= 44)
-                        {
-                            throw new ArgumentException("BODT type not expected on versions >= 44");
-                        }
-                        return BodyTemplateBinaryOverlay.BodyTemplateFactory(stream, package);
+                        return BodyTemplateBinaryCreateTranslation.ParseBodt(version, stream, subFrame);
                     case RecordTypeInts.BOD2:
-                        if (version < 43)
-                        {
-                            throw new ArgumentException("BOD2 type not expected on versions < 43");
-                        }
-                        if (version >= 44)
-                        {
-                            return BodyTemplateBinaryOverlay.BodyTemplateFactory(stream, package);
-                        }
-                        var cur = package.FormVersion;
-                        package.FormVersion = new FormVersionGetter()
-                        {
-                            FormVersion = 44
-                        };
-                        var template = BodyTemplateBinaryOverlay.BodyTemplateFactory(stream, package);
-                        template.ActsLike44 = true;
-                        package.FormVersion = cur;
-                        return template;
+                        return BodyTemplateBinaryCreateTranslation.ParseBod2(version, stream, subFrame);
                     default:
                         throw new ArgumentException();
                 }

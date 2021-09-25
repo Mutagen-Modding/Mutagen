@@ -25,9 +25,9 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
 
         public IEnumerable<Type> ScopedTypes { get; }
 
-        public ObservableCollection<FormKeyItemViewModel> FormKeys { get; } = new ObservableCollection<FormKeyItemViewModel>();
+        public ObservableCollection<FormKey> FormKeys { get; } = new();
 
-        public ObservableCollection<ModKeyItemViewModel> ModKeys { get; } = new ObservableCollection<ModKeyItemViewModel>();
+        public ObservableCollection<ModKey> ModKeys { get; } = new();
 
         public LateSetPickerVM LateSetPickerVM { get; }
 

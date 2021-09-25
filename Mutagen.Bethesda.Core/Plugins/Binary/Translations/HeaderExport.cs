@@ -59,13 +59,41 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         }
 
         /// <summary>
+        /// Exports a record header, and creates disposable to track content length.
+        /// When disposed, header will automatically update its length bytes.
+        /// </summary>
+        /// <param name="writer">Writer to export header to</param>
+        /// <param name="record">RecordType of the header</param>
+        /// <returns>Object to dispose when header's content has been written</returns>
+        public static HeaderExport Record(
+            MutagenWriter writer,
+            RecordType record)
+        {
+            return Header(writer, record, ObjectType.Record);
+        }
+
+        /// <summary>
+        /// Exports a group header, and creates disposable to track content length.
+        /// When disposed, header will automatically update its length bytes.
+        /// </summary>
+        /// <param name="writer">Writer to export header to</param>
+        /// <param name="record">RecordType of the header</param>
+        /// <returns>Object to dispose when header's content has been written</returns>
+        public static HeaderExport Group(
+            MutagenWriter writer,
+            RecordType record)
+        {
+            return Header(writer, record, ObjectType.Group);
+        }
+
+        /// <summary>
         /// Exports a subrecord header, and creates disposable to track content length.
         /// When disposed, header will automatically update its length bytes.
         /// </summary>
         /// <param name="writer">Writer to export header to</param>
         /// <param name="record">RecordType of the header</param>
         /// <returns>Object to dispose when header's content has been written</returns>
-        public static HeaderExport Subrecord(
+        public static IDisposable Subrecord(
             MutagenWriter writer,
             RecordType record)
         {
@@ -79,16 +107,28 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <param name="writer">Writer to export header to</param>
         /// <param name="record">RecordType of the header</param>
         /// <param name="overflowRecord">RecordType to use for an extra preceding subrecord, if the length is too large</param>
+        /// <param name="writerToUse">Writer to write to for the contents of the header</param>
         /// <returns>Object to dispose when header's content has been written</returns>
-        public static ExtraLengthHeaderExport Subrecord(
+        public static IDisposable Subrecord(
             MutagenWriter writer,
             RecordType record,
-            RecordType overflowRecord)
+            RecordType? overflowRecord,
+            out MutagenWriter writerToUse)
         {
-            return new ExtraLengthHeaderExport(
-                writer,
-                record,
-                overflowRecord);
+            if (overflowRecord.HasValue)
+            {
+                var ret = new ExtraLengthHeaderExport(
+                    writer,
+                    record,
+                    overflowRecord.Value);
+                writerToUse = ret.PrepWriter;
+                return ret;
+            }
+            else
+            {
+                writerToUse = writer;
+                return Subrecord(writer, record);
+            }
         }
 
         /// <summary>

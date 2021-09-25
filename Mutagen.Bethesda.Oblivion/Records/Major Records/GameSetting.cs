@@ -1,6 +1,7 @@
 using System;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -17,7 +18,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GameSetting CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter recordTypeConverter)
+            TypedParseParams? translationParams)
         {
             var majorMeta = frame.GetMajorRecord();
             var settingType = GameSettingUtility.GetGameSettingType(frame.GetMemory(checked((int)majorMeta.TotalLength)), frame.MetaData.Constants);
@@ -28,11 +29,11 @@ namespace Mutagen.Bethesda.Oblivion
             switch (settingType.Value)
             {
                 case GameSettingType.Float:
-                    return GameSettingFloat.CreateFromBinary(frame, recordTypeConverter);
+                    return GameSettingFloat.CreateFromBinary(frame, translationParams);
                 case GameSettingType.Int:
-                    return GameSettingInt.CreateFromBinary(frame, recordTypeConverter);
+                    return GameSettingInt.CreateFromBinary(frame, translationParams);
                 case GameSettingType.String:
-                    return GameSettingString.CreateFromBinary(frame, recordTypeConverter);
+                    return GameSettingString.CreateFromBinary(frame, translationParams);
                 default:
                     throw new ArgumentException($"Unknown game type: {settingType.Value}");
             }
@@ -46,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
             public static GameSettingBinaryOverlay GameSettingFactory(
                 OverlayStream stream,
                 BinaryOverlayFactoryPackage package,
-                RecordTypeConverter recordTypeConverter)
+                TypedParseParams? translationParams)
             {
                 var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingMemory, package.MetaData.Constants);
                 if (settingType.Failed)

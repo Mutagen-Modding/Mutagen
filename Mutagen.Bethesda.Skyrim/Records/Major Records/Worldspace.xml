@@ -3,7 +3,7 @@
   <Object name="Worldspace" objType="Record" recordType="WRLD" majorFlag="true" customBinaryEnd="Normal" baseClass="SkyrimMajorRecord" GUID="2ee9dfa0-e46f-43fe-b3e3-acc2314e4bce" ID="268">
     <Fields>
       <RefList name="LargeReferences" refName="WorldspaceGridReference" />
-      <RefDirect name="MaxHeight" refName="WorldspaceMaxHeight" />
+      <RefDirect name="MaxHeight" refName="WorldspaceMaxHeight" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <P2Int16 name="FixedDimensionsCenterCell" recordType="WCTR" />
       <FormLink name="InteriorLighting" recordType="LTMP" refName="LightingTemplate" />

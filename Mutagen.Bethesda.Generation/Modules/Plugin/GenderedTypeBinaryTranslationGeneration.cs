@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     if (subData?.RecordTypeConverter != null
                         && subData.RecordTypeConverter.FromConversions.Count > 0)
                     {
-                        args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                        args.Add($"parseParams: {objGen.RegistrationName}.{typeGen.Name}Converter");
                     }
                 }
                 if (gender.FemaleConversions != null)
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(gendered.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(gendered.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{gendered.SubTypeGeneration.NullChar} subItem{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{gendered.SubTypeGeneration.NullChar} subItem{(needsMasters ? $", {nameof(TypedWriteParams)}? conv" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(
@@ -424,13 +424,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 if (subData?.RecordTypeConverter != null
                                     && subData.RecordTypeConverter.FromConversions.Count > 0)
                                 {
-                                    args.Add($"recordTypeConverter: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
+                                    args.Add($"parseParams: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
                                 }
                                 else if (converterAccessor != null
                                     && gendered.FemaleConversions == null
                                     && gendered.MaleConversions == null)
                                 {
-                                    args.Add($"recordTypeConverter: {converterAccessor}");
+                                    args.Add($"parseParams: {converterAccessor}");
                                 }
                             }
                             else

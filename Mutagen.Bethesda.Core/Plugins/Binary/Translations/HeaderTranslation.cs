@@ -117,7 +117,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
         public static long ParseSubrecord(
             IMutagenReadStream reader,
-            RecordType expectedHeader)
+            RecordType expectedHeader,
+            int? lengthOverride = null)
         {
             if (!TryParse(
                 reader,
@@ -127,7 +128,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
-            return reader.Position + contentLength;
+            return reader.Position + (lengthOverride ?? contentLength);
         }
 
         public static bool TryParseRecordType(
@@ -299,10 +300,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             return span.Slice(loc + subMeta.HeaderLength, subMeta.ContentLength);
         }
 
-        public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
+        public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta, TypedParseParams? parseParams = null)
         {
             var subMeta = meta.Subrecord(span);
-            return span.Slice(subMeta.HeaderLength, subMeta.ContentLength);
+            return span.Slice(subMeta.HeaderLength, parseParams?.LengthOverride ?? subMeta.ContentLength);
         }
 
         public static ReadOnlyMemorySlice<byte> ExtractRecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)

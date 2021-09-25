@@ -1,6 +1,7 @@
 using System;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Fallout4
@@ -17,7 +18,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static GameSetting CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter recordTypeConverter)
+            TypedParseParams? translationParams)
         {
             var majorMeta = frame.GetMajorRecord();
             var settingType = GameSettingUtility.GetGameSettingType(frame.GetMemory(checked((int)majorMeta.TotalLength)), frame.MetaData.Constants);
@@ -28,15 +29,15 @@ namespace Mutagen.Bethesda.Fallout4
             switch (settingType.Value)
             {
                 case GameSettingType.Float:
-                    return GameSettingFloat.CreateFromBinary(frame, recordTypeConverter);
+                    return GameSettingFloat.CreateFromBinary(frame, translationParams);
                 case GameSettingType.Int:
-                    return GameSettingInt.CreateFromBinary(frame, recordTypeConverter);
+                    return GameSettingInt.CreateFromBinary(frame, translationParams);
                 case GameSettingType.String:
-                    return GameSettingString.CreateFromBinary(frame, recordTypeConverter);
+                    return GameSettingString.CreateFromBinary(frame, translationParams);
                 case GameSettingType.Bool:
-                    return GameSettingBool.CreateFromBinary(frame, recordTypeConverter);
+                    return GameSettingBool.CreateFromBinary(frame, translationParams);
                 case GameSettingType.UInt:
-                    return GameSettingUInt.CreateFromBinary(frame, recordTypeConverter);
+                    return GameSettingUInt.CreateFromBinary(frame, translationParams);
                 default:
                     throw new ArgumentException($"Unknown game type: {settingType.Value}");
             }
@@ -50,7 +51,7 @@ namespace Mutagen.Bethesda.Fallout4
             public static GameSettingBinaryOverlay GameSettingFactory(
                 OverlayStream stream,
                 BinaryOverlayFactoryPackage package,
-                RecordTypeConverter recordTypeConverter)
+                TypedParseParams? translationParams)
             {
                 var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingMemory, package.MetaData.Constants);
                 if (settingType.Failed)

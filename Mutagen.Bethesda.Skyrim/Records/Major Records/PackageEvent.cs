@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using System.Collections.Generic;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -34,7 +35,7 @@ namespace Mutagen.Bethesda.Skyrim
                 long finalPos,
                 int offset,
                 RecordType type,
-                int? lastParsed)
+                PreviousParse lastParsed)
             {
                 Topics = new List<IATopicReferenceGetter>(
                     ATopicReferenceBinaryCreateTranslation.Factory(

@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public bool Parse<T>(
             MutagenFrame reader,
             out EDIDLink<T> item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
             where T : class, IMajorRecordCommonGetter
         {
             if (!reader.TryCheckUpcomingRead(4, out var ex))
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public bool Parse<T>(
             MutagenFrame reader,
             out IEDIDLinkGetter<T> item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
             where T : class, IMajorRecordCommonGetter
         {
             if (!reader.TryCheckUpcomingRead(4, out var ex))

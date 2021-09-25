@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class APlacedTrapBinaryCreateTranslation
         {
-            public static partial void FillBinaryTrapFormCustom(MutagenFrame frame, IAPlacedTrapInternal item)
+            public static partial ParseResult FillBinaryTrapFormCustom(MutagenFrame frame, IAPlacedTrapInternal item)
             {
                 var subRec = frame.ReadSubrecordFrame();
                 if (subRec.Content.Length != 4)
@@ -67,6 +67,8 @@ namespace Mutagen.Bethesda.Skyrim
                     default:
                         throw new NotImplementedException();
                 }
+
+                return null;
             }
         }
 
@@ -109,7 +111,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class APlacedTrapBinaryOverlay
         {
-            partial void TrapFormCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult TrapFormCustomParse(OverlayStream stream, int offset)
             {
                 var subRec = stream.ReadSubrecordFrame();
                 if (subRec.Content.Length != 4)
@@ -146,6 +148,8 @@ namespace Mutagen.Bethesda.Skyrim
                     default:
                         throw new NotImplementedException();
                 }
+
+                return null;
             }
         }
     }

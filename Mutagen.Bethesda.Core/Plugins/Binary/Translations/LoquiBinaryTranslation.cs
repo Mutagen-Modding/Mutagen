@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public static readonly LoquiBinaryTranslation<T> Instance = new LoquiBinaryTranslation<T>();
         public delegate T CREATE_FUNC(
             MutagenFrame reader,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? translationParams);
         public static readonly CREATE_FUNC CREATE = GetCreateFunc();
 
         #region Parse
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 .Where((methodInfo) => methodInfo.ReturnType.Equals(tType))
                 .Where((methodInfo) => methodInfo.GetParameters().Length == 2)
                 .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(MutagenFrame)))
-                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(RecordTypeConverter)))
+                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(Nullable<TypedParseParams>)))
                 .FirstOrDefault();
             if (method != null)
             {
@@ -50,19 +50,19 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             return Parse(
                 frame: frame,
                 item: out item,
-                recordTypeConverter: null);
+                translationParams: null);
         }
 
         [DebuggerStepThrough]
         public bool Parse(
             MutagenFrame frame,
             out T item,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? translationParams)
         {
             var startPos = frame.Position;
             item = CREATE(
                 reader: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public static readonly LoquiBinaryAsyncTranslation<T> Instance = new LoquiBinaryAsyncTranslation<T>();
         public delegate Task<T> CREATE_FUNC(
             MutagenFrame reader,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? parseParams);
         public static readonly CREATE_FUNC CREATE = GetCreateFunc();
 
         #region Parse
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     && methodInfo.IsPublic)
                 .Where((methodInfo) => methodInfo.GetParameters().Length == 2)
                 .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(MutagenFrame)))
-                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(RecordTypeConverter)))
+                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(TypedParseParams)))
                 .FirstOrDefault();
             if (method == null)
             {
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             if (method.ReturnType == tType)
             {
                 var wrap = LoquiBinaryTranslation<T>.CREATE;
-                return async (MutagenFrame frame, RecordTypeConverter? recConv) =>
+                return async (MutagenFrame frame, TypedParseParams? recConv) =>
                 {
                     return wrap(frame, recConv);
                 };
@@ -112,17 +112,17 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         {
             return Parse(
                 frame: frame,
-                recordTypeConverter: null);
+                parseParams: null);
         }
 
         [DebuggerStepThrough]
         public async Task<TryGet<T>> Parse(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter)
+            TypedParseParams? parseParams)
         {
             var item = await CREATE(
                 reader: frame,
-                recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
+                parseParams: parseParams).ConfigureAwait(false);
             return TryGet<T>.Succeed(item);
         }
         #endregion
@@ -153,13 +153,13 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             this LoquiBinaryTranslation<T> loquiTrans,
             MutagenFrame frame,
             [MaybeNullWhen(false)] out B item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
             where T : class, ILoquiObjectGetter, B
         {
             if (loquiTrans.Parse(
                 frame: frame,
                 item: out T tItem,
-                recordTypeConverter: recordTypeConverter))
+                translationParams: translationParams))
             {
                 item = tItem;
                 return true;

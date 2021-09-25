@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -143,8 +145,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         partial class APerkEntryPointEffectBinaryCreateTranslation
         {
-            public static partial void FillBinaryFunctionParametersCustom(MutagenFrame frame, IAPerkEntryPointEffect item)
+            public static partial ParseResult FillBinaryFunctionParametersCustom(MutagenFrame frame, IAPerkEntryPointEffect item, PreviousParse lastParsed)
             {
+                return lastParsed;
             }
         }
 
@@ -152,6 +155,14 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static partial void WriteBinaryFunctionParametersCustom(MutagenWriter writer, IAPerkEntryPointEffectGetter item)
             {
+            }
+        }
+
+        public partial class APerkEntryPointEffectBinaryOverlay
+        {
+            public partial ParseResult FunctionParametersCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
+            {
+                return lastParsed;
             }
         }
     }

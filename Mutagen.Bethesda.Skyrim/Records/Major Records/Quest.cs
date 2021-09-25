@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ConditionBinaryCreateTranslation.FillConditionsList(item.DialogConditions, frame);
             }
 
-            public static partial void FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item)
+            public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item)
             {
                 var nextHeader = frame.ReadSubrecordFrame();
                 if (nextHeader.RecordType != RecordTypes.NEXT
@@ -62,12 +62,14 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("Unexpected NEXT header");
                 }
                 ConditionBinaryCreateTranslation.FillConditionsList(item.UnusedConditions, frame);
+                return null;
             }
 
-            public static partial void FillBinaryNextAliasIDCustom(MutagenFrame frame, IQuestInternal item)
+            public static partial ParseResult FillBinaryNextAliasIDCustom(MutagenFrame frame, IQuestInternal item)
             {
                 // Skip
                 frame.ReadSubrecordFrame();
+                return null;
             }
         }
 
@@ -106,12 +108,12 @@ namespace Mutagen.Bethesda.Skyrim
             public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = ListExt.Empty<IConditionGetter>();
             public IReadOnlyList<IConditionGetter> UnusedConditions { get; private set; } = ListExt.Empty<IConditionGetter>();
 
-            partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 DialogConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }
 
-            partial void UnusedConditionsLogicCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult UnusedConditionsLogicCustomParse(OverlayStream stream, int offset)
             {
                 var nextHeader = stream.ReadSubrecordFrame();
                 if (nextHeader.RecordType != RecordTypes.NEXT
@@ -120,11 +122,14 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("Unexpected NEXT header");
                 }
                 UnusedConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
+
+                return null;
             }
 
-            partial void NextAliasIDCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult NextAliasIDCustomParse(OverlayStream stream, int offset)
             {
                 stream.ReadSubrecordFrame();
+                return null;
             }
         }
     }

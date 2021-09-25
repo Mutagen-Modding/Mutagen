@@ -1497,23 +1497,23 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => QuestBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((QuestBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public new static Quest CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new Quest();
             ((QuestSetterCommon)((IQuestGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -1522,12 +1522,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Quest item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -1759,12 +1759,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IQuestInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((QuestSetterCommon)((IQuestGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -1939,12 +1939,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IQuestInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.MajorRecordParse<IQuestInternal>(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: QuestBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: QuestBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -1952,23 +1952,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Quest)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
                 item: (Quest)item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         
         #endregion
@@ -2928,26 +2928,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IQuestGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 ((QuestAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    translationParams: translationParams);
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
                 EnumBinaryTranslation<Quest.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
@@ -2964,21 +2964,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Event,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IGlobalGetter>>.Instance.Write(
                 writer: writer,
                 items: item.TextDisplayGlobals,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IGlobalGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IGlobalGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(RecordTypes.QTGL));
+                        header: translationParams.ConvertToCustom(RecordTypes.QTGL));
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectWindowFilter,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FLTR),
+                header: translationParams.ConvertToCustom(RecordTypes.FLTR),
                 binaryType: StringBinaryType.NullTerminate);
             QuestBinaryWriteTranslation.WriteBinaryDialogConditions(
                 writer: writer,
@@ -2989,24 +2989,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestStageGetter>.Instance.Write(
                 writer: writer,
                 items: item.Stages,
-                transl: (MutagenWriter subWriter, IQuestStageGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IQuestStageGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((QuestStageBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestObjectiveGetter>.Instance.Write(
                 writer: writer,
                 items: item.Objectives,
-                transl: (MutagenWriter subWriter, IQuestObjectiveGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IQuestObjectiveGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((QuestObjectiveBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             QuestBinaryWriteTranslation.WriteBinaryNextAliasID(
                 writer: writer,
@@ -3014,18 +3014,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestAliasGetter>.Instance.Write(
                 writer: writer,
                 items: item.Aliases,
-                transl: (MutagenWriter subWriter, IQuestAliasGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IQuestAliasGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((QuestAliasBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
         }
@@ -3072,12 +3072,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IQuestGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Header(
+            using (HeaderExport.Record(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.QUST),
-                type: ObjectType.Record))
+                record: translationParams.ConvertToCustom(RecordTypes.QUST)))
             {
                 try
                 {
@@ -3088,7 +3087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteRecordTypes(
                         item: item,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                     writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
@@ -3101,34 +3100,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IQuestGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IQuestGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (IQuestGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -3150,12 +3149,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             IQuestInternal item,
             MutagenFrame frame,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -3198,7 +3198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TextDisplayGlobals.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IGlobalGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QTGL),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.QTGL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Quest_FieldIndex.TextDisplayGlobals;
                 }
@@ -3219,10 +3219,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    QuestBinaryCreateTranslation.FillBinaryUnusedConditionsLogicCustom(
+                    return QuestBinaryCreateTranslation.FillBinaryUnusedConditionsLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -3230,7 +3229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestStage>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.INDX,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: QuestStage.TryCreateFromBinary));
                     return (int)Quest_FieldIndex.Stages;
                 }
@@ -3240,16 +3239,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestObjective>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.QOBJ,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: QuestObjective.TryCreateFromBinary));
                     return (int)Quest_FieldIndex.Objectives;
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    QuestBinaryCreateTranslation.FillBinaryNextAliasIDCustom(
+                    return QuestBinaryCreateTranslation.FillBinaryNextAliasIDCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return null;
                 }
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
@@ -3258,7 +3256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestAlias>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: QuestAlias_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: QuestAlias.TryCreateFromBinary));
                     return (int)Quest_FieldIndex.Aliases;
                 }
@@ -3275,6 +3273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
@@ -3285,11 +3284,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IQuestInternal item);
 
-        public static partial void FillBinaryUnusedConditionsLogicCustom(
+        public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(
             MutagenFrame frame,
             IQuestInternal item);
 
-        public static partial void FillBinaryNextAliasIDCustom(
+        public static partial ParseResult FillBinaryNextAliasIDCustom(
             MutagenFrame frame,
             IQuestInternal item);
 
@@ -3330,12 +3329,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => QuestBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((QuestBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region VirtualMachineAdapter
@@ -3396,17 +3395,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed);
+            PreviousParse lastParsed);
         #endregion
         #region UnusedConditionsLogic
-        partial void UnusedConditionsLogicCustomParse(
+        public partial ParseResult UnusedConditionsLogicCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = ListExt.Empty<QuestStageBinaryOverlay>();
         public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = ListExt.Empty<QuestObjectiveBinaryOverlay>();
         #region NextAliasID
-        partial void NextAliasIDCustomParse(
+        public partial ParseResult NextAliasIDCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -3434,7 +3433,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static QuestBinaryOverlay QuestFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new QuestBinaryOverlay(
@@ -3453,7 +3452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -3461,12 +3460,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static QuestBinaryOverlay QuestFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return QuestFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3474,16 +3473,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
                 {
-                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Quest_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FULL:
@@ -3512,7 +3511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            recordTypeConverter: recordTypeConverter));
+                            parseParams: parseParams));
                     return (int)Quest_FieldIndex.TextDisplayGlobals;
                 }
                 case RecordTypeInts.FLTR:
@@ -3532,44 +3531,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    UnusedConditionsLogicCustomParse(
+                    return UnusedConditionsLogicCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.INDX:
                 {
                     this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: RecordTypes.INDX,
-                        factory:  QuestStageBinaryOverlay.QuestStageFactory);
+                        factory: QuestStageBinaryOverlay.QuestStageFactory);
                     return (int)Quest_FieldIndex.Stages;
                 }
                 case RecordTypeInts.QOBJ:
                 {
                     this.Objectives = this.ParseRepeatedTypelessSubrecord<QuestObjectiveBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: RecordTypes.QOBJ,
-                        factory:  QuestObjectiveBinaryOverlay.QuestObjectiveFactory);
+                        factory: QuestObjectiveBinaryOverlay.QuestObjectiveFactory);
                     return (int)Quest_FieldIndex.Objectives;
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    NextAliasIDCustomParse(
+                    return NextAliasIDCustomParse(
                         stream,
                         offset);
-                    return null;
                 }
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
                 {
                     this.Aliases = this.ParseRepeatedTypelessSubrecord<QuestAliasBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: QuestAlias_Registration.TriggeringRecordTypes,
-                        factory:  QuestAliasBinaryOverlay.QuestAliasFactory);
+                        factory: QuestAliasBinaryOverlay.QuestAliasFactory);
                     return (int)Quest_FieldIndex.Aliases;
                 }
                 case RecordTypeInts.NNAM:

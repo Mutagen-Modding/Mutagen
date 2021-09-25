@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Skyrim
                     ListBinaryTranslation<PackageBranch>.Instance.Parse(
                         reader: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.ANAM,
-                        transl: (MutagenFrame r, out PackageBranch listSubItem, RecordTypeConverter? conv) =>
+                        transl: (MutagenFrame r, out PackageBranch listSubItem, TypedParseParams? translationParams) =>
                         {
                             listSubItem = PackageBranch.CreateFromBinary(r);
                             return true;
@@ -550,14 +550,14 @@ namespace Mutagen.Bethesda.Skyrim
                 _xnam = xnam.Content;
                 this.ProcedureTree = this.ParseRepeatedTypelessSubrecord<PackageBranchBinaryOverlay>(
                     stream: stream,
-                    recordTypeConverter: null,
+                    parseParams: null,
                     trigger: RecordTypes.ANAM,
                     factory: PackageBranchBinaryOverlay.PackageBranchFactory);
                 PackageBinaryCreateTranslation.AbsorbPackageData(
                     new MutagenInterfaceReadStream(stream, _package.MetaData), _packageData);
             }
 
-            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }

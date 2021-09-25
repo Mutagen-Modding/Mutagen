@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
     public class EnumerableModKeySettingsVM : SettingsNodeVM
     {
         private readonly ModKey[] _defaultVal;
-        public ObservableCollection<ModKeyItemViewModel> Values { get; } = new ObservableCollection<ModKeyItemViewModel>();
+        public ObservableCollection<ModKey> Values { get; } = new();
         public IObservable<IChangeSet<ModKey>> DetectedLoadOrder { get; }
 
         public EnumerableModKeySettingsVM(
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
         {
             _defaultVal = defaultVal.ToArray();
             DetectedLoadOrder = detectedLoadOrder;
-            Values.SetTo(defaultVal.Select(i => new ModKeyItemViewModel(i)));
+            Values.SetTo(_defaultVal);
         }
 
         public static EnumerableModKeySettingsVM Factory(ReflectionSettingsParameters param, FieldMeta fieldMeta, object? defaultVal)
@@ -54,11 +54,11 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             {
                 if (ModKey.TryFromNameAndExtension(elem.GetString(), out var modKey))
                 {
-                    Values.Add(new ModKeyItemViewModel(modKey));
+                    Values.Add(modKey);
                 }
                 else
                 {
-                    Values.Add(new ModKeyItemViewModel(ModKey.Null));
+                    Values.Add(ModKey.Null);
                 }
             }
         }
@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             obj[Meta.DiskName] = new JArray(Values
                 .Select(x =>
                 {
-                    if (x.ModKey.IsNull)
+                    if (x.IsNull)
                     {
                         return string.Empty;
                     }
                     else
                     {
-                        return x.ModKey.ToString();
+                        return x.ToString();
                     }
                 }).ToArray());
         }

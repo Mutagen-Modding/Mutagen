@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 using Xunit;
 
 namespace Mutagen.Bethesda.Core.UnitTests.Strings
@@ -32,14 +32,16 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
                 "Sir"
             };
 
+            var encodings = new Mutagen.Bethesda.Strings.DI.MutagenEncodingProvider();
+
             FrenchStringsFormat = CreateNormalStrings(
                 new string[] { FrenchString }, 
-                Encodings.Get(GameRelease.SkyrimSE, Language.French));
-            StringsFormat = CreateNormalStrings(Strs, Encoding.ASCII);
-            IlStringsFormat = CreateIlStrings(Strs, Encoding.ASCII);
+                encodings.GetEncoding(GameRelease.SkyrimSE, Language.French));
+            StringsFormat = CreateNormalStrings(Strs, encodings.GetEncoding(GameRelease.SkyrimSE, Language.English));
+            IlStringsFormat = CreateIlStrings(Strs, encodings.GetEncoding(GameRelease.SkyrimSE, Language.English));
         }
 
-        private static byte[] CreateIlStrings(IReadOnlyList<string> strs, Encoding encoding)
+        private static byte[] CreateIlStrings(IReadOnlyList<string> strs, IMutagenEncoding encoding)
         {
             var ret = new byte[100];
             var writer = new MutagenWriter(
@@ -66,7 +68,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
             return ret;
         }
 
-        private static byte[] CreateNormalStrings(IReadOnlyList<string> strs, Encoding encoding)
+        private static byte[] CreateNormalStrings(IReadOnlyList<string> strs, IMutagenEncoding encoding)
         {
             var ret = new byte[100];
             var writer = new MutagenWriter(
@@ -98,7 +100,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
             var overlay = new StringsLookupOverlay(
                 StringsFormat,
                 StringsFileFormat.Normal, 
-                Encodings.Get(GameRelease.SkyrimSE, Language.English));
+                new MutagenEncodingProvider()
+                    .GetEncoding(GameRelease.SkyrimSE, Language.English));
             Assert.Equal(Strs.Count, overlay.Count);
             Assert.True(overlay.TryLookup(1, out var str));
             Assert.Equal(Strs[0], str);
@@ -112,7 +115,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
             var overlay = new StringsLookupOverlay(
                 StringsFormat,
                 StringsFileFormat.Normal, 
-                Encodings.Get(GameRelease.SkyrimSE, Language.English));
+                new MutagenEncodingProvider()
+                    .GetEncoding(GameRelease.SkyrimSE, Language.English));
             Assert.False(overlay.TryLookup(56, out _));
         }
 
@@ -122,7 +126,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
             var overlay = new StringsLookupOverlay(
                 IlStringsFormat,
                 StringsFileFormat.LengthPrepended, 
-                Encodings.Get(GameRelease.SkyrimSE, Language.English));
+                new MutagenEncodingProvider()
+                    .GetEncoding(GameRelease.SkyrimSE, Language.English));
             Assert.Equal(Strs.Count, overlay.Count);
             Assert.True(overlay.TryLookup(1, out var str));
             Assert.Equal(Strs[0], str);
@@ -136,7 +141,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
             var overlay = new StringsLookupOverlay(
                 IlStringsFormat, 
                 StringsFileFormat.LengthPrepended,
-                Encodings.Get(GameRelease.SkyrimSE, Language.English));
+                new MutagenEncodingProvider()
+                    .GetEncoding(GameRelease.SkyrimSE, Language.English));
             Assert.False(overlay.TryLookup(56, out _));
         }
 
@@ -146,7 +152,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
             var overlay = new StringsLookupOverlay(
                 FrenchStringsFormat,
                 StringsFileFormat.Normal,
-                Encodings.Get(GameRelease.SkyrimSE, Language.French));
+                new MutagenEncodingProvider()
+                    .GetEncoding(GameRelease.SkyrimSE, Language.French));
             overlay.Count.Should().Be(1);
             overlay.TryLookup(1, out var str)
                 .Should().BeTrue();

@@ -43,12 +43,12 @@ namespace Mutagen.Bethesda.Skyrim
 
             public IReadOnlyList<IConditionGetter> CompletionConditions { get; private set; } = ListExt.Empty<IConditionGetter>();
 
-            partial void StartConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void StartConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 StartConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }
 
-            partial void CompletionConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void CompletionConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 stream.ReadSubrecordFrame();
                 CompletionConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);

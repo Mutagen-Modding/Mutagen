@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using FluentAssertions;
-using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Core.UnitTests.AutoData;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 using Noggog.Testing.IO;
 
@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Streams
         [Theory, MutagenAutoData]
         public void StreamModKeyCtorDoesNotDisposeStream()
         {
-            var stream = new DisposeTesterWrapStream(File.OpenRead(TestPathing.SkyrimOverrideMod));
+            var stream = new DisposeTesterWrapStream(File.OpenRead(TestDataPathing.SkyrimOverrideMod));
             var mutaStream = new MutagenBinaryReadStream(
                 stream,
                 ModKey.FromNameAndExtension("Skyrim.esm"),

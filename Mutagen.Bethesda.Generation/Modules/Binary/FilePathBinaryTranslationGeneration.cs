@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 args.Add($"item: {itemAccessor}");
                 if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                    args.Add($"header: translationParams.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                 }
                 else
                 {
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 }
                 if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: recordTypeConverter.Convert({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                    args.Add($"header: translationParams.Convert({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                 }
                 else
                 {

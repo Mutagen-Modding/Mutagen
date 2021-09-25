@@ -1,5 +1,4 @@
 ﻿using System;
-using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Xunit;
@@ -41,14 +40,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void GetOverlayTopLevelGroupByGenericDoesNotThrow()
         {
-            var mod = SkyrimMod.CreateFromBinaryOverlay(TestPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
+            var mod = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
             mod.GetTopLevelGroup<INpcGetter>();
         }
         
         [Fact]
         public void GetOverlayTopLevelGroupByParameterDoesNotThrow()
         {
-            var mod = SkyrimMod.CreateFromBinaryOverlay(TestPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
+            var mod = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
             mod.GetTopLevelGroup(typeof(INpcGetter));
         }
     }

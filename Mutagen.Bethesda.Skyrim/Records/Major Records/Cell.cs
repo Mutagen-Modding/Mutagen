@@ -167,14 +167,14 @@ namespace Mutagen.Bethesda.Skyrim
                         obj.NavigationMeshes.Add(
                             WorldspaceNavigationMesh.CreateFromBinary(
                                 frame.SpawnWithLength(majorMeta.TotalLength),
-                                recordTypeConverter: null));
+                                translationParams: null));
                     }
                     else
                     {
                         obj.NavigationMeshes.Add(
                             CellNavigationMesh.CreateFromBinary(
                                 frame.SpawnWithLength(majorMeta.TotalLength),
-                                recordTypeConverter: null));
+                                translationParams: null));
                     }
                     return true;
                 }
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     obj.Landscape = Landscape.CreateFromBinary(
                         frame.SpawnWithLength(majorMeta.TotalLength),
-                        recordTypeConverter: null);
+                        translationParams: null);
                     return true;
                 }
                 return false;
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
                     stream: stream,
                     finalPos: finalPos,
                     offset: offset,
-                    recordTypeConverter: null,
+                    parseParams: null,
                     fill: ret.FillRecordType);
                 try
                 {

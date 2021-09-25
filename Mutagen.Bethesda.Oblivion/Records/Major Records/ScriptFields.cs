@@ -1,5 +1,7 @@
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -51,11 +53,20 @@ namespace Mutagen.Bethesda.Oblivion
                     new RecordType("SCHR"),
                     new RecordType("SCHD")));
 
-            public static partial void FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, IScriptFields item)
+            public static partial ParseResult FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, IScriptFields item, PreviousParse lastParsed)
             {
                 item.MetadataSummary.CopyInFromBinary(
                     frame: frame,
-                    recordTypeConverter: metaConverter);
+                    translationParams: metaConverter);
+                return lastParsed;
+            }
+        }
+
+        public partial class ScriptFieldsBinaryOverlay
+        {
+            public partial ParseResult MetadataSummaryOldCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
+            {
+                return lastParsed;
             }
         }
     }

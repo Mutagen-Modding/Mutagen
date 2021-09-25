@@ -3,6 +3,7 @@ using System;
 using System.Buffers.Binary;
 using System.Text;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations
 {
@@ -11,6 +12,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
     /// </summary>
     public static class BinaryStringUtility
     {
+        private static readonly MutagenEncodingProvider MutagenEncodings = new();
+        
         /// <summary>
         /// Converts span to a string.
         /// </summary>
@@ -18,7 +21,18 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <returns>string containing a character for every byte in the input span</returns>
         public static string ToZString(ReadOnlySpan<byte> bytes)
         {
-            return Encodings.Default.GetString(bytes);
+            return ToZString(bytes, MutagenEncodings.Default);
+        }
+        
+        /// <summary>
+        /// Converts span to a string.
+        /// </summary>
+        /// <param name="bytes">Bytes to turn into a string</param>
+        /// <param name="encoding">Encoding to use</param>
+        /// <returns>string containing a character for every byte in the input span</returns>
+        public static string ToZString(ReadOnlySpan<byte> bytes, IMutagenEncoding encoding)
+        {
+            return (encoding ?? MutagenEncodings.Default).GetString(bytes);
         }
 
         /// <summary>
@@ -28,6 +42,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <returns>Trimmed bytes</returns>
         public static ReadOnlySpan<byte> ProcessNullTermination(ReadOnlySpan<byte> bytes)
         {
+            if (bytes.Length == 0) return bytes;
             // If null terminated, don't include
             if (bytes[^1] == 0)
             {
@@ -99,7 +114,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <param name="span">Bytes to retrieve string from</param>
         /// <param name="lengthLength">Amount of bytes containing length information</param>
         /// <returns>String of length denoted by initial bytes</returns>
-        public static string ParsePrependedString(ReadOnlyMemorySlice<byte> span, byte lengthLength)
+        public static string ParsePrependedString(ReadOnlySpan<byte> span, byte lengthLength)
         {
             return ProcessWholeToZString(ExtractPrependedString(span, lengthLength));
         }
@@ -111,7 +126,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <param name="span">Bytes to retrieve string from</param>
         /// <param name="lengthLength">Amount of bytes containing length information</param>
         /// <returns>String of length denoted by initial bytes</returns>
-        public static ReadOnlySpan<byte> ExtractPrependedString(ReadOnlyMemorySlice<byte> span, byte lengthLength)
+        public static ReadOnlySpan<byte> ExtractPrependedString(ReadOnlySpan<byte> span, byte lengthLength)
         {
             switch (lengthLength)
             {
@@ -158,10 +173,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
         public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType)
         {
-            Write(stream, str, binaryType, Encodings.Default);
+            Write(stream, str, binaryType, MutagenEncodings.Default);
         }
 
-        public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType, Encoding encoding)
+        public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType, IMutagenEncoding encoding)
         {
             switch (binaryType)
             {
@@ -193,15 +208,15 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
         public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str)
         {
-            Write(stream, str, Encodings.Default);
+            Write(stream, str, MutagenEncodings.Default);
         }
 
-        public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, Encoding encoding)
+        public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, IMutagenEncoding encoding)
         {
             Write(stream, str, encoding, encoding.GetByteCount(str));
         }
 
-        public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, Encoding encoding, int byteCount)
+        public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, IMutagenEncoding encoding, int byteCount)
         {
             Span<byte> bytes = stackalloc byte[byteCount];
             encoding.GetBytes(str, bytes);

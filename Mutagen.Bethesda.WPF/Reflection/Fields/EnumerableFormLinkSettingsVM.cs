@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
 {
     public class EnumerableFormLinkSettingsVM : SettingsNodeVM
     {
-        public ObservableCollection<FormKeyItemViewModel> Values { get; } = new ObservableCollection<FormKeyItemViewModel>();
+        public ObservableCollection<FormKey> Values { get; } = new();
 
         private FormKey[] _defaultVal;
         private readonly IObservable<ILinkCache?> _linkCacheObs;
@@ -70,11 +70,11 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             {
                 if (FormKey.TryFactory(elem.GetString(), out var formKey))
                 {
-                    Values.Add(new FormKeyItemViewModel(formKey));
+                    Values.Add(formKey);
                 }
                 else
                 {
-                    Values.Add(new FormKeyItemViewModel(FormKey.Null));
+                    Values.Add(FormKey.Null);
                 }
             }
         }
@@ -84,13 +84,13 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             obj[Meta.DiskName] = new JArray(Values
                 .Select(x =>
                 {
-                    if (x.FormKey.IsNull)
+                    if (x.IsNull)
                     {
                         return string.Empty;
                     }
                     else
                     {
-                        return x.FormKey.ToString();
+                        return x.ToString();
                     }
                 }).ToArray());
         }
@@ -107,10 +107,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
         public override void WrapUp()
         {
             _defaultVal = _defaultVal.Select(x => FormKeySettingsVM.StripOrigin(x)).ToArray();
-            Values.SetTo(_defaultVal.Select(x =>
-            {
-                return new FormKeyItemViewModel(x);
-            }));
+            Values.SetTo(_defaultVal);
 
             if (LoquiRegistration.TryGetRegisterByFullName(_typeName, out var regis))
             {

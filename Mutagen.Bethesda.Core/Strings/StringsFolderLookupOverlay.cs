@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings
 {
@@ -49,8 +50,13 @@ namespace Mutagen.Bethesda.Strings
             ModKey = modKey;
         }
 
-        public static StringsFolderLookupOverlay TypicalFactory(GameRelease release, ModKey modKey, DirectoryPath dataPath, StringsReadParameters? instructions)
+        public static StringsFolderLookupOverlay TypicalFactory(
+            GameRelease release, 
+            ModKey modKey, 
+            DirectoryPath dataPath,
+            StringsReadParameters? instructions)
         {
+            var encodings = instructions?.EncodingProvider ?? new MutagenEncodingProvider();
             var stringsFolderPath = instructions?.StringsFolderOverride;
             if (stringsFolderPath == null)
             {
@@ -76,7 +82,7 @@ namespace Mutagen.Bethesda.Strings
                                 continue;
                             }
                             var dict = bundle.Get(type);
-                            dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.Path, type, Encodings.Get(release, lang)), LazyThreadSafetyMode.ExecutionAndPublication);
+                            dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.Path, type, encodings.GetEncoding(release, lang)), LazyThreadSafetyMode.ExecutionAndPublication);
                         }
                     }
                     foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, dataPath, modKey, instructions?.BsaOrdering))
@@ -105,7 +111,7 @@ namespace Mutagen.Bethesda.Strings
                                     {
                                         try
                                         {
-                                            return new StringsLookupOverlay(item.GetMemorySlice(), type, Encodings.Get(release, lang));
+                                            return new StringsLookupOverlay(item.GetMemorySlice(), type, encodings.GetEncoding(release, lang));
                                         }
                                         catch (Exception ex)
                                         {
@@ -150,7 +156,7 @@ namespace Mutagen.Bethesda.Strings
             return new TranslatedString()
             {
                 StringsLookup = this,
-                Key = key,
+                StringsKey = key,
                 StringsSource = source,
             };
         }

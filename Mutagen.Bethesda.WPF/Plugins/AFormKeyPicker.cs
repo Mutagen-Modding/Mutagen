@@ -31,17 +31,17 @@ namespace Mutagen.Bethesda.WPF.Plugins
     {
         private bool _updating;
 
-        public ILinkCache LinkCache
+        public ILinkCache? LinkCache
         {
-            get => (ILinkCache)GetValue(LinkCacheProperty);
+            get => (ILinkCache?)GetValue(LinkCacheProperty);
             set => SetValue(LinkCacheProperty, value);
         }
         public static readonly DependencyProperty LinkCacheProperty = DependencyProperty.Register(nameof(LinkCache), typeof(ILinkCache), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(ILinkCache)));
 
-        public IEnumerable ScopedTypes
+        public IEnumerable? ScopedTypes
         {
-            get => (IEnumerable)GetValue(ScopedTypesProperty);
+            get => (IEnumerable?)GetValue(ScopedTypesProperty);
             set => SetValue(ScopedTypesProperty, value);
         }
         public static readonly DependencyProperty ScopedTypesProperty = DependencyProperty.Register(nameof(ScopedTypes), typeof(IEnumerable), typeof(AFormKeyPicker),
@@ -86,6 +86,22 @@ namespace Mutagen.Bethesda.WPF.Plugins
         }
         public static readonly DependencyProperty EditorIDProperty = DependencyProperty.Register(nameof(EditorID), typeof(string), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public bool MissingMeansError
+        {
+            get => (bool)GetValue(MissingMeansErrorProperty);
+            set => SetValue(MissingMeansErrorProperty, value);
+        }
+        public static readonly DependencyProperty MissingMeansErrorProperty = DependencyProperty.Register(nameof(MissingMeansError), typeof(bool), typeof(AFormKeyPicker),
+             new FrameworkPropertyMetadata(true));
+
+        public bool? MissingMeansNull
+        {
+            get => (bool?)GetValue(MissingMeansNullProperty);
+            set => SetValue(MissingMeansNullProperty, value);
+        }
+        public static readonly DependencyProperty MissingMeansNullProperty = DependencyProperty.Register(nameof(MissingMeansNull), typeof(bool?), typeof(AFormKeyPicker),
+             new FrameworkPropertyMetadata(default(bool?), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public StatusIndicatorState Status
         {
@@ -447,12 +463,14 @@ namespace Mutagen.Bethesda.WPF.Plugins
                 .Skip(1)
                 .Select(x => x.Trim())
                 .DistinctUntilChanged()
-                .Where(x => !_updating)
+                .Where(_ => !_updating)
                 .CombineLatest(
                     this.WhenAnyValue(
                         x => x.LinkCache,
-                        x => x.ScopedTypes),
-                    (str, sources) => (Raw: str, LinkCache: sources.Item1, Types: sources.Item2))
+                        x => x.ScopedTypes,
+                        x => x.MissingMeansError,
+                        x => x.MissingMeansNull),
+                    (str, sources) => (Raw: str, LinkCache: sources.Item1, Types: sources.Item2, MissingMeansError: sources.Item3, MissingMeansNull: sources.Item4))
                 .Do(_ =>
                 {
                     if (!Processing)
@@ -477,7 +495,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
                         {
                             if (x.LinkCache == null)
                             {
-                                return new State(StatusIndicatorState.Success, "Located record", formKey, string.Empty);
+                                return new State(StatusIndicatorState.Success, "Valid FormKey", formKey, string.Empty);
                             }
                             if (x.LinkCache.TryResolveIdentifier(formKey, scopedTypes, out var edid))
                             {
@@ -485,7 +503,20 @@ namespace Mutagen.Bethesda.WPF.Plugins
                             }
                             else
                             {
-                                return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty);
+                                FormKey formKeyToUse;
+                                if (x.MissingMeansNull ?? x.MissingMeansError)
+                                {
+                                    formKeyToUse = FormKey.Null;
+                                }
+                                else
+                                {
+                                    formKeyToUse = formKey;
+                                }
+                                return new State(
+                                    x.MissingMeansError ? StatusIndicatorState.Failure : StatusIndicatorState.Success,
+                                    "Could not resolve record",
+                                    formKeyToUse,
+                                    string.Empty);
                             }
                         }
 
@@ -567,10 +598,10 @@ namespace Mutagen.Bethesda.WPF.Plugins
                     }
                     else
                     {
-                        if (!FormKey.IsNull)
+                        if (FormKey != rec.FormKey)
                         {
                             _updating = true;
-                            FormKey = FormKey.Null;
+                            FormKey = rec.FormKey;
                             _updating = false;
                         }
 
@@ -698,7 +729,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
                 .DisposeWith(_unloadDisposable);
         }
 
-        protected IEnumerable<Type> ScopedTypesInternal(IEnumerable types)
+        protected IEnumerable<Type> ScopedTypesInternal(IEnumerable? types)
         {
             var scopedTypes = types as IEnumerable<Type>;
             if (scopedTypes == null || !scopedTypes.Any())

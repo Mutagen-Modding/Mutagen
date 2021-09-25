@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             if (data.RecordType.HasValue
                                 && data.HandleTrigger)
                             {
-                                args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                                args.Add($"header: translationParams.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                             }
                         }
                     }

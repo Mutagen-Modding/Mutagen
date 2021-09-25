@@ -3335,20 +3335,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
-            ModKey modKey)
-        {
-            var meta = new ParsingBundle(GameRelease.Oblivion, new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(bytes, meta));
-            return OblivionModBinaryOverlay.OblivionModFactory(
-                stream: new MutagenMemoryReadStream(
-                    data: bytes,
-                    metaData: meta),
-                modKey: modKey,
-                shouldDispose: false);
-        }
-
-        public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
             IFileSystem? fileSystem = null)
         {
@@ -10927,7 +10913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (importMask?.GameSettings ?? true)
             {
@@ -10937,7 +10923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
                         item: GameSettingsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Globals ?? true)
@@ -10948,7 +10934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Classes ?? true)
@@ -10959,7 +10945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Factions ?? true)
@@ -10970,7 +10956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: FactionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Hairs ?? true)
@@ -10981,7 +10967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
                         item: HairsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Eyes ?? true)
@@ -10992,7 +10978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyeGetter>(
                         item: EyesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Races ?? true)
@@ -11003,7 +10989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
                         item: RacesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Sounds ?? true)
@@ -11014,7 +11000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SoundsItem).BinaryWriteTranslator).Write<ISoundGetter>(
                         item: SoundsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Skills ?? true)
@@ -11025,7 +11011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SkillsItem).BinaryWriteTranslator).Write<ISkillRecordGetter>(
                         item: SkillsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.MagicEffects ?? true)
@@ -11036,7 +11022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)MagicEffectsItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
                         item: MagicEffectsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Scripts ?? true)
@@ -11047,7 +11033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ScriptsItem).BinaryWriteTranslator).Write<IScriptGetter>(
                         item: ScriptsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LandTextures ?? true)
@@ -11058,7 +11044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LandTexturesItem).BinaryWriteTranslator).Write<ILandTextureGetter>(
                         item: LandTexturesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Enchantments ?? true)
@@ -11069,7 +11055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)EnchantmentsItem).BinaryWriteTranslator).Write<IEnchantmentGetter>(
                         item: EnchantmentsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Spells ?? true)
@@ -11080,7 +11066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SpellsItem).BinaryWriteTranslator).Write<ISpellUnleveledGetter>(
                         item: SpellsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Birthsigns ?? true)
@@ -11091,7 +11077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)BirthsignsItem).BinaryWriteTranslator).Write<IBirthsignGetter>(
                         item: BirthsignsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Activators ?? true)
@@ -11102,7 +11088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ActivatorsItem).BinaryWriteTranslator).Write<IActivatorGetter>(
                         item: ActivatorsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.AlchemicalApparatus ?? true)
@@ -11113,7 +11099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)AlchemicalApparatusItem).BinaryWriteTranslator).Write<IAlchemicalApparatusGetter>(
                         item: AlchemicalApparatusItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Armors ?? true)
@@ -11124,7 +11110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
                         item: ArmorsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Books ?? true)
@@ -11135,7 +11121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)BooksItem).BinaryWriteTranslator).Write<IBookGetter>(
                         item: BooksItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Clothes ?? true)
@@ -11146,7 +11132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClothesItem).BinaryWriteTranslator).Write<IClothingGetter>(
                         item: ClothesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Containers ?? true)
@@ -11157,7 +11143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ContainersItem).BinaryWriteTranslator).Write<IContainerGetter>(
                         item: ContainersItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Doors ?? true)
@@ -11168,7 +11154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)DoorsItem).BinaryWriteTranslator).Write<IDoorGetter>(
                         item: DoorsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Ingredients ?? true)
@@ -11179,7 +11165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)IngredientsItem).BinaryWriteTranslator).Write<IIngredientGetter>(
                         item: IngredientsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Lights ?? true)
@@ -11190,7 +11176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LightsItem).BinaryWriteTranslator).Write<ILightGetter>(
                         item: LightsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Miscellaneous ?? true)
@@ -11201,7 +11187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)MiscellaneousItem).BinaryWriteTranslator).Write<IMiscellaneousGetter>(
                         item: MiscellaneousItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Statics ?? true)
@@ -11212,7 +11198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)StaticsItem).BinaryWriteTranslator).Write<IStaticGetter>(
                         item: StaticsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Grasses ?? true)
@@ -11223,7 +11209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)GrassesItem).BinaryWriteTranslator).Write<IGrassGetter>(
                         item: GrassesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Trees ?? true)
@@ -11234,7 +11220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)TreesItem).BinaryWriteTranslator).Write<ITreeGetter>(
                         item: TreesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Flora ?? true)
@@ -11245,7 +11231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FloraItem).BinaryWriteTranslator).Write<IFloraGetter>(
                         item: FloraItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Furniture ?? true)
@@ -11256,7 +11242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FurnitureItem).BinaryWriteTranslator).Write<IFurnitureGetter>(
                         item: FurnitureItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Weapons ?? true)
@@ -11267,7 +11253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)WeaponsItem).BinaryWriteTranslator).Write<IWeaponGetter>(
                         item: WeaponsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Ammunitions ?? true)
@@ -11278,7 +11264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)AmmunitionsItem).BinaryWriteTranslator).Write<IAmmunitionGetter>(
                         item: AmmunitionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Npcs ?? true)
@@ -11289,7 +11275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)NpcsItem).BinaryWriteTranslator).Write<INpcGetter>(
                         item: NpcsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Creatures ?? true)
@@ -11300,7 +11286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)CreaturesItem).BinaryWriteTranslator).Write<ICreatureGetter>(
                         item: CreaturesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LeveledCreatures ?? true)
@@ -11311,7 +11297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledCreaturesItem).BinaryWriteTranslator).Write<ILeveledCreatureGetter>(
                         item: LeveledCreaturesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.SoulGems ?? true)
@@ -11322,7 +11308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SoulGemsItem).BinaryWriteTranslator).Write<ISoulGemGetter>(
                         item: SoulGemsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Keys ?? true)
@@ -11333,7 +11319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)KeysItem).BinaryWriteTranslator).Write<IKeyGetter>(
                         item: KeysItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Potions ?? true)
@@ -11344,7 +11330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)PotionsItem).BinaryWriteTranslator).Write<IPotionGetter>(
                         item: PotionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Subspaces ?? true)
@@ -11355,7 +11341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SubspacesItem).BinaryWriteTranslator).Write<ISubspaceGetter>(
                         item: SubspacesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.SigilStones ?? true)
@@ -11366,7 +11352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SigilStonesItem).BinaryWriteTranslator).Write<ISigilStoneGetter>(
                         item: SigilStonesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LeveledItems ?? true)
@@ -11377,7 +11363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledItemsItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
                         item: LeveledItemsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Weathers ?? true)
@@ -11388,7 +11374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
                         item: WeathersItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Climates ?? true)
@@ -11399,7 +11385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClimatesItem).BinaryWriteTranslator).Write<IClimateGetter>(
                         item: ClimatesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Regions ?? true)
@@ -11410,7 +11396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)RegionsItem).BinaryWriteTranslator).Write<IRegionGetter>(
                         item: RegionsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Cells ?? true)
@@ -11421,7 +11407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((ListGroupBinaryWriteTranslation)((IBinaryItem)CellsItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
                         item: CellsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Worldspaces ?? true)
@@ -11432,7 +11418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)WorldspacesItem).BinaryWriteTranslator).Write<IWorldspaceGetter>(
                         item: WorldspacesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.DialogTopics ?? true)
@@ -11443,7 +11429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)DialogTopicsItem).BinaryWriteTranslator).Write<IDialogTopicGetter>(
                         item: DialogTopicsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Quests ?? true)
@@ -11454,7 +11440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
                         item: QuestsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.IdleAnimations ?? true)
@@ -11465,7 +11451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
                         item: IdleAnimationsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.AIPackages ?? true)
@@ -11476,7 +11462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)AIPackagesItem).BinaryWriteTranslator).Write<IAIPackageGetter>(
                         item: AIPackagesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.CombatStyles ?? true)
@@ -11487,7 +11473,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)CombatStylesItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
                         item: CombatStylesItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LoadScreens ?? true)
@@ -11498,7 +11484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LoadScreensItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
                         item: LoadScreensItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.LeveledSpells ?? true)
@@ -11509,7 +11495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledSpellsItem).BinaryWriteTranslator).Write<ILeveledSpellGetter>(
                         item: LeveledSpellsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.AnimatedObjects ?? true)
@@ -11520,7 +11506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
                         item: AnimatedObjectsItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.Waters ?? true)
@@ -11531,7 +11517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)WatersItem).BinaryWriteTranslator).Write<IWaterGetter>(
                         item: WatersItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
             if (importMask?.EffectShaders ?? true)
@@ -11542,7 +11528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
                         item: EffectShadersItem,
                         writer: writer,
-                        recordTypeConverter: recordTypeConverter);
+                        translationParams: translationParams);
                 }
             }
         }
@@ -11599,16 +11585,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             GroupMask? importMask,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.TES4:
                 {
                     item.ModHeader.CopyInFromBinary(
                         frame: frame,
-                        recordTypeConverter: null);
+                        translationParams: null);
                     return (int)OblivionMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:
@@ -11617,7 +11603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.GameSettings.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11631,7 +11617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Globals.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11645,7 +11631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Classes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11659,7 +11645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Factions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11673,7 +11659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Hairs.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11687,7 +11673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Eyes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11701,7 +11687,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Races.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11715,7 +11701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Sounds.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11729,7 +11715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Skills.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11743,7 +11729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.MagicEffects.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11757,7 +11743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Scripts.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11771,7 +11757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.LandTextures.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11785,7 +11771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Enchantments.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11799,7 +11785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Spells.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11813,7 +11799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Birthsigns.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11827,7 +11813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Activators.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11841,7 +11827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.AlchemicalApparatus.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11855,7 +11841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Armors.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11869,7 +11855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Books.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11883,7 +11869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Clothes.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11897,7 +11883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Containers.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11911,7 +11897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Doors.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11925,7 +11911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Ingredients.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11939,7 +11925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Lights.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11953,7 +11939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Miscellaneous.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11967,7 +11953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Statics.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11981,7 +11967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Grasses.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -11995,7 +11981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Trees.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12009,7 +11995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Flora.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12023,7 +12009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Furniture.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12037,7 +12023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Weapons.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12051,7 +12037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Ammunitions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12065,7 +12051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Npcs.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12079,7 +12065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Creatures.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12093,7 +12079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.LeveledCreatures.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12107,7 +12093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.SoulGems.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12121,7 +12107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Keys.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12135,7 +12121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Potions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12149,7 +12135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Subspaces.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12163,7 +12149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.SigilStones.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12177,7 +12163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.LeveledItems.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12191,7 +12177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Weathers.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12205,7 +12191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Climates.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12219,7 +12205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Regions.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12233,7 +12219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Cells.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12247,7 +12233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Worldspaces.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12261,7 +12247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.DialogTopics.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12275,7 +12261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Quests.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12289,7 +12275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.IdleAnimations.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12303,7 +12289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.AIPackages.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12317,7 +12303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.CombatStyles.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12331,7 +12317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.LoadScreens.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12345,7 +12331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.LeveledSpells.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12359,7 +12345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.AnimatedObjects.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12373,7 +12359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Waters.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12387,7 +12373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.EffectShaders.CopyInFromBinary(
                             frame: frame,
-                            recordTypeConverter: null);
+                            translationParams: null);
                     }
                     else
                     {
@@ -12836,20 +12822,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static OblivionModBinaryOverlay OblivionModFactory(
-            ReadOnlyMemorySlice<byte> data,
-            ModKey modKey)
-        {
-            var meta = new ParsingBundle(GameRelease.Oblivion, new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(data, meta));
-            return OblivionModFactory(
-                stream: new MutagenMemoryReadStream(
-                    data: data,
-                    metaData: meta),
-                modKey: modKey,
-                shouldDispose: false);
-        }
-
-        public static OblivionModBinaryOverlay OblivionModFactory(
             ModPath path,
             IFileSystem? fileSystem = null)
         {
@@ -12897,15 +12869,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             long finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter = null)
+            PreviousParse lastParsed,
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.TES4:
                 {
-                    _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     _package.MetaData.MasterReferences!.SetTo(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
@@ -12917,282 +12889,282 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.GMST:
                 {
-                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.GLOB:
                 {
-                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
-                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
-                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HAIR:
                 {
-                    _HairsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _HairsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
-                    _EyesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _EyesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
-                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
-                    _SoundsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SoundsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.SKIL:
                 {
-                    _SkillsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SkillsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Skills;
                 }
                 case RecordTypeInts.MGEF:
                 {
-                    _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.SCPT:
                 {
-                    _ScriptsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ScriptsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Scripts;
                 }
                 case RecordTypeInts.LTEX:
                 {
-                    _LandTexturesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LandTexturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.LandTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
-                    _EnchantmentsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _EnchantmentsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Enchantments;
                 }
                 case RecordTypeInts.SPEL:
                 {
-                    _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.BSGN:
                 {
-                    _BirthsignsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _BirthsignsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Birthsigns;
                 }
                 case RecordTypeInts.ACTI:
                 {
-                    _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.APPA:
                 {
-                    _AlchemicalApparatusLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AlchemicalApparatusLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.AlchemicalApparatus;
                 }
                 case RecordTypeInts.ARMO:
                 {
-                    _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
-                    _BooksLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _BooksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CLOT:
                 {
-                    _ClothesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ClothesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Clothes;
                 }
                 case RecordTypeInts.CONT:
                 {
-                    _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
-                    _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
-                    _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
-                    _LightsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LightsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
-                    _MiscellaneousLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _MiscellaneousLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Miscellaneous;
                 }
                 case RecordTypeInts.STAT:
                 {
-                    _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.GRAS:
                 {
-                    _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
-                    _TreesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _TreesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
-                    _FloraLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FloraLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Flora;
                 }
                 case RecordTypeInts.FURN:
                 {
-                    _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
-                    _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
-                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
-                    _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.CREA:
                 {
-                    _CreaturesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _CreaturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Creatures;
                 }
                 case RecordTypeInts.LVLC:
                 {
-                    _LeveledCreaturesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LeveledCreaturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.LeveledCreatures;
                 }
                 case RecordTypeInts.SLGM:
                 {
-                    _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.KEYM:
                 {
-                    _KeysLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _KeysLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
-                    _PotionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _PotionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Potions;
                 }
                 case RecordTypeInts.SBSP:
                 {
-                    _SubspacesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SubspacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Subspaces;
                 }
                 case RecordTypeInts.SGST:
                 {
-                    _SigilStonesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _SigilStonesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.SigilStones;
                 }
                 case RecordTypeInts.LVLI:
                 {
-                    _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
-                    _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
-                    _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.REGN:
                 {
-                    _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.CELL:
                 {
-                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:
                 {
-                    _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
-                    _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
-                    _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
-                    _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
-                    _AIPackagesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AIPackagesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.AIPackages;
                 }
                 case RecordTypeInts.CSTY:
                 {
-                    _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
-                    _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
-                    _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
-                    _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
-                    _WatersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _WatersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
-                    _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)OblivionMod_FieldIndex.EffectShaders;
                 }
                 default:

@@ -1,4 +1,3 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -13,12 +12,14 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PatrolBinaryCreateTranslation
         {
-            public static partial void FillBinaryPatrolScriptMarkerCustom(MutagenFrame frame, IPatrol item)
+            public static partial ParseResult FillBinaryPatrolScriptMarkerCustom(MutagenFrame frame, IPatrol item, PreviousParse lastParsed)
             {
                 if (frame.ReadSubrecordFrame().Content.Length != 0)
                 {
                     throw new ArgumentException($"Marker had unexpected length.");
                 }
+
+                return lastParsed;
             }
 
             public static partial void FillBinaryTopicsCustom(MutagenFrame frame, IPatrol item)
@@ -44,12 +45,14 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public IReadOnlyList<IATopicReferenceGetter> Topics { get; private set; } = ListExt.Empty<IATopicReferenceGetter>();
 
-            partial void PatrolScriptMarkerCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult PatrolScriptMarkerCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
             {
                 if (stream.ReadSubrecordFrame().Content.Length != 0)
                 {
                     throw new ArgumentException($"Marker had unexpected length.");
                 }
+
+                return lastParsed;
             }
 
             partial void TopicsCustomParse(
@@ -57,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
                 long finalPos,
                 int offset,
                 RecordType type,
-                int? lastParsed)
+                PreviousParse lastParsed)
             {
                 Topics = new List<IATopicReferenceGetter>(
                     ATopicReferenceBinaryCreateTranslation.Factory(

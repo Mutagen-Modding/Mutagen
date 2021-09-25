@@ -5,6 +5,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay
 {
@@ -26,14 +27,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         public static IReadOnlyList<T> FactoryByArray<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? parseParams,
             PluginBinaryOverlay.SpanRecordFactory<T> getter,
             int[] locs)
         {
             return new BinaryOverlayRecordListByLocationArray<T>(
                 mem,
                 package,
-                recordTypeConverter,
+                parseParams?.RecordTypeConverter,
                 getter,
                 locs);
         }
@@ -162,7 +163,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             int countLength,
             ICollectionGetter<RecordType> subrecordType,
             RecordType countType,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? parseParams,
             PluginBinaryOverlay.SpanRecordFactory<T> getter,
             bool skipHeader = true)
         {
@@ -182,7 +183,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 return FactoryByArray(
                     mem: stream.RemainingMemory,
                     package: package,
-                    recordTypeConverter: recordTypeConverter,
+                    parseParams: parseParams,
                     getter: getter,
                     locs: PluginBinaryOverlay.ParseRecordLocationsByCount(
                         stream: stream,
@@ -196,14 +197,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 return FactoryByArray(
                     mem: stream.RemainingMemory,
                     package: package,
-                    recordTypeConverter: recordTypeConverter,
+                    parseParams: parseParams,
                     getter: getter,
                     locs: PluginBinaryOverlay.ParseRecordLocations(
                         stream: stream,
                         constants: package.MetaData.Constants.SubConstants,
                         triggers: subrecordType,
                         skipHeader: skipHeader,
-                        recordTypeConverter: recordTypeConverter));
+                        parseParams: parseParams?.RecordTypeConverter));
             }
         }
 
@@ -213,7 +214,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             int countLength,
             RecordType subrecordType,
             RecordType countType,
-            RecordTypeConverter? recordTypeConverter,
+            TypedParseParams? parseParams,
             PluginBinaryOverlay.SpanRecordFactory<T> getter,
             bool skipHeader = true)
         {
@@ -233,7 +234,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 return FactoryByArray(
                     mem: stream.RemainingMemory,
                     package: package,
-                    recordTypeConverter: recordTypeConverter,
+                    parseParams: parseParams,
                     getter: getter,
                     locs: PluginBinaryOverlay.ParseRecordLocationsByCount(
                         stream: stream,
@@ -247,14 +248,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 return FactoryByArray(
                     mem: stream.RemainingMemory,
                     package: package,
-                    recordTypeConverter: recordTypeConverter,
+                    parseParams: parseParams,
                     getter: getter,
                     locs: PluginBinaryOverlay.ParseRecordLocations(
                         stream: stream,
                         constants: package.MetaData.Constants.SubConstants,
                         trigger: subrecordType,
                         skipHeader: skipHeader,
-                        recordTypeConverter: recordTypeConverter));
+                        parseParams: parseParams?.RecordTypeConverter));
             }
         }
 
@@ -489,7 +490,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             private BinaryOverlayFactoryPackage _package;
             private ReadOnlyMemorySlice<byte> _mem;
             private PluginBinaryOverlay.SpanRecordFactory<T> _getter;
-            private RecordTypeConverter? _recordTypeConverter;
+            private TypedParseParams? _recordTypeConverter;
 
             public BinaryOverlayRecordListByLocationArray(
                 ReadOnlyMemorySlice<byte> mem,

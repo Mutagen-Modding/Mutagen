@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Tests
                 // Get icon string
                 var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
                 stream.Position = iconLoc.Min + 20;
-                var iconStr = stream.ReadZString((int)(iconLoc.Max - stream.Position));
+                var iconStr = BinaryStringUtility.ToZString(stream.ReadMemory((int)(iconLoc.Max - stream.Position)));
 
                 // Get icon bytes
                 MemoryStream memStream = new MemoryStream();

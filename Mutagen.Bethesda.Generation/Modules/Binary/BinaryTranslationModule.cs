@@ -153,7 +153,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     fg: fg,
                     obj: obj,
                     field: field,
-                    isAsync: false);
+                    isAsync: false,
+                    useReturnValue: field is CustomLogic);
             }
         }
 
@@ -316,7 +317,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                         args.Add($"reader: {ReaderMemberName}.Reader");
                         args.Add("contentLength: out var customLen");
                     }
-                    fg.AppendLine("nextRecord = recordTypeConverter.ConvertToCustom(nextRecord);");
+                    fg.AppendLine("nextRecord = translationParams.ConvertToCustom(nextRecord);");
                     fg.AppendLine("switch (nextRecord.TypeInt)");
                     using (new BraceWrapper(fg))
                     {
@@ -331,7 +332,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                             {
                                 args.Add($"{ReaderMemberName}: {ReaderMemberName}.SpawnWithLength(customLen + {ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)})");
                                 args.Add("recordType: nextRecord");
-                                args.AddPassArg("recordTypeConverter");
+                                args.AddPassArg("translationParams");
                             }
                         }
                         fg.AppendLine("default:");
@@ -360,18 +361,22 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             }
         }
 
-        protected string GetRecordTypeString(ObjectGeneration obj, Accessor gameReleaseAccessor, Accessor versionAccessor)
+        protected string GetRecordTypeString(
+            ObjectGeneration obj, 
+            Accessor converterAccessor,
+            Accessor gameReleaseAccessor, 
+            Accessor versionAccessor)
         {
             var data = obj.GetObjectData();
             if (data.GameReleaseConverters != null)
             {
-                return $"recordTypeConverter.Combine({obj.RegistrationName}.Get({gameReleaseAccessor})).ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})";
+                return $"{converterAccessor}.Combine({obj.RegistrationName}.Get({gameReleaseAccessor})).ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})";
             }
             if (data.VersionConverters != null)
             {
-                return $"recordTypeConverter.Combine({obj.RegistrationName}.Get({versionAccessor})).ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})";
+                return $"{converterAccessor}.Combine({obj.RegistrationName}.Get({versionAccessor})).ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})";
             }
-            return $"recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})";
+            return $"{converterAccessor}.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})";
         }
 
         protected override async Task GenerateCopyInSnippet(ObjectGeneration obj, FileGeneration fg, Accessor accessor)

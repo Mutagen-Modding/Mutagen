@@ -105,16 +105,5 @@ namespace Mutagen.Bethesda.Binary
         {
             return span.Span.ReadColor(binaryType);
         }
-
-        /// <summary>
-        /// Reads a ZString from the binary stream
-        /// </summary>
-        /// <param name="stream">Stream to read from</param>
-        /// <param name="length">Length of the zstring</param>
-        /// <returns>ZString of desired length</returns>
-        public static string ReadZString(this IBinaryReadStream stream, int length)
-        {
-            return BinaryStringUtility.ToZString(stream.ReadMemory(length));
-        }
     }
 }

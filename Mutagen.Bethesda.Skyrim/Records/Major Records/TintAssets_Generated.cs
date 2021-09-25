@@ -597,23 +597,23 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((TintAssetsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
         #region Binary Create
         public static TintAssets CreateFromBinary(
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new TintAssets();
             ((TintAssetsSetterCommon)((ITintAssetsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return ret;
         }
 
@@ -622,12 +622,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TintAssets item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
             return startPos != frame.Position;
         }
         #endregion
@@ -827,12 +827,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ITintAssets item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             ((TintAssetsSetterCommon)((ITintAssetsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #endregion
@@ -976,12 +976,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ITintAssets item,
             MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
+                translationParams: translationParams,
                 fillStructs: TintAssetsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: TintAssetsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -1329,59 +1329,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ITintAssetsGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            TypedWriteParams? translationParams)
         {
             UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Index,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINI));
+                header: translationParams.ConvertToCustom(RecordTypes.TINI));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FileName,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINT),
+                header: translationParams.ConvertToCustom(RecordTypes.TINT),
                 binaryType: StringBinaryType.NullTerminate);
             EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.MaskType,
                 length: 2,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINP));
+                header: translationParams.ConvertToCustom(RecordTypes.TINP));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PresetDefault,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TIND));
+                header: translationParams.ConvertToCustom(RecordTypes.TIND));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITintPresetGetter>.Instance.Write(
                 writer: writer,
                 items: item.Presets,
-                transl: (MutagenWriter subWriter, ITintPresetGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, ITintPresetGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
                     ((TintPresetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
-                        recordTypeConverter: conv);
+                        translationParams: conv);
                 });
         }
 
         public void Write(
             MutagenWriter writer,
             ITintAssetsGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             Write(
                 item: (ITintAssetsGetter)item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1399,25 +1399,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ParseResult FillBinaryRecordTypes(
             ITintAssets item,
             MutagenFrame frame,
-            int? lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.TINI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.Index) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
                     return (int)TintAssets_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FileName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.TINP:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaskType = EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1435,7 +1435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.TIND:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PresetDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)TintAssets_FieldIndex.PresetDefault;
@@ -1444,12 +1444,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
                     item.Presets.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintPreset>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: TintPreset_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
+                            translationParams: translationParams,
                             transl: TintPreset.TryCreateFromBinary));
                     return (int)TintAssets_FieldIndex.Presets;
                 }
@@ -1469,12 +1469,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ITintAssetsGetter item,
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((TintAssetsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
     }
@@ -1514,12 +1514,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             ((TintAssetsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                translationParams: translationParams);
         }
 
         #region Index
@@ -1558,7 +1558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static TintAssetsBinaryOverlay TintAssetsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             var ret = new TintAssetsBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                recordTypeConverter: recordTypeConverter,
+                parseParams: parseParams,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -1576,12 +1576,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static TintAssetsBinaryOverlay TintAssetsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
             return TintAssetsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                recordTypeConverter: recordTypeConverter);
+                parseParams: parseParams);
         }
 
         public ParseResult FillRecordType(
@@ -1589,34 +1589,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset,
             RecordType type,
-            int? lastParsed,
+            PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
         {
-            type = recordTypeConverter.ConvertToStandard(type);
+            type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.TINI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.Index) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)TintAssets_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
                     _FileNameLocation = (stream.Position - offset);
                     return (int)TintAssets_FieldIndex.FileName;
                 }
                 case RecordTypeInts.TINP:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
                     _MaskTypeLocation = (stream.Position - offset);
                     return (int)TintAssets_FieldIndex.MaskType;
                 }
                 case RecordTypeInts.TIND:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
                     _PresetDefaultLocation = (stream.Position - offset);
                     return (int)TintAssets_FieldIndex.PresetDefault;
                 }
@@ -1624,12 +1624,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
                     this.Presets = this.ParseRepeatedTypelessSubrecord<TintPresetBinaryOverlay>(
                         stream: stream,
-                        recordTypeConverter: recordTypeConverter,
+                        parseParams: parseParams,
                         trigger: TintPreset_Registration.TriggeringRecordTypes,
-                        factory:  TintPresetBinaryOverlay.TintPresetFactory);
+                        factory: TintPresetBinaryOverlay.TintPresetFactory);
                     return (int)TintAssets_FieldIndex.Presets;
                 }
                 default:

@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType maleMarker,
             RecordType femaleMarker,
             BinaryMasterParseDelegate<TItem> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? parseParams = null)
             where TItem : class
         {
             TItem? male = default, female = default;
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 if (type == maleMarker)
                 {
                     frame.Position += subHeader.TotalLength;
-                    if (!transl(frame, out male, recordTypeConverter))
+                    if (!transl(frame, out male, parseParams))
                     {
                         male = null;
                     }
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 else if (type == femaleMarker)
                 {
                     frame.Position += subHeader.TotalLength;
-                    if (!transl(frame, out female, recordTypeConverter))
+                    if (!transl(frame, out female, parseParams))
                     {
                         female = null;
                     }
@@ -630,12 +630,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         if (markerWrap)
                         {
-                            transl(writer, male, recordTypeConverter: null);
+                            transl(writer, male, translationParams: null);
                         }
                     }
                     if (!markerWrap)
                     {
-                        transl(writer, male, recordTypeConverter: null);
+                        transl(writer, male, translationParams: null);
                     }
                 }
             }

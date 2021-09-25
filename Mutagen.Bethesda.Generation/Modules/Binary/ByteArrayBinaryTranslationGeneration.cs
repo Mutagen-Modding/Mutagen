@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 }
                 if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                    args.Add($"header: translationParams.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                 }
                 if (data.OverflowRecordType.HasValue)
                 {
@@ -178,13 +178,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 if (dataType != null) throw new ArgumentException();
                 if (data.OverflowRecordType.HasValue)
                 {
+                    fg.AppendLine($"private int? _{typeGen.Name}LengthOverride;");
                     using (var args = new ArgsWrapper(fg,
                         $"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.ReadByteArrayWithOverflow)}"))
                     {
                         args.Add(dataAccessor.ToString());
                         args.Add($"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}");
                         args.Add($"_{typeGen.Name}Location");
-                        args.Add(objGen.RecordTypeHeaderName(data.OverflowRecordType.Value));
+                        args.Add($"_{typeGen.Name}LengthOverride");
                     }
                 }
                 else
@@ -249,22 +250,16 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             Accessor converterAccessor)
         {
             var data = typeGen.GetFieldData();
+            await base.GenerateWrapperRecordTypeParse(fg, objGen, typeGen, locationAccessor, packageAccessor, converterAccessor);
             if (data.OverflowRecordType.HasValue
                 && data.BinaryOverlayFallback != BinaryGenerationType.Custom)
             {
-                using (var args = new ArgsWrapper(fg,
-                    $"_{typeGen.Name}Location = {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.HandleOverlayRecordOverflow)}"))
+                fg.AppendLine($"_{typeGen.Name}LengthOverride = lastParsed.{nameof(PreviousParse.LengthOverride)};");
+                fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.LengthOverride)}.HasValue)");
+                using (new BraceWrapper(fg))
                 {
-                    args.Add($"existingLoc: _{typeGen.Name}Location");
-                    args.AddPassArg("stream");
-                    args.AddPassArg("offset");
-                    args.Add($"data: _data");
-                    args.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}");
+                    fg.AppendLine($"stream.Position += lastParsed.{nameof(PreviousParse.LengthOverride)}.Value;");
                 }
-            }
-            else
-            {
-                await base.GenerateWrapperRecordTypeParse(fg, objGen, typeGen, locationAccessor, packageAccessor, converterAccessor);
             }
         }
 

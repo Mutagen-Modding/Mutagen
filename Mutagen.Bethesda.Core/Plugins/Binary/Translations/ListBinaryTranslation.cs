@@ -118,20 +118,20 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             BinaryMasterParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ExtendedList<T>();
             while (!reader.Complete)
             {
                 var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
-                nextRecord = recordTypeConverter.ConvertToStandard(nextRecord);
+                nextRecord = translationParams.ConvertToStandard(nextRecord);
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
                     reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = reader.Position;
-                if (transl(reader, nextRecord, out var subIitem, recordTypeConverter))
+                if (transl(reader, nextRecord, out var subIitem, translationParams))
                 {
                     ret.Add(subIitem);
                 }
@@ -149,11 +149,11 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null,
+            TypedParseParams? translationParams = null,
             bool skipHeader = false)
         {
             var ret = new ExtendedList<T>();
-            triggeringRecord = recordTypeConverter.ConvertToCustom(triggeringRecord);
+            triggeringRecord = translationParams.ConvertToCustom(triggeringRecord);
             while (!reader.Complete && !reader.Reader.Complete)
             {
                 if (!reader.Reader.TryGetSubrecord(triggeringRecord, out var header)) break;
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     reader.Position += header.HeaderLength;
                 }
                 var startingPos = reader.Position;
-                if (transl(skipHeader ? reader.SpawnWithLength(header.ContentLength) : reader, out var subItem, recordTypeConverter))
+                if (transl(skipHeader ? reader.SpawnWithLength(header.ContentLength) : reader, out var subItem, translationParams))
                 {
                     ret.Add(subItem);
                 }
@@ -180,10 +180,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var frames = new List<MutagenFrame>();
-            triggeringRecord = recordTypeConverter.ConvertToCustom(triggeringRecord);
+            triggeringRecord = translationParams.ConvertToCustom(triggeringRecord);
             while (!reader.Complete && !reader.Reader.Complete)
             {
                 var header = reader.Reader.GetVariableHeader();
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             var ret = new TryGet<T>[frames.Count];
             Parallel.ForEach(frames, (subFrame, state, count) =>
             {
-                if (transl(subFrame, out var subItem, recordTypeConverter))
+                if (transl(subFrame, out var subItem, translationParams))
                 {
                     ret[count] = TryGet<T>.Succeed(subItem);
                 }
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType triggeringRecord,
             bool thread,
             BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             if (thread)
             {
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     reader,
                     triggeringRecord,
                     transl,
-                    recordTypeConverter);
+                    translationParams);
             }
             else
             {
@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     reader,
                     triggeringRecord,
                     transl,
-                    recordTypeConverter);
+                    translationParams);
             }
         }
         #endregion
@@ -270,20 +270,20 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             BinaryMasterParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ExtendedList<T>();
             while (!reader.Complete)
             {
                 var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
-                nextRecord = recordTypeConverter.ConvertToStandard(nextRecord);
+                nextRecord = translationParams.ConvertToStandard(nextRecord);
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
                     reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = reader.Position;
-                if (transl(reader, out var subIitem, recordTypeConverter))
+                if (transl(reader, out var subIitem, translationParams))
                 {
                     ret.Add(subIitem);
                 }
@@ -299,12 +299,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public ExtendedList<T> Parse(
             MutagenFrame reader,
             BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ExtendedList<T>();
             while (!reader.Complete)
             {
-                if (transl(reader, out var subItem, recordTypeConverter))
+                if (transl(reader, out var subItem, translationParams))
                 {
                     ret.Add(subItem);
                 }
@@ -320,12 +320,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             int amount,
             BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ExtendedList<T>();
             for (int i = 0; i < amount; i++)
             {
-                if (transl(reader, out var subItem, recordTypeConverter))
+                if (transl(reader, out var subItem, translationParams))
                 {
                     ret.Add(subItem);
                 }
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             int amount,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             if (amount == 0) return new ExtendedList<T>();
             var subHeader = reader.GetSubrecord();
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             var startingPos = reader.Position;
             for (int i = 0; i < amount; i++)
             {
-                if (transl(reader, out var subIitem, recordTypeConverter))
+                if (transl(reader, out var subIitem, translationParams))
                 {
                     ret.Add(subIitem);
                 }
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType countRecord,
             int countLengthLength,
             BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var subHeader = reader.GetSubrecordFrame();
             var recType = subHeader.RecordType;
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     count,
                     triggeringRecord,
                     transl,
-                    recordTypeConverter);
+                    translationParams);
             }
             else
             {
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     reader,
                     triggeringRecord,
                     transl,
-                    recordTypeConverter);
+                    translationParams);
             }
         }
 
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             int amount,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ExtendedList<T>();
             if (amount == 0) return ret;
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 {
                     reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
-                if (transl(reader, out var subIitem, recordTypeConverter))
+                if (transl(reader, out var subIitem, translationParams))
                 {
                     ret.Add(subIitem);
                 }
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType countRecord,
             int countLengthLength,
             BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var subHeader = reader.GetSubrecordFrame();
             var recType = subHeader.RecordType;
@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     count,
                     triggeringRecord,
                     transl,
-                    recordTypeConverter);
+                    translationParams);
             }
             else
             {
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     reader,
                     triggeringRecord,
                     transl,
-                    recordTypeConverter);
+                    translationParams);
             }
         }
 
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             int countLengthLength,
             BinaryMasterParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var subHeader = reader.GetSubrecordFrame();
             var recType = subHeader.RecordType;
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     count,
                     transl,
                     triggeringRecord,
-                    recordTypeConverter);
+                    translationParams);
             }
             else
             {
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     reader,
                     transl,
                     triggeringRecord,
-                    recordTypeConverter);
+                    translationParams);
             }
         }
 
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             int amount,
             BinaryMasterParseDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             if (amount == 0) return Enumerable.Empty<T>();
             var ret = new ExtendedList<T>();
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 {
                     reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
-                if (transl(reader, out var subIitem, recordTypeConverter))
+                if (transl(reader, out var subIitem, translationParams))
                 {
                     ret.Add(subIitem);
                 }
@@ -682,12 +682,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenWriter writer,
             IEnumerable<T>? items,
             BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null) return;
             foreach (var item in items)
             {
-                transl(writer, item, recordTypeConverter);
+                transl(writer, item, translationParams);
             }
         }
 
@@ -729,18 +729,22 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType recordType,
             RecordType overflowRecord,
             BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null) return;
             try
             {
                 try
                 {
-                    using (var header = HeaderExport.Subrecord(writer, recordType, overflowRecord: overflowRecord))
+                    using (var header = HeaderExport.Subrecord(
+                        writer,
+                        recordType, 
+                        overflowRecord: overflowRecord,
+                        out var writerToUse))
                     {
                         foreach (var item in items)
                         {
-                            transl(header.PrepWriter, item, recordTypeConverter);
+                            transl(writerToUse, item, translationParams);
                         }
                     }
                 }
@@ -762,7 +766,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             IReadOnlyList<T>? items,
             RecordType recordType,
             BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null) return;
             try
@@ -773,7 +777,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         foreach (var item in items)
                         {
-                            transl(writer, item, recordTypeConverter);
+                            transl(writer, item, translationParams);
                         }
                     }
                 }
@@ -796,7 +800,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType recordType,
             int countLengthLength,
             BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null) return;
             try
@@ -818,7 +822,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                         }
                         foreach (var item in items)
                         {
-                            transl(writer, item, recordTypeConverter);
+                            transl(writer, item, translationParams);
                         }
                     }
                 }
@@ -840,7 +844,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             IReadOnlyList<T>? items,
             int countLengthLength,
             BinaryMasterWriteDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null) return;
             try
@@ -865,7 +869,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             }
             foreach (var item in items)
             {
-                transl(writer, item, recordTypeConverter);
+                transl(writer, item, translationParams);
             }
         }
 
@@ -957,7 +961,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             byte counterLength,
             bool subRecordPerItem = false,
             bool writeCounterIfNull = false,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedWriteParams? translationParams = null)
         {
             if (items == null)
             {
@@ -989,7 +993,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         using (HeaderExport.Subrecord(writer, recordType))
                         {
-                            transl(writer, item, recordTypeConverter);
+                            transl(writer, item, translationParams);
                         }
                     }
                 }
@@ -1001,7 +1005,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                         {
                             foreach (var item in items)
                             {
-                                transl(writer, item, recordTypeConverter);
+                                transl(writer, item, translationParams);
                             }
                         }
                     }
@@ -1068,7 +1072,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public delegate Task<TryGet<T>> BinarySubParseDelegate(MutagenFrame reader);
         public delegate Task<TryGet<T>> BinaryMasterParseDelegate(
             MutagenFrame reader,
-            RecordTypeConverter? recordTypeConverter);
+            TypedParseParams? translationParams);
         public delegate Task<TryGet<T>> BinarySubParseRecordDelegate(
             MutagenFrame reader,
             RecordType header);
@@ -1112,7 +1116,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var ret = new ExtendedList<T>();
             while (!reader.Complete && !reader.Reader.Complete)
@@ -1123,7 +1127,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = reader.Position;
-                var item = await transl(reader, recordTypeConverter).ConfigureAwait(false);
+                var item = await transl(reader, translationParams).ConfigureAwait(false);
                 if (item.Succeeded)
                 {
                     ret.Add(item.Value);
@@ -1168,7 +1172,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             var tasks = new List<Task<TryGet<T>>>();
             while (!reader.Complete && !reader.Reader.Complete)
@@ -1182,7 +1186,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
 
-                var toDo = transl(reader, recordTypeConverter);
+                var toDo = transl(reader, translationParams);
 
                 tasks.Add(Task.Run(() => toDo));
             }
@@ -1221,7 +1225,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType triggeringRecord,
             BinaryMasterParseDelegate transl,
             bool thread,
-            RecordTypeConverter? recordTypeConverter = null)
+            TypedParseParams? translationParams = null)
         {
             IEnumerable<T> items;
             if (thread)
@@ -1230,7 +1234,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     reader,
                     triggeringRecord,
                     transl: transl,
-                    recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
+                    translationParams: translationParams).ConfigureAwait(false);
             }
             else
             {
@@ -1238,7 +1242,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     reader,
                     triggeringRecord,
                     transl: transl,
-                    recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
+                    translationParams: translationParams).ConfigureAwait(false);
             }
             return new ExtendedList<T>(items);
         }

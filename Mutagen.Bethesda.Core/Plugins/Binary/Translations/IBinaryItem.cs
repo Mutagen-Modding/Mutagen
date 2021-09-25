@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         void Write(
             MutagenWriter writer,
             object item,
-            RecordTypeConverter? recordTypeConverter = null);
+            TypedWriteParams? translationParams = null);
     }
 
     public interface IBinaryItem
@@ -16,6 +16,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         object BinaryWriteTranslator { get; }
         void WriteToBinary(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter = null);
+            TypedWriteParams? translationParams = null);
     }
 }

@@ -77,12 +77,13 @@ namespace Mutagen.Bethesda.Skyrim
                 item.Flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
             }
 
-            public static partial void FillBinaryFlags2Custom(MutagenFrame frame, IFurnitureInternal item)
+            public static partial ParseResult FillBinaryFlags2Custom(MutagenFrame frame, IFurnitureInternal item)
             {
                 // Clear out old stuff
                 // This assumes flags will be parsed first.  Might need to be upgraded to not need that assumption
                 item.Markers = null;
                 item.Flags = FillBinaryFlags2(frame, (i) => GetNthMarker(item, i), item.Flags);
+                return null;
             }
 
 
@@ -130,9 +131,10 @@ namespace Mutagen.Bethesda.Skyrim
                 return marker;
             }
 
-            public static partial void FillBinaryDisabledMarkersCustom(MutagenFrame frame, IFurnitureInternal item)
+            public static partial ParseResult FillBinaryDisabledMarkersCustom(MutagenFrame frame, IFurnitureInternal item)
             {
                 FillBinaryDisabledMarkers(frame, (i) => GetNthMarker(item, i));
+                return null;
             }
 
             public static void FillBinaryDisabledMarkers(IMutagenReadStream stream, Func<int, FurnitureMarker> getter)
@@ -367,22 +369,24 @@ namespace Mutagen.Bethesda.Skyrim
                 _flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
             }
 
-            partial void Flags2CustomParse(OverlayStream stream, int offset)
+            public partial ParseResult Flags2CustomParse(OverlayStream stream, int offset)
             {
                 this._flags = FurnitureBinaryCreateTranslation.FillBinaryFlags2(
                     stream,
                     this.GetNthMarker,
                     this._flags);
+                return null;
             }
 
-            partial void DisabledMarkersCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult DisabledMarkersCustomParse(OverlayStream stream, int offset)
             {
                 FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkers(
                     stream,
                     this.GetNthMarker);
+                return null;
             }
 
-            partial void MarkersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void MarkersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 FurnitureBinaryCreateTranslation.FillBinaryMarkers(
                     stream,

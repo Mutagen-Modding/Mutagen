@@ -30,10 +30,11 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class IdleMarkerBinaryCreateTranslation
         {
-            public static partial void FillBinaryAnimationCountCustom(MutagenFrame frame, IIdleMarkerInternal item)
+            public static partial ParseResult FillBinaryAnimationCountCustom(MutagenFrame frame, IIdleMarkerInternal item)
             {
                 // Skip. Don't care
                 frame.ReadSubrecordFrame();
+                return null;
             }
 
             public static ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> ParseAnimations(IMutagenReadStream stream)
@@ -83,15 +84,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class IdleMarkerBinaryOverlay
         {
-            partial void AnimationCountCustomParse(OverlayStream stream, int offset)
+            public partial ParseResult AnimationCountCustomParse(OverlayStream stream, int offset)
             {
                 // Skip. Don't care
                 stream.ReadSubrecordFrame();
+                return null;
             }
 
             public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; private set; }
 
-            partial void AnimationsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void AnimationsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 var subHeader = stream.ReadSubrecord();
                 Animations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleAnimationGetter>>(
