@@ -8,18 +8,18 @@ namespace Mutagen.Bethesda.Environments.DI
         where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter 
         where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
     {
-        GameEnvironmentState<TModSetter, TModGetter> Construct(LinkCachePreferences? linkCachePrefs = null);
+        IGameEnvironmentState<TModSetter, TModGetter> Construct(LinkCachePreferences? linkCachePrefs = null);
     }
     
     public interface IGameEnvironmentProvider<TMod> 
         where TMod : class, IModGetter
     {
-        GameEnvironmentState<TMod> Construct(LinkCachePreferences? linkCachePrefs = null);
+        IGameEnvironmentState<TMod> Construct(LinkCachePreferences? linkCachePrefs = null);
     }
     
     public interface IGameEnvironmentProvider
     {
-        GameEnvironmentState<IModGetter> Construct(LinkCachePreferences? linkCachePrefs = null);
+        IGameEnvironmentState Construct(LinkCachePreferences? linkCachePrefs = null);
     }
 
     public class GameEnvironmentProvider : IGameEnvironmentProvider
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Environments.DI
             _cccPath = cccPath;
         }
 
-        public GameEnvironmentState<IModGetter> Construct(LinkCachePreferences? linkCachePrefs = null)        
+        public IGameEnvironmentState Construct(LinkCachePreferences? linkCachePrefs = null)        
         {
             var loadOrder = _loadOrderImporter.Import();
 
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Environments.DI
             _cccPath = cccPath;
         }
 
-        public GameEnvironmentState<TMod> Construct(LinkCachePreferences? linkCachePrefs = null)        
+        public IGameEnvironmentState<TMod> Construct(LinkCachePreferences? linkCachePrefs = null)        
         {
             var loadOrder = _loadOrderImporter.Import();
 
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Environments.DI
             _cccPath = cccPath;
         }
 
-        public GameEnvironmentState<TModSetter, TModGetter> Construct(LinkCachePreferences? linkCachePrefs = null)        
+        public IGameEnvironmentState<TModSetter, TModGetter> Construct(LinkCachePreferences? linkCachePrefs = null)        
         {
             var loadOrder = _loadOrderImporter.Import();
 

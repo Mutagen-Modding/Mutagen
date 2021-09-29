@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Environments
             LinkCache.Dispose();
         }
 
-        public static GameEnvironmentState<TMod> Construct(
+        public static IGameEnvironmentState<TMod> Construct(
             GameRelease release,
             DirectoryPath gameFolder,
             LinkCachePreferences? linkCachePrefs = null)
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Environments
             LinkCache.Dispose();
         }
 
-        public static GameEnvironmentState<TModSetter, TModGetter> Construct(
+        public static IGameEnvironmentState<TModSetter, TModGetter> Construct(
             GameRelease release,
             DirectoryPath gameFolder,
             LinkCachePreferences? linkCachePrefs = null)
