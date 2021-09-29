@@ -381,7 +381,6 @@
     <Compile Include="Plugins\Records\IMod.cs" />
     <Compile Include="Plugins\Records\IContextGetterMod.cs" />
     <Compile Include="Plugins\Records\IModHeaderCommon.cs" />
-    <Compile Include="Plugins\IModKeyed.cs" />
     <Compile Include="Plugins\Aspects\INamed.cs" />
     <Compile Include="Plugins\Aspects\INamedRequired.cs" />
     <Compile Include="Plugins\Aspects\ITranslatedNamed.cs" />
