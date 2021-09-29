@@ -10900,6 +10900,14 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
 }
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
+    public partial class OblivionMod_Registration : IModRegistration
+    {
+        public GameCategory GameCategory => GameCategory.Oblivion;
+    }
+
+}
 #endregion
 
 #region Binary Translation

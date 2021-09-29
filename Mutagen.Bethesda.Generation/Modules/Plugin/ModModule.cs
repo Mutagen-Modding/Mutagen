@@ -332,6 +332,26 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     }
                 }
             }
+            
+            GenerateModGameCategoryRegistration(obj, fg);
+        }
+
+        public void GenerateModGameCategoryRegistration(ObjectGeneration obj, FileGeneration fg)
+        {
+            using (var ns = new NamespaceWrapper(fg, $"Mutagen.Bethesda.{obj.GetObjectData().GameCategory}.Internals"))
+            {
+                using (var c = new ClassWrapper(fg, $"{obj.Name}_Registration"))
+                {
+                    c.Partial = true;
+                    c.Interfaces.Add(nameof(IModRegistration));
+                }
+
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"public {nameof(GameCategory)} GameCategory => {nameof(GameCategory)}.{obj.GetObjectData().GameCategory};");
+                }
+                fg.AppendLine();
+            }
         }
 
         public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)

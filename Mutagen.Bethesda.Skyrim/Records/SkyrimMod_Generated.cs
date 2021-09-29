@@ -21115,6 +21115,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
     }
 }
+namespace Mutagen.Bethesda.Skyrim.Internals
+{
+    public partial class SkyrimMod_Registration : IModRegistration
+    {
+        public GameCategory GameCategory => GameCategory.Skyrim;
+    }
+
+}
 #endregion
 
 #region Binary Translation

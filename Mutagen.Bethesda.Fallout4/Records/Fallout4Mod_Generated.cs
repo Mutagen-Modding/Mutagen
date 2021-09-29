@@ -3837,6 +3837,14 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
 }
+namespace Mutagen.Bethesda.Fallout4.Internals
+{
+    public partial class Fallout4Mod_Registration : IModRegistration
+    {
+        public GameCategory GameCategory => GameCategory.Fallout4;
+    }
+
+}
 #endregion
 
 #region Binary Translation
