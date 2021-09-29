@@ -29,7 +29,6 @@ namespace Mutagen.Bethesda.Archives.Bsa
                                 throw new InvalidDataException("Did not end all of its strings in null bytes");
                             }
                             names[i] = data.Slice(0, index + 1);
-                            var str = names[i].ReadStringTerm(bsa.HeaderType);
                             data = data.Slice(index + 1);
                         }
                         // Data doesn't seem to need to be fully consumed.
