@@ -16,6 +16,48 @@ namespace Mutagen.Bethesda.Environments.DI
     {
         GameEnvironmentState<TMod> Construct(LinkCachePreferences? linkCachePrefs = null);
     }
+    
+    public interface IGameEnvironmentProvider
+    {
+        GameEnvironmentState<IModGetter> Construct(LinkCachePreferences? linkCachePrefs = null);
+    }
+
+    public class GameEnvironmentProvider : IGameEnvironmentProvider
+    {
+        private readonly IGameReleaseContext _gameReleaseContext;
+        private readonly ILoadOrderImporter _loadOrderImporter;
+        private readonly IDataDirectoryProvider _dataDirectoryProvider;
+        private readonly IPluginListingsPathProvider _pluginListingsPathProvider;
+        private readonly ICreationClubListingsPathProvider _cccPath;
+
+        public GameEnvironmentProvider(
+            IGameReleaseContext gameReleaseContext,
+            ILoadOrderImporter loadOrderImporter,
+            IDataDirectoryProvider dataDirectoryProvider,
+            IPluginListingsPathProvider pluginListingsPathProvider,
+            ICreationClubListingsPathProvider cccPath)
+        {
+            _gameReleaseContext = gameReleaseContext;
+            _loadOrderImporter = loadOrderImporter;
+            _dataDirectoryProvider = dataDirectoryProvider;
+            _pluginListingsPathProvider = pluginListingsPathProvider;
+            _cccPath = cccPath;
+        }
+
+        public GameEnvironmentState<IModGetter> Construct(LinkCachePreferences? linkCachePrefs = null)        
+        {
+            var loadOrder = _loadOrderImporter.Import();
+
+            return new GameEnvironmentState<IModGetter>(
+                gameRelease: _gameReleaseContext.Release,
+                dataFolderPath: _dataDirectoryProvider.Path,
+                loadOrderFilePath: _pluginListingsPathProvider.Path,
+                creationClubListingsFilePath: _cccPath.Path,
+                loadOrder: loadOrder,
+                linkCache: loadOrder.ToUntypedImmutableLinkCache(linkCachePrefs),
+                dispose: true);
+        }
+    }
 
     public class GameEnvironmentProvider<TMod> : IGameEnvironmentProvider<TMod>
         where TMod : class, IModGetter

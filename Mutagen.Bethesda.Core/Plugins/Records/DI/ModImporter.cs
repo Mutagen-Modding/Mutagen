@@ -8,6 +8,8 @@ namespace Mutagen.Bethesda.Plugins.Records.DI
     {
         TMod Import<TMod>(ModPath modPath)
             where TMod : IModGetter;
+
+        IModGetter Import(ModPath modPath);
     }
     
     public interface IModImporter<TMod>
@@ -33,6 +35,11 @@ namespace Mutagen.Bethesda.Plugins.Records.DI
             where TMod : IModGetter
         {
             return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, _fileSystem);
+        }
+
+        public IModGetter Import(ModPath modPath)
+        {
+            return ModInstantiator.Importer(modPath, _gameRelease.Release, _fileSystem);
         }
     }
 

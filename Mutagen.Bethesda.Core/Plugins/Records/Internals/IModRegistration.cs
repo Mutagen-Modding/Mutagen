@@ -1,6 +1,8 @@
-﻿namespace Mutagen.Bethesda.Plugins.Records.Internals
+﻿using Loqui;
+
+namespace Mutagen.Bethesda.Plugins.Records.Internals
 {
-    public interface IModRegistration
+    public interface IModRegistration : ILoquiRegistration
     {
         GameCategory GameCategory { get; }
     }

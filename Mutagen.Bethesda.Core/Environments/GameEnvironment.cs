@@ -20,8 +20,7 @@ namespace Mutagen.Bethesda.Environments
         }
     }
 
-    public interface IGameEnvironmentState<TMod> : IDisposable 
-        where TMod : class, IModGetter
+    public interface IGameEnvironmentState : IDisposable
     {
         DirectoryPath DataFolderPath { get; }
         GameRelease GameRelease { get; }
@@ -31,12 +30,21 @@ namespace Mutagen.Bethesda.Environments
         /// <summary>
         /// Load Order object containing all the mods present in the environment.
         /// </summary>
-        ILoadOrder<IModListing<TMod>> LoadOrder { get; }
+        ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder { get; }
 
         /// <summary>
         /// Convenience Link Cache to use created from the provided Load Order object
         /// </summary>
         ILinkCache LinkCache { get; }
+    }
+
+    public interface IGameEnvironmentState<TMod> : IGameEnvironmentState 
+        where TMod : class, IModGetter
+    {
+        /// <summary>
+        /// Load Order object containing all the mods present in the environment.
+        /// </summary>
+        ILoadOrder<IModListing<TMod>> LoadOrder { get; }
     }
 
     public interface IGameEnvironmentState<TModSetter, TModGetter> : IGameEnvironmentState<TModGetter> 
@@ -72,7 +80,7 @@ namespace Mutagen.Bethesda.Environments
         public FilePath LoadOrderFilePath { get; }
 
         public FilePath? CreationClubListingsFilePath { get; }
-        
+
         public ILoadOrder<IModListing<TMod>> LoadOrder { get; }
         
         public ILinkCache LinkCache { get; }
@@ -164,6 +172,8 @@ namespace Mutagen.Bethesda.Environments
         FilePath IPluginListingsPathProvider.Path => LoadOrderFilePath;
 
         FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
+
+        ILoadOrderGetter<IModListingGetter<IModGetter>> IGameEnvironmentState.LoadOrder => LoadOrder;
     }
 
     /// <summary>
@@ -284,6 +294,8 @@ namespace Mutagen.Bethesda.Environments
 
         FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 
-        ILinkCache IGameEnvironmentState<TModGetter>.LinkCache => LinkCache;
+        ILinkCache IGameEnvironmentState.LinkCache => LinkCache;
+
+        ILoadOrderGetter<IModListingGetter<IModGetter>> IGameEnvironmentState.LoadOrder => LoadOrder;
     }
 }
