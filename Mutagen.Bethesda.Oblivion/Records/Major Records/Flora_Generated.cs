@@ -20,6 +20,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -678,6 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts.FLOR)]
     public partial interface IFloraGetter :
         IOblivionMajorRecordGetter,
         IBinaryItem,

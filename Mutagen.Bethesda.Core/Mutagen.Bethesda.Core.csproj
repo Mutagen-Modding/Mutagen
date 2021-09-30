@@ -324,6 +324,8 @@
     <Compile Include="Plugins\Records\DI\ModActivator.cs" />
     <Compile Include="Plugins\Records\DI\ModImporter.cs" />
     <Compile Include="Plugins\Records\Internals\IModRegistration.cs" />
+    <Compile Include="Plugins\RecordTypeMapping\AssociatedRecordTypesAttribute.cs" />
+    <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookup.cs" />
     <Compile Include="Strings\DI\MutagenEncodingProvider.cs" />
     <Compile Include="Strings\IOptionalStringsKeyGetter.cs" />
     <Compile Include="Strings\Language.cs" />
