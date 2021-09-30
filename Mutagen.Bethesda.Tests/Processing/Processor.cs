@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
@@ -25,7 +26,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public abstract GameRelease GameRelease { get; }
         public readonly GameConstants Meta;
-        protected RecordLocator.FileLocations _AlignedFileLocs;
+        protected RecordLocatorResults _AlignedFileLocs;
         protected BinaryFileProcessor.ConfigConstructor _Instructions = new BinaryFileProcessor.ConfigConstructor();
         private Dictionary<long, uint> _lengthTracker = new Dictionary<long, uint>();
         protected byte _NumMasters;
@@ -72,7 +73,7 @@ namespace Mutagen.Bethesda.Tests
             this.Masters = MasterReferenceReader.FromPath(SourcePath, GameRelease);
             this.Bundle = new ParsingBundle(GameRelease, Masters);
             this._NumMasters = GetNumMasters();
-            this._AlignedFileLocs = RecordLocator.GetFileLocations(new ModPath(ModKey, preprocessedPath), this.GameRelease);
+            this._AlignedFileLocs = RecordLocator.GetLocations(new ModPath(ModKey, preprocessedPath), this.GameRelease);
 
             var preprocessedBytes = File.ReadAllBytes(preprocessedPath);
             IMutagenReadStream streamGetter() => new MutagenMemoryReadStream(preprocessedBytes, Bundle);
@@ -169,7 +170,7 @@ namespace Mutagen.Bethesda.Tests
 
         protected void ProcessDynamicType(RecordType type, Func<IMutagenReadStream> streamGetter)
         {
-            IEnumerable<KeyValuePair<long, (FormKey FormKey, RecordType Record)>> locs = _AlignedFileLocs.ListedRecords;
+            IEnumerable<KeyValuePair<long, RecordLocationMarker>> locs = _AlignedFileLocs.ListedRecords;
             if (type != RecordType.Null)
             {
                 locs = locs.Where(loc => loc.Value.Record == type);
@@ -626,7 +627,7 @@ namespace Mutagen.Bethesda.Tests
             if (!EnumExt.HasFlag(mod.Flags, (int)ModHeaderCommonFlag.Localized)) return ListExt.Empty<KeyValuePair<uint, uint>>();
 
             stream.Position = 0;
-            var locs = RecordLocator.GetFileLocations(
+            var locs = RecordLocator.GetLocations(
                 stream,
                 interest: new RecordInterest(dict.Keys));
 

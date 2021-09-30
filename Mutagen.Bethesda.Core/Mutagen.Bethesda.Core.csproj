@@ -130,6 +130,13 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Environments\GameEnvironment.cs" />
+    <Compile Include="Plugins\Analysis\RecordLocationMarker.cs" />
+    <Compile Include="Plugins\Analysis\RecordLocator.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Analysis\RecordLocatorResults.cs" />
     <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
     <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
@@ -530,7 +537,6 @@
     <Compile Include="Plugins\Binary\Processing\ModRecordSorter.cs" />
     <Compile Include="Plugins\Records\Internals\ObjectType.cs" />
     <Compile Include="Plugins\Utility\RecordInterest.cs" />
-    <Compile Include="Plugins\Utility\RecordLocator.cs" />
     <Compile Include="Plugins\Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>

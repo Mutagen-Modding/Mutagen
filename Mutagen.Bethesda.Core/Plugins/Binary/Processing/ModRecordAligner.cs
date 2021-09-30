@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing
@@ -158,7 +159,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing
             };
             var constants = GameConstants.Get(release);
             var parsingBundle = new ParsingBundle(constants, MasterReferenceReader.FromPath(inputPath, release));
-            var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, release, interest);
+            var fileLocs = RecordLocator.GetLocations(inputPath.Path, release, interest);
             temp ??= TempFolder.Factory();
             using (temp)
             {
@@ -176,7 +177,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing
                     AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
                 }
 
-                fileLocs = RecordLocator.GetFileLocations(alignedGroupsFile, release, interest);
+                fileLocs = RecordLocator.GetLocations(alignedGroupsFile, release, interest);
                 var alignedCellsFile = Path.Combine(temp.Dir.Path, "alignedCells");
                 using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                 {
@@ -201,7 +202,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing
                     mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
                 }
 
-                fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, release, interest);
+                fileLocs = RecordLocator.GetLocations(alignedCellsFile, release, interest);
                 using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, parsingBundle))
                 {
                     using var writer = new MutagenWriter(outputPath.Path, GameConstants.Get(release));
@@ -231,7 +232,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing
             IMutagenReadStream inputStream,
             MutagenWriter writer,
             AlignmentRules alignmentRules,
-            RecordLocator.FileLocations fileLocs)
+            RecordLocatorResults fileLocs)
         {
             while (!inputStream.Complete)
             {
@@ -313,7 +314,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing
             MutagenBinaryReadStream inputStream,
             MutagenWriter writer,
             AlignmentRules alignmentRules,
-            RecordLocator.FileLocations fileLocs)
+            RecordLocatorResults fileLocs)
         {
             while (!inputStream.Complete)
             {

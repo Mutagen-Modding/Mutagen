@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Newtonsoft.Json;
 using Noggog;
 using System.IO;
+using Mutagen.Bethesda.Plugins.Analysis;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks
 {
@@ -44,7 +45,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public object GetFileLocations()
         {
             stream.Position = 0;
-            return RecordLocator.GetFileLocations(stream);
+            return RecordLocator.GetLocations(stream);
         }
     }
 }
