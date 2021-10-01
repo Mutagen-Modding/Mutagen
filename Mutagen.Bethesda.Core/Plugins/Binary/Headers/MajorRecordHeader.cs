@@ -1,6 +1,5 @@
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -110,11 +109,11 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         }
 
         /// <inheritdoc/>
-        public override string ToString() => $"{RecordType} =>0x{ContentLength:X}";
+        public override string ToString() => $"{RecordType.ToString()} =>0x{ContentLength.ToString("X")}";
     }
 
     /// <summary>
-    /// A ref struct that overlays on top of bytes that is able to retrive Major Record header data on demand.
+    /// A ref struct that overlays on top of bytes that is able to retrieve Major Record header data on demand.
     /// It requires to be overlaid on writable bytes, so that values can also be set and modified on the source bytes.
     /// </summary>
     public ref struct MajorRecordHeaderWritable
@@ -270,7 +269,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         }
 
         /// <inheritdoc/>
-        public override string ToString() => $"{RecordType} => 0x{ContentLength:X}";
+        public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength.ToString("X")}";
     }
 
     /// <summary>
@@ -432,7 +431,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         }
 
         /// <inheritdoc/>
-        public override string ToString() => $"{this.Frame} @ {Location}";
+        public override string ToString() => $"{this.Frame.ToString()} @ {Location.ToString()}";
 
         #region Header Forwarding
         /// <summary>

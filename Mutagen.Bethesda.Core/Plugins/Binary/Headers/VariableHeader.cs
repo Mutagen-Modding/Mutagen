@@ -29,21 +29,21 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public VariableHeader(RecordHeaderConstants constants, ReadOnlyMemorySlice<byte> span)
         {
-            this.Constants = constants;
-            this.Span = span.Slice(0, constants.HeaderLength);
+            Constants = constants;
+            Span = span.Slice(0, constants.HeaderLength);
         }
 
         /// <summary>
         /// The length that the header itself takes
         /// </summary>
-        public sbyte HeaderLength => this.Constants.HeaderLength;
+        public sbyte HeaderLength => Constants.HeaderLength;
         
         public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4));
         
         /// <summary>
         /// RecordType of the header
         /// </summary>
-        public RecordType RecordType => new RecordType(this.RecordTypeInt);
+        public RecordType RecordType => new(RecordTypeInt);
         
         private uint RecordLength
         {
@@ -66,21 +66,21 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <summary>
         /// The length of the RecordType and the length bytes
         /// </summary>
-        public int TypeAndLengthLength => this.Constants.TypeAndLengthLength;
+        public int TypeAndLengthLength => Constants.TypeAndLengthLength;
         
         /// <summary>
         /// Total length of the record, including the header and its content.
         /// </summary>
-        public long TotalLength => this.Constants.HeaderIncludedInLength ? this.RecordLength : (this.HeaderLength + this.RecordLength);
+        public long TotalLength => Constants.HeaderIncludedInLength ? RecordLength : (HeaderLength + RecordLength);
         
         /// <summary>
         /// True if RecordType == "GRUP"
         /// </summary>
-        public bool IsGroup => this.Constants.ObjectType == ObjectType.Group;
+        public bool IsGroup => Constants.ObjectType == ObjectType.Group;
         
         /// <summary>
         /// The length of the content, excluding the header bytes.
         /// </summary>
-        public long ContentLength => this.Constants.HeaderIncludedInLength ? this.RecordLength - this.HeaderLength : this.RecordLength;
+        public long ContentLength => Constants.HeaderIncludedInLength ? RecordLength - HeaderLength : RecordLength;
     }
 }
