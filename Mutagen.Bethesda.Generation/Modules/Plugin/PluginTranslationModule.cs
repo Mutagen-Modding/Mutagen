@@ -211,8 +211,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     customAPI: new CustomMethodAPI[]
                     {
                         CustomMethodAPI.FactoryPublic(gameRelease),
-                        CustomMethodAPI.FactoryPublic(modKey),
-                        CustomMethodAPI.FactoryPrivate(modKeyWriter, "modKey"),
                     }));
             this.MinorAPIs.Add(
                 new TranslationModuleAPI(
@@ -331,6 +329,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     fg.AppendLine("var frame = new MutagenFrame(reader);");
                     fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = infoCache;");
                     fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
+                    fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = modKey;");
                     internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
                 }
             }
@@ -425,10 +424,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem))");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine("var modKey = path.ModKey;");
                     fg.AppendLine("var frame = new MutagenFrame(reader);");
                     fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}));");
                     fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
+                    fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = path.ModKey;");
                     if (obj.GetObjectData().UsesStringFiles)
                     {
                         fg.AppendLine("if (reader.Remaining < 12)");
@@ -583,7 +582,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     fg.AppendLine("catch (Exception ex)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine("throw RecordException.Enrich(ex, modKey);");
+                        fg.AppendLine("throw RecordException.Enrich(ex, frame.MetaData.ModKey);");
                     }
                 }
                 fg.AppendLine();

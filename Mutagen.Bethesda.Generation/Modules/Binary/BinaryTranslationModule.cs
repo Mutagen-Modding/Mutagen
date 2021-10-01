@@ -347,16 +347,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 {
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
-                        args.AddPassArg("modKey");
+                        args.Add("modKey: frame.MetaData.ModKey");
                     }
                     if (obj.GetObjectData().GameReleaseOptions != null)
                     {
                         args.AddPassArg("release");
                     }
-                }
-                if (obj.GetObjectType() == ObjectType.Mod)
-                {
-                    fg.AppendLine($"{ReaderMemberName}.MetaData.ModKey = modKey;");
                 }
             }
         }
