@@ -23,8 +23,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Loqui" Version="2.30.0.1-dev" GeneratePathProperty="true" />
-      <PackageReference Include="Loqui.Generation" Version="2.30.0.1-dev" GeneratePathProperty="true" />
+      <PackageReference Include="Loqui" Version="2.30.1" GeneratePathProperty="true" />
+      <PackageReference Include="Loqui.Generation" Version="2.30.1" GeneratePathProperty="true" />
       <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" PrivateAssets="all" />
       <PackageReference Include="Noggog.CSharpExt" Version="2.30.0" GeneratePathProperty="true" />
