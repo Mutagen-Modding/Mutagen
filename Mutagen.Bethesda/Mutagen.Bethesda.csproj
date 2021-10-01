@@ -27,7 +27,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Plugins\Records\Internals\GameCategoryExt.cs" />
-    <Compile Include="Plugins\Records\ModInstantiator.cs" />
     <Compile Include="Plugins\Records\ProtocolDefinition_All.cs" />
     <Compile Include="Plugins\Utility\GameEnvironmentMixIn_Generated.cs" />
     <Compile Include="Plugins\WarmupAll_Generated.cs" />
