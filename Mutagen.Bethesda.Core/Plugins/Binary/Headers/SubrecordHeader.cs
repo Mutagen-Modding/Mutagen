@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
             Location = pinLocation;
         }
 
-        private SubrecordPinFrame(SubrecordFrame frame, ReadOnlyMemorySlice<byte> span, int pinLocation)
+        private SubrecordPinFrame(SubrecordFrame frame, int pinLocation)
         {
             Frame = frame;
             Location = pinLocation;
@@ -218,7 +218,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         {
             return new SubrecordPinFrame(
                 SubrecordFrame.Factory(header, span),
-                span,
                 pinLocation);
         }
 
@@ -232,7 +231,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         {
             return new SubrecordPinFrame(
                 SubrecordFrame.FactoryNoTrim(header, span),
-                span,
                 pinLocation);
         }
 
