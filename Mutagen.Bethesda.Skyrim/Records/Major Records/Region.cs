@@ -71,19 +71,23 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var rdatFrame = frame.Reader.GetSubrecordFrame();
                 int len = rdatFrame.TotalLength;
-                var subMeta = frame.Reader.GetSubrecord(offset: len);
-                var recType = subMeta.RecordType;
-                if (recType == RecordTypes.ICON)
-                {
-                    len += subMeta.TotalLength;
-                    // Skip icon subrecord for now
-                    subMeta = frame.Reader.GetSubrecord(offset: rdatFrame.TotalLength + subMeta.TotalLength);
-                }
                 RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
-                if (IsExpected(dataType, recType))
+
+                if (frame.Reader.TryGetSubrecord(out var subMeta, offset: len))
                 {
-                    len += subMeta.TotalLength;
+                    var recType = subMeta.RecordType;
+                    if (recType == RecordTypes.ICON)
+                    {
+                        len += subMeta.TotalLength;
+                        // Skip icon subrecord for now
+                        subMeta = frame.Reader.GetSubrecord(offset: rdatFrame.TotalLength + subMeta.TotalLength);
+                    }
+                    if (IsExpected(dataType, recType))
+                    {
+                        len += subMeta.TotalLength;
+                    }
                 }
+                
                 switch (dataType)
                 {
                     case RegionData.RegionDataType.Object:

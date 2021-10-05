@@ -51,7 +51,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="$(SolutionDir)Mutagen.Bethesda.Testing\Files\**" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="$(SolutionDir)Mutagen.Bethesda.Testing\Files\**" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
 </Project>
