@@ -285,7 +285,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
                         }
                         else
                         {
-                            return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty);
+                            return new State(StatusIndicatorState.Failure, "Could not resolve record", x.FormKey, string.Empty);
                         }
                     }
                     catch (Exception ex)
@@ -343,10 +343,11 @@ namespace Mutagen.Bethesda.WPF.Plugins
                             _updating = false;
                         }
 
-                        if (FormKeyStr != string.Empty)
+                        var formKeyStr = rec.FormKey.IsNull ? string.Empty : rec.FormKey.ToString();
+                        if (FormKeyStr != formKeyStr)
                         {
                             _updating = true;
-                            FormKeyStr = string.Empty;
+                            FormKeyStr = formKeyStr;
                             _updating = false;
                         }
 
