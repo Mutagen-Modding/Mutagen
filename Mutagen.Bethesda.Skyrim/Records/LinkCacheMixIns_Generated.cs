@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Order;
-using Mutagen.Bethesda.Cache.Implementations;
+using Mutagen.Bethesda.Plugins.Cache.Implementations;
 
 namespace Mutagen.Bethesda.Skyrim
 {

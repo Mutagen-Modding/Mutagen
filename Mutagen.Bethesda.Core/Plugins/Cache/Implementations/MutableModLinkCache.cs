@@ -1,15 +1,13 @@
-using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Cache;
-using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Records;
-using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Noggog;
 
-namespace Mutagen.Bethesda.Cache.Implementations
+namespace Mutagen.Bethesda.Plugins.Cache.Implementations
 {
     /// <summary>
     /// A Link Cache using a single mod as its link target.  Mod is allowed to be modified afterwards, but

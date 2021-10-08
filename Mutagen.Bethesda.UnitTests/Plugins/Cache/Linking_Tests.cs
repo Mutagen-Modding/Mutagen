@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Mutagen.Bethesda.Cache.Implementations;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
@@ -12,6 +11,7 @@ using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Xunit;
 using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Cache.Implementations;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing;
 

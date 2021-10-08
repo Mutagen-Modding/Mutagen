@@ -1,18 +1,16 @@
-using Loqui;
-using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Cache;
-using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
-using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
+using Loqui;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Noggog;
 
-namespace Mutagen.Bethesda.Cache.Implementations
+namespace Mutagen.Bethesda.Plugins.Cache.Implementations
 {
     /// <summary>
     /// A Link Cache using a LoadOrder as its link target. <br/>
