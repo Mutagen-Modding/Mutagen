@@ -9,8 +9,8 @@
           <Interface>IPlacedSimple</Interface>
         </FormLink>
       </List>
-      <RefList name="ActorCellUniques" refName="LocationReference" recordType="ACUN" />
-      <RefList name="LocationCellUniques" refName="LocationReference" recordType="LCUN" />
+      <RefList name="ActorCellUniques" refName="LocationCellUnique" recordType="ACUN" />
+      <RefList name="LocationCellUniques" refName="LocationCellUnique" recordType="LCUN" />
       <List name="ReferenceCellUnique" recordType="RCUN">
         <FormLink refName="Npc" />
       </List>
