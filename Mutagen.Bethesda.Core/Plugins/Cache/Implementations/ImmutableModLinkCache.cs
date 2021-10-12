@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
         private readonly Func<LinkCacheItem, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
         internal readonly Lazy<IReadOnlyCache<LinkCacheItem, TKey>> _untypedMajorRecords;
-        private readonly Dictionary<Type, IReadOnlyCache<LinkCacheItem, TKey>> _majorRecords = new Dictionary<Type, IReadOnlyCache<LinkCacheItem, TKey>>();
+        private readonly Dictionary<Type, IReadOnlyCache<LinkCacheItem, TKey>> _majorRecords = new();
 
         public ImmutableModLinkCacheCategory(
             ImmutableModLinkCache parent,
@@ -681,8 +681,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
     {
         internal new readonly TModGetter _sourceMod;
 
-        private readonly ImmutableModLinkCacheContextCategory<TMod, TModGetter, FormKey> _formKeyContexts;
-        private readonly ImmutableModLinkCacheContextCategory<TMod, TModGetter, string> _editorIdContexts;
+        private readonly IImmutableModLinkCacheContextCategory<TMod, TModGetter, FormKey> _formKeyContexts;
+        private readonly IImmutableModLinkCacheContextCategory<TMod, TModGetter, string> _editorIdContexts;
 
         /// <summary>
         /// Constructs a link cache around a target mod
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
                 return false;
             }
             
-            return _formKeyContexts._untypedContexts.Value.TryGetValue(formKey, out majorRec);
+            return _formKeyContexts.TryResolveUntypedContext(formKey, out majorRec);
         }
 
         /// <inheritdoc />
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
                 majorRec = default;
                 return false;
             }
-            return _editorIdContexts._untypedContexts.Value.TryGetValue(editorId, out majorRec);
+            return _editorIdContexts.TryResolveUntypedContext(editorId, out majorRec);
         }
 
         /// <inheritdoc />
@@ -859,15 +859,28 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
         }
     }
 
-    internal class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKey>
+    internal interface IImmutableModLinkCacheContextCategory<TMod, TModGetter, TKey>
         where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+        where TModGetter : class, IContextGetterMod<TMod, TModGetter> 
+        where TKey : notnull
+    {
+        bool TryResolveContext<TMajor, TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter;
+
+        bool TryResolveContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+        
+        bool TryResolveUntypedContext(TKey key, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+    }
+
+    internal class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKey> : IImmutableModLinkCacheContextCategory<TMod, TModGetter, TKey> where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         where TKey : notnull
     {
         private readonly ImmutableModLinkCache<TMod, TModGetter> _parent;
         private readonly Func<IMajorRecordCommonGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
-        internal readonly Lazy<IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>, TKey>> _untypedContexts;
+        private readonly Lazy<IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>, TKey>> _untypedContexts;
         private readonly Dictionary<Type, IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>, TKey>> _contexts = new();
 
         public ImmutableModLinkCacheContextCategory(
@@ -929,6 +942,11 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
                 return false;
             }
             return true;
+        }
+
+        public bool TryResolveUntypedContext(TKey key, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        {
+            return _untypedContexts.Value.TryGetValue(key, out majorRec);
         }
 
         private IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>, TKey> GetContextCache(Type type)
