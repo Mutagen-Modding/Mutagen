@@ -554,33 +554,33 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
         }
     }
 
-    internal class ImmutableLoadOrderLinkCacheCategory<K>
-        where K : notnull
+    internal class ImmutableLoadOrderLinkCacheCategory<TKey>
+        where TKey : notnull
     {
         private readonly ImmutableLoadOrderLinkCache _parent;
-        private readonly Func<IMajorRecordCommonGetter, TryGet<K>> _keyGetter;
-        private readonly Func<K, bool> _shortCircuit;
-        private readonly Dictionary<Type, DepthCache<K, LinkCacheItem>> _winningRecords = new();
-        private readonly Dictionary<Type, DepthCache<K, ImmutableList<LinkCacheItem>>> _allRecords = new();
+        private readonly Func<IMajorRecordCommonGetter, TryGet<TKey>> _keyGetter;
+        private readonly Func<TKey, bool> _shortCircuit;
+        private readonly Dictionary<Type, DepthCache<TKey, LinkCacheItem>> _winningRecords = new();
+        private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<LinkCacheItem>>> _allRecords = new();
 
         public ImmutableLoadOrderLinkCacheCategory(
             ImmutableLoadOrderLinkCache parent,
-            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter,
-            Func<K, bool> shortCircuit)
+            Func<IMajorRecordCommonGetter, TryGet<TKey>> keyGetter,
+            Func<TKey, bool> shortCircuit)
         {
             _parent = parent;
             _keyGetter = keyGetter;
             _shortCircuit = shortCircuit;
         }
 
-        private DepthCache<K, LinkCacheItem> GetTypeCache(Type type)
+        private DepthCache<TKey, LinkCacheItem> GetTypeCache(Type type)
         {
             lock (_winningRecords)
             {
                 // Get cache object by type
                 if (!_winningRecords.TryGetValue(type, out var cache))
                 {
-                    cache = new DepthCache<K, LinkCacheItem>();
+                    cache = new DepthCache<TKey, LinkCacheItem>();
                     if (type.Equals(typeof(IMajorRecordCommon))
                         || type.Equals(typeof(IMajorRecordCommonGetter)))
                     {
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
             }
         }
 
-        private void FillNextCacheDepth(DepthCache<K, LinkCacheItem> cache, Type type)
+        private void FillNextCacheDepth(DepthCache<TKey, LinkCacheItem> cache, Type type)
         {
             // Get next unprocessed mod 
             var targetIndex = _parent.ListedOrder.Count - cache.Depth - 1;
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
         }
 
         public bool TryResolve(
-            K key,
+            TKey key,
             ModKey? modKey,
             Type type,
             [MaybeNullWhen(false)] out LinkCacheItem majorRec)
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
                 return false;
             }
 
-            DepthCache<K, LinkCacheItem> cache = GetTypeCache(type);
+            DepthCache<TKey, LinkCacheItem> cache = GetTypeCache(type);
 
             // If we're done, we can just query without locking
             if (cache.Done)
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
         }
 
         public IEnumerable<LinkCacheItem> ResolveAll(
-            K key,
+            TKey key,
             ModKey? modKey,
             Type type)
         {
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
             }
 
             // Grab the type cache
-            DepthCache<K, ImmutableList<LinkCacheItem>> cache;
+            DepthCache<TKey, ImmutableList<LinkCacheItem>> cache;
             lock (_allRecords)
             {
                 cache = _allRecords.GetOrAdd(type);
@@ -820,7 +820,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
                 return Enumerable.Empty<LinkCacheItem>();
             }
 
-            DepthCache<K, LinkCacheItem> cache = GetTypeCache(type);
+            DepthCache<TKey, LinkCacheItem> cache = GetTypeCache(type);
             if (cancel?.IsCancellationRequested ?? true)
             {
                 return Enumerable.Empty<LinkCacheItem>();
@@ -850,7 +850,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
 
         public void Warmup(Type type)
         {
-            DepthCache<K, LinkCacheItem> cache = GetTypeCache(type);
+            DepthCache<TKey, LinkCacheItem> cache = GetTypeCache(type);
 
             lock (cache)
             {
@@ -1085,23 +1085,23 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
         }
     }
 
-    internal class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, K>
-        where K : notnull
+    internal class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, TKey>
+        where TKey : notnull
         where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod, TModGetter>
     {
         private readonly ImmutableLoadOrderLinkCache<TMod, TModGetter> _parent;
-        private readonly Func<IMajorRecordCommonGetter, TryGet<K>> _keyGetter;
-        private readonly Func<K, bool> _shortCircuit;
-        private readonly Dictionary<Type, DepthCache<K, IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningContexts
-            = new Dictionary<Type, DepthCache<K, IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
-        private readonly Dictionary<Type, DepthCache<K, ImmutableList<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>>> _allContexts
-            = new Dictionary<Type, DepthCache<K, ImmutableList<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>>>();
+        private readonly Func<IMajorRecordCommonGetter, TryGet<TKey>> _keyGetter;
+        private readonly Func<TKey, bool> _shortCircuit;
+        private readonly Dictionary<Type, DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningContexts
+            = new Dictionary<Type, DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
+        private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>>> _allContexts
+            = new Dictionary<Type, DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>>>();
 
         public ImmutableLoadOrderLinkCacheContextCategory(
             ImmutableLoadOrderLinkCache<TMod, TModGetter> parent,
-            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter,
-            Func<K, bool> shortCircuit)
+            Func<IMajorRecordCommonGetter, TryGet<TKey>> keyGetter,
+            Func<TKey, bool> shortCircuit)
         {
             _parent = parent;
             _keyGetter = keyGetter;
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
         }
 
         public bool TryResolveContext(
-            K key,
+            TKey key,
             ModKey? modKey,
             Type type,
             [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
@@ -1125,13 +1125,13 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
                 return false;
             }
 
-            DepthCache<K, IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>? cache;
+            DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>? cache;
             lock (_winningContexts)
             {
                 // Get cache object by type
                 if (!_winningContexts.TryGetValue(type, out cache))
                 {
-                    cache = new DepthCache<K, IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>();
+                    cache = new DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>();
                     if (type.Equals(typeof(IMajorRecordCommon))
                         || type.Equals(typeof(IMajorRecordCommonGetter)))
                     {
@@ -1226,7 +1226,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
         }
 
         public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(
-            K key,
+            TKey key,
             ModKey? modKey,
             Type type)
         {
@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
             }
 
             // Grab the type cache
-            DepthCache<K, ImmutableList<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>> cache;
+            DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>> cache;
             lock (_allContexts)
             {
                 cache = _allContexts.GetOrAdd(type);
