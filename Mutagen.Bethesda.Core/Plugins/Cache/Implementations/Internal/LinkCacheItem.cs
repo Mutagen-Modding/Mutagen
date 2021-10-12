@@ -1,7 +1,7 @@
 using System;
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Plugins.Cache.Implementations
+namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
 {
     internal class LinkCacheItem : IMajorRecordIdentifier
     {
