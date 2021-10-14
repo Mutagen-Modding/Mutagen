@@ -28,7 +28,22 @@ namespace Mutagen.Bethesda.Json
                 {
                     return null;
                 }
-                throw new NotImplementedException();
+                if (!objectType.Name.Contains("FormLink"))
+                {
+                    throw new ArgumentException();
+                }
+
+                if (IsNullableLink(objectType))
+                {
+                    return Activator.CreateInstance(
+                        typeof(FormLinkNullable<>).MakeGenericType(objectType.GenericTypeArguments[0]));
+                }
+                else
+                {
+                    return Activator.CreateInstance(
+                        typeof(FormLink<>).MakeGenericType(objectType.GenericTypeArguments[0]),
+                        FormKey.Null);
+                }
             }
             else
             {
@@ -42,7 +57,7 @@ namespace Mutagen.Bethesda.Json
                     throw new ArgumentException();
                 }
 
-                if (objectType.Name.AsSpan()[..^2].EndsWith("Nullable", StringComparison.Ordinal))
+                if (IsNullableLink(objectType))
                 {
                     return Activator.CreateInstance(
                         typeof(FormLinkNullable<>).MakeGenericType(objectType.GenericTypeArguments[0]),
@@ -57,6 +72,11 @@ namespace Mutagen.Bethesda.Json
             }
         }
 
+        private bool IsNullableLink(Type type)
+        {
+            return type.Name.AsSpan()[..^2].EndsWith("Nullable", StringComparison.Ordinal);
+        }
+
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             if (value == null) return;
@@ -66,7 +86,7 @@ namespace Mutagen.Bethesda.Json
                     writer.WriteValue(fk.ToString());
                     break;
                 case IFormLinkGetter fl:
-                    writer.WriteValue(fl.FormKey.ToString());
+                    writer.WriteValue(fl.FormKeyNullable?.ToString());
                     break;
                 default:
                     throw new ArgumentException();
