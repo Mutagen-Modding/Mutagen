@@ -100,29 +100,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellUniques
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _ActorCellUniques;
-        public ExtendedList<LocationReference>? ActorCellUniques
+        private ExtendedList<LocationCellUnique>? _ActorCellUniques;
+        public ExtendedList<LocationCellUnique>? ActorCellUniques
         {
             get => this._ActorCellUniques;
             set => this._ActorCellUniques = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationReferenceGetter>? ILocationGetter.ActorCellUniques => _ActorCellUniques;
+        IReadOnlyList<ILocationCellUniqueGetter>? ILocationGetter.ActorCellUniques => _ActorCellUniques;
         #endregion
 
         #endregion
         #region LocationCellUniques
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _LocationCellUniques;
-        public ExtendedList<LocationReference>? LocationCellUniques
+        private ExtendedList<LocationCellUnique>? _LocationCellUniques;
+        public ExtendedList<LocationCellUnique>? LocationCellUniques
         {
             get => this._LocationCellUniques;
             set => this._LocationCellUniques = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationReferenceGetter>? ILocationGetter.LocationCellUniques => _LocationCellUniques;
+        IReadOnlyList<ILocationCellUniqueGetter>? ILocationGetter.LocationCellUniques => _LocationCellUniques;
         #endregion
 
         #endregion
@@ -424,8 +424,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ActorCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
                 this.LocationCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
                 this.ReferenceCellPersistentReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ActorCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
-                this.LocationCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
+                this.ActorCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
+                this.LocationCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
                 this.ReferenceCellUnique = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ActorCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
                 this.LocationCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
@@ -491,8 +491,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ActorCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(ActorCellPersistentReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
                 this.LocationCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(LocationCellPersistentReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
                 this.ReferenceCellPersistentReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ReferenceCellPersistentReferences, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ActorCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(ActorCellUniques, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
-                this.LocationCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(LocationCellUniques, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
+                this.ActorCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(ActorCellUniques, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
+                this.LocationCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(LocationCellUniques, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
                 this.ReferenceCellUnique = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ReferenceCellUnique, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ActorCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(ActorCellStaticReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
                 this.LocationCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(LocationCellStaticReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
@@ -527,8 +527,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? ActorCellPersistentReferences;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? LocationCellPersistentReferences;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ReferenceCellPersistentReferences;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? ActorCellUniques;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? LocationCellUniques;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>? ActorCellUniques;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>? LocationCellUniques;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ReferenceCellUnique;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>? ActorCellStaticReferences;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>? LocationCellStaticReferences;
@@ -1108,14 +1108,14 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (ActorCellUniques != null)
                 {
-                    obj.ActorCellUniques = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.ActorCellUniques.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationReference.Mask<R>?>>());
+                    obj.ActorCellUniques = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>?>(eval(this.ActorCellUniques.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>());
                     if (ActorCellUniques.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>();
                         obj.ActorCellUniques.Specific = l;
                         foreach (var item in ActorCellUniques.Specific.WithIndex())
                         {
-                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1123,14 +1123,14 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (LocationCellUniques != null)
                 {
-                    obj.LocationCellUniques = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.LocationCellUniques.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationReference.Mask<R>?>>());
+                    obj.LocationCellUniques = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>?>(eval(this.LocationCellUniques.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>());
                     if (LocationCellUniques.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>();
                         obj.LocationCellUniques.Specific = l;
                         foreach (var item in LocationCellUniques.Specific.WithIndex())
                         {
-                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1779,8 +1779,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? ActorCellPersistentReferences;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? LocationCellPersistentReferences;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ReferenceCellPersistentReferences;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? ActorCellUniques;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? LocationCellUniques;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>? ActorCellUniques;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>? LocationCellUniques;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ReferenceCellUnique;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>? ActorCellStaticReferences;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>? LocationCellStaticReferences;
@@ -1879,10 +1879,10 @@ namespace Mutagen.Bethesda.Skyrim
                         this.ReferenceCellPersistentReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Location_FieldIndex.ActorCellUniques:
-                        this.ActorCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ex, null);
+                        this.ActorCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(ex, null);
                         break;
                     case Location_FieldIndex.LocationCellUniques:
-                        this.LocationCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ex, null);
+                        this.LocationCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(ex, null);
                         break;
                     case Location_FieldIndex.ReferenceCellUnique:
                         this.ReferenceCellUnique = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -1965,10 +1965,10 @@ namespace Mutagen.Bethesda.Skyrim
                         this.ReferenceCellPersistentReferences = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Location_FieldIndex.ActorCellUniques:
-                        this.ActorCellUniques = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>)obj;
+                        this.ActorCellUniques = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>)obj;
                         break;
                     case Location_FieldIndex.LocationCellUniques:
-                        this.LocationCellUniques = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>)obj;
+                        this.LocationCellUniques = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>)obj;
                         break;
                     case Location_FieldIndex.ReferenceCellUnique:
                         this.ReferenceCellUnique = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -2492,8 +2492,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ActorCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellPersistentReferences?.Overall, rhs.ActorCellPersistentReferences?.Overall), ExceptionExt.Combine(this.ActorCellPersistentReferences?.Specific, rhs.ActorCellPersistentReferences?.Specific));
                 ret.LocationCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellPersistentReferences?.Overall, rhs.LocationCellPersistentReferences?.Overall), ExceptionExt.Combine(this.LocationCellPersistentReferences?.Specific, rhs.LocationCellPersistentReferences?.Specific));
                 ret.ReferenceCellPersistentReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ReferenceCellPersistentReferences?.Overall, rhs.ReferenceCellPersistentReferences?.Overall), ExceptionExt.Combine(this.ReferenceCellPersistentReferences?.Specific, rhs.ReferenceCellPersistentReferences?.Specific));
-                ret.ActorCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellUniques?.Overall, rhs.ActorCellUniques?.Overall), ExceptionExt.Combine(this.ActorCellUniques?.Specific, rhs.ActorCellUniques?.Specific));
-                ret.LocationCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellUniques?.Overall, rhs.LocationCellUniques?.Overall), ExceptionExt.Combine(this.LocationCellUniques?.Specific, rhs.LocationCellUniques?.Specific));
+                ret.ActorCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellUniques?.Overall, rhs.ActorCellUniques?.Overall), ExceptionExt.Combine(this.ActorCellUniques?.Specific, rhs.ActorCellUniques?.Specific));
+                ret.LocationCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellUniques?.Overall, rhs.LocationCellUniques?.Overall), ExceptionExt.Combine(this.LocationCellUniques?.Specific, rhs.LocationCellUniques?.Specific));
                 ret.ReferenceCellUnique = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ReferenceCellUnique?.Overall, rhs.ReferenceCellUnique?.Overall), ExceptionExt.Combine(this.ReferenceCellUnique?.Specific, rhs.ReferenceCellUnique?.Specific));
                 ret.ActorCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellStaticReferences?.Overall, rhs.ActorCellStaticReferences?.Overall), ExceptionExt.Combine(this.ActorCellStaticReferences?.Specific, rhs.ActorCellStaticReferences?.Specific));
                 ret.LocationCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellStaticReferences?.Overall, rhs.LocationCellStaticReferences?.Overall), ExceptionExt.Combine(this.LocationCellStaticReferences?.Specific, rhs.LocationCellStaticReferences?.Specific));
@@ -2539,8 +2539,8 @@ namespace Mutagen.Bethesda.Skyrim
             public LocationReference.TranslationMask? ActorCellPersistentReferences;
             public LocationReference.TranslationMask? LocationCellPersistentReferences;
             public bool ReferenceCellPersistentReferences;
-            public LocationReference.TranslationMask? ActorCellUniques;
-            public LocationReference.TranslationMask? LocationCellUniques;
+            public LocationCellUnique.TranslationMask? ActorCellUniques;
+            public LocationCellUnique.TranslationMask? LocationCellUniques;
             public bool ReferenceCellUnique;
             public LocationCellStaticReference.TranslationMask? ActorCellStaticReferences;
             public LocationCellStaticReference.TranslationMask? LocationCellStaticReferences;
@@ -2769,8 +2769,8 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
         new ExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; set; }
-        new ExtendedList<LocationReference>? ActorCellUniques { get; set; }
-        new ExtendedList<LocationReference>? LocationCellUniques { get; set; }
+        new ExtendedList<LocationCellUnique>? ActorCellUniques { get; set; }
+        new ExtendedList<LocationCellUnique>? LocationCellUniques { get; set; }
         new ExtendedList<IFormLinkGetter<INpcGetter>>? ReferenceCellUnique { get; set; }
         new ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences { get; set; }
         new ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences { get; set; }
@@ -2824,8 +2824,8 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; }
         IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; }
-        IReadOnlyList<ILocationReferenceGetter>? ActorCellUniques { get; }
-        IReadOnlyList<ILocationReferenceGetter>? LocationCellUniques { get; }
+        IReadOnlyList<ILocationCellUniqueGetter>? ActorCellUniques { get; }
+        IReadOnlyList<ILocationCellUniqueGetter>? LocationCellUniques { get; }
         IReadOnlyList<IFormLinkGetter<INpcGetter>>? ReferenceCellUnique { get; }
         IReadOnlyList<ILocationCellStaticReferenceGetter>? ActorCellStaticReferences { get; }
         IReadOnlyList<ILocationCellStaticReferenceGetter>? LocationCellStaticReferences { get; }
@@ -4296,7 +4296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<LocationReference>();
+                            .ToExtendedList<LocationCellUnique>();
                     }
                     else
                     {
@@ -4328,7 +4328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<LocationReference>();
+                            .ToExtendedList<LocationCellUnique>();
                     }
                     else
                     {
@@ -4903,26 +4903,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCellUniqueGetter>.Instance.Write(
                 writer: writer,
                 items: item.ActorCellUniques,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ACUN),
-                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationCellUniqueGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
-                    ((LocationReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((LocationCellUniqueBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCellUniqueGetter>.Instance.Write(
                 writer: writer,
                 items: item.LocationCellUniques,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCUN),
-                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationCellUniqueGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
-                    ((LocationReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((LocationCellUniqueBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -5228,20 +5228,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActorCellUniques = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationReference>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationCellUnique>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: LocationReference.TryCreateFromBinary)
-                        .CastExtendedList<LocationReference>();
+                            transl: LocationCellUnique.TryCreateFromBinary)
+                        .CastExtendedList<LocationCellUnique>();
                     return (int)Location_FieldIndex.ActorCellUniques;
                 }
                 case RecordTypeInts.LCUN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationCellUniques = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationReference>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationCellUnique>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: LocationReference.TryCreateFromBinary)
-                        .CastExtendedList<LocationReference>();
+                            transl: LocationCellUnique.TryCreateFromBinary)
+                        .CastExtendedList<LocationCellUnique>();
                     return (int)Location_FieldIndex.LocationCellUniques;
                 }
                 case RecordTypeInts.RCUN:
@@ -5480,8 +5480,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; private set; }
         public IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; private set; }
-        public IReadOnlyList<ILocationReferenceGetter>? ActorCellUniques { get; private set; }
-        public IReadOnlyList<ILocationReferenceGetter>? LocationCellUniques { get; private set; }
+        public IReadOnlyList<ILocationCellUniqueGetter>? ActorCellUniques { get; private set; }
+        public IReadOnlyList<ILocationCellUniqueGetter>? LocationCellUniques { get; private set; }
         public IReadOnlyList<IFormLinkGetter<INpcGetter>>? ReferenceCellUnique { get; private set; }
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? ActorCellStaticReferences { get; private set; }
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? LocationCellStaticReferences { get; private set; }
@@ -5643,11 +5643,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
+                    this.ActorCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationCellUniqueBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
-                        getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
+                        getter: (s, p) => LocationCellUniqueBinaryOverlay.LocationCellUniqueFactory(s, p));
                     stream.Position += subLen;
                     return (int)Location_FieldIndex.ActorCellUniques;
                 }
@@ -5655,11 +5655,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
+                    this.LocationCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationCellUniqueBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
-                        getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
+                        getter: (s, p) => LocationCellUniqueBinaryOverlay.LocationCellUniqueFactory(s, p));
                     stream.Position += subLen;
                     return (int)Location_FieldIndex.LocationCellUniques;
                 }
