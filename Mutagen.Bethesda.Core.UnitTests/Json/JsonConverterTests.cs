@@ -6,9 +6,9 @@ using Mutagen.Bethesda.Testing;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Mutagen.Bethesda.Core.UnitTests.Json
+namespace Mutagen.Bethesda.UnitTests.Json
 {
-    public class JsonConverter_Tests
+    public class JsonConverterTests
     {
         #region FormKey
         class FormKeyClass
