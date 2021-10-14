@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Plugins;
 using Newtonsoft.Json;
 using System;
+using Noggog;
 
 namespace Mutagen.Bethesda.Json
 {
@@ -47,27 +48,57 @@ namespace Mutagen.Bethesda.Json
             }
             else
             {
-                if (objectType == typeof(FormKey)
-                    || objectType == typeof(FormKey?))
+                var str = obj.ToString();
+                
+                if (objectType == typeof(FormKey))
                 {
-                    return FormKey.Factory(obj.ToString());
+                    if (str.IsNullOrWhitespace())
+                    {
+                        return FormKey.Null;
+                    }
+                    else
+                    {
+                        return FormKey.Factory(str);
+                    }
                 }
+                else if (objectType == typeof(FormKey?))
+                {
+                    if (str.IsNullOrWhitespace())
+                    {
+                        return default(FormKey?);
+                    }
+                    else
+                    {
+                        return FormKey.Factory(str);
+                    }
+                }
+
                 if (!objectType.Name.Contains("FormLink"))
                 {
                     throw new ArgumentException();
                 }
 
+                FormKey key;
+                if (str.IsNullOrWhitespace())
+                {
+                    key = FormKey.Null;
+                }
+                else
+                {
+                    key = FormKey.Factory(str);
+                }
+                
                 if (IsNullableLink(objectType))
                 {
                     return Activator.CreateInstance(
                         typeof(FormLinkNullable<>).MakeGenericType(objectType.GenericTypeArguments[0]),
-                        FormKey.Factory(obj.ToString()));
+                        key);
                 }
                 else
                 {
                     return Activator.CreateInstance(
                         typeof(FormLink<>).MakeGenericType(objectType.GenericTypeArguments[0]),
-                        FormKey.Factory(obj.ToString()));
+                        key);
                 }
             }
         }
