@@ -7,6 +7,8 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -14,11 +16,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
     {
         public override async Task LoadWrapup(ObjectGeneration obj)
         {
-            if (await obj.IsMajorRecord())
-            {
-                obj.BasicCtorPermission = CtorPermissionLevel.@protected;
-            }
             await base.LoadWrapup(obj);
+            if (!await obj.IsMajorRecord()) return;
+            obj.BasicCtorPermission = CtorPermissionLevel.@protected;
+            if (!obj.Abstract)
+            {
+                obj.Attributes.Add($"[{nameof(AssociatedRecordTypesAttribute)}(Mutagen.Bethesda.{obj.GetObjectData().GameCategory}.Internals.{nameof(RecordTypeInts)}.{obj.GetObjectData().RecordType})]", LoquiInterfaceType.IGetter);
+            }
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
@@ -323,6 +327,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             if (await obj.IsMajorRecord())
             {
                 yield return "Mutagen.Bethesda.Plugins.Utility";
+                yield return "Mutagen.Bethesda.Plugins.RecordTypeMapping";
             }
         }
     }

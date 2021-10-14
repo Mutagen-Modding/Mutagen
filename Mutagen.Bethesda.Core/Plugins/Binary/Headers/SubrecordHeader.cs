@@ -6,7 +6,7 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Plugins.Binary.Headers
 {
     /// <summary>
-    /// A struct that overlays on top of bytes that is able to retrive Sub Record header data on demand.
+    /// A struct that overlays on top of bytes that is able to retrieve Sub Record header data on demand.
     /// </summary>
     public struct SubrecordHeader
     {
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         public int TotalLength => this.HeaderLength + this.ContentLength;
 
         /// <inheritdoc/>
-        public override string ToString() => $"{RecordType} => 0x{ContentLength:X}";
+        public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength.ToString("X")}";
     }
 
     /// <summary>
@@ -198,14 +198,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
         public SubrecordPinFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span, int pinLocation)
         {
-            this.Frame = new SubrecordFrame(meta, span);
-            this.Location = pinLocation;
+            Frame = new SubrecordFrame(meta, span);
+            Location = pinLocation;
         }
 
-        private SubrecordPinFrame(SubrecordFrame frame, ReadOnlyMemorySlice<byte> span, int pinLocation)
+        private SubrecordPinFrame(SubrecordFrame frame, int pinLocation)
         {
-            this.Frame = frame;
-            this.Location = pinLocation;
+            Frame = frame;
+            Location = pinLocation;
         }
 
         /// <summary>
@@ -218,7 +218,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         {
             return new SubrecordPinFrame(
                 SubrecordFrame.Factory(header, span),
-                span,
                 pinLocation);
         }
 
@@ -232,12 +231,11 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         {
             return new SubrecordPinFrame(
                 SubrecordFrame.FactoryNoTrim(header, span),
-                span,
                 pinLocation);
         }
 
         /// <inheritdoc/>
-        public override string ToString() => $"{this.Frame} @ {Location}";
+        public override string ToString() => $"{this.Frame.ToString()} @ {Location.ToString()}";
 
         #region Forwarding
         /// <summary>

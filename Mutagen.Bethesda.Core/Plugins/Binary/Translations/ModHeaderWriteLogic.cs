@@ -61,6 +61,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             AddNextFormIDActions();
             AddFormIDUniqueness();
             AddLightMasterFormLimit(modHeader);
+            AddCompressionCheck();
         }
 
         private void RunProcessors(IModGetter mod)
@@ -292,6 +293,22 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                 }
             });
         }
+        #endregion
+
+        #region Compression Check
+
+        private void AddCompressionCheck()
+        {
+            _recordIterationActions.Add(maj =>
+            {
+                if (maj.IsCompressed)
+                {
+                    throw new NotImplementedException(
+                        "Writing with compression enabled is not currently supported.  https://github.com/Mutagen-Modding/Mutagen/issues/235");
+                }
+            });
+        }
+
         #endregion
     }
 }

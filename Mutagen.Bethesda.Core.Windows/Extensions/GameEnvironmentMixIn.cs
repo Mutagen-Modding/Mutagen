@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda
 {
     public static class GameEnvironmentMixIn
     {
-        public static GameEnvironmentState<TModSetter, TModGetter> Construct<TModSetter, TModGetter>(
+        public static IGameEnvironmentState<TModSetter, TModGetter> Construct<TModSetter, TModGetter>(
             this GameEnvironment env, 
             GameRelease release,
             LinkCachePreferences? linkCachePrefs = null)

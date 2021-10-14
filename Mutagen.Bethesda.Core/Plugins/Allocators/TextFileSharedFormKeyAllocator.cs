@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Plugins.Allocators
 
         private void ReadFile(string filePath, string patcherName, InternalState state)
         {
-            using var fs = _fileSystem.FileStream.Create(filePath, FileMode.Open);
+            using var fs = _fileSystem.FileStream.Create(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var streamReader = new StreamReader(fs);
             while (true)
             {

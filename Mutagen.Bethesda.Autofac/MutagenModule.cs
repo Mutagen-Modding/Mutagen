@@ -25,6 +25,14 @@ namespace Mutagen.Bethesda.Autofac
                     typeof(IMasterReferenceReaderFactory))
                 .NotInjection()
                 .AsMatchingInterface();
+            builder.RegisterGeneric(typeof(GameEnvironmentProvider<>))
+                .As(typeof(IGameEnvironmentProvider<>));
+            builder.RegisterGeneric(typeof(GameEnvironmentProvider<,>))
+                .As(typeof(IGameEnvironmentProvider<,>));
+            builder.RegisterGeneric(typeof(LoadOrderImporter<>))
+                .As(typeof(ILoadOrderImporter<>));
+            builder.RegisterGeneric(typeof(ModImporter<>))
+                .As(typeof(IModImporter<>));
             builder.RegisterType<GameLocator>()
                 .As<IGameDirectoryLookup>()
                 .As<IDataDirectoryLookup>();

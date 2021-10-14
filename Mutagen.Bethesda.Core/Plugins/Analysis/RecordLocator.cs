@@ -7,19 +7,20 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Utility;
 
-namespace Mutagen.Bethesda.Plugins.Utility
+namespace Mutagen.Bethesda.Plugins.Analysis
 {
     public static class RecordLocator
     {
         #region Get File Locations
         internal class FileLocationConstructor
         {
-            public Dictionary<FormKey, (RangeInt64 Range, IEnumerable<long> GroupPositions, RecordType Record)> FromFormKeys = new Dictionary<FormKey, (RangeInt64 Range, IEnumerable<long> GroupPositions, RecordType Record)>();
-            public List<long> FromStartPositions = new List<long>();
-            public List<long> FromEndPositions = new List<long>();
-            public List<(FormKey FormKey, RecordType Record)> FormKeys = new List<(FormKey FormKey, RecordType Record)>();
-            public List<long> GrupLocations = new List<long>();
+            public Dictionary<FormKey, (RangeInt64 Range, IEnumerable<long> GroupPositions, RecordType Record)> FromFormKeys = new();
+            public List<long> FromStartPositions = new();
+            public List<long> FromEndPositions = new();
+            public List<RecordLocationMarker> FormKeys = new();
+            public List<long> GrupLocations = new();
             public FormKey LastParsed;
             public long LastLoc;
             public GameConstants MetaData { get; }
@@ -40,116 +41,13 @@ namespace Mutagen.Bethesda.Plugins.Utility
                 this.FromFormKeys[formKey] = (section, grupArr, record);
                 this.FromStartPositions.Add(section.Min);
                 this.FromEndPositions.Add(section.Max);
-                this.FormKeys.Add((formKey, record));
+                this.FormKeys.Add(new(formKey, section, record));
                 this.LastParsed = formKey;
                 this.LastLoc = section.Min;
             }
         }
 
-        public class FileLocations
-        {
-            private readonly Dictionary<FormKey, (RangeInt64 Range, IEnumerable<long> GroupPositions, RecordType Record)> _fromFormKeys;
-            private readonly SortingListDictionary<long, (FormKey FormKey, RecordType Record)> _fromStart;
-            private readonly SortingListDictionary<long, (FormKey FormKey, RecordType Record)> _fromEnd;
-            private readonly SortingListDictionary<long, long> _grupLocations;
-            public ISortedListGetter<long> GrupLocations => _grupLocations.Keys;
-            public SortingListDictionary<long, (FormKey FormKey, RecordType Record)> ListedRecords => _fromStart;
-            public RangeInt64 this[FormKey formKey] => _fromFormKeys[formKey].Range;
-            public ICollectionGetter<FormKey> FormKeys => new CollectionGetterWrapper<FormKey>(_fromFormKeys.Keys);
-
-            internal FileLocations(FileLocationConstructor constructor)
-            {
-                _fromFormKeys = constructor.FromFormKeys;
-                _fromStart = SortingListDictionary<long, (FormKey FormKey, RecordType Record)>.Factory_Wrap_AssumeSorted(
-                    constructor.FromStartPositions,
-                    constructor.FormKeys);
-                _fromEnd = SortingListDictionary<long, (FormKey FormKey, RecordType Record)>.Factory_Wrap_AssumeSorted(
-                    constructor.FromEndPositions,
-                    constructor.FormKeys);
-                var set = new HashSet<long>();
-                _grupLocations = new SortingListDictionary<long, long>(constructor.GrupLocations.Select(i => new KeyValuePair<long, long>(i, i)));
-            }
-
-            public bool TryGetSection(FormKey formKey, out RangeInt64 section)
-            {
-                if (this._fromFormKeys.TryGetValue(formKey, out var item))
-                {
-                    section = item.Range;
-                    return true;
-                }
-                section = default(RangeInt64);
-                return false;
-            }
-
-            public bool TryGetRecord(long loc, out (FormKey FormKey, RecordType Record) record)
-            {
-                if (!_fromStart.TryGetInDirection(
-                    key: loc,
-                    higher: false,
-                    result: out var lowerKeyRecord))
-                {
-                    record = default;
-                    return false;
-                }
-                if (!_fromEnd.TryGetInDirection(
-                    key: loc,
-                    higher: true,
-                    result: out var higherKeyRecord))
-                {
-                    record = default;
-                    return false;
-                }
-                if (lowerKeyRecord.Value.FormKey != higherKeyRecord.Value.FormKey)
-                {
-                    record = default;
-                    return false;
-                }
-                record = lowerKeyRecord.Value;
-                return true;
-            }
-
-            public bool TryGetRecords(RangeInt64 section, [MaybeNullWhen(false)] out IEnumerable<(FormKey FormKey, RecordType Record)> records)
-            {
-                var gotStart = _fromStart.TryGetIndexInDirection(
-                    key: section.Min,
-                    higher: false,
-                    result: out var start);
-                var gotEndStart = _fromStart.TryGetIndexInDirection(
-                    key: section.Max,
-                    higher: true,
-                    result: out var endStart);
-                var gotEnd = _fromEnd.TryGetIndexInDirection(
-                    key: section.Max,
-                    higher: true,
-                    result: out var end);
-                if (!gotStart || !gotEnd || !gotEndStart)
-                {
-                    records = default!;
-                    return false;
-                }
-                var endLocation = _fromEnd.Keys[end];
-                var endStartLocation = _fromStart.Keys[endStart];
-                if (endLocation > endStartLocation)
-                {
-                    records = default!;
-                    return false;
-                }
-                var ret = new HashSet<(FormKey FormKey, RecordType Record)>();
-                for (int i = start; i <= end; i++)
-                {
-                    ret.Add(_fromStart.Values[i]);
-                }
-                records = ret;
-                return true;
-            }
-
-            public IEnumerable<long> GetContainingGroupLocations(FormKey formKey)
-            {
-                return _fromFormKeys[formKey].GroupPositions;
-            }
-        }
-
-        public static FileLocations GetFileLocations(
+        public static RecordLocatorResults GetLocations(
             ModPath filePath,
             GameConstants constants,
             RecordInterest? interest = null)
@@ -159,7 +57,7 @@ namespace Mutagen.Bethesda.Plugins.Utility
                 new ParsingBundle(
                     constants, 
                     MasterReferenceReader.FromPath(filePath, constants.Release)));
-            return GetFileLocations(stream, interest);
+            return GetLocations(stream, interest);
         }
 
         private static void SkipHeader(IMutagenReadStream reader)
@@ -172,7 +70,7 @@ namespace Mutagen.Bethesda.Plugins.Utility
             reader.Position += header.ContentLength;
         }
 
-        public static FileLocations GetFileLocations(
+        public static RecordLocatorResults GetLocations(
             IMutagenReadStream reader,
             RecordInterest? interest = null,
             Func<IMutagenReadStream, RecordType, uint, bool>? additionalCriteria = null)
@@ -200,7 +98,7 @@ namespace Mutagen.Bethesda.Plugins.Utility
                     remainingTypes?.Remove(parsed.Value);
                 }
             }
-            return new FileLocations(ret);
+            return new RecordLocatorResults(ret);
         }
 
         private static RecordType? ParseTopLevelGRUP(

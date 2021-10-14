@@ -36,7 +36,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Noggog.CSharpExt" Version="2.30.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.30.0.1-dev" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Plugins\IModKeyed.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
   </ItemGroup>
 
 </Project>

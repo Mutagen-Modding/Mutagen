@@ -2,12 +2,35 @@ using Loqui;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
+using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
+    /// <summary>
+    /// A static class encapsulating the job of creating a new Mod in a generic context
+    /// </summary>
+    public static class ModInstantiator
+    {
+        private static Dictionary<GameCategory, ModInstantiator<IModGetter>.ImporterDelegate> _dict = new();
+
+        static ModInstantiator()
+        {
+            foreach (var modRegistration in LoquiRegistration.StaticRegister.Registrations
+                .WhereCastable<ILoquiRegistration, IModRegistration>())
+            {
+                _dict[modRegistration.GameCategory] = ModInstantiatorReflection.GetOverlay<IModGetter>(modRegistration);
+            }
+        }
+
+        public static IModGetter Importer(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
+        {
+            return _dict[release.ToCategory()](path, release, fileSystem);
+        }
+    }
+    
     /// <summary>
     /// A static class encapsulating the job of creating a new Mod in a generic context
     /// </summary>

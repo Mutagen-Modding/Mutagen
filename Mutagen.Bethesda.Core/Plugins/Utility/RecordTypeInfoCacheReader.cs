@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mutagen.Bethesda.Plugins.Analysis;
 
 namespace Mutagen.Bethesda.Plugins.Utility
 {
@@ -13,7 +14,7 @@ namespace Mutagen.Bethesda.Plugins.Utility
     public class RecordTypeInfoCacheReader
     {
         private readonly Func<IMutagenReadStream> _streamCreator;
-        private readonly Dictionary<Type, HashSet<FormKey>> _cachedLocs = new Dictionary<Type, HashSet<FormKey>>();
+        private readonly Dictionary<Type, HashSet<FormKey>> _cachedLocs = new();
 
         public RecordTypeInfoCacheReader(Func<IMutagenReadStream> streamCreator)
         {
@@ -29,7 +30,7 @@ namespace Mutagen.Bethesda.Plugins.Utility
                 if (!_cachedLocs.TryGetValue(typeof(T), out var cache))
                 {
                     using var stream = _streamCreator();
-                    var locs = RecordLocator.GetFileLocations(
+                    var locs = RecordLocator.GetLocations(
                         stream,
                         new RecordInterest(
                             interestingTypes: PluginUtilityTranslation.GetRecordType<T>()));

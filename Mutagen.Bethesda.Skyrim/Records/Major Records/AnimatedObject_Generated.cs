@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -554,6 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.ANIO)]
     public partial interface IAnimatedObjectGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,

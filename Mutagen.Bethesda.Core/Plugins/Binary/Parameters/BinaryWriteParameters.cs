@@ -1,11 +1,7 @@
-using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Strings;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Parameters
@@ -15,7 +11,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Parameters
     /// </summary>
     public class BinaryWriteParameters
     {
-        public static BinaryWriteParameters Default = new BinaryWriteParameters();
+        public static readonly BinaryWriteParameters Default = new();
 
         /// <summary>
         /// Flag to specify what logic to use to keep a mod's ModKey in sync with its path
@@ -92,7 +88,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Parameters
                 case ModKeyOption.ThrowIfMisaligned:
                     if (mod.ModKey != pathModKey)
                     {
-                        throw new ArgumentException($"ModKeys were misaligned: {mod.ModKey} != {pathModKey}");
+                        throw new ArgumentException($"ModKeys were misaligned: {mod.ModKey} != {pathModKey}.  " +
+                                                    $"Export to a file that matches the mod object's ModKey, or " +
+                                                    $"modify your {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.ModKey)} parameters " +
+                                                    $"to override this behavior.");
                     }
                     return mod.ModKey;
                 case ModKeyOption.CorrectToPath:

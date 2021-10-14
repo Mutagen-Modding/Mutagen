@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mutagen.Bethesda.Plugins.Analysis;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -202,7 +203,7 @@ namespace Mutagen.Bethesda.Tests
             // Always interested in parent record types
             interest.InterestingTypes.Add("CELL");
             interest.InterestingTypes.Add("WRLD");
-            var fileLocs = RecordLocator.GetFileLocations(inputPath, gameMode, interest);
+            var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest);
             if (gameMode == GameRelease.Oblivion)
             {
                 var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp.Dir.Path, "alignedRules"));
@@ -219,7 +220,7 @@ namespace Mutagen.Bethesda.Tests
                     AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
                 }
 
-                fileLocs = RecordLocator.GetFileLocations(alignedGroupsFile, gameMode, interest);
+                fileLocs = RecordLocator.GetLocations(alignedGroupsFile, gameMode, interest);
                 var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp.Dir.Path, "alignedCells"));
                 using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                 {
@@ -244,7 +245,7 @@ namespace Mutagen.Bethesda.Tests
                     mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
                 }
 
-                fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, gameMode, interest);
+                fileLocs = RecordLocator.GetLocations(alignedCellsFile, gameMode, interest);
                 using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, gameMode))
                 {
                     using var writer = new MutagenWriter(outputPath.Path, gameMode);
@@ -290,7 +291,7 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream inputStream,
             MutagenWriter writer,
             AlignmentRules alignmentRules,
-            RecordLocator.FileLocations fileLocs)
+            RecordLocatorResults fileLocs)
         {
             while (!inputStream.Complete)
             {
@@ -377,7 +378,7 @@ namespace Mutagen.Bethesda.Tests
             MutagenBinaryReadStream inputStream,
             MutagenWriter writer,
             AlignmentRules alignmentRules,
-            RecordLocator.FileLocations fileLocs)
+            RecordLocatorResults fileLocs)
         {
             while (!inputStream.Complete)
             {

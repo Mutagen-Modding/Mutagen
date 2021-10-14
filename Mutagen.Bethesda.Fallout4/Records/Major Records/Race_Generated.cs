@@ -20,6 +20,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -2398,6 +2399,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IGenderedItem<Single> DefaultWeight { get; set; }
     }
 
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.RACE)]
     public partial interface IRaceGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,

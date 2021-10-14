@@ -3236,13 +3236,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem))
                 {
-                    var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion));
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ModKey = path.ModKey;
                     return CreateFromBinary(
                         importMask: importMask,
-                        modKey: modKey,
                         frame: frame);
                 }
             }
@@ -3263,13 +3262,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem))
                 {
-                    var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion));
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ModKey = path.ModKey;
                     return CreateFromBinary(
                         importMask: importMask,
-                        modKey: modKey,
                         frame: frame);
                 }
             }
@@ -3293,9 +3291,9 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ModKey = modKey;
                     return CreateFromBinary(
                         importMask: importMask,
-                        modKey: modKey,
                         frame: frame);
                 }
             }
@@ -3320,9 +3318,9 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ModKey = modKey;
                     return CreateFromBinary(
                         importMask: importMask,
-                        modKey: modKey,
                         frame: frame);
                 }
             }
@@ -3355,23 +3353,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod CreateFromBinary(
             MutagenFrame frame,
-            ModKey modKey,
             GroupMask? importMask = null)
         {
             try
             {
-                var ret = new OblivionMod(modKey: modKey);
-                frame.MetaData.ModKey = modKey;
+                var ret = new OblivionMod(modKey: frame.MetaData.ModKey);
                 ((OblivionModSetterCommon)((IOblivionModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                     item: ret,
                     importMask: importMask,
-                    modKey: modKey,
                     frame: frame);
                 return ret;
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, modKey);
+                throw RecordException.Enrich(ex, frame.MetaData.ModKey);
             }
         }
 
@@ -3989,13 +3984,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IOblivionMod item,
             MutagenFrame frame,
-            ModKey modKey,
             GroupMask? importMask = null)
         {
             ((OblivionModSetterCommon)((IOblivionModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 importMask: importMask,
-                modKey: modKey,
                 frame: frame);
         }
 
@@ -4010,14 +4003,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Oblivion, fileSystem: fileSystem))
                 {
-                    var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion));
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ModKey = path.ModKey;
                     CopyInFromBinary(
                         item: item,
                         importMask: importMask,
-                        modKey: modKey,
                         frame: frame);
                 }
             }
@@ -4042,10 +4034,10 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     frame.MetaData.Parallel = parallel;
+                    frame.MetaData.ModKey = modKey;
                     CopyInFromBinary(
                         item: item,
                         importMask: importMask,
-                        modKey: modKey,
                         frame: frame);
                 }
             }
@@ -5025,7 +5017,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IOblivionMod item,
             MutagenFrame frame,
-            ModKey modKey,
             GroupMask? importMask = null)
         {
             PluginUtilityTranslation.ModParse(
@@ -10897,6 +10888,14 @@ namespace Mutagen.Bethesda.Oblivion
 
     public interface IOblivionModDisposableGetter : IOblivionModGetter, IModDisposeGetter
     {
+    }
+
+}
+namespace Mutagen.Bethesda.Oblivion.Internals
+{
+    public partial class OblivionMod_Registration : IModRegistration
+    {
+        public GameCategory GameCategory => GameCategory.Oblivion;
     }
 
 }

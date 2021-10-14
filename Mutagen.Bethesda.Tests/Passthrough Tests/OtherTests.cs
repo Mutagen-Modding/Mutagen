@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 using Noggog.Utility;
 using System;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Testing;
 
 namespace Mutagen.Bethesda.Tests
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Tests
             using var tmp = TempFolder.FactoryByAddedPath("Mutagen_Oblivion_Binary_GroupMask_Import");
             var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestConstants.Oblivion.FileName);
             mod.WriteToBinary(oblivionOutputPath);
-            var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, constants: GameConstants.Get(GameRelease.Oblivion));
+            var fileLocs = RecordLocator.GetLocations(oblivionOutputPath, constants: GameConstants.Get(GameRelease.Oblivion));
             using var reader = new BinaryReadStream(oblivionOutputPath);
             foreach (var rec in fileLocs.ListedRecords.Keys)
             {
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     Npcs = true
                 });
-            var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, GameRelease.Oblivion);
+            var fileLocs = RecordLocator.GetLocations(oblivionOutputPath, GameRelease.Oblivion);
             using var reader = new BinaryReadStream(oblivionOutputPath);
             foreach (var rec in fileLocs.ListedRecords.Keys)
             {

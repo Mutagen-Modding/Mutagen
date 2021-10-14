@@ -30,8 +30,8 @@
     </PackageReference>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.12" />
-    <PackageReference Include="Loqui" Version="2.30.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.30.0" />
+    <PackageReference Include="Loqui" Version="2.30.1.1-dev" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.30.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.7.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -130,6 +130,13 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Environments\GameEnvironment.cs" />
+    <Compile Include="Plugins\Analysis\RecordLocationMarker.cs" />
+    <Compile Include="Plugins\Analysis\RecordLocator.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Analysis\RecordLocatorResults.cs" />
     <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
     <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
@@ -323,6 +330,9 @@
     <Compile Include="Plugins\Binary\Translations\ColorBinaryType.cs" />
     <Compile Include="Plugins\Records\DI\ModActivator.cs" />
     <Compile Include="Plugins\Records\DI\ModImporter.cs" />
+    <Compile Include="Plugins\Records\Internals\IModRegistration.cs" />
+    <Compile Include="Plugins\RecordTypeMapping\AssociatedRecordTypesAttribute.cs" />
+    <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookup.cs" />
     <Compile Include="Strings\DI\MutagenEncodingProvider.cs" />
     <Compile Include="Strings\IOptionalStringsKeyGetter.cs" />
     <Compile Include="Strings\Language.cs" />
@@ -381,7 +391,6 @@
     <Compile Include="Plugins\Records\IMod.cs" />
     <Compile Include="Plugins\Records\IContextGetterMod.cs" />
     <Compile Include="Plugins\Records\IModHeaderCommon.cs" />
-    <Compile Include="Plugins\IModKeyed.cs" />
     <Compile Include="Plugins\Aspects\INamed.cs" />
     <Compile Include="Plugins\Aspects\INamedRequired.cs" />
     <Compile Include="Plugins\Aspects\ITranslatedNamed.cs" />
@@ -528,7 +537,6 @@
     <Compile Include="Plugins\Binary\Processing\ModRecordSorter.cs" />
     <Compile Include="Plugins\Records\Internals\ObjectType.cs" />
     <Compile Include="Plugins\Utility\RecordInterest.cs" />
-    <Compile Include="Plugins\Utility\RecordLocator.cs" />
     <Compile Include="Plugins\Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>

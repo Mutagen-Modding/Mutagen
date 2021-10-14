@@ -37,7 +37,12 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
 
         public static IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes(GameCategory mode)
         {
-            return LinkInterfaceMappingInternal.Mappings[mode];
+            if (LinkInterfaceMappingInternal.Mappings.TryGetValue(mode, out var value))
+            {
+                return value;
+            }
+
+            return DictionaryExt.Empty<Type, Type[]>();
         }
 
         public static bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type)

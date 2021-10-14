@@ -20,6 +20,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -715,6 +716,7 @@ namespace Mutagen.Bethesda.Fallout4
     /// <summary>
     /// Aspects: IKeywordCommonGetter
     /// </summary>
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.KYWD)]
     public partial interface IKeywordGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Mutagen.Bethesda.Plugins.Analysis;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing
 {
@@ -31,7 +32,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing
             using var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
 
             long runningDiff = 0;
-            var fileLocs = RecordLocator.GetFileLocations(
+            var fileLocs = RecordLocator.GetLocations(
                 inputStream,
                 interest: interest,
                 additionalCriteria: (stream, recType, len) =>
