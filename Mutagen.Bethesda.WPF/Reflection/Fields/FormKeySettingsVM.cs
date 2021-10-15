@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
         {
             if (formKey.IsNull)
             {
-                return string.Empty;
+                return "Null";
             }
             else
             {
