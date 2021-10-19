@@ -8,7 +8,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
 {
-    internal interface IImmutableModLinkCacheContextCategory<TMod, TModGetter, TKey>
+    internal interface IImmutableModLinkCacheContextCategory<TMod, TModGetter, TKey> : IImmutableModLinkCacheSimpleContextCategory<TKey>
         where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod, TModGetter> 
         where TKey : notnull
@@ -16,13 +16,14 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
         bool TryResolveContext<TMajor, TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec)
             where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter;
-
+        
         bool TryResolveContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
         
         bool TryResolveUntypedContext(TKey key, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
     }
 
-    internal class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKey> : IImmutableModLinkCacheContextCategory<TMod, TModGetter, TKey> where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+    internal class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKey> : IImmutableModLinkCacheContextCategory<TMod, TModGetter, TKey> 
+        where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         where TKey : notnull
     {
@@ -77,6 +78,24 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
             return true;
         }
 
+        public bool TryResolveSimpleContext<TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMajorGetter> majorRec) where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            if (_shortCircuit(key))
+            {
+                majorRec = default;
+                return false;
+            }
+            var cache = GetContextCache(typeof(TMajorGetter));
+            if (!cache.TryGetValue(key, out var majorRecObj)
+                || !(majorRecObj.Record is TMajorGetter))
+            {
+                majorRec = default;
+                return false;
+            }
+            majorRec = majorRecObj.AsType<IMajorRecordCommonGetter, TMajorGetter>();
+            return true;
+        }
+
         public bool TryResolveContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
             if (_shortCircuit(key))
@@ -93,7 +112,28 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
             return true;
         }
 
+        public bool TryResolveSimpleContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        {
+            if (_shortCircuit(key))
+            {
+                majorRec = default;
+                return false;
+            }
+            var cache = GetContextCache(type);
+            if (!cache.TryGetValue(key, out majorRec))
+            {
+                majorRec = default;
+                return false;
+            }
+            return true;
+        }
+
         public bool TryResolveUntypedContext(TKey key, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        {
+            return _untypedContexts.Value.TryGetValue(key, out majorRec);
+        }
+
+        public bool TryResolveUntypedSimpleContext(TKey key, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
         {
             return _untypedContexts.Value.TryGetValue(key, out majorRec);
         }

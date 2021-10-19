@@ -449,6 +449,269 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <returns>Enumerable of all located records that match the FormKey in the cache</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, ResolveTarget target = ResolveTarget.Winner);
+        
+        /// <summary>
+        /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <param name="target">Resolution target to look up</param>
+        /// <returns>True if a matching record was found</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        bool TryResolveSimpleContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
+
+        /// <summary>
+        /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <returns>True if a matching record was found</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        bool TryResolveSimpleContext(string editorId, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec);
+
+        /// <summary>
+        /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <param name="target">Resolution target to look up</param>
+        /// <returns>True if a matching record was found</returns>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        bool TryResolveSimpleContext<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec, ResolveTarget target = ResolveTarget.Winner)
+            where TMajor : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <returns>True if a matching record was found</returns>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        bool TryResolveSimpleContext<TMajor>(string editorId, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec)
+            where TMajor : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <param name="target">Resolution target to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveSimpleContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
+
+        /// <summary>
+        /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveSimpleContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec);
+
+        /// <summary>
+        /// Retrieves the winning record context that matches the FormKey relative to the source the cache was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will throw a MissingRecordException.<br />
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
+        /// <exception cref="MissingRecordException">
+        /// When the FormKey cannot be found under the attached cache.<br/>
+        /// </exception>
+        /// <returns>Matching record with context</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(FormKey formKey, ResolveTarget target = ResolveTarget.Winner);
+
+        /// <summary>
+        /// Retrieves the winning record context that matches the EditorID relative to the source the cache was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will throw a MissingRecordException.<br />
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <exception cref="MissingRecordException">
+        /// When the EditorID cannot be found under the attached cache.<br/>
+        /// </exception>
+        /// <returns>Matching record with context</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(string editorId);
+
+        /// <summary>
+        /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given type, it will be seen as not a match.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="target">Resolution target to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Matching record with context</returns>
+        /// <exception cref="MissingRecordException">
+        /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner);
+
+        /// <summary>
+        /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given type, it will be seen as not a match.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Matching record with context</returns>
+        /// <exception cref="MissingRecordException">
+        /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(string editorId, Type type);
+
+        /// <summary>
+        /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will be seen as not a match.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
+        /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+        /// <returns>Matching record with context</returns>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <exception cref="MissingRecordException">
+        /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IModContext<TMajor> ResolveSimpleContext<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+            where TMajor : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will be seen as not a match.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+        /// <returns>Matching record with context</returns>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <exception cref="MissingRecordException">
+        /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IModContext<TMajor> ResolveSimpleContext<TMajor>(string editorId)
+            where TMajor : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
+        /// If attached to a single mod, at most a single record can be found.<br />
+        /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
+        /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
+        IEnumerable<IModContext<TMajor>> ResolveAllSimpleContexts<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+            where TMajor : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
+        /// If attached to a single mod, at most a single record can be found.<br />
+        /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="target">Resolution target to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
+        IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner);
+
+        /// <summary>
+        /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
+        /// If attached to a single mod, at most a single record can be found.<br />
+        /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.<br />
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
+        /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(FormKey formKey, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Queries and caches all winning overrides of the given type within the cache

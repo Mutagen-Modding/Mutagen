@@ -38,5 +38,12 @@ namespace Mutagen.Bethesda
         {
             return new ModContextCaster<TMod, TModGetter, TMajor, TMajorGetter, RMajorSetter, RMajorGetter>(context);
         }
+
+        public static IModContext<RMajorGetter> AsType<TMajorGetter, RMajorGetter>(this IModContext<TMajorGetter> context)
+            where TMajorGetter : class, IMajorRecordCommonGetter
+            where RMajorGetter : class, TMajorGetter
+        {
+            return new SimpleModContextCaster<TMajorGetter, RMajorGetter>(context);
+        }
     }
 }

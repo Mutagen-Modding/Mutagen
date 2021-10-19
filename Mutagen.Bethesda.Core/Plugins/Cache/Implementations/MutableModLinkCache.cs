@@ -535,6 +535,190 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
         }
 
         /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public bool TryResolveSimpleContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (TryResolveContext(formKey, out var simple, target))
+            {
+                majorRec = simple;
+                return true;
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public bool TryResolveSimpleContext(string editorId, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        {
+            if (TryResolveContext(editorId, out var simple))
+            {
+                majorRec = simple;
+                return true;
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimpleContext<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec, ResolveTarget target = ResolveTarget.Winner)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (formKey.IsNull)
+            {
+                majorRec = default;
+                return false;
+            }
+
+            if (target == ResolveTarget.Origin
+                && formKey.ModKey != _sourceMod.ModKey)
+            {
+                majorRec = default;
+                return false;
+            }
+            
+            // ToDo
+            // Upgrade to EnumerateGroups<TMajor>()
+            foreach (var major in _sourceMod.EnumerateMajorRecordSimpleContexts<TMajor>(this)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
+            {
+                if (major.Record.FormKey == formKey)
+                {
+                    majorRec = major;
+                    return true;
+                }
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimpleContext<TMajor>(string editorId, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec) where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (editorId.IsNullOrWhitespace())
+            {
+                majorRec = default;
+                return false;
+            }
+            
+            // ToDo
+            // Upgrade to EnumerateGroups<TMajor>()
+            foreach (var major in _sourceMod.EnumerateMajorRecordSimpleContexts<TMajor>(this)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
+            {
+                if (editorId.Equals(major.Record.EditorID))
+                {
+                    majorRec = major;
+                    return true;
+                }
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimpleContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (TryResolveContext(formKey, type, out var simple, target))
+            {
+                majorRec = simple;
+                return true;
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimpleContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        {
+            if (TryResolveContext(editorId, type, out var simple))
+            {
+                majorRec = simple;
+                return true;
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+        {
+            return ResolveContext(formKey, target);
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(string editorId)
+        {
+            return ResolveContext(editorId);
+        }
+
+        /// <inheritdoc />
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+        {
+            return ResolveContext(formKey, type, target);
+        }
+
+        /// <inheritdoc />
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(string editorId, Type type)
+        {
+            return ResolveContext(editorId, type);
+        }
+
+        /// <inheritdoc />
+        public IModContext<TMajor> ResolveSimpleContext<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveSimpleContext<TMajor>(formKey, out var commonRec, target)) return commonRec;
+            throw new MissingRecordException(formKey, typeof(TMajor));
+        }
+
+        /// <inheritdoc />
+        public IModContext<TMajor> ResolveSimpleContext<TMajor>(string editorId) where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveSimpleContext<TMajor>(editorId, out var commonRec)) return commonRec;
+            throw new MissingRecordException(editorId, typeof(TMajor));
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<TMajor>> ResolveAllSimpleContexts<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveSimpleContext<TMajor>(formKey, out var rec, target))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (TryResolveSimpleContext(formKey, type, out var rec, target))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (TryResolveSimpleContext(formKey, out var rec, target))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
         public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter

@@ -9,44 +9,40 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
 {
-    internal interface IImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, TKey> : IImmutableLoadOrderLinkCacheSimpleContextCategory<TKey>
-        where TMod : class, IContextMod<TMod, TModGetter>, TModGetter 
-        where TModGetter : class, IContextGetterMod<TMod, TModGetter>
+    public interface IImmutableLoadOrderLinkCacheSimpleContextCategory<TKey>
         where TKey : notnull
     {
-        bool TryResolveContext(
+        bool TryResolveSimpleContext(
             TKey key,
             ModKey? modKey,
             Type type,
-            [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+            [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec);
 
-        IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(
+        IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(
             TKey key,
             ModKey? modKey,
             Type type);
     }
 
-    internal class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, TKey> : IImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, TKey>
+    internal class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : IImmutableLoadOrderLinkCacheSimpleContextCategory<TKey>
         where TKey : notnull
-        where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
-        where TModGetter : class, IContextGetterMod<TMod, TModGetter>
     {
         private readonly bool _simple;
         private readonly bool _hasAny;
         private readonly ILinkCache _linkCache;
-        private readonly IReadOnlyList<TModGetter> _listedOrder;
+        private readonly IReadOnlyList<IModGetter> _listedOrder;
         private readonly IReadOnlyDictionary<Type, Type[]> _linkInterfaces;
         private readonly Func<IMajorRecordCommonGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
-        private readonly Dictionary<Type, DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningContexts = new();
-        private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>>> _allContexts = new();
+        private readonly Dictionary<Type, DepthCache<TKey, IModContext<IMajorRecordCommonGetter>>> _winningContexts = new();
+        private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<IModContext<IMajorRecordCommonGetter>>>> _allContexts = new();
 
-        public ImmutableLoadOrderLinkCacheContextCategory(
+        public ImmutableLoadOrderLinkCacheSimpleContextCategory(
             GameCategory category,
             bool simple,
             bool hasAny,
             ILinkCache linkCache,
-            IReadOnlyList<TModGetter> listedOrder,
+            IReadOnlyList<IModGetter> listedOrder,
             Func<IMajorRecordCommonGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
         {
@@ -59,11 +55,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
             _shortCircuit = shortCircuit;
         }
 
-        public bool TryResolveContext(
-            TKey key,
-            ModKey? modKey,
-            Type type,
-            [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveSimpleContext(TKey key, ModKey? modKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
         {
             if (_simple)
             {
@@ -76,15 +68,15 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
                 return false;
             }
 
-            DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>? cache;
+            DepthCache<TKey, IModContext<IMajorRecordCommonGetter>>? cache;
             lock (_winningContexts)
             {
                 // Get cache object by type
                 if (!_winningContexts.TryGetValue(type, out cache))
                 {
-                    cache = new DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>();
-                    if (type.Equals(typeof(IMajorRecordCommon))
-                        || type.Equals(typeof(IMajorRecordCommonGetter)))
+                    cache = new DepthCache<TKey, IModContext<IMajorRecordCommonGetter>>();
+                    if (type == typeof(IMajorRecordCommon)
+                        || type == typeof(IMajorRecordCommonGetter))
                     {
                         _winningContexts[typeof(IMajorRecordCommon)] = cache;
                         _winningContexts[typeof(IMajorRecordCommonGetter)] = cache;
@@ -142,9 +134,9 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
                     cache.Depth++;
                     cache.PassedMods.Add(targetMod.ModKey);
 
-                    void AddRecords(TModGetter mod, Type type)
+                    void AddRecords(IModGetter mod, Type type)
                     {
-                        foreach (var record in mod.EnumerateMajorRecordContexts(_linkCache, type))
+                        foreach (var record in mod.EnumerateMajorRecordSimpleContexts(_linkCache, type))
                         {
                             var key = _keyGetter(record.Record);
                             if (key.Failed) continue;
@@ -176,10 +168,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
             }
         }
 
-        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(
-            TKey key,
-            ModKey? modKey,
-            Type type)
+        public IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(TKey key, ModKey? modKey, Type type)
         {
             if (!_hasAny || _shortCircuit(key))
             {
@@ -187,20 +176,20 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
             }
 
             // Grab the type cache
-            DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>> cache;
+            DepthCache<TKey, ImmutableList<IModContext<IMajorRecordCommonGetter>>> cache;
             lock (_allContexts)
             {
                 cache = _allContexts.GetOrAdd(type);
             }
 
             // Grab the formkey's list
-            ImmutableList<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>? list;
+            ImmutableList<IModContext<IMajorRecordCommonGetter>>? list;
             int consideredDepth;
             lock (cache)
             {
                 if (!cache.TryGetValue(key, out list))
                 {
-                    list = ImmutableList<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>.Empty;
+                    list = ImmutableList<IModContext<IMajorRecordCommonGetter>>.Empty;
                     cache.Add(key, list);
                 }
                 consideredDepth = cache.Depth;
@@ -230,15 +219,15 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
                         cache.Depth++;
                         cache.PassedMods.Add(targetMod.ModKey);
 
-                        void AddRecords(TModGetter mod, Type type)
+                        void AddRecords(IModGetter mod, Type type)
                         {
-                            foreach (var item in mod.EnumerateMajorRecordContexts(_linkCache, type))
+                            foreach (var item in mod.EnumerateMajorRecordSimpleContexts(_linkCache, type))
                             {
                                 var iterKey = _keyGetter(item.Record);
                                 if (iterKey.Failed) continue;
                                 if (!cache.TryGetValue(iterKey.Value, out var targetList))
                                 {
-                                    targetList = ImmutableList<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>.Empty;
+                                    targetList = ImmutableList<IModContext<IMajorRecordCommonGetter>>.Empty;
                                 }
                                 cache.Set(iterKey.Value, targetList.Add(item));
                             }
@@ -272,23 +261,6 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
                 }
                 iteratedCount = list.Count;
             }
-        }
-
-        public bool TryResolveSimpleContext(TKey key, ModKey? modKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
-        {
-            if (TryResolveContext(key, modKey, type, out var simple))
-            {
-                majorRec = simple;
-                return true;
-            }
-
-            majorRec = default;
-            return false;
-        }
-
-        public IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(TKey key, ModKey? modKey, Type type)
-        {
-            return ResolveAllContexts(key, modKey, type);
         }
     }
 }

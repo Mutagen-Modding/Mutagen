@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading;
-using Loqui;
 using Mutagen.Bethesda.Plugins.Cache.Implementations.Internal;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Implementations
@@ -24,11 +21,35 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
     /// </summary>
     public class ImmutableModLinkCache : ILinkCache
     {
+        private readonly IModGetter _sourceMod;
         private readonly InternalImmutableModLinkCache _cache;
+        private readonly IImmutableModLinkCacheSimpleContextCategory<FormKey> _formKeyContexts;
+        private readonly IImmutableModLinkCacheSimpleContextCategory<string> _editorIdContexts;
 
         public ImmutableModLinkCache(IModGetter sourceMod, LinkCachePreferences? prefs = null)
         {
+            _sourceMod = sourceMod;
+            var simple = prefs is LinkCachePreferenceOnlyIdentifiers;
+            var category = sourceMod.GameRelease.ToCategory();
             _cache = new InternalImmutableModLinkCache(sourceMod, prefs);
+            _formKeyContexts = new ImmutableModLinkCacheSimpleContextCategory<FormKey>(
+                simple: simple,
+                linkCache: this,
+                category: category,
+                contextEnumerable: sourceMod,
+                keyGetter: m => TryGet<FormKey>.Succeed(m.FormKey),
+                shortCircuit: f => f.IsNull);
+            _editorIdContexts = new ImmutableModLinkCacheSimpleContextCategory<string>(
+                simple: simple,
+                linkCache: this,
+                category: category,
+                contextEnumerable: sourceMod,
+                keyGetter: m =>
+                {
+                    var edid = m.EditorID;
+                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
+                },
+                shortCircuit: e => e.IsNullOrWhitespace());
         }
 
         public void Dispose()
@@ -260,6 +281,146 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
             return _cache.ResolveAll(formKey, target);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimpleContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (formKey.IsNull)
+            {
+                majorRec = default;
+                return false;
+            }
+            
+            if (target == ResolveTarget.Origin
+                && formKey.ModKey != _sourceMod.ModKey)
+            {
+                majorRec = default;
+                return false;
+            }
+            
+            return _formKeyContexts.TryResolveUntypedSimpleContext(formKey, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimpleContext(string editorId, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        {
+            if (editorId.IsNullOrWhitespace())
+            {
+                majorRec = default;
+                return false;
+            }
+            return _editorIdContexts.TryResolveUntypedSimpleContext(editorId, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimpleContext<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec,
+            ResolveTarget target = ResolveTarget.Winner)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (target == ResolveTarget.Origin
+                && formKey.ModKey != _sourceMod.ModKey)
+            {
+                majorRec = default;
+                return false;
+            }
+            
+            return _formKeyContexts.TryResolveSimpleContext(formKey, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimpleContext<TMajor>(string editorId, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec) where TMajor : class, IMajorRecordCommonGetter
+        {
+            return _editorIdContexts.TryResolveSimpleContext(editorId, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimpleContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec,
+            ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (target == ResolveTarget.Origin
+                && formKey.ModKey != _sourceMod.ModKey)
+            {
+                majorRec = default;
+                return false;
+            }
+
+            return _formKeyContexts.TryResolveSimpleContext(formKey, type, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimpleContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        {
+            return _editorIdContexts.TryResolveSimpleContext(editorId, type, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (TryResolveSimpleContext(formKey, out var majorRec, target)) return majorRec;
+            throw new MissingRecordException(formKey, typeof(IMajorRecordCommonGetter));
+        }
+
+        /// <inheritdoc />
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(string editorId)
+        {
+            if (TryResolveSimpleContext(editorId, out var majorRec)) return majorRec;
+            throw new MissingRecordException(editorId, typeof(IMajorRecordCommonGetter));
+        }
+
+        /// <inheritdoc />
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (TryResolveSimpleContext(formKey, type, out var commonRec, target)) return commonRec;
+            throw new MissingRecordException(formKey, type);
+        }
+
+        /// <inheritdoc />
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(string editorId, Type type)
+        {
+            if (TryResolveSimpleContext(editorId, type, out var commonRec)) return commonRec;
+            throw new MissingRecordException(editorId, type);
+        }
+
+        /// <inheritdoc />
+        public IModContext<TMajor> ResolveSimpleContext<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveSimpleContext<TMajor>(formKey, out var commonRec, target)) return commonRec;
+            throw new MissingRecordException(formKey, typeof(TMajor));
+        }
+
+        /// <inheritdoc />
+        public IModContext<TMajor> ResolveSimpleContext<TMajor>(string editorId) where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveSimpleContext<TMajor>(editorId, out var commonRec)) return commonRec;
+            throw new MissingRecordException(editorId, typeof(TMajor));
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<TMajor>> ResolveAllSimpleContexts<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveSimpleContext<TMajor>(formKey, out var rec, target))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (TryResolveSimpleContext(formKey, type, out var rec, target))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (TryResolveSimpleContext(formKey, out var rec, target))
+            {
+                yield return rec;
+            }
         }
 
         /// <inheritdoc />
@@ -681,6 +842,123 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
             return _cache.ResolveAll(formKey, target);
+        }
+
+        public bool TryResolveSimpleContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (TryResolveContext(formKey, out var context, target))
+            {
+                majorRec = context;
+                return true;
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        public bool TryResolveSimpleContext(string editorId, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        {
+            if (TryResolveContext(editorId, out var context))
+            {
+                majorRec = context;
+                return true;
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        public bool TryResolveSimpleContext<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec,
+            ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (target == ResolveTarget.Origin
+                && formKey.ModKey != _sourceMod.ModKey)
+            {
+                majorRec = default;
+                return false;
+            }
+            
+            return _formKeyContexts.TryResolveSimpleContext(formKey, out majorRec);
+        }
+
+        public bool TryResolveSimpleContext<TMajor>(string editorId, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec) where TMajor : class, IMajorRecordCommonGetter
+        {
+            return _editorIdContexts.TryResolveSimpleContext(editorId, out majorRec);
+        }
+
+        public bool TryResolveSimpleContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec,
+            ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (TryResolveContext(formKey, type, out var context))
+            {
+                majorRec = context;
+                return true;
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        public bool TryResolveSimpleContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        {
+            if (TryResolveContext(editorId, type, out var context))
+            {
+                majorRec = context;
+                return true;
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(FormKey formKey, ResolveTarget target)
+        {
+            return ResolveContext(formKey, target);
+        }
+
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(string editorId)
+        {
+            return ResolveContext(editorId);
+        }
+
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(FormKey formKey, Type type, ResolveTarget target)
+        {
+            return ResolveContext(formKey, type, target);
+        }
+
+        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(string editorId, Type type)
+        {
+            return ResolveContext(editorId, type);
+        }
+
+        public IModContext<TMajor> ResolveSimpleContext<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveSimpleContext<TMajor>(formKey, out var commonRec, target)) return commonRec;
+            throw new MissingRecordException(formKey, typeof(TMajor));
+        }
+
+        public IModContext<TMajor> ResolveSimpleContext<TMajor>(string editorId) where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveSimpleContext<TMajor>(editorId, out var commonRec)) return commonRec;
+            throw new MissingRecordException(editorId, typeof(TMajor));
+        }
+
+        public IEnumerable<IModContext<TMajor>> ResolveAllSimpleContexts<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveSimpleContext<TMajor>(formKey, out var rec, target))
+            {
+                yield return rec;
+            }
+        }
+
+        public IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(FormKey formKey, Type type, ResolveTarget target)
+        {
+            return ResolveAllContexts(formKey, type, target);
+        }
+
+        public IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(FormKey formKey, ResolveTarget target)
+        {
+            return ResolveAllContexts(formKey, target);
         }
 
         public void Warmup(Type type)

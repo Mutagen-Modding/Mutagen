@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "ryOverlay.ConditionDataFactory(new OverlayStream(_data.Slice(0x8), _package), _package, default(RecordTypeConverter));";
+            string testString = "IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, b";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

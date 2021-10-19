@@ -5,6 +5,7 @@ using Loqui;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
@@ -118,6 +119,16 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown)
         {
             return EnumerateMajorRecords(type, throwIfUnknown);
+        }
+
+        public IEnumerable<IModContext<TMajor>> EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown = true) where TMajor : class, IMajorRecordCommonGetter
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IModContext<IMajorRecordCommonGetter>> EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type t, bool throwIfUnknown = true)
+        {
+            throw new NotImplementedException();
         }
 
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping)

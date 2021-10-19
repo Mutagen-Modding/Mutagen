@@ -157,8 +157,11 @@
     <Compile Include="Plugins\Cache\Implementations\Internal\DepthCache.cs" />
     <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableLoadOrderLinkCacheCategory.cs" />
     <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableLoadOrderLinkCacheContextCategory.cs" />
+    <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableLoadOrderLinkCacheSimpleContextCategory.cs" />
     <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableModLinkCacheCategory.cs" />
     <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableModLinkCacheContextCategory.cs" />
+    <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableModLinkCacheSimpleContextCategory.cs" />
+    <Compile Include="Plugins\Cache\Implementations\Internal\InternalImmutableLoadOrderLinkCache.cs" />
     <Compile Include="Plugins\Cache\Implementations\Internal\InternalImmutableModLinkCache.cs" />
     <Compile Include="Plugins\Cache\Implementations\Internal\LinkCacheItem.cs">
       <CodeLanguage>cs</CodeLanguage>

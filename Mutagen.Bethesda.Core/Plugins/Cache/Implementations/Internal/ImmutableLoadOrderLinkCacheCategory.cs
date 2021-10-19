@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
@@ -13,18 +14,27 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
     internal class ImmutableLoadOrderLinkCacheCategory<TKey>
         where TKey : notnull
     {
-        private readonly ImmutableLoadOrderLinkCache _parent;
+        private readonly bool _hasAny;
+        private readonly bool _simple;
+        private readonly IReadOnlyList<IModGetter> _listedOrder;
+        private readonly IReadOnlyDictionary<Type, Type[]> _linkInterfaces;
         private readonly Func<IMajorRecordCommonGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
         private readonly Dictionary<Type, DepthCache<TKey, LinkCacheItem>> _winningRecords = new();
         private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<LinkCacheItem>>> _allRecords = new();
 
         public ImmutableLoadOrderLinkCacheCategory(
-            ImmutableLoadOrderLinkCache parent,
+            GameCategory gameCategory,
+            bool hasAny,
+            bool simple,
+            IReadOnlyList<IModGetter> listedOrder,
             Func<IMajorRecordCommonGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
         {
-            _parent = parent;
+            _hasAny = hasAny;
+            _simple = simple;
+            _listedOrder = listedOrder;
+            _linkInterfaces = LinkInterfaceMapping.InterfaceToObjectTypes(gameCategory);
             _keyGetter = keyGetter;
             _shortCircuit = shortCircuit;
         }
@@ -59,7 +69,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
                     }
                     else
                     {
-                        if (!_parent._linkInterfaces.TryGetValue(type, out var objs))
+                        if (!_linkInterfaces.TryGetValue(type, out var objs))
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
@@ -73,8 +83,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
         private void FillNextCacheDepth(DepthCache<TKey, LinkCacheItem> cache, Type type)
         {
             // Get next unprocessed mod 
-            var targetIndex = _parent.ListedOrder.Count - cache.Depth - 1;
-            var targetMod = _parent.ListedOrder[targetIndex];
+            var targetIndex = _listedOrder.Count - cache.Depth - 1;
+            var targetMod = _listedOrder[targetIndex];
             cache.Depth++;
             cache.PassedMods.Add(targetMod.ModKey);
 
@@ -87,12 +97,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
                 {
                     var key = _keyGetter(record);
                     if (key.Failed) continue;
-                    cache.AddIfMissing(key.Value, LinkCacheItem.Factory(record, _parent._simple));
+                    cache.AddIfMissing(key.Value, LinkCacheItem.Factory(record, _simple));
                 }
             }
 
             // Add records from that mod that aren't already cached 
-            if (_parent._linkInterfaces.TryGetValue(type, out var objs))
+            if (_linkInterfaces.TryGetValue(type, out var objs))
             {
                 foreach (var objType in objs)
                 {
@@ -111,7 +121,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
             Type type,
             [MaybeNullWhen(false)] out LinkCacheItem majorRec)
         {
-            if (!_parent._hasAny || _shortCircuit(key))
+            if (!_hasAny || _shortCircuit(key))
             {
                 majorRec = default;
                 return false;
@@ -133,13 +143,13 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
                 {
                     return true;
                 }
-                if (ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent.ListedOrder.Count, cache))
+                if (InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _listedOrder.Count, cache))
                 {
                     majorRec = default;
                     return false;
                 }
 
-                while (!ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent.ListedOrder.Count, cache))
+                while (!InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _listedOrder.Count, cache))
                 {
                     FillNextCacheDepth(cache, type);
 
@@ -160,7 +170,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
             ModKey? modKey,
             Type type)
         {
-            if (!_parent._hasAny || _shortCircuit(key))
+            if (!_hasAny || _shortCircuit(key))
             {
                 yield break;
             }
@@ -205,7 +215,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
             }
 
             int iteratedCount = list.Count;
-            bool more = !ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent.ListedOrder.Count, cache);
+            bool more = !InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _listedOrder.Count, cache);
 
             // While there's more depth to consider
             while (more)
@@ -217,8 +227,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
                     if (consideredDepth == cache.Depth)
                     {
                         // Get next unprocessed mod
-                        var targetIndex = _parent.ListedOrder.Count - cache.Depth - 1;
-                        var targetMod = _parent.ListedOrder[targetIndex];
+                        var targetIndex = _listedOrder.Count - cache.Depth - 1;
+                        var targetMod = _listedOrder[targetIndex];
                         cache.Depth++;
                         cache.PassedMods.Add(targetMod.ModKey);
 
@@ -235,7 +245,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
                                 {
                                     targetList = ImmutableList<LinkCacheItem>.Empty;
                                 }
-                                cache.Set(iterKey.Value, targetList.Add(LinkCacheItem.Factory(item, _parent._simple)));
+                                cache.Set(iterKey.Value, targetList.Add(LinkCacheItem.Factory(item, _simple)));
                             }
                             if (cache.TryGetValue(key, out var requeriedList))
                             {
@@ -244,7 +254,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
                         }
 
                         // Add records from that mod that aren't already cached
-                        if (_parent._linkInterfaces.TryGetValue(type, out var objs))
+                        if (_linkInterfaces.TryGetValue(type, out var objs))
                         {
                             foreach (var objType in objs)
                             {
@@ -257,7 +267,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
                         }
                     }
                     consideredDepth = cache.Depth;
-                    more = !ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent.ListedOrder.Count, cache);
+                    more = !InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _listedOrder.Count, cache);
                 }
 
                 // Return any new data
@@ -271,7 +281,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
 
         public IEnumerable<LinkCacheItem> AllIdentifiers(Type type, CancellationToken? cancel)
         {
-            if (!_parent._hasAny || (cancel?.IsCancellationRequested ?? true))
+            if (!_hasAny || (cancel?.IsCancellationRequested ?? true))
             {
                 return Enumerable.Empty<LinkCacheItem>();
             }
@@ -292,7 +302,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
             lock (cache)
             {
                 // Fill all
-                while (!ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey: null, _parent.ListedOrder.Count, cache))
+                while (!InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey: null, _listedOrder.Count, cache))
                 {
                     if (cancel?.IsCancellationRequested ?? false) return Enumerable.Empty<LinkCacheItem>();
                     FillNextCacheDepth(cache, type);
@@ -311,7 +321,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
             lock (cache)
             {
                 // Fill all
-                while (!ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey: null, _parent.ListedOrder.Count, cache))
+                while (!InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey: null, _listedOrder.Count, cache))
                 {
                     FillNextCacheDepth(cache, type);
                 }
