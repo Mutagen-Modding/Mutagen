@@ -75,6 +75,10 @@ namespace Mutagen.Bethesda.Plugins.Order.Internals
         /// </summary>
         /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
         /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
-        public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> WinningContextOverrides(bool includeDeletedRecords = false) => _winningContextOverrides(default(ILinkCache?)!, includeDeletedRecords);
+        public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> WinningContextOverrides(bool includeDeletedRecords = false)
+            => _winningContextOverrides(
+                // Not needed for top level groups
+                default(ILinkCache?)!,
+                includeDeletedRecords);
     }
 }
