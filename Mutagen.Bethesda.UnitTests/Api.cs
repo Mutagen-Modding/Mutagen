@@ -11,7 +11,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Testing;
-using Mutagen.Bethesda.UnitTests.Plugins.Cache;
+using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Implementations;
 
 namespace Mutagen.Bethesda.UnitTests.Api
 {
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.UnitTests.Api
         {
             SkyrimMod sourceMod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             var race = sourceMod.Races.AddNew();
-            using var cleanup = Linking_ImmutableOverlay_Tests.ConvertModToOverlay(sourceMod, out var sourceModGetter);
+            using var cleanup = ImmutableOverlayTests.ConvertModToOverlay(sourceMod, out var sourceModGetter);
             var cache = sourceModGetter.ToImmutableLinkCache();
             var otherMod = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
             var npc = otherMod.Npcs.AddNew();
