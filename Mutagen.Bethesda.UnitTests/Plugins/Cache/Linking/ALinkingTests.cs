@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
@@ -18,6 +19,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 {
     public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IClassFixture<LoquiUse>
     {
+        public static readonly IEnumerable<object[]> ContextTestSources = new[]
+        {
+            new object[] { LinkCacheTestTypes.Identifiers, new NormalContextRetriever() },
+            new object[] { LinkCacheTestTypes.WholeRecord, new NormalContextRetriever() },
+            new object[] { LinkCacheTestTypes.Identifiers, new SimpleContextRetriever() },
+            new object[] { LinkCacheTestTypes.WholeRecord, new SimpleContextRetriever() }
+        };
+
         public static FormKey UnusedFormKey = new FormKey(TestConstants.PluginModKey, 123456);
         public static string UnusedEditorID = "Unused";
         public static FormKey TestFileFormKey = new FormKey(TestDataPathing.SkyrimTestMod.ModKey, 0x800);
