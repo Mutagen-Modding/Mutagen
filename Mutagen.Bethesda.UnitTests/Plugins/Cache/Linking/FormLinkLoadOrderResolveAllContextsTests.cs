@@ -126,9 +126,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_ResolveAllContexts_SeparateQueries(LinkCacheTestTypes cacheType)
+        [MemberData(nameof(ContextTestSources))]
+        public void FormLink_LoadOrder_ResolveAllContexts_SeparateQueries(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -144,7 +143,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             };
             var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).ToArray();
+            var resolved = contextRetriever.ResolveAllContexts<INpc, INpcGetter>(formLink, package).ToArray();
             resolved.Should().HaveCount(2);
             resolved.First().Record.Should().BeSameAs(npcOverride);
             resolved.First().ModKey.Should().Be(TestConstants.PluginModKey3);
@@ -153,7 +152,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             resolved.Last().ModKey.Should().Be(TestConstants.PluginModKey);
             resolved.Last().Parent.Should().BeNull();
             formLink = new FormLink<INpcGetter>(unrelatedNpc.FormKey);
-            resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).ToArray();
+            resolved = contextRetriever.ResolveAllContexts<INpc, INpcGetter>(formLink, package).ToArray();
             resolved.Should().HaveCount(1);
             resolved.First().Record.Should().BeSameAs(unrelatedNpc);
             resolved.First().ModKey.Should().Be(TestConstants.PluginModKey);
