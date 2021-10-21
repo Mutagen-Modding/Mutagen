@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
                         obs.OnCompleted();
                     });
                 })
-                .FilterSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Empty<IMajorRecordIdentifier>())
+                .FlowSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Empty<IMajorRecordIdentifier>())
                 .ObserveOn(RxApp.TaskpoolScheduler)
                 .Select(x => x.ToObservableChangeSet())
                 .Switch()
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
             if (textBox == null) return;
             textBox.WhenAnyValue(x => x.Text)
                 .Skip(1)
-                .FilterSwitch(textBox.WhenAnyValue(x => x.IsKeyboardFocused))
+                .FlowSwitch(textBox.WhenAnyValue(x => x.IsKeyboardFocused))
                 .Subscribe(_ =>
                 {
                     this.SearchMode = searchMode;
