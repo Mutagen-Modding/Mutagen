@@ -13,9 +13,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
     public partial class ALinkingTests
     {
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void PlacedInCellQuerySucceedsIfMajorRecordType(LinkCacheTestTypes cacheType)
+        [MemberData(nameof(ContextTestSources))]
+        public void PlacedInCellQuerySucceedsIfMajorRecordType(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
         {
             var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             var placed = new PlacedObject(prototype);
@@ -42,7 +41,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             var (style, package) = GetLinkCache(mod, cacheType);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                package.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.FormKey, out var rec)
+                contextRetriever.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.AsLink(), package, out var rec)
                 .Should().BeTrue();
                 rec.Record.Should().Be(placed);
             });
@@ -55,9 +54,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void PlacedInWorldspaceQuerySucceedsIfMajorRecordType(LinkCacheTestTypes cacheType)
+        [MemberData(nameof(ContextTestSources))]
+        public void PlacedInWorldspaceQuerySucceedsIfMajorRecordType(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
         {
             var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             var placed = new PlacedObject(prototype);
@@ -91,13 +89,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             WrapPotentialThrow(cacheType, style, () =>
             {
                 package.TryResolve<ISkyrimMajorRecordGetter>(placed.FormKey, out var rec2)
-                .Should().BeTrue();
+                    .Should().BeTrue();
                 rec2.Should().Be(placed);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                package.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.FormKey, out var rec)
-                .Should().BeTrue();
+                contextRetriever.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.AsLink(), package, out var rec)
+                    .Should().BeTrue();
                 rec.Record.Should().Be(placed);
             });
         }
