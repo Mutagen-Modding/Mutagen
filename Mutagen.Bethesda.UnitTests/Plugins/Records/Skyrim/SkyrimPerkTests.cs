@@ -1,12 +1,9 @@
-﻿using System.IO;
-using FluentAssertions;
-using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Plugins.Masters;
+﻿using FluentAssertions;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests.Skyrim.Records
+namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim
 {
     public class SkyrimPerk_Test
     {
