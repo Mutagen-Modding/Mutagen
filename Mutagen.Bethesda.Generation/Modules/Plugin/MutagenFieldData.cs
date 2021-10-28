@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public RecordType? RecordType { get; set; }
         public RecordType? OverflowRecordType { get; set; }
         public HashSet<RecordType> TriggeringRecordTypes { get; } = new();
-        public HashSet<string> TriggeringRecordAccessors = new HashSet<string>();
+        public HashSet<string> TriggeringRecordAccessors = new();
         public string TriggeringRecordSetAccessor { get; set; }
         public bool HasTrigger => this.TriggeringRecordAccessors.Count > 0 || SubLoquiTypes.Count > 0;
         public bool HandleTrigger = true;
@@ -24,13 +24,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public BinaryGenerationType? BinaryOverlay;
         public BinaryGenerationType BinaryOverlayFallback => this.BinaryOverlay ?? this.Binary;
         public bool CustomFolder;
-        public Dictionary<RecordType, List<ObjectGeneration>> SubLoquiTypes = new Dictionary<RecordType, List<ObjectGeneration>>();
+        public Dictionary<RecordType, List<ObjectGeneration>> SubLoquiTypes = new();
         public IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GenerationTypes => GetGenerationTypes();
         public bool IsTriggerForObject;
         public RecordTypeConverter RecordTypeConverter;
         public ushort? CustomVersion;
-        public List<(ushort Version, VersionAction Action)> Versioning = new List<(ushort Version, VersionAction Action)>();
+        public List<(ushort Version, VersionAction Action)> Versioning = new();
         public bool HasVersioning => Versioning.Count > 0;
+        public bool IsAfterBreak;
 
         public MutagenFieldData(TypeGeneration source)
         {

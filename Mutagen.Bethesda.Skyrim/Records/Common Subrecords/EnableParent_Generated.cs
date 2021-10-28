@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public EnableParent.VersioningBreaks Versioning { get; private set; }
         public IFormLinkGetter<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public EnableParent.Flag Flags => (EnableParent.Flag)_data.Span.Slice(0x4, 0x1)[0];
+        public EnableParent.Flag Flags => _data.Span.Length <= 0x4 ? default : (EnableParent.Flag)_data.Span.Slice(0x4, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,

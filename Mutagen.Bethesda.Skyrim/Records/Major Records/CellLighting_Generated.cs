@@ -2320,7 +2320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single FogMax => _data.Slice(0x4C, 0x4).Float();
         public Single LightFadeBegin => _data.Slice(0x50, 0x4).Float();
         public Single LightFadeEnd => _data.Slice(0x54, 0x4).Float();
-        public CellLighting.Inherit Inherits => (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
+        public CellLighting.Inherit Inherits => _data.Span.Length <= 0x58 ? default : (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

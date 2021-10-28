@@ -1329,9 +1329,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public ScriptEffectData.VersioningBreaks Versioning { get; private set; }
         public IFormLinkGetter<IScriptGetter> Script => new FormLink<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public MagicSchool MagicSchool => (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public MagicSchool MagicSchool => _data.Span.Length <= 0x4 ? default : (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public IEDIDLinkGetter<IMagicEffectGetter> VisualEffect => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public ScriptEffect.Flag Flags => (ScriptEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
+        public ScriptEffect.Flag Flags => _data.Span.Length <= 0xC ? default : (ScriptEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

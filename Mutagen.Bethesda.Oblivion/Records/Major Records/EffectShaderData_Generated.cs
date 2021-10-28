@@ -4097,10 +4097,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single FillTextureEffectFullAlphaRatio => _data.Slice(0x54, 0x4).Float();
         public Single EdgeEffectFullAlphaRatio => _data.Slice(0x58, 0x4).Float();
         public EffectShader.SourceBlendMode MembraneShaderDestBlendMode => (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x5C, 0x4));
-        public EffectShader.SourceBlendMode ParticleShaderSourceBlendMode => (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x60, 0x4));
-        public EffectShader.BlendOperation ParticleShaderBlendOperation => (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x64, 0x4));
-        public EffectShader.ZTestFunction ParticleShaderZTestFunction => (EffectShader.ZTestFunction)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x68, 0x4));
-        public EffectShader.SourceBlendMode ParticleShaderDestBlendMode => (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x6C, 0x4));
+        public EffectShader.SourceBlendMode ParticleShaderSourceBlendMode => _data.Span.Length <= 0x60 ? default : (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x60, 0x4));
+        public EffectShader.BlendOperation ParticleShaderBlendOperation => _data.Span.Length <= 0x64 ? default : (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x64, 0x4));
+        public EffectShader.ZTestFunction ParticleShaderZTestFunction => _data.Span.Length <= 0x68 ? default : (EffectShader.ZTestFunction)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x68, 0x4));
+        public EffectShader.SourceBlendMode ParticleShaderDestBlendMode => _data.Span.Length <= 0x6C ? default : (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x6C, 0x4));
         public Single ParticleShaderParticleBirthRampUpTime => _data.Slice(0x70, 0x4).Float();
         public Single ParticleShaderFullParticleBirthTime => _data.Slice(0x74, 0x4).Float();
         public Single ParticleShaderParticleBirthRampDownTime => _data.Slice(0x78, 0x4).Float();
