@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using FluentAssertions;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
@@ -97,6 +98,52 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
                 contextRetriever.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.AsLink(), package, out var rec)
                     .Should().BeTrue();
                 rec.Record.Should().Be(placed);
+            });
+        }
+
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void PlacedInWorldspaceOnlyOverridesPlaced(LinkCacheTestTypes cacheType)
+        {
+            var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+            var placed = new PlacedObject(prototype);
+            var outgoing = new SkyrimMod(TestConstants.PluginModKey4, SkyrimRelease.SkyrimSE);
+            prototype.Worldspaces.Add(new Worldspace(prototype)
+            {
+                SubCells = new ExtendedList<WorldspaceBlock>()
+                {
+                    new WorldspaceBlock()
+                    {
+                        Items = new ExtendedList<WorldspaceSubBlock>()
+                        {
+                            new WorldspaceSubBlock()
+                            {
+                                Items = new ExtendedList<Cell>()
+                                {
+                                    new Cell(prototype)
+                                    {
+                                        Landscape = new Landscape(prototype),
+                                        Temporary = new ExtendedList<IPlaced>()
+                                        {
+                                            placed
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            using var disp = ConvertMod(prototype, out var mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                package.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.FormKey, out var rec)
+                    .Should().BeTrue();
+                rec.Record.Should().Be(placed);
+                rec.GetOrAddAsOverride(outgoing);
+                outgoing.Worldspaces.First().SubCells.First().Items.First().Items.First().Landscape.Should().BeNull();
             });
         }
     }

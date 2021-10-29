@@ -6,7 +6,6 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers
     {
         public LinkingTestInit()
         {
-            WarmupAll.Init();
         }
 
         public void Dispose()
