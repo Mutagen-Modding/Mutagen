@@ -1543,7 +1543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IFormLinkGetter<ISpellGetter> Effect => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(Unused3VersioningOffset + 0x10, 0x4))));
         #region Unused4
-        public Int32 Unused4 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(Unused3VersioningOffset + 0x14, 0x4));
+        public Int32 Unused4 => _data.Length <= Unused3VersioningOffset + 0x14 ? default : BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(Unused3VersioningOffset + 0x14, 0x4));
         int Unused4VersioningOffset => Unused3VersioningOffset + (_package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0);
         #endregion
         partial void CustomFactoryEnd(

@@ -1511,8 +1511,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Light.LightFlag Flags => (Light.LightFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         public Single FalloffExponent => _data.Slice(0x10, 0x4).Float();
         public Single FOV => _data.Slice(0x14, 0x4).Float();
-        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x18, 0x4));
-        public Single Weight => _data.Slice(0x1C, 0x4).Float();
+        public UInt32 Value => _data.Length <= 0x18 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x18, 0x4));
+        public Single Weight => _data.Length <= 0x1C ? default : _data.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -1532,13 +1532,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public CombatStyleFlight.VersioningBreaks Versioning { get; private set; }
         public Single HoverChance => _data.Slice(0x0, 0x4).Float();
-        public Single DiveBombChance => _data.Slice(0x4, 0x4).Float();
-        public Single GroundAttackChance => _data.Slice(0x8, 0x4).Float();
-        public Single HoverTime => _data.Slice(0xC, 0x4).Float();
-        public Single GroundAttackTime => _data.Slice(0x10, 0x4).Float();
-        public Single PerchAttackChance => _data.Slice(0x14, 0x4).Float();
-        public Single PerchAttackTime => _data.Slice(0x18, 0x4).Float();
-        public Single FlyingAttackChance => _data.Slice(0x1C, 0x4).Float();
+        public Single DiveBombChance => _data.Length <= 0x4 ? default : _data.Slice(0x4, 0x4).Float();
+        public Single GroundAttackChance => _data.Length <= 0x8 ? default : _data.Slice(0x8, 0x4).Float();
+        public Single HoverTime => _data.Length <= 0xC ? default : _data.Slice(0xC, 0x4).Float();
+        public Single GroundAttackTime => _data.Length <= 0x10 ? default : _data.Slice(0x10, 0x4).Float();
+        public Single PerchAttackChance => _data.Length <= 0x14 ? default : _data.Slice(0x14, 0x4).Float();
+        public Single PerchAttackTime => _data.Length <= 0x18 ? default : _data.Slice(0x18, 0x4).Float();
+        public Single FlyingAttackChance => _data.Length <= 0x1C ? default : _data.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -1508,7 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single BashRecoilMult => _data.Slice(0x10, 0x4).Float();
         public Single BashAttackMult => _data.Slice(0x14, 0x4).Float();
         public Single BashPowerAttackMult => _data.Slice(0x18, 0x4).Float();
-        public Single SpecialAttackMult => _data.Slice(0x1C, 0x4).Float();
+        public Single SpecialAttackMult => _data.Length <= 0x1C ? default : _data.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

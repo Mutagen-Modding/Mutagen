@@ -281,9 +281,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                             fg.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {dataAccessor}.Length >= {passed} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")} : {typeGen.GetDefault(getter: true)};");
                         }
                     }
+                    else if (data.IsAfterBreak)
+                    {
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Length <= {passedLengthAccessor} ? default : {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
+                    }
                     else
                     {
-                        fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor ?? "0x0"}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
                     }
                 }
                 else
