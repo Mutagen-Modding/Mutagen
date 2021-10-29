@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Testing
         public static string FrenchString = "Files/Core/Strings/FrenchString";
         public static string PrependedString = "Files/Core/Strings/PrependedString";
         public static string ZeroContentPrependedString = "Files/Core/Strings/ZeroContentPrependedString";
+        public static string SkyrimPlacedObjectReflectedWaterMissingData = "Files/Skyrim/PlacedObjectReflectedWaterMissingData.esp";
 
         public static MutagenFrame GetReadFrame(ModPath path, GameRelease release, ModKey? modKey = null)
         {
