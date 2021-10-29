@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Archives.Ba2;
 using Mutagen.Bethesda.Archives.Bsa;
@@ -39,6 +39,8 @@ namespace Mutagen.Bethesda.Archives.DI
                 case GameRelease.SkyrimLE:
                 case GameRelease.SkyrimSE:
                 case GameRelease.SkyrimVR:
+                case GameRelease.EnderalLE:
+                case GameRelease.EnderalSE:
                     return new BsaReader(path, _fileSystem);
                 case GameRelease.Fallout4:
                     return new Ba2Reader(path, _fileSystem);
