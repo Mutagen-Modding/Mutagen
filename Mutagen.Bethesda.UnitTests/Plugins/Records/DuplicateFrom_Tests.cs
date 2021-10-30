@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using System;
 using System.Linq;
-using Mutagen.Bethesda.Plugins.Cache.Implementations;
+using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 using Mutagen.Bethesda.Testing;
 using Xunit;
 

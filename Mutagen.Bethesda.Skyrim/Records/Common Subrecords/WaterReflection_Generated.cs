@@ -1203,17 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public WaterReflection.VersioningBreaks Versioning { get; private set; }
         public IFormLinkGetter<IPlacedObjectGetter> Water => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public WaterReflection.Flag Type
-        {
-            get
-            {
-                if (_data.Span.Length <= 0x4)
-                {
-                    return default;
-                }
-                return (WaterReflection.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-            }
-        }
+        public WaterReflection.Flag Type => _data.Span.Length <= 0x4 ? default : (WaterReflection.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

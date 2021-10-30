@@ -9,7 +9,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
+namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 {
     internal class ImmutableLoadOrderLinkCacheCategory<TKey>
         where TKey : notnull

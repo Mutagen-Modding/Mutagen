@@ -7,7 +7,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
+namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 {
     internal interface IImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, TKey> : IImmutableLoadOrderLinkCacheSimpleContextCategory<TKey>
         where TMod : class, IContextMod<TMod, TModGetter>, TModGetter 

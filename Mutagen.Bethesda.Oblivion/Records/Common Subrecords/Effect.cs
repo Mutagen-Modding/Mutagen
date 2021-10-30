@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
             public static partial ParseResult FillBinaryEffectInitialCustom(MutagenFrame frame, IEffect item, PreviousParse lastParsed)
             {
                 var subMeta = frame.ReadSubrecord();
-                if (subMeta.ContentLength != Plugins.Internals.Constants.HeaderLength)
+                if (subMeta.ContentLength != Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength)
                 {
                     throw new ArgumentException($"Magic effect name must be length 4.  Was: {subMeta.ContentLength}");
                 }
@@ -33,11 +33,11 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     throw new ArgumentException("Expected EFIT header.");
                 }
-                if (efitMeta.ContentLength < Plugins.Internals.Constants.HeaderLength)
+                if (efitMeta.ContentLength < Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength)
                 {
                     throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitMeta.ContentLength}");
                 }
-                var magicEffName2 = frame.GetMemory(amount: Plugins.Internals.Constants.HeaderLength, offset: efitMeta.HeaderLength);
+                var magicEffName2 = frame.GetMemory(amount: Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength, offset: efitMeta.HeaderLength);
                 if (!magicEffName.Span.SequenceEqual(magicEffName2.Span))
                 {
                     throw new ArgumentException($"Magic effect names did not match. {BinaryStringUtility.ToZString(magicEffName)} != {BinaryStringUtility.ToZString(magicEffName2)}");

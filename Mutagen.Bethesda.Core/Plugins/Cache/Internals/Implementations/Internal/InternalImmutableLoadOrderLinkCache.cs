@@ -7,138 +7,148 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
+namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 {
-    internal class InternalImmutableModLinkCache
+    public class InternalImmutableLoadOrderLinkCache
     {
-        internal readonly IModGetter _sourceMod;
-        public GameCategory Category { get; }
+        private readonly IReadOnlyList<IModGetter> _listedOrder;
+        private readonly IReadOnlyList<IModGetter> _priorityOrder;
+        private readonly ImmutableLoadOrderLinkCacheCategory<FormKey> _formKeyCache;
+        private readonly ImmutableLoadOrderLinkCacheCategory<string> _editorIdCache;
+        private readonly IReadOnlyDictionary<ModKey, ILinkCache> _modsByKey;
 
-        internal readonly bool _simple;
-        private readonly ImmutableModLinkCacheCategory<FormKey> _formKeyCache;
-        private readonly ImmutableModLinkCacheCategory<string> _editorIdCache;
+        public IReadOnlyList<IModGetter> ListedOrder => _listedOrder;
 
-        public IReadOnlyList<IModGetter> ListedOrder { get; }
+        public IReadOnlyList<IModGetter> PriorityOrder => _priorityOrder;
 
-        public IReadOnlyList<IModGetter> PriorityOrder => ListedOrder;
-
-        public InternalImmutableModLinkCache(IModGetter sourceMod, LinkCachePreferences? prefs = null)
+        public InternalImmutableLoadOrderLinkCache(
+            IEnumerable<IModGetter> loadOrder,
+            GameCategory gameCategory,
+            bool hasAny,
+            bool simple,
+            LinkCachePreferences? prefs)
         {
-            _sourceMod = sourceMod;
-            Category = sourceMod.GameRelease.ToCategory();
-            _simple = prefs is LinkCachePreferenceOnlyIdentifiers;
-            _formKeyCache = new ImmutableModLinkCacheCategory<FormKey>(
-                this, 
-                x => TryGet<FormKey>.Succeed(x.FormKey),
-                x => x.IsNull);
-            _editorIdCache = new ImmutableModLinkCacheCategory<string>(
-                this,
+            prefs ??= LinkCachePreferences.Default;
+            _listedOrder = loadOrder.ToList();
+            _priorityOrder = _listedOrder.Reverse().ToList();
+            _formKeyCache = new ImmutableLoadOrderLinkCacheCategory<FormKey>(
+                gameCategory,
+                hasAny: hasAny,
+                simple: simple,
+                listedOrder: _listedOrder,
+                m => TryGet<FormKey>.Succeed(m.FormKey),
+                f => f.IsNull);
+            this._editorIdCache = new ImmutableLoadOrderLinkCacheCategory<string>(
+                gameCategory,
+                hasAny: hasAny,
+                simple: simple,
+                listedOrder: _listedOrder,
                 m =>
                 {
                     var edid = m.EditorID;
                     return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
                 },
                 e => e.IsNullOrWhitespace());
-            this.ListedOrder = new List<IModGetter>()
+            
+            var modsByKey = new Dictionary<ModKey, ILinkCache>();
+            foreach (var modGetter in _listedOrder) 
             {
-                sourceMod
-            };
+                try
+                {
+                    modsByKey.Add(modGetter.ModKey, modGetter.ToUntypedImmutableLinkCache(prefs));
+                }
+                catch (Exception e)
+                {
+                    throw new ArgumentException(
+                        $"Mods with duplicate ModKeys were passed into the Link Cache: {modGetter.ModKey}");
+                }
+            }
+
+            _modsByKey = modsByKey;
+        }
+
+        internal static bool ShouldStopQuery<K, T>(ModKey? modKey, int modCount, DepthCache<K, T> cache)
+            where K : notnull
+        {
+            if (cache.Depth >= modCount)
+            {
+                cache.Done = true;
+                return true;
+            }
+
+            // If we're going deeper than the originating mod of the target FormKey, we can stop
+            if (modKey != null && cache.PassedMods.Contains(modKey.Value))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
-            if (formKey.IsNull)
-            {
-                majorRec = default;
-                return false;
-            }
-            
-            if (target == ResolveTarget.Origin
-                && formKey.ModKey != _sourceMod.ModKey)
-            {
-                majorRec = default;
-                return false;
-            }
-            
-            if (_formKeyCache._untypedMajorRecords.Value.TryGetValue(formKey, out var item))
-            {
-                majorRec = item.Record;
-                return true;
-            }
-            majorRec = default;
-            return false;
+            return TryResolve<IMajorRecordCommonGetter>(formKey, out majorRec, target);
         }
 
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
-            if (string.IsNullOrWhiteSpace(editorId))
-            {
-                majorRec = default;
-                return false;
-            }
-            if (_editorIdCache._untypedMajorRecords.Value.TryGetValue(editorId, out var item))
-            {
-                majorRec = item.Record;
-                return true;
-            }
-            majorRec = default;
-            return false;
+            return TryResolve<IMajorRecordCommonGetter>(editorId, out majorRec);
         }
 
         public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (target == ResolveTarget.Origin
-                && formKey.ModKey != _sourceMod.ModKey)
+            if (!TryResolve(formKey, typeof(TMajor), out var commonRec, target))
             {
                 majorRec = default;
                 return false;
             }
-            
-            if (_formKeyCache.TryResolve(formKey, typeof(TMajor), out var item))
-            {
-                majorRec = item.Record as TMajor;
-                return majorRec != null;
-            }
-            majorRec = default;
-            return false;
+
+            majorRec = commonRec as TMajor;
+            return majorRec != null;
         }
 
         public bool TryResolve<TMajor>(string editorId, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (_editorIdCache.TryResolve(editorId, typeof(TMajor), out var item))
-            {
-                majorRec = item.Record as TMajor;
-                return majorRec != null;
-            }
-            majorRec = default;
-            return false;
-        }
-
-        public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
-        {
-            if (target == ResolveTarget.Origin
-                && formKey.ModKey != _sourceMod.ModKey)
+            if (!TryResolve(editorId, typeof(TMajor), out var commonRec))
             {
                 majorRec = default;
                 return false;
             }
 
-            if (_formKeyCache.TryResolve(formKey, type, out var item))
+            majorRec = commonRec as TMajor;
+            return majorRec != null;
+        }
+
+        public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
+        {
+            if (target == ResolveTarget.Origin)
+            {
+                if (!_modsByKey.TryGetValue(formKey.ModKey, out var origMod))
+                {
+                    majorRec = default;
+                    return false;
+                }
+
+                return origMod.TryResolve(formKey, type, out majorRec);
+            }
+            
+            if (_formKeyCache.TryResolve(formKey, formKey.ModKey, type, out var item))
             {
                 majorRec = item.Record;
                 return true;
             }
+            
             majorRec = default;
             return false;
         }
 
         public bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
-            if (_editorIdCache.TryResolve(editorId, type, out var item))
+            if (_editorIdCache.TryResolve(editorId, default(ModKey?), type, out var item))
             {
                 majorRec = item.Record;
                 return true;
@@ -150,14 +160,14 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public IMajorRecordCommonGetter Resolve(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
-            if (TryResolve<IMajorRecordCommonGetter>(formKey, out var majorRec, target)) return majorRec;
+            if (TryResolve<IMajorRecordCommonGetter>(formKey, out var commonRec, target)) return commonRec;
             throw new MissingRecordException(formKey, typeof(IMajorRecordCommonGetter));
         }
 
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public IMajorRecordCommonGetter Resolve(string editorId)
         {
-            if (TryResolve<IMajorRecordCommonGetter>(editorId, out var majorRec)) return majorRec;
+            if (TryResolve<IMajorRecordCommonGetter>(editorId, out var commonRec)) return commonRec;
             throw new MissingRecordException(editorId, typeof(IMajorRecordCommonGetter));
         }
 
@@ -190,27 +200,26 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
         public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (TryResolve<TMajor>(formKey, out var rec, target))
-            {
-                yield return rec;
-            }
+            return ResolveAll(formKey, typeof(TMajor), target).Cast<TMajor>();
         }
 
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
-            if (TryResolve(formKey, type, out var rec, target))
+            switch (target)
             {
-                yield return rec;
+                case ResolveTarget.Origin:
+                    return _formKeyCache.ResolveAll(formKey, formKey.ModKey, type).Reverse().Select(i => i.Record);
+                case ResolveTarget.Winner:
+                    return _formKeyCache.ResolveAll(formKey, formKey.ModKey, type).Select(i => i.Record);
+                default:
+                    throw new NotImplementedException();
             }
         }
 
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
-            if (TryResolve(formKey, out var rec, target))
-            {
-                yield return rec;
-            }
+            return ResolveAll(formKey, typeof(IMajorRecordCommonGetter), target);
         }
 
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types)
@@ -225,13 +234,6 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
 
         public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
-            if (target == ResolveTarget.Origin
-                && formKey.ModKey != _sourceMod.ModKey)
-            {
-                majorRec = default;
-                return false;
-            }
-            
             foreach (var type in types)
             {
                 if (TryResolve(formKey, type, out majorRec, target))
@@ -280,100 +282,107 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
 
         public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
         {
-            if (formKey.IsNull)
+            if (target == ResolveTarget.Origin)
             {
-                editorId = default;
-                return false;
+                if (!_modsByKey.TryGetValue(formKey.ModKey, out var origMod))
+                {
+                    editorId = default;
+                    return false;
+                }
+
+                return origMod.TryResolveIdentifier(formKey, out editorId);
             }
-            
-            if (target == ResolveTarget.Origin
-                && formKey.ModKey != _sourceMod.ModKey)
+
+            if (_formKeyCache.TryResolve(formKey, formKey.ModKey, typeof(IMajorRecordCommonGetter), out var rec))
             {
-                editorId = default;
-                return false;
-            }
-            
-            if (_formKeyCache._untypedMajorRecords.Value.TryGetValue(formKey, out var item))
-            {
-                editorId = item.EditorID;
+                editorId = rec.EditorID;
                 return true;
             }
+
             editorId = default;
             return false;
         }
 
         public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
         {
-            if (string.IsNullOrWhiteSpace(editorId))
+            if (_editorIdCache.TryResolve(editorId, default, typeof(IMajorRecordCommonGetter), out var rec))
             {
-                formKey = default;
-                return false;
-            }
-            if (_editorIdCache._untypedMajorRecords.Value.TryGetValue(editorId, out var item))
-            {
-                formKey = item.FormKey;
+                formKey = rec.FormKey;
                 return true;
             }
+
             formKey = default;
             return false;
         }
 
         public bool TryResolveIdentifier(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
         {
-            if (target == ResolveTarget.Origin
-                && formKey.ModKey != _sourceMod.ModKey)
+            if (target == ResolveTarget.Origin)
             {
-                editorId = default;
-                return false;
+                if (!_modsByKey.TryGetValue(formKey.ModKey, out var origMod))
+                {
+                    editorId = default;
+                    return false;
+                }
+
+                return origMod.TryResolveIdentifier(formKey, type, out editorId);
             }
-            
-            if (_formKeyCache.TryResolve(formKey, type, out var item))
+
+            if (_formKeyCache.TryResolve(formKey, formKey.ModKey, type, out var rec))
             {
-                editorId = item.EditorID;
+                editorId = rec.EditorID;
                 return true;
             }
+
             editorId = default;
             return false;
         }
 
         public bool TryResolveIdentifier(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
         {
-            if (_editorIdCache.TryResolve(editorId, type, out var item))
+            if (_editorIdCache.TryResolve(editorId, default, type, out var rec))
             {
-                formKey = item.FormKey;
+                formKey = rec.FormKey;
                 return true;
             }
+
             formKey = default;
             return false;
         }
 
-        public bool TryResolveIdentifier<TMajor>(FormKey formKey, out string? editorId, ResolveTarget target = ResolveTarget.Winner)
+        public bool TryResolveIdentifier<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (target == ResolveTarget.Origin
-                && formKey.ModKey != _sourceMod.ModKey)
+            if (target == ResolveTarget.Origin)
             {
-                editorId = default;
-                return false;
+                if (!_modsByKey.TryGetValue(formKey.ModKey, out var origMod))
+                {
+                    editorId = default;
+                    return false;
+                }
+
+                return origMod.TryResolveIdentifier<TMajor>(formKey, out editorId);
             }
-            
-            if (_formKeyCache.TryResolve(formKey, typeof(TMajor), out var item))
+
+            if (_formKeyCache.TryResolve(formKey, formKey.ModKey, typeof(TMajor), out var rec))
             {
-                editorId = item.EditorID;
+                editorId = rec.EditorID;
                 return true;
             }
+
             editorId = default;
             return false;
         }
 
-        public bool TryResolveIdentifier<TMajor>(string editorId, out FormKey formKey)
+        public bool TryResolveIdentifier<TMajor>(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (_editorIdCache.TryResolve(editorId, typeof(TMajor), out var item))
+            if (_editorIdCache.TryResolve(editorId, default, typeof(TMajor), out var rec))
             {
-                formKey = item.FormKey;
+                formKey = rec.FormKey;
                 return true;
             }
+
             formKey = default;
             return false;
         }
@@ -390,20 +399,34 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
 
         public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
         {
-            if (target == ResolveTarget.Origin
-                && formKey.ModKey != _sourceMod.ModKey)
+            if (target == ResolveTarget.Origin)
             {
-                editorId = default;
-                return false;
-            }
-
-            foreach (var type in types)
-            {
-                if (TryResolveIdentifier(formKey, type, out editorId))
+                if (!_modsByKey.TryGetValue(formKey.ModKey, out var origMod))
                 {
-                    return true;
+                    editorId = default;
+                    return false;
+                }
+
+                foreach (var type in types)
+                {
+                    if (origMod.TryResolveIdentifier(formKey, out editorId, type))
+                    {
+                        return true;
+                    }
                 }
             }
+            else
+            {
+                foreach (var type in types)
+                {
+                    if (_formKeyCache.TryResolve(formKey, formKey.ModKey, type, out var rec))
+                    {
+                        editorId = rec.EditorID;
+                        return true;
+                    }
+                }
+            }
+
             editorId = default;
             return false;
         }
@@ -412,11 +435,13 @@ namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
         {
             foreach (var type in types)
             {
-                if (TryResolveIdentifier(editorId, type, out formKey))
+                if (_editorIdCache.TryResolve(editorId, default, type, out var rec))
                 {
+                    formKey = rec.FormKey;
                     return true;
                 }
             }
+
             formKey = default;
             return false;
         }

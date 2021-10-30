@@ -154,20 +154,21 @@
     <Compile Include="Plugins\Binary\Translations\TypedParseParams.cs" />
     <Compile Include="Plugins\Binary\Translations\TypedWriteParams.cs" />
     <Compile Include="Plugins\Cache\IIdentifierLinkCache.cs" />
-    <Compile Include="Plugins\Cache\Implementations\Internal\DepthCache.cs" />
-    <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableLoadOrderLinkCacheCategory.cs" />
-    <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableLoadOrderLinkCacheContextCategory.cs" />
-    <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableLoadOrderLinkCacheSimpleContextCategory.cs" />
-    <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableModLinkCacheCategory.cs" />
-    <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableModLinkCacheContextCategory.cs" />
-    <Compile Include="Plugins\Cache\Implementations\Internal\ImmutableModLinkCacheSimpleContextCategory.cs" />
-    <Compile Include="Plugins\Cache\Implementations\Internal\InternalImmutableLoadOrderLinkCache.cs" />
-    <Compile Include="Plugins\Cache\Implementations\Internal\InternalImmutableModLinkCache.cs" />
-    <Compile Include="Plugins\Cache\Implementations\Internal\LinkCacheItem.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
+    <Compile Include="Plugins\Cache\Internals\Implementations\ImmutableLoadOrderLinkCache.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\ImmutableModLinkCache.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\Internal\DepthCache.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\Internal\ImmutableLoadOrderLinkCacheCategory.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\Internal\ImmutableLoadOrderLinkCacheContextCategory.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\Internal\ImmutableLoadOrderLinkCacheSimpleContextCategory.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\Internal\ImmutableModLinkCacheCategory.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\Internal\ImmutableModLinkCacheContextCategory.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\Internal\ImmutableModLinkCacheSimpleContextCategory.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\Internal\InternalImmutableLoadOrderLinkCache.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\Internal\InternalImmutableModLinkCache.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\Internal\LinkCacheItem.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\MutableLoadOrderLinkCache.cs" />
+    <Compile Include="Plugins\Cache\Internals\Implementations\MutableModLinkCache.cs" />
+    <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistrations.cs" />
     <Compile Include="Plugins\Cache\ResolveTarget.cs" />
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
@@ -413,17 +414,13 @@
     <Compile Include="Plugins\Records\Internals\LinkInterfaceMapping.cs" />
     <Compile Include="IsExternalInit.cs" />
     <Compile Include="Plugins\Aspects\IWeightValue.cs" />
-    <Compile Include="Plugins\Cache\Implementations\ImmutableModLinkCache.cs" />
     <Compile Include="Plugins\Cache\LinkCachePreferenceOnlyIdentifiers.cs" />
     <Compile Include="Plugins\Cache\LinkCachePreferenceWholeRecord.cs" />
     <Compile Include="Plugins\Internals\FormLinkInformation.cs" />
     <Compile Include="Plugins\FormLinkNullable.cs" />
     <Compile Include="Plugins\IFormLink.cs" />
     <Compile Include="Plugins\Cache\ILinkCache.cs" />
-    <Compile Include="Plugins\Cache\Implementations\ImmutableLoadOrderLinkCache.cs" />
     <Compile Include="Plugins\Cache\LinkCachePreferences.cs" />
-    <Compile Include="Plugins\Cache\Implementations\MutableModLinkCache.cs" />
-    <Compile Include="Plugins\Cache\Implementations\MutableLoadOrderLinkCache.cs" />
     <Compile Include="Plugins\FormLinkTypelessComparer.cs" />
     <Compile Include="Plugins\Order\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />

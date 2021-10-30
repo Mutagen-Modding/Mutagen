@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using Mutagen.Bethesda.Plugins.Cache;
-using Mutagen.Bethesda.Plugins.Cache.Implementations;
+using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;

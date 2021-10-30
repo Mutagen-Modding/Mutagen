@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Mutagen.Bethesda.Plugins.Cache.Implementations.Internal
+namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 {
     internal class DepthCache<K, T>
         where K : notnull

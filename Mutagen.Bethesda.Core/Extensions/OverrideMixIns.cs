@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Cache.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Exceptions;
 
@@ -398,8 +399,6 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public readonly static Dictionary<Type, object> AddAsOverrideMasks = new Dictionary<Type, object>();
-
         /// <summary>
         /// Takes in an existing record definition, and either returns the existing override definition
         /// from the Group, or copies the given record, inserts it, and then returns it as an override.
@@ -417,7 +416,7 @@ namespace Mutagen.Bethesda
                 {
                     return existingMajor;
                 }
-                var mask = AddAsOverrideMasks.GetValueOrDefault(typeof(TMajor));
+                var mask = OverrideMaskRegistrations.Get<TMajor>();
                 existingMajor = (major.DeepCopy(mask as MajorRecord.TranslationMask) as TMajor)!;
                 group.RecordCache.Set(existingMajor);
                 return existingMajor;

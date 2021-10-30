@@ -4,6 +4,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 using Loqui;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -23,8 +24,8 @@ namespace Mutagen.Bethesda.Skyrim
             Loqui.Initialization.SpinUp(
                 new ProtocolDefinition_Bethesda(),
                 new ProtocolDefinition_Skyrim());
-            Plugins.Records.Internals.LinkInterfaceMapping.AutomaticRegistration = false;
-            Plugins.Records.Internals.LinkInterfaceMapping.Register(new Mutagen.Bethesda.Skyrim.Internals.LinkInterfaceMapping());
+            LinkInterfaceMapping.AutomaticRegistration = false;
+            LinkInterfaceMapping.Register(new Mutagen.Bethesda.Skyrim.Internals.LinkInterfaceMapping());
             InitCustom();
         }
         static partial void InitCustom();
