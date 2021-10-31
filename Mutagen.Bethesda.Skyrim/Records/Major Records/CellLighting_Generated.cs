@@ -2314,13 +2314,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color AmbientDirectionalYMinus => _data.Slice(0x34, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color AmbientDirectionalZPlus => _data.Slice(0x38, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color AmbientDirectionalZMinus => _data.Slice(0x3C, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color AmbientSpecular => _data.Slice(0x40, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single AmbientScale => _data.Slice(0x44, 0x4).Float();
-        public Color FogFarColor => _data.Slice(0x48, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single FogMax => _data.Slice(0x4C, 0x4).Float();
-        public Single LightFadeBegin => _data.Slice(0x50, 0x4).Float();
-        public Single LightFadeEnd => _data.Slice(0x54, 0x4).Float();
-        public CellLighting.Inherit Inherits => (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
+        public Color AmbientSpecular => _data.Length <= 0x40 ? default : _data.Slice(0x40, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single AmbientScale => _data.Length <= 0x44 ? default : _data.Slice(0x44, 0x4).Float();
+        public Color FogFarColor => _data.Length <= 0x48 ? default : _data.Slice(0x48, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single FogMax => _data.Length <= 0x4C ? default : _data.Slice(0x4C, 0x4).Float();
+        public Single LightFadeBegin => _data.Length <= 0x50 ? default : _data.Slice(0x50, 0x4).Float();
+        public Single LightFadeEnd => _data.Length <= 0x54 ? default : _data.Slice(0x54, 0x4).Float();
+        public CellLighting.Inherit Inherits => _data.Span.Length <= 0x58 ? default : (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

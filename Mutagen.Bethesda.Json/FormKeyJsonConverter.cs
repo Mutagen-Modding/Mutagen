@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Plugins;
 using Newtonsoft.Json;
 using System;
+using Noggog;
 
 namespace Mutagen.Bethesda.Json
 {
@@ -11,7 +12,6 @@ namespace Mutagen.Bethesda.Json
             if (objectType == typeof(FormKey)) return true;
             if (objectType == typeof(FormKey?)) return true;
             if (!objectType.IsGenericType) return false;
-            var genDef = objectType.GetGenericTypeDefinition();
             if (typeof(IFormLinkGetter).IsAssignableFrom(objectType)) return true;
             return false;
         }
@@ -29,33 +29,83 @@ namespace Mutagen.Bethesda.Json
                 {
                     return null;
                 }
-                throw new NotImplementedException();
-            }
-            else
-            {
-                if (objectType == typeof(FormKey)
-                    || objectType == typeof(FormKey?))
-                {
-                    return FormKey.Factory(obj.ToString());
-                }
                 if (!objectType.Name.Contains("FormLink"))
                 {
                     throw new ArgumentException();
                 }
 
-                if (objectType.Name.AsSpan()[..^2].EndsWith("Nullable", StringComparison.Ordinal))
+                if (IsNullableLink(objectType))
                 {
                     return Activator.CreateInstance(
-                        typeof(FormLinkNullable<>).MakeGenericType(objectType.GenericTypeArguments[0]),
-                        FormKey.Factory(obj.ToString()));
+                        typeof(FormLinkNullable<>).MakeGenericType(objectType.GenericTypeArguments[0]));
                 }
                 else
                 {
                     return Activator.CreateInstance(
                         typeof(FormLink<>).MakeGenericType(objectType.GenericTypeArguments[0]),
-                        FormKey.Factory(obj.ToString()));
+                        FormKey.Null);
                 }
             }
+            else
+            {
+                var str = obj.ToString();
+                
+                if (objectType == typeof(FormKey))
+                {
+                    if (str.IsNullOrWhitespace())
+                    {
+                        return FormKey.Null;
+                    }
+                    else
+                    {
+                        return FormKey.Factory(str);
+                    }
+                }
+                else if (objectType == typeof(FormKey?))
+                {
+                    if (str.IsNullOrWhitespace())
+                    {
+                        return default(FormKey?);
+                    }
+                    else
+                    {
+                        return FormKey.Factory(str);
+                    }
+                }
+
+                if (!objectType.Name.Contains("FormLink"))
+                {
+                    throw new ArgumentException();
+                }
+
+                FormKey key;
+                if (str.IsNullOrWhitespace())
+                {
+                    key = FormKey.Null;
+                }
+                else
+                {
+                    key = FormKey.Factory(str);
+                }
+                
+                if (IsNullableLink(objectType))
+                {
+                    return Activator.CreateInstance(
+                        typeof(FormLinkNullable<>).MakeGenericType(objectType.GenericTypeArguments[0]),
+                        key);
+                }
+                else
+                {
+                    return Activator.CreateInstance(
+                        typeof(FormLink<>).MakeGenericType(objectType.GenericTypeArguments[0]),
+                        key);
+                }
+            }
+        }
+
+        private bool IsNullableLink(Type type)
+        {
+            return type.Name.AsSpan()[..^2].EndsWith("Nullable", StringComparison.Ordinal);
         }
 
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
@@ -67,7 +117,7 @@ namespace Mutagen.Bethesda.Json
                     writer.WriteValue(fk.ToString());
                     break;
                 case IFormLinkGetter fl:
-                    writer.WriteValue(fl.FormKey.ToString());
+                    writer.WriteValue(fl.FormKeyNullable?.ToString());
                     break;
                 default:
                     throw new ArgumentException();

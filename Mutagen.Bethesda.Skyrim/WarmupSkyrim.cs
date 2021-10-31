@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Mutagen.Bethesda.Plugins.Cache.Internals;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -8,18 +9,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static partial void InitCustom()
         {
-            lock (OverrideMixIns.AddAsOverrideMasks)
-            {
-                OverrideMixIns.AddAsOverrideMasks[typeof(ICell)] = ModContextExt.CellCopyMask;
-                OverrideMixIns.AddAsOverrideMasks[typeof(ICellGetter)] = ModContextExt.CellCopyMask;
-                OverrideMixIns.AddAsOverrideMasks[typeof(Cell)] = ModContextExt.CellCopyMask;
-                OverrideMixIns.AddAsOverrideMasks[typeof(IWorldspace)] = ModContextExt.WorldspaceCopyMask;
-                OverrideMixIns.AddAsOverrideMasks[typeof(IWorldspaceGetter)] = ModContextExt.WorldspaceCopyMask;
-                OverrideMixIns.AddAsOverrideMasks[typeof(Worldspace)] = ModContextExt.WorldspaceCopyMask;
-                OverrideMixIns.AddAsOverrideMasks[typeof(IDialogTopic)] = ModContextExt.DialogTopicCopyMask;
-                OverrideMixIns.AddAsOverrideMasks[typeof(IDialogTopicGetter)] = ModContextExt.DialogTopicCopyMask;
-                OverrideMixIns.AddAsOverrideMasks[typeof(DialogTopic)] = ModContextExt.DialogTopicCopyMask;
-            }
+            OverrideMaskRegistrations.Warmup();
         }
     }
 }

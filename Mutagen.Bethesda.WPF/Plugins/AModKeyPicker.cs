@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
                             return Observable.Return<IChangeSet<ModKey>>(ChangeSet<ModKey>.Empty);
                     }
                 })
-                .FilterSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Return<IChangeSet<ModKey>>(ChangeSet<ModKey>.Empty))
+                .FlowSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Return<IChangeSet<ModKey>>(ChangeSet<ModKey>.Empty))
                 .Switch()
                 .ObserveOnGui()
                 .Filter(this.WhenAnyValue(x => x.FileName)
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
             {
                 modKeyBox.WhenAnyValue(x => x.FileName)
                     .Skip(1)
-                    .FilterSwitch(modKeyBox.WhenAnyValue(x => x.IsKeyboardFocusWithin))
+                    .FlowSwitch(modKeyBox.WhenAnyValue(x => x.IsKeyboardFocusWithin))
                     .Subscribe(_ =>
                     {
                         this.InSearchMode = true;

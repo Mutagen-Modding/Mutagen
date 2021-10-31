@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
             fg.AppendLine("using System.Collections.Generic;");
             fg.AppendLine("using Mutagen.Bethesda.Plugins.Order;");
-            fg.AppendLine("using Mutagen.Bethesda.Cache.Implementations;");
+            fg.AppendLine("using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;");
 
             fg.AppendLine();
             using (var n = new NamespaceWrapper(fg, proto.DefaultNamespace))

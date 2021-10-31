@@ -7,14 +7,14 @@ namespace Mutagen.Bethesda.Skyrim
         [Flags]
         public enum SkyrimMajorRecordFlag
         {
-            ESM = Plugins.Internals.Constants.MasterFlag,
+            ESM = Mutagen.Bethesda.Plugins.Internals.Constants.MasterFlag,
             NotPlayable = 0x0000_0004,
-            Deleted = Plugins.Internals.Constants.DeletedFlag,
-            InitiallyDisabled = Plugins.Internals.Constants.InitiallyDisabled,
-            Ignored = Plugins.Internals.Constants.Ignored,
+            Deleted = Mutagen.Bethesda.Plugins.Internals.Constants.DeletedFlag,
+            InitiallyDisabled = Mutagen.Bethesda.Plugins.Internals.Constants.InitiallyDisabled,
+            Ignored = Mutagen.Bethesda.Plugins.Internals.Constants.Ignored,
             VisibleWhenDistant = 0x00008000,
             Dangerous_OffLimits_InteriorCell = 0x00020000,
-            Compressed = Plugins.Internals.Constants.CompressedFlag,
+            Compressed = Mutagen.Bethesda.Plugins.Internals.Constants.CompressedFlag,
             CantWait = 0x00080000,
         }
 

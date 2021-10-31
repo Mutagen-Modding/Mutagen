@@ -4,6 +4,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 using Loqui;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Fallout4
 {
@@ -23,8 +24,8 @@ namespace Mutagen.Bethesda.Fallout4
             Loqui.Initialization.SpinUp(
                 new ProtocolDefinition_Bethesda(),
                 new ProtocolDefinition_Fallout4());
-            Plugins.Records.Internals.LinkInterfaceMapping.AutomaticRegistration = false;
-            Plugins.Records.Internals.LinkInterfaceMapping.Register(new Mutagen.Bethesda.Fallout4.Internals.LinkInterfaceMapping());
+            LinkInterfaceMapping.AutomaticRegistration = false;
+            LinkInterfaceMapping.Register(new Mutagen.Bethesda.Fallout4.Internals.LinkInterfaceMapping());
             InitCustom();
         }
         static partial void InitCustom();

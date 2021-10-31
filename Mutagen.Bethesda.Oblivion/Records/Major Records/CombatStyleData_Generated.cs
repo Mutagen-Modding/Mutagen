@@ -3078,15 +3078,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single HoldTimerMax => _data.Slice(0x4C, 0x4).Float();
         public CombatStyle.Flag Flags => GetFlagsCustom(location: 0x50);
         public Byte AcrobaticDodgePercentChance => _data.Span[0x51];
-        public Single RangeMultOptimal => _data.Slice(0x54, 0x4).Float();
-        public Single RangeMultMax => _data.Slice(0x58, 0x4).Float();
-        public Single SwitchDistanceMelee => _data.Slice(0x5C, 0x4).Float();
-        public Single SwitchDistanceRanged => _data.Slice(0x60, 0x4).Float();
-        public Single BuffStandoffDistance => _data.Slice(0x64, 0x4).Float();
-        public Single RangedStandoffDistance => _data.Slice(0x68, 0x4).Float();
-        public Single GroupStandoffDistance => _data.Slice(0x6C, 0x4).Float();
+        public Single RangeMultOptimal => _data.Length <= 0x54 ? default : _data.Slice(0x54, 0x4).Float();
+        public Single RangeMultMax => _data.Length <= 0x58 ? default : _data.Slice(0x58, 0x4).Float();
+        public Single SwitchDistanceMelee => _data.Length <= 0x5C ? default : _data.Slice(0x5C, 0x4).Float();
+        public Single SwitchDistanceRanged => _data.Length <= 0x60 ? default : _data.Slice(0x60, 0x4).Float();
+        public Single BuffStandoffDistance => _data.Length <= 0x64 ? default : _data.Slice(0x64, 0x4).Float();
+        public Single RangedStandoffDistance => _data.Length <= 0x68 ? default : _data.Slice(0x68, 0x4).Float();
+        public Single GroupStandoffDistance => _data.Length <= 0x6C ? default : _data.Slice(0x6C, 0x4).Float();
         public Byte RushingAttackPercentChance => _data.Span[0x70];
-        public Single RushingAttackDistanceMult => _data.Slice(0x74, 0x4).Float();
+        public Single RushingAttackDistanceMult => _data.Length <= 0x74 ? default : _data.Slice(0x74, 0x4).Float();
         #region SecondaryFlags
          partial void SecondaryFlagsCustomParse(
             OverlayStream stream,

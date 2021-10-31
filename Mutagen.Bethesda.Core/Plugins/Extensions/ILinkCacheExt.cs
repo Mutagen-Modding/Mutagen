@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Mutagen.Bethesda.Cache.Implementations;
 using Mutagen.Bethesda.Plugins.Order;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda

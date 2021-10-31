@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO.Abstractions;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Cache;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
@@ -35,8 +36,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <param name="modKey">Key to assign the mod</param> 
         public AMod(ModKey modKey)
         {
-            this.ModKey = modKey;
-            this._allocator = new SimpleFormKeyAllocator(this);
+            ModKey = modKey;
+            _allocator = new SimpleFormKeyAllocator(this);
         }
 
         #region NonImplemented IMod 
@@ -73,6 +74,11 @@ namespace Mutagen.Bethesda.Plugins.Records
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => throw new NotImplementedException();
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => throw new NotImplementedException();
         public IMask<bool> GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => throw new NotImplementedException();
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown = true)
+        {
+            throw new NotImplementedException();
+        }
+        IEnumerable<IModContext<IMajorRecordCommonGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type t, bool throwIfUnknown = true) => throw new NotImplementedException();
         #endregion
 
         /// <inheritdoc />

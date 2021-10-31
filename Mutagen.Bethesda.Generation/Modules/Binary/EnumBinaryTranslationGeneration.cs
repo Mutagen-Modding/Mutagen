@@ -181,6 +181,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
             }
             var posStr = dataType == null ? passedLengthAccessor : $"_{typeGen.Name}Location";
+            posStr ??= "0x0";
             string slice;
             if (data.RecordType.HasValue)
             {
@@ -188,7 +189,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             }
             else
             {
-                slice = $"{dataAccessor}.Span.Slice({posStr ?? "0x0"}, 0x{eType.ByteLength:X})";
+                slice = $"{dataAccessor}.Span.Slice({posStr}, 0x{eType.ByteLength:X})";
             }
             var getType = GenerateForTypicalWrapper(objGen, typeGen, slice, "_package");
 
@@ -228,7 +229,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             {
                 if (!isSetCheck)
                 {
-                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
+                    if (data.IsAfterBreak)
+                    {
+                        fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {dataAccessor}.Span.Length <= {posStr} ? default : {getType};");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
+                    }
                 }
                 else
                 {

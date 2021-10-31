@@ -71,6 +71,7 @@
     <Compile Include="Interfaces\IPositionRotation.cs" />
     <Compile Include="Interfaces\IScripted.cs" />
     <Compile Include="IsExternalInit.cs" />
+    <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistration.cs" />
     <Compile Include="Records\Common Subrecords\ActivateParents.cs">
       <DependentUpon>ActivateParents.xml</DependentUpon>
     </Compile>
@@ -2080,13 +2081,13 @@
     <Compile Include="Interfaces\IBindableEquipment_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GitInfo" Version="2.1.2">
+    <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.31.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.31.0" />
-    <PackageReference Include="NuGetizer" Version="0.7.4">
+    <PackageReference Include="Loqui" Version="2.32.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.32.0" />
+    <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

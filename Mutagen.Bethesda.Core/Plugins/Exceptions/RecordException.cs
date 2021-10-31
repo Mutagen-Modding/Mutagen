@@ -6,10 +6,10 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
 {
     public class RecordException : Exception
     {
-        public ModKey? ModKey { get; internal set; }
-        public FormKey? FormKey { get; internal set; }
-        public Type? RecordType { get; internal set; }
-        public string? EditorID { get; internal set; }
+        public ModKey? ModKey { get; private set; }
+        public FormKey? FormKey { get; private set; }
+        public Type? RecordType { get; private set; }
+        public string? EditorID { get; private set; }
 
         public RecordException(FormKey? formKey, Type? recordType, ModKey? modKey, string? edid)
         {
@@ -87,13 +87,23 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
                 innerException: ex);
         }
 
+        private static Type GetRecordType(Type t)
+        {
+            if (LoquiRegistration.TryGetRegister(t, out var regis))
+            {
+                return regis.ClassType;
+            }
+
+            return t;
+        }
+
         public static RecordException Enrich<TMajor>(Exception ex, FormKey? formKey, string? edid, ModKey? modKey = null)
             where TMajor : IMajorRecordCommonGetter
         {
             return Enrich(
                 ex,
                 formKey,
-                LoquiRegistration.GetRegister(typeof(TMajor)).ClassType,
+                GetRecordType(typeof(TMajor)),
                 edid,
                 modKey);
         }
@@ -169,7 +179,7 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
             return Create(
                 message: message,
                 formKey: formKey,
-                recordType: LoquiRegistration.GetRegister(typeof(TMajor)).ClassType,
+                recordType: GetRecordType(typeof(TMajor)),
                 modKey: modKey,
                 edid: edid,
                 innerException: innerException);

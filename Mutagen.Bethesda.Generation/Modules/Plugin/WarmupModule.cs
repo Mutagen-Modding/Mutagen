@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Loqui;
 using Loqui.Generation;
 using System.IO;
@@ -18,6 +19,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             FileGeneration fg = new FileGeneration();
             ObjectGeneration.AddAutogenerationComment(fg);
             fg.AppendLine("using Loqui;");
+            fg.AppendLine("using Mutagen.Bethesda.Plugins.Records.Internals;");
             fg.AppendLine();
 
             using (new NamespaceWrapper(fg, proto.DefaultNamespace))
@@ -72,9 +74,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 args.Add($"new ProtocolDefinition_Bethesda()");
                                 args.Add($"new ProtocolDefinition_{proto.Protocol.Namespace}()");
                             }
-                            fg.AppendLine($"Plugins.Records.Internals.LinkInterfaceMapping.AutomaticRegistration = false;");
+                            fg.AppendLine($"LinkInterfaceMapping.AutomaticRegistration = false;");
                             using (var args = new ArgsWrapper(fg,
-                                $"Plugins.Records.Internals.LinkInterfaceMapping.Register"))
+                                $"LinkInterfaceMapping.Register"))
                             {
                                 args.Add($"new {proto.DefaultNamespace}.Internals.LinkInterfaceMapping()");
                             }

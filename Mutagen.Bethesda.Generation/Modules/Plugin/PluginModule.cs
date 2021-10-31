@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Generation.Modules
             this.SubModules.Add(new GameEnvironmentStateModule());
             this.SubModules.Add(new MajorRecordLinkEqualityModule());
             this.SubModules.Add(new ImplicitsModule());
+            this.SubModules.Add(new BreakMarkingModule());
         }
 
         public bool FieldFilter(TypeGeneration field)

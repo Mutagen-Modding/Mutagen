@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
             set => SetValue(MaxSearchBoxHeightProperty, value);
         }
         public static readonly DependencyProperty MaxSearchBoxHeightProperty = DependencyProperty.Register(nameof(MaxSearchBoxHeight), typeof(double), typeof(ModKeyPicker),
-             new FrameworkPropertyMetadata(double.PositiveInfinity));
+             new FrameworkPropertyMetadata(1000d));
 
         public double SearchBoxHeight
         {

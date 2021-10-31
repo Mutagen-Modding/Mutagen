@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using FluentAssertions;
-using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -9,10 +8,11 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Testing;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests.Skyrim.Records
+namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim
 {
     public abstract class ABodyTemplateTests
     {
