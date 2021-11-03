@@ -47,7 +47,7 @@
       <FormLink name="AcousticSpace" refName="AcousticSpace" recordType="XCAS" />
       <FormLink name="EncounterZone" refName="EncounterZone" recordType="XEZN" />
       <FormLink name="Music" refName="MusicType" recordType="XCMO" />
-      <FormLink name="ImageSpace" refName="ImageSpaceAdapter" recordType="XCIM" />
+      <FormLink name="ImageSpace" refName="ImageSpace" recordType="XCIM" />
       <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
       <RefList name="NavigationMeshes" binary="NoGeneration" refName="ANavigationMesh" />
       <Int32 name="Timestamp" binary="NoGeneration" />
