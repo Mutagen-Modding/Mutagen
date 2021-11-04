@@ -1,18 +1,14 @@
-using System;
 using Mutagen.Bethesda.Plugins;
 using Noggog.WPF;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using DynamicData;
-using DynamicData.Binding;
 using Noggog;
 
 namespace Mutagen.Bethesda.WPF.Plugins
@@ -22,13 +18,13 @@ namespace Mutagen.Bethesda.WPF.Plugins
     {
         private ListBox? _modKeyListBox;
         
-        public IList<ModKey>? ModKeys
+        public ICollection<ModKey>? ModKeys
         {
-            get => (IList<ModKey>)GetValue(ModKeysProperty);
+            get => (ICollection<ModKey>)GetValue(ModKeysProperty);
             set => SetValue(ModKeysProperty, value);
         }
-        public static readonly DependencyProperty ModKeysProperty = DependencyProperty.Register(nameof(ModKeys), typeof(IList<ModKey>), typeof(ModKeyMultiPicker),
-             new FrameworkPropertyMetadata(default(IList<ModKey?>)));
+        public static readonly DependencyProperty ModKeysProperty = DependencyProperty.Register(nameof(ModKeys), typeof(ICollection<ModKey>), typeof(ModKeyMultiPicker),
+             new FrameworkPropertyMetadata(default(ICollection<ModKey?>)));
 
         public ModKey? SelectedModKey
         {
@@ -36,51 +32,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
             set => SetValue(SelectedModKeyProperty, value);
         }
         public static readonly DependencyProperty SelectedModKeyProperty = DependencyProperty.Register(nameof(SelectedModKey), typeof(ModKey?), typeof(ModKeyMultiPicker),
-             new FrameworkPropertyMetadata(default(ModKey?), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                 (d, e) =>
-                 {
-                     var picker = (ModKeyMultiPicker)d;
-                     if (e.NewValue == null)
-                     {
-                         picker.SelectedModKeyViewModel = null;
-                         return;
-                     }
-                     var newModKey = (ModKey)e.NewValue;
-                     picker.SelectedModKeyViewModel = picker.ModKeySelectionViewModels.FirstOrDefault(x => x.Item == newModKey);
-                 }));
-
-        public ReadOnlyObservableCollection<SelectedVm> ModKeySelectionViewModels { get; }
-
-        public SelectedVm? SelectedModKeyViewModel
-        {
-            get { return (SelectedVm?)GetValue(SelectedModKeyViewModelProperty); }
-            set { SetValue(SelectedModKeyViewModelProperty, value); }
-        }
-        public static readonly DependencyProperty SelectedModKeyViewModelProperty = DependencyProperty.Register(
-            nameof(SelectedModKeyViewModel), typeof(SelectedVm), typeof(ModKeyMultiPicker), 
-            new FrameworkPropertyMetadata(default(SelectedVm?), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                (d, e) =>
-                {
-                    var picker = (ModKeyMultiPicker)d;
-                    if (e.NewValue == null)
-                    {
-                        picker.SelectedModKey = null;
-                        return;
-                    }
-                    var newFormKey = (SelectedVm)e.NewValue;
-                    picker.SelectedModKey = newFormKey.Item;
-                }));
-
-        public class SelectedVm : ReactiveObject, ISelectedItem<ModKey>
-        {
-            [Reactive] public bool IsSelected { get; set; }
-            public ModKey Item { get; }
-
-            public SelectedVm(ModKey modKey)
-            {
-                Item = modKey;
-            }
-        }
+             new FrameworkPropertyMetadata(default(ModKey?), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Brush SelectedForegroundBrush
         {
@@ -149,44 +101,10 @@ namespace Mutagen.Bethesda.WPF.Plugins
                     if (ModKeys == null) return;
                     ModKeys.Add(ModKey);
                 });
-
-            this.WhenAnyValue(x => x.ModKeys)
-                .Select(x =>
-                {
-                    if (x is ObservableCollection<ModKey> obsCollection)
-                    {
-                        return obsCollection.ToObservableChangeSet();
-                    }
-
-                    if (x is IObservableCollection<ModKey> obsCollInterf)
-                    {
-                        return obsCollInterf.ToObservableChangeSet<IObservableCollection<ModKey>, ModKey>();
-                    }
-
-                    return Observable.Empty<IChangeSet<ModKey>>();
-                })
-                .Switch()
-                .Transform(x => new SelectedVm(x))
-                .Bind(out ReadOnlyObservableCollection<SelectedVm> selModKeys)
-                .Subscribe();
-            ModKeySelectionViewModels = selModKeys;
-            
             DeleteSelectedItemsCommand = ReactiveCommand.Create(
-                canExecute: this.WhenAnyValue(x => x.SelectedModKeyViewModel)
+                canExecute: this.WhenAnyValue(x => x.SelectedModKey)
                     .Select(x => x != null),
-                execute: () =>
-                {
-                    var modKeys = ModKeys;
-                    if (modKeys == null) return;
-                    foreach (var item in ModKeySelectionViewModels
-                        .WithIndex()
-                        .Where(i => i.Item.IsSelected)
-                        .OrderByDescending(x => x.Index)
-                        .ToArray())
-                    {
-                        modKeys.RemoveAt(item.Index);
-                    }
-                });
+                execute: () => _modKeyListBox?.TryRemoveSelected());
         }
 
         public override void OnApplyTemplate()
@@ -195,7 +113,6 @@ namespace Mutagen.Bethesda.WPF.Plugins
             _modKeyListBox = GetTemplateChild("PART_AddedModKeyListBox") as ListBox;
             if (_modKeyListBox != null)
             {
-                _modKeyListBox.ItemsSource = ModKeySelectionViewModels;
                 Noggog.WPF.Drag.ListBoxDragDrop(_modKeyListBox, () => this.ModKeys as IList<ModKey>)
                     .DisposeWith(_templateDisposable);
             }
