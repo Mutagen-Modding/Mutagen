@@ -303,14 +303,14 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IMusicTypeGetter> ICellGetter.Music => this.Music;
         #endregion
         #region ImageSpace
-        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace
+        private readonly IFormLinkNullable<IImageSpaceGetter> _ImageSpace = new FormLinkNullable<IImageSpaceGetter>();
+        public IFormLinkNullable<IImageSpaceGetter> ImageSpace
         {
             get => _ImageSpace;
             set => _ImageSpace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ICellGetter.ImageSpace => this.ImageSpace;
+        IFormLinkNullableGetter<IImageSpaceGetter> ICellGetter.ImageSpace => this.ImageSpace;
         #endregion
         #region Landscape
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2143,7 +2143,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace { get; set; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
+        new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
         new Landscape? Landscape { get; set; }
         new ExtendedList<ANavigationMesh> NavigationMeshes { get; }
         new Int32 Timestamp { get; set; }
@@ -2210,7 +2210,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IAcousticSpaceGetter> AcousticSpace { get; }
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace { get; }
+        IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
         ILandscapeGetter? Landscape { get; }
         IReadOnlyList<IANavigationMeshGetter> NavigationMeshes { get; }
         Int32 Timestamp { get; }
@@ -6037,7 +6037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ImageSpace
         private int? _ImageSpaceLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

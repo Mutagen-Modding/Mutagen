@@ -30,8 +30,8 @@
     </PackageReference>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.13" />
-    <PackageReference Include="Loqui" Version="2.32.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.32.0" />
+    <PackageReference Include="Loqui" Version="2.33.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.33.0" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -170,6 +170,9 @@
     <Compile Include="Plugins\Cache\Internals\Implementations\MutableModLinkCache.cs" />
     <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistrations.cs" />
     <Compile Include="Plugins\Cache\ResolveTarget.cs" />
+    <Compile Include="Plugins\Converters\FormKeyTypeConverter.cs" />
+    <Compile Include="Plugins\Converters\ModKeyTypeConverter.cs" />
+    <Compile Include="Plugins\Converters\ModPathTypeConverter.cs" />
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
     <Compile Include="Plugins\Extensions\ModContextExt.cs" />
