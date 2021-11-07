@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
                     })
                     .DisposeWith(disposable);
 
-                Noggog.WPF.Drag.ListBoxDragDrop(this.SettingsListBox, () => this.ViewModel?.Values)
+                Noggog.WPF.Drag.ListBoxDragDrop<SelectionWrapper>(SettingsListBox)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.IsFocused)
                     .Select((sel) => sel ? Visibility.Visible : Visibility.Collapsed)
