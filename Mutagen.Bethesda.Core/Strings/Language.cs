@@ -15,5 +15,16 @@ namespace Mutagen.Bethesda.Strings
         Chinese,
         Russian,
         Japanese,
+        Czech,
+        Hungarian,
+        Danish,
+        Finnish,
+        Greek,
+        Norwegian,
+        Swedish,
+        Turkish,
+        Arabic,
+        Korean,
+        Thai,
     }
 }

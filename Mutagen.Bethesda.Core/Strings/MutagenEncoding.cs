@@ -34,4 +34,54 @@ namespace Mutagen.Bethesda.Strings
             return _encoding.GetBytes(chars, bytes);
         }
     }
+
+    public class MutagenEncodingFallbackWrapper : IMutagenEncoding
+    {
+        private readonly IMutagenEncoding _primaryEncoding;
+        private readonly IMutagenEncoding _secondaryEncoding;
+
+        public MutagenEncodingFallbackWrapper(
+            IMutagenEncoding primaryEncoding,
+            IMutagenEncoding secondaryEncoding)
+        {
+            _primaryEncoding = primaryEncoding;
+            _secondaryEncoding = secondaryEncoding;
+        }
+
+        public string GetString(ReadOnlySpan<byte> bytes)
+        {
+            try
+            {
+                return _primaryEncoding.GetString(bytes);
+            }
+            catch (Exception)
+            {
+                return _secondaryEncoding.GetString(bytes);
+            }
+        }
+
+        public int GetByteCount(ReadOnlySpan<char> str)
+        {
+            try
+            {
+                return _primaryEncoding.GetByteCount(str);
+            }
+            catch (Exception)
+            {
+                return _secondaryEncoding.GetByteCount(str);
+            }
+        }
+
+        public int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes)
+        {
+            try
+            {
+                return _primaryEncoding.GetBytes(chars, bytes);
+            }
+            catch (Exception)
+            {
+                return _secondaryEncoding.GetBytes(chars, bytes);
+            }
+        }
+    }
 }
