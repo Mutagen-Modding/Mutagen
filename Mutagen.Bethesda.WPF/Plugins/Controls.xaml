@@ -279,6 +279,7 @@
                                 AlternationCount="{Binding ItemsSource.Count, RelativeSource={RelativeSource Self}}"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                VirtualizingStackPanel.IsVirtualizing="False"
                                 SelectedValue="{Binding SelectedModKeyViewModel, RelativeSource={RelativeSource TemplatedParent}}"
                                 SelectionMode="Extended">
                                 <ListBox.ItemContainerStyle>
@@ -704,6 +705,7 @@
                                 AlternationCount="{Binding ItemsSource.Count, RelativeSource={RelativeSource Self}}"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                VirtualizingStackPanel.IsVirtualizing="False"
                                 SelectedValue="{Binding SelectedFormKeyViewModel, RelativeSource={RelativeSource TemplatedParent}}"
                                 SelectionMode="Extended">
                                 <ListBox.ItemContainerStyle>
