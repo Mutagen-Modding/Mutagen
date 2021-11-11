@@ -26,6 +26,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -1502,8 +1503,8 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            bool disposeStrings = param.StringsWriter == null;
-            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings")) : null;
+            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
+            bool disposeStrings = param.StringsWriter != null;
             using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
             {
                 Fallout4ModCommon.WriteParallel(
@@ -4261,11 +4262,11 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            bool disposeStrings = param.StringsWriter == null;
-            var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings")) : null);
+            param.StringsWriter ??= (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null);
+            bool disposeStrings = param.StringsWriter != null;
             var bundle = new WritingBundle(GameRelease.Fallout4)
             {
-                StringsWriter = stringsWriter,
+                StringsWriter = param.StringsWriter,
                 CleanNulls = param.CleanNulls
             };
             using var memStream = new MemoryTributary();

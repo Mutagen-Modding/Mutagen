@@ -10,6 +10,7 @@ namespace Mutagen.Bethesda.Strings.DI
 
     public class MutagenEncodingProvider : IMutagenEncodingProvider
     {
+        public static readonly MutagenEncodingProvider Instance = new();
         public static readonly IMutagenEncoding _932;
         public static readonly IMutagenEncoding _1250;
         public static readonly IMutagenEncoding _1251;
