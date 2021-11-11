@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
                     })
                     .DisposeWith(disposable);
 
-                Noggog.WPF.Drag.ListBoxDragDrop(this.SettingsListBox, () => this.ViewModel?.Values)
+                Noggog.WPF.Drag.ListBoxDragDrop<IBasicSettingsNodeVM>(SettingsListBox)
                     .DisposeWith(disposable);
             });
         }

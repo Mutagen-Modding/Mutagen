@@ -277,10 +277,10 @@
                                 HorizontalContentAlignment="Stretch"
                                 AllowDrop="True"
                                 AlternationCount="{Binding ItemsSource.Count, RelativeSource={RelativeSource Self}}"
-                                ItemsSource="{Binding ModKeys, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                SelectedValue="{Binding SelectedModKey, RelativeSource={RelativeSource TemplatedParent}}"
+                                VirtualizingStackPanel.IsVirtualizing="False"
+                                SelectedValue="{Binding SelectedModKeyViewModel, RelativeSource={RelativeSource TemplatedParent}}"
                                 SelectionMode="Extended">
                                 <ListBox.ItemContainerStyle>
                                     <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
@@ -290,7 +290,7 @@
                                 </ListBox.ItemContainerStyle>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid>
+                                        <Grid DataContext="{Binding Item}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
@@ -703,10 +703,10 @@
                                 HorizontalContentAlignment="Stretch"
                                 AllowDrop="True"
                                 AlternationCount="{Binding ItemsSource.Count, RelativeSource={RelativeSource Self}}"
-                                ItemsSource="{Binding FormKeys, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                SelectedValue="{Binding SelectedFormKey, RelativeSource={RelativeSource TemplatedParent}}"
+                                VirtualizingStackPanel.IsVirtualizing="False"
+                                SelectedValue="{Binding SelectedFormKeyViewModel, RelativeSource={RelativeSource TemplatedParent}}"
                                 SelectionMode="Extended">
                                 <ListBox.ItemContainerStyle>
                                     <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
@@ -716,7 +716,7 @@
                                 </ListBox.ItemContainerStyle>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid>
+                                        <Grid DataContext="{Binding Item}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
