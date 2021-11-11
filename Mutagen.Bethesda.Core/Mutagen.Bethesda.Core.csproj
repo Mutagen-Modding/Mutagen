@@ -415,7 +415,6 @@
     <Compile Include="Plugins\Aspects\ITranslatedNamedRequired.cs" />
     <Compile Include="Plugins\Records\Internals\IMapsToGetter.cs" />
     <Compile Include="Plugins\Records\Internals\LinkInterfaceMapping.cs" />
-    <Compile Include="IsExternalInit.cs" />
     <Compile Include="Plugins\Aspects\IWeightValue.cs" />
     <Compile Include="Plugins\Cache\LinkCachePreferenceOnlyIdentifiers.cs" />
     <Compile Include="Plugins\Cache\LinkCachePreferenceWholeRecord.cs" />

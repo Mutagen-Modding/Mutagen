@@ -70,7 +70,6 @@
     <Compile Include="Interfaces\IPlaced.cs" />
     <Compile Include="Interfaces\IPositionRotation.cs" />
     <Compile Include="Interfaces\IScripted.cs" />
-    <Compile Include="IsExternalInit.cs" />
     <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistration.cs" />
     <Compile Include="Records\Common Subrecords\ActivateParents.cs">
       <DependentUpon>ActivateParents.xml</DependentUpon>
