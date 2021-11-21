@@ -27,5 +27,27 @@ namespace Mutagen.Bethesda
                 _ => throw new NotImplementedException(),
             };
         }
+
+        public static IEnumerable<GameRelease> GetRelatedReleases(this GameCategory gameCategory)
+        {
+            switch (gameCategory)
+            {
+                case GameCategory.Oblivion:
+                    yield return GameRelease.Oblivion;
+                    yield break;
+                case GameCategory.Skyrim:
+                    yield return GameRelease.SkyrimLE;
+                    yield return GameRelease.SkyrimSE;
+                    yield return GameRelease.SkyrimVR;
+                    yield return GameRelease.EnderalLE;
+                    yield return GameRelease.EnderalSE;
+                    yield break;
+                case GameCategory.Fallout4:
+                    yield return GameRelease.Fallout4;
+                    yield break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
     }
 }
