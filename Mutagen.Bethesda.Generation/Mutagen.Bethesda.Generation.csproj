@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+	<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <WarningsAsErrors></WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -13,9 +13,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.34.0" />
-    <PackageReference Include="Loqui.Generation" Version="2.34.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.34.0" />
+    <PackageReference Include="Loqui" Version="2.34.0.1-dev" />
+    <PackageReference Include="Loqui.Generation" Version="2.34.0.1-dev" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.34.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

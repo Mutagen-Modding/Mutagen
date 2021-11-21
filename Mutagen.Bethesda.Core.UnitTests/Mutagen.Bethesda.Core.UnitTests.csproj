@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
         <WarningsAsErrors>nullable</WarningsAsErrors>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -14,8 +14,8 @@
         <PackageReference Include="FluentAssertions" Version="6.2.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
         <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
-        <PackageReference Include="Noggog.CSharpExt" Version="2.34.0" />
-        <PackageReference Include="Noggog.Testing" Version="2.34.0" />
+        <PackageReference Include="Noggog.CSharpExt" Version="2.34.0.1-dev" />
+        <PackageReference Include="Noggog.Testing" Version="2.34.0.1-dev" />
         <PackageReference Include="GitInfo" Version="2.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -36,8 +36,8 @@
         </PackageReference>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" Version="1.1.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.SourceGenerators.Testing" Version="1.1.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.11.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.0.1" />
     </ItemGroup>
 
     <ItemGroup>
