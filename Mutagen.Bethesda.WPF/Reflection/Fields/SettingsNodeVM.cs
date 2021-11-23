@@ -259,6 +259,10 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
                             return FormLinkSettingsVM.Factory(param.LinkCache, meta, param.TargetType, param.DefaultVal);
                         }
                         var foundType = param.Assembly.GetType(param.TargetType.FullName!);
+                        if (foundType == null)
+                        {
+                            EnumExt.TryGetEnumType(param.TargetType.FullName!, out foundType);
+                        }
                         if (foundType != null)
                         {
                             if (foundType.IsEnum)
