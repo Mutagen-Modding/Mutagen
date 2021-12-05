@@ -230,13 +230,14 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
                         }
                     }
                 case "Dictionary`2":
+                case "OrderedDictionary`2":
                     {
                         var firstGen = param.TargetType.GenericTypeArguments[0];
                         var secondGen = param.TargetType.GenericTypeArguments[1];
                         if (member != null
                             && firstGen.IsEnum
                             && (!member.TryGetCustomAttributeByName(nameof(StaticEnumDictionary), out var staticEnumAttr)
-                            || (staticEnumAttr.GetType().GetProperty(nameof(StaticEnumDictionary.Enabled)) is PropertyInfo staticEnumProp
+                            || (staticEnumAttr.GetType().GetProperty(nameof(StaticEnumDictionary.Enabled)) is { } staticEnumProp
                                 && (bool)staticEnumProp.GetValue(staticEnumAttr)!)))
                         {
                             return EnumDictionarySettingsVM.Factory(param with { TargetType = secondGen }, meta, firstGen);
