@@ -5257,7 +5257,7 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool UsingLocalization
         {
             get => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Localized);
-            set => this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Localized, value);
+            set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Localized, value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;

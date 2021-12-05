@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine($"get => this.ModHeader.Flags.HasFlag({obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized);");
-                    fg.AppendLine($"set => this.ModHeader.Flags.SetFlag({obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized, value);");
+                    fg.AppendLine($"set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag({obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized, value);");
                 }
             }
             else

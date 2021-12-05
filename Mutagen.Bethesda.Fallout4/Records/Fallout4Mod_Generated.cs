@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool UsingLocalization
         {
             get => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Localized);
-            set => this.ModHeader.Flags.SetFlag(Fallout4ModHeader.HeaderFlag.Localized, value);
+            set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(Fallout4ModHeader.HeaderFlag.Localized, value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
