@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
@@ -40,11 +41,11 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
             DirectoryProvider = dataDirectoryProvider;
             ReaderFactory = readerFactory;
         }
-        
+
         public IEnumerable<ModKey> Find(
             IEnumerable<IModListingGetter> loadOrderListing,
             bool skipMissingMods = false)
-        {            
+        {
             var listingToIndices = loadOrderListing
                 .ToDictionary(x => x.ModKey);
             HashSet<ModKey> referencedMasters = new();
@@ -60,20 +61,28 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                 {
                     yield return listing.ModKey;
                 }
-
+                
                 var path = Path.Combine(DirectoryProvider.Path, listing.ModKey.FileName);
                 if (!_fileSystem.File.Exists(path))
                 {
                     if (skipMissingMods) continue;
                     throw new MissingModException(new ModPath(listing.ModKey, path));
                 }
-                var reader = ReaderFactory.FromPath(path);
-                foreach (var master in reader.Masters)
+
+                try
                 {
-                    if (!referencedMasters.Contains(master.Master))
+                    var reader = ReaderFactory.FromPath(path);
+                    foreach (var master in reader.Masters)
                     {
-                        toCheck.Enqueue(master.Master);
+                        if (!referencedMasters.Contains(master.Master))
+                        {
+                            toCheck.Enqueue(master.Master);
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    throw new ModHeaderMalformedException(new ModPath(key, path), innerException: e);
                 }
             }
         }
