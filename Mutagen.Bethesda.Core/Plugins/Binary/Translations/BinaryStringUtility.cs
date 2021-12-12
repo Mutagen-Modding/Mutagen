@@ -12,8 +12,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
     /// </summary>
     public static class BinaryStringUtility
     {
-        private static readonly MutagenEncodingProvider MutagenEncodings = new();
-        
         /// <summary>
         /// Converts span to a string.
         /// </summary>
@@ -21,7 +19,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <returns>string containing a character for every byte in the input span</returns>
         public static string ToZString(ReadOnlySpan<byte> bytes)
         {
-            return ToZString(bytes, MutagenEncodings.Default);
+            return ToZString(bytes, MutagenEncodingProvider.Instance.Default);
         }
         
         /// <summary>
@@ -32,7 +30,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         /// <returns>string containing a character for every byte in the input span</returns>
         public static string ToZString(ReadOnlySpan<byte> bytes, IMutagenEncoding encoding)
         {
-            return (encoding ?? MutagenEncodings.Default).GetString(bytes);
+            return (encoding ?? MutagenEncodingProvider.Instance.Default).GetString(bytes);
         }
 
         /// <summary>
@@ -173,7 +171,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
         public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType)
         {
-            Write(stream, str, binaryType, MutagenEncodings.Default);
+            Write(stream, str, binaryType, MutagenEncodingProvider.Instance.Default);
         }
 
         public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType, IMutagenEncoding encoding)
@@ -208,7 +206,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
         public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str)
         {
-            Write(stream, str, MutagenEncodings.Default);
+            Write(stream, str, MutagenEncodingProvider.Instance.Default);
         }
 
         public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str, IMutagenEncoding encoding)

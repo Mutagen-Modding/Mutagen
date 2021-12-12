@@ -26,6 +26,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;

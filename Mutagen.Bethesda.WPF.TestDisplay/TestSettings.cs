@@ -18,5 +18,15 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
         
         [Tooltip("This is my Armor")]
         public IFormLinkGetter<IArmorGetter> MyArmor = FormLink<IArmorGetter>.Null;
+
+        [Tooltip("This is an enum")]
+        public MyEnum MyEnum = MyEnum.EnumValue2;
+    }
+
+    public enum MyEnum
+    {
+        EnumValue1,
+        EnumValue2,
+        EnumValue3,
     }
 }

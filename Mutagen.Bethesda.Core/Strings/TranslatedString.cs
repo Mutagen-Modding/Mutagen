@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Strings
         /// <summary>
         /// The default language to use as the main target language
         /// </summary>
-        public static Language DefaultLanguage = Language.English;
+        public static Language DefaultLanguage { get; set; } = Language.English;
 
         /// <summary>
         /// Language the string is targeting, and will be set/return when accessed normally

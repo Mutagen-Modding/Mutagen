@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings
 {
@@ -15,15 +16,19 @@ namespace Mutagen.Bethesda.Strings
     public class StringsWriter : IDisposable
     {
         public DirectoryPath WriteDir { get; }
+        private readonly GameRelease _release;
         private readonly ModKey _modKey;
+        private readonly IMutagenEncodingProvider _encodingProvider;
         private readonly StringsLanguageFormat _languageFormat;
-        private readonly List<KeyValuePair<Language, string>[]> _strings = new List<KeyValuePair<Language, string>[]>();
-        private readonly List<KeyValuePair<Language, string>[]> _ilStrings = new List<KeyValuePair<Language, string>[]>();
-        private readonly List<KeyValuePair<Language, string>[]> _dlStrings = new List<KeyValuePair<Language, string>[]>();
+        private readonly List<KeyValuePair<Language, string>[]> _strings = new();
+        private readonly List<KeyValuePair<Language, string>[]> _ilStrings = new();
+        private readonly List<KeyValuePair<Language, string>[]> _dlStrings = new();
 
-        public StringsWriter(GameRelease release, ModKey modKey, DirectoryPath writeDirectory)
+        public StringsWriter(GameRelease release, ModKey modKey, DirectoryPath writeDirectory, IMutagenEncodingProvider encodingProvider)
         {
+            _release = release;
             _modKey = modKey;
+            _encodingProvider = encodingProvider;
             _languageFormat = release.GetLanguageFormat();
             WriteDir = writeDirectory;
         }
@@ -114,6 +119,7 @@ namespace Mutagen.Bethesda.Strings
 
             foreach (var language in subLists)
             {
+                var encoding = _encodingProvider.GetEncoding(_release, language.Key);
                 using var writer = new MutagenWriter(
                     Path.Combine(WriteDir.Path, StringsUtility.GetFileName(_languageFormat, _modKey, language.Key, source)),
                     meta: null!);
@@ -126,16 +132,17 @@ namespace Mutagen.Bethesda.Strings
                 foreach (var item in language.Value)
                 {
                     writer.Write(item.Index);
+                    var strLen = encoding.GetByteCount(item.String);
                     switch (source)
                     {
                         case StringsSource.Normal:
                             writer.Write(size);
-                            size += item.String.Length + 1;
+                            size += strLen + 1;
                             break;
                         case StringsSource.IL:
                         case StringsSource.DL:
                             writer.Write(size);
-                            size += item.String.Length + 5;
+                            size += strLen + 5;
                             break;
                         default:
                             throw new NotImplementedException();
@@ -152,12 +159,12 @@ namespace Mutagen.Bethesda.Strings
                     switch (source)
                     {
                         case StringsSource.Normal:
-                            writer.Write(item.String, StringBinaryType.NullTerminate);
+                            writer.Write(item.String, StringBinaryType.NullTerminate, encoding);
                             break;
                         case StringsSource.IL:
                         case StringsSource.DL:
                             writer.Write(item.String.Length + 1);
-                            writer.Write(item.String, StringBinaryType.NullTerminate);
+                            writer.Write(item.String, StringBinaryType.NullTerminate, encoding);
                             break;
                         default:
                             throw new NotImplementedException();

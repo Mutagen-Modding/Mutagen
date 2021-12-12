@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+		<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
         <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
         <PackageId>Mutagen.Bethesda.Testing</PackageId>
         <Authors>Noggog</Authors>
@@ -21,7 +21,7 @@
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.17.0" />
-        <PackageReference Include="Noggog.Testing" Version="2.34.0" />
+        <PackageReference Include="Noggog.Testing" Version="2.35.0" />
         <PackageReference Include="GitInfo" Version="2.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

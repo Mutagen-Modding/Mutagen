@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -664,7 +665,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 BsaOrdering = bsaOrder
             });
-            using var writer = new StringsWriter(this.GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)), outFolder);
+            using var writer = new StringsWriter(this.GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)), outFolder, MutagenEncodingProvider.Instance);
             var dict = stringsOverlay.Get(source);
             foreach (var lang in dict)
             {

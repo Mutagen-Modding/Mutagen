@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -165,7 +166,7 @@ namespace Mutagen.Bethesda.Tests
                             record.IsCompressed = false;
                         }
 
-                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(this.GameRelease, mod.ModKey, strsWriteDir) : null);
+                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(this.GameRelease, mod.ModKey, strsWriteDir, MutagenEncodingProvider.Instance) : null);
                         mod.WriteToBinary(outputPath, writeParam);
                         GC.Collect();
 
@@ -205,7 +206,7 @@ namespace Mutagen.Bethesda.Tests
                         using (var wrapper = await ImportBinaryOverlay(this.FilePath.Path))
                         {
                             doStrings = wrapper.UsingLocalization;
-                            var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(this.GameRelease, wrapper.ModKey, strsWriteDir) : null);
+                            var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(this.GameRelease, wrapper.ModKey, strsWriteDir, MutagenEncodingProvider.Instance) : null);
                             wrapper.WriteToBinary(binaryOverlayPath, writeParam);
                             writeParam.StringsWriter?.Dispose();
                         }
@@ -244,7 +245,7 @@ namespace Mutagen.Bethesda.Tests
                         o.OnNext(FilePath.ToString());
                         var copyIn = await ImportCopyIn(this.FilePath.Path);
                         doStrings = copyIn.UsingLocalization;
-                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(this.GameRelease, copyIn.ModKey, strsWriteDir) : null);
+                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(this.GameRelease, copyIn.ModKey, strsWriteDir, MutagenEncodingProvider.Instance) : null);
                         copyIn.WriteToBinary(copyInPath, writeParam);
                         writeParam.StringsWriter?.Dispose();
 

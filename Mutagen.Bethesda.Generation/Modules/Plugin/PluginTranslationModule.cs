@@ -19,6 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -362,15 +363,15 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             if (objData.UsesStringFiles)
             {
-                fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
-                fg.AppendLine($"var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\")) : null);");
+                fg.AppendLine($"param.StringsWriter ??= (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncodingProvider)}.{nameof(MutagenEncodingProvider.Instance)}) : null);");
+                fg.AppendLine("bool disposeStrings = param.StringsWriter != null;");
             }
             fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameReleaseStr})");
             using (var prop = new PropertyCtorWrapper(fg))
             {
                 if (objData.UsesStringFiles)
                 {
-                    prop.Add($"{nameof(WritingBundle.StringsWriter)} = stringsWriter");
+                    prop.Add($"{nameof(WritingBundle.StringsWriter)} = param.StringsWriter");
                 }
                 prop.Add($"{nameof(WritingBundle.CleanNulls)} = param.{nameof(BinaryWriteParameters.CleanNulls)}");
             }
@@ -603,6 +604,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 yield return "Mutagen.Bethesda.Plugins.Meta";
                 yield return "Mutagen.Bethesda.Plugins.Utility";
                 yield return "Mutagen.Bethesda.Plugins.Cache.Internals";
+                yield return "Mutagen.Bethesda.Strings.DI";
             }
 
             if (HasRecordTypeFields(obj))

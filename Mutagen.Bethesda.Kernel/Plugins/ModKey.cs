@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Plugins
         /// <returns>True if conversion successful</returns>
         public static bool TryFromFileName(FileName fileName, [MaybeNullWhen(false)] out ModKey modKey, out string errorReason)
         {
-            return TryFromNameAndExtension(fileName, out modKey, out errorReason);
+            return TryFromNameAndExtension(fileName.String, out modKey, out errorReason);
         }
 
         /// <summary>

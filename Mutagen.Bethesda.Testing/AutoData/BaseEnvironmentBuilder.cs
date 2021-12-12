@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda.Testing.AutoData
     {
         private readonly GameRelease _release;
         private MockFileSystem? _mockFileSystem;
+        public static readonly DirectoryPath GameDirectory = "C:/GameDirectory";
 
         public BaseEnvironmentBuilder(GameRelease release)
         {
@@ -44,7 +45,7 @@ namespace Mutagen.Bethesda.Testing.AutoData
             }
             else if (t == typeof(IGameDirectoryProvider))
             {
-                return new GameDirectoryInjection(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory"));
+                return new GameDirectoryInjection(GameDirectory);
             }
             else if (t == typeof(IDataDirectoryProvider))
             {
@@ -66,9 +67,9 @@ namespace Mutagen.Bethesda.Testing.AutoData
                     };
                     _mockFileSystem.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
                     _mockFileSystem.File.Create(PathBuilder.ExistingFile);
-                    _mockFileSystem.Directory.CreateDirectory(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory"));
+                    _mockFileSystem.Directory.CreateDirectory(Path.Combine(GameDirectory, "DataDirectory"));
                     _mockFileSystem.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "Plugins.txt"));
-                    _mockFileSystem.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", $"{_release.ToCategory()}.ccc"));
+                    _mockFileSystem.File.Create(Path.Combine(GameDirectory, $"{_release.ToCategory()}.ccc"));
                 }
                 return _mockFileSystem;
             }

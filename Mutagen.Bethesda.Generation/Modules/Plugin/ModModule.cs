@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -32,6 +33,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 yield return "System.IO";
                 yield return "System.IO.Abstractions";
                 yield return "Mutagen.Bethesda.Plugins.Masters";
+                yield return "Mutagen.Bethesda.Strings.DI";
             }
         }
 
@@ -76,7 +78,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine($"get => this.ModHeader.Flags.HasFlag({obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized);");
-                    fg.AppendLine($"set => this.ModHeader.Flags.SetFlag({obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized, value);");
+                    fg.AppendLine($"set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag({obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized, value);");
                 }
             }
             else
@@ -459,8 +461,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
                 if (obj.GetObjectData().UsesStringFiles)
                 {
-                    fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
-                    fg.AppendLine($"param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\")) : null;");
+                    fg.AppendLine($"param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncodingProvider)}.{nameof(MutagenEncodingProvider.Instance)}) : null;");
+                    fg.AppendLine("bool disposeStrings = param.StringsWriter != null;");
                 }
                 fg.AppendLine("using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))");
                 using (new BraceWrapper(fg))
