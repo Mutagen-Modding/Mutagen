@@ -77,15 +77,22 @@ namespace Mutagen.Bethesda.Installs.DI
         {
             try
             {
-                var key = Games[release].RegistryKey;
-                using var regKey = Registry.LocalMachine.OpenSubKey(key);
+                var gameRegistration = Games[release];
+                
+                if (gameRegistration.RegistryPath == null || gameRegistration.RegistryKey == null)
+                {
+                    path = default;
+                    return false;
+                }
+                
+                using var regKey = Registry.LocalMachine.OpenSubKey(gameRegistration.RegistryPath);
                 if (regKey == null)
                 {
                     path = default;
                     return false;
                 }
 
-                var regRes = RegistryHelper.GetStringValueFromRegistry(regKey, "installed path");
+                var regRes = RegistryHelper.GetStringValueFromRegistry(regKey, gameRegistration.RegistryKey);
                 if (regRes.Failed)
                 {
                     path = default;
@@ -197,7 +204,8 @@ namespace Mutagen.Bethesda.Installs.DI
                         NexusGameId: 101,
                         SteamId: 22330,
                         GogId: 1458058109,
-                        RegistryKey: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Oblivion",
+                        RegistryPath: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Oblivion",
+                        RegistryKey: @"installed path",
                         RequiredFiles: new string[]
                         {
                             "oblivion.exe"
@@ -210,7 +218,8 @@ namespace Mutagen.Bethesda.Installs.DI
                         NexusGameId: 110,
                         SteamId: 72850,
                         GogId: null,
-                        RegistryKey: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim",
+                        RegistryPath: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim",
+                        RegistryKey: @"installed path",
                         RequiredFiles: new string[]
                         {
                             "tesv.exe"
@@ -223,7 +232,8 @@ namespace Mutagen.Bethesda.Installs.DI
                         NexusGameId: 1704,
                         SteamId: 489830,
                         GogId: null,
-                        RegistryKey: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim Special Edition",
+                        RegistryPath: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim Special Edition",
+                        RegistryKey: @"installed path",
                         RequiredFiles: new string[]
                         {
                             "SkyrimSE.exe"
@@ -236,7 +246,8 @@ namespace Mutagen.Bethesda.Installs.DI
                         NexusGameId: 1151,
                         SteamId: 377160,
                         GogId: null,
-                        RegistryKey: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout4",
+                        RegistryPath: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout4",
+                        RegistryKey: @"installed path",
                         RequiredFiles: new string[]
                         {
                             "Fallout4.exe"
@@ -249,15 +260,23 @@ namespace Mutagen.Bethesda.Installs.DI
                         NexusGameId: 1704,
                         SteamId: 611670,
                         GogId: null,
-                        RegistryKey: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim VR",
+                        RegistryPath: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim VR",
+                        RegistryKey: @"installed path",
                         RequiredFiles: new string[]
                         {
                             "SkyrimVR.exe"
                         })
                 }
             };
-            games[GameRelease.EnderalLE] = games[GameRelease.SkyrimLE];
-            games[GameRelease.EnderalSE] = games[GameRelease.SkyrimSE];
+            games[GameRelease.EnderalLE] = games[GameRelease.SkyrimLE] with
+            {
+                RegistryPath = null,
+                RegistryKey = null,
+            };
+            games[GameRelease.EnderalSE] = games[GameRelease.SkyrimSE] with
+            {
+                RegistryPath = @"SOFTWARE\WOW6432Node\SureAI\Enderal SE",
+            };
             Games = games;
         }
         

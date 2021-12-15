@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda.Installs
         long NexusGameId,
         int? SteamId,
         int? GogId,
-        string RegistryKey,
+        string? RegistryPath,
+        string? RegistryKey,
         IEnumerable<string> RequiredFiles);
 }
