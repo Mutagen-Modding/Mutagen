@@ -100,9 +100,9 @@ namespace Mutagen.Bethesda.Plugins
                    // Texture Set
                    skyrimModKey.MakeFormKey(0x28),
                });
-            EnderalLE = SkyrimLE with { Listings = new ImplicitModKeyCollection(SkyrimLE.Listings.And(enderal)) };
+            EnderalLE = SkyrimLE with { BaseMasters = new ImplicitModKeyCollection(SkyrimLE.Listings.And(enderal)) };
             SkyrimSE = SkyrimLE with { GameRelease = GameRelease.SkyrimSE };
-            EnderalSE = SkyrimSE with { Listings = new ImplicitModKeyCollection(SkyrimSE.Listings.And(enderal)) };
+            EnderalSE = SkyrimSE with { BaseMasters = new ImplicitModKeyCollection(SkyrimSE.Listings.And(enderal)) };
             SkyrimVR = SkyrimSE with
             {
                 GameRelease = GameRelease.SkyrimVR,
