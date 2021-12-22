@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => RaceMovementType_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => RaceMovementType_Registration.Instance;
         IFormLinkNullableGetter<IMovementTypeGetter> MovementType { get; }
         ISpeedOverridesGetter? Overrides { get; }
 

@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IStoryManagerBranchNodeGetter>,
         IMapsToGetter<IStoryManagerBranchNodeGetter>
     {
-        static new ILoquiRegistration Registration => StoryManagerBranchNode_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => StoryManagerBranchNode_Registration.Instance;
         AStoryManagerNode.Flag? Flags { get; }
         ReadOnlyMemorySlice<Byte>? XNAM { get; }
 

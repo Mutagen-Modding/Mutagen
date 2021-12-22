@@ -1087,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter
     {
-        static new ILoquiRegistration Registration => AlchemicalApparatus_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter

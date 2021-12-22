@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WaterReflection_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WaterReflection_Registration.Instance;
         WaterReflection.VersioningBreaks Versioning { get; }
         IFormLinkGetter<IPlacedObjectGetter> Water { get; }
         WaterReflection.Flag Type { get; }

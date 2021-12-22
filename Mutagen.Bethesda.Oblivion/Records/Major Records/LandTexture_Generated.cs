@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ILandTextureGetter>,
         IMapsToGetter<ILandTextureGetter>
     {
-        static new ILoquiRegistration Registration => LandTexture_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LandTexture_Registration.Instance;
         String? Icon { get; }
         IHavokDataGetter? Havok { get; }
         Byte? TextureSpecularExponent { get; }

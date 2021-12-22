@@ -4160,7 +4160,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IEffectShaderGetter>,
         IMapsToGetter<IEffectShaderGetter>
     {
-        static new ILoquiRegistration Registration => EffectShader_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
         String? FillTexture { get; }
         String? ParticleShaderTexture { get; }
         String? HolesTexture { get; }

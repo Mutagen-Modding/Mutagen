@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LocationReference_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LocationReference_Registration.Instance;
         IFormLinkGetter<ILinkedReferenceGetter> Actor { get; }
         IFormLinkGetter<IComplexLocationGetter> Location { get; }
         P2Int16 Grid { get; }

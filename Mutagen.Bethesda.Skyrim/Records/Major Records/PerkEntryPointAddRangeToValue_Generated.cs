@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPerkEntryPointAddRangeToValueGetter>
     {
-        static new ILoquiRegistration Registration => PerkEntryPointAddRangeToValue_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkEntryPointAddRangeToValue_Registration.Instance;
         Single From { get; }
         Single To { get; }
 

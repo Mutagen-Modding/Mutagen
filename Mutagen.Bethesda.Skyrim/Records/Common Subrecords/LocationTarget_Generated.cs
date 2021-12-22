@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<ILocationTargetGetter>
     {
-        static new ILoquiRegistration Registration => LocationTarget_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LocationTarget_Registration.Instance;
         IFormLinkGetter<ILocationTargetableGetter> Link { get; }
 
     }

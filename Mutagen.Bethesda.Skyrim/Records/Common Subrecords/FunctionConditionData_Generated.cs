@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IFunctionConditionDataGetter>
     {
-        static new ILoquiRegistration Registration => FunctionConditionData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => FunctionConditionData_Registration.Instance;
         Condition.Function Function { get; }
         UInt16 Unknown2 { get; }
         IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }

@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         ILoquiObject<IModelGetter>
     {
-        static new ILoquiRegistration Registration => Model_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Model_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? Unknown { get; }
 
     }

@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CombatStyleCloseRange_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
         CombatStyleCloseRange.VersioningBreaks Versioning { get; }
         Single CircleMult { get; }
         Single FallbackMult { get; }

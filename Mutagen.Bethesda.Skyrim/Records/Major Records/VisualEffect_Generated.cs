@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IVisualEffectGetter>,
         IMapsToGetter<IVisualEffectGetter>
     {
-        static new ILoquiRegistration Registration => VisualEffect_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => VisualEffect_Registration.Instance;
         IFormLinkGetter<IArtObjectGetter> EffectArt { get; }
         IFormLinkGetter<IEffectShaderGetter> Shader { get; }
         VisualEffect.Flag Flags { get; }

@@ -1363,7 +1363,7 @@ namespace Mutagen.Bethesda.Fallout4
         IOwnerGetter,
         IRelatableGetter
     {
-        static new ILoquiRegistration Registration => Faction_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Faction_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter

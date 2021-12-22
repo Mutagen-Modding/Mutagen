@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ISubspaceGetter>,
         IMapsToGetter<ISubspaceGetter>
     {
-        static new ILoquiRegistration Registration => Subspace_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Subspace_Registration.Instance;
         P3Float? Point { get; }
 
     }

@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<ICellNavigationMeshDataGetter>
     {
-        static new ILoquiRegistration Registration => CellNavigationMeshData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CellNavigationMeshData_Registration.Instance;
         IFormLinkGetter<IWorldspaceGetter> UnusedWorldspaceParent { get; }
         IFormLinkGetter<ICellGetter> Parent { get; }
 

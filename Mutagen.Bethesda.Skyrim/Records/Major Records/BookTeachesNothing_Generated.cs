@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IBookTeachesNothingGetter>
     {
-        static new ILoquiRegistration Registration => BookTeachesNothing_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => BookTeachesNothing_Registration.Instance;
         UInt32 RawContent { get; }
 
     }

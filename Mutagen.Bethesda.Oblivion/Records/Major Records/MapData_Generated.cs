@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MapData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MapData_Registration.Instance;
         P2Int UsableDimensions { get; }
         P2Int16 CellCoordinatesNWCell { get; }
         P2Int16 CellCoordinatesSECell { get; }

@@ -912,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IRegionGetter>,
         IMapsToGetter<IRegionGetter>
     {
-        static new ILoquiRegistration Registration => Region_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Region_Registration.Instance;
         String? Icon { get; }
         Color? MapColor { get; }
         IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }

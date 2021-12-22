@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<ISceneAdapterGetter>
     {
-        static new ILoquiRegistration Registration => SceneAdapter_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SceneAdapter_Registration.Instance;
         ISceneScriptFragmentsGetter? ScriptFragments { get; }
 
     }

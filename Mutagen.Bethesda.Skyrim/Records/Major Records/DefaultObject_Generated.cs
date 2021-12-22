@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DefaultObject_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DefaultObject_Registration.Instance;
         RecordType Use { get; }
         IFormLinkGetter<ISkyrimMajorRecordGetter> Object { get; }
 

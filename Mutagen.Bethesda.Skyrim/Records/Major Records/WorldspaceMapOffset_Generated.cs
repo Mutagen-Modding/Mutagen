@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorldspaceMapOffset_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorldspaceMapOffset_Registration.Instance;
         Single Scale { get; }
         P3Float CellOffset { get; }
 

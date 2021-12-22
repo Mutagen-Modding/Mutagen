@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedHazardGetter>,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedHazard_Registration.Instance;
         IFormLinkGetter<IHazardGetter> Hazard { get; }
 
     }

@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MajorRecord_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MajorRecord_Registration.Instance;
         Int32 MajorRecordFlagsRaw { get; }
         FormKey FormKey { get; }
         UInt32 VersionControl { get; }

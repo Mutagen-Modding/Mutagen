@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         ILoquiObject<ILocationFallbackGetter>
     {
-        static new ILoquiRegistration Registration => LocationFallback_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LocationFallback_Registration.Instance;
         LocationTargetRadius.LocationType Type { get; }
         Int32 Data { get; }
 

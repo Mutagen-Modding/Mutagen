@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => FurnitureMarker_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FurnitureMarker_Registration.Instance;
         Boolean Enabled { get; }
         IEntryPointsGetter? DisabledEntryPoints { get; }
         IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword { get; }

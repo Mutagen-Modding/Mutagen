@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         ISoundGetter
     {
-        static new ILoquiRegistration Registration => SoundMarker_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoundMarker_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter

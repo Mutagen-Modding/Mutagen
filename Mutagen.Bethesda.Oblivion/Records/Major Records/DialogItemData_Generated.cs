@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DialogItemData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DialogItemData_Registration.Instance;
         DialogItemData.VersioningBreaks Versioning { get; }
         DialogType DialogType { get; }
         DialogItem.Flag Flags { get; }

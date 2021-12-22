@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IKeywordGetter>,
         IMapsToGetter<IKeywordGetter>
     {
-        static new ILoquiRegistration Registration => Keyword_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Keyword_Registration.Instance;
         Color? Color { get; }
 
     }

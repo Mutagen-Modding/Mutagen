@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPerkEntryPointAbsoluteValueGetter>
     {
-        static new ILoquiRegistration Registration => PerkEntryPointAbsoluteValue_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkEntryPointAbsoluteValue_Registration.Instance;
         Boolean Negative { get; }
 
     }

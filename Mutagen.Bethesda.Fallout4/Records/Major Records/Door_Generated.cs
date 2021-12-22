@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IDoorGetter>,
         IObjectIdGetter
     {
-        static new ILoquiRegistration Registration => Door_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Door_Registration.Instance;
 
     }
 

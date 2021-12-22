@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Pex
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PexFile_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PexFile_Registration.Instance;
         Byte MajorVersion { get; }
         Byte MinorVersion { get; }
         UInt16 GameId { get; }

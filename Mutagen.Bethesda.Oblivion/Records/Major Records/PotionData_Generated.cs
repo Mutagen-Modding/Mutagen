@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PotionData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PotionData_Registration.Instance;
         UInt32 Value { get; }
         IngredientFlag Flags { get; }
 

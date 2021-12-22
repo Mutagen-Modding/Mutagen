@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Pex
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PexObjectState_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PexObjectState_Registration.Instance;
         String? Name { get; }
         IReadOnlyList<IPexObjectNamedFunctionGetter> Functions { get; }
 

@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IMagicEffectSpawnHazardArchetypeGetter>
     {
-        static new ILoquiRegistration Registration => MagicEffectSpawnHazardArchetype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
 
     }
 

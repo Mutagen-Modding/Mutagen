@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IDialogItemGetter>,
         IMapsToGetter<IDialogItemGetter>
     {
-        static new ILoquiRegistration Registration => DialogItem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DialogItem_Registration.Instance;
         IDialogItemDataGetter? Data { get; }
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic { get; }

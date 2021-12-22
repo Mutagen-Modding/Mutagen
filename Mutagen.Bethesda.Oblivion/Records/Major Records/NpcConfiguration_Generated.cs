@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NpcConfiguration_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NpcConfiguration_Registration.Instance;
         Npc.NpcFlag Flags { get; }
         UInt16 BaseSpellPoints { get; }
         UInt16 Fatigue { get; }

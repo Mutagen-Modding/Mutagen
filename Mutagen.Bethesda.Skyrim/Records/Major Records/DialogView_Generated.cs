@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IDialogViewGetter>,
         IMapsToGetter<IDialogViewGetter>
     {
-        static new ILoquiRegistration Registration => DialogView_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DialogView_Registration.Instance;
         IFormLinkGetter<IQuestGetter> Quest { get; }
         IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; }
         IReadOnlyList<ReadOnlyMemorySlice<Byte>> TNAMs { get; }

@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IAStoryManagerNodeGetter>
     {
-        static new ILoquiRegistration Registration => AStoryManagerNode_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AStoryManagerNode_Registration.Instance;
         IFormLinkNullableGetter<IAStoryManagerNodeGetter> Parent { get; }
         IFormLinkNullableGetter<IAStoryManagerNodeGetter> PreviousSibling { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }

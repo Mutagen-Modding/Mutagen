@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ILocationReferenceTypeGetter>,
         IMapsToGetter<ILocationReferenceTypeGetter>
     {
-        static new ILoquiRegistration Registration => LocationReferenceType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         Color? Color { get; }
 
     }

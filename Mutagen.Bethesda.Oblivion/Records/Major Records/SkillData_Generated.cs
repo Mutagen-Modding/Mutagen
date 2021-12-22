@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SkillData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SkillData_Registration.Instance;
         ActorValue Action { get; }
         ActorValue Attribute { get; }
         Specialization Specialization { get; }

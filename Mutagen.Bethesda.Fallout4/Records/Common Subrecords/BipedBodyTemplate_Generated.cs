@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => BipedBodyTemplate_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => BipedBodyTemplate_Registration.Instance;
         BipedObjectFlag FirstPersonFlags { get; }
 
     }

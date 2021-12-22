@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IImpactDataSetGetter>,
         IMapsToGetter<IImpactDataSetGetter>
     {
-        static new ILoquiRegistration Registration => ImpactDataSet_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ImpactDataSet_Registration.Instance;
 
     }
 

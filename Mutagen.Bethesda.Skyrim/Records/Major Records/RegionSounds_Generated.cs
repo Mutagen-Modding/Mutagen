@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         ILoquiObject<IRegionSoundsGetter>
     {
-        static new ILoquiRegistration Registration => RegionSounds_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => RegionSounds_Registration.Instance;
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
         IReadOnlyList<IRegionSoundGetter>? Sounds { get; }
 

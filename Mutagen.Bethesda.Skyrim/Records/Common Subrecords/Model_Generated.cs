@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IModelGetter>
     {
-        static new ILoquiRegistration Registration => Model_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Model_Registration.Instance;
         IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; }
 
     }

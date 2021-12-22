@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IOutfitGetter>,
         IMapsToGetter<IOutfitGetter>
     {
-        static new ILoquiRegistration Registration => Outfit_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Outfit_Registration.Instance;
 
     }
 

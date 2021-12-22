@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         ILoquiObject<IRegionWeatherGetter>
     {
-        static new ILoquiRegistration Registration => RegionWeather_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => RegionWeather_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
 
     }

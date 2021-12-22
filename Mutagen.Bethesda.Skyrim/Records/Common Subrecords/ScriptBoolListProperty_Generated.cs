@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IScriptBoolListPropertyGetter>,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ScriptBoolListProperty_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ScriptBoolListProperty_Registration.Instance;
         IReadOnlyList<Boolean> Data { get; }
 
     }

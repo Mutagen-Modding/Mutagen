@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IBodyPartDataGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => BodyPartData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => BodyPartData_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter

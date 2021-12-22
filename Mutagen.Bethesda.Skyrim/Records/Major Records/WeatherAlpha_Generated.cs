@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeatherAlpha_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeatherAlpha_Registration.Instance;
         Single Sunrise { get; }
         Single Day { get; }
         Single Sunset { get; }

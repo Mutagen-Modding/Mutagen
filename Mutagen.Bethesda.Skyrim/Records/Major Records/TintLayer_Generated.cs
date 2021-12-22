@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => TintLayer_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => TintLayer_Registration.Instance;
         UInt16? Index { get; }
         Color? Color { get; }
         Single? InterpolationValue { get; }

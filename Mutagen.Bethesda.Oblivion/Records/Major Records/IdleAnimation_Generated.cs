@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IIdleAnimationGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => IdleAnimation_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter

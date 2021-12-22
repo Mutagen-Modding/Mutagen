@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Class_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Class_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter

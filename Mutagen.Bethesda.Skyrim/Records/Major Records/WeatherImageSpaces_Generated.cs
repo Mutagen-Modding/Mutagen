@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeatherImageSpaces_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeatherImageSpaces_Registration.Instance;
         IFormLinkGetter<IImageSpaceAdapterGetter> Sunrise { get; }
         IFormLinkGetter<IImageSpaceAdapterGetter> Day { get; }
         IFormLinkGetter<IImageSpaceAdapterGetter> Sunset { get; }

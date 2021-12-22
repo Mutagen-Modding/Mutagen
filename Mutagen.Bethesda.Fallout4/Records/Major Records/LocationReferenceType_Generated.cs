@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<ILocationReferenceTypeGetter>,
         IMapsToGetter<ILocationReferenceTypeGetter>
     {
-        static new ILoquiRegistration Registration => LocationReferenceType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         Color? Color { get; }
         String? TNAM { get; }
 

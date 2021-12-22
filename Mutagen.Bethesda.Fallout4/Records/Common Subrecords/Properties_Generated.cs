@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Properties_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Properties_Registration.Instance;
         IReadOnlyList<Single> PropertyList { get; }
 
     }

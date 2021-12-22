@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IColorRecordGetter>,
         IMapsToGetter<IColorRecordGetter>
     {
-        static new ILoquiRegistration Registration => ColorRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ColorRecord_Registration.Instance;
 
     }
 

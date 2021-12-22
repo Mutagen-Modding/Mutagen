@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainerGetter,
         ILoquiObject<IRegionObjectsGetter>
     {
-        static new ILoquiRegistration Registration => RegionObjects_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => RegionObjects_Registration.Instance;
         IReadOnlyList<IRegionObjectGetter>? Objects { get; }
 
     }

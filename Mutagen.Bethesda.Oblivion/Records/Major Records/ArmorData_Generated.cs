@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ArmorData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ArmorData_Registration.Instance;
         Single ArmorValue { get; }
         UInt32 Value { get; }
         UInt32 Health { get; }

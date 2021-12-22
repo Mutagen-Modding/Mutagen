@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ILoadScreenGetter>,
         IMapsToGetter<ILoadScreenGetter>
     {
-        static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LoadScreen_Registration.Instance;
         #region Icons
         /// <summary>
         /// Aspects: IHasIconsGetter

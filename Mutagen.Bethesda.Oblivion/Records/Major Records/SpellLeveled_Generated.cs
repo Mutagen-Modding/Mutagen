@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => SpellLeveled_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SpellLeveled_Registration.Instance;
 
     }
 

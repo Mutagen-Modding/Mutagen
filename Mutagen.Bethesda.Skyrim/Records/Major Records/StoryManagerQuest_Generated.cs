@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => StoryManagerQuest_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => StoryManagerQuest_Registration.Instance;
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         Single? HoursUntilReset { get; }

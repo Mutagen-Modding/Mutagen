@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedBarrierGetter>,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedBarrier_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedBarrier_Registration.Instance;
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }

@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<ILeveledSpellGetter>,
         ISpellRecordGetter
     {
-        static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
         IReadOnlyList<ILeveledSpellEntryGetter> Entries { get; }

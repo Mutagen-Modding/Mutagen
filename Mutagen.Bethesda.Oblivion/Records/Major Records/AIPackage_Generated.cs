@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IAIPackageGetter>,
         IMapsToGetter<IAIPackageGetter>
     {
-        static new ILoquiRegistration Registration => AIPackage_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AIPackage_Registration.Instance;
         IAIPackageDataGetter? Data { get; }
         IAIPackageLocationGetter? Location { get; }
         IAIPackageScheduleGetter? Schedule { get; }

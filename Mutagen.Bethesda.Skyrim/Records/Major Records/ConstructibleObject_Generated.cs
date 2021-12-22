@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IConstructibleObjectGetter>,
         IMapsToGetter<IConstructibleObjectGetter>
     {
-        static new ILoquiRegistration Registration => ConstructibleObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ConstructibleObject_Registration.Instance;
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IFormLinkNullableGetter<IConstructibleGetter> CreatedObject { get; }

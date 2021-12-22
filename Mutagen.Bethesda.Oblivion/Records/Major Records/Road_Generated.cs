@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IRoadGetter>,
         IMapsToGetter<IRoadGetter>
     {
-        static new ILoquiRegistration Registration => Road_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Road_Registration.Instance;
         IReadOnlyList<IRoadPointGetter>? Points { get; }
 
     }

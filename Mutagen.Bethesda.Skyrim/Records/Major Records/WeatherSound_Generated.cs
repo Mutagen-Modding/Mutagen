@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeatherSound_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeatherSound_Registration.Instance;
         IFormLinkGetter<ISoundGetter> Sound { get; }
         WeatherSound.TypeEnum Type { get; }
 

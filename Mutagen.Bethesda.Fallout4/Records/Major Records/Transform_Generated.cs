@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<ITransformGetter>,
         IMapsToGetter<ITransformGetter>
     {
-        static new ILoquiRegistration Registration => Transform_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Transform_Registration.Instance;
         P3Float Position { get; }
         P3Float Rotation { get; }
         Single Scale { get; }

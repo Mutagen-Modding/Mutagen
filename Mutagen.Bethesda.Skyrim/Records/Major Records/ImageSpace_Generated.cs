@@ -693,7 +693,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IImageSpaceGetter>,
         IMapsToGetter<IImageSpaceGetter>
     {
-        static new ILoquiRegistration Registration => ImageSpace_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ImageSpace_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? ENAM { get; }
         IImageSpaceHdrGetter? Hdr { get; }
         IImageSpaceCinematicGetter? Cinematic { get; }

@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ShoutWord_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ShoutWord_Registration.Instance;
         IFormLinkGetter<IWordOfPowerGetter> Word { get; }
         IFormLinkGetter<ISpellGetter> Spell { get; }
         Single RecoveryTime { get; }

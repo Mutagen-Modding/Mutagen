@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<ILandscapeGetter>,
         IPlacedGetter
     {
-        static new ILoquiRegistration Registration => Landscape_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Landscape_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         ReadOnlyMemorySlice<Byte>? VertexNormals { get; }
         ReadOnlyMemorySlice<Byte>? VertexHeightMap { get; }

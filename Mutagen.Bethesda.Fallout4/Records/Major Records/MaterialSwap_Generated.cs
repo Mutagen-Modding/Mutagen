@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IMaterialSwapGetter>,
         IMapsToGetter<IMaterialSwapGetter>
     {
-        static new ILoquiRegistration Registration => MaterialSwap_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MaterialSwap_Registration.Instance;
 
     }
 

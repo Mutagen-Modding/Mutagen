@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<INpcOwnerGetter>
     {
-        static new ILoquiRegistration Registration => NpcOwner_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => NpcOwner_Registration.Instance;
         IFormLinkGetter<INpcGetter> Npc { get; }
         IFormLinkGetter<IGlobalGetter> Global { get; }
 

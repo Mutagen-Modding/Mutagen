@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IScriptIntListPropertyGetter>,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ScriptIntListProperty_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ScriptIntListProperty_Registration.Instance;
         IReadOnlyList<Int32> Data { get; }
 
     }

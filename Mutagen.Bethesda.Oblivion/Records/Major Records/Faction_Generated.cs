@@ -812,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequiredGetter,
         IOwnerGetter
     {
-        static new ILoquiRegistration Registration => Faction_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Faction_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter

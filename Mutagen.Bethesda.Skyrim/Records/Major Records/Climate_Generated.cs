@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IClimateGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Climate_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; }
         String? SunTexture { get; }
         String? SunGlareTexture { get; }

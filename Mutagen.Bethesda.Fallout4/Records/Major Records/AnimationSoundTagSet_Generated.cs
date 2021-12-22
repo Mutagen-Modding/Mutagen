@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IAnimationSoundTagSetGetter>,
         IMapsToGetter<IAnimationSoundTagSetGetter>
     {
-        static new ILoquiRegistration Registration => AnimationSoundTagSet_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
 
     }
 

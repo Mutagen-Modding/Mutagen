@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IShaderParticleGeometryGetter>,
         IMapsToGetter<IShaderParticleGeometryGetter>
     {
-        static new ILoquiRegistration Registration => ShaderParticleGeometry_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ShaderParticleGeometry_Registration.Instance;
         Single GravityVelocity { get; }
         Single RotationVelocity { get; }
         Single ParticleSizeX { get; }

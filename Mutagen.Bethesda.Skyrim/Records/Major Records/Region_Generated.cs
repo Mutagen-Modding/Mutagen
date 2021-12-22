@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IRegionGetter>,
         IMapsToGetter<IRegionGetter>
     {
-        static new ILoquiRegistration Registration => Region_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Region_Registration.Instance;
         Color? MapColor { get; }
         IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
         IReadOnlyList<IRegionAreaGetter> RegionAreas { get; }

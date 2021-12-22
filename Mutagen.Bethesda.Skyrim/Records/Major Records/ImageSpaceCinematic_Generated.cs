@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ImageSpaceCinematic_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ImageSpaceCinematic_Registration.Instance;
         Single Saturation { get; }
         Single Brightness { get; }
         Single Contrast { get; }

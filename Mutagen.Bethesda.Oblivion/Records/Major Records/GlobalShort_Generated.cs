@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IGlobalShortGetter>,
         IMapsToGetter<IGlobalShortGetter>
     {
-        static new ILoquiRegistration Registration => GlobalShort_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GlobalShort_Registration.Instance;
         Int16? Data { get; }
 
     }

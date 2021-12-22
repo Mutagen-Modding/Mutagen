@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NpcFaceParts_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NpcFaceParts_Registration.Instance;
         UInt32 Nose { get; }
         UInt32 Unknown { get; }
         UInt32 Eyes { get; }

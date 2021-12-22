@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => TalkingActivator_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => TalkingActivator_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter

@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IActorValueInformationGetter>,
         IMapsToGetter<IActorValueInformationGetter>
     {
-        static new ILoquiRegistration Registration => ActorValueInformation_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
 
     }
 

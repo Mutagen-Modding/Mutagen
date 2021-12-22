@@ -761,7 +761,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptionalGetter,
         IOutfitTargetGetter
     {
-        static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter

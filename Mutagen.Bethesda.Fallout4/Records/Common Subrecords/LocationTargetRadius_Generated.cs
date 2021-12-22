@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LocationTargetRadius_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LocationTargetRadius_Registration.Instance;
         IALocationTargetGetter Target { get; }
         UInt32 Radius { get; }
         UInt32 CollectionIndex { get; }

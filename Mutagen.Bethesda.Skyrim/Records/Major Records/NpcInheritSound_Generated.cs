@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<INpcInheritSoundGetter>
     {
-        static new ILoquiRegistration Registration => NpcInheritSound_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => NpcInheritSound_Registration.Instance;
         IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom { get; }
 
     }

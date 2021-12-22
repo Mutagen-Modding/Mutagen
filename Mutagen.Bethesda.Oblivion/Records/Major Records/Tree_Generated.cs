@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<ITreeGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Tree_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Tree_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter

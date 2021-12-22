@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         ILoquiObject<IRegionMapGetter>
     {
-        static new ILoquiRegistration Registration => RegionMap_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => RegionMap_Registration.Instance;
         String? Map { get; }
 
     }

@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LightData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LightData_Registration.Instance;
         LightData.VersioningBreaks Versioning { get; }
         Single FovOffset { get; }
         Single FadeOffset { get; }

@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainerGetter,
         ILoquiObject<IRegionSoundsGetter>
     {
-        static new ILoquiRegistration Registration => RegionSounds_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => RegionSounds_Registration.Instance;
         MusicType? MusicType { get; }
         IReadOnlyList<IRegionSoundGetter>? Sounds { get; }
 

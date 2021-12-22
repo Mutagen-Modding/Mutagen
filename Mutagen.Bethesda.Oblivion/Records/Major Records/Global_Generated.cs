@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         ILoquiObject<IGlobalGetter>
     {
-        static new ILoquiRegistration Registration => Global_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Global_Registration.Instance;
 
     }
 

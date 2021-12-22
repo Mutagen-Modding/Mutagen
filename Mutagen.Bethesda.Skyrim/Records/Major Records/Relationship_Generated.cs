@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IRelationshipGetter>,
         IMapsToGetter<IRelationshipGetter>
     {
-        static new ILoquiRegistration Registration => Relationship_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Relationship_Registration.Instance;
         IFormLinkGetter<INpcGetter> Parent { get; }
         IFormLinkGetter<INpcGetter> Child { get; }
         Relationship.RankType Rank { get; }

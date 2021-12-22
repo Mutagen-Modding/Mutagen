@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => RegionDataHeader_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => RegionDataHeader_Registration.Instance;
         RegionData.RegionDataType DataType { get; }
         RegionData.RegionDataFlag Flags { get; }
         Byte Priority { get; }

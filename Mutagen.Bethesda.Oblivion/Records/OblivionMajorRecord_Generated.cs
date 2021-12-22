@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IOblivionMajorRecordGetter>,
         IMajorRecordGetterEnumerable
     {
-        static new ILoquiRegistration Registration => OblivionMajorRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => OblivionMajorRecord_Registration.Instance;
         OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; }
 
     }

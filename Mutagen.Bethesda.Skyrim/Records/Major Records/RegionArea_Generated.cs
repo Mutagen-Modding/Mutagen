@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => RegionArea_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => RegionArea_Registration.Instance;
         UInt32? EdgeFallOff { get; }
         IReadOnlyList<P2Float>? RegionPointListData { get; }
 

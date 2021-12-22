@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<ILocationObjectTypeGetter>
     {
-        static new ILoquiRegistration Registration => LocationObjectType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LocationObjectType_Registration.Instance;
         TargetObjectType Type { get; }
 
     }

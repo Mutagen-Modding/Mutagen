@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<IConditionFloatGetter>
     {
-        static new ILoquiRegistration Registration => ConditionFloat_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ConditionFloat_Registration.Instance;
         Single ComparisonValue { get; }
         IConditionDataGetter Data { get; }
 

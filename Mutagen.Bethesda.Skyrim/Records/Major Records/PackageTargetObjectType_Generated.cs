@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPackageTargetObjectTypeGetter>
     {
-        static new ILoquiRegistration Registration => PackageTargetObjectType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PackageTargetObjectType_Registration.Instance;
         TargetObjectType Type { get; }
 
     }

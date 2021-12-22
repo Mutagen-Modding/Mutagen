@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => GrassData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => GrassData_Registration.Instance;
         Byte Density { get; }
         Byte MinSlope { get; }
         Byte MaxSlope { get; }

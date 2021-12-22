@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IDefaultObjectManagerGetter>,
         IMapsToGetter<IDefaultObjectManagerGetter>
     {
-        static new ILoquiRegistration Registration => DefaultObjectManager_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DefaultObjectManager_Registration.Instance;
         IReadOnlyList<IDefaultObjectGetter>? Objects { get; }
 
     }

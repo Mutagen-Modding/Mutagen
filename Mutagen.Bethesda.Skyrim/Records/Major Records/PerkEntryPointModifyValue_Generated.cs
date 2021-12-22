@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPerkEntryPointModifyValueGetter>
     {
-        static new ILoquiRegistration Registration => PerkEntryPointModifyValue_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkEntryPointModifyValue_Registration.Instance;
         PerkEntryPointModifyValue.ModificationType Modification { get; }
         Single? Value { get; }
 

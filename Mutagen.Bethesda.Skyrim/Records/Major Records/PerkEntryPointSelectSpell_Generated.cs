@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IPerkEntryPointSelectSpellGetter>
     {
-        static new ILoquiRegistration Registration => PerkEntryPointSelectSpell_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkEntryPointSelectSpell_Registration.Instance;
         IFormLinkGetter<ISpellGetter> Spell { get; }
 
     }

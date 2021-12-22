@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorldspaceObjectBounds_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorldspaceObjectBounds_Registration.Instance;
         P2Float Min { get; }
         P2Float Max { get; }
 

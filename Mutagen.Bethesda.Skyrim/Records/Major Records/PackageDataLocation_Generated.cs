@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => PackageDataLocation_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PackageDataLocation_Registration.Instance;
         ILocationTargetRadiusGetter Location { get; }
 
     }

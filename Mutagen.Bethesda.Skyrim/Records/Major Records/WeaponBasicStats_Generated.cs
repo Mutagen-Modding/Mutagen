@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeaponBasicStats_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeaponBasicStats_Registration.Instance;
         UInt32 Value { get; }
         Single Weight { get; }
         UInt16 Damage { get; }

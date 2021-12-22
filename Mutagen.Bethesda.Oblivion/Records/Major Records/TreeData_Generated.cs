@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => TreeData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => TreeData_Registration.Instance;
         Single LeafCurvature { get; }
         Single MinimumLeafAngle { get; }
         Single MaximumLeafAngle { get; }

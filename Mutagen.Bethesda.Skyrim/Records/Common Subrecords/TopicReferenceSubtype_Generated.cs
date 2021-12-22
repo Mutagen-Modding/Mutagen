@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<ITopicReferenceSubtypeGetter>
     {
-        static new ILoquiRegistration Registration => TopicReferenceSubtype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => TopicReferenceSubtype_Registration.Instance;
         RecordType Subtype { get; }
 
     }

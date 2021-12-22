@@ -1035,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IMusicTrackGetter>,
         IMapsToGetter<IMusicTrackGetter>
     {
-        static new ILoquiRegistration Registration => MusicTrack_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MusicTrack_Registration.Instance;
         MusicTrack.TypeEnum Type { get; }
         Single? Duration { get; }
         Single? FadeOut { get; }

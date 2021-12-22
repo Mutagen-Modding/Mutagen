@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPerkAdapterGetter>
     {
-        static new ILoquiRegistration Registration => PerkAdapter_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkAdapter_Registration.Instance;
         IPerkScriptFragmentsGetter? ScriptFragments { get; }
 
     }

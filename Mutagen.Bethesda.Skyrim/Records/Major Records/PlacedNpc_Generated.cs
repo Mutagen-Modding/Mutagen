@@ -1761,7 +1761,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedSimpleGetter,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedNpc_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedNpc_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter

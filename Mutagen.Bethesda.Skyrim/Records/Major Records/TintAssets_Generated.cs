@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => TintAssets_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => TintAssets_Registration.Instance;
         UInt16? Index { get; }
         String? FileName { get; }
         TintAssets.TintMaskType? MaskType { get; }

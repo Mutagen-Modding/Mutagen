@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MusicTypeData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MusicTypeData_Registration.Instance;
         UInt16 Priority { get; }
         Single DuckingDecibel { get; }
 

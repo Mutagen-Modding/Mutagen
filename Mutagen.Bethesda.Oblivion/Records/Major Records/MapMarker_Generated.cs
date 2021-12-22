@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MapMarker_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MapMarker_Registration.Instance;
         MapMarker.Flag? Flags { get; }
         #region Name
         /// <summary>

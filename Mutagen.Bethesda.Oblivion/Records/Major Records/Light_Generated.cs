@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Light_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Light_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter

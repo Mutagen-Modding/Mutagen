@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => FindMatchingRefFromEvent_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
         RecordType? FromEvent { get; }
         ReadOnlyMemorySlice<Byte>? EventData { get; }
 

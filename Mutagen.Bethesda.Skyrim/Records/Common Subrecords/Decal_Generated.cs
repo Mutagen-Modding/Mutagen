@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Decal_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Decal_Registration.Instance;
         Single MinWidth { get; }
         Single MaxWidth { get; }
         Single MinHeight { get; }

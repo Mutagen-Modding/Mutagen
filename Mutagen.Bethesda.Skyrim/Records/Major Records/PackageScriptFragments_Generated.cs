@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PackageScriptFragments_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PackageScriptFragments_Registration.Instance;
         SByte Unknown { get; }
         String FileName { get; }
         IScriptFragmentGetter? OnBegin { get; }

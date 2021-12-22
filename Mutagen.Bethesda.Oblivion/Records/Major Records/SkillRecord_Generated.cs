@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ISkillRecordGetter>,
         IMapsToGetter<ISkillRecordGetter>
     {
-        static new ILoquiRegistration Registration => SkillRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SkillRecord_Registration.Instance;
         ActorValue? Skill { get; }
         String? Description { get; }
         String? Icon { get; }

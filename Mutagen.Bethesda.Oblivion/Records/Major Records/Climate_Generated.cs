@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IClimateGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Climate_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
         String? SunTexture { get; }
         String? SunGlareTexture { get; }

@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LinkedReferenceColor_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LinkedReferenceColor_Registration.Instance;
         Color Start { get; }
         Color End { get; }
 

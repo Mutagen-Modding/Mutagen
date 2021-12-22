@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<INpcSoundTypesGetter>
     {
-        static new ILoquiRegistration Registration => NpcSoundTypes_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => NpcSoundTypes_Registration.Instance;
         IReadOnlyList<INpcSoundTypeGetter> Types { get; }
 
     }

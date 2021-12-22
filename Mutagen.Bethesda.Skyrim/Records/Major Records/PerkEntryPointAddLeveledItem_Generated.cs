@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IPerkEntryPointAddLeveledItemGetter>
     {
-        static new ILoquiRegistration Registration => PerkEntryPointAddLeveledItem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkEntryPointAddLeveledItem_Registration.Instance;
         IFormLinkGetter<ILeveledItemGetter> Item { get; }
 
     }

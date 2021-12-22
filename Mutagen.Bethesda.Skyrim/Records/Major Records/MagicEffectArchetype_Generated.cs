@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MagicEffectArchetype_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MagicEffectArchetype_Registration.Instance;
         MagicEffectArchetype.TypeEnum Type { get; }
         FormKey AssociationKey { get; }
         ActorValue ActorValue { get; }

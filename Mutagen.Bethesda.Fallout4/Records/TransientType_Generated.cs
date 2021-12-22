@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => TransientType_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => TransientType_Registration.Instance;
         UInt32 FormType { get; }
         IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links { get; }
 

@@ -1928,7 +1928,7 @@ namespace Mutagen.Bethesda.Oblivion
         INpcRecordGetter,
         INpcSpawnGetter
     {
-        static new ILoquiRegistration Registration => Creature_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Creature_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter

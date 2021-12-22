@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPerkEntryPointSelectTextGetter>
     {
-        static new ILoquiRegistration Registration => PerkEntryPointSelectText_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkEntryPointSelectText_Registration.Instance;
         String Text { get; }
 
     }

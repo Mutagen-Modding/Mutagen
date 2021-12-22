@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         ILoquiObject<IGlobalGetter>
     {
-        static new ILoquiRegistration Registration => Global_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Global_Registration.Instance;
 
         #region Mutagen
         Global.MajorFlag MajorFlags { get; }

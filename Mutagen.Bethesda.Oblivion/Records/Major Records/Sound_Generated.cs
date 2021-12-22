@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ISoundGetter>,
         IMapsToGetter<ISoundGetter>
     {
-        static new ILoquiRegistration Registration => Sound_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Sound_Registration.Instance;
         String? File { get; }
         ISoundDataInternalGetter? Data { get; }
 

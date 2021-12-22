@@ -2820,7 +2820,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Location_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Location_Registration.Instance;
         IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; }
         IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; }

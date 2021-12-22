@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NpcSound_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NpcSound_Registration.Instance;
         IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
         Byte? SoundChance { get; }
 

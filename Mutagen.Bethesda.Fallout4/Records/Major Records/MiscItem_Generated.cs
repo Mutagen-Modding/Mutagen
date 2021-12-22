@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IMiscItemGetter>,
         IMapsToGetter<IMiscItemGetter>
     {
-        static new ILoquiRegistration Registration => MiscItem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MiscItem_Registration.Instance;
 
     }
 

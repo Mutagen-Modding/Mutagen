@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IPerkAbilityEffectGetter>
     {
-        static new ILoquiRegistration Registration => PerkAbilityEffect_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkAbilityEffect_Registration.Instance;
         IFormLinkGetter<ISpellGetter> Ability { get; }
 
     }

@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Keyword_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Keyword_Registration.Instance;
         Color? Color { get; }
         String? Notes { get; }
         Keyword.TypeEnum? Type { get; }

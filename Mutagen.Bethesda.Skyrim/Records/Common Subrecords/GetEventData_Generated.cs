@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IGetEventDataGetter>
     {
-        static new ILoquiRegistration Registration => GetEventData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GetEventData_Registration.Instance;
         UInt16 EventFunction { get; }
         UInt16 EventMember { get; }
         IFormLinkGetter<ISkyrimMajorRecordGetter> Parameter3 { get; }

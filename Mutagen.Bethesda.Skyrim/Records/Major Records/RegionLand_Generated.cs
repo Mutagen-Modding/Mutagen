@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         ILoquiObject<IRegionLandGetter>
     {
-        static new ILoquiRegistration Registration => RegionLand_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => RegionLand_Registration.Instance;
 
     }
 

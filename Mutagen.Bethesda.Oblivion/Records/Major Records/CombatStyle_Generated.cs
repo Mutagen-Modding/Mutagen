@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ICombatStyleGetter>,
         IMapsToGetter<ICombatStyleGetter>
     {
-        static new ILoquiRegistration Registration => CombatStyle_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CombatStyle_Registration.Instance;
         ICombatStyleDataGetter? Data { get; }
         ICombatStyleAdvancedGetter? Advanced { get; }
 

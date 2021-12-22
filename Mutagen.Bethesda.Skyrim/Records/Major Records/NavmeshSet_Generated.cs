@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NavmeshSet_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NavmeshSet_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes { get; }
 
     }

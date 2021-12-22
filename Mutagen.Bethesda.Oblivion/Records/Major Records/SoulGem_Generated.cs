@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => SoulGem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoulGem_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter

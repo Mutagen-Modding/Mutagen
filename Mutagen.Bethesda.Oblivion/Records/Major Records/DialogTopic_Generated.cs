@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DialogTopic_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<IQuestGetter>> Quests { get; }
         #region Name
         /// <summary>

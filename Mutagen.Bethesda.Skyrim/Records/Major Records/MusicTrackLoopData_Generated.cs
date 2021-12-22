@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MusicTrackLoopData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MusicTrackLoopData_Registration.Instance;
         Single Begins { get; }
         Single Ends { get; }
         UInt32 Count { get; }

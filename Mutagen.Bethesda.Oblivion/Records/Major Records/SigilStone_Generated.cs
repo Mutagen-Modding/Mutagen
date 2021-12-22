@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => SigilStone_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SigilStone_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter

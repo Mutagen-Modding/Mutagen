@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         ILoquiObject<ISoundDataExtendedInternalGetter>
     {
-        static new ILoquiRegistration Registration => SoundDataExtended_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoundDataExtended_Registration.Instance;
         Single StaticAttenuation { get; }
         Single StopTime { get; }
         Single StartTime { get; }

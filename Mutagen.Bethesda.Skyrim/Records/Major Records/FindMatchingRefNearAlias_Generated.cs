@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => FindMatchingRefNearAlias_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FindMatchingRefNearAlias_Registration.Instance;
         Int16? AliasIndex { get; }
         FindMatchingRefNearAlias.TypeEnum? Type { get; }
 

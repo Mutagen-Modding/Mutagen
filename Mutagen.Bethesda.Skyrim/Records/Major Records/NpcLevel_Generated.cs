@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<INpcLevelGetter>
     {
-        static new ILoquiRegistration Registration => NpcLevel_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => NpcLevel_Registration.Instance;
         Int16 Level { get; }
 
     }

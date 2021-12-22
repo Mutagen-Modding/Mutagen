@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IArmorAddonGetter>,
         IMapsToGetter<IArmorAddonGetter>
     {
-        static new ILoquiRegistration Registration => ArmorAddon_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ArmorAddon_Registration.Instance;
         IBodyTemplateGetter? BodyTemplate { get; }
         IFormLinkNullableGetter<IRaceGetter> Race { get; }
         IGenderedItemGetter<Byte> Priority { get; }

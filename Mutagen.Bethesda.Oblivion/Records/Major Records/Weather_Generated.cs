@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IWeatherGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Weather_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         String? TextureLowerLayer { get; }
         String? TextureUpperLayer { get; }
         #region Model

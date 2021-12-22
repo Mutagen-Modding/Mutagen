@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Pex
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DebugStructOrder_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DebugStructOrder_Registration.Instance;
         String ObjectName { get; }
         String OrderName { get; }
         IReadOnlyList<String> Names { get; }

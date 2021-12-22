@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ICameraShotGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => CameraShot_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CameraShot_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter

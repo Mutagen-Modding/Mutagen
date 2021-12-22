@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IMagicEffectLightArchetypeGetter>
     {
-        static new ILoquiRegistration Registration => MagicEffectLightArchetype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffectLightArchetype_Registration.Instance;
 
     }
 

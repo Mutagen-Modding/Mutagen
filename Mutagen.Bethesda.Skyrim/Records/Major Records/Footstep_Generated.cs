@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IFootstepGetter>,
         IMapsToGetter<IFootstepGetter>
     {
-        static new ILoquiRegistration Registration => Footstep_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Footstep_Registration.Instance;
         IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
         String Tag { get; }
 

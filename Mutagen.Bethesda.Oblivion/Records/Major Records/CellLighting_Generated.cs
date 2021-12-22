@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CellLighting_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CellLighting_Registration.Instance;
         Color AmbientColor { get; }
         Color DirectionalColor { get; }
         Color FogColor { get; }

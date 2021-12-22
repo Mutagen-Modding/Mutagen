@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CellBlock_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CellBlock_Registration.Instance;
         Int32 BlockNumber { get; }
         GroupTypeEnum GroupType { get; }
         Int32 LastModified { get; }

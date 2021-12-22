@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IVirtualMachineAdapterGetter>
     {
-        static new ILoquiRegistration Registration => VirtualMachineAdapter_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => VirtualMachineAdapter_Registration.Instance;
 
     }
 

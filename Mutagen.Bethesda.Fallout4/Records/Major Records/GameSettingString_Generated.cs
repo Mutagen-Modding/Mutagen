@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IGameSettingStringGetter>,
         IMapsToGetter<IGameSettingStringGetter>
     {
-        static new ILoquiRegistration Registration => GameSettingString_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GameSettingString_Registration.Instance;
         ITranslatedStringGetter? Data { get; }
 
     }

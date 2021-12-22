@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => InterCellPoint_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => InterCellPoint_Registration.Instance;
         Int32 PointID { get; }
         P3Float Point { get; }
 

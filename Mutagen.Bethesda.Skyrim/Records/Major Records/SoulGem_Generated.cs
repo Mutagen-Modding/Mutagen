@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter
     {
-        static new ILoquiRegistration Registration => SoulGem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoulGem_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedOptionalGetter

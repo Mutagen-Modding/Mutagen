@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Quest_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Quest_Registration.Instance;
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         #region Name
         /// <summary>

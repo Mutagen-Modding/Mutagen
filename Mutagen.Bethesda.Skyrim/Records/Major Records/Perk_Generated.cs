@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Perk_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Perk_Registration.Instance;
         IPerkAdapterGetter? VirtualMachineAdapter { get; }
         #region Name
         /// <summary>

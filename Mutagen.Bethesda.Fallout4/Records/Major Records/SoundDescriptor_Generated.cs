@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<ISoundDescriptorGetter>,
         IMapsToGetter<ISoundDescriptorGetter>
     {
-        static new ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
 
     }
 

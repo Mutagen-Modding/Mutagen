@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Fallout4Mod_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Fallout4Mod_Registration.Instance;
         IFallout4ModHeaderGetter ModHeader { get; }
         IGroupGetter<IGameSettingGetter> GameSettings { get; }
         IGroupGetter<IKeywordGetter> Keywords { get; }

@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IIdleAnimationGetter>,
         IMapsToGetter<IIdleAnimationGetter>
     {
-        static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => IdleAnimation_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
         String? Filename { get; }
         String? AnimationEvent { get; }

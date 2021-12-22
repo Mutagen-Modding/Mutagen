@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PlayerSkills_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PlayerSkills_Registration.Instance;
         IReadOnlyDictionary<Skill, Byte> SkillValues { get; }
         IReadOnlyDictionary<Skill, Byte> SkillOffsets { get; }
         UInt16 Health { get; }

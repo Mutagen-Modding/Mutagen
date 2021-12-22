@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IGameSettingGetter>
     {
-        static new ILoquiRegistration Registration => GameSetting_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GameSetting_Registration.Instance;
 
     }
 

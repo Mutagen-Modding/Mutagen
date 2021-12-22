@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IPackageTargetReferenceGetter>
     {
-        static new ILoquiRegistration Registration => PackageTargetReference_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PackageTargetReference_Registration.Instance;
         IFormLinkGetter<ISkyrimMajorRecordGetter> Reference { get; }
 
     }

@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => HavokData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => HavokData_Registration.Instance;
         HavokData.MaterialType Material { get; }
         Byte Friction { get; }
         Byte Restitution { get; }

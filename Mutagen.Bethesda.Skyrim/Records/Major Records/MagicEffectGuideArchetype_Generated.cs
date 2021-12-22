@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IMagicEffectGuideArchetypeGetter>
     {
-        static new ILoquiRegistration Registration => MagicEffectGuideArchetype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffectGuideArchetype_Registration.Instance;
 
     }
 

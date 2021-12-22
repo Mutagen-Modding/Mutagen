@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IAnimatedObjectGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AnimatedObject_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter

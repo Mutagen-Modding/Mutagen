@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ILandscapeTextureGetter>,
         IRegionTargetGetter
     {
-        static new ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LandscapeTexture_Registration.Instance;
         IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
         IFormLinkGetter<IMaterialTypeGetter> MaterialType { get; }
         Byte HavokFriction { get; }

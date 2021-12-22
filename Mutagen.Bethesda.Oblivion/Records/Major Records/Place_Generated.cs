@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IPlaceGetter>,
         IMajorRecordGetterEnumerable
     {
-        static new ILoquiRegistration Registration => Place_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Place_Registration.Instance;
 
     }
 

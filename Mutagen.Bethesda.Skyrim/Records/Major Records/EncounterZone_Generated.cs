@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IEncounterZoneGetter>,
         IMapsToGetter<IEncounterZoneGetter>
     {
-        static new ILoquiRegistration Registration => EncounterZone_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => EncounterZone_Registration.Instance;
         IFormLinkGetter<IOwnerGetter> Owner { get; }
         IFormLinkGetter<ILocationGetter> Location { get; }
         SByte Rank { get; }

@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorldspaceGridReference_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorldspaceGridReference_Registration.Instance;
         P2Int16 GridPosition { get; }
         IReadOnlyList<IWorldspaceReferenceGetter> References { get; }
 

@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ISoundOutputModelGetter>,
         IMapsToGetter<ISoundOutputModelGetter>
     {
-        static new ILoquiRegistration Registration => SoundOutputModel_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoundOutputModel_Registration.Instance;
         ISoundOutputDataGetter? Data { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         SoundOutputModel.TypeEnum? Type { get; }

@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<IFallout4MajorRecordGetter>
     {
-        static new ILoquiRegistration Registration => Fallout4MajorRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         UInt16 FormVersion { get; }
         UInt16 Version2 { get; }
 

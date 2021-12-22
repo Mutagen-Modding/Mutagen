@@ -3475,7 +3475,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => OblivionMod_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => OblivionMod_Registration.Instance;
         IOblivionModHeaderGetter ModHeader { get; }
         IGroupGetter<IGameSettingGetter> GameSettings { get; }
         IGroupGetter<IGlobalGetter> Globals { get; }

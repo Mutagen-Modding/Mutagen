@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ISkyrimMajorRecordGetter>,
         IMajorRecordGetterEnumerable
     {
-        static new ILoquiRegistration Registration => SkyrimMajorRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SkyrimMajorRecord_Registration.Instance;
         UInt16 FormVersion { get; }
         UInt16 Version2 { get; }
 

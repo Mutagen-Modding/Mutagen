@@ -7151,7 +7151,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IImageSpaceAdapterGetter>,
         IMapsToGetter<IImageSpaceAdapterGetter>
     {
-        static new ILoquiRegistration Registration => ImageSpaceAdapter_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
         ImageSpaceAdapter.Flag Flags { get; }
         Single Duration { get; }
         ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; }

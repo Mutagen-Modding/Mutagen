@@ -885,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IReverbParametersGetter>,
         IMapsToGetter<IReverbParametersGetter>
     {
-        static new ILoquiRegistration Registration => ReverbParameters_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ReverbParameters_Registration.Instance;
         UInt16 DecayMilliseconds { get; }
         UInt16 HfReferenceHertz { get; }
         SByte RoomFilter { get; }

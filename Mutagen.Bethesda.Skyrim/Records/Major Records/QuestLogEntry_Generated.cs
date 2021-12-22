@@ -759,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => QuestLogEntry_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => QuestLogEntry_Registration.Instance;
         QuestLogEntry.Flag? Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         ITranslatedStringGetter? Entry { get; }

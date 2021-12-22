@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedFlameGetter>,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedFlame_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedFlame_Registration.Instance;
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }

@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ICellNavigationMeshGetter>,
         IMapsToGetter<ICellNavigationMeshGetter>
     {
-        static new ILoquiRegistration Registration => CellNavigationMesh_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CellNavigationMesh_Registration.Instance;
         ICellNavigationMeshDataGetter? Data { get; }
 
     }

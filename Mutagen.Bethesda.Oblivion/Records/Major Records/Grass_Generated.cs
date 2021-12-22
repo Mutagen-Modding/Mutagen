@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IGrassGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Grass_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Grass_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter

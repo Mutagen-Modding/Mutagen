@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ActorValueSkill_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ActorValueSkill_Registration.Instance;
         Single UseMult { get; }
         Single OffsetMult { get; }
         Single ImproveMult { get; }

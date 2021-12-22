@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter
     {
-        static new ILoquiRegistration Registration => ArtObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ArtObject_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter

@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Icons_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Icons_Registration.Instance;
         String LargeIconFilename { get; }
         String? SmallIconFilename { get; }
 

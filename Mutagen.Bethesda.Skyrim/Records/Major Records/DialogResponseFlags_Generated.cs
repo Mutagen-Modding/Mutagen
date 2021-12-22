@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DialogResponseFlags_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DialogResponseFlags_Registration.Instance;
         DialogResponses.Flag Flags { get; }
         Single ResetHours { get; }
 

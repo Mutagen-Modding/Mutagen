@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ISoundDescriptorGetter>,
         ISoundGetter
     {
-        static new ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? CNAM { get; }
         IFormLinkNullableGetter<ISoundCategoryGetter> Category { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor { get; }

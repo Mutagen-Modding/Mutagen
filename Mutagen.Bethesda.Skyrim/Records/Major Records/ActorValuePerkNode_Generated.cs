@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ActorValuePerkNode_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ActorValuePerkNode_Registration.Instance;
         IFormLinkGetter<IPerkGetter> Perk { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         UInt32? PerkGridX { get; }

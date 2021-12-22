@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IOutfitGetter>,
         IMapsToGetter<IOutfitGetter>
     {
-        static new ILoquiRegistration Registration => Outfit_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Outfit_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<IOutfitTargetGetter>>? Items { get; }
 
     }

@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<ILocationKeywordGetter>
     {
-        static new ILoquiRegistration Registration => LocationKeyword_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LocationKeyword_Registration.Instance;
         IFormLinkGetter<IKeywordGetter> Link { get; }
 
     }

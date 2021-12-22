@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IWaterGetter>,
         IMapsToGetter<IWaterGetter>
     {
-        static new ILoquiRegistration Registration => Water_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Water_Registration.Instance;
         String? Texture { get; }
         Byte? Opacity { get; }
         Water.Flag? Flags { get; }

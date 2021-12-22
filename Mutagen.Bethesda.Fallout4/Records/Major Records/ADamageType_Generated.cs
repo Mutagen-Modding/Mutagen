@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<IADamageTypeGetter>
     {
-        static new ILoquiRegistration Registration => ADamageType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ADamageType_Registration.Instance;
 
     }
 

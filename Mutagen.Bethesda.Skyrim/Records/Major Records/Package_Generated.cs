@@ -1840,7 +1840,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IPackageGetter>,
         IMapsToGetter<IPackageGetter>
     {
-        static new ILoquiRegistration Registration => Package_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Package_Registration.Instance;
         IPackageAdapterGetter? VirtualMachineAdapter { get; }
         Package.Flag Flags { get; }
         Package.Types Type { get; }

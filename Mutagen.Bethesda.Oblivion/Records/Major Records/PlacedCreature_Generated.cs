@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IPlacedCreatureGetter>,
         IPlacedGetter
     {
-        static new ILoquiRegistration Registration => PlacedCreature_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedCreature_Registration.Instance;
         IFormLinkNullableGetter<ICreatureGetter> Base { get; }
         IFormLinkNullableGetter<IFactionGetter> Owner { get; }
         Int32? FactionRank { get; }

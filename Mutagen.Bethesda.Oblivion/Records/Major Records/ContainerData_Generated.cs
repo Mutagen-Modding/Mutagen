@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ContainerData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ContainerData_Registration.Instance;
         Container.ContainerFlag Flags { get; }
         Single Weight { get; }
 

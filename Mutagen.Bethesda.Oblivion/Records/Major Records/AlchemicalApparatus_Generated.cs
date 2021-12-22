@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => AlchemicalApparatus_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter

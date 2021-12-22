@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => QuestTarget_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => QuestTarget_Registration.Instance;
         IFormLinkGetter<IPlacedGetter> Target { get; }
         Quest.TargetFlag Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }

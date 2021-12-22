@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => RoadPoint_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => RoadPoint_Registration.Instance;
         P3Float Point { get; }
         ReadOnlyMemorySlice<Byte> NumConnectionsFluffBytes { get; }
         IReadOnlyList<P3Float> Connections { get; }

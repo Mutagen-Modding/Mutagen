@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IFormListGetter>,
         IObjectIdGetter
     {
-        static new ILoquiRegistration Registration => FormList_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>> Items { get; }
 
     }

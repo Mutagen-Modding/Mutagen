@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => SpellUnleveled_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SpellUnleveled_Registration.Instance;
         ISpellDataGetter? Data { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
 

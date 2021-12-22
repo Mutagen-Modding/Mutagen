@@ -909,7 +909,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundedOptionalGetter,
         IObjectIdGetter
     {
-        static new ILoquiRegistration Registration => TextureSet_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter

@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ISceneGetter>,
         IMapsToGetter<ISceneGetter>
     {
-        static new ILoquiRegistration Registration => Scene_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Scene_Registration.Instance;
         ISceneAdapterGetter? VirtualMachineAdapter { get; }
         Scene.Flag? Flags { get; }
         IReadOnlyList<IScenePhaseGetter> Phases { get; }

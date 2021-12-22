@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<ITopicReferenceGetter>
     {
-        static new ILoquiRegistration Registration => TopicReference_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => TopicReference_Registration.Instance;
         IFormLinkGetter<IDialogTopicGetter> Reference { get; }
 
     }

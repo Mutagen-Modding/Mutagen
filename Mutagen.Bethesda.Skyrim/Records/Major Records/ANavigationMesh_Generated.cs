@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IANavigationMeshGetter>
     {
-        static new ILoquiRegistration Registration => ANavigationMesh_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ANavigationMesh_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? ONAM { get; }
         ReadOnlyMemorySlice<Byte>? PNAM { get; }
         ReadOnlyMemorySlice<Byte>? NNAM { get; }

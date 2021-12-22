@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IDebrisGetter>,
         IMapsToGetter<IDebrisGetter>
     {
-        static new ILoquiRegistration Registration => Debris_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Debris_Registration.Instance;
 
     }
 

@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NpcConfiguration_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NpcConfiguration_Registration.Instance;
         NpcConfiguration.Flag Flags { get; }
         Int16 MagickaOffset { get; }
         Int16 StaminaOffset { get; }

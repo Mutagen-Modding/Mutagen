@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IAPerkEntryPointEffectGetter>
     {
-        static new ILoquiRegistration Registration => APerkEntryPointEffect_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => APerkEntryPointEffect_Registration.Instance;
         APerkEntryPointEffect.EntryType EntryPoint { get; }
         Byte PerkConditionTabCount { get; }
 

@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<INoOwnerGetter>
     {
-        static new ILoquiRegistration Registration => NoOwner_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => NoOwner_Registration.Instance;
         UInt32 RawOwnerData { get; }
         UInt32 RawVariableData { get; }
 

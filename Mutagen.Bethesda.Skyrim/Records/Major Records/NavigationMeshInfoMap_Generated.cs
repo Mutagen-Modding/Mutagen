@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<INavigationMeshInfoMapGetter>,
         IMapsToGetter<INavigationMeshInfoMapGetter>
     {
-        static new ILoquiRegistration Registration => NavigationMeshInfoMap_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => NavigationMeshInfoMap_Registration.Instance;
         UInt32? NavMeshVersion { get; }
         IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; }
         IPreferredPathingGetter? PreferredPathing { get; }

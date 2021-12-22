@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PlacedPrimitive_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PlacedPrimitive_Registration.Instance;
         P3Float Bounds { get; }
         Color Color { get; }
         Single Unknown { get; }

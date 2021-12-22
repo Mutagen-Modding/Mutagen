@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => FaceGenData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FaceGenData_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? SymmetricGeometry { get; }
         ReadOnlyMemorySlice<Byte>? AsymmetricGeometry { get; }
         ReadOnlyMemorySlice<Byte>? SymmetricTexture { get; }

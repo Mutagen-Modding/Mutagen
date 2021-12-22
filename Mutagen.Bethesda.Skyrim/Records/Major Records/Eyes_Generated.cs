@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequiredGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Eyes_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Eyes_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedRequiredGetter, ITranslatedNamedRequiredGetter

@@ -1393,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IPlacedObjectGetter>,
         IPlacedGetter
     {
-        static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         IFormLinkNullableGetter<IOblivionMajorRecordGetter> Base { get; }
         ReadOnlyMemorySlice<Byte>? XPCIFluff { get; }
         ReadOnlyMemorySlice<Byte>? FULLFluff { get; }

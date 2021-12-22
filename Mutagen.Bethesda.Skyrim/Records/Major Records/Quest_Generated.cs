@@ -1600,7 +1600,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Quest_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Quest_Registration.Instance;
         IQuestAdapterGetter? VirtualMachineAdapter { get; }
         #region Name
         /// <summary>

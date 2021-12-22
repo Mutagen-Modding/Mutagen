@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequiredGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Class_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Class_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedRequiredGetter, ITranslatedNamedRequiredGetter

@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CombatStyleMelee_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CombatStyleMelee_Registration.Instance;
         CombatStyleMelee.VersioningBreaks Versioning { get; }
         Single AttackStaggeredMult { get; }
         Single PowerAttackStaggeredMult { get; }

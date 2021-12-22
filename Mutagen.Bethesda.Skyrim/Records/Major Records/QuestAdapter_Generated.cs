@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IQuestAdapterGetter>
     {
-        static new ILoquiRegistration Registration => QuestAdapter_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => QuestAdapter_Registration.Instance;
         QuestAdapter.VersioningBreaks Versioning { get; }
         Byte Unknown { get; }
         String FileName { get; }

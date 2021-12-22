@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ICameraPathGetter>,
         IMapsToGetter<ICameraPathGetter>
     {
-        static new ILoquiRegistration Registration => CameraPath_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CameraPath_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; }
         CameraPath.ZoomType Zoom { get; }

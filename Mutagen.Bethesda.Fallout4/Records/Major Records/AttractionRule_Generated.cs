@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IAttractionRuleGetter>,
         IMapsToGetter<IAttractionRuleGetter>
     {
-        static new ILoquiRegistration Registration => AttractionRule_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AttractionRule_Registration.Instance;
 
     }
 

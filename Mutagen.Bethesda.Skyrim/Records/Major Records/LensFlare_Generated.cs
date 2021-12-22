@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ILensFlareGetter>,
         IMapsToGetter<ILensFlareGetter>
     {
-        static new ILoquiRegistration Registration => LensFlare_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
 
     }
 

@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Patrol_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Patrol_Registration.Instance;
         Single IdleTime { get; }
         IFormLinkGetter<IIdleAnimationGetter> Idle { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }

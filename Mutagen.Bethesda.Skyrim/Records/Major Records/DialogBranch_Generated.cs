@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IDialogBranchGetter>,
         IMapsToGetter<IDialogBranchGetter>
     {
-        static new ILoquiRegistration Registration => DialogBranch_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DialogBranch_Registration.Instance;
         IFormLinkGetter<IQuestGetter> Quest { get; }
         Int32? TNAM { get; }
         DialogBranch.Flag? Flags { get; }

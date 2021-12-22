@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPcLevelMultGetter>
     {
-        static new ILoquiRegistration Registration => PcLevelMult_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PcLevelMult_Registration.Instance;
         Single LevelMult { get; }
 
     }

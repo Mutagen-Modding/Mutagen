@@ -1820,7 +1820,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Phoneme_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Phoneme_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedRequiredGetter

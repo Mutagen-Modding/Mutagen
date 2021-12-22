@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SoundData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SoundData_Registration.Instance;
         UInt16 MinimumAttenuationDistance { get; }
         UInt16 MaximumAttenuationDistance { get; }
         SByte FrequencyAdjustment { get; }

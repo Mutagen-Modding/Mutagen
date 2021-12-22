@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<ISceneScriptFragmentsGetter>
     {
-        static new ILoquiRegistration Registration => SceneScriptFragments_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SceneScriptFragments_Registration.Instance;
         IReadOnlyList<IScenePhaseFragmentGetter> PhaseFragments { get; }
 
     }

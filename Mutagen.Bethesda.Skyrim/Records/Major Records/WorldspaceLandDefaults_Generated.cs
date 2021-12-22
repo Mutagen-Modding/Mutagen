@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorldspaceLandDefaults_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
         Single DefaultLandHeight { get; }
         Single DefaultWaterHeight { get; }
 

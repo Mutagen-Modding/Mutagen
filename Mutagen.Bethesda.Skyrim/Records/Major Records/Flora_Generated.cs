@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Flora_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Flora_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter

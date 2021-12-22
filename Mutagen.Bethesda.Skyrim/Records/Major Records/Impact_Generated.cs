@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IImpactGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Impact_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Impact_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter

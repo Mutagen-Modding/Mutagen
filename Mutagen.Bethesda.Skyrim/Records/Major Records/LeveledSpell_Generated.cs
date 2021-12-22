@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptionalGetter,
         ISpellRecordGetter
     {
-        static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter

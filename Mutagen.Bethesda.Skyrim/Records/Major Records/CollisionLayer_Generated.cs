@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ICollisionLayerGetter>,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => CollisionLayer_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CollisionLayer_Registration.Instance;
         ITranslatedStringGetter Description { get; }
         UInt32 Index { get; }
         Color DebugColor { get; }

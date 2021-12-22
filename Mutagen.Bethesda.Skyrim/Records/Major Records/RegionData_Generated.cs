@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => RegionData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => RegionData_Registration.Instance;
         IRegionDataHeaderGetter? Header { get; }
         #region Icons
         /// <summary>

@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IStoryManagerEventNodeGetter>,
         IMapsToGetter<IStoryManagerEventNodeGetter>
     {
-        static new ILoquiRegistration Registration => StoryManagerEventNode_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => StoryManagerEventNode_Registration.Instance;
         AStoryManagerNode.Flag? Flags { get; }
         ReadOnlyMemorySlice<Byte>? XNAM { get; }
         RecordType? Type { get; }

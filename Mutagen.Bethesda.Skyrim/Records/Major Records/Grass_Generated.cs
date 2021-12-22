@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter
     {
-        static new ILoquiRegistration Registration => Grass_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Grass_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter

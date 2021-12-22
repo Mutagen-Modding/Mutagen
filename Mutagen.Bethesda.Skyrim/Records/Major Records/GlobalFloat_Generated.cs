@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGlobalFloatGetter>,
         IMapsToGetter<IGlobalFloatGetter>
     {
-        static new ILoquiRegistration Registration => GlobalFloat_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GlobalFloat_Registration.Instance;
         Single? Data { get; }
 
     }

@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IAssociationTypeGetter>,
         IMapsToGetter<IAssociationTypeGetter>
     {
-        static new ILoquiRegistration Registration => AssociationType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AssociationType_Registration.Instance;
         IGenderedItemGetter<String?>? ParentTitle { get; }
         IGenderedItemGetter<String?>? Title { get; }
         AssociationType.Flag Flags { get; }

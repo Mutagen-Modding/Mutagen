@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => PackageDataTopic_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PackageDataTopic_Registration.Instance;
         IReadOnlyList<IATopicReferenceGetter> Topics { get; }
         ReadOnlyMemorySlice<Byte>? TPIC { get; }
 

@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IFactionOwnerGetter>
     {
-        static new ILoquiRegistration Registration => FactionOwner_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => FactionOwner_Registration.Instance;
         IFormLinkGetter<IFactionGetter> Faction { get; }
         Int32 RequiredRank { get; }
 

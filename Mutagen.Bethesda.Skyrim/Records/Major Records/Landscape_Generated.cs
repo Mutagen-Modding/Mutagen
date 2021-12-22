@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ILandscapeGetter>,
         IMapsToGetter<ILandscapeGetter>
     {
-        static new ILoquiRegistration Registration => Landscape_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Landscape_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         ReadOnlyMemorySlice<Byte>? VertexNormals { get; }
         ReadOnlyMemorySlice<Byte>? VertexHeightMap { get; }

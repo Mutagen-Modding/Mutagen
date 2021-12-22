@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedBeamGetter>,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedBeam_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedBeam_Registration.Instance;
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }

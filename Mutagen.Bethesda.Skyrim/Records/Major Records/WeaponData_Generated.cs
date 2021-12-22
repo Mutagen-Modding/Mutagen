@@ -1259,7 +1259,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeaponData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeaponData_Registration.Instance;
         WeaponAnimationType AnimationType { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
         Single Speed { get; }

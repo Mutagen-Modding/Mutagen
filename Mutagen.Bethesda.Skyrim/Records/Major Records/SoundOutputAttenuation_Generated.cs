@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SoundOutputAttenuation_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SoundOutputAttenuation_Registration.Instance;
         Int32 Unknown { get; }
         Single MinDistance { get; }
         Single MaxDistance { get; }

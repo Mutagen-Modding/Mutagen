@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IActionRecordGetter>,
         IMapsToGetter<IActionRecordGetter>
     {
-        static new ILoquiRegistration Registration => ActionRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ActionRecord_Registration.Instance;
         Color? Color { get; }
 
     }

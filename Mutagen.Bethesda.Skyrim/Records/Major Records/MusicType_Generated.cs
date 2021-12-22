@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IMusicTypeGetter>,
         IMapsToGetter<IMusicTypeGetter>
     {
-        static new ILoquiRegistration Registration => MusicType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MusicType_Registration.Instance;
         MusicType.Flag Flags { get; }
         IMusicTypeDataGetter? Data { get; }
         Single? FadeDuration { get; }

@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IScriptStringPropertyGetter>,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ScriptStringProperty_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ScriptStringProperty_Registration.Instance;
         String Data { get; }
 
     }

@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IVoiceTypeGetter>,
         IMapsToGetter<IVoiceTypeGetter>
     {
-        static new ILoquiRegistration Registration => VoiceType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => VoiceType_Registration.Instance;
         VoiceType.Flag Flags { get; }
 
     }

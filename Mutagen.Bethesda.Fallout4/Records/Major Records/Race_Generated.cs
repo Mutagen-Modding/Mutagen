@@ -2411,7 +2411,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequiredGetter,
         IRelatableGetter
     {
-        static new ILoquiRegistration Registration => Race_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound { get; }
         #region Name
         /// <summary>

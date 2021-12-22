@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IVolumetricLightingGetter>,
         IMapsToGetter<IVolumetricLightingGetter>
     {
-        static new ILoquiRegistration Registration => VolumetricLighting_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => VolumetricLighting_Registration.Instance;
         Single? Intensity { get; }
         Single? CustomColorContribution { get; }
         Single? ColorR { get; }

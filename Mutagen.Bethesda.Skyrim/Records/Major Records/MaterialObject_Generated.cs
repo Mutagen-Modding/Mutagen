@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IMaterialObjectGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => MaterialObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MaterialObject_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter

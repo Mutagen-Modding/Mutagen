@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<IConditionGlobalGetter>
     {
-        static new ILoquiRegistration Registration => ConditionGlobal_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ConditionGlobal_Registration.Instance;
         IFormLinkGetter<IGlobalGetter> ComparisonValue { get; }
         IConditionDataGetter Data { get; }
 

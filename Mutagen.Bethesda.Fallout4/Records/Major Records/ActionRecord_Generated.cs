@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ActionRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ActionRecord_Registration.Instance;
         Color? Color { get; }
         String? Notes { get; }
         ActionRecord.TypeEnum? Type { get; }

@@ -2497,7 +2497,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffect_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter

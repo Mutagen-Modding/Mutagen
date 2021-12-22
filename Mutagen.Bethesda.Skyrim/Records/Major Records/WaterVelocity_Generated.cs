@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WaterVelocity_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WaterVelocity_Registration.Instance;
         P3Float Offset { get; }
         Int32 Unknown { get; }
         P3Float Angle { get; }

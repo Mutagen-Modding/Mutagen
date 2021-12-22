@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ICombatStyleGetter>,
         IMapsToGetter<ICombatStyleGetter>
     {
-        static new ILoquiRegistration Registration => CombatStyle_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CombatStyle_Registration.Instance;
         Single OffensiveMult { get; }
         Single DefensiveMult { get; }
         Single GroupOffensiveMult { get; }

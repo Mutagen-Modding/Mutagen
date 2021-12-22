@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CloudLayer_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CloudLayer_Registration.Instance;
         Boolean? Enabled { get; }
         Single? XSpeed { get; }
         Single? YSpeed { get; }

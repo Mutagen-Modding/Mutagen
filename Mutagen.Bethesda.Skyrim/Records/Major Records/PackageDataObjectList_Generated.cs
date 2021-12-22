@@ -429,7 +429,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => PackageDataObjectList_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PackageDataObjectList_Registration.Instance;
         Single? Data { get; }
 
     }

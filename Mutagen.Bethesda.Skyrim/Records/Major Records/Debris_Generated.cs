@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IDebrisGetter>,
         IMapsToGetter<IDebrisGetter>
     {
-        static new ILoquiRegistration Registration => Debris_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Debris_Registration.Instance;
         IReadOnlyList<IDebrisModelGetter> Models { get; }
 
     }

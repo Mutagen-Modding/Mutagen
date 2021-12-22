@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IScriptObjectPropertyGetter>,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ScriptObjectProperty_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ScriptObjectProperty_Registration.Instance;
         IFormLinkGetter<ISkyrimMajorRecordGetter> Object { get; }
         Int16 Alias { get; }
         UInt16 Unused { get; }

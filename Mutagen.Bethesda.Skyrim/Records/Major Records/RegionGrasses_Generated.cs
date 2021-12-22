@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         ILoquiObject<IRegionGrassesGetter>
     {
-        static new ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => RegionGrasses_Registration.Instance;
         IReadOnlyList<IRegionGrassGetter>? Grasses { get; }
 
     }

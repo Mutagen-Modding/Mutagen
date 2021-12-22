@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IGlobalBoolGetter>,
         IMapsToGetter<IGlobalBoolGetter>
     {
-        static new ILoquiRegistration Registration => GlobalBool_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GlobalBool_Registration.Instance;
         Boolean? Data { get; }
 
     }

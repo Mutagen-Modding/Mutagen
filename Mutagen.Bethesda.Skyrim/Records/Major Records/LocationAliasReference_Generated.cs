@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LocationAliasReference_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LocationAliasReference_Registration.Instance;
         Int32? AliasIndex { get; }
         IFormLinkNullableGetter<IKeywordGetter> Keyword { get; }
         IFormLinkNullableGetter<ILocationReferenceTypeGetter> RefType { get; }

@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => MaterialType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MaterialType_Registration.Instance;
         IFormLinkNullableGetter<IMaterialTypeGetter> Parent { get; }
         #region Name
         /// <summary>

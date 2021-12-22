@@ -3142,7 +3142,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IWeatherGetter>,
         IMapsToGetter<IWeatherGetter>
     {
-        static new ILoquiRegistration Registration => Weather_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         ReadOnlyMemorySlice<String?> CloudTextures { get; }
         ReadOnlyMemorySlice<Byte>? DNAM { get; }
         ReadOnlyMemorySlice<Byte>? CNAM { get; }

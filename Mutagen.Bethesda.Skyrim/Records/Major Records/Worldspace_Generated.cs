@@ -1916,7 +1916,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Worldspace_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Worldspace_Registration.Instance;
         IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; }
         IWorldspaceMaxHeightGetter? MaxHeight { get; }
         #region Name

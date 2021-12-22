@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IPerkEntryPointAddActivateChoiceGetter>
     {
-        static new ILoquiRegistration Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkEntryPointAddActivateChoice_Registration.Instance;
         IFormLinkNullableGetter<ISpellGetter> Spell { get; }
         ITranslatedStringGetter? ButtonLabel { get; }
         IPerkScriptFlagGetter Flags { get; }

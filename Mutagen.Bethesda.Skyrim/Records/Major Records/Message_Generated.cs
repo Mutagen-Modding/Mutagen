@@ -844,7 +844,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Message_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Message_Registration.Instance;
         ITranslatedStringGetter Description { get; }
         #region Name
         /// <summary>

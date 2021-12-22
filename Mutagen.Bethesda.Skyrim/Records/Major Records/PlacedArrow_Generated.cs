@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedArrowGetter>,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedArrow_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedArrow_Registration.Instance;
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }

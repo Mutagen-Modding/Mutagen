@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IDamageTypeIndexedGetter>,
         IMapsToGetter<IDamageTypeIndexedGetter>
     {
-        static new ILoquiRegistration Registration => DamageTypeIndexed_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DamageTypeIndexed_Registration.Instance;
         IReadOnlyList<UInt32>? DamageTypes { get; }
 
     }

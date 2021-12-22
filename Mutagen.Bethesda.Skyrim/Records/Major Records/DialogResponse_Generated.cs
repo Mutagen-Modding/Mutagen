@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DialogResponse_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DialogResponse_Registration.Instance;
         Emotion Emotion { get; }
         UInt32 EmotionValue { get; }
         Int32 Unknown { get; }

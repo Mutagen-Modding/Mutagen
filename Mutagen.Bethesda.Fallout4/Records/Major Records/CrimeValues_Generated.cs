@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CrimeValues_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CrimeValues_Registration.Instance;
         CrimeValues.VersioningBreaks Versioning { get; }
         Boolean Arrest { get; }
         Boolean AttackOnSight { get; }

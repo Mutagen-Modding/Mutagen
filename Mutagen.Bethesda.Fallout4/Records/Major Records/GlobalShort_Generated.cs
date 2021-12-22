@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IGlobalShortGetter>,
         IMapsToGetter<IGlobalShortGetter>
     {
-        static new ILoquiRegistration Registration => GlobalShort_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GlobalShort_Registration.Instance;
         Int16? Data { get; }
 
     }

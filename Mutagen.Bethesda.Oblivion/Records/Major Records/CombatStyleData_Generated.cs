@@ -1612,7 +1612,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CombatStyleData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CombatStyleData_Registration.Instance;
         CombatStyleData.VersioningBreaks Versioning { get; }
         Byte DodgePercentChance { get; }
         Byte LeftRightPercentChance { get; }

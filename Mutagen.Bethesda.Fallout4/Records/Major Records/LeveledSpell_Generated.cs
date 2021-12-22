@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<ILeveledSpellGetter>,
         ISpellRecordGetter
     {
-        static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
 
     }
 

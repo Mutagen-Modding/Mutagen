@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ImageSpaceTint_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ImageSpaceTint_Registration.Instance;
         Single Amount { get; }
         Color Color { get; }
 

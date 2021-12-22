@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGameSettingIntGetter>,
         IMapsToGetter<IGameSettingIntGetter>
     {
-        static new ILoquiRegistration Registration => GameSettingInt_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GameSettingInt_Registration.Instance;
         Int32? Data { get; }
 
     }

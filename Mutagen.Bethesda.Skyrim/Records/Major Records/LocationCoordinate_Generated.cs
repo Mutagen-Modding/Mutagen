@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LocationCoordinate_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LocationCoordinate_Registration.Instance;
         IFormLinkGetter<IComplexLocationGetter> Location { get; }
         IReadOnlyList<P2Int16> Coordinates { get; }
 

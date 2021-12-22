@@ -1388,7 +1388,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IDialogResponsesGetter>,
         IMapsToGetter<IDialogResponsesGetter>
     {
-        static new ILoquiRegistration Registration => DialogResponses_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DialogResponses_Registration.Instance;
         IDialogResponsesAdapterGetter? VirtualMachineAdapter { get; }
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         IDialogResponseFlagsGetter? Flags { get; }

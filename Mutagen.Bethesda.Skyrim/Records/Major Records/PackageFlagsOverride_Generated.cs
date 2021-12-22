@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PackageFlagsOverride_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PackageFlagsOverride_Registration.Instance;
         Package.Flag SetFlags { get; }
         Package.Flag ClearFlags { get; }
         Package.InterruptFlag SetInterruptFlags { get; }

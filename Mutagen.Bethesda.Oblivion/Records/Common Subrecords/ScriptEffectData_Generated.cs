@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ScriptEffectData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ScriptEffectData_Registration.Instance;
         ScriptEffectData.VersioningBreaks Versioning { get; }
         IFormLinkGetter<IScriptGetter> Script { get; }
         MagicSchool MagicSchool { get; }

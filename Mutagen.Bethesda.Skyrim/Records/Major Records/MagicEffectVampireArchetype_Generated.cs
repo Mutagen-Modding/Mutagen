@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IMagicEffectVampireArchetypeGetter>
     {
-        static new ILoquiRegistration Registration => MagicEffectVampireArchetype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffectVampireArchetype_Registration.Instance;
 
     }
 
