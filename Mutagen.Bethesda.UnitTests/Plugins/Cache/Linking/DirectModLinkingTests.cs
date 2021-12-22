@@ -23,8 +23,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             // Test FormKey fails
             Assert.False(package.TryResolve(UnusedFormKey, out var _));
             Assert.False(package.TryResolve(FormKey.Null, out var _));
-            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IMajorRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IMajorRecordGetter>(FormKey.Null, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
             Assert.False(package.TryResolve<IObjectEffectGetter>(UnusedFormKey, out var _));
@@ -41,8 +41,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             // Test EditorID fails
             Assert.False(package.TryResolve(UnusedEditorID, out var _));
             Assert.False(package.TryResolve(string.Empty, out var _));
-            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedEditorID, out var _));
-            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(string.Empty, out var _));
+            Assert.False(package.TryResolve<IMajorRecordGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IMajorRecordGetter>(string.Empty, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedEditorID, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(string.Empty, out var _));
             Assert.False(package.TryResolve<IObjectEffectGetter>(UnusedEditorID, out var _));
@@ -70,8 +70,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             // Test FormKey fails
             Assert.False(package.TryResolve(UnusedFormKey, out var _));
             Assert.False(package.TryResolve(FormKey.Null, out var _));
-            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IMajorRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IMajorRecordGetter>(FormKey.Null, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
             Assert.False(package.TryResolve<IObjectEffectGetter>(UnusedFormKey, out var _));
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             // Test EditorID fails
             Assert.False(package.TryResolve(UnusedEditorID, out var _));
             Assert.False(package.TryResolve(string.Empty, out var _));
-            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedEditorID, out var _));
-            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(string.Empty, out var _));
+            Assert.False(package.TryResolve<IMajorRecordGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IMajorRecordGetter>(string.Empty, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedEditorID, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(string.Empty, out var _));
             Assert.False(package.TryResolve<IObjectEffectGetter>(UnusedEditorID, out var _));
@@ -158,22 +158,22 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<IMajorRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.EditorID, out var rec));
+                Assert.True(package.TryResolve<IMajorRecordGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<IMajorRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.EditorID, out var rec));
+                Assert.True(package.TryResolve<IMajorRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>

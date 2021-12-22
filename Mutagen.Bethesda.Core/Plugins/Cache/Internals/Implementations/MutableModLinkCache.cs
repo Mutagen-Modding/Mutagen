@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
+        public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
             if (formKey.IsNull)
             {
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
             if (editorId.IsNullOrWhitespace())
             {
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             if (formKey.IsNull)
             {
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public bool TryResolve<TMajor>(string editorId, [MaybeNullWhen(false)] out TMajor majorRec)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             if (editorId.IsNullOrWhitespace())
             {
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
+        public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
             if (formKey.IsNull)
             {
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        public bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
             if (editorId.IsNullOrWhitespace())
             {
@@ -228,28 +228,28 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Resolve(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+        public IMajorRecordGetter Resolve(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
-            if (TryResolve<IMajorRecordCommonGetter>(formKey, out var majorRec, target)) return majorRec;
-            throw new MissingRecordException(formKey, typeof(IMajorRecordCommonGetter));
+            if (TryResolve<IMajorRecordGetter>(formKey, out var majorRec, target)) return majorRec;
+            throw new MissingRecordException(formKey, typeof(IMajorRecordGetter));
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Resolve(string editorId)
+        public IMajorRecordGetter Resolve(string editorId)
         {
-            if (TryResolve<IMajorRecordCommonGetter>(editorId, out var majorRec)) return majorRec;
-            throw new MissingRecordException(editorId, typeof(IMajorRecordCommonGetter));
+            if (TryResolve<IMajorRecordGetter>(editorId, out var majorRec)) return majorRec;
+            throw new MissingRecordException(editorId, typeof(IMajorRecordGetter));
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Resolve(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+        public IMajorRecordGetter Resolve(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
             if (TryResolve(formKey, type, out var commonRec, target)) return commonRec;
             throw new MissingRecordException(formKey, type);
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Resolve(string editorId, Type type)
+        public IMajorRecordGetter Resolve(string editorId, Type type)
         {
             if (TryResolve(editorId, type, out var commonRec)) return commonRec;
             throw new MissingRecordException(editorId, type);
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public TMajor Resolve<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             if (TryResolve<TMajor>(formKey, out var commonRec, target)) return commonRec;
             throw new MissingRecordException(formKey, typeof(TMajor));
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public TMajor Resolve<TMajor>(string editorId)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             if (TryResolve<TMajor>(editorId, out var commonRec)) return commonRec;
             throw new MissingRecordException(editorId, typeof(TMajor));
@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
+        public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
             if (formKey.IsNull)
             {
@@ -290,7 +290,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this)
+            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecord, IMajorRecordGetter>(this)
                 // ToDo
                 // Capture and expose errors optionally via TryResolve /w out param
                 .Catch((Exception ex) => { }))
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public bool TryResolveContext(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveContext(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec)
         {
             if (editorId.IsNullOrWhitespace())
             {
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this)
+            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecord, IMajorRecordGetter>(this)
                 // ToDo
                 // Capture and expose errors optionally via TryResolve /w out param
                 .Catch((Exception ex) => { }))
@@ -334,8 +334,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public bool TryResolveContext<TMajor, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecord, TMajorGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             if (formKey.IsNull)
             {
@@ -370,8 +370,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public bool TryResolveContext<TMajor, TMajorGetter>(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec)
-            where TMajor : class, IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecord, TMajorGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             if (editorId.IsNullOrWhitespace())
             {
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
+        public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
             if (formKey.IsNull)
             {
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public bool TryResolveContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec)
         {
             if (editorId.IsNullOrWhitespace())
             {
@@ -459,29 +459,29 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+        public IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> ResolveContext(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
-            if (TryResolveContext<IMajorRecordCommon, IMajorRecordCommonGetter>(formKey, out var majorRec, target)) return majorRec;
-            throw new MissingRecordException(formKey, typeof(IMajorRecordCommonGetter));
+            if (TryResolveContext<IMajorRecord, IMajorRecordGetter>(formKey, out var majorRec, target)) return majorRec;
+            throw new MissingRecordException(formKey, typeof(IMajorRecordGetter));
         }
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId)
+        public IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> ResolveContext(string editorId)
         {
-            if (TryResolveContext<IMajorRecordCommon, IMajorRecordCommonGetter>(editorId, out var majorRec)) return majorRec;
-            throw new MissingRecordException(editorId, typeof(IMajorRecordCommonGetter));
+            if (TryResolveContext<IMajorRecord, IMajorRecordGetter>(editorId, out var majorRec)) return majorRec;
+            throw new MissingRecordException(editorId, typeof(IMajorRecordGetter));
         }
 
         /// <inheritdoc />
-        public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+        public IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> ResolveContext(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
             if (TryResolveContext(formKey, type, out var commonRec, target)) return commonRec;
             throw new MissingRecordException(formKey, type);
         }
 
         /// <inheritdoc />
-        public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId, Type type)
+        public IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> ResolveContext(string editorId, Type type)
         {
             if (TryResolveContext(editorId, type, out var commonRec)) return commonRec;
             throw new MissingRecordException(editorId, type);
@@ -489,8 +489,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecord, TMajorGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             if (TryResolveContext<TMajor, TMajorGetter>(formKey, out var commonRec, target)) return commonRec;
             throw new MissingRecordException(formKey, typeof(TMajorGetter));
@@ -498,8 +498,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(string editorId)
-            where TMajor : class, IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecord, TMajorGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             if (TryResolveContext<TMajor, TMajorGetter>(editorId, out var commonRec)) return commonRec;
             throw new MissingRecordException(editorId, typeof(TMajorGetter));
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             if (TryResolve<TMajor>(formKey, out var rec, target))
             {
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+        public IEnumerable<IMajorRecordGetter> ResolveAll(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
             if (TryResolve(formKey, type, out var rec, target))
             {
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+        public IEnumerable<IMajorRecordGetter> ResolveAll(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
             if (TryResolve(formKey, out var rec, target))
             {
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public bool TryResolveSimpleContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
+        public bool TryResolveSimpleContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
             if (TryResolveContext(formKey, out var simple, target))
             {
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public bool TryResolveSimpleContext(string editorId, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveSimpleContext(string editorId, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec)
         {
             if (TryResolveContext(editorId, out var simple))
             {
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public bool TryResolveSimpleContext<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             if (formKey.IsNull)
             {
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimpleContext<TMajor>(string editorId, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec) where TMajor : class, IMajorRecordCommonGetter
+        public bool TryResolveSimpleContext<TMajor>(string editorId, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec) where TMajor : class, IMajorRecordGetter
         {
             if (editorId.IsNullOrWhitespace())
             {
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimpleContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
+        public bool TryResolveSimpleContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
             if (TryResolveContext(formKey, type, out var simple, target))
             {
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimpleContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveSimpleContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec)
         {
             if (TryResolveContext(editorId, type, out var simple))
             {
@@ -652,46 +652,46 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+        public IModContext<IMajorRecordGetter> ResolveSimpleContext(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
             return ResolveContext(formKey, target);
         }
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(string editorId)
+        public IModContext<IMajorRecordGetter> ResolveSimpleContext(string editorId)
         {
             return ResolveContext(editorId);
         }
 
         /// <inheritdoc />
-        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+        public IModContext<IMajorRecordGetter> ResolveSimpleContext(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
             return ResolveContext(formKey, type, target);
         }
 
         /// <inheritdoc />
-        public IModContext<IMajorRecordCommonGetter> ResolveSimpleContext(string editorId, Type type)
+        public IModContext<IMajorRecordGetter> ResolveSimpleContext(string editorId, Type type)
         {
             return ResolveContext(editorId, type);
         }
 
         /// <inheritdoc />
-        public IModContext<TMajor> ResolveSimpleContext<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordCommonGetter
+        public IModContext<TMajor> ResolveSimpleContext<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordGetter
         {
             if (TryResolveSimpleContext<TMajor>(formKey, out var commonRec, target)) return commonRec;
             throw new MissingRecordException(formKey, typeof(TMajor));
         }
 
         /// <inheritdoc />
-        public IModContext<TMajor> ResolveSimpleContext<TMajor>(string editorId) where TMajor : class, IMajorRecordCommonGetter
+        public IModContext<TMajor> ResolveSimpleContext<TMajor>(string editorId) where TMajor : class, IMajorRecordGetter
         {
             if (TryResolveSimpleContext<TMajor>(editorId, out var commonRec)) return commonRec;
             throw new MissingRecordException(editorId, typeof(TMajor));
         }
 
         /// <inheritdoc />
-        public IEnumerable<IModContext<TMajor>> ResolveAllSimpleContexts<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordCommonGetter
+        public IEnumerable<IModContext<TMajor>> ResolveAllSimpleContexts<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordGetter
         {
             if (TryResolveSimpleContext<TMajor>(formKey, out var rec, target))
             {
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+        public IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
             if (TryResolveSimpleContext(formKey, type, out var rec, target))
             {
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+        public IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
             if (TryResolveSimpleContext(formKey, out var rec, target))
             {
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecord, TMajorGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             if (TryResolveContext<TMajor, TMajorGetter>(formKey, out var rec, target))
             {
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
         
         /// <inheritdoc />
-        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> ResolveAllContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
             if (TryResolveContext(formKey, type, out var rec, target))
             {
@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> ResolveAllContexts(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
             if (TryResolveContext(formKey, out var rec, target))
             {
@@ -749,19 +749,19 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types)
+        public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
         {
             return TryResolve(formKey, (IEnumerable<Type>)types, out majorRec);
         }
 
         /// <inheritdoc />
-        public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types)
+        public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
         {
             return TryResolve(editorId, (IEnumerable<Type>)types, out majorRec);
         }
 
         /// <inheritdoc />
-        public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
+        public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
             foreach (var type in types)
             {
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
             foreach (var type in types)
             {
@@ -789,26 +789,26 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Resolve(FormKey formKey, params Type[] types)
+        public IMajorRecordGetter Resolve(FormKey formKey, params Type[] types)
         {
             return Resolve(formKey, (IEnumerable<Type>)types);
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Resolve(string editorId, params Type[] types)
+        public IMajorRecordGetter Resolve(string editorId, params Type[] types)
         {
             return Resolve(editorId, (IEnumerable<Type>)types);
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types, ResolveTarget target = ResolveTarget.Winner)
+        public IMajorRecordGetter Resolve(FormKey formKey, IEnumerable<Type> types, ResolveTarget target = ResolveTarget.Winner)
         {
             if (TryResolve(formKey, types, out var commonRec, target)) return commonRec;
             throw new MissingRecordException(formKey, types.ToArray());
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Resolve(string editorId, IEnumerable<Type> types)
+        public IMajorRecordGetter Resolve(string editorId, IEnumerable<Type> types)
         {
             if (TryResolve(editorId, types, out var commonRec)) return commonRec;
             throw new MissingRecordException(editorId, types.ToArray());
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public bool TryResolveIdentifier<TMajor>(FormKey formKey, out string? editorId, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             if (TryResolve<TMajor>(formKey, out var rec, target))
             {
@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public bool TryResolveIdentifier<TMajor>(string editorId, out FormKey formKey)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             if (TryResolve<TMajor>(editorId, out var rec))
             {
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             return AllIdentifiers(typeof(TMajor), cancel);
         }

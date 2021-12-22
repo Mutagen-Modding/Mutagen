@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public bool Parse<T>(
             MutagenFrame reader,
             [MaybeNullWhen(false)] out FormLink<T> item)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public bool Parse<T>(
             MutagenFrame reader,
             [MaybeNullWhen(false)] out IFormLinkGetter<T> item)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public bool Parse<T>(
             MutagenFrame reader,
             [MaybeNullWhen(false)] out IFormLink<T> item)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public bool Parse<T>(
             MutagenFrame reader,
             [MaybeNullWhen(false)] out IFormLinkNullableGetter<T> item)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public bool Parse<T>(
             MutagenFrame reader,
             [MaybeNullWhen(false)] out IFormLinkNullable<T> item)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public void Write<T>(
             MutagenWriter writer,
             IFormLinkGetter<T> item)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             FormKeyBinaryTranslation.Instance.Write(
                 writer,
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenWriter writer,
             FormLink<T> item,
             RecordType header)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             try
             {
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenWriter writer,
             IFormLinkGetter<T> item,
             RecordType header)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             FormKeyBinaryTranslation.Instance.Write(
                 writer,
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenWriter writer,
             FormLinkNullable<T> item,
             RecordType header)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (item.FormKeyNullable == null) return;
             FormKeyBinaryTranslation.Instance.Write(
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenWriter writer,
             IFormLinkNullableGetter<T> item,
             RecordType header)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (item.FormKeyNullable == null) return;
             FormKeyBinaryTranslation.Instance.Write(
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public void WriteNullable<T>(
             MutagenWriter writer,
             FormLinkNullable<T> item)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (item.FormKeyNullable == null) return;
             FormKeyBinaryTranslation.Instance.Write(
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public void WriteNullable<T>(
             MutagenWriter writer,
             IFormLinkNullableGetter<T> item)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (item.FormKeyNullable == null) return;
             FormKeyBinaryTranslation.Instance.Write(

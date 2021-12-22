@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Plugins
         /// <param name="cache">Link Cache to resolve against</param>
         /// <param name="majorRecord">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRecord);
+        bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordGetter majorRecord);
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Plugins
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
     public interface ILink<out TMajor> : ILink
-        where TMajor : IMajorRecordCommonGetter
+        where TMajor : IMajorRecordGetter
     {
         /// <summary>
         /// Attempts to locate link target in given Link Cache.

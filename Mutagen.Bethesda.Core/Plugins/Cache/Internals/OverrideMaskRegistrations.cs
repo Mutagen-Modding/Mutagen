@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals
         }
 
         public static object? Get<TMajor>()
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             return AddAsOverrideMasks.GetValueOrDefault(typeof(TMajor));
         }

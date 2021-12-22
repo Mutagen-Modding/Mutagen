@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
 
         public class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
-            where T : IMajorRecordCommonGetter
+            where T : IMajorRecordGetter
         {
             private readonly IReadOnlyDictionary<FormKey, int> _locs;
             private readonly ReadOnlyMemorySlice<byte> _data;
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
 
         public class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGroupCommonGetter<TMajor>
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             protected GroupMajorRecordCacheWrapper<TMajor>? _RecordCache;
 

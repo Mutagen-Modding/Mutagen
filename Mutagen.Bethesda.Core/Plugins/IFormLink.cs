@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Plugins
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
     public interface IFormLinkGetter<out TMajorGetter> : ILink<TMajorGetter>, IFormLinkGetter
-       where TMajorGetter : class, IMajorRecordCommonGetter
+       where TMajorGetter : class, IMajorRecordGetter
     {
         /// <summary>
         /// Creates a new FormLink with the given type, with the same FormKey.
@@ -39,11 +39,11 @@ namespace Mutagen.Bethesda.Plugins
         /// <typeparam name="TMajorRet">Type to cast FormLink to</typeparam>
         /// <returns>new FormLink with the given type, with the same FormKey</returns>
         IFormLink<TMajorRet> Cast<TMajorRet>()
-            where TMajorRet : class, IMajorRecordCommonGetter;
+            where TMajorRet : class, IMajorRecordGetter;
     }
 
     public interface IFormLink<out TMajorGetter> : IFormLinkGetter<TMajorGetter>, IClearable
-       where TMajorGetter : class, IMajorRecordCommonGetter
+       where TMajorGetter : class, IMajorRecordGetter
     {
         /// <summary>
         /// FormKey to link against
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Plugins
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
     public interface IFormLinkNullableGetter<out TMajorGetter> : ILink<TMajorGetter>, IFormLinkGetter, IFormLinkGetter<TMajorGetter>
-       where TMajorGetter : class, IMajorRecordCommonGetter
+       where TMajorGetter : class, IMajorRecordGetter
     {
         /// <summary>
         /// Creates a new FormLink with the given type, with the same FormKey.
@@ -75,11 +75,11 @@ namespace Mutagen.Bethesda.Plugins
         /// <typeparam name="TMajorRet">Type to cast FormLink to</typeparam>
         /// <returns>new FormLink with the given type, with the same FormKey</returns>
         new IFormLinkNullable<TMajorRet> Cast<TMajorRet>()
-            where TMajorRet : class, IMajorRecordCommonGetter;
+            where TMajorRet : class, IMajorRecordGetter;
     }
 
     public interface IFormLinkNullable<out TMajorGetter> : IFormLink<TMajorGetter>, IFormLinkNullableGetter<TMajorGetter>
-       where TMajorGetter : class, IMajorRecordCommonGetter
+       where TMajorGetter : class, IMajorRecordGetter
     {
     }
 }

@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins
         [Fact]
         public void NormalCollectionContains()
         {
-            var set = new HashSet<IFormLinkGetter<IMajorRecordCommonGetter>>();
+            var set = new HashSet<IFormLinkGetter<IMajorRecordGetter>>();
             set.Add(new FormLink<ITestMajorRecordGetter>(TestConstants.Form1));
             set.Contains(new FormLink<ITestMajorRecordGetter>(TestConstants.Form1)).Should().BeTrue();
             set.Contains(new FormLink<IOtherTestMajorRecordGetter>(TestConstants.Form1)).Should().BeFalse();
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins
         [Fact]
         public void TypelessCollectionContains()
         {
-            var set = new HashSet<IFormLinkGetter<IMajorRecordCommonGetter>>(FormLink<IMajorRecordCommonGetter>.TypelessComparer);
+            var set = new HashSet<IFormLinkGetter<IMajorRecordGetter>>(FormLink<IMajorRecordGetter>.TypelessComparer);
             set.Add(new FormLink<ITestMajorRecordGetter>(TestConstants.Form1));
             set.Contains(new FormLink<ITestMajorRecordGetter>(TestConstants.Form1)).Should().BeTrue();
             set.Contains(new FormLink<IOtherTestMajorRecordGetter>(TestConstants.Form1)).Should().BeTrue();

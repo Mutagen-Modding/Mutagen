@@ -404,7 +404,6 @@
     <Compile Include="Plugins\Records\IGroup.cs" />
     <Compile Include="Plugins\Aspects\IKeyworded.cs" />
     <Compile Include="Plugins\Records\Internals\ILinkInterfaceMapping.cs" />
-    <Compile Include="Plugins\Records\IMajorRecordCommon.cs" />
     <Compile Include="Plugins\Records\IMajorRecordContextEnumerable.cs" />
     <Compile Include="Plugins\Records\IMajorRecordEnumerable.cs" />
     <Compile Include="Plugins\Records\IMajorRecordIdentifier.cs" />

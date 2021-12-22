@@ -5,15 +5,15 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 {
     internal class LinkCacheItem : IMajorRecordIdentifier
     {
-        private readonly IMajorRecordCommonGetter? _record;
+        private readonly IMajorRecordGetter? _record;
         private readonly string? _editorId;
 
         public FormKey FormKey { get; }
         public string? EditorID => _record?.EditorID ?? _editorId;
-        public IMajorRecordCommonGetter Record => _record ?? throw new ArgumentException("Queried for record on a simple cache");
+        public IMajorRecordGetter Record => _record ?? throw new ArgumentException("Queried for record on a simple cache");
 
         public LinkCacheItem(
-            IMajorRecordCommonGetter? record,
+            IMajorRecordGetter? record,
             FormKey formKey,
             string? editorId)
         {
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             FormKey = formKey;
         }
 
-        public static LinkCacheItem Factory(IMajorRecordCommonGetter record, bool simple)
+        public static LinkCacheItem Factory(IMajorRecordGetter record, bool simple)
         {
             return new LinkCacheItem(
                 simple ? null : record,

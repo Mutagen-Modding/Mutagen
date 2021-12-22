@@ -6,14 +6,47 @@ using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
-    public partial interface IMajorRecord : IMajorRecordCommon
+    public partial interface IMajorRecord : IFormLinkContainer
     {
         new FormKey FormKey { get; }
         
+        /// <summary>
+        /// Marker of whether the content is compressed
+        /// </summary>
+        new bool IsCompressed { get; set; }
+
+        /// <summary>
+        /// Marker of whether the content is deleted
+        /// </summary>
+        new bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// Disables the record by setting the RecordFlag to Initially Disabled.
+        /// <returns>Returns true if the disable was successful.</returns>
+        /// </summary>
+        bool Disable();
     }
 
-    public partial interface IMajorRecordGetter : IMajorRecordCommonGetter
+    public partial interface IMajorRecordGetter : 
+        IFormVersionGetter, 
+        IMajorRecordIdentifier,
+        IFormLinkContainerGetter,
+        IEquatable<IFormLinkGetter>
     {
+        /// <summary>
+        /// Marker of whether the content is compressed
+        /// </summary>
+        bool IsCompressed { get; }
+
+        /// <summary>
+        /// Marker of whether the content is deleted
+        /// </summary>
+        bool IsDeleted { get; }
+
+        /// <summary>
+        /// Form Version of the record
+        /// </summary>
+        new ushort? FormVersion { get; }
     }
 
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
@@ -37,20 +70,14 @@ namespace Mutagen.Bethesda.Plugins.Records
             set => this.MajorRecordFlagsRaw = EnumExt.SetFlag(this.MajorRecordFlagsRaw, Constants.CompressedFlag, value);
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IMajorRecordCommonGetter.IsCompressed => this.IsCompressed;
-
         public bool IsDeleted
         {
             get => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.DeletedFlag);
             set => this.MajorRecordFlagsRaw = EnumExt.SetFlag(this.MajorRecordFlagsRaw, Constants.DeletedFlag, value);
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IMajorRecordCommonGetter.IsDeleted => this.IsDeleted;
-
         protected abstract ushort? FormVersionAbstract { get; }
-        ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
+        ushort? IMajorRecordGetter.FormVersion => FormVersionAbstract;
         ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
 
         public virtual bool Disable()
@@ -61,18 +88,18 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
 
         #region Comparers
-        public static IEqualityComparer<IMajorRecordCommonGetter> FormKeyEqualityComparer => _formKeyEqualityComparer;
+        public static IEqualityComparer<IMajorRecordGetter> FormKeyEqualityComparer => _formKeyEqualityComparer;
 
-        static readonly MajorRecordFormKeyComparer _formKeyEqualityComparer = new MajorRecordFormKeyComparer();
+        private static readonly MajorRecordFormKeyComparer _formKeyEqualityComparer = new();
 
-        class MajorRecordFormKeyComparer : IEqualityComparer<IMajorRecordCommonGetter>
+        class MajorRecordFormKeyComparer : IEqualityComparer<IMajorRecordGetter>
         {
-            public bool Equals(IMajorRecordCommonGetter? x, IMajorRecordCommonGetter? y)
+            public bool Equals(IMajorRecordGetter? x, IMajorRecordGetter? y)
             {
                 return x?.FormKey == y?.FormKey;
             }
 
-            public int GetHashCode(IMajorRecordCommonGetter obj)
+            public int GetHashCode(IMajorRecordGetter obj)
             {
                 return obj.FormKey.GetHashCode();
             }
@@ -85,18 +112,26 @@ namespace Mutagen.Bethesda.Plugins.Records
             return other.Equals(this);
         }
     }
+
+    public static class IMajorRecordGetterExt
+    {
+        public static IFormLinkGetter ToFormLinkInformation(this IMajorRecordGetter majorRec)
+        {
+            return FormLinkInformation.Factory(majorRec);
+        }
+    }
 }
 
 namespace Mutagen.Bethesda.Plugins.Records.Internals
 {
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
-    public abstract partial class MajorRecordBinaryOverlay : IMajorRecordCommonGetter
+    public abstract partial class MajorRecordBinaryOverlay : IMajorRecordGetter
     {
         public bool IsCompressed => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.CompressedFlag);
         public bool IsDeleted => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.DeletedFlag);
 
         protected abstract ushort? FormVersionAbstract { get; }
-        ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
+        ushort? IMajorRecordGetter.FormVersion => FormVersionAbstract;
         ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
 
         public bool Equals(IFormLinkGetter? other)

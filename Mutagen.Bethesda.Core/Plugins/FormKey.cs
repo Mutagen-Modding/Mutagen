@@ -253,25 +253,25 @@ namespace Mutagen.Bethesda.Plugins
         }
 
         public FormLink<TMajorGetter> AsLink<TMajorGetter>()
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             return new FormLink<TMajorGetter>(this);
         }
 
         public IFormLinkGetter<TMajorGetter> AsLinkGetter<TMajorGetter>()
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             return new FormLink<TMajorGetter>(this);
         }
 
         public FormLinkNullable<TMajorGetter> AsNullableLink<TMajorGetter>()
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             return new FormLinkNullable<TMajorGetter>(this);
         }
 
         public IFormLinkNullableGetter<TMajorGetter> AsNullableLinkGetter<TMajorGetter>()
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             return new FormLinkNullable<TMajorGetter>(this);
         }

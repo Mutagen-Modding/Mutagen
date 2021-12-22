@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.UnitTests.Api
             MajorRecord majorRecord = placedObject;
             majorRecord.Disable();
             Assert.True(EnumExt.HasFlag(majorRecord.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
-            IMajorRecordCommon interfaceRecord = placedObject;
+            IMajorRecord interfaceRecord = placedObject;
             interfaceRecord.Disable();
             Assert.True(EnumExt.HasFlag(interfaceRecord.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
             IPlaced interfacePlaced = placedObject;

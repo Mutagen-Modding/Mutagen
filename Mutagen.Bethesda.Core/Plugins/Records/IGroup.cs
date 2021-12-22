@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// An interface that Group Record objects implement to hook into the common systems
     /// </summary>
     public interface IGroupCommonGetter<out TMajor> : IEnumerable<TMajor>
-        where TMajor : IMajorRecordCommonGetter
+        where TMajor : IMajorRecordGetter
     {
         /// <summary>
         /// Mod object the Group belongs to
@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     }
 
     public interface IGroupCommon<TMajor> : IGroupCommonGetter<TMajor>, IClearable
-        where TMajor : IMajorRecordCommonGetter
+        where TMajor : IMajorRecordGetter
     {
         /// <summary>
         /// Access to records in an ICache interface

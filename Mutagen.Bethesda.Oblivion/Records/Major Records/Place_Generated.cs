@@ -339,17 +339,17 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IPlaceGetter obj)
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IPlaceGetter obj)
         {
             return ((PlaceCommon)((IPlaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
         }
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IPlaceGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             return ((PlaceCommon)((IPlaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             this IPlaceGetter obj,
             Type type,
             bool throwIfUnknown = true)
@@ -604,18 +604,18 @@ namespace Mutagen.Bethesda.Oblivion
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommonGetter)m);
+                .Select(m => (IMajorRecordGetter)m);
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IPlaceInternal obj)
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IPlaceInternal obj)
         {
             return ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IPlaceInternal obj)
-            where TMajor : class, IMajorRecordCommon
+            where TMajor : class, IMajorRecord
         {
             return ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
             this IPlaceInternal obj,
             Type? type,
             bool throwIfUnknown = true)
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommon)m);
+                .Select(m => (IMajorRecord)m);
         }
 
         [DebuggerStepThrough]
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternal obj,
             TMajor record,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(record.FormKey);
@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternal obj,
             IEnumerable<TMajor> records,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternal obj,
             FormKey key,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternal obj,
             IEnumerable<FormKey> keys,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternal obj,
             HashSet<FormKey> keys,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -947,15 +947,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.RemapLinks(obj, mapping);
         }
         
-        public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IPlaceInternal obj)
+        public virtual IEnumerable<IMajorRecord> EnumerateMajorRecords(IPlaceInternal obj)
         {
             foreach (var item in PlaceCommon.Instance.EnumerateMajorRecords(obj))
             {
-                yield return (item as IMajorRecordCommon)!;
+                yield return (item as IMajorRecord)!;
             }
         }
         
-        public virtual IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+        public virtual IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
             IPlaceInternal obj,
             Type? type,
             bool throwIfUnknown)
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             IPlaceInternal obj,
             Type type,
             bool throwIfUnknown)
@@ -989,13 +989,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "IOblivionMajorRecord":
                 case "OblivionMajorRecord":
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "IOblivionMajorRecordGetter":
                     if (!Place_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
@@ -1229,12 +1227,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IPlaceGetter obj)
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IPlaceGetter obj)
         {
             yield break;
         }
         
-        public virtual IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+        public virtual IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
             IPlaceGetter obj,
             Type? type,
             bool throwIfUnknown)
@@ -1243,14 +1241,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             IPlaceGetter obj,
             Type type,
             bool throwIfUnknown)
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "IOblivionMajorRecord":
@@ -1262,7 +1259,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "IOblivionMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
@@ -1593,11 +1589,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlaceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

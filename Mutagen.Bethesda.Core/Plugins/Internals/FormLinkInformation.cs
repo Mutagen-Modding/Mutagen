@@ -17,18 +17,18 @@ namespace Mutagen.Bethesda.Plugins.Internals
         }
 
         public static FormLinkInformation Factory<TMajorGetter>(IFormLinkGetter<TMajorGetter> link)
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
         }
 
         public static FormLinkInformation Factory<TMajorGetter>(IFormLinkNullableGetter<TMajorGetter> link)
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
         }
 
-        public static FormLinkInformation Factory(IMajorRecordCommonGetter majorRec)
+        public static FormLinkInformation Factory(IMajorRecordGetter majorRec)
         {
             return new FormLinkInformation(majorRec.FormKey, majorRec.Registration.GetterType);
         }
@@ -47,9 +47,9 @@ namespace Mutagen.Bethesda.Plugins.Internals
             return true;
         }
 
-        public bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRecord)
+        public bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordGetter majorRecord)
         {
-            return cache.TryResolve<IMajorRecordCommonGetter>(this.FormKey, out majorRecord);
+            return cache.TryResolve<IMajorRecordGetter>(this.FormKey, out majorRecord);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Road.TranslationMask? RoadCopyMask = null;
         public static readonly PathGrid.TranslationMask? PathGridCopyMask = null;
 
-        internal static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        internal static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             this IListGroupGetter<ICellBlockGetter> cellBlocks,
             ILinkCache linkCache,
             ModKey modKey,
@@ -45,13 +45,13 @@ namespace Mutagen.Bethesda.Oblivion
             return EnumerateMajorRecordContexts(
                 cellBlocks,
                 linkCache,
-                type: typeof(IMajorRecordCommonGetter),
+                type: typeof(IMajorRecordGetter),
                 modKey: modKey,
                 parent: parent,
                 throwIfUnknown: true);
         }
 
-        internal static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        internal static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             this IListGroupGetter<ICellBlockGetter> cellBlocks,
             ILinkCache linkCache,
             Type type,
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (LoquiRegistration.TryGetRegister(type, out var regis)
                             && regis.ClassType == typeof(Cell))
                         {
-                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>(
                                 modKey: modKey,
                                 record: readOnlyCell,
                                 getOrAddAsOverride: (m, r) => cellGetter(m, (ICellGetter)r, false, default(string?)),
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        internal static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        internal static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks,
             IWorldspaceGetter worldspace,
             ILinkCache linkCache,
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Oblivion
                         if (LoquiRegistration.TryGetRegister(type, out var regis)
                             && regis.ClassType == typeof(Cell))
                         {
-                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>(
                                 modKey: modKey,
                                 record: readOnlyCell,
                                 getOrAddAsOverride: (m, r) => cellGetter(m, (ICellGetter)r, false, default(string?)),

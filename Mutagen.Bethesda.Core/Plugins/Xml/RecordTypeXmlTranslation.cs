@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Plugins.Xml
             XElement node,
             out EDIDLink<T> item,
             ErrorMaskBuilder? errorMask)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (Parse(node, out RecordType id, errorMask))
             {
@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Plugins.Xml
             XElement node,
             out IEDIDLinkGetter<T> item,
             ErrorMaskBuilder? errorMask)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (Parse(node, out RecordType id, errorMask))
             {
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Plugins.Xml
             out EDIDLink<T> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             return this.Parse(
                 node: node,
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Plugins.Xml
             out IEDIDLinkGetter<T> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             return this.Parse(
                 node: node,

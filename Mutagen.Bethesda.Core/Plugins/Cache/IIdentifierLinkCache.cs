@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </exception>
         /// <returns>True if a matching record was found</returns>
         bool TryResolveIdentifier<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordCommonGetter;
+            where TMajor : class, IMajorRecordGetter;
 
         /// <summary>
         /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </exception>
         /// <returns>True if a matching record was found</returns>
         bool TryResolveIdentifier<TMajor>(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
-            where TMajor : class, IMajorRecordCommonGetter;
+            where TMajor : class, IMajorRecordGetter;
 
         /// <summary>
         /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <param name="cancel">Optional cancel token</param>
         /// <returns>Winning identifiers for a given type</returns>
         IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
-            where TMajor : class, IMajorRecordCommonGetter;
+            where TMajor : class, IMajorRecordGetter;
 
         /// <summary>
         /// Returns all winning identifiers for the given types.

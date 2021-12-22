@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
             var scopedTypes = types as IEnumerable<Type>;
             if (scopedTypes == null || !scopedTypes.Any())
             {
-                scopedTypes = typeof(IMajorRecordCommonGetter).AsEnumerable();
+                scopedTypes = typeof(IMajorRecordGetter).AsEnumerable();
             }
             return scopedTypes;
         }

@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Plugins.Records;
 namespace Mutagen.Bethesda.Plugins.Utility
 {
     public static class MajorRecordPrinter<TMajor>
-        where TMajor : class, IMajorRecordCommonGetter
+        where TMajor : class, IMajorRecordGetter
     {
         private static readonly string _TypeString;
 
@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Plugins.Utility
 
         public static string TypeString => _TypeString;
 
-        public static string ToString(IMajorRecordCommonGetter majorRec)
+        public static string ToString(IMajorRecordGetter majorRec)
         {
             if (majorRec.EditorID is {} edid)
             {

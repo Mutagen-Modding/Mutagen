@@ -36,12 +36,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 fg.AppendLine("[DebuggerStepThrough]");
                 fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, TSetter, TGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts<TSetter, TGetter>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, "TSetter".AsEnumerable().And("TGetter").ToArray())}(linkCache, throwIfUnknown: throwIfUnknown);");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
                 
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<{typeof(IMajorRecordCommonGetter)}, TMajor>());");
+                fg.AppendLine($"IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<{typeof(IMajorRecordGetter)}, TMajor>());");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<IModContext<IMajorRecordCommonGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
             }
         }
 
@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 $"public static IEnumerable<IModContext<{modSetter}, {modGetter}, TSetter, TGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, new string[] { "TSetter", "TGetter" })}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
-                args.Wheres.Add($"where TSetter : class, IMajorRecordCommon, TGetter");
-                args.Wheres.Add($"where TGetter : class, IMajorRecordCommonGetter");
+                args.Wheres.Add($"where TSetter : class, IMajorRecord, TGetter");
+                args.Wheres.Add($"where TGetter : class, IMajorRecordGetter");
                 args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
                 args.Add($"{nameof(ILinkCache)} linkCache");
                 args.Add($"bool throwIfUnknown = true");
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
                 using (new DepthWrapper(fg))
                 {
-                    fg.AppendLine($".Select(m => m.AsType<{modSetter}, {modGetter}, {nameof(IMajorRecordCommon)}, {nameof(IMajorRecordCommonGetter)}, TSetter, TGetter>()){enderSemi}");
+                    fg.AppendLine($".Select(m => m.AsType<{modSetter}, {modGetter}, {nameof(IMajorRecord)}, {nameof(IMajorRecordGetter)}, TSetter, TGetter>()){enderSemi}");
                     if (needsCatch)
                     {
                         fg.AppendLine($"{catchLine};");
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
             fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
-                $"public static IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal)}"))
+                $"public static IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
                 args.Add($"{nameof(ILinkCache)} linkCache");
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             var modSetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: false);
 
             using (var args = new FunctionWrapper(fg,
-                $"public{overrideStr}IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts"))
+                $"public{overrideStr}IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts"))
             {
                 args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
                 args.Add($"{nameof(ILinkCache)} linkCache");
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public{overrideStr}IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts"))
+                $"public{overrideStr}IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts"))
             {
                 args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
                 args.Add($"{nameof(ILinkCache)} linkCache");
@@ -382,7 +382,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 using (new BraceWrapper(fg))
                 {
                     var gameCategory = obj.GetObjectData().GameCategory;
-                    fg.AppendLine($"case \"{nameof(IMajorRecordCommon)}\":");
                     fg.AppendLine($"case \"{nameof(IMajorRecord)}\":");
                     fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
                     if (gameCategory != null)
@@ -420,7 +419,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         fg.AppendLine("yield break;");
                     }
                     fg.AppendLine($"case \"{nameof(IMajorRecordGetter)}\":");
-                    fg.AppendLine($"case \"{nameof(IMajorRecordCommonGetter)}\":");
                     if (gameCategory != null)
                     {
                         fg.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
@@ -857,7 +855,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             }
                             using (new BraceWrapper(fieldGen, doIt: includeType))
                             {
-                                fieldGen.AppendLine($"yield return ({nameof(IMajorRecordCommonGetter)})item;");
+                                fieldGen.AppendLine($"yield return ({nameof(IMajorRecordGetter)})item;");
                             }
                         }
                         fieldGen.AppendLine($"foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");
@@ -882,7 +880,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         else
                         {
-                            args.Add($"type: typeof({nameof(IMajorRecordCommonGetter)})");
+                            args.Add($"type: typeof({nameof(IMajorRecordGetter)})");
                         }
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");

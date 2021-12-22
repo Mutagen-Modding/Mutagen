@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Plugins
         IEquatable<IFormLinkGetter<TMajorGetter>>,
         IEquatable<IFormLinkNullableGetter<TMajorGetter>>,
         IEquatable<TMajorGetter>
-        where TMajorGetter : class, IMajorRecordCommonGetter
+        where TMajorGetter : class, IMajorRecordGetter
     {
         protected FormKey _formKey;
 
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Plugins
             return true;
         }
 
-        public bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordCommonGetter formKey)
+        public bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordGetter formKey)
         {
             if (this.TryResolve(cache, out var rec))
             {
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Plugins
         }
 
         public IFormLink<TMajorRet> Cast<TMajorRet>() 
-            where TMajorRet : class, IMajorRecordCommonGetter
+            where TMajorRet : class, IMajorRecordGetter
         {
             return new FormLink<TMajorRet>(this.FormKey);
         }
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Plugins
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
     public class FormLink<TMajorGetter> : FormLinkGetter<TMajorGetter>, IFormLink<TMajorGetter>
-        where TMajorGetter : class, IMajorRecordCommonGetter
+        where TMajorGetter : class, IMajorRecordGetter
     {
         /// <summary>
         /// FormKey of the target record
@@ -236,8 +236,8 @@ namespace Mutagen.Bethesda.Plugins
     }
 
     public struct FormLink<TMajor, TMajorGetter>
-        where TMajor : class, IMajorRecordCommon, TMajorGetter
-        where TMajorGetter : class, IMajorRecordCommonGetter
+        where TMajor : class, IMajorRecord, TMajorGetter
+        where TMajorGetter : class, IMajorRecordGetter
     {
         /// <summary>
         /// FormKey of the target record

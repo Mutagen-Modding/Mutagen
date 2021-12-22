@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda
             this IGroupCommonGetter<TMajor> group,
             FormKey formKey,
             [MaybeNullWhen(false)] out TMajor record)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             return group.RecordCache.TryGetValue(formKey, out record);
         }
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda
         public static TMajor? TryGetValue<TMajor>(
             this IGroupCommonGetter<TMajor> group,
             FormKey formKey)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             if (group.RecordCache.TryGetValue(formKey, out var record))
             {

@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// <summary>
     /// An interface that GameSetting objects implement to hook into the common systems
     /// </summary>
-    public interface IGameSettingCommon : IMajorRecordCommon
+    public interface IGameSettingCommon : IMajorRecord
     {
         /// <summary>
         /// The type of data that the GameSetting contains

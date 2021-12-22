@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Internals
     public static class MutagenRemoveExt
     {
         public static void Remove<TItem>(this IExtendedList<TItem>? enumer, HashSet<FormKey> removeSet)
-            where TItem : IMajorRecordCommonGetter
+            where TItem : IMajorRecordGetter
         {
             enumer.RemoveWhere((i) => removeSet.Contains(i.FormKey));
         }

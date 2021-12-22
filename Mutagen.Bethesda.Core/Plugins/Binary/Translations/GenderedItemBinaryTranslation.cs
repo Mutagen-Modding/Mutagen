@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             BinaryMasterWriteDelegate<IFormLinkNullableGetter<TMajor>> transl,
             bool markerWrap = true,
             RecordTypeConverter? recordTypeConverter = null)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             if (item == null) return;
             try
