@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         await ApplyRemovalLines(field, fieldGen, accessor, removeSelf: applicable);
                     }
 
-                    bool doAdditionlDeepLogic = obj.Name != "ListGroup";
+                    bool doAdditionlDeepLogic = !obj.Name.EndsWith("ListGroup");
 
                     if (doAdditionlDeepLogic)
                     {

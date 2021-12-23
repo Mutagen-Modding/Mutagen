@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
         public static async Task<Case> HasMajorRecords(ObjectGeneration obj, bool includeBaseClass, bool includeSelf, GenericSpecification specifications = null)
         {
-            if (obj.Name == "ListGroup") return Case.Yes;
+            if (obj.Name.EndsWith("ListGroup")) return Case.Yes;
             foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
             {
                 if (field is LoquiType loqui)

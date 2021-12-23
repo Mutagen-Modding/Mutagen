@@ -48,7 +48,7 @@
       <Group name="Climates" refName="Climate" />
       <Group name="Regions" refName="Region" />
       <Ref name="Cells" singleton="true" >
-        <Direct refName="ListGroup" >
+        <Direct refName="OblivionListGroup" >
           <GenericSpecification Definition="Oblivion.CellBlock" TypeToSpecify="T" />
         </Direct>
       </Ref>

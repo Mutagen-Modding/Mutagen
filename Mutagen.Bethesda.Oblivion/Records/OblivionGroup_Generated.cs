@@ -36,21 +36,21 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Group<T> :
-        IEquatable<IGroupGetter<T>>,
-        IGroup<T>,
-        ILoquiObjectSetter<Group<T>>
+    public partial class OblivionGroup<T> :
+        IEquatable<IOblivionGroupGetter<T>>,
+        ILoquiObjectSetter<OblivionGroup<T>>,
+        IOblivionGroup<T>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         #region Ctor
-        protected Group()
+        protected OblivionGroup()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        static Group()
+        static OblivionGroup()
         {
             T_RecordType = PluginUtilityTranslation.GetRecordType<T>();
         }
@@ -67,9 +67,9 @@ namespace Mutagen.Bethesda.Oblivion
         public ICache<T, FormKey> RecordCache => _RecordCache;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ICache<T, FormKey> IGroup<T>.RecordCache => _RecordCache;
+        ICache<T, FormKey> IOblivionGroup<T>.RecordCache => _RecordCache;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyCache<T, FormKey> IGroupGetter<T>.RecordCache => _RecordCache;
+        IReadOnlyCache<T, FormKey> IOblivionGroupGetter<T>.RecordCache => _RecordCache;
         #endregion
 
         #endregion
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
             FileGeneration fg,
             string? name = null)
         {
-            GroupMixIn.ToString(
+            OblivionGroupMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -90,23 +90,23 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IGroupGetter<T> rhs) return false;
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            if (obj is not IOblivionGroupGetter<T> rhs) return false;
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IGroupGetter<T>? obj)
+        public bool Equals(IOblivionGroupGetter<T>? obj)
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
+        public override int GetHashCode() => ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
         #endregion
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionGroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -145,25 +145,25 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => OblivionGroupBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((OblivionGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static Group<T> CreateFromBinary(
+        public static OblivionGroup<T> CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new Group<T>();
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
+            var ret = new OblivionGroup<T>();
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Group<T> item,
+            out OblivionGroup<T> item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -189,23 +189,23 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)this).CommonSetterInstance(typeof(T))!).Clear(this);
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)this).CommonSetterInstance(typeof(T))!).Clear(this);
         }
 
-        internal static Group<T> GetNew()
+        internal static OblivionGroup<T> GetNew()
         {
-            return new Group<T>();
+            return new OblivionGroup<T>();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IGroup<T> :
+    public partial interface IOblivionGroup<T> :
         IFormLinkContainer,
-        IGroupGetter<T>,
-        ILoquiObjectSetter<IGroup<T>>,
-        IMajorRecordEnumerable
+        ILoquiObjectSetter<IOblivionGroup<T>>,
+        IMajorRecordEnumerable,
+        IOblivionGroupGetter<T>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
@@ -213,11 +213,11 @@ namespace Mutagen.Bethesda.Oblivion
         new ICache<T, FormKey> RecordCache { get; }
     }
 
-    public partial interface IGroupGetter<out T> :
+    public partial interface IOblivionGroupGetter<out T> :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IGroupGetter<T>>,
+        ILoquiObject<IOblivionGroupGetter<T>>,
         IMajorRecordGetterEnumerable
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance(Type type0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => Group_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => OblivionGroup_Registration.Instance;
         GroupTypeEnum Type { get; }
         Int32 LastModified { get; }
         IReadOnlyCache<T, FormKey> RecordCache { get; }
@@ -237,46 +237,46 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static partial class GroupMixIn
+    public static partial class OblivionGroupMixIn
     {
-        public static void Clear<T>(this IGroup<T> item)
+        public static void Clear<T>(this IOblivionGroup<T> item)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).Clear(item: item);
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).Clear(item: item);
         }
 
-        public static Group.Mask<bool> GetEqualsMask<T>(
-            this IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
+        public static OblivionGroup.Mask<bool> GetEqualsMask<T>(
+            this IOblivionGroupGetter<T> item,
+            IOblivionGroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).GetEqualsMask(
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)item).CommonInstance(typeof(T))!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString<T>(
-            this IGroupGetter<T> item,
+            this IOblivionGroupGetter<T> item,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            OblivionGroup.Mask<bool>? printMask = null)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString<T>(
-            this IGroupGetter<T> item,
+            this IOblivionGroupGetter<T> item,
             FileGeneration fg,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            OblivionGroup.Mask<bool>? printMask = null)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -284,36 +284,36 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool Equals<T>(
-            this IGroupGetter<T> item,
-            IGroupGetter<T> rhs)
+            this IOblivionGroupGetter<T> item,
+            IOblivionGroupGetter<T> rhs)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: null);
         }
 
         public static bool Equals<T, T_TranslMask>(
-            this IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
-            Group.TranslationMask<T_TranslMask> equalsMask)
+            this IOblivionGroupGetter<T> item,
+            IOblivionGroupGetter<T> rhs,
+            OblivionGroup.TranslationMask<T_TranslMask> equalsMask)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T, TGetter>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs)
+            this IOblivionGroup<T> lhs,
+            IOblivionGroupGetter<TGetter> rhs)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((OblivionGroupSetterTranslationCommon)((IOblivionGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -322,14 +322,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn<T, TGetter, T_TranslMask>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+            this IOblivionGroup<T> lhs,
+            IOblivionGroupGetter<TGetter> rhs,
+            OblivionGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((OblivionGroupSetterTranslationCommon)((IOblivionGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -338,34 +338,34 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn<T, TGetter, T_ErrMask, T_TranslMask>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+            this IOblivionGroup<T> lhs,
+            IOblivionGroupGetter<TGetter> rhs,
+            out OblivionGroup.ErrorMask<T_ErrMask> errorMask,
+            OblivionGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_ErrMask : OblivionMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((OblivionGroupSetterTranslationCommon)((IOblivionGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = OblivionGroup.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn<T, TGetter>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs,
+            this IOblivionGroup<T> lhs,
+            IOblivionGroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((OblivionGroupSetterTranslationCommon)((IOblivionGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -373,41 +373,41 @@ namespace Mutagen.Bethesda.Oblivion
                 deepCopy: false);
         }
 
-        public static Group<T> DeepCopy<T, TGetter, T_TranslMask>(
-            this IGroupGetter<TGetter> item,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public static OblivionGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
+            this IOblivionGroupGetter<TGetter> item,
+            OblivionGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_TranslMask>(
+            return ((OblivionGroupSetterTranslationCommon)((IOblivionGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_TranslMask>(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Group<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
-            this IGroupGetter<TGetter> item,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public static OblivionGroup<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            this IOblivionGroupGetter<TGetter> item,
+            out OblivionGroup.ErrorMask<T_ErrMask> errorMask,
+            OblivionGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_ErrMask : OblivionMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            return ((OblivionGroupSetterTranslationCommon)((IOblivionGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Group<T> DeepCopy<T, TGetter>(
-            this IGroupGetter<TGetter> item,
+        public static OblivionGroup<T> DeepCopy<T, TGetter>(
+            this IOblivionGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
+            return ((OblivionGroupSetterTranslationCommon)((IOblivionGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -415,20 +415,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords<T>(this IGroupGetter<T> obj)
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords<T>(this IOblivionGroupGetter<T> obj)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(
-            this IGroupGetter<T> obj,
+            this IOblivionGroupGetter<T> obj,
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
             where TMajor : class, IMajorRecordGetter
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
                 throwIfUnknown: throwIfUnknown)
@@ -437,12 +437,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords<T>(
-            this IGroupGetter<T> obj,
+            this IOblivionGroupGetter<T> obj,
             Type type,
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -450,18 +450,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecord> EnumerateMajorRecords<T>(this IGroup<T> obj)
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords<T>(this IOblivionGroup<T> obj)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
+            return ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IGroup<T> obj)
+        public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IOblivionGroup<T> obj)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
             where TMajor : class, IMajorRecord
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
+            return ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
                 throwIfUnknown: true)
@@ -470,12 +470,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecord> EnumerateMajorRecords<T>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             Type? type,
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumeratePotentiallyTypedMajorRecords(
+            return ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -484,42 +484,42 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             FormKey key)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys);
         }
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             IEnumerable<FormKey> keys)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
         }
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             HashSet<FormKey> keys)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys);
         }
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             FormKey key,
             Type type,
             bool throwIfUnknown = true)
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: type,
@@ -536,13 +536,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             IEnumerable<FormKey> keys,
             Type type,
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet(),
                 type: type,
@@ -551,13 +551,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             HashSet<FormKey> keys,
             Type type,
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: type,
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             TMajor record,
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var keys = new HashSet<FormKey>();
             keys.Add(record.FormKey);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -583,13 +583,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             IEnumerable<TMajor> records,
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
             where TMajor : IMajorRecordGetter
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: records.Select(m => m.FormKey).ToHashSet(),
                 type: typeof(TMajor),
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             FormKey key,
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -615,13 +615,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             IEnumerable<FormKey> keys,
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
             where TMajor : IMajorRecordGetter
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet(),
                 type: typeof(TMajor),
@@ -630,13 +630,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this IOblivionGroup<T> obj,
             HashSet<FormKey> keys,
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
             where TMajor : IMajorRecordGetter
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -647,12 +647,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         public static void CopyInFromBinary<T>(
-            this IGroup<T> item,
+            this IOblivionGroup<T> item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
+            ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum Group_FieldIndex
+    public enum OblivionGroup_FieldIndex
     {
         Type = 0,
         LastModified = 1,
@@ -677,9 +677,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Group_Registration : ILoquiRegistration
+    public partial class OblivionGroup_Registration : ILoquiRegistration
     {
-        public static readonly Group_Registration Instance = new Group_Registration();
+        public static readonly OblivionGroup_Registration Instance = new OblivionGroup_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
@@ -694,32 +694,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(Group.Mask<>);
+        public static readonly Type MaskType = typeof(OblivionGroup.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Group.ErrorMask<>);
+        public static readonly Type ErrorMaskType = typeof(OblivionGroup.ErrorMask<>);
 
-        public static readonly Type ClassType = typeof(Group<>);
+        public static readonly Type ClassType = typeof(OblivionGroup<>);
 
-        public static readonly Type GetterType = typeof(IGroupGetter<>);
+        public static readonly Type GetterType = typeof(IOblivionGroupGetter<>);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IGroup<>);
+        public static readonly Type SetterType = typeof(IOblivionGroup<>);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.Group";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.OblivionGroup";
 
-        public const string Name = "Group";
+        public const string Name = "OblivionGroup";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
         public const byte GenericCount = 1;
 
-        public static readonly Type? GenericRegistrationType = typeof(Group_Registration<>);
+        public static readonly Type? GenericRegistrationType = typeof(OblivionGroup_Registration<>);
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
-        public static readonly Type BinaryWriteTranslation = typeof(GroupBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(OblivionGroupBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -750,21 +750,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Group_Registration<T> : Group_Registration
+    public class OblivionGroup_Registration<T> : OblivionGroup_Registration
         where T : OblivionMajorRecord, IBinaryItem
     {
-        public static readonly Group_Registration<T> GenericInstance = new Group_Registration<T>();
+        public static readonly OblivionGroup_Registration<T> GenericInstance = new OblivionGroup_Registration<T>();
 
         public new static Type GetNthType(ushort index)
         {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
+            OblivionGroup_FieldIndex enu = (OblivionGroup_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.Type:
+                case OblivionGroup_FieldIndex.Type:
                     return typeof(GroupTypeEnum);
-                case Group_FieldIndex.LastModified:
+                case OblivionGroup_FieldIndex.LastModified:
                     return typeof(Int32);
-                case Group_FieldIndex.RecordCache:
+                case OblivionGroup_FieldIndex.RecordCache:
                     return typeof(ICache<T, FormKey>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -775,14 +775,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class GroupSetterCommon<T>
+    public partial class OblivionGroupSetterCommon<T>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
-        public static readonly GroupSetterCommon<T> Instance = new GroupSetterCommon<T>();
+        public static readonly OblivionGroupSetterCommon<T> Instance = new OblivionGroupSetterCommon<T>();
 
         partial void ClearPartial();
         
-        public void Clear(IGroup<T> item)
+        public void Clear(IOblivionGroup<T> item)
         {
             ClearPartial();
             item.Type = default;
@@ -791,21 +791,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public void RemapLinks(IGroup<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IOblivionGroup<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.RecordCache.RemapLinks(mapping);
         }
         
-        public IEnumerable<IMajorRecord> EnumerateMajorRecords(IGroup<T> obj)
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(IOblivionGroup<T> obj)
         {
-            foreach (var item in GroupCommon<T>.Instance.EnumerateMajorRecords(obj))
+            foreach (var item in OblivionGroupCommon<T>.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
             }
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
-            IGroup<T> obj,
+            IOblivionGroup<T> obj,
             Type? type,
             bool throwIfUnknown)
         {
@@ -814,25 +814,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
-            IGroup<T> obj,
+            IOblivionGroup<T> obj,
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in GroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            foreach (var item in OblivionGroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
         }
         
         public void Remove(
-            IGroup<T> obj,
+            IOblivionGroup<T> obj,
             HashSet<FormKey> keys)
         {
             obj.RecordCache.Remove(keys);
         }
         
         public void Remove(
-            IGroup<T> obj,
+            IOblivionGroup<T> obj,
             HashSet<FormKey> keys,
             Type type,
             bool throwIfUnknown)
@@ -845,7 +845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "OblivionMajorRecord":
                 case "IMajorRecordGetter":
                 case "IOblivionMajorRecordGetter":
-                    if (!Group_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    if (!OblivionGroup_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
                 default:
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IGroup<T> item,
+            IOblivionGroup<T> item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -873,25 +873,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: GroupBinaryCreateTranslation<T>.FillBinaryStructs,
-                fillTyped: GroupBinaryCreateTranslation<T>.FillBinaryRecordTypes);
+                fillStructs: OblivionGroupBinaryCreateTranslation<T>.FillBinaryStructs,
+                fillTyped: OblivionGroupBinaryCreateTranslation<T>.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    public partial class GroupCommon<T>
+    public partial class OblivionGroupCommon<T>
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
-        public static readonly GroupCommon<T> Instance = new GroupCommon<T>();
+        public static readonly OblivionGroupCommon<T> Instance = new OblivionGroupCommon<T>();
 
-        public Group.Mask<bool> GetEqualsMask(
-            IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
+        public OblivionGroup.Mask<bool> GetEqualsMask(
+            IOblivionGroupGetter<T> item,
+            IOblivionGroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Group.Mask<bool>(false);
-            ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).FillEqualsMask(
+            var ret = new OblivionGroup.Mask<bool>(false);
+            ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)item).CommonInstance(typeof(T))!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -900,9 +900,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void FillEqualsMask(
-            IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
-            Group.Mask<bool> ret,
+            IOblivionGroupGetter<T> item,
+            IOblivionGroupGetter<T> rhs,
+            OblivionGroup.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -916,9 +916,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public string ToString(
-            IGroupGetter<T> item,
+            IOblivionGroupGetter<T> item,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            OblivionGroup.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -930,18 +930,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void ToString(
-            IGroupGetter<T> item,
+            IOblivionGroupGetter<T> item,
             FileGeneration fg,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            OblivionGroup.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Group<{typeof(T).Name}> =>");
+                fg.AppendLine($"OblivionGroup<{typeof(T).Name}> =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Group<{typeof(T).Name}>) =>");
+                fg.AppendLine($"{name} (OblivionGroup<{typeof(T).Name}>) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -955,9 +955,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         protected static void ToStringFields(
-            IGroupGetter<T> item,
+            IOblivionGroupGetter<T> item,
             FileGeneration fg,
-            Group.Mask<bool>? printMask = null)
+            OblivionGroup.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
@@ -989,27 +989,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IGroupGetter<T>? lhs,
-            IGroupGetter<T>? rhs,
+            IOblivionGroupGetter<T>? lhs,
+            IOblivionGroupGetter<T>? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.Type) ?? true))
+            if ((crystal?.GetShouldTranslate((int)OblivionGroup_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
+            if ((crystal?.GetShouldTranslate((int)OblivionGroup_FieldIndex.LastModified) ?? true))
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
+            if ((crystal?.GetShouldTranslate((int)OblivionGroup_FieldIndex.RecordCache) ?? true))
             {
                 if (!lhs.RecordCache.SequenceEqualNullable(rhs.RecordCache)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IGroupGetter<T> item)
+        public virtual int GetHashCode(IOblivionGroupGetter<T> item)
         {
             var hash = new HashCode();
             hash.Add(item.Type);
@@ -1024,11 +1024,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public object GetNew<T_Setter>()
             where T_Setter : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            return Group<T_Setter>.GetNew();
+            return OblivionGroup<T_Setter>.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGroupGetter<T> obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IOblivionGroupGetter<T> obj)
         {
             foreach (var item in obj.RecordCache.Items.WhereCastable<T, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IGroupGetter<T> obj)
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IOblivionGroupGetter<T> obj)
         {
             foreach (var subItem in obj.RecordCache.Items)
             {
@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
-            IGroupGetter<T> obj,
+            IOblivionGroupGetter<T> obj,
             Type? type,
             bool throwIfUnknown)
         {
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
-            IGroupGetter<T> obj,
+            IOblivionGroupGetter<T> obj,
             Type type,
             bool throwIfUnknown)
         {
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "MajorRecord":
                 case "IOblivionMajorRecord":
                 case "OblivionMajorRecord":
-                    if (!Group_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    if (!OblivionGroup_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -1103,31 +1103,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GroupSetterTranslationCommon
+    public partial class OblivionGroupSetterTranslationCommon
     {
-        public static readonly GroupSetterTranslationCommon Instance = new GroupSetterTranslationCommon();
+        public static readonly OblivionGroupSetterTranslationCommon Instance = new OblivionGroupSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn<T, TGetter>(
-            IGroup<T> item,
-            IGroupGetter<TGetter> rhs,
+            IOblivionGroup<T> item,
+            IOblivionGroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.Type) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionGroup_FieldIndex.Type) ?? true))
             {
                 item.Type = rhs.Type;
             }
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionGroup_FieldIndex.LastModified) ?? true))
             {
                 item.LastModified = rhs.LastModified;
             }
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionGroup_FieldIndex.RecordCache) ?? true))
             {
-                errorMask?.PushIndex((int)Group_FieldIndex.RecordCache);
+                errorMask?.PushIndex((int)OblivionGroup_FieldIndex.RecordCache);
                 try
                 {
                     item.RecordCache.SetTo(
@@ -1151,15 +1151,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public Group<T> DeepCopy<T, TGetter, T_TranslMask>(
-            IGroupGetter<TGetter> item,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public OblivionGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
+            IOblivionGroupGetter<TGetter> item,
+            OblivionGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            OblivionGroup<T> ret = (OblivionGroup<T>)((OblivionGroupCommon<TGetter>)((IOblivionGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((OblivionGroupSetterTranslationCommon)((IOblivionGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1168,36 +1168,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public Group<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
-            IGroupGetter<TGetter> item,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public OblivionGroup<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            IOblivionGroupGetter<TGetter> item,
+            out OblivionGroup.ErrorMask<T_ErrMask> errorMask,
+            OblivionGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_ErrMask : OblivionMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            OblivionGroup<T> ret = (OblivionGroup<T>)((OblivionGroupCommon<TGetter>)((IOblivionGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((OblivionGroupSetterTranslationCommon)((IOblivionGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = OblivionGroup.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Group<T> DeepCopy<T, TGetter>(
-            IGroupGetter<TGetter> item,
+        public OblivionGroup<T> DeepCopy<T, TGetter>(
+            IOblivionGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            OblivionGroup<T> ret = (OblivionGroup<T>)((OblivionGroupCommon<TGetter>)((IOblivionGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((OblivionGroupSetterTranslationCommon)((IOblivionGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1213,27 +1213,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class Group<T>
+    public partial class OblivionGroup<T>
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
-        public static Group_Registration Registration => Group_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => OblivionGroup_Registration.Instance;
+        public static OblivionGroup_Registration Registration => OblivionGroup_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(GroupCommon<T>.Instance, typeof(T), type0);
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(OblivionGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
         protected object CommonSetterInstance(Type type0)
         {
-            return GenericCommonInstanceGetter.Get(GroupSetterCommon<T>.Instance, typeof(T), type0);
+            return GenericCommonInstanceGetter.Get(OblivionGroupSetterCommon<T>.Instance, typeof(T), type0);
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => OblivionGroupSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
+        object IOblivionGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonSetterInstance(Type type0) => this.CommonSetterInstance(type0);
+        object IOblivionGroupGetter<T>.CommonSetterInstance(Type type0) => this.CommonSetterInstance(type0);
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IOblivionGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1244,16 +1244,16 @@ namespace Mutagen.Bethesda.Oblivion
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class GroupBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class OblivionGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
+        public readonly static OblivionGroupBinaryWriteTranslation Instance = new OblivionGroupBinaryWriteTranslation();
 
         public static void WriteEmbedded<T>(
-            IGroupGetter<T> item,
+            IOblivionGroupGetter<T> item,
             MutagenWriter writer)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
+            OblivionGroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
                 writer: writer,
                 item: item);
             EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteRecordTypes<T>(
-            IGroupGetter<T> item,
+            IOblivionGroupGetter<T> item,
             MutagenWriter writer,
             TypedWriteParams? translationParams)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
@@ -1285,12 +1285,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item)
+            IOblivionGroupGetter<T> item)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem;
 
         public static void WriteBinaryContainedRecordTypeParse<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item)
+            IOblivionGroupGetter<T> item)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
             WriteBinaryContainedRecordTypeParseCustom(
@@ -1300,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item,
+            IOblivionGroupGetter<T> item,
             TypedWriteParams? translationParams = null)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
@@ -1328,16 +1328,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class GroupBinaryCreateTranslation<T>
+    public partial class OblivionGroupBinaryCreateTranslation<T>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
-        public readonly static GroupBinaryCreateTranslation<T> Instance = new GroupBinaryCreateTranslation<T>();
+        public readonly static OblivionGroupBinaryCreateTranslation<T> Instance = new OblivionGroupBinaryCreateTranslation<T>();
 
         public static void FillBinaryStructs(
-            IGroup<T> item,
+            IOblivionGroup<T> item,
             MutagenFrame frame)
         {
-            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustom(
+            OblivionGroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustom(
                 frame: frame,
                 item: item);
             item.Type = EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -1347,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            IGroup<T> item,
+            IOblivionGroup<T> item,
             MutagenFrame frame,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
@@ -1358,11 +1358,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (nextRecordType.TypeInt)
             {
                 default:
-                    if (nextRecordType.Equals(Group<T>.T_RecordType))
+                    if (nextRecordType.Equals(OblivionGroup<T>.T_RecordType))
                     {
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Group<T>.T_RecordType,
+                            triggeringRecord: OblivionGroup<T>.T_RecordType,
                             item: item.RecordCache,
                             transl: LoquiBinaryTranslation<T>.Instance.Parse);
                         return ParseResult.Stop;
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
-            IGroup<T> item);
+            IOblivionGroup<T> item);
 
     }
 
@@ -1382,16 +1382,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Binary Write Mixins
-    public static class GroupBinaryTranslationMixIn
+    public static class OblivionGroupBinaryTranslationMixIn
     {
         public static void WriteToBinary<T, T_ErrMask>(
-            this IGroupGetter<T> item,
+            this IOblivionGroupGetter<T> item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_ErrMask : OblivionMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
-            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((OblivionGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1404,29 +1404,29 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class GroupBinaryOverlay<T> : IGroupGetter<T>
+    public partial class OblivionGroupBinaryOverlay<T> : IOblivionGroupGetter<T>
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
-        public static Group_Registration Registration => Group_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => OblivionGroup_Registration.Instance;
+        public static OblivionGroup_Registration Registration => OblivionGroup_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(GroupCommon<T>.Instance, typeof(T), type0);
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(OblivionGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => OblivionGroupSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
+        object IOblivionGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object? IGroupGetter<T>.CommonSetterInstance(Type type0) => null;
+        object? IOblivionGroupGetter<T>.CommonSetterInstance(Type type0) => null;
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IOblivionGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionGroupCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -1434,14 +1434,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => OblivionGroupBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((OblivionGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
 
         partial void CustomCtor();
-        protected GroupBinaryOverlay(
+        protected OblivionGroupBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1470,12 +1470,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.CustomCtor();
         }
 
-        public static GroupBinaryOverlay<T> GroupFactory(
+        public static OblivionGroupBinaryOverlay<T> OblivionGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new GroupBinaryOverlay<T>(
+            var ret = new OblivionGroupBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));
@@ -1494,12 +1494,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static GroupBinaryOverlay<T> GroupFactory(
+        public static OblivionGroupBinaryOverlay<T> OblivionGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return GroupFactory(
+            return OblivionGroupFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             string? name = null)
         {
-            GroupMixIn.ToString(
+            OblivionGroupMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1537,16 +1537,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IGroupGetter<T> rhs) return false;
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            if (obj is not IOblivionGroupGetter<T> rhs) return false;
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IGroupGetter<T>? obj)
+        public bool Equals(IOblivionGroupGetter<T>? obj)
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
+        public override int GetHashCode() => ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
         #endregion
 
@@ -1559,7 +1559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public static class Group
+    public static class OblivionGroup
     {
         public class Mask<TItem> :
             IEquatable<Mask<TItem>>,
@@ -1668,7 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Group.Mask<R>();
+                var ret = new OblivionGroup.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -1699,16 +1699,16 @@ namespace Mutagen.Bethesda.Oblivion
                 return ToString(printMask: null);
             }
         
-            public string ToString(Group.Mask<bool>? printMask = null)
+            public string ToString(OblivionGroup.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
         
-            public void ToString(FileGeneration fg, Group.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, OblivionGroup.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Group.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(OblivionGroup.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1782,14 +1782,14 @@ namespace Mutagen.Bethesda.Oblivion
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                Group_FieldIndex enu = (Group_FieldIndex)index;
+                OblivionGroup_FieldIndex enu = (OblivionGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.Type:
+                    case OblivionGroup_FieldIndex.Type:
                         return Type;
-                    case Group_FieldIndex.LastModified:
+                    case OblivionGroup_FieldIndex.LastModified:
                         return LastModified;
-                    case Group_FieldIndex.RecordCache:
+                    case OblivionGroup_FieldIndex.RecordCache:
                         return RecordCache;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1798,16 +1798,16 @@ namespace Mutagen.Bethesda.Oblivion
         
             public void SetNthException(int index, Exception ex)
             {
-                Group_FieldIndex enu = (Group_FieldIndex)index;
+                OblivionGroup_FieldIndex enu = (OblivionGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.Type:
+                    case OblivionGroup_FieldIndex.Type:
                         this.Type = ex;
                         break;
-                    case Group_FieldIndex.LastModified:
+                    case OblivionGroup_FieldIndex.LastModified:
                         this.LastModified = ex;
                         break;
-                    case Group_FieldIndex.RecordCache:
+                    case OblivionGroup_FieldIndex.RecordCache:
                         this.RecordCache = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ex, null);
                         break;
                     default:
@@ -1817,16 +1817,16 @@ namespace Mutagen.Bethesda.Oblivion
         
             public void SetNthMask(int index, object obj)
             {
-                Group_FieldIndex enu = (Group_FieldIndex)index;
+                OblivionGroup_FieldIndex enu = (OblivionGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.Type:
+                    case OblivionGroup_FieldIndex.Type:
                         this.Type = (Exception?)obj;
                         break;
-                    case Group_FieldIndex.LastModified:
+                    case OblivionGroup_FieldIndex.LastModified:
                         this.LastModified = (Exception?)obj;
                         break;
-                    case Group_FieldIndex.RecordCache:
+                    case OblivionGroup_FieldIndex.RecordCache:
                         this.RecordCache = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>)obj;
                         break;
                     default:

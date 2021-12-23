@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly PathGrid.TranslationMask? PathGridCopyMask = null;
 
         internal static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
-            this IListGroupGetter<ICellBlockGetter> cellBlocks,
+            this IOblivionListGroupGetter<ICellBlockGetter> cellBlocks,
             ILinkCache linkCache,
             ModKey modKey,
             IModContext? parent)
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         internal static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
-            this IListGroupGetter<ICellBlockGetter> cellBlocks,
+            this IOblivionListGroupGetter<ICellBlockGetter> cellBlocks,
             ILinkCache linkCache,
             Type type,
             ModKey modKey,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Noggog</Authors>
@@ -65,11 +65,11 @@
     <Compile Include="Records\Common Subrecords\ScriptEffect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Group.cs">
-      <DependentUpon>Group.xml</DependentUpon>
+    <Compile Include="Records\OblivionGroup.cs">
+      <DependentUpon>OblivionGroup.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\ListGroup.cs">
-      <DependentUpon>Group.xml</DependentUpon>
+    <Compile Include="Records\OblivionListGroup.cs">
+      <DependentUpon>OblivionGroup.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AIPackage.cs">
       <DependentUpon>AIPackage.xml</DependentUpon>
@@ -279,12 +279,6 @@
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Oblivion.cs" />
-    <Compile Include="Records\Group_Generated.cs">
-      <DependentUpon>Group.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\ListGroup_Generated.cs">
-      <DependentUpon>Group.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\ModStats_Generated.cs">
       <DependentUpon>OblivionModHeader.xml</DependentUpon>
     </Compile>
@@ -887,6 +881,12 @@
       <DependentUpon>ClothingFlags.xml</DependentUpon>
     </Compile>
     <Compile Include="ImplicitsMixIn_Generated.cs" />
+    <Compile Include="Records\OblivionGroup_Generated.cs">
+      <DependentUpon>OblivionGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\OblivionListGroup_Generated.cs">
+      <DependentUpon>OblivionGroup.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

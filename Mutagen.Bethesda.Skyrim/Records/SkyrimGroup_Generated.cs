@@ -36,21 +36,21 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class Group<T> :
-        IEquatable<IGroupGetter<T>>,
-        IGroup<T>,
-        ILoquiObjectSetter<Group<T>>
+    public partial class SkyrimGroup<T> :
+        IEquatable<ISkyrimGroupGetter<T>>,
+        ILoquiObjectSetter<SkyrimGroup<T>>,
+        ISkyrimGroup<T>
         where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
         #region Ctor
-        protected Group()
+        protected SkyrimGroup()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        static Group()
+        static SkyrimGroup()
         {
             T_RecordType = PluginUtilityTranslation.GetRecordType<T>();
         }
@@ -70,9 +70,9 @@ namespace Mutagen.Bethesda.Skyrim
         public ICache<T, FormKey> RecordCache => _RecordCache;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ICache<T, FormKey> IGroup<T>.RecordCache => _RecordCache;
+        ICache<T, FormKey> ISkyrimGroup<T>.RecordCache => _RecordCache;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyCache<T, FormKey> IGroupGetter<T>.RecordCache => _RecordCache;
+        IReadOnlyCache<T, FormKey> ISkyrimGroupGetter<T>.RecordCache => _RecordCache;
         #endregion
 
         #endregion
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            GroupMixIn.ToString(
+            SkyrimGroupMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -93,23 +93,23 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IGroupGetter<T> rhs) return false;
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            if (obj is not ISkyrimGroupGetter<T> rhs) return false;
+            return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IGroupGetter<T>? obj)
+        public bool Equals(ISkyrimGroupGetter<T>? obj)
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
+        public override int GetHashCode() => ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
         #endregion
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimGroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -148,25 +148,25 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SkyrimGroupBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SkyrimGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static Group<T> CreateFromBinary(
+        public static SkyrimGroup<T> CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new Group<T>();
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
+            var ret = new SkyrimGroup<T>();
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Group<T> item,
+            out SkyrimGroup<T> item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -192,23 +192,23 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)this).CommonSetterInstance(typeof(T))!).Clear(this);
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)this).CommonSetterInstance(typeof(T))!).Clear(this);
         }
 
-        internal static Group<T> GetNew()
+        internal static SkyrimGroup<T> GetNew()
         {
-            return new Group<T>();
+            return new SkyrimGroup<T>();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IGroup<T> :
+    public partial interface ISkyrimGroup<T> :
         IFormLinkContainer,
-        IGroupGetter<T>,
-        ILoquiObjectSetter<IGroup<T>>,
-        IMajorRecordEnumerable
+        ILoquiObjectSetter<ISkyrimGroup<T>>,
+        IMajorRecordEnumerable,
+        ISkyrimGroupGetter<T>
         where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
@@ -217,11 +217,11 @@ namespace Mutagen.Bethesda.Skyrim
         new ICache<T, FormKey> RecordCache { get; }
     }
 
-    public partial interface IGroupGetter<out T> :
+    public partial interface ISkyrimGroupGetter<out T> :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IGroupGetter<T>>,
+        ILoquiObject<ISkyrimGroupGetter<T>>,
         IMajorRecordGetterEnumerable
         where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance(Type type0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => Group_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SkyrimGroup_Registration.Instance;
         GroupTypeEnum Type { get; }
         Int32 LastModified { get; }
         Int32 Unknown { get; }
@@ -242,46 +242,46 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class GroupMixIn
+    public static partial class SkyrimGroupMixIn
     {
-        public static void Clear<T>(this IGroup<T> item)
+        public static void Clear<T>(this ISkyrimGroup<T> item)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).Clear(item: item);
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).Clear(item: item);
         }
 
-        public static Group.Mask<bool> GetEqualsMask<T>(
-            this IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
+        public static SkyrimGroup.Mask<bool> GetEqualsMask<T>(
+            this ISkyrimGroupGetter<T> item,
+            ISkyrimGroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).GetEqualsMask(
+            return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)item).CommonInstance(typeof(T))!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString<T>(
-            this IGroupGetter<T> item,
+            this ISkyrimGroupGetter<T> item,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            SkyrimGroup.Mask<bool>? printMask = null)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString<T>(
-            this IGroupGetter<T> item,
+            this ISkyrimGroupGetter<T> item,
             FileGeneration fg,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            SkyrimGroup.Mask<bool>? printMask = null)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -289,36 +289,36 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals<T>(
-            this IGroupGetter<T> item,
-            IGroupGetter<T> rhs)
+            this ISkyrimGroupGetter<T> item,
+            ISkyrimGroupGetter<T> rhs)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
+            return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: null);
         }
 
         public static bool Equals<T, T_TranslMask>(
-            this IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
-            Group.TranslationMask<T_TranslMask> equalsMask)
+            this ISkyrimGroupGetter<T> item,
+            ISkyrimGroupGetter<T> rhs,
+            SkyrimGroup.TranslationMask<T_TranslMask> equalsMask)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
+            return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T, TGetter>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs)
+            this ISkyrimGroup<T> lhs,
+            ISkyrimGroupGetter<TGetter> rhs)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((SkyrimGroupSetterTranslationCommon)((ISkyrimGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -327,14 +327,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn<T, TGetter, T_TranslMask>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+            this ISkyrimGroup<T> lhs,
+            ISkyrimGroupGetter<TGetter> rhs,
+            SkyrimGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((SkyrimGroupSetterTranslationCommon)((ISkyrimGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -343,34 +343,34 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn<T, TGetter, T_ErrMask, T_TranslMask>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+            this ISkyrimGroup<T> lhs,
+            ISkyrimGroupGetter<TGetter> rhs,
+            out SkyrimGroup.ErrorMask<T_ErrMask> errorMask,
+            SkyrimGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((SkyrimGroupSetterTranslationCommon)((ISkyrimGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = SkyrimGroup.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn<T, TGetter>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs,
+            this ISkyrimGroup<T> lhs,
+            ISkyrimGroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((SkyrimGroupSetterTranslationCommon)((ISkyrimGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -378,41 +378,41 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static Group<T> DeepCopy<T, TGetter, T_TranslMask>(
-            this IGroupGetter<TGetter> item,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public static SkyrimGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
+            this ISkyrimGroupGetter<TGetter> item,
+            SkyrimGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_TranslMask>(
+            return ((SkyrimGroupSetterTranslationCommon)((ISkyrimGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_TranslMask>(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Group<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
-            this IGroupGetter<TGetter> item,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public static SkyrimGroup<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            this ISkyrimGroupGetter<TGetter> item,
+            out SkyrimGroup.ErrorMask<T_ErrMask> errorMask,
+            SkyrimGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            return ((SkyrimGroupSetterTranslationCommon)((ISkyrimGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Group<T> DeepCopy<T, TGetter>(
-            this IGroupGetter<TGetter> item,
+        public static SkyrimGroup<T> DeepCopy<T, TGetter>(
+            this ISkyrimGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
+            return ((SkyrimGroupSetterTranslationCommon)((ISkyrimGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -420,20 +420,20 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords<T>(this IGroupGetter<T> obj)
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords<T>(this ISkyrimGroupGetter<T> obj)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
+            return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(
-            this IGroupGetter<T> obj,
+            this ISkyrimGroupGetter<T> obj,
             bool throwIfUnknown = true)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             where TMajor : class, IMajorRecordGetter
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
+            return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
                 throwIfUnknown: throwIfUnknown)
@@ -442,12 +442,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords<T>(
-            this IGroupGetter<T> obj,
+            this ISkyrimGroupGetter<T> obj,
             Type type,
             bool throwIfUnknown = true)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
+            return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -455,18 +455,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecord> EnumerateMajorRecords<T>(this IGroup<T> obj)
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords<T>(this ISkyrimGroup<T> obj)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
+            return ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IGroup<T> obj)
+        public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this ISkyrimGroup<T> obj)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
             where TMajor : class, IMajorRecord
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
+            return ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
                 throwIfUnknown: true)
@@ -475,12 +475,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecord> EnumerateMajorRecords<T>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             Type? type,
             bool throwIfUnknown = true)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumeratePotentiallyTypedMajorRecords(
+            return ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -489,42 +489,42 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             FormKey key)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys);
         }
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             IEnumerable<FormKey> keys)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
         }
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             HashSet<FormKey> keys)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys);
         }
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             FormKey key,
             Type type,
             bool throwIfUnknown = true)
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: type,
@@ -541,13 +541,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             IEnumerable<FormKey> keys,
             Type type,
             bool throwIfUnknown = true)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet(),
                 type: type,
@@ -556,13 +556,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             HashSet<FormKey> keys,
             Type type,
             bool throwIfUnknown = true)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: type,
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             TMajor record,
             bool throwIfUnknown = true)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var keys = new HashSet<FormKey>();
             keys.Add(record.FormKey);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -588,13 +588,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             IEnumerable<TMajor> records,
             bool throwIfUnknown = true)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
             where TMajor : IMajorRecordGetter
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: records.Select(m => m.FormKey).ToHashSet(),
                 type: typeof(TMajor),
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             FormKey key,
             bool throwIfUnknown = true)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -620,13 +620,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             IEnumerable<FormKey> keys,
             bool throwIfUnknown = true)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
             where TMajor : IMajorRecordGetter
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet(),
                 type: typeof(TMajor),
@@ -635,13 +635,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this ISkyrimGroup<T> obj,
             HashSet<FormKey> keys,
             bool throwIfUnknown = true)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
             where TMajor : IMajorRecordGetter
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -652,12 +652,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary<T>(
-            this IGroup<T> item,
+            this ISkyrimGroup<T> item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
+            ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum Group_FieldIndex
+    public enum SkyrimGroup_FieldIndex
     {
         Type = 0,
         LastModified = 1,
@@ -683,9 +683,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Group_Registration : ILoquiRegistration
+    public partial class SkyrimGroup_Registration : ILoquiRegistration
     {
-        public static readonly Group_Registration Instance = new Group_Registration();
+        public static readonly SkyrimGroup_Registration Instance = new SkyrimGroup_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
@@ -700,32 +700,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(Group.Mask<>);
+        public static readonly Type MaskType = typeof(SkyrimGroup.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Group.ErrorMask<>);
+        public static readonly Type ErrorMaskType = typeof(SkyrimGroup.ErrorMask<>);
 
-        public static readonly Type ClassType = typeof(Group<>);
+        public static readonly Type ClassType = typeof(SkyrimGroup<>);
 
-        public static readonly Type GetterType = typeof(IGroupGetter<>);
+        public static readonly Type GetterType = typeof(ISkyrimGroupGetter<>);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IGroup<>);
+        public static readonly Type SetterType = typeof(ISkyrimGroup<>);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.Group";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.SkyrimGroup";
 
-        public const string Name = "Group";
+        public const string Name = "SkyrimGroup";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
         public const byte GenericCount = 1;
 
-        public static readonly Type? GenericRegistrationType = typeof(Group_Registration<>);
+        public static readonly Type? GenericRegistrationType = typeof(SkyrimGroup_Registration<>);
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
-        public static readonly Type BinaryWriteTranslation = typeof(GroupBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(SkyrimGroupBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -756,23 +756,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public class Group_Registration<T> : Group_Registration
+    public class SkyrimGroup_Registration<T> : SkyrimGroup_Registration
         where T : SkyrimMajorRecord, IBinaryItem
     {
-        public static readonly Group_Registration<T> GenericInstance = new Group_Registration<T>();
+        public static readonly SkyrimGroup_Registration<T> GenericInstance = new SkyrimGroup_Registration<T>();
 
         public new static Type GetNthType(ushort index)
         {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
+            SkyrimGroup_FieldIndex enu = (SkyrimGroup_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.Type:
+                case SkyrimGroup_FieldIndex.Type:
                     return typeof(GroupTypeEnum);
-                case Group_FieldIndex.LastModified:
+                case SkyrimGroup_FieldIndex.LastModified:
                     return typeof(Int32);
-                case Group_FieldIndex.Unknown:
+                case SkyrimGroup_FieldIndex.Unknown:
                     return typeof(Int32);
-                case Group_FieldIndex.RecordCache:
+                case SkyrimGroup_FieldIndex.RecordCache:
                     return typeof(ICache<T, FormKey>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -783,14 +783,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class GroupSetterCommon<T>
+    public partial class SkyrimGroupSetterCommon<T>
         where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
-        public static readonly GroupSetterCommon<T> Instance = new GroupSetterCommon<T>();
+        public static readonly SkyrimGroupSetterCommon<T> Instance = new SkyrimGroupSetterCommon<T>();
 
         partial void ClearPartial();
         
-        public void Clear(IGroup<T> item)
+        public void Clear(ISkyrimGroup<T> item)
         {
             ClearPartial();
             item.Type = default;
@@ -800,21 +800,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public void RemapLinks(IGroup<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ISkyrimGroup<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.RecordCache.RemapLinks(mapping);
         }
         
-        public IEnumerable<IMajorRecord> EnumerateMajorRecords(IGroup<T> obj)
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(ISkyrimGroup<T> obj)
         {
-            foreach (var item in GroupCommon<T>.Instance.EnumerateMajorRecords(obj))
+            foreach (var item in SkyrimGroupCommon<T>.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
             }
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
-            IGroup<T> obj,
+            ISkyrimGroup<T> obj,
             Type? type,
             bool throwIfUnknown)
         {
@@ -823,25 +823,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
-            IGroup<T> obj,
+            ISkyrimGroup<T> obj,
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in GroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            foreach (var item in SkyrimGroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
         }
         
         public void Remove(
-            IGroup<T> obj,
+            ISkyrimGroup<T> obj,
             HashSet<FormKey> keys)
         {
             obj.RecordCache.Remove(keys);
         }
         
         public void Remove(
-            IGroup<T> obj,
+            ISkyrimGroup<T> obj,
             HashSet<FormKey> keys,
             Type type,
             bool throwIfUnknown)
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "SkyrimMajorRecord":
                 case "IMajorRecordGetter":
                 case "ISkyrimMajorRecordGetter":
-                    if (!Group_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    if (!SkyrimGroup_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
                 default:
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IGroup<T> item,
+            ISkyrimGroup<T> item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -882,25 +882,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: GroupBinaryCreateTranslation<T>.FillBinaryStructs,
-                fillTyped: GroupBinaryCreateTranslation<T>.FillBinaryRecordTypes);
+                fillStructs: SkyrimGroupBinaryCreateTranslation<T>.FillBinaryStructs,
+                fillTyped: SkyrimGroupBinaryCreateTranslation<T>.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    public partial class GroupCommon<T>
+    public partial class SkyrimGroupCommon<T>
         where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
-        public static readonly GroupCommon<T> Instance = new GroupCommon<T>();
+        public static readonly SkyrimGroupCommon<T> Instance = new SkyrimGroupCommon<T>();
 
-        public Group.Mask<bool> GetEqualsMask(
-            IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
+        public SkyrimGroup.Mask<bool> GetEqualsMask(
+            ISkyrimGroupGetter<T> item,
+            ISkyrimGroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Group.Mask<bool>(false);
-            ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).FillEqualsMask(
+            var ret = new SkyrimGroup.Mask<bool>(false);
+            ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)item).CommonInstance(typeof(T))!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -909,9 +909,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
-            Group.Mask<bool> ret,
+            ISkyrimGroupGetter<T> item,
+            ISkyrimGroupGetter<T> rhs,
+            SkyrimGroup.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -926,9 +926,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IGroupGetter<T> item,
+            ISkyrimGroupGetter<T> item,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            SkyrimGroup.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -940,18 +940,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IGroupGetter<T> item,
+            ISkyrimGroupGetter<T> item,
             FileGeneration fg,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            SkyrimGroup.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Group<{typeof(T).Name}> =>");
+                fg.AppendLine($"SkyrimGroup<{typeof(T).Name}> =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Group<{typeof(T).Name}>) =>");
+                fg.AppendLine($"{name} (SkyrimGroup<{typeof(T).Name}>) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -965,9 +965,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IGroupGetter<T> item,
+            ISkyrimGroupGetter<T> item,
             FileGeneration fg,
-            Group.Mask<bool>? printMask = null)
+            SkyrimGroup.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
@@ -1003,31 +1003,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IGroupGetter<T>? lhs,
-            IGroupGetter<T>? rhs,
+            ISkyrimGroupGetter<T>? lhs,
+            ISkyrimGroupGetter<T>? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.Type) ?? true))
+            if ((crystal?.GetShouldTranslate((int)SkyrimGroup_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
+            if ((crystal?.GetShouldTranslate((int)SkyrimGroup_FieldIndex.LastModified) ?? true))
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.Unknown) ?? true))
+            if ((crystal?.GetShouldTranslate((int)SkyrimGroup_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
+            if ((crystal?.GetShouldTranslate((int)SkyrimGroup_FieldIndex.RecordCache) ?? true))
             {
                 if (!lhs.RecordCache.SequenceEqualNullable(rhs.RecordCache)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IGroupGetter<T> item)
+        public virtual int GetHashCode(ISkyrimGroupGetter<T> item)
         {
             var hash = new HashCode();
             hash.Add(item.Type);
@@ -1043,11 +1043,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public object GetNew<T_Setter>()
             where T_Setter : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
-            return Group<T_Setter>.GetNew();
+            return SkyrimGroup<T_Setter>.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGroupGetter<T> obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISkyrimGroupGetter<T> obj)
         {
             foreach (var item in obj.RecordCache.Items.WhereCastable<T, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
@@ -1057,7 +1057,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IGroupGetter<T> obj)
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ISkyrimGroupGetter<T> obj)
         {
             foreach (var subItem in obj.RecordCache.Items)
             {
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
-            IGroupGetter<T> obj,
+            ISkyrimGroupGetter<T> obj,
             Type? type,
             bool throwIfUnknown)
         {
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
-            IGroupGetter<T> obj,
+            ISkyrimGroupGetter<T> obj,
             Type type,
             bool throwIfUnknown)
         {
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
                 case "SkyrimMajorRecord":
-                    if (!Group_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    if (!SkyrimGroup_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -1122,35 +1122,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GroupSetterTranslationCommon
+    public partial class SkyrimGroupSetterTranslationCommon
     {
-        public static readonly GroupSetterTranslationCommon Instance = new GroupSetterTranslationCommon();
+        public static readonly SkyrimGroupSetterTranslationCommon Instance = new SkyrimGroupSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn<T, TGetter>(
-            IGroup<T> item,
-            IGroupGetter<TGetter> rhs,
+            ISkyrimGroup<T> item,
+            ISkyrimGroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.Type) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimGroup_FieldIndex.Type) ?? true))
             {
                 item.Type = rhs.Type;
             }
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimGroup_FieldIndex.LastModified) ?? true))
             {
                 item.LastModified = rhs.LastModified;
             }
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimGroup_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimGroup_FieldIndex.RecordCache) ?? true))
             {
-                errorMask?.PushIndex((int)Group_FieldIndex.RecordCache);
+                errorMask?.PushIndex((int)SkyrimGroup_FieldIndex.RecordCache);
                 try
                 {
                     item.RecordCache.SetTo(
@@ -1174,15 +1174,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public Group<T> DeepCopy<T, TGetter, T_TranslMask>(
-            IGroupGetter<TGetter> item,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public SkyrimGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
+            ISkyrimGroupGetter<TGetter> item,
+            SkyrimGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            SkyrimGroup<T> ret = (SkyrimGroup<T>)((SkyrimGroupCommon<TGetter>)((ISkyrimGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((SkyrimGroupSetterTranslationCommon)((ISkyrimGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1191,36 +1191,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public Group<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
-            IGroupGetter<TGetter> item,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public SkyrimGroup<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            ISkyrimGroupGetter<TGetter> item,
+            out SkyrimGroup.ErrorMask<T_ErrMask> errorMask,
+            SkyrimGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            SkyrimGroup<T> ret = (SkyrimGroup<T>)((SkyrimGroupCommon<TGetter>)((ISkyrimGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((SkyrimGroupSetterTranslationCommon)((ISkyrimGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = SkyrimGroup.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Group<T> DeepCopy<T, TGetter>(
-            IGroupGetter<TGetter> item,
+        public SkyrimGroup<T> DeepCopy<T, TGetter>(
+            ISkyrimGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            SkyrimGroup<T> ret = (SkyrimGroup<T>)((SkyrimGroupCommon<TGetter>)((ISkyrimGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((SkyrimGroupSetterTranslationCommon)((ISkyrimGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1236,27 +1236,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class Group<T>
+    public partial class SkyrimGroup<T>
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
-        public static Group_Registration Registration => Group_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SkyrimGroup_Registration.Instance;
+        public static SkyrimGroup_Registration Registration => SkyrimGroup_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(GroupCommon<T>.Instance, typeof(T), type0);
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(SkyrimGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
         protected object CommonSetterInstance(Type type0)
         {
-            return GenericCommonInstanceGetter.Get(GroupSetterCommon<T>.Instance, typeof(T), type0);
+            return GenericCommonInstanceGetter.Get(SkyrimGroupSetterCommon<T>.Instance, typeof(T), type0);
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SkyrimGroupSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
+        object ISkyrimGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonSetterInstance(Type type0) => this.CommonSetterInstance(type0);
+        object ISkyrimGroupGetter<T>.CommonSetterInstance(Type type0) => this.CommonSetterInstance(type0);
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISkyrimGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1267,16 +1267,16 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class GroupBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class SkyrimGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
+        public readonly static SkyrimGroupBinaryWriteTranslation Instance = new SkyrimGroupBinaryWriteTranslation();
 
         public static void WriteEmbedded<T>(
-            IGroupGetter<T> item,
+            ISkyrimGroupGetter<T> item,
             MutagenWriter writer)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
-            GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
+            SkyrimGroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
                 writer: writer,
                 item: item);
             EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteRecordTypes<T>(
-            IGroupGetter<T> item,
+            ISkyrimGroupGetter<T> item,
             MutagenWriter writer,
             TypedWriteParams? translationParams)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
@@ -1309,12 +1309,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item)
+            ISkyrimGroupGetter<T> item)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem;
 
         public static void WriteBinaryContainedRecordTypeParse<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item)
+            ISkyrimGroupGetter<T> item)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             WriteBinaryContainedRecordTypeParseCustom(
@@ -1324,7 +1324,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item,
+            ISkyrimGroupGetter<T> item,
             TypedWriteParams? translationParams = null)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
@@ -1352,16 +1352,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class GroupBinaryCreateTranslation<T>
+    public partial class SkyrimGroupBinaryCreateTranslation<T>
         where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
-        public readonly static GroupBinaryCreateTranslation<T> Instance = new GroupBinaryCreateTranslation<T>();
+        public readonly static SkyrimGroupBinaryCreateTranslation<T> Instance = new SkyrimGroupBinaryCreateTranslation<T>();
 
         public static void FillBinaryStructs(
-            IGroup<T> item,
+            ISkyrimGroup<T> item,
             MutagenFrame frame)
         {
-            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustom(
+            SkyrimGroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustom(
                 frame: frame,
                 item: item);
             item.Type = EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -1372,7 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            IGroup<T> item,
+            ISkyrimGroup<T> item,
             MutagenFrame frame,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
@@ -1383,11 +1383,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (nextRecordType.TypeInt)
             {
                 default:
-                    if (nextRecordType.Equals(Group<T>.T_RecordType))
+                    if (nextRecordType.Equals(SkyrimGroup<T>.T_RecordType))
                     {
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Group<T>.T_RecordType,
+                            triggeringRecord: SkyrimGroup<T>.T_RecordType,
                             item: item.RecordCache,
                             transl: LoquiBinaryTranslation<T>.Instance.Parse);
                         return ParseResult.Stop;
@@ -1399,7 +1399,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
-            IGroup<T> item);
+            ISkyrimGroup<T> item);
 
     }
 
@@ -1407,16 +1407,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class GroupBinaryTranslationMixIn
+    public static class SkyrimGroupBinaryTranslationMixIn
     {
         public static void WriteToBinary<T, T_ErrMask>(
-            this IGroupGetter<T> item,
+            this ISkyrimGroupGetter<T> item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
-            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((SkyrimGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1429,29 +1429,29 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class GroupBinaryOverlay<T> : IGroupGetter<T>
+    public partial class SkyrimGroupBinaryOverlay<T> : ISkyrimGroupGetter<T>
         where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
-        public static Group_Registration Registration => Group_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SkyrimGroup_Registration.Instance;
+        public static SkyrimGroup_Registration Registration => SkyrimGroup_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(GroupCommon<T>.Instance, typeof(T), type0);
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(SkyrimGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SkyrimGroupSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
+        object ISkyrimGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object? IGroupGetter<T>.CommonSetterInstance(Type type0) => null;
+        object? ISkyrimGroupGetter<T>.CommonSetterInstance(Type type0) => null;
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISkyrimGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimGroupCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -1459,14 +1459,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SkyrimGroupBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SkyrimGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1486,7 +1486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected GroupBinaryOverlay(
+        protected SkyrimGroupBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1496,12 +1496,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static GroupBinaryOverlay<T> GroupFactory(
+        public static SkyrimGroupBinaryOverlay<T> SkyrimGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new GroupBinaryOverlay<T>(
+            var ret = new SkyrimGroupBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));
@@ -1520,12 +1520,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static GroupBinaryOverlay<T> GroupFactory(
+        public static SkyrimGroupBinaryOverlay<T> SkyrimGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return GroupFactory(
+            return SkyrimGroupFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1553,7 +1553,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            GroupMixIn.ToString(
+            SkyrimGroupMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1563,16 +1563,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IGroupGetter<T> rhs) return false;
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            if (obj is not ISkyrimGroupGetter<T> rhs) return false;
+            return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IGroupGetter<T>? obj)
+        public bool Equals(ISkyrimGroupGetter<T>? obj)
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
+        public override int GetHashCode() => ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
         #endregion
 
@@ -1585,7 +1585,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public static class Group
+    public static class SkyrimGroup
     {
         public class Mask<TItem> :
             IEquatable<Mask<TItem>>,
@@ -1702,7 +1702,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Group.Mask<R>();
+                var ret = new SkyrimGroup.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -1734,16 +1734,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
         
-            public string ToString(Group.Mask<bool>? printMask = null)
+            public string ToString(SkyrimGroup.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
         
-            public void ToString(FileGeneration fg, Group.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, SkyrimGroup.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Group.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(SkyrimGroup.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1822,16 +1822,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                Group_FieldIndex enu = (Group_FieldIndex)index;
+                SkyrimGroup_FieldIndex enu = (SkyrimGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.Type:
+                    case SkyrimGroup_FieldIndex.Type:
                         return Type;
-                    case Group_FieldIndex.LastModified:
+                    case SkyrimGroup_FieldIndex.LastModified:
                         return LastModified;
-                    case Group_FieldIndex.Unknown:
+                    case SkyrimGroup_FieldIndex.Unknown:
                         return Unknown;
-                    case Group_FieldIndex.RecordCache:
+                    case SkyrimGroup_FieldIndex.RecordCache:
                         return RecordCache;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1840,19 +1840,19 @@ namespace Mutagen.Bethesda.Skyrim
         
             public void SetNthException(int index, Exception ex)
             {
-                Group_FieldIndex enu = (Group_FieldIndex)index;
+                SkyrimGroup_FieldIndex enu = (SkyrimGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.Type:
+                    case SkyrimGroup_FieldIndex.Type:
                         this.Type = ex;
                         break;
-                    case Group_FieldIndex.LastModified:
+                    case SkyrimGroup_FieldIndex.LastModified:
                         this.LastModified = ex;
                         break;
-                    case Group_FieldIndex.Unknown:
+                    case SkyrimGroup_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case Group_FieldIndex.RecordCache:
+                    case SkyrimGroup_FieldIndex.RecordCache:
                         this.RecordCache = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ex, null);
                         break;
                     default:
@@ -1862,19 +1862,19 @@ namespace Mutagen.Bethesda.Skyrim
         
             public void SetNthMask(int index, object obj)
             {
-                Group_FieldIndex enu = (Group_FieldIndex)index;
+                SkyrimGroup_FieldIndex enu = (SkyrimGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.Type:
+                    case SkyrimGroup_FieldIndex.Type:
                         this.Type = (Exception?)obj;
                         break;
-                    case Group_FieldIndex.LastModified:
+                    case SkyrimGroup_FieldIndex.LastModified:
                         this.LastModified = (Exception?)obj;
                         break;
-                    case Group_FieldIndex.Unknown:
+                    case SkyrimGroup_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case Group_FieldIndex.RecordCache:
+                    case SkyrimGroup_FieldIndex.RecordCache:
                         this.RecordCache = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>)obj;
                         break;
                     default:

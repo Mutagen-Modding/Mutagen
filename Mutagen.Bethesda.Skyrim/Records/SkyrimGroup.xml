@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Group" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false" GUID="bf12722f-f38f-429d-b80e-b055025380eb" ID="62">
+  <Object name="SkyrimGroup" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false" GUID="bf12722f-f38f-429d-b80e-b055025380eb" ID="62">
     <Generic name="T" isLoqui="true" getterVariance="Out" override="true" isClass="true">
       <Where>SkyrimMajorRecord</Where>
     </Generic>
@@ -18,7 +18,7 @@
       </Dict>
     </Fields>
   </Object>
-  <Object name="ListGroup" objType="Group" recordType="GRUP" GUID="bf438bf8-1824-4739-b117-5b149190176b" ID="293">
+  <Object name="SkyrimListGroup" objType="Group" recordType="GRUP" GUID="bf438bf8-1824-4739-b117-5b149190176b" ID="293">
     <Generic name="T" isLoqui="true" getterVariance="Out" isClass="true">
       <Where>CellBlock</Where>
     </Generic>

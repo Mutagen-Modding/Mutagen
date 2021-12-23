@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "IMajorRecordCommon";
+            string testString = "GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

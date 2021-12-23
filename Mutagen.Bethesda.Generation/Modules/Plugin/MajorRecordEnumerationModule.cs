@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             await ApplyIterationLines(field, fieldGen, accessor, getter);
                         }
 
-                        bool doAdditionlDeepLogic = obj.Name != "ListGroup";
+                        bool doAdditionlDeepLogic = !obj.Name.EndsWith("ListGroup");
 
                         if (doAdditionlDeepLogic)
                         {

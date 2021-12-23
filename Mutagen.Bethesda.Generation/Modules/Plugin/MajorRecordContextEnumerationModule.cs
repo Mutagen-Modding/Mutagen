@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 var gameCategory = obj.GetObjectData().GameCategory;
                 Dictionary<object, FileGeneration> generationDict = new Dictionary<object, FileGeneration>();
 
-                bool doAdditionlDeepLogic = obj.Name != "ListGroup";
+                bool doAdditionlDeepLogic = !obj.Name.EndsWith("ListGroup");
                 var typesWithDeepTargets = new List<TypeGeneration>();
                 if (doAdditionlDeepLogic)
                 {
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             includeType: true);
                     }
 
-                    bool doAdditionlDeepLogic = obj.Name != "ListGroup";
+                    bool doAdditionlDeepLogic = !obj.Name.EndsWith("ListGroup");
 
                     if (doAdditionlDeepLogic)
                     {

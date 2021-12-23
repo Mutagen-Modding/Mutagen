@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     fg.AppendLine($"if (mask?.{field.Name} ?? true)");
                     using (new BraceWrapper(fg))
                     {
-                        if (loqui.TargetObjectGeneration.Name == "Group")
+                        if (loqui.TargetObjectGeneration.Name == $"{obj.ProtoGen.Protocol.Namespace}Group")
                         {
                             fg.AppendLine($"this.{field.Name}.RecordCache.Set(rhsMod.{field.Name}.RecordCache.Items);");
                         }
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     if (!(field is LoquiType loqui)) continue;
                     if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
-                    if (loqui.TargetObjectGeneration.Name == "ListGroup")
+                    if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
                     {
                         fg.AppendLine($"count += {field.Name}.Records.Count > 0 ? 1 : default(uint);");
                     }
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         using (new DepthWrapper(fg))
                         {
-                            if (loqui.TargetObjectGeneration.Name == "ListGroup")
+                            if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
                             {
                                 fg.AppendLine($"return obj.{field.Name}.Records;");
                             }
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     if (!(field is LoquiType loqui)) continue;
                     if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
-                    if (loqui.TargetObjectGeneration.Name == "ListGroup")
+                    if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
                     {
                         listGroupInstance = loqui;
                     }
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         groupInstance = loqui;
                     }
                     if (loqui.GetGroupTarget().GetObjectData().CustomBinaryEnd == CustomEnd.Off
-                        && loqui.TargetObjectGeneration.Name != "ListGroup")
+                        && !loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
                     {
                         fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, writer.MetaData.MasterReferences!, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams{(objData.UsesStringFiles ? ", param.StringsWriter" : null)}));");
                     }
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 using (var args = new FunctionWrapper(fg,
                     $"public static void WriteGroupParallel<T>"))
                 {
-                    args.Add("IGroupGetter<T> group");
+                    args.Add($"I{obj.ProtoGen.Protocol.Namespace}GroupGetter<T> group");
                     args.Add($"{nameof(IMasterReferenceReader)} masters");
                     args.Add("int targetIndex");
                     if (objData.GameReleaseOptions != null)
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
-                        fg.AppendLine($"GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);");
+                        fg.AppendLine($"{obj.ProtoGen.Protocol.Namespace}GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);");
                     }
                     fg.AppendLine($"subStreams[0] = groupByteStream;");
                     fg.AppendLine($"Parallel.ForEach(cuts, (cutItems, state, counter) =>");

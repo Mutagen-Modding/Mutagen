@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.UnitTests.Api
         public static void GroupAccessors()
         {
             var mod = new SkyrimMod(TestConstants.LightMasterModKey, SkyrimRelease.SkyrimSE);
-            var group = new Group<Npc>(mod);
+            var group = new SkyrimGroup<Npc>(mod);
             if (group.TryGetValue(TestConstants.Form1, out var npc))
             {
             }
