@@ -5247,9 +5247,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SkyrimMod_Registration.TriggeringRecordType;
         public SkyrimRelease SkyrimRelease { get; }
         public override GameRelease GameRelease => SkyrimRelease.ToGameRelease();
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
-        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => SkyrimModMixIn.GetEqualsMask(this, (ISkyrimModGetter)rhs, include);
@@ -6634,27 +6634,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Mutagen
-        public static IGroupCommonGetter<T> GetTopLevelGroup<T>(this ISkyrimModGetter obj)
+        public static IGroupGetter<T> GetTopLevelGroup<T>(this ISkyrimModGetter obj)
             where T : IMajorRecordGetter
         {
-            return (IGroupCommonGetter<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroupCommonGetter<IMajorRecordGetter> GetTopLevelGroup(
+        public static IGroupGetter<IMajorRecordGetter> GetTopLevelGroup(
             this ISkyrimModGetter obj,
             Type type)
         {
-            return (IGroupCommonGetter<IMajorRecordGetter>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<IMajorRecordGetter>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
 
-        public static IGroupCommon<T> GetTopLevelGroup<T>(this ISkyrimMod obj)
+        public static IGroup<T> GetTopLevelGroup<T>(this ISkyrimMod obj)
             where T : IMajorRecord
         {
-            return (IGroupCommon<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
@@ -24142,8 +24142,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public SkyrimRelease SkyrimRelease { get; }
         public GameRelease GameRelease => SkyrimRelease.ToGameRelease();
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;

@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// <summary>
     /// An interface that Group Record objects implement to hook into the common systems
     /// </summary>
-    public interface IGroupCommonGetter<out TMajor> : IEnumerable<TMajor>
+    public interface IGroupGetter<out TMajor> : IEnumerable<TMajor>
         where TMajor : IMajorRecordGetter
     {
         /// <summary>
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         bool ContainsKey(FormKey key);
     }
 
-    public interface IGroupCommon<TMajor> : IGroupCommonGetter<TMajor>, IClearable
+    public interface IGroup<TMajor> : IGroupGetter<TMajor>, IClearable
         where TMajor : IMajorRecordGetter
     {
         /// <summary>

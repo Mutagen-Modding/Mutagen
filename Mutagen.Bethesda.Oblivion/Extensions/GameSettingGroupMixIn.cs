@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public static class GameSettingGroupMixIn
     {
-        public static GameSettingFloat AddNewFloat(this IGroupCommon<GameSetting> gameSettings)
+        public static GameSettingFloat AddNewFloat(this IGroup<GameSetting> gameSettings)
         {
             var ret = new GameSettingFloat(
                 gameSettings.SourceMod.GetNextFormKey());
@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GameSettingFloat AddNewFloat(this IGroupCommon<GameSetting> gameSettings, string editorId)
+        public static GameSettingFloat AddNewFloat(this IGroup<GameSetting> gameSettings, string editorId)
         {
             var ret = new GameSettingFloat(
                 gameSettings.SourceMod.GetNextFormKey(editorId));
@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GameSettingInt AddNewInt(this IGroupCommon<GameSetting> gameSettings)
+        public static GameSettingInt AddNewInt(this IGroup<GameSetting> gameSettings)
         {
             var ret = new GameSettingInt(
                 gameSettings.SourceMod.GetNextFormKey());
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GameSettingInt AddNewInt(this IGroupCommon<GameSetting> gameSettings, string editorId)
+        public static GameSettingInt AddNewInt(this IGroup<GameSetting> gameSettings, string editorId)
         {
             var ret = new GameSettingInt(
                 gameSettings.SourceMod.GetNextFormKey(editorId));
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GameSettingString AddNewShort(this IGroupCommon<GameSetting> gameSettings)
+        public static GameSettingString AddNewShort(this IGroup<GameSetting> gameSettings)
         {
             var ret = new GameSettingString(
                 gameSettings.SourceMod.GetNextFormKey());
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GameSettingString AddNewShort(this IGroupCommon<GameSetting> gameSettings, string editorId)
+        public static GameSettingString AddNewShort(this IGroup<GameSetting> gameSettings, string editorId)
         {
             var ret = new GameSettingString(
                 gameSettings.SourceMod.GetNextFormKey(editorId));

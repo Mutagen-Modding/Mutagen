@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda
         /// <param name="group">Group to add a record to</param>
         /// <param name="formKey">FormKey assign the new record.</param>
         /// <returns>New record already added to the Group</returns>
-        public static TMajor AddNew<TMajor>(this IGroupCommon<TMajor> group, FormKey formKey)
+        public static TMajor AddNew<TMajor>(this IGroup<TMajor> group, FormKey formKey)
             where TMajor : IMajorRecordInternal
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="group">Group to add a record to</param>
         /// <returns>New record already added to the Group</returns>
-        public static TMajor AddNew<TMajor>(this IGroupCommon<TMajor> group)
+        public static TMajor AddNew<TMajor>(this IGroup<TMajor> group)
             where TMajor : IMajorRecordInternal
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda
         /// <param name="group">Group to add a record to</param>
         /// <param name="editorID">Editor ID to assign the new record, and use in any FormKey persistence logic.</param>
         /// <returns>New record already added to the Group</returns>
-        public static TMajor AddNew<TMajor>(this IGroupCommon<TMajor> group, string? editorID)
+        public static TMajor AddNew<TMajor>(this IGroup<TMajor> group, string? editorID)
             where TMajor : IMajorRecordInternal
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda
         /// <param name="group">Group to add to</param>
         /// <param name="source">Source record to duplicate</param>
         /// <returns>Duplicated and added record</returns>
-        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source)
+        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter source)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
             where TMajorGetter : IMajorRecordGetter
         {
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda
         /// <param name="group">Group to add to</param>
         /// <param name="source">Source record to duplicate</param>
         /// <returns>Duplicated and added record</returns>
-        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroupCommon<TMajor> group, TMajorGetter source)
+        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroup<TMajor> group, TMajorGetter source)
             where TMajor : class, IMajorRecordInternal, TSharedParent
             where TMajorGetter : TSharedParent
             where TSharedParent : IMajorRecordGetter
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda
         /// <param name="source">Source record to duplicate</param>
         /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
         /// <returns>Duplicated and added record</returns>
-        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source, string? edid)
+        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter source, string? edid)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
             where TMajorGetter : IMajorRecordGetter
         {
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda
         /// <param name="source">Source record to duplicate</param>
         /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
         /// <returns>Duplicated and added record</returns>
-        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroupCommon<TMajor> group, TMajorGetter source, string? edid)
+        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroup<TMajor> group, TMajorGetter source, string? edid)
             where TMajor : class, IMajorRecordInternal, TSharedParent
             where TMajorGetter : TSharedParent
             where TSharedParent : IMajorRecordGetter
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda
         /// <param name="record">Record object, if located</param>
         /// <returns>True if record retreived from group</returns>
         public static bool TryGetValue<TMajor>(
-            this IGroupCommonGetter<TMajor> group,
+            this IGroupGetter<TMajor> group,
             FormKey formKey,
             [MaybeNullWhen(false)] out TMajor record)
             where TMajor : IMajorRecordGetter
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">FormKey to query for</param>
         /// <returns>Record object, if located</returns>
         public static TMajor? TryGetValue<TMajor>(
-            this IGroupCommonGetter<TMajor> group,
+            this IGroupGetter<TMajor> group,
             FormKey formKey)
             where TMajor : IMajorRecordGetter
         {

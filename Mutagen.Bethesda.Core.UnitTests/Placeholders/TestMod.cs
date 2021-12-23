@@ -141,12 +141,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
             throw new NotImplementedException();
         }
 
-        IGroupCommonGetter<TMajor> IModGetter.GetTopLevelGroup<TMajor>()
+        IGroupGetter<TMajor> IModGetter.GetTopLevelGroup<TMajor>()
         {
             throw new NotImplementedException();
         }
 
-        public IGroupCommonGetter<IMajorRecordGetter> GetTopLevelGroup(Type type)
+        public IGroupGetter<IMajorRecordGetter> GetTopLevelGroup(Type type)
         {
             throw new NotImplementedException();
         }
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
             throw new NotImplementedException();
         }
 
-        public IGroupCommon<TMajor> GetTopLevelGroup<TMajor>() where TMajor : IMajorRecord
+        public IGroup<TMajor> GetTopLevelGroup<TMajor>() where TMajor : IMajorRecord
         {
             throw new NotImplementedException();
         }

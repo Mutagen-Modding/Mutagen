@@ -269,8 +269,8 @@ namespace Mutagen.Bethesda.Plugins.Cache
             where TMajor : class, IMajorRecordInternal, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter
         {
-            private readonly Func<TMod, IGroupCommon<TMajor>> _group;
-            private readonly Func<TModGetter, IGroupCommonGetter<TMajorGetter>> _groupGetter;
+            private readonly Func<TMod, IGroup<TMajor>> _group;
+            private readonly Func<TModGetter, IGroupGetter<TMajorGetter>> _groupGetter;
 
             public TMajorGetter Record { get; }
 
@@ -283,8 +283,8 @@ namespace Mutagen.Bethesda.Plugins.Cache
             public GroupModContext(
                 ModKey modKey,
                 TMajorGetter record,
-                Func<TMod, IGroupCommon<TMajor>> group,
-                Func<TModGetter, IGroupCommonGetter<TMajorGetter>> groupGetter)
+                Func<TMod, IGroup<TMajor>> group,
+                Func<TModGetter, IGroupGetter<TMajorGetter>> groupGetter)
             {
                 ModKey = modKey;
                 Record = record;

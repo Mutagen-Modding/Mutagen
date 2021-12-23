@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// <summary>
     /// An abstract base class for Groups to inherit from for some common functionality
     /// </summary>
-    public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroupCommon<TMajor>
+    public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
         where TMajor : class, IMajorRecordInternal
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IMod SourceMod { get; private set; }
 
-        IReadOnlyCache<TMajor, FormKey> IGroupCommonGetter<TMajor>.RecordCache => InternalCache;
+        IReadOnlyCache<TMajor, FormKey> IGroupGetter<TMajor>.RecordCache => InternalCache;
 
         /// <inheritdoc />
         public ICache<TMajor, FormKey> RecordCache => InternalCache;
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             }
         }
 
-        public class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGroupCommonGetter<TMajor>
+        public class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGroupGetter<TMajor>
             where TMajor : IMajorRecordGetter
         {
             protected GroupMajorRecordCacheWrapper<TMajor>? _RecordCache;

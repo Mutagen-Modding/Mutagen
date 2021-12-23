@@ -904,9 +904,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public static readonly RecordType GrupRecordType = Fallout4Mod_Registration.TriggeringRecordType;
         public override GameRelease GameRelease => GameRelease.Fallout4;
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
-        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => Fallout4ModMixIn.GetEqualsMask(this, (IFallout4ModGetter)rhs, include);
@@ -1456,27 +1456,27 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Mutagen
-        public static IGroupCommonGetter<T> GetTopLevelGroup<T>(this IFallout4ModGetter obj)
+        public static IGroupGetter<T> GetTopLevelGroup<T>(this IFallout4ModGetter obj)
             where T : IMajorRecordGetter
         {
-            return (IGroupCommonGetter<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroupCommonGetter<IMajorRecordGetter> GetTopLevelGroup(
+        public static IGroupGetter<IMajorRecordGetter> GetTopLevelGroup(
             this IFallout4ModGetter obj,
             Type type)
         {
-            return (IGroupCommonGetter<IMajorRecordGetter>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<IMajorRecordGetter>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
 
-        public static IGroupCommon<T> GetTopLevelGroup<T>(this IFallout4Mod obj)
+        public static IGroup<T> GetTopLevelGroup<T>(this IFallout4Mod obj)
             where T : IMajorRecord
         {
-            return (IGroupCommon<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
@@ -4338,8 +4338,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public GameRelease GameRelease => GameRelease.Fallout4;
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;

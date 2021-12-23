@@ -22,12 +22,12 @@ namespace Mutagen.Bethesda.Oblivion
         protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
     }
 
-    public partial interface IOblivionGroup<T> : IGroupCommon<T>
+    public partial interface IOblivionGroup<T> : IGroup<T>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
     }
 
-    public partial interface IOblivionGroupGetter<out T> : IGroupCommonGetter<T>
+    public partial interface IOblivionGroupGetter<out T> : IGroupGetter<T>
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
     }

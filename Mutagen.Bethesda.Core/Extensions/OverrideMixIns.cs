@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda
         /// <param name="group">Group to retrieve and/or insert from</param>
         /// <param name="major">Major record to query and potentially copy</param>
         /// <returns>Existing override record, or a copy of the given record that has already been inserted into the group</returns>
-        public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter major)
+        public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter major)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter
         {
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda
         /// <param name="cache">Cache to query link against</param>
         /// <param name="rec">Retrieved record if successful</param>
         /// <returns>True if a record was retrieved</returns>
-        public static bool TryGetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, IFormLinkGetter<TMajorGetter> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor rec)
+        public static bool TryGetOrAddAsOverride<TMajor, TMajorGetter>(this IGroup<TMajor> group, IFormLinkGetter<TMajorGetter> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor rec)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter
         {
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda
         /// <param name="cache">Cache to query link against</param>
         /// <param name="rec">Retrieved record if successful</param>
         /// <returns>True if a record was retrieved</returns>
-        public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, IFormLinkGetter<TMajorGetter> link, ILinkCache cache)
+        public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroup<TMajor> group, IFormLinkGetter<TMajorGetter> link, ILinkCache cache)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter
         {

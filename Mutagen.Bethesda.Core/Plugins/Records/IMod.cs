@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         ///   - Nested types, where there is not just one top level group that contains given type (Placed Objects) <br />
         ///   - A setter type is requested from a getter only object. <br />
         /// </exception>
-        IGroupCommonGetter<TMajor> GetTopLevelGroup<TMajor>() where TMajor : IMajorRecordGetter;
+        IGroupGetter<TMajor> GetTopLevelGroup<TMajor>() where TMajor : IMajorRecordGetter;
 
         /// <summary>
         /// Returns the top-level Group getter object associated with the given Major Record Type.
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         ///   - Nested types, where there is not just one top level group that contains given type (Placed Objects) <br />
         ///   - A setter type is requested from a getter only object. <br />
         /// </exception>
-        IGroupCommonGetter<IMajorRecordGetter> GetTopLevelGroup(Type type);
+        IGroupGetter<IMajorRecordGetter> GetTopLevelGroup(Type type);
 
         /// <summary>
         /// Exports to disk in Bethesda binary format.
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        new IGroupCommon<TMajor> GetTopLevelGroup<TMajor>() where TMajor : IMajorRecord;
+        new IGroup<TMajor> GetTopLevelGroup<TMajor>() where TMajor : IMajorRecord;
 
         /// <summary>
         /// The next FormID to be allocated

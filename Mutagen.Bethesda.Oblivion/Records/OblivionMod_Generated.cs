@@ -2795,9 +2795,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = OblivionMod_Registration.TriggeringRecordType;
         public override GameRelease GameRelease => GameRelease.Oblivion;
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
-        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
@@ -3679,27 +3679,27 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public static IGroupCommonGetter<T> GetTopLevelGroup<T>(this IOblivionModGetter obj)
+        public static IGroupGetter<T> GetTopLevelGroup<T>(this IOblivionModGetter obj)
             where T : IMajorRecordGetter
         {
-            return (IGroupCommonGetter<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroupCommonGetter<IMajorRecordGetter> GetTopLevelGroup(
+        public static IGroupGetter<IMajorRecordGetter> GetTopLevelGroup(
             this IOblivionModGetter obj,
             Type type)
         {
-            return (IGroupCommonGetter<IMajorRecordGetter>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<IMajorRecordGetter>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
 
-        public static IGroupCommon<T> GetTopLevelGroup<T>(this IOblivionMod obj)
+        public static IGroup<T> GetTopLevelGroup<T>(this IOblivionMod obj)
             where T : IMajorRecord
         {
-            return (IGroupCommon<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
@@ -12494,8 +12494,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public GameRelease GameRelease => GameRelease.Oblivion;
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;

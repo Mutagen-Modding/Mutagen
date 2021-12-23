@@ -50,10 +50,10 @@ namespace Mutagen.Bethesda.Plugins.Records
         public abstract bool CanUseLocalization { get; }
         public abstract bool UsingLocalization { get; set; }
         bool IModGetter.UsingLocalization => throw new NotImplementedException();
-        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => throw new NotImplementedException();
+        IGroup<T> IMod.GetTopLevelGroup<T>() => throw new NotImplementedException();
         public abstract void SyncRecordCount();
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => throw new NotImplementedException();
-        IGroupCommonGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => throw new NotImplementedException();
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => throw new NotImplementedException();
+        IGroupGetter<IMajorRecordGetter> IModGetter.GetTopLevelGroup(Type type) => throw new NotImplementedException();
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => throw new NotImplementedException();
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => throw new NotImplementedException();
         IEnumerable<T> IMajorRecordEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown) => throw new NotImplementedException();
