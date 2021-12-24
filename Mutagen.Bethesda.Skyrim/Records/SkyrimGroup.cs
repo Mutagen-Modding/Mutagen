@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int finalPos,
                 int offset)
             {
-                _RecordCache = GroupMajorRecordCacheWrapper<T>.Factory(
+                _recordCache = GroupMajorRecordCacheWrapper<T>.Factory(
                     stream,
                     _data,
                     _package,

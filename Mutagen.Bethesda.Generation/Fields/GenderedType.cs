@@ -30,8 +30,8 @@ namespace Mutagen.Bethesda.Generation
             }
         }
         public override bool CanBeNullable(bool getter) => true;
-        public RecordTypeConverter FemaleConversions;
-        public RecordTypeConverter MaleConversions;
+        public RecordTypeConverter? FemaleConversions;
+        public RecordTypeConverter? MaleConversions;
 
         public RecordType? MaleMarker;
         public RecordType? FemaleMarker;

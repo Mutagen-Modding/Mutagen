@@ -2776,7 +2776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             get
             {
                 if (!_Priority_IsSet) return new GenderedItem<Byte>(default, default);
-                var data = _data.Span.Slice(_PriorityLocation);
+                var data = _data.Slice(_PriorityLocation);
                 return new GenderedItem<Byte>(
                     data[0],
                     data.Slice(1)[0]);

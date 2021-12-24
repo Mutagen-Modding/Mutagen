@@ -33,6 +33,9 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// </summary>
         public IEnumerable<TMajor> Records => ProtectedCache.Items;
 
+        IEnumerable<IMajorRecordGetter> IGroupGetter.Records => Records;
+        IEnumerable<IMajorRecord> IGroup.Records => Records;
+
         /// <summary>
         /// Number of records contained in the group.
         /// </summary>
@@ -49,11 +52,15 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <inheritdoc />
         public ICache<TMajor, FormKey> RecordCache => InternalCache;
 
+        IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => RecordCache;
+
         /// <inheritdoc />
         public IEnumerable<FormKey> FormKeys => InternalCache.Keys;
 
         /// <inheritdoc />
         public TMajor this[FormKey key] => InternalCache[key];
+
+        IMajorRecordGetter IGroupGetter.this[FormKey key] => this[key];
 
         private readonly GameRelease _release;
 
@@ -319,31 +326,34 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
 
         public class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGroupGetter<TMajor>
-            where TMajor : IMajorRecordGetter
+            where TMajor : class, IMajorRecordGetter
         {
-            protected GroupMajorRecordCacheWrapper<TMajor>? _RecordCache;
+            protected IReadOnlyCache<TMajor, FormKey> _recordCache = null!;
 
-            public TMajor this[FormKey key] => _RecordCache![key];
-            public IReadOnlyCache<TMajor, FormKey> RecordCache => _RecordCache!;
+            public TMajor this[FormKey key] => _recordCache[key];
+            IMajorRecordGetter IGroupGetter.this[FormKey key] => _recordCache[key];
+            public IReadOnlyCache<TMajor, FormKey> RecordCache => _recordCache;
             public IMod SourceMod => throw new NotImplementedException();
             public IEnumerable<TMajor> Records => RecordCache.Items;
-            public int Count => this.RecordCache.Count;
-            public IEnumerable<FormKey> FormKeys => _RecordCache!.Keys;
-            public IEnumerable<TMajor> Items => _RecordCache!.Items;
+            public int Count => RecordCache.Count;
+            public IEnumerable<FormKey> FormKeys => _recordCache.Keys;
+            public IEnumerable<TMajor> Items => _recordCache.Items;
+            IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => _recordCache;
+            IEnumerable<IMajorRecordGetter> IGroupGetter.Records => _recordCache.Items;
 
             public bool ContainsKey(FormKey key)
             {
-                return _RecordCache!.ContainsKey(key);
+                return _recordCache.ContainsKey(key);
             }
 
             public IEnumerator<TMajor> GetEnumerator()
             {
-                return _RecordCache!.Items.GetEnumerator();
+                return _recordCache.Items.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return _RecordCache!.GetEnumerator();
+                return _recordCache.GetEnumerator();
             }
 
             protected AGroupBinaryOverlay(

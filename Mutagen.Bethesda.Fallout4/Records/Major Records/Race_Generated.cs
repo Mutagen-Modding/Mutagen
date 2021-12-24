@@ -4716,7 +4716,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             get
             {
                 if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Span.Slice(_HeightLocation);
+                var data = _data.Slice(_HeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
@@ -4731,7 +4731,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             get
             {
                 if (!_DefaultWeight_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Span.Slice(_DefaultWeightLocation);
+                var data = _data.Slice(_DefaultWeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());

@@ -34,6 +34,11 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
         public bool CanUseLocalization { get; }
         public bool UsingLocalization { get; set; }
 
+        IGroup IMod.GetTopLevelGroup(Type type)
+        {
+            throw new NotImplementedException();
+        }
+
         public uint NextFormID { get; set; }
 
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords()
@@ -146,7 +151,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
             throw new NotImplementedException();
         }
 
-        public IGroupGetter<IMajorRecordGetter> GetTopLevelGroup(Type type)
+        public IGroupGetter GetTopLevelGroup(Type type)
         {
             throw new NotImplementedException();
         }

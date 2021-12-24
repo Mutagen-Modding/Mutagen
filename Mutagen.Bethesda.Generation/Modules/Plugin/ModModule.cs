@@ -64,8 +64,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
             // Interfaces
             fg.AppendLine($"IGroupGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
-            fg.AppendLine($"IGroupGetter<IMajorRecordGetter> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
+            fg.AppendLine($"IGroupGetter {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
             fg.AppendLine($"IGroup<T> {nameof(IMod)}.{nameof(IMod.GetTopLevelGroup)}<T>() => this.{nameof(IMod.GetTopLevelGroup)}<T>();");
+            fg.AppendLine($"IGroup {nameof(IMod)}.{nameof(IMod.GetTopLevelGroup)}(Type type) => this.{nameof(IMod.GetTopLevelGroup)}(type);");
             fg.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);");
             fg.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
@@ -389,7 +390,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine();
             
             using (var args = new FunctionWrapper(fg,
-                $"public static IGroupGetter<{nameof(IMajorRecordGetter)}> {nameof(IModGetter.GetTopLevelGroup)}"))
+                $"public static IGroupGetter {nameof(IModGetter.GetTopLevelGroup)}"))
             {
                 args.Add($"this {obj.Interface(getter: true)} obj");
                 args.Add("Type type");
@@ -397,7 +398,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return (IGroupGetter<{nameof(IMajorRecordGetter)}>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
+                    $"return (IGroupGetter){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
                 {
                     args.AddPassArg("obj");
                     args.AddPassArg("type");
@@ -418,6 +419,23 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     args.AddPassArg("obj");
                     args.Add("type: typeof(T)");
+                }
+            }
+            fg.AppendLine();
+            
+            using (var args = new FunctionWrapper(fg,
+                $"public static IGroup {nameof(IModGetter.GetTopLevelGroup)}"))
+            {
+                args.Add($"this {obj.Interface(getter: false)} obj");
+                args.Add("Type type");
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new ArgsWrapper(fg,
+                           $"return (IGroup){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
+                {
+                    args.AddPassArg("obj");
+                    args.AddPassArg("type");
                 }
             }
             fg.AppendLine();

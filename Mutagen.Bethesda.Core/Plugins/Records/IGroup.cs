@@ -7,8 +7,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// <summary>
     /// An interface that Group Record objects implement to hook into the common systems
     /// </summary>
-    public interface IGroupGetter<out TMajor> : IEnumerable<TMajor>
-        where TMajor : IMajorRecordGetter
+    public interface IGroupGetter
     {
         /// <summary>
         /// Mod object the Group belongs to
@@ -18,7 +17,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <summary>
         /// Access to records in an IReadOnlyCache interface
         /// </summary>
-        IReadOnlyCache<TMajor, FormKey> RecordCache { get; }
+        IReadOnlyCache<IMajorRecordGetter, FormKey> RecordCache { get; }
 
         /// <summary>
         /// Number of contained records
@@ -31,12 +30,17 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <param name="key">FormKey to retrieve</param>
         /// <exception cref="KeyNotFoundException">A record with the given FormKey does not exist</exception>
         /// <returns>Record associated with the specified key</returns>
-        TMajor this[FormKey key] { get; }
+        IMajorRecordGetter this[FormKey key] { get; }
 
         /// <summary>
         /// Enumerable containing all the FormKeys present in the group
         /// </summary>
         IEnumerable<FormKey> FormKeys { get; }
+
+        /// <summary>
+        /// Enumerable containing all the FormKeys present in the group
+        /// </summary>
+        IEnumerable<IMajorRecordGetter> Records { get; }
 
         /// <summary>
         /// Checks if a record with the specified key exists in the group
@@ -45,29 +49,34 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <returns>True if record found with given key</returns>
         bool ContainsKey(FormKey key);
     }
-
-    public interface IGroup : IGroupGetter<IMajorRecordGetter>
-    {
-        
-    }
-
-    public interface IGroup<TMajor> : IGroupGetter<TMajor>, IClearable
+    
+    /// <summary>
+    /// An interface that Group Record objects implement to hook into the common systems
+    /// </summary>
+    public interface IGroupGetter<out TMajor> : IGroupGetter, IEnumerable<TMajor>
         where TMajor : IMajorRecordGetter
     {
         /// <summary>
-        /// Access to records in an ICache interface
+        /// Access to records in an IReadOnlyCache interface
         /// </summary>
-        new ICache<TMajor, FormKey> RecordCache { get; }
+        new IReadOnlyCache<TMajor, FormKey> RecordCache { get; }
 
         /// <summary>
-        /// Adds a major record to the group
+        /// Gets the record associated with the specified key
         /// </summary>
-        /// <param name="record">The record</param>
-        /// <exception cref="ArgumentException">
-        /// A record with the same FormKey already exists in the group
-        /// </exception>
-        void Add(TMajor record);
+        /// <param name="key">FormKey to retrieve</param>
+        /// <exception cref="KeyNotFoundException">A record with the given FormKey does not exist</exception>
+        /// <returns>Record associated with the specified key</returns>
+        new TMajor this[FormKey key] { get; }
 
+        /// <summary>
+        /// Enumerable containing all the FormKeys present in the group
+        /// </summary>
+        new IEnumerable<TMajor> Records { get; }
+    }
+
+    public interface IGroup : IGroupGetter
+    {
         /// <summary>
         /// Adds
         /// </summary>
@@ -76,12 +85,6 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// A record with the same FormKey already exists in the group, or is of the wrong type.
         /// </exception>
         void AddUntyped(IMajorRecord record);
-
-        /// <summary>
-        /// Adds or replaces the major record
-        /// </summary>
-        /// <param name="record">The record</param>
-        void Set(TMajor record);
 
         /// <summary>
         /// Adds or replaces the major record
@@ -95,17 +98,51 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <summary>
         /// Adds or updates the major records given
         /// </summary>
-        /// <param name="records">The records</param>
-        void Set(IEnumerable<TMajor> records);
-
-        /// <summary>
-        /// Adds or updates the major records given
-        /// </summary>
         /// <exception cref="ArgumentException">
         /// A record was the wrong type.  The contents of the group will be undefined.  Some records may have been added.
         /// </exception>
         /// <param name="records">The records</param>
         void SetUntyped(IEnumerable<IMajorRecord> records);
+
+        /// <summary>
+        /// Enumerable containing all the FormKeys present in the group
+        /// </summary>
+        new IEnumerable<IMajorRecord> Records { get; }
+    }
+
+    public interface IGroup<TMajor> : IGroupGetter<TMajor>, IGroup, IClearable
+        where TMajor : IMajorRecordGetter
+    {
+        /// <summary>
+        /// Access to records in an ICache interface
+        /// </summary>
+        new ICache<TMajor, FormKey> RecordCache { get; }
+
+        /// <summary>
+        /// Enumerable containing all the FormKeys present in the group
+        /// </summary>
+        new IEnumerable<TMajor> Records { get; }
+        
+        /// <summary>
+        /// Adds a major record to the group
+        /// </summary>
+        /// <param name="record">The record</param>
+        /// <exception cref="ArgumentException">
+        /// A record with the same FormKey already exists in the group
+        /// </exception>
+        void Add(TMajor record);
+
+        /// <summary>
+        /// Adds or replaces the major record
+        /// </summary>
+        /// <param name="record">The record</param>
+        void Set(TMajor record);
+
+        /// <summary>
+        /// Adds or updates the major records given
+        /// </summary>
+        /// <param name="records">The records</param>
+        void Set(IEnumerable<TMajor> records);
 
         /// <summary>
         /// Removes the item matching the specified key.

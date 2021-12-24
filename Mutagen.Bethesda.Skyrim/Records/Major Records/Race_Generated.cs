@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region BodyData
-        public IGenderedItem<BodyData?> BodyData { get; set; } = new GenderedItem<BodyData?>(default(BodyData?), default(BodyData?));
+        public IGenderedItem<BodyData?> BodyData { get; set; } = new GenderedItem<BodyData?>(default, default);
         IGenderedItemGetter<IBodyDataGetter?> IRaceGetter.BodyData => this.BodyData;
         #endregion
         #region Hairs
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IBodyPartDataGetter> IRaceGetter.BodyPartData => this.BodyPartData;
         #endregion
         #region BehaviorGraph
-        public IGenderedItem<Model?> BehaviorGraph { get; set; } = new GenderedItem<Model?>(default(Model?), default(Model?));
+        public IGenderedItem<Model?> BehaviorGraph { get; set; } = new GenderedItem<Model?>(default, default);
         IGenderedItemGetter<IModelGetter?> IRaceGetter.BehaviorGraph => this.BehaviorGraph;
         #endregion
         #region MaterialType
@@ -8161,7 +8161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             get
             {
                 if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Span.Slice(_HeightLocation);
+                var data = _data.Slice(_HeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
@@ -8176,7 +8176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             get
             {
                 if (!_Weight_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Span.Slice(_WeightLocation);
+                var data = _data.Slice(_WeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());

@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
-                _RecordCache = GroupMajorRecordCacheWrapper<T>.Factory(
+                _recordCache = GroupMajorRecordCacheWrapper<T>.Factory(
                     stream,
                     _data,
                     _package,

@@ -3004,13 +3004,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.RaceStats,
                 recordType: RecordTypes.ATTR,
-                transl: (MutagenWriter subWriter, IRaceStatsGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IRaceStatsGetter subItem) =>
                 {
                     var Item = subItem;
                     ((RaceStatsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
+                        writer: subWriter);
                 });
             using (HeaderExport.Subrecord(writer, RecordTypes.NAM0)) { }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFacePartGetter>.Instance.Write(
