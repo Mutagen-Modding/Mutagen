@@ -1,3 +1,4 @@
+using System;
 using Noggog;
 using System.Collections.Generic;
 
@@ -45,6 +46,11 @@ namespace Mutagen.Bethesda.Plugins.Records
         bool ContainsKey(FormKey key);
     }
 
+    public interface IGroup : IGroupGetter<IMajorRecordGetter>
+    {
+        
+    }
+
     public interface IGroup<TMajor> : IGroupGetter<TMajor>, IClearable
         where TMajor : IMajorRecordGetter
     {
@@ -54,10 +60,22 @@ namespace Mutagen.Bethesda.Plugins.Records
         new ICache<TMajor, FormKey> RecordCache { get; }
 
         /// <summary>
-        /// Adds an item using the specified key
+        /// Adds a major record to the group
         /// </summary>
-        /// <param name="item">The item.</param>
-        void Add(TMajor item);
+        /// <param name="record">The record</param>
+        /// <exception cref="ArgumentException">
+        /// A record with the same FormKey already exists in the group
+        /// </exception>
+        void Add(TMajor record);
+
+        /// <summary>
+        /// Adds
+        /// </summary>
+        /// <param name="record"></param>
+        /// <exception cref="ArgumentException">
+        /// A record with the same FormKey already exists in the group, or is of the wrong type.
+        /// </exception>
+        void AddUntyped(IMajorRecord record);
 
         /// <summary>
         /// Adds or replaces the major record
@@ -66,10 +84,28 @@ namespace Mutagen.Bethesda.Plugins.Records
         void Set(TMajor record);
 
         /// <summary>
+        /// Adds or replaces the major record
+        /// </summary>
+        /// <exception cref="ArgumentException">
+        /// Record was the wrong type
+        /// </exception>
+        /// <param name="record">The record</param>
+        void SetUntyped(IMajorRecord record);
+
+        /// <summary>
         /// Adds or updates the major records given
         /// </summary>
         /// <param name="records">The records</param>
         void Set(IEnumerable<TMajor> records);
+
+        /// <summary>
+        /// Adds or updates the major records given
+        /// </summary>
+        /// <exception cref="ArgumentException">
+        /// A record was the wrong type.  The contents of the group will be undefined.  Some records may have been added.
+        /// </exception>
+        /// <param name="records">The records</param>
+        void SetUntyped(IEnumerable<IMajorRecord> records);
 
         /// <summary>
         /// Removes the item matching the specified key.

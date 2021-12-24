@@ -99,13 +99,37 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
 
         /// <inheritdoc />
-        public void Add(TMajor item) => InternalCache.Add(item);
+        public void Add(TMajor record) => InternalCache.Add(record);
+
+        private TMajor ConfirmCorrectType(IMajorRecord record, string paramName)
+        {
+            if (record == null) throw new ArgumentNullException(paramName);
+            if (record is not TMajor cast)
+            {
+                throw new ArgumentException(
+                    $"A record was added of the wrong type.  Expected {typeof(TMajor)}, but was given {record.GetType()}",
+                    paramName);
+            }
+
+            return cast;
+        }
+
+        public void AddUntyped(IMajorRecord record)
+        {
+            Add(ConfirmCorrectType(record, nameof(record)));
+        }
 
         /// <inheritdoc />
-        public void Set(TMajor item) => InternalCache.Set(item);
+        public void Set(TMajor record) => InternalCache.Set(record);
 
         /// <inheritdoc />
-        public void Set(IEnumerable<TMajor> items) => InternalCache.Set(items);
+        public void SetUntyped(IMajorRecord record) => Set(ConfirmCorrectType(record, nameof(record)));
+
+        /// <inheritdoc />
+        public void Set(IEnumerable<TMajor> records) => InternalCache.Set(records);
+
+        /// <inheritdoc />
+        public void SetUntyped(IEnumerable<IMajorRecord> records) => SetUntyped(records.Select(r => ConfirmCorrectType(r, nameof(records))));
 
         /// <inheritdoc />
         public bool Remove(FormKey key) => InternalCache.Remove(key);
