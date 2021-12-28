@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="NullReferenceException">If link was not successful</exception>
         /// <typeparam name="TMajor">Original links Major Record type</typeparam>
         /// <typeparam name="TScoped">Inheriting Major Record type to scope to</typeparam>
-        public static IModContext<TScoped>? ResolveContext<TMajor, TScoped>(
+        public static IModContext<TScoped>? ResolveSimpleContext<TMajor, TScoped>(
             this IFormLinkGetter<TMajor> link,
             ILinkCache cache)
             where TMajor : class, IMajorRecordGetter
