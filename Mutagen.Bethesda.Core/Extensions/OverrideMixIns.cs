@@ -467,8 +467,7 @@ namespace Mutagen.Bethesda
         /// <param name="group">Group to retrieve and/or insert from</param>
         /// <param name="link">Link to query and add</param>
         /// <param name="cache">Cache to query link against</param>
-        /// <param name="rec">Retrieved record if successful</param>
-        /// <returns>True if a record was retrieved</returns>
+        /// <returns>Retrieved record if successful</returns>
         public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroup<TMajor> group, IFormLinkGetter<TMajorGetter> link, ILinkCache cache)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter
