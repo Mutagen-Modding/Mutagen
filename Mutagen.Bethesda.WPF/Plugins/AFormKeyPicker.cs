@@ -641,7 +641,6 @@ namespace Mutagen.Bethesda.WPF.Plugins
                             foreach (var item in x.LinkCache.AllIdentifiers(scopedTypes, cancel))
                             {
                                 if (cancel.IsCancellationRequested) return;
-                                var edid = item.EditorID;
                                 obs.OnNext(item);
                             }
                         }
