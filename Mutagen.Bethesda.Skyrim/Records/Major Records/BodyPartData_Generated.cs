@@ -1461,7 +1461,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPartData_Registration.Instance;
-        public new static BodyPartData_Registration Registration => BodyPartData_Registration.Instance;
+        public new static BodyPartData_Registration StaticRegistration => BodyPartData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BodyPartDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1655,7 +1655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPartData_Registration.Instance;
-        public new static BodyPartData_Registration Registration => BodyPartData_Registration.Instance;
+        public new static BodyPartData_Registration StaticRegistration => BodyPartData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BodyPartDataCommon.Instance;
         [DebuggerStepThrough]

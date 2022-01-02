@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddRangeToValue_Registration.Instance;
-        public new static PerkEntryPointAddRangeToValue_Registration Registration => PerkEntryPointAddRangeToValue_Registration.Instance;
+        public new static PerkEntryPointAddRangeToValue_Registration StaticRegistration => PerkEntryPointAddRangeToValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddRangeToValueCommon.Instance;
         [DebuggerStepThrough]
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddRangeToValue_Registration.Instance;
-        public new static PerkEntryPointAddRangeToValue_Registration Registration => PerkEntryPointAddRangeToValue_Registration.Instance;
+        public new static PerkEntryPointAddRangeToValue_Registration StaticRegistration => PerkEntryPointAddRangeToValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddRangeToValueCommon.Instance;
         [DebuggerStepThrough]

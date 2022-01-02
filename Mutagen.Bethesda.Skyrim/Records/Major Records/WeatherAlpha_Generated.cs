@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAlpha_Registration.Instance;
-        public static WeatherAlpha_Registration Registration => WeatherAlpha_Registration.Instance;
+        public static WeatherAlpha_Registration StaticRegistration => WeatherAlpha_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAlphaCommon.Instance;
         [DebuggerStepThrough]
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAlpha_Registration.Instance;
-        public static WeatherAlpha_Registration Registration => WeatherAlpha_Registration.Instance;
+        public static WeatherAlpha_Registration StaticRegistration => WeatherAlpha_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAlphaCommon.Instance;
         [DebuggerStepThrough]

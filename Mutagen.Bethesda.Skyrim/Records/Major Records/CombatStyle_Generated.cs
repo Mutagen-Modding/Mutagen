@@ -2267,7 +2267,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
-        public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
+        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]
@@ -2569,7 +2569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
-        public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
+        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]

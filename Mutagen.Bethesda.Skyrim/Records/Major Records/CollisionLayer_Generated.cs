@@ -1604,7 +1604,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CollisionLayer_Registration.Instance;
-        public new static CollisionLayer_Registration Registration => CollisionLayer_Registration.Instance;
+        public new static CollisionLayer_Registration StaticRegistration => CollisionLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CollisionLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1851,7 +1851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CollisionLayer_Registration.Instance;
-        public new static CollisionLayer_Registration Registration => CollisionLayer_Registration.Instance;
+        public new static CollisionLayer_Registration StaticRegistration => CollisionLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CollisionLayerCommon.Instance;
         [DebuggerStepThrough]

@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherColors_Registration.Instance;
-        public static WeatherColors_Registration Registration => WeatherColors_Registration.Instance;
+        public static WeatherColors_Registration StaticRegistration => WeatherColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherColorsCommon.Instance;
         [DebuggerStepThrough]
@@ -1180,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherColors_Registration.Instance;
-        public static WeatherColors_Registration Registration => WeatherColors_Registration.Instance;
+        public static WeatherColors_Registration StaticRegistration => WeatherColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherColorsCommon.Instance;
         [DebuggerStepThrough]

@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimationChangeThresholds_Registration.Instance;
-        public static AnimationChangeThresholds_Registration Registration => AnimationChangeThresholds_Registration.Instance;
+        public static AnimationChangeThresholds_Registration StaticRegistration => AnimationChangeThresholds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AnimationChangeThresholdsCommon.Instance;
         [DebuggerStepThrough]
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimationChangeThresholds_Registration.Instance;
-        public static AnimationChangeThresholds_Registration Registration => AnimationChangeThresholds_Registration.Instance;
+        public static AnimationChangeThresholds_Registration StaticRegistration => AnimationChangeThresholds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AnimationChangeThresholdsCommon.Instance;
         [DebuggerStepThrough]

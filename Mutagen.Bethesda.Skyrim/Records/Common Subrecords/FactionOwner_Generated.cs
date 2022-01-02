@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FactionOwner_Registration.Instance;
-        public new static FactionOwner_Registration Registration => FactionOwner_Registration.Instance;
+        public new static FactionOwner_Registration StaticRegistration => FactionOwner_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionOwnerCommon.Instance;
         [DebuggerStepThrough]
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FactionOwner_Registration.Instance;
-        public new static FactionOwner_Registration Registration => FactionOwner_Registration.Instance;
+        public new static FactionOwner_Registration StaticRegistration => FactionOwner_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionOwnerCommon.Instance;
         [DebuggerStepThrough]

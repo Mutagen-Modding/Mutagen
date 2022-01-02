@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
-        public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
+        public static MapMarker_Registration StaticRegistration => MapMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
-        public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
+        public static MapMarker_Registration StaticRegistration => MapMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapMarkerCommon.Instance;
         [DebuggerStepThrough]

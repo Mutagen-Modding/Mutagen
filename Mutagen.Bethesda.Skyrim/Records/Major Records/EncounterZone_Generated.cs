@@ -1566,7 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EncounterZone_Registration.Instance;
-        public new static EncounterZone_Registration Registration => EncounterZone_Registration.Instance;
+        public new static EncounterZone_Registration StaticRegistration => EncounterZone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EncounterZoneCommon.Instance;
         [DebuggerStepThrough]
@@ -1772,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EncounterZone_Registration.Instance;
-        public new static EncounterZone_Registration Registration => EncounterZone_Registration.Instance;
+        public new static EncounterZone_Registration StaticRegistration => EncounterZone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EncounterZoneCommon.Instance;
         [DebuggerStepThrough]

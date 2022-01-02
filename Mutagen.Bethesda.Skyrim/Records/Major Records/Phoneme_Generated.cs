@@ -3035,7 +3035,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Phoneme_Registration.Instance;
-        public static Phoneme_Registration Registration => Phoneme_Registration.Instance;
+        public static Phoneme_Registration StaticRegistration => Phoneme_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PhonemeCommon.Instance;
         [DebuggerStepThrough]
@@ -3137,7 +3137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Phoneme_Registration.Instance;
-        public static Phoneme_Registration Registration => Phoneme_Registration.Instance;
+        public static Phoneme_Registration StaticRegistration => Phoneme_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PhonemeCommon.Instance;
         [DebuggerStepThrough]

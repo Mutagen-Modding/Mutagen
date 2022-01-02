@@ -2132,7 +2132,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Impact_Registration.Instance;
-        public new static Impact_Registration Registration => Impact_Registration.Instance;
+        public new static Impact_Registration StaticRegistration => Impact_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactCommon.Instance;
         [DebuggerStepThrough]
@@ -2427,7 +2427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Impact_Registration.Instance;
-        public new static Impact_Registration Registration => Impact_Registration.Instance;
+        public new static Impact_Registration StaticRegistration => Impact_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactCommon.Instance;
         [DebuggerStepThrough]

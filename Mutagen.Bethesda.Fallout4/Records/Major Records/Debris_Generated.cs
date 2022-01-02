@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
-        public new static Debris_Registration Registration => Debris_Registration.Instance;
+        public new static Debris_Registration StaticRegistration => Debris_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
-        public new static Debris_Registration Registration => Debris_Registration.Instance;
+        public new static Debris_Registration StaticRegistration => Debris_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]

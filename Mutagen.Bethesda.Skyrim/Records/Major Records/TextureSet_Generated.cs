@@ -1858,7 +1858,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration Registration => TextureSet_Registration.Instance;
+        public new static TextureSet_Registration StaticRegistration => TextureSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TextureSetCommon.Instance;
         [DebuggerStepThrough]
@@ -2156,7 +2156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration Registration => TextureSet_Registration.Instance;
+        public new static TextureSet_Registration StaticRegistration => TextureSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TextureSetCommon.Instance;
         [DebuggerStepThrough]

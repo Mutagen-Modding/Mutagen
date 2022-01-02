@@ -1618,7 +1618,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
-        public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
+        public static DialogResponse_Registration StaticRegistration => DialogResponse_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseCommon.Instance;
         [DebuggerStepThrough]
@@ -1851,7 +1851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
-        public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
+        public static DialogResponse_Registration StaticRegistration => DialogResponse_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseCommon.Instance;
         [DebuggerStepThrough]

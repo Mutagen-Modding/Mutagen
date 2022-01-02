@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration Registration => FormList_Registration.Instance;
+        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration Registration => FormList_Registration.Instance;
+        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]

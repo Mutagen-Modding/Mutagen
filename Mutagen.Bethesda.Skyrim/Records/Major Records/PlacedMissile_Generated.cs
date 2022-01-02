@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedMissile_Registration.Instance;
-        public new static PlacedMissile_Registration Registration => PlacedMissile_Registration.Instance;
+        public new static PlacedMissile_Registration StaticRegistration => PlacedMissile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedMissileCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,7 +1543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedMissile_Registration.Instance;
-        public new static PlacedMissile_Registration Registration => PlacedMissile_Registration.Instance;
+        public new static PlacedMissile_Registration StaticRegistration => PlacedMissile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedMissileCommon.Instance;
         [DebuggerStepThrough]

@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ALocationTarget_Registration.Instance;
-        public static ALocationTarget_Registration Registration => ALocationTarget_Registration.Instance;
+        public static ALocationTarget_Registration StaticRegistration => ALocationTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ALocationTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ALocationTarget_Registration.Instance;
-        public static ALocationTarget_Registration Registration => ALocationTarget_Registration.Instance;
+        public static ALocationTarget_Registration StaticRegistration => ALocationTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ALocationTargetCommon.Instance;
         [DebuggerStepThrough]

@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyTemplate_Registration.Instance;
-        public static BodyTemplate_Registration Registration => BodyTemplate_Registration.Instance;
+        public static BodyTemplate_Registration StaticRegistration => BodyTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BodyTemplateCommon.Instance;
         [DebuggerStepThrough]
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyTemplate_Registration.Instance;
-        public static BodyTemplate_Registration Registration => BodyTemplate_Registration.Instance;
+        public static BodyTemplate_Registration StaticRegistration => BodyTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BodyTemplateCommon.Instance;
         [DebuggerStepThrough]

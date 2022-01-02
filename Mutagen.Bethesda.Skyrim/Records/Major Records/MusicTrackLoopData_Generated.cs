@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrackLoopData_Registration.Instance;
-        public static MusicTrackLoopData_Registration Registration => MusicTrackLoopData_Registration.Instance;
+        public static MusicTrackLoopData_Registration StaticRegistration => MusicTrackLoopData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MusicTrackLoopDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrackLoopData_Registration.Instance;
-        public static MusicTrackLoopData_Registration Registration => MusicTrackLoopData_Registration.Instance;
+        public static MusicTrackLoopData_Registration StaticRegistration => MusicTrackLoopData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MusicTrackLoopDataCommon.Instance;
         [DebuggerStepThrough]

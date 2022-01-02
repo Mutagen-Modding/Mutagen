@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
-        public static AIPackageSchedule_Registration Registration => AIPackageSchedule_Registration.Instance;
+        public static AIPackageSchedule_Registration StaticRegistration => AIPackageSchedule_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageScheduleCommon.Instance;
         [DebuggerStepThrough]
@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
-        public static AIPackageSchedule_Registration Registration => AIPackageSchedule_Registration.Instance;
+        public static AIPackageSchedule_Registration StaticRegistration => AIPackageSchedule_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageScheduleCommon.Instance;
         [DebuggerStepThrough]

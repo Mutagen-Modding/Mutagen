@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
-        public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
+        public static TeleportDestination_Registration StaticRegistration => TeleportDestination_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TeleportDestinationCommon.Instance;
         [DebuggerStepThrough]
@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
-        public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
+        public static TeleportDestination_Registration StaticRegistration => TeleportDestination_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TeleportDestinationCommon.Instance;
         [DebuggerStepThrough]

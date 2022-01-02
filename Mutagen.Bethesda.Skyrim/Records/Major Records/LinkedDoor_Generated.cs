@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedDoor_Registration.Instance;
-        public static LinkedDoor_Registration Registration => LinkedDoor_Registration.Instance;
+        public static LinkedDoor_Registration StaticRegistration => LinkedDoor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedDoorCommon.Instance;
         [DebuggerStepThrough]
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedDoor_Registration.Instance;
-        public static LinkedDoor_Registration Registration => LinkedDoor_Registration.Instance;
+        public static LinkedDoor_Registration StaticRegistration => LinkedDoor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedDoorCommon.Instance;
         [DebuggerStepThrough]

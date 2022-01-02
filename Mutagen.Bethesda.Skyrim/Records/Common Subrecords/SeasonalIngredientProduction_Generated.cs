@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SeasonalIngredientProduction_Registration.Instance;
-        public static SeasonalIngredientProduction_Registration Registration => SeasonalIngredientProduction_Registration.Instance;
+        public static SeasonalIngredientProduction_Registration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SeasonalIngredientProductionCommon.Instance;
         [DebuggerStepThrough]
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SeasonalIngredientProduction_Registration.Instance;
-        public static SeasonalIngredientProduction_Registration Registration => SeasonalIngredientProduction_Registration.Instance;
+        public static SeasonalIngredientProduction_Registration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SeasonalIngredientProductionCommon.Instance;
         [DebuggerStepThrough]

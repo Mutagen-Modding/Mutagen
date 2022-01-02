@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnchantmentData_Registration.Instance;
-        public static EnchantmentData_Registration Registration => EnchantmentData_Registration.Instance;
+        public static EnchantmentData_Registration StaticRegistration => EnchantmentData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EnchantmentDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnchantmentData_Registration.Instance;
-        public static EnchantmentData_Registration Registration => EnchantmentData_Registration.Instance;
+        public static EnchantmentData_Registration StaticRegistration => EnchantmentData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EnchantmentDataCommon.Instance;
         [DebuggerStepThrough]

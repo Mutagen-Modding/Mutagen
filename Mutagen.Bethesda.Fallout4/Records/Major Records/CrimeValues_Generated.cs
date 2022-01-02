@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CrimeValues_Registration.Instance;
-        public static CrimeValues_Registration Registration => CrimeValues_Registration.Instance;
+        public static CrimeValues_Registration StaticRegistration => CrimeValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CrimeValuesCommon.Instance;
         [DebuggerStepThrough]
@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CrimeValues_Registration.Instance;
-        public static CrimeValues_Registration Registration => CrimeValues_Registration.Instance;
+        public static CrimeValues_Registration StaticRegistration => CrimeValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CrimeValuesCommon.Instance;
         [DebuggerStepThrough]

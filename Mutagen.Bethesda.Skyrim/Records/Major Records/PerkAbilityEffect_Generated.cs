@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkAbilityEffect_Registration.Instance;
-        public new static PerkAbilityEffect_Registration Registration => PerkAbilityEffect_Registration.Instance;
+        public new static PerkAbilityEffect_Registration StaticRegistration => PerkAbilityEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkAbilityEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkAbilityEffect_Registration.Instance;
-        public new static PerkAbilityEffect_Registration Registration => PerkAbilityEffect_Registration.Instance;
+        public new static PerkAbilityEffect_Registration StaticRegistration => PerkAbilityEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkAbilityEffectCommon.Instance;
         [DebuggerStepThrough]

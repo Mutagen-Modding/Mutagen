@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ownership_Registration.Instance;
-        public static Ownership_Registration Registration => Ownership_Registration.Instance;
+        public static Ownership_Registration StaticRegistration => Ownership_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => OwnershipCommon.Instance;
         [DebuggerStepThrough]
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ownership_Registration.Instance;
-        public static Ownership_Registration Registration => Ownership_Registration.Instance;
+        public static Ownership_Registration StaticRegistration => Ownership_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => OwnershipCommon.Instance;
         [DebuggerStepThrough]

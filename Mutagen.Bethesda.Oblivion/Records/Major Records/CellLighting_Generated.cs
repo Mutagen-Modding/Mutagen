@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
-        public static CellLighting_Registration Registration => CellLighting_Registration.Instance;
+        public static CellLighting_Registration StaticRegistration => CellLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -1457,7 +1457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
-        public static CellLighting_Registration Registration => CellLighting_Registration.Instance;
+        public static CellLighting_Registration StaticRegistration => CellLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellLightingCommon.Instance;
         [DebuggerStepThrough]

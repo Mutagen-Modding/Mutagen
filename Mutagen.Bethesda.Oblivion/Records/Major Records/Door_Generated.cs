@@ -1803,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
-        public new static Door_Registration Registration => Door_Registration.Instance;
+        public new static Door_Registration StaticRegistration => Door_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]
@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
-        public new static Door_Registration Registration => Door_Registration.Instance;
+        public new static Door_Registration StaticRegistration => Door_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]

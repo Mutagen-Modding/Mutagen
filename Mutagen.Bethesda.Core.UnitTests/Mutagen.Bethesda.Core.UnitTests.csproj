@@ -14,8 +14,8 @@
         <PackageReference Include="FluentAssertions" Version="6.2.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
         <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
-        <PackageReference Include="Noggog.CSharpExt" Version="2.36.0" />
-        <PackageReference Include="Noggog.Testing" Version="2.36.0" />
+        <PackageReference Include="Noggog.CSharpExt" Version="2.37.0" />
+        <PackageReference Include="Noggog.Testing" Version="2.37.0" />
         <PackageReference Include="GitInfo" Version="2.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

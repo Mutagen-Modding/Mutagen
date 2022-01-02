@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => KeyFrame_Registration.Instance;
-        public static KeyFrame_Registration Registration => KeyFrame_Registration.Instance;
+        public static KeyFrame_Registration StaticRegistration => KeyFrame_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => KeyFrameCommon.Instance;
         [DebuggerStepThrough]
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => KeyFrame_Registration.Instance;
-        public static KeyFrame_Registration Registration => KeyFrame_Registration.Instance;
+        public static KeyFrame_Registration StaticRegistration => KeyFrame_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => KeyFrameCommon.Instance;
         [DebuggerStepThrough]

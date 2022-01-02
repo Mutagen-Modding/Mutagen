@@ -1660,7 +1660,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DualCastData_Registration.Instance;
-        public new static DualCastData_Registration Registration => DualCastData_Registration.Instance;
+        public new static DualCastData_Registration StaticRegistration => DualCastData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DualCastDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DualCastData_Registration.Instance;
-        public new static DualCastData_Registration Registration => DualCastData_Registration.Instance;
+        public new static DualCastData_Registration StaticRegistration => DualCastData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DualCastDataCommon.Instance;
         [DebuggerStepThrough]

@@ -1414,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Decal_Registration.Instance;
-        public static Decal_Registration Registration => Decal_Registration.Instance;
+        public static Decal_Registration StaticRegistration => Decal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DecalCommon.Instance;
         [DebuggerStepThrough]
@@ -1566,7 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Decal_Registration.Instance;
-        public static Decal_Registration Registration => Decal_Registration.Instance;
+        public static Decal_Registration StaticRegistration => Decal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DecalCommon.Instance;
         [DebuggerStepThrough]

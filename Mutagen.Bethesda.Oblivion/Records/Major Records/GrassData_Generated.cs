@@ -1462,7 +1462,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GrassData_Registration.Instance;
-        public static GrassData_Registration Registration => GrassData_Registration.Instance;
+        public static GrassData_Registration StaticRegistration => GrassData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => GrassDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1613,7 +1613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GrassData_Registration.Instance;
-        public static GrassData_Registration Registration => GrassData_Registration.Instance;
+        public static GrassData_Registration StaticRegistration => GrassData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => GrassDataCommon.Instance;
         [DebuggerStepThrough]

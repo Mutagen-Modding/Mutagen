@@ -1615,7 +1615,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpace_Registration.Instance;
-        public new static ImageSpace_Registration Registration => ImageSpace_Registration.Instance;
+        public new static ImageSpace_Registration StaticRegistration => ImageSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceCommon.Instance;
         [DebuggerStepThrough]
@@ -1832,7 +1832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpace_Registration.Instance;
-        public new static ImageSpace_Registration Registration => ImageSpace_Registration.Instance;
+        public new static ImageSpace_Registration StaticRegistration => ImageSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceCommon.Instance;
         [DebuggerStepThrough]

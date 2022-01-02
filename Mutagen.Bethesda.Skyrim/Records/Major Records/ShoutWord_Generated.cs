@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ShoutWord_Registration.Instance;
-        public static ShoutWord_Registration Registration => ShoutWord_Registration.Instance;
+        public static ShoutWord_Registration StaticRegistration => ShoutWord_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ShoutWordCommon.Instance;
         [DebuggerStepThrough]
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ShoutWord_Registration.Instance;
-        public static ShoutWord_Registration Registration => ShoutWord_Registration.Instance;
+        public static ShoutWord_Registration StaticRegistration => ShoutWord_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ShoutWordCommon.Instance;
         [DebuggerStepThrough]

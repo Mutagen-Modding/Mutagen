@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceParts_Registration.Instance;
-        public static NpcFaceParts_Registration Registration => NpcFaceParts_Registration.Instance;
+        public static NpcFaceParts_Registration StaticRegistration => NpcFaceParts_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFacePartsCommon.Instance;
         [DebuggerStepThrough]
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceParts_Registration.Instance;
-        public static NpcFaceParts_Registration Registration => NpcFaceParts_Registration.Instance;
+        public static NpcFaceParts_Registration StaticRegistration => NpcFaceParts_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFacePartsCommon.Instance;
         [DebuggerStepThrough]

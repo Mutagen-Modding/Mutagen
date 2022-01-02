@@ -1750,7 +1750,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellBlock_Registration.Instance;
-        public static CellBlock_Registration Registration => CellBlock_Registration.Instance;
+        public static CellBlock_Registration StaticRegistration => CellBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellBlock_Registration.Instance;
-        public static CellBlock_Registration Registration => CellBlock_Registration.Instance;
+        public static CellBlock_Registration StaticRegistration => CellBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellBlockCommon.Instance;
         [DebuggerStepThrough]

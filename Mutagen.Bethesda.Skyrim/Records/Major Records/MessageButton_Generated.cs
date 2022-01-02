@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MessageButton_Registration.Instance;
-        public static MessageButton_Registration Registration => MessageButton_Registration.Instance;
+        public static MessageButton_Registration StaticRegistration => MessageButton_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MessageButtonCommon.Instance;
         [DebuggerStepThrough]
@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MessageButton_Registration.Instance;
-        public static MessageButton_Registration Registration => MessageButton_Registration.Instance;
+        public static MessageButton_Registration StaticRegistration => MessageButton_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MessageButtonCommon.Instance;
         [DebuggerStepThrough]

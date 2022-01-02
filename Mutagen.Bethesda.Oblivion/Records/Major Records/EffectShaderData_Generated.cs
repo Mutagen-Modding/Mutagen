@@ -3674,7 +3674,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShaderData_Registration.Instance;
-        public static EffectShaderData_Registration Registration => EffectShaderData_Registration.Instance;
+        public static EffectShaderData_Registration StaticRegistration => EffectShaderData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectShaderDataCommon.Instance;
         [DebuggerStepThrough]
@@ -4042,7 +4042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShaderData_Registration.Instance;
-        public static EffectShaderData_Registration Registration => EffectShaderData_Registration.Instance;
+        public static EffectShaderData_Registration StaticRegistration => EffectShaderData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectShaderDataCommon.Instance;
         [DebuggerStepThrough]

@@ -1216,7 +1216,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
-        public static QuestTarget_Registration Registration => QuestTarget_Registration.Instance;
+        public static QuestTarget_Registration StaticRegistration => QuestTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -1388,7 +1388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
-        public static QuestTarget_Registration Registration => QuestTarget_Registration.Instance;
+        public static QuestTarget_Registration StaticRegistration => QuestTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestTargetCommon.Instance;
         [DebuggerStepThrough]

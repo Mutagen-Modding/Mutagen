@@ -2210,7 +2210,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterData_Registration.Instance;
-        public static WaterData_Registration Registration => WaterData_Registration.Instance;
+        public static WaterData_Registration StaticRegistration => WaterData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterDataCommon.Instance;
         [DebuggerStepThrough]

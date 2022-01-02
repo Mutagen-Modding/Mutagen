@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherData_Registration.Instance;
-        public static WeatherData_Registration Registration => WeatherData_Registration.Instance;
+        public static WeatherData_Registration StaticRegistration => WeatherData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1655,7 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherData_Registration.Instance;
-        public static WeatherData_Registration Registration => WeatherData_Registration.Instance;
+        public static WeatherData_Registration StaticRegistration => WeatherData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherDataCommon.Instance;
         [DebuggerStepThrough]

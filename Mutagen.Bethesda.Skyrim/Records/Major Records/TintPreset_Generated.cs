@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintPreset_Registration.Instance;
-        public static TintPreset_Registration Registration => TintPreset_Registration.Instance;
+        public static TintPreset_Registration StaticRegistration => TintPreset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintPresetCommon.Instance;
         [DebuggerStepThrough]
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintPreset_Registration.Instance;
-        public static TintPreset_Registration Registration => TintPreset_Registration.Instance;
+        public static TintPreset_Registration StaticRegistration => TintPreset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintPresetCommon.Instance;
         [DebuggerStepThrough]

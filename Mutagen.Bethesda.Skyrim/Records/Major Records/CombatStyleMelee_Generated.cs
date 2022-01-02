@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleMelee_Registration.Instance;
-        public static CombatStyleMelee_Registration Registration => CombatStyleMelee_Registration.Instance;
+        public static CombatStyleMelee_Registration StaticRegistration => CombatStyleMelee_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleMeleeCommon.Instance;
         [DebuggerStepThrough]
@@ -1470,7 +1470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleMelee_Registration.Instance;
-        public static CombatStyleMelee_Registration Registration => CombatStyleMelee_Registration.Instance;
+        public static CombatStyleMelee_Registration StaticRegistration => CombatStyleMelee_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleMeleeCommon.Instance;
         [DebuggerStepThrough]

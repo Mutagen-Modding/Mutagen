@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundItem_Registration.Instance;
-        public static SoundItem_Registration Registration => SoundItem_Registration.Instance;
+        public static SoundItem_Registration StaticRegistration => SoundItem_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundItem_Registration.Instance;
-        public static SoundItem_Registration Registration => SoundItem_Registration.Instance;
+        public static SoundItem_Registration StaticRegistration => SoundItem_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundItemCommon.Instance;
         [DebuggerStepThrough]

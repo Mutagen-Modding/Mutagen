@@ -1415,7 +1415,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DamageTypeIndexed_Registration.Instance;
-        public new static DamageTypeIndexed_Registration Registration => DamageTypeIndexed_Registration.Instance;
+        public new static DamageTypeIndexed_Registration StaticRegistration => DamageTypeIndexed_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DamageTypeIndexedCommon.Instance;
         [DebuggerStepThrough]
@@ -1600,7 +1600,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DamageTypeIndexed_Registration.Instance;
-        public new static DamageTypeIndexed_Registration Registration => DamageTypeIndexed_Registration.Instance;
+        public new static DamageTypeIndexed_Registration StaticRegistration => DamageTypeIndexed_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DamageTypeIndexedCommon.Instance;
         [DebuggerStepThrough]

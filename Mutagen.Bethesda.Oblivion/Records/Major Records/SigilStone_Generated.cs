@@ -1727,7 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStone_Registration.Instance;
-        public new static SigilStone_Registration Registration => SigilStone_Registration.Instance;
+        public new static SigilStone_Registration StaticRegistration => SigilStone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SigilStoneCommon.Instance;
         [DebuggerStepThrough]
@@ -1970,7 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStone_Registration.Instance;
-        public new static SigilStone_Registration Registration => SigilStone_Registration.Instance;
+        public new static SigilStone_Registration StaticRegistration => SigilStone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SigilStoneCommon.Instance;
         [DebuggerStepThrough]

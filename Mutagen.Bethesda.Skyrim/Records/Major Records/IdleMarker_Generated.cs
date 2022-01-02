@@ -1698,7 +1698,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleMarker_Registration.Instance;
-        public new static IdleMarker_Registration Registration => IdleMarker_Registration.Instance;
+        public new static IdleMarker_Registration StaticRegistration => IdleMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1957,7 +1957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleMarker_Registration.Instance;
-        public new static IdleMarker_Registration Registration => IdleMarker_Registration.Instance;
+        public new static IdleMarker_Registration StaticRegistration => IdleMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleMarkerCommon.Instance;
         [DebuggerStepThrough]

@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PreferredPathing_Registration.Instance;
-        public static PreferredPathing_Registration Registration => PreferredPathing_Registration.Instance;
+        public static PreferredPathing_Registration StaticRegistration => PreferredPathing_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PreferredPathingCommon.Instance;
         [DebuggerStepThrough]
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PreferredPathing_Registration.Instance;
-        public static PreferredPathing_Registration Registration => PreferredPathing_Registration.Instance;
+        public static PreferredPathing_Registration StaticRegistration => PreferredPathing_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PreferredPathingCommon.Instance;
         [DebuggerStepThrough]

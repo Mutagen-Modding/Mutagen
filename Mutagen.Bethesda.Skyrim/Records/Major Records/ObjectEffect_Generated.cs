@@ -2063,7 +2063,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectEffect_Registration.Instance;
-        public new static ObjectEffect_Registration Registration => ObjectEffect_Registration.Instance;
+        public new static ObjectEffect_Registration StaticRegistration => ObjectEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ObjectEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -2340,7 +2340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectEffect_Registration.Instance;
-        public new static ObjectEffect_Registration Registration => ObjectEffect_Registration.Instance;
+        public new static ObjectEffect_Registration StaticRegistration => ObjectEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ObjectEffectCommon.Instance;
         [DebuggerStepThrough]

@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
-        public static MapData_Registration Registration => MapData_Registration.Instance;
+        public static MapData_Registration StaticRegistration => MapData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
-        public static MapData_Registration Registration => MapData_Registration.Instance;
+        public static MapData_Registration StaticRegistration => MapData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapDataCommon.Instance;
         [DebuggerStepThrough]

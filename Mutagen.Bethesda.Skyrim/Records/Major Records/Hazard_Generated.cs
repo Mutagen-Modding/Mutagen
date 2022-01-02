@@ -2136,7 +2136,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hazard_Registration.Instance;
-        public new static Hazard_Registration Registration => Hazard_Registration.Instance;
+        public new static Hazard_Registration StaticRegistration => Hazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HazardCommon.Instance;
         [DebuggerStepThrough]
@@ -2403,7 +2403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hazard_Registration.Instance;
-        public new static Hazard_Registration Registration => Hazard_Registration.Instance;
+        public new static Hazard_Registration StaticRegistration => Hazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HazardCommon.Instance;
         [DebuggerStepThrough]

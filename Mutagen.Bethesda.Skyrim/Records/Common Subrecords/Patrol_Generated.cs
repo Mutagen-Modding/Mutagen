@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Patrol_Registration.Instance;
-        public static Patrol_Registration Registration => Patrol_Registration.Instance;
+        public static Patrol_Registration StaticRegistration => Patrol_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PatrolCommon.Instance;
         [DebuggerStepThrough]
@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Patrol_Registration.Instance;
-        public static Patrol_Registration Registration => Patrol_Registration.Instance;
+        public static Patrol_Registration StaticRegistration => Patrol_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PatrolCommon.Instance;
         [DebuggerStepThrough]

@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorData_Registration.Instance;
-        public static ArmorData_Registration Registration => ArmorData_Registration.Instance;
+        public static ArmorData_Registration StaticRegistration => ArmorData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorData_Registration.Instance;
-        public static ArmorData_Registration Registration => ArmorData_Registration.Instance;
+        public static ArmorData_Registration StaticRegistration => ArmorData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorDataCommon.Instance;
         [DebuggerStepThrough]

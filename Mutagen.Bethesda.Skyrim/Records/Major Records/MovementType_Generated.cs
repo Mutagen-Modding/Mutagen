@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MovementType_Registration.Instance;
-        public new static MovementType_Registration Registration => MovementType_Registration.Instance;
+        public new static MovementType_Registration StaticRegistration => MovementType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MovementTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -2200,7 +2200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MovementType_Registration.Instance;
-        public new static MovementType_Registration Registration => MovementType_Registration.Instance;
+        public new static MovementType_Registration StaticRegistration => MovementType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MovementTypeCommon.Instance;
         [DebuggerStepThrough]

@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
-        public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
+        public static LoadScreenLocation_Registration StaticRegistration => LoadScreenLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LoadScreenLocationCommon.Instance;
         [DebuggerStepThrough]
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
-        public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
+        public static LoadScreenLocation_Registration StaticRegistration => LoadScreenLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LoadScreenLocationCommon.Instance;
         [DebuggerStepThrough]

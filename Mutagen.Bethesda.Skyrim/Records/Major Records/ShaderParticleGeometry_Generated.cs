@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ShaderParticleGeometry_Registration.Instance;
-        public new static ShaderParticleGeometry_Registration Registration => ShaderParticleGeometry_Registration.Instance;
+        public new static ShaderParticleGeometry_Registration StaticRegistration => ShaderParticleGeometry_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ShaderParticleGeometryCommon.Instance;
         [DebuggerStepThrough]
@@ -2115,7 +2115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ShaderParticleGeometry_Registration.Instance;
-        public new static ShaderParticleGeometry_Registration Registration => ShaderParticleGeometry_Registration.Instance;
+        public new static ShaderParticleGeometry_Registration StaticRegistration => ShaderParticleGeometry_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ShaderParticleGeometryCommon.Instance;
         [DebuggerStepThrough]

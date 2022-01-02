@@ -1413,7 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpeedOverrides_Registration.Instance;
-        public static SpeedOverrides_Registration Registration => SpeedOverrides_Registration.Instance;
+        public static SpeedOverrides_Registration StaticRegistration => SpeedOverrides_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SpeedOverridesCommon.Instance;
         [DebuggerStepThrough]
@@ -1566,7 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpeedOverrides_Registration.Instance;
-        public static SpeedOverrides_Registration Registration => SpeedOverrides_Registration.Instance;
+        public static SpeedOverrides_Registration StaticRegistration => SpeedOverrides_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SpeedOverridesCommon.Instance;
         [DebuggerStepThrough]

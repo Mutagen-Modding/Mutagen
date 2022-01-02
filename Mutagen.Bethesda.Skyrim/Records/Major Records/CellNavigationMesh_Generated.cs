@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellNavigationMesh_Registration.Instance;
-        public new static CellNavigationMesh_Registration Registration => CellNavigationMesh_Registration.Instance;
+        public new static CellNavigationMesh_Registration StaticRegistration => CellNavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellNavigationMeshCommon.Instance;
         [DebuggerStepThrough]
@@ -1518,7 +1518,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellNavigationMesh_Registration.Instance;
-        public new static CellNavigationMesh_Registration Registration => CellNavigationMesh_Registration.Instance;
+        public new static CellNavigationMesh_Registration StaticRegistration => CellNavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellNavigationMeshCommon.Instance;
         [DebuggerStepThrough]

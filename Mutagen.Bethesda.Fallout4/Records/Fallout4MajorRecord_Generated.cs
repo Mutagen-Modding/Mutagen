@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4MajorRecord_Registration.Instance;
-        public new static Fallout4MajorRecord_Registration Registration => Fallout4MajorRecord_Registration.Instance;
+        public new static Fallout4MajorRecord_Registration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => Fallout4MajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4MajorRecord_Registration.Instance;
-        public new static Fallout4MajorRecord_Registration Registration => Fallout4MajorRecord_Registration.Instance;
+        public new static Fallout4MajorRecord_Registration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => Fallout4MajorRecordCommon.Instance;
         [DebuggerStepThrough]

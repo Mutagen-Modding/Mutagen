@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
-        public static Location_Registration Registration => Location_Registration.Instance;
+        public static Location_Registration StaticRegistration => Location_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
-        public static Location_Registration Registration => Location_Registration.Instance;
+        public static Location_Registration StaticRegistration => Location_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]

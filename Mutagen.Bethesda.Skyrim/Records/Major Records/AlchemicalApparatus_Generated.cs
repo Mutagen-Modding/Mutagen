@@ -2227,7 +2227,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
-        public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
+        public new static AlchemicalApparatus_Registration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlchemicalApparatusCommon.Instance;
         [DebuggerStepThrough]
@@ -2539,7 +2539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
-        public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
+        public new static AlchemicalApparatus_Registration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlchemicalApparatusCommon.Instance;
         [DebuggerStepThrough]

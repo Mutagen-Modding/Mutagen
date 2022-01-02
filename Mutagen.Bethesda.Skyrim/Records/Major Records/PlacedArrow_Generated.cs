@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedArrow_Registration.Instance;
-        public new static PlacedArrow_Registration Registration => PlacedArrow_Registration.Instance;
+        public new static PlacedArrow_Registration StaticRegistration => PlacedArrow_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedArrowCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,7 +1543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedArrow_Registration.Instance;
-        public new static PlacedArrow_Registration Registration => PlacedArrow_Registration.Instance;
+        public new static PlacedArrow_Registration StaticRegistration => PlacedArrow_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedArrowCommon.Instance;
         [DebuggerStepThrough]

@@ -3058,7 +3058,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
-        public new static Armor_Registration Registration => Armor_Registration.Instance;
+        public new static Armor_Registration StaticRegistration => Armor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorCommon.Instance;
         [DebuggerStepThrough]
@@ -3526,7 +3526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
-        public new static Armor_Registration Registration => Armor_Registration.Instance;
+        public new static Armor_Registration StaticRegistration => Armor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorCommon.Instance;
         [DebuggerStepThrough]

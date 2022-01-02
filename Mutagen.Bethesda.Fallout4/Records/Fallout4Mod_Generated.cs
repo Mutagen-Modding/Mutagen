@@ -3772,7 +3772,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4Mod_Registration.Instance;
-        public static Fallout4Mod_Registration Registration => Fallout4Mod_Registration.Instance;
+        public static Fallout4Mod_Registration StaticRegistration => Fallout4Mod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModCommon.Instance;
         [DebuggerStepThrough]
@@ -4331,7 +4331,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4Mod_Registration.Instance;
-        public static Fallout4Mod_Registration Registration => Fallout4Mod_Registration.Instance;
+        public static Fallout4Mod_Registration StaticRegistration => Fallout4Mod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModCommon.Instance;
         [DebuggerStepThrough]

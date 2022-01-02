@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSounds_Registration.Instance;
-        public new static RegionSounds_Registration Registration => RegionSounds_Registration.Instance;
+        public new static RegionSounds_Registration StaticRegistration => RegionSounds_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionSoundsCommon.Instance;
         [DebuggerStepThrough]
@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSounds_Registration.Instance;
-        public new static RegionSounds_Registration Registration => RegionSounds_Registration.Instance;
+        public new static RegionSounds_Registration StaticRegistration => RegionSounds_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionSoundsCommon.Instance;
         [DebuggerStepThrough]

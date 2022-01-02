@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
-        public static RoadPoint_Registration Registration => RoadPoint_Registration.Instance;
+        public static RoadPoint_Registration StaticRegistration => RoadPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RoadPointCommon.Instance;
         [DebuggerStepThrough]
@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
-        public static RoadPoint_Registration Registration => RoadPoint_Registration.Instance;
+        public static RoadPoint_Registration StaticRegistration => RoadPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RoadPointCommon.Instance;
         [DebuggerStepThrough]

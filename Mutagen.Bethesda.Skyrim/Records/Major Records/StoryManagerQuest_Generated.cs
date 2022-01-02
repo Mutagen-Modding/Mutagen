@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerQuest_Registration.Instance;
-        public static StoryManagerQuest_Registration Registration => StoryManagerQuest_Registration.Instance;
+        public static StoryManagerQuest_Registration StaticRegistration => StoryManagerQuest_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => StoryManagerQuestCommon.Instance;
         [DebuggerStepThrough]
@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerQuest_Registration.Instance;
-        public static StoryManagerQuest_Registration Registration => StoryManagerQuest_Registration.Instance;
+        public static StoryManagerQuest_Registration StaticRegistration => StoryManagerQuest_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => StoryManagerQuestCommon.Instance;
         [DebuggerStepThrough]

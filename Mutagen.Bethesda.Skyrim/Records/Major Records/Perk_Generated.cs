@@ -2263,7 +2263,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Perk_Registration.Instance;
-        public new static Perk_Registration Registration => Perk_Registration.Instance;
+        public new static Perk_Registration StaticRegistration => Perk_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkCommon.Instance;
         [DebuggerStepThrough]
@@ -2564,7 +2564,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Perk_Registration.Instance;
-        public new static Perk_Registration Registration => Perk_Registration.Instance;
+        public new static Perk_Registration StaticRegistration => Perk_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkCommon.Instance;
         [DebuggerStepThrough]

@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimGroup_Registration.Instance;
-        public static SkyrimGroup_Registration Registration => SkyrimGroup_Registration.Instance;
+        public static SkyrimGroup_Registration StaticRegistration => SkyrimGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(SkyrimGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -1435,7 +1435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimGroup_Registration.Instance;
-        public static SkyrimGroup_Registration Registration => SkyrimGroup_Registration.Instance;
+        public static SkyrimGroup_Registration StaticRegistration => SkyrimGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(SkyrimGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]

@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpellEntry_Registration.Instance;
-        public static LeveledSpellEntry_Registration Registration => LeveledSpellEntry_Registration.Instance;
+        public static LeveledSpellEntry_Registration StaticRegistration => LeveledSpellEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledSpellEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpellEntry_Registration.Instance;
-        public static LeveledSpellEntry_Registration Registration => LeveledSpellEntry_Registration.Instance;
+        public static LeveledSpellEntry_Registration StaticRegistration => LeveledSpellEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledSpellEntryCommon.Instance;
         [DebuggerStepThrough]

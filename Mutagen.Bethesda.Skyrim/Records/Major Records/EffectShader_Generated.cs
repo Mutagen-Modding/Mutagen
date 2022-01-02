@@ -6676,7 +6676,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
-        public new static EffectShader_Registration Registration => EffectShader_Registration.Instance;
+        public new static EffectShader_Registration StaticRegistration => EffectShader_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
         [DebuggerStepThrough]
@@ -7355,7 +7355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
-        public new static EffectShader_Registration Registration => EffectShader_Registration.Instance;
+        public new static EffectShader_Registration StaticRegistration => EffectShader_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
         [DebuggerStepThrough]

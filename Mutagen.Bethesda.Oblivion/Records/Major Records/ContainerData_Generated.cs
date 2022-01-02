@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerData_Registration.Instance;
-        public static ContainerData_Registration Registration => ContainerData_Registration.Instance;
+        public static ContainerData_Registration StaticRegistration => ContainerData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerData_Registration.Instance;
-        public static ContainerData_Registration Registration => ContainerData_Registration.Instance;
+        public static ContainerData_Registration StaticRegistration => ContainerData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerDataCommon.Instance;
         [DebuggerStepThrough]

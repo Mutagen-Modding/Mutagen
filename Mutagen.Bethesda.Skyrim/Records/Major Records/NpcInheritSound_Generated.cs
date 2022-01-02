@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcInheritSound_Registration.Instance;
-        public new static NpcInheritSound_Registration Registration => NpcInheritSound_Registration.Instance;
+        public new static NpcInheritSound_Registration StaticRegistration => NpcInheritSound_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcInheritSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcInheritSound_Registration.Instance;
-        public new static NpcInheritSound_Registration Registration => NpcInheritSound_Registration.Instance;
+        public new static NpcInheritSound_Registration StaticRegistration => NpcInheritSound_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcInheritSoundCommon.Instance;
         [DebuggerStepThrough]

@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebugInfo_Registration.Instance;
-        public static DebugInfo_Registration Registration => DebugInfo_Registration.Instance;
+        public static DebugInfo_Registration StaticRegistration => DebugInfo_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebugInfoCommon.Instance;
         [DebuggerStepThrough]

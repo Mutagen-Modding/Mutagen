@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDescriptor_Registration.Instance;
-        public new static SoundDescriptor_Registration Registration => SoundDescriptor_Registration.Instance;
+        public new static SoundDescriptor_Registration StaticRegistration => SoundDescriptor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDescriptorCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDescriptor_Registration.Instance;
-        public new static SoundDescriptor_Registration Registration => SoundDescriptor_Registration.Instance;
+        public new static SoundDescriptor_Registration StaticRegistration => SoundDescriptor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDescriptorCommon.Instance;
         [DebuggerStepThrough]

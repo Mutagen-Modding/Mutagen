@@ -1490,7 +1490,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
-        public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
+        public static MajorRecord_Registration StaticRegistration => MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => MajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1652,7 +1652,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
-        public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
+        public static MajorRecord_Registration StaticRegistration => MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => MajorRecordCommon.Instance;
         [DebuggerStepThrough]

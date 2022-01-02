@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellStaticReference_Registration.Instance;
-        public static LocationCellStaticReference_Registration Registration => LocationCellStaticReference_Registration.Instance;
+        public static LocationCellStaticReference_Registration StaticRegistration => LocationCellStaticReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellStaticReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellStaticReference_Registration.Instance;
-        public static LocationCellStaticReference_Registration Registration => LocationCellStaticReference_Registration.Instance;
+        public static LocationCellStaticReference_Registration StaticRegistration => LocationCellStaticReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellStaticReferenceCommon.Instance;
         [DebuggerStepThrough]

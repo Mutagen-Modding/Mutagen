@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ExternalAliasReference_Registration.Instance;
-        public static ExternalAliasReference_Registration Registration => ExternalAliasReference_Registration.Instance;
+        public static ExternalAliasReference_Registration StaticRegistration => ExternalAliasReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ExternalAliasReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ExternalAliasReference_Registration.Instance;
-        public static ExternalAliasReference_Registration Registration => ExternalAliasReference_Registration.Instance;
+        public static ExternalAliasReference_Registration StaticRegistration => ExternalAliasReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ExternalAliasReferenceCommon.Instance;
         [DebuggerStepThrough]

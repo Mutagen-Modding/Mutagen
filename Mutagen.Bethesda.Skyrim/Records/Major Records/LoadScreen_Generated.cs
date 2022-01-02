@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreen_Registration.Instance;
-        public new static LoadScreen_Registration Registration => LoadScreen_Registration.Instance;
+        public new static LoadScreen_Registration StaticRegistration => LoadScreen_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LoadScreenCommon.Instance;
         [DebuggerStepThrough]
@@ -2172,7 +2172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreen_Registration.Instance;
-        public new static LoadScreen_Registration Registration => LoadScreen_Registration.Instance;
+        public new static LoadScreen_Registration StaticRegistration => LoadScreen_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LoadScreenCommon.Instance;
         [DebuggerStepThrough]

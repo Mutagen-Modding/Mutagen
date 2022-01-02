@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneScriptFragments_Registration.Instance;
-        public new static SceneScriptFragments_Registration Registration => SceneScriptFragments_Registration.Instance;
+        public new static SceneScriptFragments_Registration StaticRegistration => SceneScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneScriptFragments_Registration.Instance;
-        public new static SceneScriptFragments_Registration Registration => SceneScriptFragments_Registration.Instance;
+        public new static SceneScriptFragments_Registration StaticRegistration => SceneScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]

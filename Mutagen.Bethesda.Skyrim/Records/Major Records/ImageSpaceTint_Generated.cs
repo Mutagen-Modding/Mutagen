@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceTint_Registration.Instance;
-        public static ImageSpaceTint_Registration Registration => ImageSpaceTint_Registration.Instance;
+        public static ImageSpaceTint_Registration StaticRegistration => ImageSpaceTint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceTintCommon.Instance;
         [DebuggerStepThrough]
@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceTint_Registration.Instance;
-        public static ImageSpaceTint_Registration Registration => ImageSpaceTint_Registration.Instance;
+        public static ImageSpaceTint_Registration StaticRegistration => ImageSpaceTint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceTintCommon.Instance;
         [DebuggerStepThrough]

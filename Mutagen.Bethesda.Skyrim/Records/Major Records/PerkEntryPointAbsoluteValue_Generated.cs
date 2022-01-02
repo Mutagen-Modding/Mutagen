@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAbsoluteValue_Registration.Instance;
-        public new static PerkEntryPointAbsoluteValue_Registration Registration => PerkEntryPointAbsoluteValue_Registration.Instance;
+        public new static PerkEntryPointAbsoluteValue_Registration StaticRegistration => PerkEntryPointAbsoluteValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAbsoluteValueCommon.Instance;
         [DebuggerStepThrough]
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAbsoluteValue_Registration.Instance;
-        public new static PerkEntryPointAbsoluteValue_Registration Registration => PerkEntryPointAbsoluteValue_Registration.Instance;
+        public new static PerkEntryPointAbsoluteValue_Registration StaticRegistration => PerkEntryPointAbsoluteValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAbsoluteValueCommon.Instance;
         [DebuggerStepThrough]

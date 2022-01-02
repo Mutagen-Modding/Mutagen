@@ -2937,7 +2937,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Scroll_Registration.Instance;
-        public new static Scroll_Registration Registration => Scroll_Registration.Instance;
+        public new static Scroll_Registration StaticRegistration => Scroll_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScrollCommon.Instance;
         [DebuggerStepThrough]
@@ -3333,7 +3333,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Scroll_Registration.Instance;
-        public new static Scroll_Registration Registration => Scroll_Registration.Instance;
+        public new static Scroll_Registration StaticRegistration => Scroll_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScrollCommon.Instance;
         [DebuggerStepThrough]

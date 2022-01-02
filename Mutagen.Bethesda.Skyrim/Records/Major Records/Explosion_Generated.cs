@@ -2519,7 +2519,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Explosion_Registration.Instance;
-        public new static Explosion_Registration Registration => Explosion_Registration.Instance;
+        public new static Explosion_Registration StaticRegistration => Explosion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ExplosionCommon.Instance;
         [DebuggerStepThrough]
@@ -2849,7 +2849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Explosion_Registration.Instance;
-        public new static Explosion_Registration Registration => Explosion_Registration.Instance;
+        public new static Explosion_Registration StaticRegistration => Explosion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ExplosionCommon.Instance;
         [DebuggerStepThrough]

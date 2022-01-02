@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionGrass_Registration.Instance;
-        public static RegionGrass_Registration Registration => RegionGrass_Registration.Instance;
+        public static RegionGrass_Registration StaticRegistration => RegionGrass_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionGrassCommon.Instance;
         [DebuggerStepThrough]
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionGrass_Registration.Instance;
-        public static RegionGrass_Registration Registration => RegionGrass_Registration.Instance;
+        public static RegionGrass_Registration StaticRegistration => RegionGrass_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionGrassCommon.Instance;
         [DebuggerStepThrough]

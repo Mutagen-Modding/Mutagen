@@ -1680,7 +1680,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
-        public new static Faction_Registration Registration => Faction_Registration.Instance;
+        public new static Faction_Registration StaticRegistration => Faction_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionCommon.Instance;
         [DebuggerStepThrough]
@@ -1920,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
-        public new static Faction_Registration Registration => Faction_Registration.Instance;
+        public new static Faction_Registration StaticRegistration => Faction_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionCommon.Instance;
         [DebuggerStepThrough]

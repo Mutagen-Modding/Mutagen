@@ -3082,7 +3082,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Projectile_Registration.Instance;
-        public new static Projectile_Registration Registration => Projectile_Registration.Instance;
+        public new static Projectile_Registration StaticRegistration => Projectile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ProjectileCommon.Instance;
         [DebuggerStepThrough]
@@ -3465,7 +3465,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Projectile_Registration.Instance;
-        public new static Projectile_Registration Registration => Projectile_Registration.Instance;
+        public new static Projectile_Registration StaticRegistration => Projectile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ProjectileCommon.Instance;
         [DebuggerStepThrough]

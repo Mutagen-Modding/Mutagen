@@ -969,7 +969,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
-        public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        public static MasterReference_Registration StaticRegistration => MasterReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MasterReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
-        public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        public static MasterReference_Registration StaticRegistration => MasterReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MasterReferenceCommon.Instance;
         [DebuggerStepThrough]

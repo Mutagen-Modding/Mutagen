@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
-        public new static Subspace_Registration Registration => Subspace_Registration.Instance;
+        public new static Subspace_Registration StaticRegistration => Subspace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SubspaceCommon.Instance;
         [DebuggerStepThrough]
@@ -1357,7 +1357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
-        public new static Subspace_Registration Registration => Subspace_Registration.Instance;
+        public new static Subspace_Registration StaticRegistration => Subspace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SubspaceCommon.Instance;
         [DebuggerStepThrough]

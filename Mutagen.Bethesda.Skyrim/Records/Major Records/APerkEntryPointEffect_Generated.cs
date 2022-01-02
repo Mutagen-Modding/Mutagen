@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEntryPointEffect_Registration.Instance;
-        public new static APerkEntryPointEffect_Registration Registration => APerkEntryPointEffect_Registration.Instance;
+        public new static APerkEntryPointEffect_Registration StaticRegistration => APerkEntryPointEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APerkEntryPointEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEntryPointEffect_Registration.Instance;
-        public new static APerkEntryPointEffect_Registration Registration => APerkEntryPointEffect_Registration.Instance;
+        public new static APerkEntryPointEffect_Registration StaticRegistration => APerkEntryPointEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APerkEntryPointEffectCommon.Instance;
         [DebuggerStepThrough]

@@ -2167,7 +2167,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TalkingActivator_Registration.Instance;
-        public new static TalkingActivator_Registration Registration => TalkingActivator_Registration.Instance;
+        public new static TalkingActivator_Registration StaticRegistration => TalkingActivator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TalkingActivatorCommon.Instance;
         [DebuggerStepThrough]
@@ -2458,7 +2458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TalkingActivator_Registration.Instance;
-        public new static TalkingActivator_Registration Registration => TalkingActivator_Registration.Instance;
+        public new static TalkingActivator_Registration StaticRegistration => TalkingActivator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TalkingActivatorCommon.Instance;
         [DebuggerStepThrough]

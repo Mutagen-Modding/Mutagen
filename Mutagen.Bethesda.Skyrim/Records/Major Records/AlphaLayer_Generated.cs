@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
-        public new static AlphaLayer_Registration Registration => AlphaLayer_Registration.Instance;
+        public new static AlphaLayer_Registration StaticRegistration => AlphaLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlphaLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
-        public new static AlphaLayer_Registration Registration => AlphaLayer_Registration.Instance;
+        public new static AlphaLayer_Registration StaticRegistration => AlphaLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlphaLayerCommon.Instance;
         [DebuggerStepThrough]

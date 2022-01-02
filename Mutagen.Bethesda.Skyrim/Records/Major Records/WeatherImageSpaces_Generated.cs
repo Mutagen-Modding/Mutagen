@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherImageSpaces_Registration.Instance;
-        public static WeatherImageSpaces_Registration Registration => WeatherImageSpaces_Registration.Instance;
+        public static WeatherImageSpaces_Registration StaticRegistration => WeatherImageSpaces_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherImageSpacesCommon.Instance;
         [DebuggerStepThrough]
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherImageSpaces_Registration.Instance;
-        public static WeatherImageSpaces_Registration Registration => WeatherImageSpaces_Registration.Instance;
+        public static WeatherImageSpaces_Registration StaticRegistration => WeatherImageSpaces_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherImageSpacesCommon.Instance;
         [DebuggerStepThrough]

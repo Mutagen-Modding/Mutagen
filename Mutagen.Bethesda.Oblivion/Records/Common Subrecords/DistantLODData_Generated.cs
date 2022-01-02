@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
-        public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
+        public static DistantLODData_Registration StaticRegistration => DistantLODData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DistantLODDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
-        public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
+        public static DistantLODData_Registration StaticRegistration => DistantLODData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DistantLODDataCommon.Instance;
         [DebuggerStepThrough]

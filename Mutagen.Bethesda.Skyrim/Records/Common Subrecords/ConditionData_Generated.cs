@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionData_Registration.Instance;
-        public static ConditionData_Registration Registration => ConditionData_Registration.Instance;
+        public static ConditionData_Registration StaticRegistration => ConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ConditionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionData_Registration.Instance;
-        public static ConditionData_Registration Registration => ConditionData_Registration.Instance;
+        public static ConditionData_Registration StaticRegistration => ConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ConditionDataCommon.Instance;
         [DebuggerStepThrough]

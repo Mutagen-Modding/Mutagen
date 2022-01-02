@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PexObjectVariableData_Registration.Instance;
-        public static PexObjectVariableData_Registration Registration => PexObjectVariableData_Registration.Instance;
+        public static PexObjectVariableData_Registration StaticRegistration => PexObjectVariableData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PexObjectVariableDataCommon.Instance;
         [DebuggerStepThrough]

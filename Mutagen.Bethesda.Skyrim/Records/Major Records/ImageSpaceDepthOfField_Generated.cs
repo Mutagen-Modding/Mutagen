@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceDepthOfField_Registration.Instance;
-        public static ImageSpaceDepthOfField_Registration Registration => ImageSpaceDepthOfField_Registration.Instance;
+        public static ImageSpaceDepthOfField_Registration StaticRegistration => ImageSpaceDepthOfField_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceDepthOfFieldCommon.Instance;
         [DebuggerStepThrough]
@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceDepthOfField_Registration.Instance;
-        public static ImageSpaceDepthOfField_Registration Registration => ImageSpaceDepthOfField_Registration.Instance;
+        public static ImageSpaceDepthOfField_Registration StaticRegistration => ImageSpaceDepthOfField_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceDepthOfFieldCommon.Instance;
         [DebuggerStepThrough]

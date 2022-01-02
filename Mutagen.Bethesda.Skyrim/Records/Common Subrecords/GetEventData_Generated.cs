@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GetEventData_Registration.Instance;
-        public new static GetEventData_Registration Registration => GetEventData_Registration.Instance;
+        public new static GetEventData_Registration StaticRegistration => GetEventData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GetEventDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GetEventData_Registration.Instance;
-        public new static GetEventData_Registration Registration => GetEventData_Registration.Instance;
+        public new static GetEventData_Registration StaticRegistration => GetEventData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GetEventDataCommon.Instance;
         [DebuggerStepThrough]

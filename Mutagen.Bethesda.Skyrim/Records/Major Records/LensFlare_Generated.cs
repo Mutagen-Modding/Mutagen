@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LensFlare_Registration.Instance;
-        public new static LensFlare_Registration Registration => LensFlare_Registration.Instance;
+        public new static LensFlare_Registration StaticRegistration => LensFlare_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LensFlareCommon.Instance;
         [DebuggerStepThrough]
@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LensFlare_Registration.Instance;
-        public new static LensFlare_Registration Registration => LensFlare_Registration.Instance;
+        public new static LensFlare_Registration StaticRegistration => LensFlare_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LensFlareCommon.Instance;
         [DebuggerStepThrough]

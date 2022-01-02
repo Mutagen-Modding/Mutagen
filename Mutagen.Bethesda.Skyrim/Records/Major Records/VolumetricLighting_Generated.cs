@@ -1819,7 +1819,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VolumetricLighting_Registration.Instance;
-        public new static VolumetricLighting_Registration Registration => VolumetricLighting_Registration.Instance;
+        public new static VolumetricLighting_Registration StaticRegistration => VolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VolumetricLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VolumetricLighting_Registration.Instance;
-        public new static VolumetricLighting_Registration Registration => VolumetricLighting_Registration.Instance;
+        public new static VolumetricLighting_Registration StaticRegistration => VolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VolumetricLightingCommon.Instance;
         [DebuggerStepThrough]

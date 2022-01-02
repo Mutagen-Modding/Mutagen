@@ -4274,7 +4274,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
-        public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
+        public new static MagicEffect_Registration StaticRegistration => MagicEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -4799,7 +4799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
-        public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
+        public new static MagicEffect_Registration StaticRegistration => MagicEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectCommon.Instance;
         [DebuggerStepThrough]

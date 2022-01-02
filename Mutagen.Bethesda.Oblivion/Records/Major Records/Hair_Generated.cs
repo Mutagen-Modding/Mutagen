@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
-        public new static Hair_Registration Registration => Hair_Registration.Instance;
+        public new static Hair_Registration StaticRegistration => Hair_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HairCommon.Instance;
         [DebuggerStepThrough]
@@ -1651,7 +1651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
-        public new static Hair_Registration Registration => Hair_Registration.Instance;
+        public new static Hair_Registration StaticRegistration => Hair_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HairCommon.Instance;
         [DebuggerStepThrough]

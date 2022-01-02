@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValuePerkNode_Registration.Instance;
-        public static ActorValuePerkNode_Registration Registration => ActorValuePerkNode_Registration.Instance;
+        public static ActorValuePerkNode_Registration StaticRegistration => ActorValuePerkNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValuePerkNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1718,7 +1718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValuePerkNode_Registration.Instance;
-        public static ActorValuePerkNode_Registration Registration => ActorValuePerkNode_Registration.Instance;
+        public static ActorValuePerkNode_Registration StaticRegistration => ActorValuePerkNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValuePerkNodeCommon.Instance;
         [DebuggerStepThrough]

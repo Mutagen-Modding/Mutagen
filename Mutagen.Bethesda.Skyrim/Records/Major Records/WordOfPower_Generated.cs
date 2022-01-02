@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WordOfPower_Registration.Instance;
-        public new static WordOfPower_Registration Registration => WordOfPower_Registration.Instance;
+        public new static WordOfPower_Registration StaticRegistration => WordOfPower_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WordOfPowerCommon.Instance;
         [DebuggerStepThrough]
@@ -1498,7 +1498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WordOfPower_Registration.Instance;
-        public new static WordOfPower_Registration Registration => WordOfPower_Registration.Instance;
+        public new static WordOfPower_Registration StaticRegistration => WordOfPower_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WordOfPowerCommon.Instance;
         [DebuggerStepThrough]

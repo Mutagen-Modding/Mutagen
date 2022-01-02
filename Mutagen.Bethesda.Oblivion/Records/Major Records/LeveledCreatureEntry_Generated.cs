@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreatureEntry_Registration.Instance;
-        public static LeveledCreatureEntry_Registration Registration => LeveledCreatureEntry_Registration.Instance;
+        public static LeveledCreatureEntry_Registration StaticRegistration => LeveledCreatureEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledCreatureEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreatureEntry_Registration.Instance;
-        public static LeveledCreatureEntry_Registration Registration => LeveledCreatureEntry_Registration.Instance;
+        public static LeveledCreatureEntry_Registration StaticRegistration => LeveledCreatureEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledCreatureEntryCommon.Instance;
         [DebuggerStepThrough]

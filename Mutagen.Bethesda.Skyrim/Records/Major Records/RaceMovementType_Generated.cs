@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceMovementType_Registration.Instance;
-        public static RaceMovementType_Registration Registration => RaceMovementType_Registration.Instance;
+        public static RaceMovementType_Registration StaticRegistration => RaceMovementType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceMovementTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceMovementType_Registration.Instance;
-        public static RaceMovementType_Registration Registration => RaceMovementType_Registration.Instance;
+        public static RaceMovementType_Registration StaticRegistration => RaceMovementType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceMovementTypeCommon.Instance;
         [DebuggerStepThrough]

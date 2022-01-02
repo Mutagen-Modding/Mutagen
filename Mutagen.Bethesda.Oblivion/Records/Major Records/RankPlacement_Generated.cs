@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
-        public static RankPlacement_Registration Registration => RankPlacement_Registration.Instance;
+        public static RankPlacement_Registration StaticRegistration => RankPlacement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankPlacementCommon.Instance;
         [DebuggerStepThrough]
@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
-        public static RankPlacement_Registration Registration => RankPlacement_Registration.Instance;
+        public static RankPlacement_Registration StaticRegistration => RankPlacement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankPlacementCommon.Instance;
         [DebuggerStepThrough]

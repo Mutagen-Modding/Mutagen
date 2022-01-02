@@ -2483,7 +2483,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceFxPhonemes_Registration.Instance;
-        public static FaceFxPhonemes_Registration Registration => FaceFxPhonemes_Registration.Instance;
+        public static FaceFxPhonemes_Registration StaticRegistration => FaceFxPhonemes_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceFxPhonemesCommon.Instance;
         [DebuggerStepThrough]
@@ -2585,7 +2585,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceFxPhonemes_Registration.Instance;
-        public static FaceFxPhonemes_Registration Registration => FaceFxPhonemes_Registration.Instance;
+        public static FaceFxPhonemes_Registration StaticRegistration => FaceFxPhonemes_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceFxPhonemesCommon.Instance;
         [DebuggerStepThrough]

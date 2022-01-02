@@ -1515,7 +1515,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellUnleveled_Registration.Instance;
-        public new static SpellUnleveled_Registration Registration => SpellUnleveled_Registration.Instance;
+        public new static SpellUnleveled_Registration StaticRegistration => SpellUnleveled_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellUnleveledCommon.Instance;
         [DebuggerStepThrough]
@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellUnleveled_Registration.Instance;
-        public new static SpellUnleveled_Registration Registration => SpellUnleveled_Registration.Instance;
+        public new static SpellUnleveled_Registration StaticRegistration => SpellUnleveled_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellUnleveledCommon.Instance;
         [DebuggerStepThrough]

@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AmbientColors_Registration.Instance;
-        public static AmbientColors_Registration Registration => AmbientColors_Registration.Instance;
+        public static AmbientColors_Registration StaticRegistration => AmbientColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AmbientColorsCommon.Instance;
         [DebuggerStepThrough]
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AmbientColors_Registration.Instance;
-        public static AmbientColors_Registration Registration => AmbientColors_Registration.Instance;
+        public static AmbientColors_Registration StaticRegistration => AmbientColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AmbientColorsCommon.Instance;
         [DebuggerStepThrough]

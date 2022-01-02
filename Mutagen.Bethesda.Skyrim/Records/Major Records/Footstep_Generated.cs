@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Footstep_Registration.Instance;
-        public new static Footstep_Registration Registration => Footstep_Registration.Instance;
+        public new static Footstep_Registration StaticRegistration => Footstep_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FootstepCommon.Instance;
         [DebuggerStepThrough]
@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Footstep_Registration.Instance;
-        public new static Footstep_Registration Registration => Footstep_Registration.Instance;
+        public new static Footstep_Registration StaticRegistration => Footstep_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FootstepCommon.Instance;
         [DebuggerStepThrough]

@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
-        public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
+        public static FaceGenData_Registration StaticRegistration => FaceGenData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceGenDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
-        public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
+        public static FaceGenData_Registration StaticRegistration => FaceGenData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceGenDataCommon.Instance;
         [DebuggerStepThrough]

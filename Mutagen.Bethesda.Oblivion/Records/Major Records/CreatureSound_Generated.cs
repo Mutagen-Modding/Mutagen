@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
-        public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
+        public static CreatureSound_Registration StaticRegistration => CreatureSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
-        public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
+        public static CreatureSound_Registration StaticRegistration => CreatureSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureSoundCommon.Instance;
         [DebuggerStepThrough]

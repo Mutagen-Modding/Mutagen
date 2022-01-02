@@ -5329,7 +5329,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
-        public new static Npc_Registration Registration => Npc_Registration.Instance;
+        public new static Npc_Registration StaticRegistration => Npc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcCommon.Instance;
         [DebuggerStepThrough]
@@ -6125,7 +6125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
-        public new static Npc_Registration Registration => Npc_Registration.Instance;
+        public new static Npc_Registration StaticRegistration => Npc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcCommon.Instance;
         [DebuggerStepThrough]

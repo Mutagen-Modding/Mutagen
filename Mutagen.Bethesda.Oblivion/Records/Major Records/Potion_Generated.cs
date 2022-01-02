@@ -1782,7 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Potion_Registration.Instance;
-        public new static Potion_Registration Registration => Potion_Registration.Instance;
+        public new static Potion_Registration StaticRegistration => Potion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PotionCommon.Instance;
         [DebuggerStepThrough]
@@ -2035,7 +2035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Potion_Registration.Instance;
-        public new static Potion_Registration Registration => Potion_Registration.Instance;
+        public new static Potion_Registration StaticRegistration => Potion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PotionCommon.Instance;
         [DebuggerStepThrough]

@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCoordinate_Registration.Instance;
-        public static LocationCoordinate_Registration Registration => LocationCoordinate_Registration.Instance;
+        public static LocationCoordinate_Registration StaticRegistration => LocationCoordinate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCoordinateCommon.Instance;
         [DebuggerStepThrough]
@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCoordinate_Registration.Instance;
-        public static LocationCoordinate_Registration Registration => LocationCoordinate_Registration.Instance;
+        public static LocationCoordinate_Registration StaticRegistration => LocationCoordinate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCoordinateCommon.Instance;
         [DebuggerStepThrough]

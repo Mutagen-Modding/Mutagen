@@ -1948,7 +1948,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CameraShot_Registration.Instance;
-        public new static CameraShot_Registration Registration => CameraShot_Registration.Instance;
+        public new static CameraShot_Registration StaticRegistration => CameraShot_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CameraShotCommon.Instance;
         [DebuggerStepThrough]
@@ -2213,7 +2213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CameraShot_Registration.Instance;
-        public new static CameraShot_Registration Registration => CameraShot_Registration.Instance;
+        public new static CameraShot_Registration StaticRegistration => CameraShot_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CameraShotCommon.Instance;
         [DebuggerStepThrough]

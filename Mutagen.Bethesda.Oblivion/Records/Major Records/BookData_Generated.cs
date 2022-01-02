@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookData_Registration.Instance;
-        public static BookData_Registration Registration => BookData_Registration.Instance;
+        public static BookData_Registration StaticRegistration => BookData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BookDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookData_Registration.Instance;
-        public static BookData_Registration Registration => BookData_Registration.Instance;
+        public static BookData_Registration StaticRegistration => BookData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BookDataCommon.Instance;
         [DebuggerStepThrough]

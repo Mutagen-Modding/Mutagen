@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItemEntryData_Registration.Instance;
-        public static LeveledItemEntryData_Registration Registration => LeveledItemEntryData_Registration.Instance;
+        public static LeveledItemEntryData_Registration StaticRegistration => LeveledItemEntryData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledItemEntryDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItemEntryData_Registration.Instance;
-        public static LeveledItemEntryData_Registration Registration => LeveledItemEntryData_Registration.Instance;
+        public static LeveledItemEntryData_Registration StaticRegistration => LeveledItemEntryData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledItemEntryDataCommon.Instance;
         [DebuggerStepThrough]

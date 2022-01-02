@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedBarrier_Registration.Instance;
-        public new static PlacedBarrier_Registration Registration => PlacedBarrier_Registration.Instance;
+        public new static PlacedBarrier_Registration StaticRegistration => PlacedBarrier_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedBarrierCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,7 +1543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedBarrier_Registration.Instance;
-        public new static PlacedBarrier_Registration Registration => PlacedBarrier_Registration.Instance;
+        public new static PlacedBarrier_Registration StaticRegistration => PlacedBarrier_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedBarrierCommon.Instance;
         [DebuggerStepThrough]

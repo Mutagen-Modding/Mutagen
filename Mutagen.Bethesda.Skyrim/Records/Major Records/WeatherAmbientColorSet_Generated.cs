@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAmbientColorSet_Registration.Instance;
-        public static WeatherAmbientColorSet_Registration Registration => WeatherAmbientColorSet_Registration.Instance;
+        public static WeatherAmbientColorSet_Registration StaticRegistration => WeatherAmbientColorSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAmbientColorSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAmbientColorSet_Registration.Instance;
-        public static WeatherAmbientColorSet_Registration Registration => WeatherAmbientColorSet_Registration.Instance;
+        public static WeatherAmbientColorSet_Registration StaticRegistration => WeatherAmbientColorSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAmbientColorSetCommon.Instance;
         [DebuggerStepThrough]

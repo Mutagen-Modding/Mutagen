@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponBasicStats_Registration.Instance;
-        public static WeaponBasicStats_Registration Registration => WeaponBasicStats_Registration.Instance;
+        public static WeaponBasicStats_Registration StaticRegistration => WeaponBasicStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponBasicStatsCommon.Instance;
         [DebuggerStepThrough]
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponBasicStats_Registration.Instance;
-        public static WeaponBasicStats_Registration Registration => WeaponBasicStats_Registration.Instance;
+        public static WeaponBasicStats_Registration StaticRegistration => WeaponBasicStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponBasicStatsCommon.Instance;
         [DebuggerStepThrough]

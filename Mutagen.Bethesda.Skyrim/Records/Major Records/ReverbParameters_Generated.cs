@@ -1796,7 +1796,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ReverbParameters_Registration.Instance;
-        public new static ReverbParameters_Registration Registration => ReverbParameters_Registration.Instance;
+        public new static ReverbParameters_Registration StaticRegistration => ReverbParameters_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ReverbParametersCommon.Instance;
         [DebuggerStepThrough]
@@ -2004,7 +2004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ReverbParameters_Registration.Instance;
-        public new static ReverbParameters_Registration Registration => ReverbParameters_Registration.Instance;
+        public new static ReverbParameters_Registration StaticRegistration => ReverbParameters_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ReverbParametersCommon.Instance;
         [DebuggerStepThrough]

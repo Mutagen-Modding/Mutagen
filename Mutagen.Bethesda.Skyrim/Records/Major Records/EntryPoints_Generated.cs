@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EntryPoints_Registration.Instance;
-        public static EntryPoints_Registration Registration => EntryPoints_Registration.Instance;
+        public static EntryPoints_Registration StaticRegistration => EntryPoints_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EntryPointsCommon.Instance;
         [DebuggerStepThrough]
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EntryPoints_Registration.Instance;
-        public static EntryPoints_Registration Registration => EntryPoints_Registration.Instance;
+        public static EntryPoints_Registration StaticRegistration => EntryPoints_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EntryPointsCommon.Instance;
         [DebuggerStepThrough]

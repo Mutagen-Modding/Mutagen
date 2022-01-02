@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceLandDefaults_Registration.Instance;
-        public static WorldspaceLandDefaults_Registration Registration => WorldspaceLandDefaults_Registration.Instance;
+        public static WorldspaceLandDefaults_Registration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceLandDefaultsCommon.Instance;
         [DebuggerStepThrough]
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceLandDefaults_Registration.Instance;
-        public static WorldspaceLandDefaults_Registration Registration => WorldspaceLandDefaults_Registration.Instance;
+        public static WorldspaceLandDefaults_Registration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceLandDefaultsCommon.Instance;
         [DebuggerStepThrough]

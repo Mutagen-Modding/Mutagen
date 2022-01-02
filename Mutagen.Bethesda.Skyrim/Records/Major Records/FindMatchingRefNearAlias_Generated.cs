@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefNearAlias_Registration.Instance;
-        public static FindMatchingRefNearAlias_Registration Registration => FindMatchingRefNearAlias_Registration.Instance;
+        public static FindMatchingRefNearAlias_Registration StaticRegistration => FindMatchingRefNearAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefNearAliasCommon.Instance;
         [DebuggerStepThrough]
@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefNearAlias_Registration.Instance;
-        public static FindMatchingRefNearAlias_Registration Registration => FindMatchingRefNearAlias_Registration.Instance;
+        public static FindMatchingRefNearAlias_Registration StaticRegistration => FindMatchingRefNearAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefNearAliasCommon.Instance;
         [DebuggerStepThrough]

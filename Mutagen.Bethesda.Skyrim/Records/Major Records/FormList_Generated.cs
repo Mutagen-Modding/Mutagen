@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration Registration => FormList_Registration.Instance;
+        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]
@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration Registration => FormList_Registration.Instance;
+        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]

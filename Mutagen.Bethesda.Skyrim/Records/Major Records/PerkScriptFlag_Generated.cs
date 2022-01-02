@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkScriptFlag_Registration.Instance;
-        public static PerkScriptFlag_Registration Registration => PerkScriptFlag_Registration.Instance;
+        public static PerkScriptFlag_Registration StaticRegistration => PerkScriptFlag_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkScriptFlagCommon.Instance;
         [DebuggerStepThrough]
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkScriptFlag_Registration.Instance;
-        public static PerkScriptFlag_Registration Registration => PerkScriptFlag_Registration.Instance;
+        public static PerkScriptFlag_Registration StaticRegistration => PerkScriptFlag_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkScriptFlagCommon.Instance;
         [DebuggerStepThrough]

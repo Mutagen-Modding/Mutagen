@@ -1552,7 +1552,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
-        public new static Keyword_Registration Registration => Keyword_Registration.Instance;
+        public new static Keyword_Registration StaticRegistration => Keyword_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => KeywordCommon.Instance;
         [DebuggerStepThrough]
@@ -1785,7 +1785,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
-        public new static Keyword_Registration Registration => Keyword_Registration.Instance;
+        public new static Keyword_Registration StaticRegistration => Keyword_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => KeywordCommon.Instance;
         [DebuggerStepThrough]

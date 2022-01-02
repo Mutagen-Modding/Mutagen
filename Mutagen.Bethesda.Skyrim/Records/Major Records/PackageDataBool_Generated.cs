@@ -976,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataBool_Registration.Instance;
-        public new static PackageDataBool_Registration Registration => PackageDataBool_Registration.Instance;
+        public new static PackageDataBool_Registration StaticRegistration => PackageDataBool_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataBoolCommon.Instance;
         [DebuggerStepThrough]
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataBool_Registration.Instance;
-        public new static PackageDataBool_Registration Registration => PackageDataBool_Registration.Instance;
+        public new static PackageDataBool_Registration StaticRegistration => PackageDataBool_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataBoolCommon.Instance;
         [DebuggerStepThrough]

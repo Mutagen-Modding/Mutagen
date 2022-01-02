@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellWaterVelocity_Registration.Instance;
-        public static CellWaterVelocity_Registration Registration => CellWaterVelocity_Registration.Instance;
+        public static CellWaterVelocity_Registration StaticRegistration => CellWaterVelocity_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellWaterVelocityCommon.Instance;
         [DebuggerStepThrough]
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellWaterVelocity_Registration.Instance;
-        public static CellWaterVelocity_Registration Registration => CellWaterVelocity_Registration.Instance;
+        public static CellWaterVelocity_Registration StaticRegistration => CellWaterVelocity_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellWaterVelocityCommon.Instance;
         [DebuggerStepThrough]

@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructableData_Registration.Instance;
-        public static DestructableData_Registration Registration => DestructableData_Registration.Instance;
+        public static DestructableData_Registration StaticRegistration => DestructableData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructableDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructableData_Registration.Instance;
-        public static DestructableData_Registration Registration => DestructableData_Registration.Instance;
+        public static DestructableData_Registration StaticRegistration => DestructableData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructableDataCommon.Instance;
         [DebuggerStepThrough]

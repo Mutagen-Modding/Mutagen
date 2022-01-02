@@ -2713,7 +2713,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleData_Registration.Instance;
-        public static CombatStyleData_Registration Registration => CombatStyleData_Registration.Instance;
+        public static CombatStyleData_Registration StaticRegistration => CombatStyleData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleDataCommon.Instance;
         [DebuggerStepThrough]
@@ -3020,7 +3020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleData_Registration.Instance;
-        public static CombatStyleData_Registration Registration => CombatStyleData_Registration.Instance;
+        public static CombatStyleData_Registration StaticRegistration => CombatStyleData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleDataCommon.Instance;
         [DebuggerStepThrough]

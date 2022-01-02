@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
-        public new static Flora_Registration Registration => Flora_Registration.Instance;
+        public new static Flora_Registration StaticRegistration => Flora_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FloraCommon.Instance;
         [DebuggerStepThrough]
@@ -1772,7 +1772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
-        public new static Flora_Registration Registration => Flora_Registration.Instance;
+        public new static Flora_Registration StaticRegistration => Flora_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FloraCommon.Instance;
         [DebuggerStepThrough]

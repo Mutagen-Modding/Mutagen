@@ -1944,7 +1944,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANavigationMeshData_Registration.Instance;
-        public static ANavigationMeshData_Registration Registration => ANavigationMeshData_Registration.Instance;
+        public static ANavigationMeshData_Registration StaticRegistration => ANavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2198,7 +2198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANavigationMeshData_Registration.Instance;
-        public static ANavigationMeshData_Registration Registration => ANavigationMeshData_Registration.Instance;
+        public static ANavigationMeshData_Registration StaticRegistration => ANavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]

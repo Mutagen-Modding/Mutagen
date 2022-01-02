@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AvailableMorphs_Registration.Instance;
-        public static AvailableMorphs_Registration Registration => AvailableMorphs_Registration.Instance;
+        public static AvailableMorphs_Registration StaticRegistration => AvailableMorphs_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AvailableMorphsCommon.Instance;
         [DebuggerStepThrough]
@@ -1424,7 +1424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AvailableMorphs_Registration.Instance;
-        public static AvailableMorphs_Registration Registration => AvailableMorphs_Registration.Instance;
+        public static AvailableMorphs_Registration StaticRegistration => AvailableMorphs_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AvailableMorphsCommon.Instance;
         [DebuggerStepThrough]

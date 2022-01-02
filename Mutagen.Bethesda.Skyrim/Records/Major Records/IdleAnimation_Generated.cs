@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleAnimation_Registration.Instance;
-        public new static IdleAnimation_Registration Registration => IdleAnimation_Registration.Instance;
+        public new static IdleAnimation_Registration StaticRegistration => IdleAnimation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleAnimationCommon.Instance;
         [DebuggerStepThrough]
@@ -2176,7 +2176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleAnimation_Registration.Instance;
-        public new static IdleAnimation_Registration Registration => IdleAnimation_Registration.Instance;
+        public new static IdleAnimation_Registration StaticRegistration => IdleAnimation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleAnimationCommon.Instance;
         [DebuggerStepThrough]

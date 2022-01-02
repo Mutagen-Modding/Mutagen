@@ -976,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Icons_Registration.Instance;
-        public static Icons_Registration Registration => Icons_Registration.Instance;
+        public static Icons_Registration StaticRegistration => Icons_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IconsCommon.Instance;
         [DebuggerStepThrough]
@@ -1124,7 +1124,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Icons_Registration.Instance;
-        public static Icons_Registration Registration => Icons_Registration.Instance;
+        public static Icons_Registration StaticRegistration => Icons_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IconsCommon.Instance;
         [DebuggerStepThrough]

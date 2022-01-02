@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSetting_Registration.Instance;
-        public new static GameSetting_Registration Registration => GameSetting_Registration.Instance;
+        public new static GameSetting_Registration StaticRegistration => GameSetting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingCommon.Instance;
         [DebuggerStepThrough]
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSetting_Registration.Instance;
-        public new static GameSetting_Registration Registration => GameSetting_Registration.Instance;
+        public new static GameSetting_Registration StaticRegistration => GameSetting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingCommon.Instance;
         [DebuggerStepThrough]

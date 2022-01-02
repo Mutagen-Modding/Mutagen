@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillData_Registration.Instance;
-        public static SkillData_Registration Registration => SkillData_Registration.Instance;
+        public static SkillData_Registration StaticRegistration => SkillData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkillDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillData_Registration.Instance;
-        public static SkillData_Registration Registration => SkillData_Registration.Instance;
+        public static SkillData_Registration StaticRegistration => SkillData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkillDataCommon.Instance;
         [DebuggerStepThrough]

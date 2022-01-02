@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptIntProperty_Registration.Instance;
-        public new static ScriptIntProperty_Registration Registration => ScriptIntProperty_Registration.Instance;
+        public new static ScriptIntProperty_Registration StaticRegistration => ScriptIntProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptIntPropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -1067,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptIntProperty_Registration.Instance;
-        public new static ScriptIntProperty_Registration Registration => ScriptIntProperty_Registration.Instance;
+        public new static ScriptIntProperty_Registration StaticRegistration => ScriptIntProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptIntPropertyCommon.Instance;
         [DebuggerStepThrough]

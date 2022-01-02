@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IngredientData_Registration.Instance;
-        public static IngredientData_Registration Registration => IngredientData_Registration.Instance;
+        public static IngredientData_Registration StaticRegistration => IngredientData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IngredientDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IngredientData_Registration.Instance;
-        public static IngredientData_Registration Registration => IngredientData_Registration.Instance;
+        public static IngredientData_Registration StaticRegistration => IngredientData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IngredientDataCommon.Instance;
         [DebuggerStepThrough]

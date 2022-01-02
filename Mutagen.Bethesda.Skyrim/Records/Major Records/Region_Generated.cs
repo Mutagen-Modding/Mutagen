@@ -2084,7 +2084,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration Registration => Region_Registration.Instance;
+        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
@@ -2311,7 +2311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration Registration => Region_Registration.Instance;
+        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]

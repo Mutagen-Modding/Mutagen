@@ -1297,7 +1297,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingBool_Registration.Instance;
-        public new static GameSettingBool_Registration Registration => GameSettingBool_Registration.Instance;
+        public new static GameSettingBool_Registration StaticRegistration => GameSettingBool_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingBoolCommon.Instance;
         [DebuggerStepThrough]
@@ -1494,7 +1494,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingBool_Registration.Instance;
-        public new static GameSettingBool_Registration Registration => GameSettingBool_Registration.Instance;
+        public new static GameSettingBool_Registration StaticRegistration => GameSettingBool_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingBoolCommon.Instance;
         [DebuggerStepThrough]

@@ -2344,7 +2344,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcData_Registration.Instance;
-        public static NpcData_Registration Registration => NpcData_Registration.Instance;
+        public static NpcData_Registration StaticRegistration => NpcData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2513,7 +2513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcData_Registration.Instance;
-        public static NpcData_Registration Registration => NpcData_Registration.Instance;
+        public static NpcData_Registration StaticRegistration => NpcData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcDataCommon.Instance;
         [DebuggerStepThrough]

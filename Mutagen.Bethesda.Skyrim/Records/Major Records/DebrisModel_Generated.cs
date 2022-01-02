@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebrisModel_Registration.Instance;
-        public static DebrisModel_Registration Registration => DebrisModel_Registration.Instance;
+        public static DebrisModel_Registration StaticRegistration => DebrisModel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebrisModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebrisModel_Registration.Instance;
-        public static DebrisModel_Registration Registration => DebrisModel_Registration.Instance;
+        public static DebrisModel_Registration StaticRegistration => DebrisModel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebrisModelCommon.Instance;
         [DebuggerStepThrough]

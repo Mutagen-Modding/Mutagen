@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlayerSkills_Registration.Instance;
-        public static PlayerSkills_Registration Registration => PlayerSkills_Registration.Instance;
+        public static PlayerSkills_Registration StaticRegistration => PlayerSkills_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlayerSkillsCommon.Instance;
         [DebuggerStepThrough]
@@ -1718,7 +1718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlayerSkills_Registration.Instance;
-        public static PlayerSkills_Registration Registration => PlayerSkills_Registration.Instance;
+        public static PlayerSkills_Registration StaticRegistration => PlayerSkills_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlayerSkillsCommon.Instance;
         [DebuggerStepThrough]

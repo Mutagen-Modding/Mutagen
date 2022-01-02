@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshSet_Registration.Instance;
-        public static NavmeshSet_Registration Registration => NavmeshSet_Registration.Instance;
+        public static NavmeshSet_Registration StaticRegistration => NavmeshSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshSet_Registration.Instance;
-        public static NavmeshSet_Registration Registration => NavmeshSet_Registration.Instance;
+        public static NavmeshSet_Registration StaticRegistration => NavmeshSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshSetCommon.Instance;
         [DebuggerStepThrough]

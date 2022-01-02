@@ -1547,7 +1547,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relationship_Registration.Instance;
-        public new static Relationship_Registration Registration => Relationship_Registration.Instance;
+        public new static Relationship_Registration StaticRegistration => Relationship_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RelationshipCommon.Instance;
         [DebuggerStepThrough]
@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relationship_Registration.Instance;
-        public new static Relationship_Registration Registration => Relationship_Registration.Instance;
+        public new static Relationship_Registration StaticRegistration => Relationship_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RelationshipCommon.Instance;
         [DebuggerStepThrough]

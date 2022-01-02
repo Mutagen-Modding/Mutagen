@@ -990,7 +990,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Portal_Registration.Instance;
-        public static Portal_Registration Registration => Portal_Registration.Instance;
+        public static Portal_Registration StaticRegistration => Portal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PortalCommon.Instance;
         [DebuggerStepThrough]
@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Portal_Registration.Instance;
-        public static Portal_Registration Registration => Portal_Registration.Instance;
+        public static Portal_Registration StaticRegistration => Portal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PortalCommon.Instance;
         [DebuggerStepThrough]

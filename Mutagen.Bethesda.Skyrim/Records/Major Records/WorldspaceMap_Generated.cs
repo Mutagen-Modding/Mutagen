@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMap_Registration.Instance;
-        public static WorldspaceMap_Registration Registration => WorldspaceMap_Registration.Instance;
+        public static WorldspaceMap_Registration StaticRegistration => WorldspaceMap_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMapCommon.Instance;
         [DebuggerStepThrough]
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMap_Registration.Instance;
-        public static WorldspaceMap_Registration Registration => WorldspaceMap_Registration.Instance;
+        public static WorldspaceMap_Registration StaticRegistration => WorldspaceMap_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMapCommon.Instance;
         [DebuggerStepThrough]

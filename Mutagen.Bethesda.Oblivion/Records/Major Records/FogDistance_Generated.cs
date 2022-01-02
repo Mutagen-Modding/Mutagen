@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FogDistance_Registration.Instance;
-        public static FogDistance_Registration Registration => FogDistance_Registration.Instance;
+        public static FogDistance_Registration StaticRegistration => FogDistance_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FogDistanceCommon.Instance;
         [DebuggerStepThrough]
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FogDistance_Registration.Instance;
-        public static FogDistance_Registration Registration => FogDistance_Registration.Instance;
+        public static FogDistance_Registration StaticRegistration => FogDistance_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FogDistanceCommon.Instance;
         [DebuggerStepThrough]

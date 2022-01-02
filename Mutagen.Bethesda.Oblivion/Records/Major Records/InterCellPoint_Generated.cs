@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InterCellPoint_Registration.Instance;
-        public static InterCellPoint_Registration Registration => InterCellPoint_Registration.Instance;
+        public static InterCellPoint_Registration StaticRegistration => InterCellPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => InterCellPointCommon.Instance;
         [DebuggerStepThrough]
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InterCellPoint_Registration.Instance;
-        public static InterCellPoint_Registration Registration => InterCellPoint_Registration.Instance;
+        public static InterCellPoint_Registration StaticRegistration => InterCellPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => InterCellPointCommon.Instance;
         [DebuggerStepThrough]

@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedTrap_Registration.Instance;
-        public new static PlacedTrap_Registration Registration => PlacedTrap_Registration.Instance;
+        public new static PlacedTrap_Registration StaticRegistration => PlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedTrapCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,7 +1543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedTrap_Registration.Instance;
-        public new static PlacedTrap_Registration Registration => PlacedTrap_Registration.Instance;
+        public new static PlacedTrap_Registration StaticRegistration => PlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedTrapCommon.Instance;
         [DebuggerStepThrough]

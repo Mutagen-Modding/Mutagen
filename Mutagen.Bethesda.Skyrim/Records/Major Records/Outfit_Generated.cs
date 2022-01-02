@@ -1342,7 +1342,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Outfit_Registration.Instance;
-        public new static Outfit_Registration Registration => Outfit_Registration.Instance;
+        public new static Outfit_Registration StaticRegistration => Outfit_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => OutfitCommon.Instance;
         [DebuggerStepThrough]
@@ -1521,7 +1521,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Outfit_Registration.Instance;
-        public new static Outfit_Registration Registration => Outfit_Registration.Instance;
+        public new static Outfit_Registration StaticRegistration => Outfit_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => OutfitCommon.Instance;
         [DebuggerStepThrough]

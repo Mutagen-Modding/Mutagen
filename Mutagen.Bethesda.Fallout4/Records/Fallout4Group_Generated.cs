@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4Group_Registration.Instance;
-        public static Fallout4Group_Registration Registration => Fallout4Group_Registration.Instance;
+        public static Fallout4Group_Registration StaticRegistration => Fallout4Group_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(Fallout4GroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -1435,7 +1435,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4Group_Registration.Instance;
-        public static Fallout4Group_Registration Registration => Fallout4Group_Registration.Instance;
+        public static Fallout4Group_Registration StaticRegistration => Fallout4Group_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(Fallout4GroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]

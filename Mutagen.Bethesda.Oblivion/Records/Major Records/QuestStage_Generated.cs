@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestStage_Registration.Instance;
-        public static QuestStage_Registration Registration => QuestStage_Registration.Instance;
+        public static QuestStage_Registration StaticRegistration => QuestStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestStageCommon.Instance;
         [DebuggerStepThrough]
@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestStage_Registration.Instance;
-        public static QuestStage_Registration Registration => QuestStage_Registration.Instance;
+        public static QuestStage_Registration StaticRegistration => QuestStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestStageCommon.Instance;
         [DebuggerStepThrough]

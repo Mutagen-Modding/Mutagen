@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponseData_Registration.Instance;
-        public static DialogResponseData_Registration Registration => DialogResponseData_Registration.Instance;
+        public static DialogResponseData_Registration StaticRegistration => DialogResponseData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponseData_Registration.Instance;
-        public static DialogResponseData_Registration Registration => DialogResponseData_Registration.Instance;
+        public static DialogResponseData_Registration StaticRegistration => DialogResponseData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseDataCommon.Instance;
         [DebuggerStepThrough]

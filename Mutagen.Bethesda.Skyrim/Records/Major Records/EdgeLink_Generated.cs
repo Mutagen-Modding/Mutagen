@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EdgeLink_Registration.Instance;
-        public static EdgeLink_Registration Registration => EdgeLink_Registration.Instance;
+        public static EdgeLink_Registration StaticRegistration => EdgeLink_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EdgeLinkCommon.Instance;
         [DebuggerStepThrough]
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EdgeLink_Registration.Instance;
-        public static EdgeLink_Registration Registration => EdgeLink_Registration.Instance;
+        public static EdgeLink_Registration StaticRegistration => EdgeLink_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EdgeLinkCommon.Instance;
         [DebuggerStepThrough]

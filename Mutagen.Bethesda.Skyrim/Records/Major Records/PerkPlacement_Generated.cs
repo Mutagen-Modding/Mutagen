@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkPlacement_Registration.Instance;
-        public static PerkPlacement_Registration Registration => PerkPlacement_Registration.Instance;
+        public static PerkPlacement_Registration StaticRegistration => PerkPlacement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkPlacementCommon.Instance;
         [DebuggerStepThrough]
@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkPlacement_Registration.Instance;
-        public static PerkPlacement_Registration Registration => PerkPlacement_Registration.Instance;
+        public static PerkPlacement_Registration StaticRegistration => PerkPlacement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkPlacementCommon.Instance;
         [DebuggerStepThrough]

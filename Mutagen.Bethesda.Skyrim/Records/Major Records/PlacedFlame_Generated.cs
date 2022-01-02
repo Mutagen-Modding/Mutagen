@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedFlame_Registration.Instance;
-        public new static PlacedFlame_Registration Registration => PlacedFlame_Registration.Instance;
+        public new static PlacedFlame_Registration StaticRegistration => PlacedFlame_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedFlameCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,7 +1543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedFlame_Registration.Instance;
-        public new static PlacedFlame_Registration Registration => PlacedFlame_Registration.Instance;
+        public new static PlacedFlame_Registration StaticRegistration => PlacedFlame_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedFlameCommon.Instance;
         [DebuggerStepThrough]

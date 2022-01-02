@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceGridReference_Registration.Instance;
-        public static WorldspaceGridReference_Registration Registration => WorldspaceGridReference_Registration.Instance;
+        public static WorldspaceGridReference_Registration StaticRegistration => WorldspaceGridReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceGridReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceGridReference_Registration.Instance;
-        public static WorldspaceGridReference_Registration Registration => WorldspaceGridReference_Registration.Instance;
+        public static WorldspaceGridReference_Registration StaticRegistration => WorldspaceGridReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceGridReferenceCommon.Instance;
         [DebuggerStepThrough]

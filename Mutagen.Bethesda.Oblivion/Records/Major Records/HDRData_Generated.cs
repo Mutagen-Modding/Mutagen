@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HDRData_Registration.Instance;
-        public static HDRData_Registration Registration => HDRData_Registration.Instance;
+        public static HDRData_Registration StaticRegistration => HDRData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HDRDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1725,7 +1725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HDRData_Registration.Instance;
-        public static HDRData_Registration Registration => HDRData_Registration.Instance;
+        public static HDRData_Registration StaticRegistration => HDRData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HDRDataCommon.Instance;
         [DebuggerStepThrough]

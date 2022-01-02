@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintAssets_Registration.Instance;
-        public static TintAssets_Registration Registration => TintAssets_Registration.Instance;
+        public static TintAssets_Registration StaticRegistration => TintAssets_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintAssetsCommon.Instance;
         [DebuggerStepThrough]
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintAssets_Registration.Instance;
-        public static TintAssets_Registration Registration => TintAssets_Registration.Instance;
+        public static TintAssets_Registration StaticRegistration => TintAssets_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintAssetsCommon.Instance;
         [DebuggerStepThrough]

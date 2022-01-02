@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectVampireArchetype_Registration.Instance;
-        public new static MagicEffectVampireArchetype_Registration Registration => MagicEffectVampireArchetype_Registration.Instance;
+        public new static MagicEffectVampireArchetype_Registration StaticRegistration => MagicEffectVampireArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectVampireArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectVampireArchetype_Registration.Instance;
-        public new static MagicEffectVampireArchetype_Registration Registration => MagicEffectVampireArchetype_Registration.Instance;
+        public new static MagicEffectVampireArchetype_Registration StaticRegistration => MagicEffectVampireArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectVampireArchetypeCommon.Instance;
         [DebuggerStepThrough]

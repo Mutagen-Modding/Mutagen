@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Explosion_Registration.Instance;
-        public new static Explosion_Registration Registration => Explosion_Registration.Instance;
+        public new static Explosion_Registration StaticRegistration => Explosion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ExplosionCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Explosion_Registration.Instance;
-        public new static Explosion_Registration Registration => Explosion_Registration.Instance;
+        public new static Explosion_Registration StaticRegistration => Explosion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ExplosionCommon.Instance;
         [DebuggerStepThrough]

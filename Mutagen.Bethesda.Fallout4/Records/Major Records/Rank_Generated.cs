@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
-        public static Rank_Registration Registration => Rank_Registration.Instance;
+        public static Rank_Registration StaticRegistration => Rank_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankCommon.Instance;
         [DebuggerStepThrough]
@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
-        public static Rank_Registration Registration => Rank_Registration.Instance;
+        public static Rank_Registration StaticRegistration => Rank_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankCommon.Instance;
         [DebuggerStepThrough]

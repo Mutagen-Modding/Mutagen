@@ -1714,7 +1714,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Message_Registration.Instance;
-        public new static Message_Registration Registration => Message_Registration.Instance;
+        public new static Message_Registration StaticRegistration => Message_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MessageCommon.Instance;
         [DebuggerStepThrough]
@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Message_Registration.Instance;
-        public new static Message_Registration Registration => Message_Registration.Instance;
+        public new static Message_Registration StaticRegistration => Message_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MessageCommon.Instance;
         [DebuggerStepThrough]

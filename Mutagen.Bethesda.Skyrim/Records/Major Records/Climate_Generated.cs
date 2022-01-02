@@ -1980,7 +1980,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration Registration => Climate_Registration.Instance;
+        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]
@@ -2252,7 +2252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration Registration => Climate_Registration.Instance;
+        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]

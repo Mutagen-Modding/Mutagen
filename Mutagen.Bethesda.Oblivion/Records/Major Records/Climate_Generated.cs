@@ -1651,7 +1651,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration Registration => Climate_Registration.Instance;
+        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]
@@ -1884,7 +1884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration Registration => Climate_Registration.Instance;
+        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]

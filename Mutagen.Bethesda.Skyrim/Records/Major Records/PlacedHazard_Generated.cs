@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedHazard_Registration.Instance;
-        public new static PlacedHazard_Registration Registration => PlacedHazard_Registration.Instance;
+        public new static PlacedHazard_Registration StaticRegistration => PlacedHazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedHazardCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,7 +1543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedHazard_Registration.Instance;
-        public new static PlacedHazard_Registration Registration => PlacedHazard_Registration.Instance;
+        public new static PlacedHazard_Registration StaticRegistration => PlacedHazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedHazardCommon.Instance;
         [DebuggerStepThrough]

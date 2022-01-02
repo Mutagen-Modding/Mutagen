@@ -1315,7 +1315,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceHdr_Registration.Instance;
-        public static ImageSpaceHdr_Registration Registration => ImageSpaceHdr_Registration.Instance;
+        public static ImageSpaceHdr_Registration StaticRegistration => ImageSpaceHdr_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceHdrCommon.Instance;
         [DebuggerStepThrough]
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceHdr_Registration.Instance;
-        public static ImageSpaceHdr_Registration Registration => ImageSpaceHdr_Registration.Instance;
+        public static ImageSpaceHdr_Registration StaticRegistration => ImageSpaceHdr_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceHdrCommon.Instance;
         [DebuggerStepThrough]

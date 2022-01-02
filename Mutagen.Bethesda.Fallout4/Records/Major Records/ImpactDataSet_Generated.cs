@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImpactDataSet_Registration.Instance;
-        public new static ImpactDataSet_Registration Registration => ImpactDataSet_Registration.Instance;
+        public new static ImpactDataSet_Registration StaticRegistration => ImpactDataSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactDataSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImpactDataSet_Registration.Instance;
-        public new static ImpactDataSet_Registration Registration => ImpactDataSet_Registration.Instance;
+        public new static ImpactDataSet_Registration StaticRegistration => ImpactDataSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactDataSetCommon.Instance;
         [DebuggerStepThrough]

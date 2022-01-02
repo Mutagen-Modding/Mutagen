@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttractionRule_Registration.Instance;
-        public new static AttractionRule_Registration Registration => AttractionRule_Registration.Instance;
+        public new static AttractionRule_Registration StaticRegistration => AttractionRule_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AttractionRuleCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttractionRule_Registration.Instance;
-        public new static AttractionRule_Registration Registration => AttractionRule_Registration.Instance;
+        public new static AttractionRule_Registration StaticRegistration => AttractionRule_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AttractionRuleCommon.Instance;
         [DebuggerStepThrough]

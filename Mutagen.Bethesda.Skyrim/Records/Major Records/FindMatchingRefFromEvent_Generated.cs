@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefFromEvent_Registration.Instance;
-        public static FindMatchingRefFromEvent_Registration Registration => FindMatchingRefFromEvent_Registration.Instance;
+        public static FindMatchingRefFromEvent_Registration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefFromEventCommon.Instance;
         [DebuggerStepThrough]
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefFromEvent_Registration.Instance;
-        public static FindMatchingRefFromEvent_Registration Registration => FindMatchingRefFromEvent_Registration.Instance;
+        public static FindMatchingRefFromEvent_Registration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefFromEventCommon.Instance;
         [DebuggerStepThrough]

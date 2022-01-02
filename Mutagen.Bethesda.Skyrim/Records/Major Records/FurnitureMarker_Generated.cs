@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FurnitureMarker_Registration.Instance;
-        public static FurnitureMarker_Registration Registration => FurnitureMarker_Registration.Instance;
+        public static FurnitureMarker_Registration StaticRegistration => FurnitureMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FurnitureMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FurnitureMarker_Registration.Instance;
-        public static FurnitureMarker_Registration Registration => FurnitureMarker_Registration.Instance;
+        public static FurnitureMarker_Registration StaticRegistration => FurnitureMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FurnitureMarkerCommon.Instance;
         [DebuggerStepThrough]

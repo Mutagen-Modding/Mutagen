@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkCondition_Registration.Instance;
-        public static PerkCondition_Registration Registration => PerkCondition_Registration.Instance;
+        public static PerkCondition_Registration StaticRegistration => PerkCondition_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkConditionCommon.Instance;
         [DebuggerStepThrough]
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkCondition_Registration.Instance;
-        public static PerkCondition_Registration Registration => PerkCondition_Registration.Instance;
+        public static PerkCondition_Registration StaticRegistration => PerkCondition_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkConditionCommon.Instance;
         [DebuggerStepThrough]

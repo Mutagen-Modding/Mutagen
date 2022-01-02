@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CloudLayer_Registration.Instance;
-        public static CloudLayer_Registration Registration => CloudLayer_Registration.Instance;
+        public static CloudLayer_Registration StaticRegistration => CloudLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CloudLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CloudLayer_Registration.Instance;
-        public static CloudLayer_Registration Registration => CloudLayer_Registration.Instance;
+        public static CloudLayer_Registration StaticRegistration => CloudLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CloudLayerCommon.Instance;
         [DebuggerStepThrough]

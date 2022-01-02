@@ -1660,7 +1660,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
-        public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
+        public new static SoulGem_Registration StaticRegistration => SoulGem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoulGemCommon.Instance;
         [DebuggerStepThrough]
@@ -1907,7 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
-        public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
+        public new static SoulGem_Registration StaticRegistration => SoulGem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoulGemCommon.Instance;
         [DebuggerStepThrough]

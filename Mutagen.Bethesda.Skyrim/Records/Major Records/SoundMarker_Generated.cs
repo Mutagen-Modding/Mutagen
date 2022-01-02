@@ -1469,7 +1469,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundMarker_Registration.Instance;
-        public new static SoundMarker_Registration Registration => SoundMarker_Registration.Instance;
+        public new static SoundMarker_Registration StaticRegistration => SoundMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1668,7 +1668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundMarker_Registration.Instance;
-        public new static SoundMarker_Registration Registration => SoundMarker_Registration.Instance;
+        public new static SoundMarker_Registration StaticRegistration => SoundMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundMarkerCommon.Instance;
         [DebuggerStepThrough]

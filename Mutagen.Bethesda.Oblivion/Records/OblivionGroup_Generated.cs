@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionGroup_Registration.Instance;
-        public static OblivionGroup_Registration Registration => OblivionGroup_Registration.Instance;
+        public static OblivionGroup_Registration StaticRegistration => OblivionGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(OblivionGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionGroup_Registration.Instance;
-        public static OblivionGroup_Registration Registration => OblivionGroup_Registration.Instance;
+        public static OblivionGroup_Registration StaticRegistration => OblivionGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(OblivionGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]

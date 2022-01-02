@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        public new static WorldspaceNavigationMeshData_Registration Registration => WorldspaceNavigationMeshData_Registration.Instance;
+        public new static WorldspaceNavigationMeshData_Registration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceNavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        public new static WorldspaceNavigationMeshData_Registration Registration => WorldspaceNavigationMeshData_Registration.Instance;
+        public new static WorldspaceNavigationMeshData_Registration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceNavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]

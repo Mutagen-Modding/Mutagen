@@ -2524,7 +2524,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Furniture_Registration.Instance;
-        public new static Furniture_Registration Registration => Furniture_Registration.Instance;
+        public new static Furniture_Registration StaticRegistration => Furniture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FurnitureCommon.Instance;
         [DebuggerStepThrough]
@@ -2936,7 +2936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Furniture_Registration.Instance;
-        public new static Furniture_Registration Registration => Furniture_Registration.Instance;
+        public new static Furniture_Registration StaticRegistration => Furniture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FurnitureCommon.Instance;
         [DebuggerStepThrough]

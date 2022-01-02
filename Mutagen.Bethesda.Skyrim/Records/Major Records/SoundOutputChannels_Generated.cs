@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputChannels_Registration.Instance;
-        public static SoundOutputChannels_Registration Registration => SoundOutputChannels_Registration.Instance;
+        public static SoundOutputChannels_Registration StaticRegistration => SoundOutputChannels_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundOutputChannelsCommon.Instance;
         [DebuggerStepThrough]
@@ -1239,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputChannels_Registration.Instance;
-        public static SoundOutputChannels_Registration Registration => SoundOutputChannels_Registration.Instance;
+        public static SoundOutputChannels_Registration StaticRegistration => SoundOutputChannels_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundOutputChannelsCommon.Instance;
         [DebuggerStepThrough]

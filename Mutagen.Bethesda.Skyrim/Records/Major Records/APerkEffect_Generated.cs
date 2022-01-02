@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEffect_Registration.Instance;
-        public static APerkEffect_Registration Registration => APerkEffect_Registration.Instance;
+        public static APerkEffect_Registration StaticRegistration => APerkEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APerkEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEffect_Registration.Instance;
-        public static APerkEffect_Registration Registration => APerkEffect_Registration.Instance;
+        public static APerkEffect_Registration StaticRegistration => APerkEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APerkEffectCommon.Instance;
         [DebuggerStepThrough]

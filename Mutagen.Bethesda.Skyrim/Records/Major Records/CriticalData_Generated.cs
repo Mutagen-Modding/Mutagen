@@ -1344,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CriticalData_Registration.Instance;
-        public static CriticalData_Registration Registration => CriticalData_Registration.Instance;
+        public static CriticalData_Registration StaticRegistration => CriticalData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CriticalDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CriticalData_Registration.Instance;
-        public static CriticalData_Registration Registration => CriticalData_Registration.Instance;
+        public static CriticalData_Registration StaticRegistration => CriticalData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CriticalDataCommon.Instance;
         [DebuggerStepThrough]

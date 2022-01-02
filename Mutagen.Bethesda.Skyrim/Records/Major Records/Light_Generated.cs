@@ -2613,7 +2613,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
-        public new static Light_Registration Registration => Light_Registration.Instance;
+        public new static Light_Registration StaticRegistration => Light_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LightCommon.Instance;
         [DebuggerStepThrough]
@@ -2936,7 +2936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
-        public new static Light_Registration Registration => Light_Registration.Instance;
+        public new static Light_Registration StaticRegistration => Light_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LightCommon.Instance;
         [DebuggerStepThrough]

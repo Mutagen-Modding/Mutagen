@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
-        public new static PerkEntryPointAddActivateChoice_Registration Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
+        public new static PerkEntryPointAddActivateChoice_Registration StaticRegistration => PerkEntryPointAddActivateChoice_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddActivateChoiceCommon.Instance;
         [DebuggerStepThrough]
@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
-        public new static PerkEntryPointAddActivateChoice_Registration Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
+        public new static PerkEntryPointAddActivateChoice_Registration StaticRegistration => PerkEntryPointAddActivateChoice_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddActivateChoiceCommon.Instance;
         [DebuggerStepThrough]

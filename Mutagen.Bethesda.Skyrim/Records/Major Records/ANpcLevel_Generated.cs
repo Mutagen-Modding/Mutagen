@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcLevel_Registration.Instance;
-        public static ANpcLevel_Registration Registration => ANpcLevel_Registration.Instance;
+        public static ANpcLevel_Registration StaticRegistration => ANpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcLevelCommon.Instance;
         [DebuggerStepThrough]
@@ -924,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcLevel_Registration.Instance;
-        public static ANpcLevel_Registration Registration => ANpcLevel_Registration.Instance;
+        public static ANpcLevel_Registration StaticRegistration => ANpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcLevelCommon.Instance;
         [DebuggerStepThrough]

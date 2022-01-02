@@ -1799,7 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
-        public static WorldspaceBlock_Registration Registration => WorldspaceBlock_Registration.Instance;
+        public static WorldspaceBlock_Registration StaticRegistration => WorldspaceBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -1969,7 +1969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
-        public static WorldspaceBlock_Registration Registration => WorldspaceBlock_Registration.Instance;
+        public static WorldspaceBlock_Registration StaticRegistration => WorldspaceBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
         [DebuggerStepThrough]

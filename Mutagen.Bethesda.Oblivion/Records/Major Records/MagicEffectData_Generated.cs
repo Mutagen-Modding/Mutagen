@@ -1503,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectData_Registration.Instance;
-        public static MagicEffectData_Registration Registration => MagicEffectData_Registration.Instance;
+        public static MagicEffectData_Registration StaticRegistration => MagicEffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1669,7 +1669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectData_Registration.Instance;
-        public static MagicEffectData_Registration Registration => MagicEffectData_Registration.Instance;
+        public static MagicEffectData_Registration StaticRegistration => MagicEffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectDataCommon.Instance;
         [DebuggerStepThrough]

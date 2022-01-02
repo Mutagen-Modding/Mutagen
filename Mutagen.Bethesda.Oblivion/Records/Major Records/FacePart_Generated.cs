@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
-        public static FacePart_Registration Registration => FacePart_Registration.Instance;
+        public static FacePart_Registration StaticRegistration => FacePart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FacePartCommon.Instance;
         [DebuggerStepThrough]
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
-        public static FacePart_Registration Registration => FacePart_Registration.Instance;
+        public static FacePart_Registration StaticRegistration => FacePart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FacePartCommon.Instance;
         [DebuggerStepThrough]

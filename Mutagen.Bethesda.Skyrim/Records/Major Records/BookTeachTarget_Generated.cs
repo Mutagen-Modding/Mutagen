@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookTeachTarget_Registration.Instance;
-        public static BookTeachTarget_Registration Registration => BookTeachTarget_Registration.Instance;
+        public static BookTeachTarget_Registration StaticRegistration => BookTeachTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => BookTeachTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookTeachTarget_Registration.Instance;
-        public static BookTeachTarget_Registration Registration => BookTeachTarget_Registration.Instance;
+        public static BookTeachTarget_Registration StaticRegistration => BookTeachTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => BookTeachTargetCommon.Instance;
         [DebuggerStepThrough]

@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IslandData_Registration.Instance;
-        public static IslandData_Registration Registration => IslandData_Registration.Instance;
+        public static IslandData_Registration StaticRegistration => IslandData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IslandDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IslandData_Registration.Instance;
-        public static IslandData_Registration Registration => IslandData_Registration.Instance;
+        public static IslandData_Registration StaticRegistration => IslandData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IslandDataCommon.Instance;
         [DebuggerStepThrough]

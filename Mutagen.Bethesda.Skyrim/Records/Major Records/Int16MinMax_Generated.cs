@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Int16MinMax_Registration.Instance;
-        public static Int16MinMax_Registration Registration => Int16MinMax_Registration.Instance;
+        public static Int16MinMax_Registration StaticRegistration => Int16MinMax_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Int16MinMaxCommon.Instance;
         [DebuggerStepThrough]
@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Int16MinMax_Registration.Instance;
-        public static Int16MinMax_Registration Registration => Int16MinMax_Registration.Instance;
+        public static Int16MinMax_Registration StaticRegistration => Int16MinMax_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Int16MinMaxCommon.Instance;
         [DebuggerStepThrough]

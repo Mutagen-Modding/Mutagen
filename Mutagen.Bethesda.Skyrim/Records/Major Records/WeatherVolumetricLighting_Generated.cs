@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherVolumetricLighting_Registration.Instance;
-        public static WeatherVolumetricLighting_Registration Registration => WeatherVolumetricLighting_Registration.Instance;
+        public static WeatherVolumetricLighting_Registration StaticRegistration => WeatherVolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherVolumetricLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherVolumetricLighting_Registration.Instance;
-        public static WeatherVolumetricLighting_Registration Registration => WeatherVolumetricLighting_Registration.Instance;
+        public static WeatherVolumetricLighting_Registration StaticRegistration => WeatherVolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherVolumetricLightingCommon.Instance;
         [DebuggerStepThrough]

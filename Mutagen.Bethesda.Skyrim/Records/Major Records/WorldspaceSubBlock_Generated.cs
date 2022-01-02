@@ -2090,7 +2090,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceSubBlock_Registration.Instance;
-        public static WorldspaceSubBlock_Registration Registration => WorldspaceSubBlock_Registration.Instance;
+        public static WorldspaceSubBlock_Registration StaticRegistration => WorldspaceSubBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceSubBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -2268,7 +2268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceSubBlock_Registration.Instance;
-        public static WorldspaceSubBlock_Registration Registration => WorldspaceSubBlock_Registration.Instance;
+        public static WorldspaceSubBlock_Registration StaticRegistration => WorldspaceSubBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceSubBlockCommon.Instance;
         [DebuggerStepThrough]

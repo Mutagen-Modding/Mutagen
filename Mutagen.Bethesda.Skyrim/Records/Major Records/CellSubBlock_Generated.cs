@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
-        public static CellSubBlock_Registration Registration => CellSubBlock_Registration.Instance;
+        public static CellSubBlock_Registration StaticRegistration => CellSubBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellSubBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -2217,7 +2217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
-        public static CellSubBlock_Registration Registration => CellSubBlock_Registration.Instance;
+        public static CellSubBlock_Registration StaticRegistration => CellSubBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellSubBlockCommon.Instance;
         [DebuggerStepThrough]

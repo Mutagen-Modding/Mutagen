@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
-        public new static AnimatedObject_Registration Registration => AnimatedObject_Registration.Instance;
+        public new static AnimatedObject_Registration StaticRegistration => AnimatedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimatedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
-        public new static AnimatedObject_Registration Registration => AnimatedObject_Registration.Instance;
+        public new static AnimatedObject_Registration StaticRegistration => AnimatedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimatedObjectCommon.Instance;
         [DebuggerStepThrough]

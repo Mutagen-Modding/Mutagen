@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
-        public new static Tree_Registration Registration => Tree_Registration.Instance;
+        public new static Tree_Registration StaticRegistration => Tree_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
         [DebuggerStepThrough]
@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
-        public new static Tree_Registration Registration => Tree_Registration.Instance;
+        public new static Tree_Registration StaticRegistration => Tree_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
         [DebuggerStepThrough]

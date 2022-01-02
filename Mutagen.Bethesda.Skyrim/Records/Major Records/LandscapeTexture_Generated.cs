@@ -1706,7 +1706,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandscapeTexture_Registration.Instance;
-        public new static LandscapeTexture_Registration Registration => LandscapeTexture_Registration.Instance;
+        public new static LandscapeTexture_Registration StaticRegistration => LandscapeTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeTextureCommon.Instance;
         [DebuggerStepThrough]
@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandscapeTexture_Registration.Instance;
-        public new static LandscapeTexture_Registration Registration => LandscapeTexture_Registration.Instance;
+        public new static LandscapeTexture_Registration StaticRegistration => LandscapeTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeTextureCommon.Instance;
         [DebuggerStepThrough]

@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCreature_Registration.Instance;
-        public new static PlacedCreature_Registration Registration => PlacedCreature_Registration.Instance;
+        public new static PlacedCreature_Registration StaticRegistration => PlacedCreature_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedCreatureCommon.Instance;
         [DebuggerStepThrough]
@@ -1952,7 +1952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCreature_Registration.Instance;
-        public new static PlacedCreature_Registration Registration => PlacedCreature_Registration.Instance;
+        public new static PlacedCreature_Registration StaticRegistration => PlacedCreature_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedCreatureCommon.Instance;
         [DebuggerStepThrough]

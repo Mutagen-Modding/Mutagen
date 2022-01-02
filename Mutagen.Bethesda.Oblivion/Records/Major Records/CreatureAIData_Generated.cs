@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureAIData_Registration.Instance;
-        public static CreatureAIData_Registration Registration => CreatureAIData_Registration.Instance;
+        public static CreatureAIData_Registration StaticRegistration => CreatureAIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureAIDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureAIData_Registration.Instance;
-        public static CreatureAIData_Registration Registration => CreatureAIData_Registration.Instance;
+        public static CreatureAIData_Registration StaticRegistration => CreatureAIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureAIDataCommon.Instance;
         [DebuggerStepThrough]

@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatusData_Registration.Instance;
-        public static AlchemicalApparatusData_Registration Registration => AlchemicalApparatusData_Registration.Instance;
+        public static AlchemicalApparatusData_Registration StaticRegistration => AlchemicalApparatusData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AlchemicalApparatusDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatusData_Registration.Instance;
-        public static AlchemicalApparatusData_Registration Registration => AlchemicalApparatusData_Registration.Instance;
+        public static AlchemicalApparatusData_Registration StaticRegistration => AlchemicalApparatusData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AlchemicalApparatusDataCommon.Instance;
         [DebuggerStepThrough]

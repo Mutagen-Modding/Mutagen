@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookSpell_Registration.Instance;
-        public new static BookSpell_Registration Registration => BookSpell_Registration.Instance;
+        public new static BookSpell_Registration StaticRegistration => BookSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookSpell_Registration.Instance;
-        public new static BookSpell_Registration Registration => BookSpell_Registration.Instance;
+        public new static BookSpell_Registration StaticRegistration => BookSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookSpellCommon.Instance;
         [DebuggerStepThrough]

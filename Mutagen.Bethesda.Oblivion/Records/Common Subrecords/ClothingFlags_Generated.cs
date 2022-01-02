@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClothingFlags_Registration.Instance;
-        public static ClothingFlags_Registration Registration => ClothingFlags_Registration.Instance;
+        public static ClothingFlags_Registration StaticRegistration => ClothingFlags_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClothingFlagsCommon.Instance;
         [DebuggerStepThrough]
@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClothingFlags_Registration.Instance;
-        public static ClothingFlags_Registration Registration => ClothingFlags_Registration.Instance;
+        public static ClothingFlags_Registration StaticRegistration => ClothingFlags_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClothingFlagsCommon.Instance;
         [DebuggerStepThrough]

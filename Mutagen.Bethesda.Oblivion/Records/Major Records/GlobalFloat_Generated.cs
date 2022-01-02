@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalFloat_Registration.Instance;
-        public new static GlobalFloat_Registration Registration => GlobalFloat_Registration.Instance;
+        public new static GlobalFloat_Registration StaticRegistration => GlobalFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalFloat_Registration.Instance;
-        public new static GlobalFloat_Registration Registration => GlobalFloat_Registration.Instance;
+        public new static GlobalFloat_Registration StaticRegistration => GlobalFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalFloatCommon.Instance;
         [DebuggerStepThrough]

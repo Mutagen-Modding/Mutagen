@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterReflection_Registration.Instance;
-        public static WaterReflection_Registration Registration => WaterReflection_Registration.Instance;
+        public static WaterReflection_Registration StaticRegistration => WaterReflection_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterReflectionCommon.Instance;
         [DebuggerStepThrough]
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterReflection_Registration.Instance;
-        public static WaterReflection_Registration Registration => WaterReflection_Registration.Instance;
+        public static WaterReflection_Registration StaticRegistration => WaterReflection_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterReflectionCommon.Instance;
         [DebuggerStepThrough]

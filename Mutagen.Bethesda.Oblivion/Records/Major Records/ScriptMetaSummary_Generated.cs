@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
-        public static ScriptMetaSummary_Registration Registration => ScriptMetaSummary_Registration.Instance;
+        public static ScriptMetaSummary_Registration StaticRegistration => ScriptMetaSummary_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptMetaSummaryCommon.Instance;
         [DebuggerStepThrough]
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
-        public static ScriptMetaSummary_Registration Registration => ScriptMetaSummary_Registration.Instance;
+        public static ScriptMetaSummary_Registration StaticRegistration => ScriptMetaSummary_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptMetaSummaryCommon.Instance;
         [DebuggerStepThrough]
