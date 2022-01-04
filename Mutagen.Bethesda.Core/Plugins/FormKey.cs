@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Plugins
     ///   - Remove the 255 limit while within code space.  On-disk formats still enforce 255 limit.<br/>
     /// </summary>
     [DebuggerDisplay("{ToString()}")]
-    public struct FormKey : IEquatable<FormKey>
+    public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     {
         /// <summary>
         /// A static readonly singleton string representing a null FormKey
@@ -453,5 +453,7 @@ namespace Mutagen.Bethesda.Plugins
             }
         }
         #endregion
+
+        FormKey IFormKeyGetter.FormKey => this;
     }
 }
