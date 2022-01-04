@@ -2325,6 +2325,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MagicEffect>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMagicEffect);
+
         [Flags]
         public enum DATADataType
         {
@@ -4821,6 +4823,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMagicEffect);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

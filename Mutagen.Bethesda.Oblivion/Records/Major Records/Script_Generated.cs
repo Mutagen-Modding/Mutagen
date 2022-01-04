@@ -392,6 +392,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Script>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IScript);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1420,6 +1422,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IScript);
+
 
         #region Fields
         private IScriptFieldsGetter? _Fields;

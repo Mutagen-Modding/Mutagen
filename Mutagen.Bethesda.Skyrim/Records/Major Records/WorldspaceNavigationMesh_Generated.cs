@@ -421,6 +421,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<WorldspaceNavigationMesh>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IWorldspaceNavigationMesh);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1540,6 +1542,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IWorldspaceNavigationMesh);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

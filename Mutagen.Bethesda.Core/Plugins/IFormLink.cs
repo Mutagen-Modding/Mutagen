@@ -1,3 +1,4 @@
+using System;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
@@ -7,7 +8,15 @@ namespace Mutagen.Bethesda.Plugins
     /// An interface for a FormLink.
     /// FormKey is allowed to be null to communicate absence of a record.
     /// </summary>
-    public interface IFormLinkGetter : ILink, IFormKeyGetter
+    public interface IFormLinkIdentifier : IFormKeyGetter, ILinkIdentifier
+    {
+    }
+    
+    /// <summary>
+    /// An interface for a FormLink.
+    /// FormKey is allowed to be null to communicate absence of a record.
+    /// </summary>
+    public interface IFormLinkGetter : ILink, IFormLinkIdentifier
     {
         /// <summary>
         /// FormKey to link against

@@ -516,6 +516,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<SpellUnleveled>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISpellUnleveled);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1741,6 +1743,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISpellUnleveled);
+
 
         #region Data
         private RangeInt32? _DataLocation;

@@ -789,6 +789,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<TextureSet>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ITextureSet);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2232,6 +2234,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ITextureSet);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

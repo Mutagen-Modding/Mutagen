@@ -1467,6 +1467,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Quest>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IQuest);
+
         [Flags]
         public enum DNAMDataType
         {
@@ -3338,6 +3340,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IQuest);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

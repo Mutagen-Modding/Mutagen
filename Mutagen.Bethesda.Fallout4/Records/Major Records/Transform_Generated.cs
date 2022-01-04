@@ -565,6 +565,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Transform>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ITransform);
+
         [Flags]
         public enum DATADataType
         {
@@ -1693,6 +1695,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ITransform);
+
 
         private int? _DATALocation;
         public Transform.DATADataType DATADataTypeState { get; private set; }

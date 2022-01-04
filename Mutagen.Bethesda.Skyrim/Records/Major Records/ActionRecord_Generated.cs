@@ -400,6 +400,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ActionRecord>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IActionRecord);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1403,6 +1405,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IActionRecord);
+
 
         #region Color
         private int? _ColorLocation;

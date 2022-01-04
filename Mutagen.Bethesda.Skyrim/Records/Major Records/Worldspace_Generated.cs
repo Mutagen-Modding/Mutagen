@@ -1726,6 +1726,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Worldspace>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IWorldspace);
+
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -5954,6 +5956,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IWorldspace);
+
         public Worldspace.MajorFlag MajorFlags => (Worldspace.MajorFlag)this.MajorRecordFlagsRaw;
 
         public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = ListExt.Empty<WorldspaceGridReferenceBinaryOverlay>();

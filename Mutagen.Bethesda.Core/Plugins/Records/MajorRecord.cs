@@ -26,11 +26,17 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// </summary>
         bool Disable();
     }
+    
+    public partial interface IMajorRecordInternal
+    {
+        new FormKey FormKey { get; set; }
+    }
 
     public partial interface IMajorRecordGetter : 
         IFormVersionGetter, 
         IMajorRecordIdentifier,
         IFormLinkContainerGetter,
+        IFormLinkIdentifier,
         IEquatable<IFormLinkGetter>
     {
         /// <summary>
@@ -111,10 +117,14 @@ namespace Mutagen.Bethesda.Plugins.Records
             if (other == null) return false;
             return other.Equals(this);
         }
+
+        Type ILinkIdentifier.Type => LinkType;
+        protected abstract Type LinkType { get; }
     }
 
     public static class IMajorRecordGetterExt
     {
+        [Obsolete("Major records implement IFormLinkIdentifier which should be used instead")]
         public static IFormLinkGetter ToFormLinkInformation(this IMajorRecordGetter majorRec)
         {
             return FormLinkInformation.Factory(majorRec);
@@ -133,6 +143,9 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         protected abstract ushort? FormVersionAbstract { get; }
         ushort? IMajorRecordGetter.FormVersion => FormVersionAbstract;
         ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
+
+        Type ILinkIdentifier.Type => LinkType;
+        protected abstract Type LinkType { get; }
 
         public bool Equals(IFormLinkGetter? other)
         {

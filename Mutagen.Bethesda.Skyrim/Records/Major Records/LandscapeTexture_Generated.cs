@@ -717,6 +717,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<LandscapeTexture>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILandscapeTexture);
+
         [Flags]
         public enum HNAMDataType
         {
@@ -1977,6 +1979,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILandscapeTexture);
+
 
         #region TextureSet
         private int? _TextureSetLocation;

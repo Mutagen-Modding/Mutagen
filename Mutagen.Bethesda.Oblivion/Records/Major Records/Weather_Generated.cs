@@ -842,6 +842,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Weather>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IWeather);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2316,6 +2318,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IWeather);
+
 
         #region TextureLowerLayer
         private int? _TextureLowerLayerLocation;

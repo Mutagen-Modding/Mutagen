@@ -344,6 +344,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Debris>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDebris);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1277,6 +1279,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDebris);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

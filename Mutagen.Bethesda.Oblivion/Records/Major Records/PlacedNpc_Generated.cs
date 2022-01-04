@@ -752,6 +752,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<PlacedNpc>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedNpc);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2175,6 +2177,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedNpc);
+
 
         #region Base
         private int? _BaseLocation;

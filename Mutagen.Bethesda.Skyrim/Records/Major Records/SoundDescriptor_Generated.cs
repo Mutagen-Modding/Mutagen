@@ -1019,6 +1019,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<SoundDescriptor>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISoundDescriptor);
+
         [Flags]
         public enum BNAMDataType
         {
@@ -2521,6 +2523,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISoundDescriptor);
+
 
         #region CNAM
         private int? _CNAMLocation;

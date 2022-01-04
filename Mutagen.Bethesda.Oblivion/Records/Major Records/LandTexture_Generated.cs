@@ -577,6 +577,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<LandTexture>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILandTexture);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1751,6 +1753,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILandTexture);
+
 
         #region Icon
         private int? _IconLocation;

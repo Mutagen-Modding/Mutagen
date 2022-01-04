@@ -594,6 +594,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MusicType>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMusicType);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1780,6 +1782,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMusicType);
+
 
         #region Flags
         private int? _FlagsLocation;

@@ -1024,6 +1024,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Perk>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPerk);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -2586,6 +2588,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPerk);
+
         public Perk.MajorFlag MajorFlags => (Perk.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

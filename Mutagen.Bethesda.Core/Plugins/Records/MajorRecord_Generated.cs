@@ -584,7 +584,6 @@ namespace Mutagen.Bethesda.Plugins.Records
         IMajorRecord,
         IMajorRecordGetter
     {
-        new FormKey FormKey { get; set; }
     }
 
     /// <summary>
@@ -605,7 +604,6 @@ namespace Mutagen.Bethesda.Plugins.Records
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => MajorRecord_Registration.Instance;
         Int32 MajorRecordFlagsRaw { get; }
-        FormKey FormKey { get; }
         UInt32 VersionControl { get; }
         String? EditorID { get; }
 

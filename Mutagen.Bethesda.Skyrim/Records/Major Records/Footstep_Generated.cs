@@ -438,6 +438,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Footstep>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IFootstep);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1471,6 +1473,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IFootstep);
+
 
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;

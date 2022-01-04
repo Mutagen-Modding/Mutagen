@@ -1181,6 +1181,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Explosion>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IExplosion);
+
         [Flags]
         public enum DATADataType
         {
@@ -2871,6 +2873,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IExplosion);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

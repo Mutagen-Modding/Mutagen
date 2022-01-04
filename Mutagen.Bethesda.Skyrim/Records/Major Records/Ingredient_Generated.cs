@@ -1234,6 +1234,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Ingredient>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IIngredient);
+
         [Flags]
         public enum DATADataType
         {
@@ -3089,6 +3091,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IIngredient);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

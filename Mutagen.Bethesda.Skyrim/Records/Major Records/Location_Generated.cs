@@ -2676,6 +2676,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Location>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILocation);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -5476,6 +5478,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILocation);
+
 
         public IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; private set; }
         public IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; private set; }

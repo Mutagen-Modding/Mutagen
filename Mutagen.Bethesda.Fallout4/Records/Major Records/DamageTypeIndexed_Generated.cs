@@ -474,6 +474,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<DamageTypeIndexed>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDamageTypeIndexed);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1621,6 +1623,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDamageTypeIndexed);
+
 
         public IReadOnlyList<UInt32>? DamageTypes { get; private set; }
         partial void CustomFactoryEnd(

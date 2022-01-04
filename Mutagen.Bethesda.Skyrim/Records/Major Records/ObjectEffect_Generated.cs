@@ -931,6 +931,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ObjectEffect>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IObjectEffect);
+
         [Flags]
         public enum ENITDataType
         {
@@ -2362,6 +2364,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IObjectEffect);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

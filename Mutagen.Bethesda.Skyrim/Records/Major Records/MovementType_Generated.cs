@@ -841,6 +841,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MovementType>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMovementType);
+
         [Flags]
         public enum SPEDDataType
         {
@@ -2221,6 +2223,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMovementType);
+
 
         #region Name
         private int? _NameLocation;

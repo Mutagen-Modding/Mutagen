@@ -1700,6 +1700,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Package>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPackage);
+
         [Flags]
         public enum PKDTDataType
         {
@@ -3826,6 +3828,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPackage);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

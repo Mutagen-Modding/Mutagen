@@ -3945,6 +3945,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<EffectShader>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IEffectShader);
+
         [Flags]
         public enum DATADataType
         {
@@ -7377,6 +7379,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IEffectShader);
+
 
         #region FillTexture
         private int? _FillTextureLocation;

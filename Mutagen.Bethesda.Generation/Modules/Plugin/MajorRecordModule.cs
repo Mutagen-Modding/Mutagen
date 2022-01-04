@@ -125,6 +125,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 fg.AppendLine($"return MajorRecordPrinter<{obj.Name}>.ToString(this);");
             }
             fg.AppendLine();
+
+            if (!obj.Abstract)
+            {
+                fg.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: false)});");
+                fg.AppendLine();
+            }
         }
 
         public static async Task<Case> HasMajorRecordsInTree(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)

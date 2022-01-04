@@ -380,6 +380,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<GlobalInt>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGlobalInt);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1498,6 +1500,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGlobalInt);
+
 
         #region Data
         partial void DataCustomParse(

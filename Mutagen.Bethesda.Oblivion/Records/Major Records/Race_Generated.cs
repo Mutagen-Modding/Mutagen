@@ -1399,6 +1399,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Race>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IRace);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -3355,6 +3357,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRace);
+
 
         #region Name
         private int? _NameLocation;

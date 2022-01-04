@@ -989,6 +989,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<HeadPart>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IHeadPart);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -2503,6 +2505,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IHeadPart);
+
         public HeadPart.MajorFlag MajorFlags => (HeadPart.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name

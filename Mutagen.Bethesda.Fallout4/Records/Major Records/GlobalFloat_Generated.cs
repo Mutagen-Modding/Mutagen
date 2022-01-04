@@ -423,6 +423,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<GlobalFloat>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGlobalFloat);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1556,6 +1558,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGlobalFloat);
+
 
         #region Data
         private int? _DataLocation;

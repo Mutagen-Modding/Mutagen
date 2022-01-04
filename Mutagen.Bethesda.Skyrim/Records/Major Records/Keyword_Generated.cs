@@ -404,6 +404,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Keyword>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IKeyword);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1415,6 +1417,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IKeyword);
+
 
         #region Color
         private int? _ColorLocation;

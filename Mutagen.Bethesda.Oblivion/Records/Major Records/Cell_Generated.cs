@@ -1448,6 +1448,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Cell>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ICell);
+
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -4681,6 +4683,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ICell);
+
 
         #region Name
         private int? _NameLocation;

@@ -456,6 +456,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<AnimatedObject>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAnimatedObject);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1547,6 +1549,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAnimatedObject);
+
 
         public IModelGetter? Model { get; private set; }
         #region UnloadEvent

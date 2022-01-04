@@ -876,6 +876,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<DialogTopic>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDialogTopic);
+
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -2817,6 +2819,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDialogTopic);
+
 
         #region Name
         private int? _NameLocation;

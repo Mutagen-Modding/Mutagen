@@ -640,6 +640,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<AddonNode>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAddonNode);
+
         [Flags]
         public enum DNAMDataType
         {
@@ -1920,6 +1922,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAddonNode);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

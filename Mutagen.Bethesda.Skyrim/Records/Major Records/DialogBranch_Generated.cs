@@ -511,6 +511,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<DialogBranch>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDialogBranch);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1613,6 +1615,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDialogBranch);
+
 
         #region Quest
         private int? _QuestLocation;

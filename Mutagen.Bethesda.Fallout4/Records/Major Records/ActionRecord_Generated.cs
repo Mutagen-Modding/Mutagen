@@ -547,6 +547,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<ActionRecord>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IActionRecord);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1703,6 +1705,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IActionRecord);
+
 
         #region Color
         private int? _ColorLocation;

@@ -567,6 +567,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<AlchemicalApparatus>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAlchemicalApparatus);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1793,6 +1795,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAlchemicalApparatus);
+
 
         #region Name
         private int? _NameLocation;

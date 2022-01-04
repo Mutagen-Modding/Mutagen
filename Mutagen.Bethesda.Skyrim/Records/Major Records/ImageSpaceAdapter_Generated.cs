@@ -6987,6 +6987,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ImageSpaceAdapter>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IImageSpaceAdapter);
+
         [Flags]
         public enum DNAMDataType
         {
@@ -12914,6 +12916,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IImageSpaceAdapter);
+
 
         private int? _DNAMLocation;
         public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; private set; }

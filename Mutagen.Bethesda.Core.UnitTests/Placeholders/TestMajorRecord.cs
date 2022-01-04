@@ -164,5 +164,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
         {
             throw new NotImplementedException();
         }
+
+        public Type Type => throw new NotImplementedException();
     }
 }

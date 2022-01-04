@@ -853,6 +853,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<IdleAnimation>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IIdleAnimation);
+
         [Flags]
         public enum DATADataType
         {
@@ -2198,6 +2200,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IIdleAnimation);
+
 
         #region Conditions
         partial void ConditionsCustomParse(

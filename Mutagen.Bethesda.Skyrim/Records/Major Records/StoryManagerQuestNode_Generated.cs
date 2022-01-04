@@ -591,6 +591,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<StoryManagerQuestNode>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IStoryManagerQuestNode);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1864,6 +1866,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IStoryManagerQuestNode);
+
 
         #region Flags
         private int? _FlagsLocation;

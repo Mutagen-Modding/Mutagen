@@ -589,6 +589,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ImageSpace>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IImageSpace);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1853,6 +1855,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IImageSpace);
+
 
         #region ENAM
         private int? _ENAMLocation;

@@ -658,6 +658,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MoveableStatic>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMoveableStatic);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1986,6 +1988,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMoveableStatic);
+
         public MoveableStatic.MajorFlag MajorFlags => (MoveableStatic.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds

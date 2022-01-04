@@ -986,6 +986,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Flora>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IFlora);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2656,6 +2658,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IFlora);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

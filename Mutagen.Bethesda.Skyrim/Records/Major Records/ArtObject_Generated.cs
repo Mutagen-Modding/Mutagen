@@ -511,6 +511,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ArtObject>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IArtObject);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1664,6 +1666,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IArtObject);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

@@ -1027,6 +1027,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ArmorAddon>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IArmorAddon);
+
         [Flags]
         public enum DNAMDataType
         {
@@ -2754,6 +2756,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IArmorAddon);
+
 
         #region BodyTemplate
         partial void BodyTemplateCustomParse(

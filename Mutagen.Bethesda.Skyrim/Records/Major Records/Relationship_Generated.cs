@@ -607,6 +607,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Relationship>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IRelationship);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1774,6 +1776,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRelationship);
+
         public Relationship.MajorFlag MajorFlags => (Relationship.MajorFlag)this.MajorRecordFlagsRaw;
 
         private int? _DATALocation;

@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Plugins
         /// </summary>
         public RecordType EDID { get; set; }
         
-        Type ILink.Type => typeof(TMajor);
+        Type ILinkIdentifier.Type => typeof(TMajor);
 
         public EDIDLink()
         {

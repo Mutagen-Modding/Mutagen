@@ -684,6 +684,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<SigilStone>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISigilStone);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1992,6 +1994,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISigilStone);
+
 
         #region Name
         private int? _NameLocation;

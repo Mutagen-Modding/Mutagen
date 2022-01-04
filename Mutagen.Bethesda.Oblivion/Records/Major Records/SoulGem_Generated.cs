@@ -633,6 +633,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<SoulGem>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISoulGem);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1929,6 +1931,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISoulGem);
+
 
         #region Name
         private int? _NameLocation;

@@ -540,6 +540,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<BodyPartData>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IBodyPartData);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1677,6 +1679,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IBodyPartData);
+
 
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IBodyPartGetter> Parts { get; private set; } = ListExt.Empty<BodyPartBinaryOverlay>();

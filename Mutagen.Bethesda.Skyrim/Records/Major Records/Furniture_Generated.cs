@@ -1108,6 +1108,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Furniture>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IFurniture);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -2958,6 +2960,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IFurniture);
+
         public Furniture.MajorFlag MajorFlags => (Furniture.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

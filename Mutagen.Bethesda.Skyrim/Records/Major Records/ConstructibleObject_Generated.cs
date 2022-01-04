@@ -712,6 +712,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ConstructibleObject>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IConstructibleObject);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1964,6 +1966,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IConstructibleObject);
+
 
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region Conditions

@@ -822,6 +822,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ShaderParticleGeometry>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IShaderParticleGeometry);
+
         [Flags]
         public enum DATADataType
         {
@@ -2136,6 +2138,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IShaderParticleGeometry);
+
 
         private int? _DATALocation;
         public ShaderParticleGeometry.DATADataType DATADataTypeState { get; private set; }

@@ -975,6 +975,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Key>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IKey);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -2643,6 +2645,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IKey);
+
         public Key.MajorFlag MajorFlags => (Key.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

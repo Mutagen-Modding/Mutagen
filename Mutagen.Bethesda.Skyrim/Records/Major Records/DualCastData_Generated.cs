@@ -677,6 +677,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<DualCastData>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDualCastData);
+
         [Flags]
         public enum DATADataType
         {
@@ -1896,6 +1898,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDualCastData);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

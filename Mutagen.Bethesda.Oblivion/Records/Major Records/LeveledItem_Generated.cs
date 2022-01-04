@@ -533,6 +533,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<LeveledItem>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILeveledItem);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1678,6 +1680,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILeveledItem);
+
 
         #region ChanceNone
         private int? _ChanceNoneLocation;

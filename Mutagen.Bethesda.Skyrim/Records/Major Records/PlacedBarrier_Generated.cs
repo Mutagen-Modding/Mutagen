@@ -442,6 +442,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<PlacedBarrier>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedBarrier);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1565,6 +1567,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedBarrier);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -855,6 +855,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Climate>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IClimate);
+
         [Flags]
         public enum TNAMDataType
         {
@@ -2274,6 +2276,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IClimate);
+
 
         public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
         #region SunTexture

@@ -651,6 +651,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<AIPackage>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAIPackage);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1961,6 +1963,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAIPackage);
+
 
         #region Data
         private RangeInt32? _DataLocation;

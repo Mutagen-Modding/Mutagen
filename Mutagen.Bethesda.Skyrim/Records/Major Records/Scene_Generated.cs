@@ -1118,6 +1118,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Scene>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IScene);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2760,6 +2762,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IScene);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

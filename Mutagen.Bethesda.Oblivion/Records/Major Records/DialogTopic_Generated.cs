@@ -693,6 +693,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<DialogTopic>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDialogTopic);
+
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -2457,6 +2459,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDialogTopic);
+
 
         public IReadOnlyList<IFormLinkGetter<IQuestGetter>> Quests { get; private set; } = ListExt.Empty<IFormLinkGetter<IQuestGetter>>();
         #region Name

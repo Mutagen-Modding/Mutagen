@@ -484,6 +484,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<FormList>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IFormList);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1536,6 +1538,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IFormList);
+
 
         public IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>> Items { get; private set; } = ListExt.Empty<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
         partial void CustomFactoryEnd(

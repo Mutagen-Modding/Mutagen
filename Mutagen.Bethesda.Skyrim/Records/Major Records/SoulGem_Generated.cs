@@ -1031,6 +1031,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<SoulGem>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISoulGem);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -2730,6 +2732,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISoulGem);
+
         public SoulGem.MajorFlag MajorFlags => (SoulGem.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds

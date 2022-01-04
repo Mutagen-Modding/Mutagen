@@ -3929,6 +3929,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Race>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IRace);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -8070,6 +8072,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRace);
+
         public Race.MajorFlag MajorFlags => (Race.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name

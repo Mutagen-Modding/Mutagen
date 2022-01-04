@@ -906,6 +906,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<TalkingActivator>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ITalkingActivator);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -2480,6 +2482,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ITalkingActivator);
+
         public TalkingActivator.MajorFlag MajorFlags => (TalkingActivator.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

@@ -930,6 +930,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<AlchemicalApparatus>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAlchemicalApparatus);
+
         [Flags]
         public enum DATADataType
         {
@@ -2561,6 +2563,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAlchemicalApparatus);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

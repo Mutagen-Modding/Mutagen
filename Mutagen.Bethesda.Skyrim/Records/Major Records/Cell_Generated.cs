@@ -1988,6 +1988,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Cell>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ICell);
+
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -5930,6 +5932,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ICell);
+
         public Cell.MajorFlag MajorFlags => (Cell.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name

@@ -1232,6 +1232,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<LightingTemplate>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILightingTemplate);
+
         [Flags]
         public enum DATADataType
         {
@@ -2829,6 +2831,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILightingTemplate);
+
 
         private int? _DATALocation;
         public LightingTemplate.DATADataType DATADataTypeState { get; private set; }

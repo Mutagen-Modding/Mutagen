@@ -2691,6 +2691,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Water>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IWater);
+
         [Flags]
         public enum DNAMDataType
         {
@@ -5428,6 +5430,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IWater);
+
 
         #region Name
         private int? _NameLocation;

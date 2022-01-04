@@ -789,6 +789,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<LoadScreen>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILoadScreen);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -2194,6 +2196,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILoadScreen);
+
         public LoadScreen.MajorFlag MajorFlags => (LoadScreen.MajorFlag)this.MajorRecordFlagsRaw;
 
         public IIconsGetter? Icons { get; private set; }

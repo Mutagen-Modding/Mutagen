@@ -507,6 +507,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<VisualEffect>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IVisualEffect);
+
         [Flags]
         public enum DATADataType
         {
@@ -1592,6 +1594,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IVisualEffect);
+
 
         private int? _DATALocation;
         public VisualEffect.DATADataType DATADataTypeState { get; private set; }

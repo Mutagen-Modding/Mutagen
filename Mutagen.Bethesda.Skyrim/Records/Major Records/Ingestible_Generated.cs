@@ -1259,6 +1259,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Ingestible>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IIngestible);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -3109,6 +3111,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IIngestible);
+
         public Ingestible.MajorFlag MajorFlags => (Ingestible.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds

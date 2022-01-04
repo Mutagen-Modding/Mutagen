@@ -1877,6 +1877,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     }
                 }
 
+                if (await obj.IsMajorRecord() && !obj.Abstract)
+                {
+                    fg.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: false)});");
+                    fg.AppendLine();
+                }
+
                 if (obj.GetObjectData().MajorRecordFlags)
                 {
                     fg.AppendLine($"public {obj.ObjectName}.MajorFlag MajorFlags => ({obj.ObjectName}.MajorFlag)this.MajorRecordFlagsRaw;");

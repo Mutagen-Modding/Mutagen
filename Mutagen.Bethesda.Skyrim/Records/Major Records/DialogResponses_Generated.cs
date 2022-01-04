@@ -1261,6 +1261,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<DialogResponses>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDialogResponses);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -3013,6 +3015,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDialogResponses);
+
         public DialogResponses.MajorFlag MajorFlags => (DialogResponses.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

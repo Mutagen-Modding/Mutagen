@@ -738,6 +738,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Landscape>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILandscape);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2053,6 +2055,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILandscape);
+
 
         #region DATA
         private int? _DATALocation;

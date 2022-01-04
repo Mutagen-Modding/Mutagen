@@ -1606,6 +1606,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<PlacedNpc>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedNpc);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -3899,6 +3901,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedNpc);
+
         public PlacedNpc.MajorFlag MajorFlags => (PlacedNpc.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

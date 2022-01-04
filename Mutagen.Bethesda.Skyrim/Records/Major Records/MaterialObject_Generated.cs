@@ -893,6 +893,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MaterialObject>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMaterialObject);
+
         [Flags]
         public enum DATADataType
         {
@@ -2282,6 +2284,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMaterialObject);
+
 
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<ReadOnlyMemorySlice<Byte>> DNAMs { get; private set; } = ListExt.Empty<ReadOnlyMemorySlice<Byte>>();

@@ -640,6 +640,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<EncounterZone>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IEncounterZone);
+
         [Flags]
         public enum DATADataType
         {
@@ -1794,6 +1796,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IEncounterZone);
+
 
         private int? _DATALocation;
         public EncounterZone.DATADataType DATADataTypeState { get; private set; }

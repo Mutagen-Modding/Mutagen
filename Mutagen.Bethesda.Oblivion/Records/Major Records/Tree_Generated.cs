@@ -641,6 +641,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Tree>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ITree);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1919,6 +1921,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ITree);
+
 
         public IModelGetter? Model { get; private set; }
         #region Icon

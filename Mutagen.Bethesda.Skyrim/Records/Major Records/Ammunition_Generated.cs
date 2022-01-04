@@ -1109,6 +1109,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Ammunition>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAmmunition);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -2861,6 +2863,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAmmunition);
+
         public Ammunition.MajorFlag MajorFlags => (Ammunition.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds

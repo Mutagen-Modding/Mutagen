@@ -1528,6 +1528,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Projectile>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IProjectile);
+
         [Flags]
         public enum DATADataType
         {
@@ -3487,6 +3489,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IProjectile);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

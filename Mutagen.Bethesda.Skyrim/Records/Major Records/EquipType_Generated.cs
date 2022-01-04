@@ -517,6 +517,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<EquipType>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IEquipType);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1611,6 +1613,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IEquipType);
+
 
         public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; private set; }
         #region UseAllParents

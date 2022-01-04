@@ -578,6 +578,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Birthsign>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IBirthsign);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1738,6 +1740,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IBirthsign);
+
 
         #region Name
         private int? _NameLocation;

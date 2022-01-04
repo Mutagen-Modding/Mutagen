@@ -950,6 +950,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Hazard>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IHazard);
+
         [Flags]
         public enum DATADataType
         {
@@ -2425,6 +2427,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IHazard);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

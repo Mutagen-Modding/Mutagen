@@ -920,6 +920,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Grass>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGrass);
+
         [Flags]
         public enum DATADataType
         {
@@ -2358,6 +2360,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGrass);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

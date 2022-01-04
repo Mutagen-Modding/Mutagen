@@ -392,6 +392,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<GlobalInt>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGlobalInt);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1515,6 +1517,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGlobalInt);
+
 
         #region Data
         partial void DataCustomParse(

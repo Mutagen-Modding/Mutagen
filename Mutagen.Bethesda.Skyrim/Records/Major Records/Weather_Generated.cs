@@ -2964,6 +2964,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Weather>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IWeather);
+
         [Flags]
         public enum NAM0DataType
         {
@@ -6514,6 +6516,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IWeather);
+
 
         #region CloudTexturesParse
          partial void CloudTexturesParseCustomParse(

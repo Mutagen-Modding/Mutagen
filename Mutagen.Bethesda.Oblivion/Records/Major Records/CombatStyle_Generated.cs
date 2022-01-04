@@ -439,6 +439,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<CombatStyle>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ICombatStyle);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1533,6 +1535,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ICombatStyle);
+
 
         #region Data
         private RangeInt32? _DataLocation;

@@ -1154,6 +1154,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Spell>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISpell);
+
         [Flags]
         public enum SPITDataType
         {
@@ -2781,6 +2783,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISpell);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

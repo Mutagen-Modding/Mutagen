@@ -484,6 +484,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Outfit>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IOutfit);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1543,6 +1545,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IOutfit);
+
 
         public IReadOnlyList<IFormLinkGetter<IOutfitTargetGetter>>? Items { get; private set; }
         partial void CustomFactoryEnd(

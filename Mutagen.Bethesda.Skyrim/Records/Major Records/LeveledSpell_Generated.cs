@@ -606,6 +606,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<LeveledSpell>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILeveledSpell);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1806,6 +1808,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILeveledSpell);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

@@ -1032,6 +1032,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<CombatStyle>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ICombatStyle);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -2590,6 +2592,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ICombatStyle);
+
         public CombatStyle.MajorFlag MajorFlags => (CombatStyle.MajorFlag)this.MajorRecordFlagsRaw;
 
         private int? _CSGDLocation;

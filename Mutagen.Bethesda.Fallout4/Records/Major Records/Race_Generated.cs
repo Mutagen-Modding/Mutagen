@@ -2234,6 +2234,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Race>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IRace);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -4670,6 +4672,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRace);
+
         public Race.MajorFlag MajorFlags => (Race.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region AnimationSound

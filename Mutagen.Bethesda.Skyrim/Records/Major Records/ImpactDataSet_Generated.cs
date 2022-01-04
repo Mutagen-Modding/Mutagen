@@ -486,6 +486,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ImpactDataSet>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IImpactDataSet);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1539,6 +1541,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IImpactDataSet);
+
 
         public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = ListExt.Empty<ImpactDataBinaryOverlay>();
         partial void CustomFactoryEnd(

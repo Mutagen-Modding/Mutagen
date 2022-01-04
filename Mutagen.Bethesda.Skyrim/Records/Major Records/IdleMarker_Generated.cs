@@ -659,6 +659,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<IdleMarker>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IIdleMarker);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1979,6 +1981,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IIdleMarker);
+
         public IdleMarker.MajorFlag MajorFlags => (IdleMarker.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds

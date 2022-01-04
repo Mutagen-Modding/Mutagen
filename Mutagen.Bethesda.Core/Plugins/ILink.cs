@@ -5,16 +5,19 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins
 {
-    /// <summary>
-    /// An interface for an object that is able to resolve against a LinkCache
-    /// </summary>
-    public interface ILink
+    public interface ILinkIdentifier
     {
         /// <summary>
         /// The MajorRecord Type that the link is associated with
         /// </summary>
         Type Type { get; }
-        
+    }
+    
+    /// <summary>
+    /// An interface for an object that is able to resolve against a LinkCache
+    /// </summary>
+    public interface ILink : ILinkIdentifier
+    {
         /// <summary>
         /// Attempts to locate an associated ModKey from the link
         /// </summary>

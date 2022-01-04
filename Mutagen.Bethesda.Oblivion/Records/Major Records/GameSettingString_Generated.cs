@@ -380,6 +380,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<GameSettingString>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGameSettingString);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1484,6 +1486,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGameSettingString);
+
 
         #region Data
         private int? _DataLocation;

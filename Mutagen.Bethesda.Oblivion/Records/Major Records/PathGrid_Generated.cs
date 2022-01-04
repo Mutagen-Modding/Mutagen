@@ -740,6 +740,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<PathGrid>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPathGrid);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1996,6 +1998,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPathGrid);
+
 
         #region PointToPointConnections
         partial void PointToPointConnectionsCustomParse(

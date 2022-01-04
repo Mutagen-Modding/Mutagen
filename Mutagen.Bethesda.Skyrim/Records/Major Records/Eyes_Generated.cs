@@ -483,6 +483,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Eyes>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IEyes);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1572,6 +1574,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IEyes);
+
         public Eyes.MajorFlag MajorFlags => (Eyes.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name

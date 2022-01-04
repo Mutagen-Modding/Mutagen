@@ -401,6 +401,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Static>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IStatic);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1443,6 +1445,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IStatic);
+
 
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
