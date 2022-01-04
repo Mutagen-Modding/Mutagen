@@ -350,6 +350,7 @@
     <Compile Include="Plugins\Binary\Translations\ColorBinaryType.cs" />
     <Compile Include="Plugins\Records\DI\ModActivator.cs" />
     <Compile Include="Plugins\Records\DI\ModImporter.cs" />
+    <Compile Include="Plugins\Records\IFormKeyGetter.cs" />
     <Compile Include="Plugins\Records\Internals\IModRegistration.cs" />
     <Compile Include="Plugins\RecordTypeMapping\AssociatedRecordTypesAttribute.cs" />
     <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookup.cs" />

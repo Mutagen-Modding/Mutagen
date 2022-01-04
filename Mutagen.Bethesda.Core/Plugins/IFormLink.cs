@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Plugins
     /// An interface for a FormLink.
     /// FormKey is allowed to be null to communicate absence of a record.
     /// </summary>
-    public interface IFormLinkGetter : ILink
+    public interface IFormLinkGetter : ILink, IFormKeyGetter
     {
         /// <summary>
         /// FormKey to link against
@@ -18,11 +18,6 @@ namespace Mutagen.Bethesda.Plugins
         /// True if FormKey points to a null ID
         /// </summary>
         bool IsNull { get; }
-
-        /// <summary>
-        /// FormKey to link against
-        /// </summary>
-        FormKey FormKey { get; }
     }
 
     /// <summary>
