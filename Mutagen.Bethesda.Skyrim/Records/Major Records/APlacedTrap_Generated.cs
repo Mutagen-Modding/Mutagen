@@ -3301,7 +3301,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class APlacedTrapBinaryOverlay :
+    public abstract partial class APlacedTrapBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IAPlacedTrapGetter
     {

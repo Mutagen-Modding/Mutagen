@@ -1570,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class PlaceBinaryOverlay :
+    public abstract partial class PlaceBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IPlaceGetter
     {

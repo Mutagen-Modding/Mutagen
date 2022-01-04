@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class AStoryManagerNodeBinaryOverlay :
+    public abstract partial class AStoryManagerNodeBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IAStoryManagerNodeGetter
     {

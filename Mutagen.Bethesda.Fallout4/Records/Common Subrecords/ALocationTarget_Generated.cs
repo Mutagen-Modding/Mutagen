@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class ALocationTargetBinaryOverlay :
+    public abstract partial class ALocationTargetBinaryOverlay :
         PluginBinaryOverlay,
         IALocationTargetGetter
     {

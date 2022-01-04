@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class GlobalBinaryOverlay :
+    public abstract partial class GlobalBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IGlobalGetter
     {

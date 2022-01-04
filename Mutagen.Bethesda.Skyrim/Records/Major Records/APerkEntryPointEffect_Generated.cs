@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class APerkEntryPointEffectBinaryOverlay :
+    public abstract partial class APerkEntryPointEffectBinaryOverlay :
         APerkEffectBinaryOverlay,
         IAPerkEntryPointEffectGetter
     {

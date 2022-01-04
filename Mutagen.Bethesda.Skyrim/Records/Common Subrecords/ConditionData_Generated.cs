@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ConditionDataBinaryOverlay :
+    public abstract partial class ConditionDataBinaryOverlay :
         PluginBinaryOverlay,
         IConditionDataGetter
     {

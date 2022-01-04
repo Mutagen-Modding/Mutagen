@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class GameSettingBinaryOverlay :
+    public abstract partial class GameSettingBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IGameSettingGetter
     {

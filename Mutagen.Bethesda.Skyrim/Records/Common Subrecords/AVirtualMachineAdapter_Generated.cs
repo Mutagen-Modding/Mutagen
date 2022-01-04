@@ -1262,7 +1262,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class AVirtualMachineAdapterBinaryOverlay :
+    public abstract partial class AVirtualMachineAdapterBinaryOverlay :
         PluginBinaryOverlay,
         IAVirtualMachineAdapterGetter
     {

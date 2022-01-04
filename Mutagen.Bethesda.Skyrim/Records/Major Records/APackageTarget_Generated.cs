@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class APackageTargetBinaryOverlay :
+    public abstract partial class APackageTargetBinaryOverlay :
         PluginBinaryOverlay,
         IAPackageTargetGetter
     {

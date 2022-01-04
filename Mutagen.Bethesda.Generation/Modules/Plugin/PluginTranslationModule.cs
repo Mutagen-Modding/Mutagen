@@ -1788,6 +1788,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             using (var args = new ClassWrapper(fg, $"{BinaryOverlayClass(obj)}"))
             {
+                args.Abstract = obj.Abstract;
                 args.Partial = true;
                 var block = obj.GetObjectType() == ObjectType.Mod
                     || (obj.GetObjectType() == ObjectType.Group && obj.Generics.Count > 0);

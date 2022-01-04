@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class BookTeachTargetBinaryOverlay :
+    public abstract partial class BookTeachTargetBinaryOverlay :
         PluginBinaryOverlay,
         IBookTeachTargetGetter
     {

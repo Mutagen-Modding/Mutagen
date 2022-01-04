@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class RegionDataBinaryOverlay :
+    public abstract partial class RegionDataBinaryOverlay :
         PluginBinaryOverlay,
         IRegionDataGetter
     {

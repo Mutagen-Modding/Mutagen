@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ANpcSoundDefinitionBinaryOverlay :
+    public abstract partial class ANpcSoundDefinitionBinaryOverlay :
         PluginBinaryOverlay,
         IANpcSoundDefinitionGetter
     {

@@ -1645,7 +1645,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 }
 namespace Mutagen.Bethesda.Plugins.Records.Internals
 {
-    public partial class MajorRecordBinaryOverlay :
+    public abstract partial class MajorRecordBinaryOverlay :
         PluginBinaryOverlay,
         IMajorRecordGetter
     {

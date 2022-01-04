@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ATopicReferenceBinaryOverlay :
+    public abstract partial class ATopicReferenceBinaryOverlay :
         PluginBinaryOverlay,
         IATopicReferenceGetter
     {

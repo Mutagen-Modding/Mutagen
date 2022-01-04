@@ -1138,7 +1138,7 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class ConditionBinaryOverlay :
+    public abstract partial class ConditionBinaryOverlay :
         PluginBinaryOverlay,
         IConditionGetter
     {

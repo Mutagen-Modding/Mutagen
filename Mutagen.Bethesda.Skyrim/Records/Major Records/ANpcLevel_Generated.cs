@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ANpcLevelBinaryOverlay :
+    public abstract partial class ANpcLevelBinaryOverlay :
         PluginBinaryOverlay,
         IANpcLevelGetter
     {

@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ANavigationMeshBinaryOverlay :
+    public abstract partial class ANavigationMeshBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IANavigationMeshGetter
     {

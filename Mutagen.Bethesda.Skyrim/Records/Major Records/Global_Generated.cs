@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class GlobalBinaryOverlay :
+    public abstract partial class GlobalBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IGlobalGetter
     {
