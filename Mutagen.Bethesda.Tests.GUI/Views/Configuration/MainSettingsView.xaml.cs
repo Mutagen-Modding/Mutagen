@@ -38,6 +38,15 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                     .DisposeWith(disposable);
                 this.Bind(this.ViewModel, x => x.CacheProcessing, x => x.CacheProcessing.IsChecked)
                     .DisposeWith(disposable);
+                this.Bind(this.ViewModel, x => x.CacheTrimming, x => x.CacheTrimming.IsChecked)
+                    .DisposeWith(disposable);
+                
+                this.OneWayBind(ViewModel, x => x.SkippedRecordTypes, x => x.SkippedTypes.ItemsSource)
+                    .DisposeWith(disposable);
+                this.OneWayBind(ViewModel, x => x.AddSkipCommand, x => x.AddSkipButton.Command)
+                    .DisposeWith(disposable);
+                this.Bind(ViewModel, x => x.SkipInput, x => x.SkipInput.Text)
+                    .DisposeWith(disposable);
 
                 this.WhenAnyFallback(x => x.ViewModel!.DataFoldersDisplay)
                     .BindTo(this, x => x.DataFolders.ItemsSource)
