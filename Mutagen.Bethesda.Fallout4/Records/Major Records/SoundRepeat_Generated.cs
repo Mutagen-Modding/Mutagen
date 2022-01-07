@@ -47,6 +47,9 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public SoundRepeat.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region MinTime
         public Single MinTime { get; set; } = default;
         #endregion
@@ -94,16 +97,19 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.MinTime = initialValue;
                 this.MaxTime = initialValue;
                 this.Stackable = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem MinTime,
                 TItem MaxTime,
                 TItem Stackable)
             {
+                this.Versioning = Versioning;
                 this.MinTime = MinTime;
                 this.MaxTime = MaxTime;
                 this.Stackable = Stackable;
@@ -118,6 +124,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem MinTime;
             public TItem MaxTime;
             public TItem Stackable;
@@ -133,6 +140,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.MinTime, rhs.MinTime)) return false;
                 if (!object.Equals(this.MaxTime, rhs.MaxTime)) return false;
                 if (!object.Equals(this.Stackable, rhs.Stackable)) return false;
@@ -141,6 +149,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.MinTime);
                 hash.Add(this.MaxTime);
                 hash.Add(this.Stackable);
@@ -152,6 +161,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.MinTime)) return false;
                 if (!eval(this.MaxTime)) return false;
                 if (!eval(this.Stackable)) return false;
@@ -162,6 +172,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.MinTime)) return true;
                 if (eval(this.MaxTime)) return true;
                 if (eval(this.Stackable)) return true;
@@ -179,6 +190,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.MinTime = eval(this.MinTime);
                 obj.MaxTime = eval(this.MaxTime);
                 obj.Stackable = eval(this.Stackable);
@@ -204,6 +216,10 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.MinTime ?? true)
                     {
                         fg.AppendItem(MinTime, "MinTime");
@@ -241,6 +257,7 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? MinTime;
             public Exception? MaxTime;
             public Exception? Stackable;
@@ -252,6 +269,8 @@ namespace Mutagen.Bethesda.Fallout4
                 SoundRepeat_FieldIndex enu = (SoundRepeat_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundRepeat_FieldIndex.Versioning:
+                        return Versioning;
                     case SoundRepeat_FieldIndex.MinTime:
                         return MinTime;
                     case SoundRepeat_FieldIndex.MaxTime:
@@ -268,6 +287,9 @@ namespace Mutagen.Bethesda.Fallout4
                 SoundRepeat_FieldIndex enu = (SoundRepeat_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundRepeat_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case SoundRepeat_FieldIndex.MinTime:
                         this.MinTime = ex;
                         break;
@@ -287,6 +309,9 @@ namespace Mutagen.Bethesda.Fallout4
                 SoundRepeat_FieldIndex enu = (SoundRepeat_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundRepeat_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case SoundRepeat_FieldIndex.MinTime:
                         this.MinTime = (Exception?)obj;
                         break;
@@ -304,6 +329,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (MinTime != null) return true;
                 if (MaxTime != null) return true;
                 if (Stackable != null) return true;
@@ -341,6 +367,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(MinTime, "MinTime");
                 fg.AppendItem(MaxTime, "MaxTime");
                 fg.AppendItem(Stackable, "Stackable");
@@ -352,6 +379,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.MinTime = this.MinTime.Combine(rhs.MinTime);
                 ret.MaxTime = this.MaxTime.Combine(rhs.MaxTime);
                 ret.Stackable = this.Stackable.Combine(rhs.Stackable);
@@ -378,6 +406,7 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool MinTime;
             public bool MaxTime;
             public bool Stackable;
@@ -390,6 +419,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.MinTime = defaultOn;
                 this.MaxTime = defaultOn;
                 this.Stackable = defaultOn;
@@ -408,6 +438,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((MinTime, null));
                 ret.Add((MaxTime, null));
                 ret.Add((Stackable, null));
@@ -423,6 +454,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoundRepeat_Registration.TriggeringRecordType;
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -487,6 +523,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<ISoundRepeat>,
         ISoundRepeatGetter
     {
+        new SoundRepeat.VersioningBreaks Versioning { get; set; }
         new Single MinTime { get; set; }
         new Single MaxTime { get; set; }
         new Boolean Stackable { get; set; }
@@ -504,6 +541,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => SoundRepeat_Registration.Instance;
+        SoundRepeat.VersioningBreaks Versioning { get; }
         Single MinTime { get; }
         Single MaxTime { get; }
         Boolean Stackable { get; }
@@ -676,9 +714,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #region Field Index
     public enum SoundRepeat_FieldIndex
     {
-        MinTime = 0,
-        MaxTime = 1,
-        Stackable = 2,
+        Versioning = 0,
+        MinTime = 1,
+        MaxTime = 2,
+        Stackable = 3,
     }
     #endregion
 
@@ -696,9 +735,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "beab6506-5f95-4dd2-b8ee-02655c76538c";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(SoundRepeat.Mask<>);
 
@@ -767,6 +806,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(ISoundRepeat item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.MinTime = default;
             item.MaxTime = default;
             item.Stackable = default;
@@ -824,6 +864,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.MinTime = item.MinTime.EqualsWithin(rhs.MinTime);
             ret.MaxTime = item.MaxTime.EqualsWithin(rhs.MaxTime);
             ret.Stackable = item.Stackable == rhs.Stackable;
@@ -873,6 +914,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             SoundRepeat.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.MinTime ?? true)
             {
                 fg.AppendItem(item.MinTime, "MinTime");
@@ -894,6 +939,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((crystal?.GetShouldTranslate((int)SoundRepeat_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)SoundRepeat_FieldIndex.MinTime) ?? true))
             {
                 if (!lhs.MinTime.EqualsWithin(rhs.MinTime)) return false;
@@ -912,6 +961,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(ISoundRepeatGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.MinTime);
             hash.Add(item.MaxTime);
             hash.Add(item.Stackable);
@@ -947,6 +997,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)SoundRepeat_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)SoundRepeat_FieldIndex.MinTime) ?? true))
             {
                 item.MinTime = rhs.MinTime;
@@ -955,6 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.MaxTime = rhs.MaxTime;
             }
+            if (rhs.Versioning.HasFlag(SoundRepeat.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)SoundRepeat_FieldIndex.Stackable) ?? true))
             {
                 item.Stackable = rhs.Stackable;
@@ -1061,7 +1116,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MaxTime);
-            writer.Write(item.Stackable);
+            if (!item.Versioning.HasFlag(SoundRepeat.VersioningBreaks.Break0))
+            {
+                writer.Write(item.Stackable);
+            }
         }
 
         public void Write(
@@ -1104,6 +1162,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             item.MinTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.MaxTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= SoundRepeat.VersioningBreaks.Break0;
+                return;
+            }
             item.Stackable = frame.ReadBoolean();
         }
 
@@ -1170,9 +1233,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
+        public SoundRepeat.VersioningBreaks Versioning { get; private set; }
         public Single MinTime => _data.Slice(0x0, 0x4).Float();
         public Single MaxTime => _data.Slice(0x4, 0x4).Float();
-        public Boolean Stackable => _data.Slice(0x8, 0x1)[0] == 1;
+        public Boolean Stackable => _data.Length <= 0x8 ? default : _data.Slice(0x8, 0x1)[0] == 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1199,7 +1263,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x9 + package.MetaData.Constants.SubConstants.HeaderLength;
+            if (ret._data.Length <= 0x8)
+            {
+                ret.Versioning |= SoundRepeat.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

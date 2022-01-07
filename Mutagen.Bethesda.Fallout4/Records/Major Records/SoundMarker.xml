@@ -13,6 +13,7 @@
     <Fields>
       <Float name="MinTime" />
       <Float name="MaxTime" />
+	  <Break/>
       <Bool name="Stackable" byteLength="1" />
     </Fields>
   </Object>

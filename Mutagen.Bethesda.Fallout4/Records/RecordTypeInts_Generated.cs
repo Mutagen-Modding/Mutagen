@@ -3,10 +3,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     public class RecordTypeInts
     {
         public const int AACT = 0x54434141;
+        public const int ANAM = 0x4D414E41;
         public const int AORU = 0x55524F41;
         public const int APPR = 0x52505041;
         public const int ARMO = 0x4F4D5241;
+        public const int ASPC = 0x43505341;
         public const int AVIF = 0x46495641;
+        public const int BNAM = 0x4D414E42;
         public const int BOD2 = 0x32444F42;
         public const int CELL = 0x4C4C4543;
         public const int CITC = 0x43544943;
@@ -72,8 +75,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int PNAM = 0x4D414E50;
         public const int PRPS = 0x53505250;
         public const int RACE = 0x45434152;
+        public const int RDAT = 0x54414452;
         public const int REFR = 0x52464552;
+        public const int REGN = 0x4E474552;
         public const int REPT = 0x54504552;
+        public const int REVB = 0x42564552;
         public const int RNAM = 0x4D414E52;
         public const int SCRN = 0x4E524353;
         public const int SDSC = 0x43534453;
@@ -103,6 +109,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int WAIT = 0x54494157;
         public const int WNAM = 0x4D414E57;
         public const int XNAM = 0x4D414E58;
+        public const int XTRI = 0x49525458;
         public const int XXXX = 0x58585858;
     }
 }

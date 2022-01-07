@@ -7,15 +7,14 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
@@ -38,29 +37,20 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LeveledSpell, LocationReferenceType, MaterialSwap, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
-    /// </summary>
-    public abstract partial class Fallout4MajorRecord :
-        MajorRecord,
-        IEquatable<IFallout4MajorRecordGetter>,
-        IFallout4MajorRecordInternal,
-        ILoquiObjectSetter<Fallout4MajorRecord>
+    public partial class Region :
+        Fallout4MajorRecord,
+        IEquatable<IRegionGetter>,
+        ILoquiObjectSetter<Region>,
+        IRegionInternal
     {
         #region Ctor
-        protected Fallout4MajorRecord()
+        protected Region()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FormVersion
-        public UInt16 FormVersion { get; set; } = default;
-        #endregion
-        #region Version2
-        public UInt16 Version2 { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -68,7 +58,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            Fallout4MajorRecordMixIn.ToString(
+            RegionMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -77,7 +67,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mask
         public new class Mask<TItem> :
-            MajorRecord.Mask<TItem>,
+            Fallout4MajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -85,8 +75,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FormVersion = initialValue;
-                this.Version2 = initialValue;
             }
 
             public Mask(
@@ -100,10 +88,10 @@ namespace Mutagen.Bethesda.Fallout4
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
-                EditorID: EditorID)
+                EditorID: EditorID,
+                FormVersion: FormVersion,
+                Version2: Version2)
             {
-                this.FormVersion = FormVersion;
-                this.Version2 = Version2;
             }
 
             #pragma warning disable CS8618
@@ -112,11 +100,6 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
-            #endregion
-
-            #region Members
-            public TItem FormVersion;
-            public TItem Version2;
             #endregion
 
             #region Equals
@@ -130,15 +113,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FormVersion, rhs.FormVersion)) return false;
-                if (!object.Equals(this.Version2, rhs.Version2)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FormVersion);
-                hash.Add(this.Version2);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -149,8 +128,6 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FormVersion)) return false;
-                if (!eval(this.Version2)) return false;
                 return true;
             }
             #endregion
@@ -159,8 +136,6 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FormVersion)) return true;
-                if (eval(this.Version2)) return true;
                 return false;
             }
             #endregion
@@ -168,7 +143,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Fallout4MajorRecord.Mask<R>();
+                var ret = new Region.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -176,8 +151,6 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FormVersion = eval(this.FormVersion);
-                obj.Version2 = eval(this.Version2);
             }
             #endregion
 
@@ -187,27 +160,19 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(Fallout4MajorRecord.Mask<bool>? printMask = null)
+            public string ToString(Region.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, Fallout4MajorRecord.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Region.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Fallout4MajorRecord.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Region.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.FormVersion ?? true)
-                    {
-                        fg.AppendItem(FormVersion, "FormVersion");
-                    }
-                    if (printMask?.Version2 ?? true)
-                    {
-                        fg.AppendItem(Version2, "Version2");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -216,24 +181,15 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public new class ErrorMask :
-            MajorRecord.ErrorMask,
+            Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
-            #region Members
-            public Exception? FormVersion;
-            public Exception? Version2;
-            #endregion
-
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Fallout4MajorRecord_FieldIndex enu = (Fallout4MajorRecord_FieldIndex)index;
+                Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
-                    case Fallout4MajorRecord_FieldIndex.FormVersion:
-                        return FormVersion;
-                    case Fallout4MajorRecord_FieldIndex.Version2:
-                        return Version2;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -241,15 +197,9 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                Fallout4MajorRecord_FieldIndex enu = (Fallout4MajorRecord_FieldIndex)index;
+                Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
-                    case Fallout4MajorRecord_FieldIndex.FormVersion:
-                        this.FormVersion = ex;
-                        break;
-                    case Fallout4MajorRecord_FieldIndex.Version2:
-                        this.Version2 = ex;
-                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -258,15 +208,9 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                Fallout4MajorRecord_FieldIndex enu = (Fallout4MajorRecord_FieldIndex)index;
+                Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
-                    case Fallout4MajorRecord_FieldIndex.FormVersion:
-                        this.FormVersion = (Exception?)obj;
-                        break;
-                    case Fallout4MajorRecord_FieldIndex.Version2:
-                        this.Version2 = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -276,8 +220,6 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FormVersion != null) return true;
-                if (Version2 != null) return true;
                 return false;
             }
             #endregion
@@ -313,8 +255,6 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(FormVersion, "FormVersion");
-                fg.AppendItem(Version2, "Version2");
             }
             #endregion
 
@@ -323,8 +263,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FormVersion = this.FormVersion.Combine(rhs.FormVersion);
-                ret.Version2 = this.Version2.Combine(rhs.Version2);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -343,32 +281,18 @@ namespace Mutagen.Bethesda.Fallout4
 
         }
         public new class TranslationMask :
-            MajorRecord.TranslationMask,
+            Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
-            #region Members
-            public bool FormVersion;
-            public bool Version2;
-            #endregion
-
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.FormVersion = defaultOn;
-                this.Version2 = defaultOn;
             }
 
             #endregion
-
-            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-            {
-                base.GetCrystal(ret);
-                ret.Add((FormVersion, null));
-                ret.Add((Version2, null));
-            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -379,15 +303,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4MajorRecordCommon.Instance.GetContainedFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
-        public Fallout4MajorRecord(FormKey formKey)
+        public static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
+        public Region(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private Fallout4MajorRecord(
+        private Region(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -396,7 +319,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal Fallout4MajorRecord(
+        internal Region(
             FormKey formKey,
             ushort formVersion)
         {
@@ -405,12 +328,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public Fallout4MajorRecord(IFallout4Mod mod)
+        public Region(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Fallout4MajorRecord(IFallout4Mod mod, string editorID)
+        public Region(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -418,8 +341,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Fallout4MajorRecord>.ToString(this);
+            return MajorRecordPrinter<Region>.ToString(this);
         }
+
+        protected override Type LinkType => typeof(IRegion);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -428,16 +353,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IFallout4MajorRecordGetter rhs) return false;
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IRegionGetter rhs) return false;
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IFallout4MajorRecordGetter? obj)
+        public bool Equals(IRegionGetter? obj)
         {
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -445,15 +370,41 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => Fallout4MajorRecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((Fallout4MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((RegionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
+        }
+        #region Binary Create
+        public new static Region CreateFromBinary(
+            MutagenFrame frame,
+            TypedParseParams? translationParams = null)
+        {
+            var ret = new Region();
+            ((RegionSetterCommon)((IRegionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                translationParams: translationParams);
+            return ret;
+        }
+
+        #endregion
+
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out Region item,
+            TypedParseParams? translationParams = null)
+        {
+            var startPos = frame.Position;
+            item = CreateFromBinary(
+                frame: frame,
+                translationParams: translationParams);
+            return startPos != frame.Position;
         }
         #endregion
 
@@ -461,92 +412,82 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)this).CommonSetterInstance()!).Clear(this);
+            ((RegionSetterCommon)((IRegionGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Fallout4MajorRecord GetNew()
+        internal static new Region GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new Region();
         }
 
     }
     #endregion
 
     #region Interface
-    /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LeveledSpell, LocationReferenceType, MaterialSwap, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
-    /// </summary>
-    public partial interface IFallout4MajorRecord :
+    public partial interface IRegion :
+        IFallout4MajorRecordInternal,
+        ILoquiObjectSetter<IRegionInternal>,
+        IRegionGetter
+    {
+    }
+
+    public partial interface IRegionInternal :
+        IFallout4MajorRecordInternal,
+        IRegion,
+        IRegionGetter
+    {
+    }
+
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.REGN)]
+    public partial interface IRegionGetter :
         IFallout4MajorRecordGetter,
-        IFormLinkContainer,
-        ILoquiObjectSetter<IFallout4MajorRecordInternal>,
-        IMajorRecordInternal
-    {
-        new UInt16 FormVersion { get; set; }
-        new UInt16 Version2 { get; set; }
-    }
-
-    public partial interface IFallout4MajorRecordInternal :
-        IMajorRecordInternal,
-        IFallout4MajorRecord,
-        IFallout4MajorRecordGetter
-    {
-    }
-
-    /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LeveledSpell, LocationReferenceType, MaterialSwap, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
-    /// </summary>
-    public partial interface IFallout4MajorRecordGetter :
-        IMajorRecordGetter,
         IBinaryItem,
-        IFormLinkContainerGetter,
-        ILoquiObject<IFallout4MajorRecordGetter>
+        ILoquiObject<IRegionGetter>,
+        IMapsToGetter<IRegionGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
-        UInt16 FormVersion { get; }
-        UInt16 Version2 { get; }
+        static new ILoquiRegistration StaticRegistration => Region_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class Fallout4MajorRecordMixIn
+    public static partial class RegionMixIn
     {
-        public static void Clear(this IFallout4MajorRecordInternal item)
+        public static void Clear(this IRegionInternal item)
         {
-            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((RegionSetterCommon)((IRegionGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Fallout4MajorRecord.Mask<bool> GetEqualsMask(
-            this IFallout4MajorRecordGetter item,
-            IFallout4MajorRecordGetter rhs,
+        public static Region.Mask<bool> GetEqualsMask(
+            this IRegionGetter item,
+            IRegionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IFallout4MajorRecordGetter item,
+            this IRegionGetter item,
             string? name = null,
-            Fallout4MajorRecord.Mask<bool>? printMask = null)
+            Region.Mask<bool>? printMask = null)
         {
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).ToString(
+            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IFallout4MajorRecordGetter item,
+            this IRegionGetter item,
             FileGeneration fg,
             string? name = null,
-            Fallout4MajorRecord.Mask<bool>? printMask = null)
+            Region.Mask<bool>? printMask = null)
         {
-            ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).ToString(
+            ((RegionCommon)((IRegionGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -554,39 +495,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IFallout4MajorRecordGetter item,
-            IFallout4MajorRecordGetter rhs,
-            Fallout4MajorRecord.TranslationMask? equalsMask = null)
+            this IRegionGetter item,
+            IRegionGetter rhs,
+            Region.TranslationMask? equalsMask = null)
         {
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).Equals(
+            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IFallout4MajorRecordInternal lhs,
-            IFallout4MajorRecordGetter rhs,
-            out Fallout4MajorRecord.ErrorMask errorMask,
-            Fallout4MajorRecord.TranslationMask? copyMask = null)
+            this IRegionInternal lhs,
+            IRegionGetter rhs,
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((Fallout4MajorRecordSetterTranslationCommon)((IFallout4MajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RegionSetterTranslationCommon)((IRegionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Fallout4MajorRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Region.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IFallout4MajorRecordInternal lhs,
-            IFallout4MajorRecordGetter rhs,
+            this IRegionInternal lhs,
+            IRegionGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((Fallout4MajorRecordSetterTranslationCommon)((IFallout4MajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RegionSetterTranslationCommon)((IRegionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -594,44 +535,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static Fallout4MajorRecord DeepCopy(
-            this IFallout4MajorRecordGetter item,
-            Fallout4MajorRecord.TranslationMask? copyMask = null)
+        public static Region DeepCopy(
+            this IRegionGetter item,
+            Region.TranslationMask? copyMask = null)
         {
-            return ((Fallout4MajorRecordSetterTranslationCommon)((IFallout4MajorRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RegionSetterTranslationCommon)((IRegionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Fallout4MajorRecord DeepCopy(
-            this IFallout4MajorRecordGetter item,
-            out Fallout4MajorRecord.ErrorMask errorMask,
-            Fallout4MajorRecord.TranslationMask? copyMask = null)
+        public static Region DeepCopy(
+            this IRegionGetter item,
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? copyMask = null)
         {
-            return ((Fallout4MajorRecordSetterTranslationCommon)((IFallout4MajorRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RegionSetterTranslationCommon)((IRegionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Fallout4MajorRecord DeepCopy(
-            this IFallout4MajorRecordGetter item,
+        public static Region DeepCopy(
+            this IRegionGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((Fallout4MajorRecordSetterTranslationCommon)((IFallout4MajorRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RegionSetterTranslationCommon)((IRegionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Fallout4MajorRecord Duplicate(
-            this IFallout4MajorRecordGetter item,
+        public static Region Duplicate(
+            this IRegionGetter item,
             FormKey formKey,
-            Fallout4MajorRecord.TranslationMask? copyMask = null)
+            Region.TranslationMask? copyMask = null)
         {
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).Duplicate(
+            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -641,11 +582,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IFallout4MajorRecordInternal item,
+            this IRegionInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((RegionSetterCommon)((IRegionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -661,7 +602,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
-    public enum Fallout4MajorRecord_FieldIndex
+    public enum Region_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -673,40 +614,40 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Fallout4MajorRecord_Registration : ILoquiRegistration
+    public partial class Region_Registration : ILoquiRegistration
     {
-        public static readonly Fallout4MajorRecord_Registration Instance = new Fallout4MajorRecord_Registration();
+        public static readonly Region_Registration Instance = new Region_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 18,
+            msgID: 96,
             version: 0);
 
-        public const string GUID = "31e44987-0e57-41ce-8b90-094434216c76";
+        public const string GUID = "338121a9-a29d-4d43-9abc-c7a01e94ba05";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(Fallout4MajorRecord.Mask<>);
+        public static readonly Type MaskType = typeof(Region.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Fallout4MajorRecord.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Region.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Fallout4MajorRecord);
+        public static readonly Type ClassType = typeof(Region);
 
-        public static readonly Type GetterType = typeof(IFallout4MajorRecordGetter);
+        public static readonly Type GetterType = typeof(IRegionGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IFallout4MajorRecord);
+        public static readonly Type SetterType = typeof(IRegion);
 
-        public static readonly Type? InternalSetterType = typeof(IFallout4MajorRecordInternal);
+        public static readonly Type? InternalSetterType = typeof(IRegionInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.Fallout4MajorRecord";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.Region";
 
-        public const string Name = "Fallout4MajorRecord";
+        public const string Name = "Region";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -714,7 +655,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(Fallout4MajorRecordBinaryWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.REGN;
+        public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -747,27 +689,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class Fallout4MajorRecordSetterCommon : MajorRecordSetterCommon
+    public partial class RegionSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly Fallout4MajorRecordSetterCommon Instance = new Fallout4MajorRecordSetterCommon();
+        public new static readonly RegionSetterCommon Instance = new RegionSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IFallout4MajorRecordInternal item)
+        public void Clear(IRegionInternal item)
         {
             ClearPartial();
-            item.FormVersion = default;
-            item.Version2 = default;
             base.Clear(item);
+        }
+        
+        public override void Clear(IFallout4MajorRecordInternal item)
+        {
+            Clear(item: (IRegionInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IFallout4MajorRecordInternal)item);
+            Clear(item: (IRegionInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IFallout4MajorRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IRegion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -776,10 +721,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
+            IRegionInternal item,
+            MutagenFrame frame,
+            TypedParseParams? translationParams = null)
+        {
+            PluginUtilityTranslation.MajorRecordParse<IRegionInternal>(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: RegionBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RegionBinaryCreateTranslation.FillBinaryRecordTypes);
+        }
+        
+        public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
+            CopyInFromBinary(
+                item: (Region)item,
+                frame: frame,
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
@@ -788,7 +750,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (Fallout4MajorRecord)item,
+                item: (Region)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -796,17 +758,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4MajorRecordCommon : MajorRecordCommon
+    public partial class RegionCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly Fallout4MajorRecordCommon Instance = new Fallout4MajorRecordCommon();
+        public new static readonly RegionCommon Instance = new RegionCommon();
 
-        public Fallout4MajorRecord.Mask<bool> GetEqualsMask(
-            IFallout4MajorRecordGetter item,
-            IFallout4MajorRecordGetter rhs,
+        public Region.Mask<bool> GetEqualsMask(
+            IRegionGetter item,
+            IRegionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Fallout4MajorRecord.Mask<bool>(false);
-            ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Region.Mask<bool>(false);
+            ((RegionCommon)((IRegionGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -815,21 +777,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void FillEqualsMask(
-            IFallout4MajorRecordGetter item,
-            IFallout4MajorRecordGetter rhs,
-            Fallout4MajorRecord.Mask<bool> ret,
+            IRegionGetter item,
+            IRegionGetter rhs,
+            Region.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.FormVersion = item.FormVersion == rhs.FormVersion;
-            ret.Version2 = item.Version2 == rhs.Version2;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            IFallout4MajorRecordGetter item,
+            IRegionGetter item,
             string? name = null,
-            Fallout4MajorRecord.Mask<bool>? printMask = null)
+            Region.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -841,18 +801,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void ToString(
-            IFallout4MajorRecordGetter item,
+            IRegionGetter item,
             FileGeneration fg,
             string? name = null,
-            Fallout4MajorRecord.Mask<bool>? printMask = null)
+            Region.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Fallout4MajorRecord =>");
+                fg.AppendLine($"Region =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Fallout4MajorRecord) =>");
+                fg.AppendLine($"{name} (Region) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -866,36 +826,49 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         protected static void ToStringFields(
-            IFallout4MajorRecordGetter item,
+            IRegionGetter item,
             FileGeneration fg,
-            Fallout4MajorRecord.Mask<bool>? printMask = null)
+            Region.Mask<bool>? printMask = null)
         {
-            MajorRecordCommon.ToStringFields(
+            Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.FormVersion ?? true)
+        }
+        
+        public static Region_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        {
+            switch (index)
             {
-                fg.AppendItem(item.FormVersion, "FormVersion");
-            }
-            if (printMask?.Version2 ?? true)
-            {
-                fg.AppendItem(item.Version2, "Version2");
+                case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Region_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.FormKey:
+                    return (Region_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.VersionControl:
+                    return (Region_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.EditorID:
+                    return (Region_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.FormVersion:
+                    return (Region_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Region_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static Fallout4MajorRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Region_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Fallout4MajorRecord_FieldIndex)((int)index);
+                    return (Region_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Fallout4MajorRecord_FieldIndex)((int)index);
+                    return (Region_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Fallout4MajorRecord_FieldIndex)((int)index);
+                    return (Region_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Fallout4MajorRecord_FieldIndex)((int)index);
+                    return (Region_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -903,21 +876,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
+            IRegionGetter? lhs,
+            IRegionGetter? rhs,
+            TranslationCrystal? crystal)
+        {
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            return true;
+        }
+        
+        public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Fallout4MajorRecord_FieldIndex.FormVersion) ?? true))
-            {
-                if (lhs.FormVersion != rhs.FormVersion) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Fallout4MajorRecord_FieldIndex.Version2) ?? true))
-            {
-                if (lhs.Version2 != rhs.Version2) return false;
-            }
-            return true;
+            return Equals(
+                lhs: (IRegionGetter?)lhs,
+                rhs: rhs as IRegionGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
@@ -926,23 +902,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IFallout4MajorRecordGetter?)lhs,
-                rhs: rhs as IFallout4MajorRecordGetter,
+                lhs: (IRegionGetter?)lhs,
+                rhs: rhs as IRegionGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IFallout4MajorRecordGetter item)
+        public virtual int GetHashCode(IRegionGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FormVersion);
-            hash.Add(item.Version2);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
+        public override int GetHashCode(IFallout4MajorRecordGetter item)
+        {
+            return GetHashCode(item: (IRegionGetter)item);
+        }
+        
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IFallout4MajorRecordGetter)item);
+            return GetHashCode(item: (IRegionGetter)item);
         }
         
         #endregion
@@ -950,11 +929,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override object GetNew()
         {
-            return Fallout4MajorRecord.GetNew();
+            return Region.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFallout4MajorRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -964,12 +943,25 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Duplicate
-        public virtual Fallout4MajorRecord Duplicate(
+        public Region Duplicate(
+            IRegionGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            var newRec = new Region(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
+        }
+        
+        public override Fallout4MajorRecord Duplicate(
             IFallout4MajorRecordGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            throw new NotImplementedException();
+            return this.Duplicate(
+                item: (IRegionGetter)item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
         
         public override MajorRecord Duplicate(
@@ -978,7 +970,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFallout4MajorRecordGetter)item,
+                item: (IRegionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -988,14 +980,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4MajorRecordSetterTranslationCommon : MajorRecordSetterTranslationCommon
+    public partial class RegionSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly Fallout4MajorRecordSetterTranslationCommon Instance = new Fallout4MajorRecordSetterTranslationCommon();
+        public new static readonly RegionSetterTranslationCommon Instance = new RegionSetterTranslationCommon();
 
         #region DeepCopyIn
-        public virtual void DeepCopyIn(
-            IFallout4MajorRecordInternal item,
-            IFallout4MajorRecordGetter rhs,
+        public void DeepCopyIn(
+            IRegionInternal item,
+            IRegionGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1008,27 +1000,49 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 deepCopy: deepCopy);
         }
         
-        public virtual void DeepCopyIn(
+        public void DeepCopyIn(
+            IRegion item,
+            IRegionGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            base.DeepCopyIn(
+                (IFallout4MajorRecord)item,
+                (IFallout4MajorRecordGetter)rhs,
+                errorMask,
+                copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
+            IFallout4MajorRecordInternal item,
+            IFallout4MajorRecordGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IRegionInternal)item,
+                rhs: (IRegionGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
             IFallout4MajorRecord item,
             IFallout4MajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            base.DeepCopyIn(
-                (IMajorRecord)item,
-                (IMajorRecordGetter)rhs,
-                errorMask,
-                copyMask,
+            this.DeepCopyIn(
+                item: (IRegion)item,
+                rhs: (IRegionGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Fallout4MajorRecord_FieldIndex.FormVersion) ?? true))
-            {
-                item.FormVersion = rhs.FormVersion;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Fallout4MajorRecord_FieldIndex.Version2) ?? true))
-            {
-                item.Version2 = rhs.Version2;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1039,8 +1053,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IFallout4MajorRecordInternal)item,
-                rhs: (IFallout4MajorRecordGetter)rhs,
+                item: (IRegionInternal)item,
+                rhs: (IRegionGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1054,8 +1068,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IFallout4MajorRecord)item,
-                rhs: (IFallout4MajorRecordGetter)rhs,
+                item: (IRegion)item,
+                rhs: (IRegionGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1063,12 +1077,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #endregion
         
-        public Fallout4MajorRecord DeepCopy(
-            IFallout4MajorRecordGetter item,
-            Fallout4MajorRecord.TranslationMask? copyMask = null)
+        public Region DeepCopy(
+            IRegionGetter item,
+            Region.TranslationMask? copyMask = null)
         {
-            Fallout4MajorRecord ret = (Fallout4MajorRecord)((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).GetNew();
-            ((Fallout4MajorRecordSetterTranslationCommon)((IFallout4MajorRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Region ret = (Region)((RegionCommon)((IRegionGetter)item).CommonInstance()!).GetNew();
+            ((RegionSetterTranslationCommon)((IRegionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1077,30 +1091,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
         
-        public Fallout4MajorRecord DeepCopy(
-            IFallout4MajorRecordGetter item,
-            out Fallout4MajorRecord.ErrorMask errorMask,
-            Fallout4MajorRecord.TranslationMask? copyMask = null)
+        public Region DeepCopy(
+            IRegionGetter item,
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Fallout4MajorRecord ret = (Fallout4MajorRecord)((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).GetNew();
-            ((Fallout4MajorRecordSetterTranslationCommon)((IFallout4MajorRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Region ret = (Region)((RegionCommon)((IRegionGetter)item).CommonInstance()!).GetNew();
+            ((RegionSetterTranslationCommon)((IRegionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Fallout4MajorRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Region.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Fallout4MajorRecord DeepCopy(
-            IFallout4MajorRecordGetter item,
+        public Region DeepCopy(
+            IRegionGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Fallout4MajorRecord ret = (Fallout4MajorRecord)((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).GetNew();
-            ((Fallout4MajorRecordSetterTranslationCommon)((IFallout4MajorRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Region ret = (Region)((RegionCommon)((IRegionGetter)item).CommonInstance()!).GetNew();
+            ((RegionSetterTranslationCommon)((IRegionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1116,21 +1130,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Fallout4MajorRecord
+    public partial class Region
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Fallout4MajorRecord_Registration.Instance;
-        public new static Fallout4MajorRecord_Registration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
+        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => Fallout4MajorRecordCommon.Instance;
+        protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return Fallout4MajorRecordSetterCommon.Instance;
+            return RegionSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => Fallout4MajorRecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => RegionSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1141,41 +1155,35 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class Fallout4MajorRecordBinaryWriteTranslation :
-        MajorRecordBinaryWriteTranslation,
+    public partial class RegionBinaryWriteTranslation :
+        Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static Fallout4MajorRecordBinaryWriteTranslation Instance = new Fallout4MajorRecordBinaryWriteTranslation();
+        public new readonly static RegionBinaryWriteTranslation Instance = new RegionBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IFallout4MajorRecordGetter item,
-            MutagenWriter writer)
-        {
-            MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-            writer.Write(item.FormVersion);
-            writer.Write(item.Version2);
-        }
-
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
-            IFallout4MajorRecordGetter item,
+            IRegionGetter item,
             TypedWriteParams? translationParams = null)
         {
-            try
+            using (HeaderExport.Record(
+                writer: writer,
+                record: translationParams.ConvertToCustom(RecordTypes.REGN)))
             {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, item);
+                try
+                {
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                        item: item,
+                        writer: writer);
+                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        item: item,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, item);
+                }
             }
         }
 
@@ -1185,7 +1193,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IFallout4MajorRecordGetter)item,
+                item: (IRegionGetter)item,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IFallout4MajorRecordGetter item,
+            TypedWriteParams? translationParams = null)
+        {
+            Write(
+                item: (IRegionGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1196,27 +1215,25 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IFallout4MajorRecordGetter)item,
+                item: (IRegionGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class Fallout4MajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
+    public partial class RegionBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static Fallout4MajorRecordBinaryCreateTranslation Instance = new Fallout4MajorRecordBinaryCreateTranslation();
+        public new readonly static RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
 
-        public override RecordType RecordType => throw new ArgumentException();
+        public override RecordType RecordType => RecordTypes.REGN;
         public static void FillBinaryStructs(
-            IFallout4MajorRecordInternal item,
+            IRegionInternal item,
             MutagenFrame frame)
         {
-            MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FormVersion = frame.ReadUInt16();
-            item.Version2 = frame.ReadUInt16();
         }
 
     }
@@ -1225,7 +1242,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class Fallout4MajorRecordBinaryTranslationMixIn
+    public static class RegionBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1234,45 +1251,44 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public abstract partial class Fallout4MajorRecordBinaryOverlay :
-        MajorRecordBinaryOverlay,
-        IFallout4MajorRecordGetter
+    public partial class RegionBinaryOverlay :
+        Fallout4MajorRecordBinaryOverlay,
+        IRegionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Fallout4MajorRecord_Registration.Instance;
-        public new static Fallout4MajorRecord_Registration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
+        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => Fallout4MajorRecordCommon.Instance;
+        protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => Fallout4MajorRecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => RegionSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4MajorRecordCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => Fallout4MajorRecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((Fallout4MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((RegionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRegion);
 
-        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xC, 0x2));
-        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
+
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected Fallout4MajorRecordBinaryOverlay(
+        protected RegionBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1282,6 +1298,43 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this.CustomCtor();
         }
 
+        public static RegionBinaryOverlay RegionFactory(
+            OverlayStream stream,
+            BinaryOverlayFactoryPackage package,
+            TypedParseParams? parseParams = null)
+        {
+            stream = PluginUtilityTranslation.DecompressStream(stream);
+            var ret = new RegionBinaryOverlay(
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                package: package);
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
+            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret.CustomFactoryEnd(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                majorReference: ret,
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                parseParams: parseParams,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public static RegionBinaryOverlay RegionFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            TypedParseParams? parseParams = null)
+        {
+            return RegionFactory(
+                stream: new OverlayStream(slice, package),
+                package: package,
+                parseParams: parseParams);
+        }
 
         #region To String
 
@@ -1289,7 +1342,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             string? name = null)
         {
-            Fallout4MajorRecordMixIn.ToString(
+            RegionMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1298,7 +1351,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Fallout4MajorRecord>.ToString(this);
+            return MajorRecordPrinter<Region>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1308,16 +1361,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IFallout4MajorRecordGetter rhs) return false;
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IRegionGetter rhs) return false;
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IFallout4MajorRecordGetter? obj)
+        public bool Equals(IRegionGetter? obj)
         {
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

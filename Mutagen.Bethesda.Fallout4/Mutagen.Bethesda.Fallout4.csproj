@@ -354,6 +354,15 @@
     <Compile Include="Records\Major Records\SoundRepeat_Generated.cs">
       <DependentUpon>SoundMarker.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AcousticSpace_Generated.cs">
+      <DependentUpon>AcousticSpace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Region_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ReverbParameters_Generated.cs">
+      <DependentUpon>ReverbParameters.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

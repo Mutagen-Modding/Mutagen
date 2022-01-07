@@ -18,10 +18,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Keyword
 - Race
 ### IObjectBounded
+- AcousticSpace
 - Component
 - SoundMarker
 - TextureSet
 ## Concrete Classes to Interfaces
+### AcousticSpace
+- IObjectBounded
 ### ActionRecord
 - INamed
 ### Class

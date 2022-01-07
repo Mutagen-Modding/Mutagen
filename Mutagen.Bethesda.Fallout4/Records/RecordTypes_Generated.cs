@@ -5,10 +5,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     public class RecordTypes
     {
         public static readonly RecordType AACT = new(0x54434141);
+        public static readonly RecordType ANAM = new(0x4D414E41);
         public static readonly RecordType AORU = new(0x55524F41);
         public static readonly RecordType APPR = new(0x52505041);
         public static readonly RecordType ARMO = new(0x4F4D5241);
+        public static readonly RecordType ASPC = new(0x43505341);
         public static readonly RecordType AVIF = new(0x46495641);
+        public static readonly RecordType BNAM = new(0x4D414E42);
         public static readonly RecordType BOD2 = new(0x32444F42);
         public static readonly RecordType CELL = new(0x4C4C4543);
         public static readonly RecordType CITC = new(0x43544943);
@@ -74,8 +77,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType PNAM = new(0x4D414E50);
         public static readonly RecordType PRPS = new(0x53505250);
         public static readonly RecordType RACE = new(0x45434152);
+        public static readonly RecordType RDAT = new(0x54414452);
         public static readonly RecordType REFR = new(0x52464552);
+        public static readonly RecordType REGN = new(0x4E474552);
         public static readonly RecordType REPT = new(0x54504552);
+        public static readonly RecordType REVB = new(0x42564552);
         public static readonly RecordType RNAM = new(0x4D414E52);
         public static readonly RecordType SCRN = new(0x4E524353);
         public static readonly RecordType SDSC = new(0x43534453);
@@ -105,6 +111,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType WAIT = new(0x54494157);
         public static readonly RecordType WNAM = new(0x4D414E57);
         public static readonly RecordType XNAM = new(0x4D414E58);
+        public static readonly RecordType XTRI = new(0x49525458);
         public static readonly RecordType XXXX = new(0x58585858);
     }
 }
