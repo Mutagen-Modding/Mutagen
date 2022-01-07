@@ -73,10 +73,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int PRPS = 0x53505250;
         public const int RACE = 0x45434152;
         public const int REFR = 0x52464552;
+        public const int REPT = 0x54504552;
         public const int RNAM = 0x4D414E52;
         public const int SCRN = 0x4E524353;
+        public const int SDSC = 0x43534453;
         public const int SNAM = 0x4D414E53;
         public const int SNDR = 0x52444E53;
+        public const int SOUN = 0x4E554F53;
         public const int SPCT = 0x54435053;
         public const int SPLO = 0x4F4C5053;
         public const int STAG = 0x47415453;

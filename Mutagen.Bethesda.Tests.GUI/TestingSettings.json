@@ -1,0 +1,94 @@
+{
+  "TestGroupMasks": false,
+  "TestFlattenedMod": false,
+  "TestBenchmarks": false,
+  "TestRecordEnumerables": false,
+  "TestEquality": false,
+  "TestPex": false,
+  "DataFolderLocations": {
+    "Oblivion": "",
+    "Skyrim": "",
+    "SkyrimSpecialEdition": "D:\\Games\\SkyrimSE\\Data",
+    "SkyrimVR": "",
+    "Fallout4": "D:\\Games\\Fallout 4\\Data"
+  },
+  "PassthroughSettings": {
+    "CacheReuse": {
+      "ReuseDecompression": false,
+      "ReuseAlignment": false,
+      "ReuseProcessing": false,
+      "ReuseTrimming": false
+    },
+    "Trimming": {
+      "TypesToTrim": [
+        "RACE"
+      ]
+    },
+    "DeleteCachesAfter": false,
+    "TestNormal": true,
+    "TestBinaryOverlay": true,
+    "TestImport": false,
+    "TestFolder": false,
+    "TestCopyIn": false,
+    "Parallel": false,
+    "HasAnyToRun": true
+  },
+  "TargetGroups": [
+    {
+      "Do": false,
+      "NicknameSuffix": "SE",
+      "GameRelease": 2,
+      "Targets": [
+        {
+          "Do": false,
+          "Path": "D:\\Games\\SkyrimSE\\Data\\Skyrim.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": false,
+          "Path": "D:\\Games\\SkyrimSE\\Data\\Dawnguard.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": false,
+          "Path": "D:\\Games\\SkyrimSE\\Data\\HearthFires.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": false,
+          "Path": "D:\\Games\\SkyrimSE\\Data\\Dragonborn.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": false,
+          "Path": "D:\\Games\\SkyrimSE\\Data\\Update.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": false,
+          "Path": "D:\\Games\\SkyrimSE\\Data\\Unofficial Skyrim Special Edition Patch.esp",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        }
+      ]
+    },
+    {
+      "Do": true,
+      "NicknameSuffix": "",
+      "GameRelease": 4,
+      "Targets": [
+        {
+          "Do": true,
+          "Path": "D:\\Games\\Fallout 4\\Data\\Fallout4.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        }
+      ]
+    }
+  ]
+}

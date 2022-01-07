@@ -19,6 +19,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Race
 ### IObjectBounded
 - Component
+- SoundMarker
 - TextureSet
 ## Concrete Classes to Interfaces
 ### ActionRecord
@@ -39,5 +40,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Race
 - IKeyworded
 - INamed
+### SoundMarker
+- IObjectBounded
 ### TextureSet
 - IObjectBounded

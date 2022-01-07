@@ -348,6 +348,12 @@
     <Compile Include="Records\Fallout4Group_Generated.cs">
       <DependentUpon>Fallout4Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SoundMarker_Generated.cs">
+      <DependentUpon>SoundMarker.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundRepeat_Generated.cs">
+      <DependentUpon>SoundMarker.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

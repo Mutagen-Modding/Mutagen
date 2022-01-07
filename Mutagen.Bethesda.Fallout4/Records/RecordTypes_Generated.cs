@@ -75,10 +75,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType PRPS = new(0x53505250);
         public static readonly RecordType RACE = new(0x45434152);
         public static readonly RecordType REFR = new(0x52464552);
+        public static readonly RecordType REPT = new(0x54504552);
         public static readonly RecordType RNAM = new(0x4D414E52);
         public static readonly RecordType SCRN = new(0x4E524353);
+        public static readonly RecordType SDSC = new(0x43534453);
         public static readonly RecordType SNAM = new(0x4D414E53);
         public static readonly RecordType SNDR = new(0x52444E53);
+        public static readonly RecordType SOUN = new(0x4E554F53);
         public static readonly RecordType SPCT = new(0x54435053);
         public static readonly RecordType SPLO = new(0x4F4C5053);
         public static readonly RecordType STAG = new(0x47415453);
