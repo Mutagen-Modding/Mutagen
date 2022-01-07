@@ -40,6 +40,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType GLOB = new(0x424F4C47);
         public static readonly RecordType GMST = new(0x54534D47);
         public static readonly RecordType GNAM = new(0x4D414E47);
+        public static readonly RecordType GRAS = new(0x53415247);
         public static readonly RecordType GRUP = new(0x50555247);
         public static readonly RecordType HDPT = new(0x54504448);
         public static readonly RecordType HEDR = new(0x52444548);
@@ -55,8 +56,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType KWDA = new(0x4144574B);
         public static readonly RecordType KYWD = new(0x4457594B);
         public static readonly RecordType LCRT = new(0x5452434C);
+        public static readonly RecordType LTEX = new(0x5845544C);
         public static readonly RecordType LVSP = new(0x5053564C);
         public static readonly RecordType MAST = new(0x5453414D);
+        public static readonly RecordType MATT = new(0x5454414D);
         public static readonly RecordType MISC = new(0x4353494D);
         public static readonly RecordType MNAM = new(0x4D414E4D);
         public static readonly RecordType MODC = new(0x43444F4D);

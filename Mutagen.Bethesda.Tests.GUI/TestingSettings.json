@@ -21,7 +21,22 @@
     },
     "Trimming": {
       "TypesToTrim": [
-        "RACE"
+        "RACE",
+        "MGEF",
+        "ENCH",
+        "SPEL",
+        "ACTI",
+        "TACT",
+        "ARMO",
+        "BOOK",
+        "CONT",
+        "DOOR",
+        "INGR",
+        "LIGH",
+        "MISC",
+        "STAT",
+        "SCOL",
+        "MSTT"
       ]
     },
     "DeleteCachesAfter": false,

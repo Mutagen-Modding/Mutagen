@@ -8,6 +8,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IKeyworded
 - Race
 ### IModeled
+- Grass
 - HeadPart
 ### INamed
 - ActionRecord
@@ -16,10 +17,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Faction
 - HeadPart
 - Keyword
+- MaterialType
 - Race
 ### IObjectBounded
 - AcousticSpace
 - Component
+- Grass
 - SoundMarker
 - TextureSet
 ## Concrete Classes to Interfaces
@@ -34,11 +37,16 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### Faction
 - INamed
+### Grass
+- IModeled
+- IObjectBounded
 ### HeadPart
 - IModeled
 - INamed
 ### Keyword
 - IKeywordCommon
+- INamed
+### MaterialType
 - INamed
 ### Race
 - IKeyworded

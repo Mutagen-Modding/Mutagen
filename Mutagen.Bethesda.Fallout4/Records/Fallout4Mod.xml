@@ -18,6 +18,10 @@
       <!--<Group name="Races" refName="Race" />-->
       <Group name="SoundMarkers" refName="SoundMarker" />
 	  <Group name="AcousticSpaces" refName="AcousticSpace" />
-    </Fields>
+	  <!--<Group name="MagicEffects" refName="MagicEffect" />-->
+	  <Group name="LandscapeTextures" refName="LandscapeTexture" />
+	  <Group name="Grasses" refName="Grass" />
+	  <Group name="MaterialTypes" refName="MaterialType" />
+	</Fields>
   </Object>
 </Loqui>

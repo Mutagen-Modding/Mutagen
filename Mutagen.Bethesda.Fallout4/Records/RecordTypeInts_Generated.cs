@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int GLOB = 0x424F4C47;
         public const int GMST = 0x54534D47;
         public const int GNAM = 0x4D414E47;
+        public const int GRAS = 0x53415247;
         public const int GRUP = 0x50555247;
         public const int HDPT = 0x54504448;
         public const int HEDR = 0x52444548;
@@ -53,8 +54,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int KWDA = 0x4144574B;
         public const int KYWD = 0x4457594B;
         public const int LCRT = 0x5452434C;
+        public const int LTEX = 0x5845544C;
         public const int LVSP = 0x5053564C;
         public const int MAST = 0x5453414D;
+        public const int MATT = 0x5454414D;
         public const int MISC = 0x4353494D;
         public const int MNAM = 0x4D414E4D;
         public const int MODC = 0x43444F4D;

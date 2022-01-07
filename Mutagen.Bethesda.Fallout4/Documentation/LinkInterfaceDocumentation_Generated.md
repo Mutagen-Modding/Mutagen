@@ -21,6 +21,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - TextureSet
 ### IOwner
 - Faction
+### IRegionTarget
+- LandscapeTexture
 ### IRelatable
 - Faction
 - Race
@@ -40,6 +42,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IRelatable
 ### Keyword
 - IKeywordLinkedReference
+### LandscapeTexture
+- IRegionTarget
 ### LeveledSpell
 - ISpellRecord
 ### LocationReferenceType
