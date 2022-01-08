@@ -73,6 +73,7 @@ public record CacheReuse
 
 public record TrimmingSettings
 {
+    public bool Enabled { get; set; }= true;
     public List<string> TypesToTrim { get; set; } = new();
 }
 

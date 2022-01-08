@@ -84,6 +84,9 @@ public class MainVM : ViewModel
 
     [Reactive]
     public RunningTestsVM? RunningTests { get; private set; }
+    
+    [Reactive]
+    public bool TrimmingEnabled { get; set; }
 
     public MainVM()
     {
@@ -203,7 +206,8 @@ public class MainVM : ViewModel
         this.CacheAlignment = settings.PassthroughSettings.CacheReuse.ReuseAlignment;
         this.CacheDecompression = settings.PassthroughSettings.CacheReuse.ReuseDecompression;
         this.CacheProcessing = settings.PassthroughSettings.CacheReuse.ReuseProcessing;
-        
+
+        TrimmingEnabled = settings.PassthroughSettings.Trimming.Enabled;
         this.SkippedRecordTypes.Clear();
         this.SkippedRecordTypes.SetTo(settings.PassthroughSettings.Trimming.TypesToTrim.Select(x => new RecordTypeVm(this, x)));
 
@@ -270,6 +274,7 @@ public class MainVM : ViewModel
                     .ToList(),
             })
             .ToList();
+        settings.PassthroughSettings.Trimming.Enabled = TrimmingEnabled;
         settings.PassthroughSettings.Trimming.TypesToTrim = SkippedRecordTypes.Select(x => x.RecordType.Type).ToList();
 
         settings.DataFolderLocations.Oblivion = DataFolders.Get(GameRelease.Oblivion).DataFolder.TargetPath;
@@ -299,7 +304,8 @@ public class MainVM : ViewModel
             TestNormal = TestNormal,
             Trimming = new TrimmingSettings()
             {
-                TypesToTrim = SkippedRecordTypes.Select(x => x.RecordType.Type).ToList()
+                TypesToTrim = SkippedRecordTypes.Select(x => x.RecordType.Type).ToList(),
+                Enabled = TrimmingEnabled
             }
         };
     }

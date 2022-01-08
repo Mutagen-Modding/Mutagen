@@ -81,21 +81,28 @@ public abstract class PassthroughTest
                 if (!Settings.CacheReuse.ReuseTrimming
                     || !File.Exists(trimmedPath))
                 {
-                    try
+                    if (Settings.Trimming.Enabled)
                     {
-                        await using var outStream = new FileStream(trimmedPath, FileMode.Create, FileAccess.Write);
-                        ModTrimmer.Trim(
-                            streamCreator: () => new MutagenBinaryReadStream(this.FilePath, this.GameRelease),
-                            outputStream: outStream,
-                            interest: new RecordInterest(uninterestingTypes: Settings.Trimming.TypesToTrim.Select(x => new RecordType(x))));
-                    }
-                    catch (Exception)
-                    {
-                        if (File.Exists(trimmedPath))
+                        try
                         {
-                            File.Delete(trimmedPath);
+                            await using var outStream = new FileStream(trimmedPath, FileMode.Create, FileAccess.Write);
+                            ModTrimmer.Trim(
+                                streamCreator: () => new MutagenBinaryReadStream(this.FilePath, this.GameRelease),
+                                outputStream: outStream,
+                                interest: new RecordInterest(uninterestingTypes: Settings.Trimming.TypesToTrim.Select(x => new RecordType(x))));
                         }
-                        throw;
+                        catch (Exception)
+                        {
+                            if (File.Exists(trimmedPath))
+                            {
+                                File.Delete(trimmedPath);
+                            }
+                            throw;
+                        }
+                    }
+                    else
+                    {
+                        trimmedPath = FilePath;
                     }
                 }
 
