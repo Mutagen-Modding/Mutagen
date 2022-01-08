@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Tests
                 using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                 {
                     using var writer = new MutagenWriter(alignedCellsFile, gameMode);
-                    foreach (var grup in fileLocs.GrupLocations)
+                    foreach (var grup in fileLocs.GrupLocations.Keys)
                     {
                         if (grup <= mutaReader.Position) continue;
                         var noRecordLength = grup - mutaReader.Position;
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Tests
                 using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, gameMode))
                 {
                     using var writer = new MutagenWriter(outputPath.Path, gameMode);
-                    foreach (var grup in fileLocs.GrupLocations)
+                    foreach (var grup in fileLocs.GrupLocations.Keys)
                     {
                         if (grup <= mutaReader.Position) continue;
                         var noRecordLength = grup - mutaReader.Position;
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Tests
                     higher: true,
                     result: out var nextRec))
                 {
-                    noRecordLength = nextRec.Value - inputStream.Position;
+                    noRecordLength = nextRec.Value.Location.Min - inputStream.Position;
                 }
                 else
                 {

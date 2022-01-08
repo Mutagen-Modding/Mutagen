@@ -81,7 +81,7 @@ public abstract class Processor
         {
             lock (_lengthTracker)
             {
-                foreach (var grup in _alignedFileLocs.GrupLocations.And(_alignedFileLocs.ListedRecords.Keys))
+                foreach (var grup in _alignedFileLocs.GrupLocations.Keys.And(_alignedFileLocs.ListedRecords.Keys))
                 {
                     stream.Position = grup + 4;
                     _lengthTracker[grup] = stream.ReadUInt32();
@@ -461,7 +461,7 @@ public abstract class Processor
     public void RemoveEmptyGroups(Func<IMutagenReadStream> streamGetter)
     {
         using var stream = streamGetter();
-        foreach (var loc in _alignedFileLocs.GrupLocations)
+        foreach (var loc in _alignedFileLocs.GrupLocations.Keys)
         {
             stream.Position = loc;
             var groupMeta = stream.ReadGroup();
