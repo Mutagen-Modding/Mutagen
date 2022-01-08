@@ -7,7 +7,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Strings;
 using Noggog;
-using Noggog.Utility;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -34,7 +33,7 @@ public abstract class Processor
     protected IMasterReferenceCollection Masters;
     protected ParsingBundle Bundle;
     protected ModPath SourcePath;
-    protected TempFolder TempFolder;
+    protected DirectoryPath TempFolder;
     public bool DoMultithreading = true;
     public ModKey ModKey => SourcePath.ModKey;
     public delegate void DynamicProcessor(MajorRecordFrame majorFrame, long fileOffset);
@@ -62,7 +61,7 @@ public abstract class Processor
     }
 
     public async Task Process(
-        TempFolder tmpFolder,
+        DirectoryPath tmpFolder,
         Subject<string> logging,
         ModPath sourcePath,
         string preprocessedPath,
@@ -660,7 +659,7 @@ public abstract class Processor
     {
         if (reindexing.Count == 0) return;
 
-        var outFolder = Path.Combine(TempFolder.Dir.Path, "Strings/Processed");
+        var outFolder = Path.Combine(TempFolder, "Strings/Processed");
         var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder, new StringsReadParameters()
         {
             BsaOrdering = bsaOrder

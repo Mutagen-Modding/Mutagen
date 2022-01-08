@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -35,13 +36,13 @@ public abstract class PassthroughTest
     public ModPath FilePath { get; set; }
     public PassthroughSettings Settings { get; }
     public Target Target { get; }
-    public ModPath ExportFileName(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport"));
-    public ModPath ObservableExportFileName(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport"));
-    public ModPath TrimmedFileName(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Trimmed"));
-    public ModPath UncompressedFileName(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Uncompressed"));
-    public ModPath AlignedFileName(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned"));
-    public ModPath OrderedFileName(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered"));
-    public ModPath ProcessedPath(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed"));
+    public ModPath ExportFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_NormalExport"));
+    public ModPath ObservableExportFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_ObservableExport"));
+    public ModPath TrimmedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Trimmed"));
+    public ModPath UncompressedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Uncompressed"));
+    public ModPath AlignedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Aligned"));
+    public ModPath OrderedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Ordered"));
+    public ModPath ProcessedPath(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Processed"));
     public ModKey ModKey => FilePath.ModKey;
     public abstract GameRelease GameRelease { get; }
     public readonly GameConstants Meta;
@@ -50,11 +51,11 @@ public abstract class PassthroughTest
     public PassthroughTest(PassthroughTestParams param)
     {
         var path = param.Target.Path;
-        this.FilePath = path;
-        this.Nickname = $"{Path.GetFileName(param.Target.Path)}{param.NicknameSuffix}";
-        this.Settings = param.PassthroughSettings;
-        this.Target = param.Target;
-        this.Meta = GameConstants.Get(this.GameRelease);
+        FilePath = path;
+        Nickname = $"{Path.GetFileName(param.Target.Path)}{param.NicknameSuffix}";
+        Settings = param.PassthroughSettings;
+        Target = param.Target;
+        Meta = GameConstants.Get(this.GameRelease);
     }
 
     public abstract ModRecordAligner.AlignmentRules GetAlignmentRules();
@@ -68,95 +69,122 @@ public abstract class PassthroughTest
             parallel: Settings.Parallel,
             toDo: async (o) =>
             {
-                o.OnNext(this.Nickname);
-                var outputPath = ExportFileName(tmp);
-                var observableOutputPath = ObservableExportFileName(tmp);
-                var decompressedPath = UncompressedFileName(tmp);
-                var alignedPath = AlignedFileName(tmp);
-                var orderedPath = OrderedFileName(tmp);
-                var trimmedPath = TrimmedFileName(tmp);
-                var preprocessedPath = alignedPath;
-                var processedPath = ProcessedPath(tmp);
+                o.OnNext(Nickname);
                     
-                if (!Settings.CacheReuse.ReuseTrimming
-                    || !File.Exists(trimmedPath))
-                {
-                    if (Settings.Trimming.Enabled)
-                    {
-                        try
-                        {
-                            await using var outStream = new FileStream(trimmedPath, FileMode.Create, FileAccess.Write);
-                            ModTrimmer.Trim(
-                                streamCreator: () => new MutagenBinaryReadStream(this.FilePath, this.GameRelease),
-                                outputStream: outStream,
-                                interest: new RecordInterest(uninterestingTypes: Settings.Trimming.TypesToTrim.Select(x => new RecordType(x))));
-                        }
-                        catch (Exception)
-                        {
-                            if (File.Exists(trimmedPath))
-                            {
-                                File.Delete(trimmedPath);
-                            }
-                            throw;
-                        }
-                    }
-                    else
-                    {
-                        trimmedPath = FilePath;
-                    }
-                }
+                var path = await ExecuteTrimming(tmp.Dir);
 
-                if (!Settings.CacheReuse.ReuseDecompression
-                    || !File.Exists(decompressedPath))
-                {
-                    try
-                    {
-                        await using var outStream = new FileStream(decompressedPath, FileMode.Create, FileAccess.Write);
-                        ModDecompressor.Decompress(
-                            streamCreator: () => new MutagenBinaryReadStream(trimmedPath, this.GameRelease),
-                            outputStream: outStream);
-                    }
-                    catch (Exception)
-                    {
-                        if (File.Exists(decompressedPath))
-                        {
-                            File.Delete(decompressedPath);
-                        }
-                        throw;
-                    }
-                }
+                path = await ExecuteDecompression(path, tmp.Dir);
 
-                if (!Settings.CacheReuse.ReuseAlignment
-                    || !File.Exists(alignedPath))
-                {
-                    ModRecordAligner.Align(
-                        inputPath: decompressedPath,
-                        outputPath: alignedPath.Path,
-                        gameMode: this.GameRelease,
-                        alignmentRules: GetAlignmentRules(),
-                        temp: tmp);
-                }
+                path = ExecuteAlignment(path, tmp.Dir);
 
-                BinaryFileProcessor.Config instructions;
-                if (!Settings.CacheReuse.ReuseProcessing
-                    || !File.Exists(processedPath))
-                {
-                    instructions = new BinaryFileProcessor.Config();
-
-                    var processor = this.ProcessorFactory();
-                    if (processor != null)
-                    {
-                        await processor.Process(
-                            tmpFolder: tmp,
-                            logging: o,
-                            sourcePath: this.FilePath,
-                            preprocessedPath: alignedPath,
-                            outputPath: processedPath);
-                    }
-                }
+                await ExecuteProcessing(path, tmp.Dir, o);
             });
         test.AddDisposeAction(tmp);
         return (tmp, test);
+    }
+
+    private async Task ExecuteProcessing(ModPath prev, DirectoryPath tmp, Subject<string> o)
+    {
+        var processedPath = ProcessedPath(tmp);
+        BinaryFileProcessor.Config instructions;
+        if (!Settings.CacheReuse.ReuseProcessing
+            || !File.Exists(processedPath))
+        {
+            instructions = new BinaryFileProcessor.Config();
+
+            var processor = this.ProcessorFactory();
+            if (processor != null)
+            {
+                await processor.Process(
+                    tmpFolder: tmp,
+                    logging: o,
+                    sourcePath: this.FilePath,
+                    preprocessedPath: prev,
+                    outputPath: processedPath);
+            }
+        }
+    }
+
+    private ModPath ExecuteAlignment(ModPath prev, DirectoryPath temp)
+    {
+        var alignedPath = AlignedFileName(temp);
+        
+        if (!Settings.CacheReuse.ReuseAlignment
+            || !File.Exists(alignedPath))
+        {
+            ModRecordAligner.Align(
+                inputPath: prev,
+                outputPath: alignedPath.Path,
+                gameMode: this.GameRelease,
+                alignmentRules: GetAlignmentRules(),
+                temp: temp);
+        }
+
+        return alignedPath;
+    }
+
+    private async Task<ModPath> ExecuteDecompression(ModPath prev, DirectoryPath temp)
+    {
+        var decompressedPath = UncompressedFileName(temp);
+        
+        if (!Settings.CacheReuse.ReuseDecompression
+            || !File.Exists(decompressedPath))
+        {
+            try
+            {
+                await using var outStream = new FileStream(decompressedPath, FileMode.Create, FileAccess.Write);
+                ModDecompressor.Decompress(
+                    streamCreator: () => new MutagenBinaryReadStream(prev, this.GameRelease),
+                    outputStream: outStream);
+            }
+            catch (Exception)
+            {
+                if (File.Exists(decompressedPath))
+                {
+                    File.Delete(decompressedPath);
+                }
+
+                throw;
+            }
+        }
+
+        return decompressedPath;
+    }
+
+    private async Task<ModPath> ExecuteTrimming(DirectoryPath tempFolder)
+    {
+        var trimmedPath = TrimmedFileName(tempFolder);
+        if (!Settings.CacheReuse.ReuseTrimming
+            || !File.Exists(trimmedPath))
+        {
+            if (Settings.Trimming.Enabled)
+            {
+                try
+                {
+                    await using var outStream = new FileStream(trimmedPath, FileMode.Create, FileAccess.Write);
+                    ModTrimmer.Trim(
+                        streamCreator: () => new MutagenBinaryReadStream(this.FilePath, this.GameRelease),
+                        outputStream: outStream,
+                        interest: new RecordInterest(
+                            uninterestingTypes: Settings.Trimming.TypesToTrim.Select(x => new RecordType(x))));
+                }
+                catch (Exception)
+                {
+                    if (File.Exists(trimmedPath))
+                    {
+                        File.Delete(trimmedPath);
+                    }
+
+                    throw;
+                }
+            }
+            else
+            {
+                trimmedPath = FilePath;
+            }
+        }
+
+        return trimmedPath;
     }
 
     protected abstract Task<IMod> ImportBinary(FilePath path);
@@ -168,8 +196,7 @@ public abstract class PassthroughTest
         (TempFolder tmp, Test processedTest) = SetupProcessedFiles();
 
         var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
-        var processedPath = ProcessedPath(tmp);
-        var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
+        var processedPath = ProcessedPath(tmp.Dir);
         var binaryOverlayPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryOverlay");
         var copyInPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_CopyIn");
         var strsProcessedPath = Path.Combine(tmp.Dir.Path, "Strings/Processed");
