@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <summary>
         /// The length that the header itself takes
         /// </summary>
-        public sbyte HeaderLength => Constants.HeaderLength;
+        public byte HeaderLength => Constants.HeaderLength;
         
         public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4));
         
