@@ -325,8 +325,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             TImportMask importMask,
             RecordStructFill<TMod> fillStructs,
             ModRecordTypeFill<TMod, TImportMask> fillTyped)
-            where TMod : IMod
+            where TMod : IMod, IClearable
         {
+            record.Clear();
             var modHeader = frame.Reader.GetModHeader();
             fillTyped(
                 record: record,
