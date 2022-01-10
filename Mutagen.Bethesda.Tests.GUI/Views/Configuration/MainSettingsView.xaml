@@ -53,6 +53,7 @@
         <WrapPanel Grid.Row="3">
             <CheckBox x:Name="CacheTrimming" Content="Trimming" />
             <CheckBox x:Name="CacheDecompression" Content="Decompression" />
+            <CheckBox x:Name="CacheMerging" Content="Trimming" />
             <CheckBox x:Name="CacheAlignment" Content="Alignment" />
             <CheckBox x:Name="CacheProcessing" Content="Processing" />
         </WrapPanel>

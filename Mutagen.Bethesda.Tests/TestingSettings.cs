@@ -66,6 +66,7 @@ public record PassthroughSettings
 public record CacheReuse
 {
     public bool ReuseDecompression { get; set; }
+    public bool ReuseMerge { get; set; }
     public bool ReuseAlignment { get; set; }
     public bool ReuseProcessing { get; set; }
     public bool ReuseTrimming { get; set; }

@@ -52,6 +52,9 @@ public class MainVM : ViewModel
     public bool CacheReuseAny { get; set; }
 
     [Reactive]
+    public bool CacheMerging { get; set; }
+
+    [Reactive]
     public bool CacheTrimming { get; set; }
 
     [Reactive]
@@ -203,6 +206,7 @@ public class MainVM : ViewModel
         this.TestPex = settings.TestPex;
 
         this.CacheTrimming = settings.PassthroughSettings.CacheReuse.ReuseTrimming;
+        this.CacheMerging = settings.PassthroughSettings.CacheReuse.ReuseMerge;
         this.CacheAlignment = settings.PassthroughSettings.CacheReuse.ReuseAlignment;
         this.CacheDecompression = settings.PassthroughSettings.CacheReuse.ReuseDecompression;
         this.CacheProcessing = settings.PassthroughSettings.CacheReuse.ReuseProcessing;
@@ -255,6 +259,7 @@ public class MainVM : ViewModel
         settings.PassthroughSettings.CacheReuse.ReuseAlignment = this.CacheAlignment;
         settings.PassthroughSettings.CacheReuse.ReuseProcessing = this.CacheProcessing;
         settings.PassthroughSettings.CacheReuse.ReuseTrimming = this.CacheTrimming;
+        settings.PassthroughSettings.CacheReuse.ReuseMerge = this.CacheMerging;
 
         settings.TargetGroups = Groups
             .Select(g => new TargetGroup()
@@ -295,7 +300,8 @@ public class MainVM : ViewModel
                 ReuseAlignment = CacheAlignment,
                 ReuseDecompression = CacheDecompression,
                 ReuseProcessing = CacheProcessing,
-                ReuseTrimming = CacheTrimming
+                ReuseTrimming = CacheTrimming,
+                ReuseMerge = CacheMerging
             },
             TestBinaryOverlay = TestOverlay,
             TestCopyIn = TestCopyIn,

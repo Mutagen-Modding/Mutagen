@@ -39,6 +39,7 @@ public abstract class PassthroughTest
     public ModPath ExportFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_NormalExport"));
     public ModPath ObservableExportFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_ObservableExport"));
     public ModPath TrimmedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Trimmed"));
+    public ModPath MergedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Merged"));
     public ModPath UncompressedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Uncompressed"));
     public ModPath AlignedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Aligned"));
     public ModPath OrderedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Ordered"));
@@ -74,6 +75,8 @@ public abstract class PassthroughTest
                 var path = await ExecuteTrimming(tmp.Dir);
 
                 path = await ExecuteDecompression(path, tmp.Dir);
+
+                path = await ExecuteGroupMerging(path, tmp.Dir);
 
                 path = ExecuteAlignment(path, tmp.Dir);
 
@@ -149,6 +152,34 @@ public abstract class PassthroughTest
         }
 
         return decompressedPath;
+    }
+
+    private async Task<ModPath> ExecuteGroupMerging(ModPath prev, DirectoryPath temp)
+    {
+        var path = MergedFileName(temp);
+        
+        if (!Settings.CacheReuse.ReuseMerge
+            || !File.Exists(path))
+        {
+            try
+            {
+                await using var outStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+                ModGroupMerger.MergeGroups(
+                    streamCreator: () => new MutagenBinaryReadStream(prev, this.GameRelease),
+                    outputStream: outStream);
+            }
+            catch (Exception)
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+
+                throw;
+            }
+        }
+
+        return path;
     }
 
     private async Task<ModPath> ExecuteTrimming(DirectoryPath tempFolder)

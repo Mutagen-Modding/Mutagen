@@ -150,6 +150,7 @@
     <Compile Include="Plugins\Binary\Parameters\ModKeyOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\NextFormIDOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\RecordCountOption.cs" />
+    <Compile Include="Plugins\Binary\Processing\ModGroupMerger.cs" />
     <Compile Include="Plugins\Binary\Processing\ModTrimmer.cs" />
     <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />
     <Compile Include="Plugins\Binary\Translations\TypedParseParams.cs" />

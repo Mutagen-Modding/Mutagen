@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                     .DisposeWith(disposable);
                 this.Bind(this.ViewModel, x => x.CacheAlignment, x => x.CacheAlignment.IsChecked)
                     .DisposeWith(disposable);
+                this.Bind(this.ViewModel, x => x.CacheMerging, x => x.CacheMerging.IsChecked)
+                    .DisposeWith(disposable);
                 this.Bind(this.ViewModel, x => x.CacheProcessing, x => x.CacheProcessing.IsChecked)
                     .DisposeWith(disposable);
                 this.Bind(this.ViewModel, x => x.CacheTrimming, x => x.CacheTrimming.IsChecked)
