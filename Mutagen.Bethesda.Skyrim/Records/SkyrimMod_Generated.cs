@@ -24191,268 +24191,268 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ISkyrimModHeaderGetter ModHeader => _ModHeader ?? new SkyrimModHeader();
         #endregion
         #region GameSettings
-        private RangeInt64? _GameSettingsLocation;
-        private ISkyrimGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocation.HasValue ? SkyrimGroupBinaryOverlay<IGameSettingGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GameSettingsLocation!.Value.Min, _GameSettingsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _GameSettingsLocations;
+        private ISkyrimGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? SkyrimGroupBinaryOverlay<IGameSettingGetter>.SkyrimGroupFactory(_data, _GameSettingsLocations, _package) : default;
         public ISkyrimGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new SkyrimGroup<GameSetting>(this);
         #endregion
         #region Keywords
-        private RangeInt64? _KeywordsLocation;
-        private ISkyrimGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocation.HasValue ? SkyrimGroupBinaryOverlay<IKeywordGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _KeywordsLocation!.Value.Min, _KeywordsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _KeywordsLocations;
+        private ISkyrimGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocations != null ? SkyrimGroupBinaryOverlay<IKeywordGetter>.SkyrimGroupFactory(_data, _KeywordsLocations, _package) : default;
         public ISkyrimGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new SkyrimGroup<Keyword>(this);
         #endregion
         #region LocationReferenceTypes
-        private RangeInt64? _LocationReferenceTypesLocation;
-        private ISkyrimGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocation.HasValue ? SkyrimGroupBinaryOverlay<ILocationReferenceTypeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LocationReferenceTypesLocation!.Value.Min, _LocationReferenceTypesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LocationReferenceTypesLocations;
+        private ISkyrimGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocations != null ? SkyrimGroupBinaryOverlay<ILocationReferenceTypeGetter>.SkyrimGroupFactory(_data, _LocationReferenceTypesLocations, _package) : default;
         public ISkyrimGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new SkyrimGroup<LocationReferenceType>(this);
         #endregion
         #region Actions
-        private RangeInt64? _ActionsLocation;
-        private ISkyrimGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocation.HasValue ? SkyrimGroupBinaryOverlay<IActionRecordGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ActionsLocation!.Value.Min, _ActionsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ActionsLocations;
+        private ISkyrimGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocations != null ? SkyrimGroupBinaryOverlay<IActionRecordGetter>.SkyrimGroupFactory(_data, _ActionsLocations, _package) : default;
         public ISkyrimGroupGetter<IActionRecordGetter> Actions => _Actions ?? new SkyrimGroup<ActionRecord>(this);
         #endregion
         #region TextureSets
-        private RangeInt64? _TextureSetsLocation;
-        private ISkyrimGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocation.HasValue ? SkyrimGroupBinaryOverlay<ITextureSetGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TextureSetsLocation!.Value.Min, _TextureSetsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _TextureSetsLocations;
+        private ISkyrimGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? SkyrimGroupBinaryOverlay<ITextureSetGetter>.SkyrimGroupFactory(_data, _TextureSetsLocations, _package) : default;
         public ISkyrimGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new SkyrimGroup<TextureSet>(this);
         #endregion
         #region Globals
-        private RangeInt64? _GlobalsLocation;
-        private ISkyrimGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocation.HasValue ? SkyrimGroupBinaryOverlay<IGlobalGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GlobalsLocation!.Value.Min, _GlobalsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _GlobalsLocations;
+        private ISkyrimGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? SkyrimGroupBinaryOverlay<IGlobalGetter>.SkyrimGroupFactory(_data, _GlobalsLocations, _package) : default;
         public ISkyrimGroupGetter<IGlobalGetter> Globals => _Globals ?? new SkyrimGroup<Global>(this);
         #endregion
         #region Classes
-        private RangeInt64? _ClassesLocation;
-        private ISkyrimGroupGetter<IClassGetter>? _Classes => _ClassesLocation.HasValue ? SkyrimGroupBinaryOverlay<IClassGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClassesLocation!.Value.Min, _ClassesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ClassesLocations;
+        private ISkyrimGroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? SkyrimGroupBinaryOverlay<IClassGetter>.SkyrimGroupFactory(_data, _ClassesLocations, _package) : default;
         public ISkyrimGroupGetter<IClassGetter> Classes => _Classes ?? new SkyrimGroup<Class>(this);
         #endregion
         #region Factions
-        private RangeInt64? _FactionsLocation;
-        private ISkyrimGroupGetter<IFactionGetter>? _Factions => _FactionsLocation.HasValue ? SkyrimGroupBinaryOverlay<IFactionGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FactionsLocation!.Value.Min, _FactionsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _FactionsLocations;
+        private ISkyrimGroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? SkyrimGroupBinaryOverlay<IFactionGetter>.SkyrimGroupFactory(_data, _FactionsLocations, _package) : default;
         public ISkyrimGroupGetter<IFactionGetter> Factions => _Factions ?? new SkyrimGroup<Faction>(this);
         #endregion
         #region HeadParts
-        private RangeInt64? _HeadPartsLocation;
-        private ISkyrimGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocation.HasValue ? SkyrimGroupBinaryOverlay<IHeadPartGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _HeadPartsLocation!.Value.Min, _HeadPartsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _HeadPartsLocations;
+        private ISkyrimGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? SkyrimGroupBinaryOverlay<IHeadPartGetter>.SkyrimGroupFactory(_data, _HeadPartsLocations, _package) : default;
         public ISkyrimGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new SkyrimGroup<HeadPart>(this);
         #endregion
         #region Hairs
-        private RangeInt64? _HairsLocation;
-        private ISkyrimGroupGetter<IHairGetter>? _Hairs => _HairsLocation.HasValue ? SkyrimGroupBinaryOverlay<IHairGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _HairsLocation!.Value.Min, _HairsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _HairsLocations;
+        private ISkyrimGroupGetter<IHairGetter>? _Hairs => _HairsLocations != null ? SkyrimGroupBinaryOverlay<IHairGetter>.SkyrimGroupFactory(_data, _HairsLocations, _package) : default;
         public ISkyrimGroupGetter<IHairGetter> Hairs => _Hairs ?? new SkyrimGroup<Hair>(this);
         #endregion
         #region Eyes
-        private RangeInt64? _EyesLocation;
-        private ISkyrimGroupGetter<IEyesGetter>? _Eyes => _EyesLocation.HasValue ? SkyrimGroupBinaryOverlay<IEyesGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EyesLocation!.Value.Min, _EyesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _EyesLocations;
+        private ISkyrimGroupGetter<IEyesGetter>? _Eyes => _EyesLocations != null ? SkyrimGroupBinaryOverlay<IEyesGetter>.SkyrimGroupFactory(_data, _EyesLocations, _package) : default;
         public ISkyrimGroupGetter<IEyesGetter> Eyes => _Eyes ?? new SkyrimGroup<Eyes>(this);
         #endregion
         #region Races
-        private RangeInt64? _RacesLocation;
-        private ISkyrimGroupGetter<IRaceGetter>? _Races => _RacesLocation.HasValue ? SkyrimGroupBinaryOverlay<IRaceGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _RacesLocation!.Value.Min, _RacesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _RacesLocations;
+        private ISkyrimGroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? SkyrimGroupBinaryOverlay<IRaceGetter>.SkyrimGroupFactory(_data, _RacesLocations, _package) : default;
         public ISkyrimGroupGetter<IRaceGetter> Races => _Races ?? new SkyrimGroup<Race>(this);
         #endregion
         #region SoundMarkers
-        private RangeInt64? _SoundMarkersLocation;
-        private ISkyrimGroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocation.HasValue ? SkyrimGroupBinaryOverlay<ISoundMarkerGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoundMarkersLocation!.Value.Min, _SoundMarkersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SoundMarkersLocations;
+        private ISkyrimGroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocations != null ? SkyrimGroupBinaryOverlay<ISoundMarkerGetter>.SkyrimGroupFactory(_data, _SoundMarkersLocations, _package) : default;
         public ISkyrimGroupGetter<ISoundMarkerGetter> SoundMarkers => _SoundMarkers ?? new SkyrimGroup<SoundMarker>(this);
         #endregion
         #region AcousticSpaces
-        private RangeInt64? _AcousticSpacesLocation;
-        private ISkyrimGroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocation.HasValue ? SkyrimGroupBinaryOverlay<IAcousticSpaceGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AcousticSpacesLocation!.Value.Min, _AcousticSpacesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _AcousticSpacesLocations;
+        private ISkyrimGroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? SkyrimGroupBinaryOverlay<IAcousticSpaceGetter>.SkyrimGroupFactory(_data, _AcousticSpacesLocations, _package) : default;
         public ISkyrimGroupGetter<IAcousticSpaceGetter> AcousticSpaces => _AcousticSpaces ?? new SkyrimGroup<AcousticSpace>(this);
         #endregion
         #region MagicEffects
-        private RangeInt64? _MagicEffectsLocation;
-        private ISkyrimGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocation.HasValue ? SkyrimGroupBinaryOverlay<IMagicEffectGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MagicEffectsLocation!.Value.Min, _MagicEffectsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _MagicEffectsLocations;
+        private ISkyrimGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? SkyrimGroupBinaryOverlay<IMagicEffectGetter>.SkyrimGroupFactory(_data, _MagicEffectsLocations, _package) : default;
         public ISkyrimGroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new SkyrimGroup<MagicEffect>(this);
         #endregion
         #region LandscapeTextures
-        private RangeInt64? _LandscapeTexturesLocation;
-        private ISkyrimGroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocation.HasValue ? SkyrimGroupBinaryOverlay<ILandscapeTextureGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LandscapeTexturesLocation!.Value.Min, _LandscapeTexturesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LandscapeTexturesLocations;
+        private ISkyrimGroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? SkyrimGroupBinaryOverlay<ILandscapeTextureGetter>.SkyrimGroupFactory(_data, _LandscapeTexturesLocations, _package) : default;
         public ISkyrimGroupGetter<ILandscapeTextureGetter> LandscapeTextures => _LandscapeTextures ?? new SkyrimGroup<LandscapeTexture>(this);
         #endregion
         #region ObjectEffects
-        private RangeInt64? _ObjectEffectsLocation;
-        private ISkyrimGroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocation.HasValue ? SkyrimGroupBinaryOverlay<IObjectEffectGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ObjectEffectsLocation!.Value.Min, _ObjectEffectsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ObjectEffectsLocations;
+        private ISkyrimGroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocations != null ? SkyrimGroupBinaryOverlay<IObjectEffectGetter>.SkyrimGroupFactory(_data, _ObjectEffectsLocations, _package) : default;
         public ISkyrimGroupGetter<IObjectEffectGetter> ObjectEffects => _ObjectEffects ?? new SkyrimGroup<ObjectEffect>(this);
         #endregion
         #region Spells
-        private RangeInt64? _SpellsLocation;
-        private ISkyrimGroupGetter<ISpellGetter>? _Spells => _SpellsLocation.HasValue ? SkyrimGroupBinaryOverlay<ISpellGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SpellsLocation!.Value.Min, _SpellsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SpellsLocations;
+        private ISkyrimGroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? SkyrimGroupBinaryOverlay<ISpellGetter>.SkyrimGroupFactory(_data, _SpellsLocations, _package) : default;
         public ISkyrimGroupGetter<ISpellGetter> Spells => _Spells ?? new SkyrimGroup<Spell>(this);
         #endregion
         #region Scrolls
-        private RangeInt64? _ScrollsLocation;
-        private ISkyrimGroupGetter<IScrollGetter>? _Scrolls => _ScrollsLocation.HasValue ? SkyrimGroupBinaryOverlay<IScrollGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ScrollsLocation!.Value.Min, _ScrollsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ScrollsLocations;
+        private ISkyrimGroupGetter<IScrollGetter>? _Scrolls => _ScrollsLocations != null ? SkyrimGroupBinaryOverlay<IScrollGetter>.SkyrimGroupFactory(_data, _ScrollsLocations, _package) : default;
         public ISkyrimGroupGetter<IScrollGetter> Scrolls => _Scrolls ?? new SkyrimGroup<Scroll>(this);
         #endregion
         #region Activators
-        private RangeInt64? _ActivatorsLocation;
-        private ISkyrimGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocation.HasValue ? SkyrimGroupBinaryOverlay<IActivatorGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ActivatorsLocation!.Value.Min, _ActivatorsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ActivatorsLocations;
+        private ISkyrimGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? SkyrimGroupBinaryOverlay<IActivatorGetter>.SkyrimGroupFactory(_data, _ActivatorsLocations, _package) : default;
         public ISkyrimGroupGetter<IActivatorGetter> Activators => _Activators ?? new SkyrimGroup<Activator>(this);
         #endregion
         #region TalkingActivators
-        private RangeInt64? _TalkingActivatorsLocation;
-        private ISkyrimGroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocation.HasValue ? SkyrimGroupBinaryOverlay<ITalkingActivatorGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TalkingActivatorsLocation!.Value.Min, _TalkingActivatorsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _TalkingActivatorsLocations;
+        private ISkyrimGroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocations != null ? SkyrimGroupBinaryOverlay<ITalkingActivatorGetter>.SkyrimGroupFactory(_data, _TalkingActivatorsLocations, _package) : default;
         public ISkyrimGroupGetter<ITalkingActivatorGetter> TalkingActivators => _TalkingActivators ?? new SkyrimGroup<TalkingActivator>(this);
         #endregion
         #region Armors
-        private RangeInt64? _ArmorsLocation;
-        private ISkyrimGroupGetter<IArmorGetter>? _Armors => _ArmorsLocation.HasValue ? SkyrimGroupBinaryOverlay<IArmorGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ArmorsLocation!.Value.Min, _ArmorsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ArmorsLocations;
+        private ISkyrimGroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? SkyrimGroupBinaryOverlay<IArmorGetter>.SkyrimGroupFactory(_data, _ArmorsLocations, _package) : default;
         public ISkyrimGroupGetter<IArmorGetter> Armors => _Armors ?? new SkyrimGroup<Armor>(this);
         #endregion
         #region Books
-        private RangeInt64? _BooksLocation;
-        private ISkyrimGroupGetter<IBookGetter>? _Books => _BooksLocation.HasValue ? SkyrimGroupBinaryOverlay<IBookGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _BooksLocation!.Value.Min, _BooksLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _BooksLocations;
+        private ISkyrimGroupGetter<IBookGetter>? _Books => _BooksLocations != null ? SkyrimGroupBinaryOverlay<IBookGetter>.SkyrimGroupFactory(_data, _BooksLocations, _package) : default;
         public ISkyrimGroupGetter<IBookGetter> Books => _Books ?? new SkyrimGroup<Book>(this);
         #endregion
         #region Containers
-        private RangeInt64? _ContainersLocation;
-        private ISkyrimGroupGetter<IContainerGetter>? _Containers => _ContainersLocation.HasValue ? SkyrimGroupBinaryOverlay<IContainerGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ContainersLocation!.Value.Min, _ContainersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ContainersLocations;
+        private ISkyrimGroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? SkyrimGroupBinaryOverlay<IContainerGetter>.SkyrimGroupFactory(_data, _ContainersLocations, _package) : default;
         public ISkyrimGroupGetter<IContainerGetter> Containers => _Containers ?? new SkyrimGroup<Container>(this);
         #endregion
         #region Doors
-        private RangeInt64? _DoorsLocation;
-        private ISkyrimGroupGetter<IDoorGetter>? _Doors => _DoorsLocation.HasValue ? SkyrimGroupBinaryOverlay<IDoorGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DoorsLocation!.Value.Min, _DoorsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _DoorsLocations;
+        private ISkyrimGroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? SkyrimGroupBinaryOverlay<IDoorGetter>.SkyrimGroupFactory(_data, _DoorsLocations, _package) : default;
         public ISkyrimGroupGetter<IDoorGetter> Doors => _Doors ?? new SkyrimGroup<Door>(this);
         #endregion
         #region Ingredients
-        private RangeInt64? _IngredientsLocation;
-        private ISkyrimGroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocation.HasValue ? SkyrimGroupBinaryOverlay<IIngredientGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IngredientsLocation!.Value.Min, _IngredientsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _IngredientsLocations;
+        private ISkyrimGroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocations != null ? SkyrimGroupBinaryOverlay<IIngredientGetter>.SkyrimGroupFactory(_data, _IngredientsLocations, _package) : default;
         public ISkyrimGroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new SkyrimGroup<Ingredient>(this);
         #endregion
         #region Lights
-        private RangeInt64? _LightsLocation;
-        private ISkyrimGroupGetter<ILightGetter>? _Lights => _LightsLocation.HasValue ? SkyrimGroupBinaryOverlay<ILightGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LightsLocation!.Value.Min, _LightsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LightsLocations;
+        private ISkyrimGroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? SkyrimGroupBinaryOverlay<ILightGetter>.SkyrimGroupFactory(_data, _LightsLocations, _package) : default;
         public ISkyrimGroupGetter<ILightGetter> Lights => _Lights ?? new SkyrimGroup<Light>(this);
         #endregion
         #region MiscItems
-        private RangeInt64? _MiscItemsLocation;
-        private ISkyrimGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocation.HasValue ? SkyrimGroupBinaryOverlay<IMiscItemGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MiscItemsLocation!.Value.Min, _MiscItemsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _MiscItemsLocations;
+        private ISkyrimGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? SkyrimGroupBinaryOverlay<IMiscItemGetter>.SkyrimGroupFactory(_data, _MiscItemsLocations, _package) : default;
         public ISkyrimGroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new SkyrimGroup<MiscItem>(this);
         #endregion
         #region AlchemicalApparatuses
-        private RangeInt64? _AlchemicalApparatusesLocation;
-        private ISkyrimGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatuses => _AlchemicalApparatusesLocation.HasValue ? SkyrimGroupBinaryOverlay<IAlchemicalApparatusGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AlchemicalApparatusesLocation!.Value.Min, _AlchemicalApparatusesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _AlchemicalApparatusesLocations;
+        private ISkyrimGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatuses => _AlchemicalApparatusesLocations != null ? SkyrimGroupBinaryOverlay<IAlchemicalApparatusGetter>.SkyrimGroupFactory(_data, _AlchemicalApparatusesLocations, _package) : default;
         public ISkyrimGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatuses => _AlchemicalApparatuses ?? new SkyrimGroup<AlchemicalApparatus>(this);
         #endregion
         #region Statics
-        private RangeInt64? _StaticsLocation;
-        private ISkyrimGroupGetter<IStaticGetter>? _Statics => _StaticsLocation.HasValue ? SkyrimGroupBinaryOverlay<IStaticGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _StaticsLocation!.Value.Min, _StaticsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _StaticsLocations;
+        private ISkyrimGroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? SkyrimGroupBinaryOverlay<IStaticGetter>.SkyrimGroupFactory(_data, _StaticsLocations, _package) : default;
         public ISkyrimGroupGetter<IStaticGetter> Statics => _Statics ?? new SkyrimGroup<Static>(this);
         #endregion
         #region MoveableStatics
-        private RangeInt64? _MoveableStaticsLocation;
-        private ISkyrimGroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocation.HasValue ? SkyrimGroupBinaryOverlay<IMoveableStaticGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MoveableStaticsLocation!.Value.Min, _MoveableStaticsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _MoveableStaticsLocations;
+        private ISkyrimGroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocations != null ? SkyrimGroupBinaryOverlay<IMoveableStaticGetter>.SkyrimGroupFactory(_data, _MoveableStaticsLocations, _package) : default;
         public ISkyrimGroupGetter<IMoveableStaticGetter> MoveableStatics => _MoveableStatics ?? new SkyrimGroup<MoveableStatic>(this);
         #endregion
         #region Grasses
-        private RangeInt64? _GrassesLocation;
-        private ISkyrimGroupGetter<IGrassGetter>? _Grasses => _GrassesLocation.HasValue ? SkyrimGroupBinaryOverlay<IGrassGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GrassesLocation!.Value.Min, _GrassesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _GrassesLocations;
+        private ISkyrimGroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? SkyrimGroupBinaryOverlay<IGrassGetter>.SkyrimGroupFactory(_data, _GrassesLocations, _package) : default;
         public ISkyrimGroupGetter<IGrassGetter> Grasses => _Grasses ?? new SkyrimGroup<Grass>(this);
         #endregion
         #region Trees
-        private RangeInt64? _TreesLocation;
-        private ISkyrimGroupGetter<ITreeGetter>? _Trees => _TreesLocation.HasValue ? SkyrimGroupBinaryOverlay<ITreeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TreesLocation!.Value.Min, _TreesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _TreesLocations;
+        private ISkyrimGroupGetter<ITreeGetter>? _Trees => _TreesLocations != null ? SkyrimGroupBinaryOverlay<ITreeGetter>.SkyrimGroupFactory(_data, _TreesLocations, _package) : default;
         public ISkyrimGroupGetter<ITreeGetter> Trees => _Trees ?? new SkyrimGroup<Tree>(this);
         #endregion
         #region Florae
-        private RangeInt64? _FloraeLocation;
-        private ISkyrimGroupGetter<IFloraGetter>? _Florae => _FloraeLocation.HasValue ? SkyrimGroupBinaryOverlay<IFloraGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FloraeLocation!.Value.Min, _FloraeLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _FloraeLocations;
+        private ISkyrimGroupGetter<IFloraGetter>? _Florae => _FloraeLocations != null ? SkyrimGroupBinaryOverlay<IFloraGetter>.SkyrimGroupFactory(_data, _FloraeLocations, _package) : default;
         public ISkyrimGroupGetter<IFloraGetter> Florae => _Florae ?? new SkyrimGroup<Flora>(this);
         #endregion
         #region Furniture
-        private RangeInt64? _FurnitureLocation;
-        private ISkyrimGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocation.HasValue ? SkyrimGroupBinaryOverlay<IFurnitureGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FurnitureLocation!.Value.Min, _FurnitureLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _FurnitureLocations;
+        private ISkyrimGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? SkyrimGroupBinaryOverlay<IFurnitureGetter>.SkyrimGroupFactory(_data, _FurnitureLocations, _package) : default;
         public ISkyrimGroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new SkyrimGroup<Furniture>(this);
         #endregion
         #region Weapons
-        private RangeInt64? _WeaponsLocation;
-        private ISkyrimGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocation.HasValue ? SkyrimGroupBinaryOverlay<IWeaponGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WeaponsLocation!.Value.Min, _WeaponsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _WeaponsLocations;
+        private ISkyrimGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? SkyrimGroupBinaryOverlay<IWeaponGetter>.SkyrimGroupFactory(_data, _WeaponsLocations, _package) : default;
         public ISkyrimGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new SkyrimGroup<Weapon>(this);
         #endregion
         #region Ammunitions
-        private RangeInt64? _AmmunitionsLocation;
-        private ISkyrimGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocation.HasValue ? SkyrimGroupBinaryOverlay<IAmmunitionGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AmmunitionsLocation!.Value.Min, _AmmunitionsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _AmmunitionsLocations;
+        private ISkyrimGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? SkyrimGroupBinaryOverlay<IAmmunitionGetter>.SkyrimGroupFactory(_data, _AmmunitionsLocations, _package) : default;
         public ISkyrimGroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new SkyrimGroup<Ammunition>(this);
         #endregion
         #region Npcs
-        private RangeInt64? _NpcsLocation;
-        private ISkyrimGroupGetter<INpcGetter>? _Npcs => _NpcsLocation.HasValue ? SkyrimGroupBinaryOverlay<INpcGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _NpcsLocation!.Value.Min, _NpcsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _NpcsLocations;
+        private ISkyrimGroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? SkyrimGroupBinaryOverlay<INpcGetter>.SkyrimGroupFactory(_data, _NpcsLocations, _package) : default;
         public ISkyrimGroupGetter<INpcGetter> Npcs => _Npcs ?? new SkyrimGroup<Npc>(this);
         #endregion
         #region LeveledNpcs
-        private RangeInt64? _LeveledNpcsLocation;
-        private ISkyrimGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocation.HasValue ? SkyrimGroupBinaryOverlay<ILeveledNpcGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledNpcsLocation!.Value.Min, _LeveledNpcsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LeveledNpcsLocations;
+        private ISkyrimGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocations != null ? SkyrimGroupBinaryOverlay<ILeveledNpcGetter>.SkyrimGroupFactory(_data, _LeveledNpcsLocations, _package) : default;
         public ISkyrimGroupGetter<ILeveledNpcGetter> LeveledNpcs => _LeveledNpcs ?? new SkyrimGroup<LeveledNpc>(this);
         #endregion
         #region Keys
-        private RangeInt64? _KeysLocation;
-        private ISkyrimGroupGetter<IKeyGetter>? _Keys => _KeysLocation.HasValue ? SkyrimGroupBinaryOverlay<IKeyGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _KeysLocation!.Value.Min, _KeysLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _KeysLocations;
+        private ISkyrimGroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? SkyrimGroupBinaryOverlay<IKeyGetter>.SkyrimGroupFactory(_data, _KeysLocations, _package) : default;
         public ISkyrimGroupGetter<IKeyGetter> Keys => _Keys ?? new SkyrimGroup<Key>(this);
         #endregion
         #region Ingestibles
-        private RangeInt64? _IngestiblesLocation;
-        private ISkyrimGroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocation.HasValue ? SkyrimGroupBinaryOverlay<IIngestibleGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IngestiblesLocation!.Value.Min, _IngestiblesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _IngestiblesLocations;
+        private ISkyrimGroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? SkyrimGroupBinaryOverlay<IIngestibleGetter>.SkyrimGroupFactory(_data, _IngestiblesLocations, _package) : default;
         public ISkyrimGroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new SkyrimGroup<Ingestible>(this);
         #endregion
         #region IdleMarkers
-        private RangeInt64? _IdleMarkersLocation;
-        private ISkyrimGroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocation.HasValue ? SkyrimGroupBinaryOverlay<IIdleMarkerGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IdleMarkersLocation!.Value.Min, _IdleMarkersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _IdleMarkersLocations;
+        private ISkyrimGroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? SkyrimGroupBinaryOverlay<IIdleMarkerGetter>.SkyrimGroupFactory(_data, _IdleMarkersLocations, _package) : default;
         public ISkyrimGroupGetter<IIdleMarkerGetter> IdleMarkers => _IdleMarkers ?? new SkyrimGroup<IdleMarker>(this);
         #endregion
         #region ConstructibleObjects
-        private RangeInt64? _ConstructibleObjectsLocation;
-        private ISkyrimGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocation.HasValue ? SkyrimGroupBinaryOverlay<IConstructibleObjectGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ConstructibleObjectsLocation!.Value.Min, _ConstructibleObjectsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ConstructibleObjectsLocations;
+        private ISkyrimGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? SkyrimGroupBinaryOverlay<IConstructibleObjectGetter>.SkyrimGroupFactory(_data, _ConstructibleObjectsLocations, _package) : default;
         public ISkyrimGroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new SkyrimGroup<ConstructibleObject>(this);
         #endregion
         #region Projectiles
-        private RangeInt64? _ProjectilesLocation;
-        private ISkyrimGroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocation.HasValue ? SkyrimGroupBinaryOverlay<IProjectileGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ProjectilesLocation!.Value.Min, _ProjectilesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ProjectilesLocations;
+        private ISkyrimGroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? SkyrimGroupBinaryOverlay<IProjectileGetter>.SkyrimGroupFactory(_data, _ProjectilesLocations, _package) : default;
         public ISkyrimGroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new SkyrimGroup<Projectile>(this);
         #endregion
         #region Hazards
-        private RangeInt64? _HazardsLocation;
-        private ISkyrimGroupGetter<IHazardGetter>? _Hazards => _HazardsLocation.HasValue ? SkyrimGroupBinaryOverlay<IHazardGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _HazardsLocation!.Value.Min, _HazardsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _HazardsLocations;
+        private ISkyrimGroupGetter<IHazardGetter>? _Hazards => _HazardsLocations != null ? SkyrimGroupBinaryOverlay<IHazardGetter>.SkyrimGroupFactory(_data, _HazardsLocations, _package) : default;
         public ISkyrimGroupGetter<IHazardGetter> Hazards => _Hazards ?? new SkyrimGroup<Hazard>(this);
         #endregion
         #region SoulGems
-        private RangeInt64? _SoulGemsLocation;
-        private ISkyrimGroupGetter<ISoulGemGetter>? _SoulGems => _SoulGemsLocation.HasValue ? SkyrimGroupBinaryOverlay<ISoulGemGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoulGemsLocation!.Value.Min, _SoulGemsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SoulGemsLocations;
+        private ISkyrimGroupGetter<ISoulGemGetter>? _SoulGems => _SoulGemsLocations != null ? SkyrimGroupBinaryOverlay<ISoulGemGetter>.SkyrimGroupFactory(_data, _SoulGemsLocations, _package) : default;
         public ISkyrimGroupGetter<ISoulGemGetter> SoulGems => _SoulGems ?? new SkyrimGroup<SoulGem>(this);
         #endregion
         #region LeveledItems
-        private RangeInt64? _LeveledItemsLocation;
-        private ISkyrimGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocation.HasValue ? SkyrimGroupBinaryOverlay<ILeveledItemGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledItemsLocation!.Value.Min, _LeveledItemsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LeveledItemsLocations;
+        private ISkyrimGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? SkyrimGroupBinaryOverlay<ILeveledItemGetter>.SkyrimGroupFactory(_data, _LeveledItemsLocations, _package) : default;
         public ISkyrimGroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new SkyrimGroup<LeveledItem>(this);
         #endregion
         #region Weathers
-        private RangeInt64? _WeathersLocation;
-        private ISkyrimGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocation.HasValue ? SkyrimGroupBinaryOverlay<IWeatherGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WeathersLocation!.Value.Min, _WeathersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _WeathersLocations;
+        private ISkyrimGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? SkyrimGroupBinaryOverlay<IWeatherGetter>.SkyrimGroupFactory(_data, _WeathersLocations, _package) : default;
         public ISkyrimGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new SkyrimGroup<Weather>(this);
         #endregion
         #region Climates
-        private RangeInt64? _ClimatesLocation;
-        private ISkyrimGroupGetter<IClimateGetter>? _Climates => _ClimatesLocation.HasValue ? SkyrimGroupBinaryOverlay<IClimateGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClimatesLocation!.Value.Min, _ClimatesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ClimatesLocations;
+        private ISkyrimGroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? SkyrimGroupBinaryOverlay<IClimateGetter>.SkyrimGroupFactory(_data, _ClimatesLocations, _package) : default;
         public ISkyrimGroupGetter<IClimateGetter> Climates => _Climates ?? new SkyrimGroup<Climate>(this);
         #endregion
         #region ShaderParticleGeometries
-        private RangeInt64? _ShaderParticleGeometriesLocation;
-        private ISkyrimGroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocation.HasValue ? SkyrimGroupBinaryOverlay<IShaderParticleGeometryGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ShaderParticleGeometriesLocation!.Value.Min, _ShaderParticleGeometriesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ShaderParticleGeometriesLocations;
+        private ISkyrimGroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocations != null ? SkyrimGroupBinaryOverlay<IShaderParticleGeometryGetter>.SkyrimGroupFactory(_data, _ShaderParticleGeometriesLocations, _package) : default;
         public ISkyrimGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries => _ShaderParticleGeometries ?? new SkyrimGroup<ShaderParticleGeometry>(this);
         #endregion
         #region VisualEffects
-        private RangeInt64? _VisualEffectsLocation;
-        private ISkyrimGroupGetter<IVisualEffectGetter>? _VisualEffects => _VisualEffectsLocation.HasValue ? SkyrimGroupBinaryOverlay<IVisualEffectGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _VisualEffectsLocation!.Value.Min, _VisualEffectsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _VisualEffectsLocations;
+        private ISkyrimGroupGetter<IVisualEffectGetter>? _VisualEffects => _VisualEffectsLocations != null ? SkyrimGroupBinaryOverlay<IVisualEffectGetter>.SkyrimGroupFactory(_data, _VisualEffectsLocations, _package) : default;
         public ISkyrimGroupGetter<IVisualEffectGetter> VisualEffects => _VisualEffects ?? new SkyrimGroup<VisualEffect>(this);
         #endregion
         #region Regions
-        private RangeInt64? _RegionsLocation;
-        private ISkyrimGroupGetter<IRegionGetter>? _Regions => _RegionsLocation.HasValue ? SkyrimGroupBinaryOverlay<IRegionGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _RegionsLocation!.Value.Min, _RegionsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _RegionsLocations;
+        private ISkyrimGroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? SkyrimGroupBinaryOverlay<IRegionGetter>.SkyrimGroupFactory(_data, _RegionsLocations, _package) : default;
         public ISkyrimGroupGetter<IRegionGetter> Regions => _Regions ?? new SkyrimGroup<Region>(this);
         #endregion
         #region NavigationMeshInfoMaps
-        private RangeInt64? _NavigationMeshInfoMapsLocation;
-        private ISkyrimGroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocation.HasValue ? SkyrimGroupBinaryOverlay<INavigationMeshInfoMapGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _NavigationMeshInfoMapsLocation!.Value.Min, _NavigationMeshInfoMapsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _NavigationMeshInfoMapsLocations;
+        private ISkyrimGroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? SkyrimGroupBinaryOverlay<INavigationMeshInfoMapGetter>.SkyrimGroupFactory(_data, _NavigationMeshInfoMapsLocations, _package) : default;
         public ISkyrimGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new SkyrimGroup<NavigationMeshInfoMap>(this);
         #endregion
         #region Cells
@@ -24461,298 +24461,298 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ISkyrimListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new SkyrimListGroup<CellBlock>();
         #endregion
         #region Worldspaces
-        private RangeInt64? _WorldspacesLocation;
-        private ISkyrimGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocation.HasValue ? SkyrimGroupBinaryOverlay<IWorldspaceGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WorldspacesLocation!.Value.Min, _WorldspacesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _WorldspacesLocations;
+        private ISkyrimGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? SkyrimGroupBinaryOverlay<IWorldspaceGetter>.SkyrimGroupFactory(_data, _WorldspacesLocations, _package) : default;
         public ISkyrimGroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new SkyrimGroup<Worldspace>(this);
         #endregion
         #region DialogTopics
-        private RangeInt64? _DialogTopicsLocation;
-        private ISkyrimGroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocation.HasValue ? SkyrimGroupBinaryOverlay<IDialogTopicGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DialogTopicsLocation!.Value.Min, _DialogTopicsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _DialogTopicsLocations;
+        private ISkyrimGroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocations != null ? SkyrimGroupBinaryOverlay<IDialogTopicGetter>.SkyrimGroupFactory(_data, _DialogTopicsLocations, _package) : default;
         public ISkyrimGroupGetter<IDialogTopicGetter> DialogTopics => _DialogTopics ?? new SkyrimGroup<DialogTopic>(this);
         #endregion
         #region Quests
-        private RangeInt64? _QuestsLocation;
-        private ISkyrimGroupGetter<IQuestGetter>? _Quests => _QuestsLocation.HasValue ? SkyrimGroupBinaryOverlay<IQuestGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _QuestsLocation!.Value.Min, _QuestsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _QuestsLocations;
+        private ISkyrimGroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? SkyrimGroupBinaryOverlay<IQuestGetter>.SkyrimGroupFactory(_data, _QuestsLocations, _package) : default;
         public ISkyrimGroupGetter<IQuestGetter> Quests => _Quests ?? new SkyrimGroup<Quest>(this);
         #endregion
         #region IdleAnimations
-        private RangeInt64? _IdleAnimationsLocation;
-        private ISkyrimGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocation.HasValue ? SkyrimGroupBinaryOverlay<IIdleAnimationGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IdleAnimationsLocation!.Value.Min, _IdleAnimationsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _IdleAnimationsLocations;
+        private ISkyrimGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? SkyrimGroupBinaryOverlay<IIdleAnimationGetter>.SkyrimGroupFactory(_data, _IdleAnimationsLocations, _package) : default;
         public ISkyrimGroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new SkyrimGroup<IdleAnimation>(this);
         #endregion
         #region Packages
-        private RangeInt64? _PackagesLocation;
-        private ISkyrimGroupGetter<IPackageGetter>? _Packages => _PackagesLocation.HasValue ? SkyrimGroupBinaryOverlay<IPackageGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _PackagesLocation!.Value.Min, _PackagesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _PackagesLocations;
+        private ISkyrimGroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? SkyrimGroupBinaryOverlay<IPackageGetter>.SkyrimGroupFactory(_data, _PackagesLocations, _package) : default;
         public ISkyrimGroupGetter<IPackageGetter> Packages => _Packages ?? new SkyrimGroup<Package>(this);
         #endregion
         #region CombatStyles
-        private RangeInt64? _CombatStylesLocation;
-        private ISkyrimGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocation.HasValue ? SkyrimGroupBinaryOverlay<ICombatStyleGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CombatStylesLocation!.Value.Min, _CombatStylesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _CombatStylesLocations;
+        private ISkyrimGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? SkyrimGroupBinaryOverlay<ICombatStyleGetter>.SkyrimGroupFactory(_data, _CombatStylesLocations, _package) : default;
         public ISkyrimGroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new SkyrimGroup<CombatStyle>(this);
         #endregion
         #region LoadScreens
-        private RangeInt64? _LoadScreensLocation;
-        private ISkyrimGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocation.HasValue ? SkyrimGroupBinaryOverlay<ILoadScreenGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LoadScreensLocation!.Value.Min, _LoadScreensLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LoadScreensLocations;
+        private ISkyrimGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? SkyrimGroupBinaryOverlay<ILoadScreenGetter>.SkyrimGroupFactory(_data, _LoadScreensLocations, _package) : default;
         public ISkyrimGroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new SkyrimGroup<LoadScreen>(this);
         #endregion
         #region LeveledSpells
-        private RangeInt64? _LeveledSpellsLocation;
-        private ISkyrimGroupGetter<ILeveledSpellGetter>? _LeveledSpells => _LeveledSpellsLocation.HasValue ? SkyrimGroupBinaryOverlay<ILeveledSpellGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledSpellsLocation!.Value.Min, _LeveledSpellsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LeveledSpellsLocations;
+        private ISkyrimGroupGetter<ILeveledSpellGetter>? _LeveledSpells => _LeveledSpellsLocations != null ? SkyrimGroupBinaryOverlay<ILeveledSpellGetter>.SkyrimGroupFactory(_data, _LeveledSpellsLocations, _package) : default;
         public ISkyrimGroupGetter<ILeveledSpellGetter> LeveledSpells => _LeveledSpells ?? new SkyrimGroup<LeveledSpell>(this);
         #endregion
         #region AnimatedObjects
-        private RangeInt64? _AnimatedObjectsLocation;
-        private ISkyrimGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocation.HasValue ? SkyrimGroupBinaryOverlay<IAnimatedObjectGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AnimatedObjectsLocation!.Value.Min, _AnimatedObjectsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _AnimatedObjectsLocations;
+        private ISkyrimGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? SkyrimGroupBinaryOverlay<IAnimatedObjectGetter>.SkyrimGroupFactory(_data, _AnimatedObjectsLocations, _package) : default;
         public ISkyrimGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new SkyrimGroup<AnimatedObject>(this);
         #endregion
         #region Waters
-        private RangeInt64? _WatersLocation;
-        private ISkyrimGroupGetter<IWaterGetter>? _Waters => _WatersLocation.HasValue ? SkyrimGroupBinaryOverlay<IWaterGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WatersLocation!.Value.Min, _WatersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _WatersLocations;
+        private ISkyrimGroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? SkyrimGroupBinaryOverlay<IWaterGetter>.SkyrimGroupFactory(_data, _WatersLocations, _package) : default;
         public ISkyrimGroupGetter<IWaterGetter> Waters => _Waters ?? new SkyrimGroup<Water>(this);
         #endregion
         #region EffectShaders
-        private RangeInt64? _EffectShadersLocation;
-        private ISkyrimGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocation.HasValue ? SkyrimGroupBinaryOverlay<IEffectShaderGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EffectShadersLocation!.Value.Min, _EffectShadersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _EffectShadersLocations;
+        private ISkyrimGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? SkyrimGroupBinaryOverlay<IEffectShaderGetter>.SkyrimGroupFactory(_data, _EffectShadersLocations, _package) : default;
         public ISkyrimGroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new SkyrimGroup<EffectShader>(this);
         #endregion
         #region Explosions
-        private RangeInt64? _ExplosionsLocation;
-        private ISkyrimGroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocation.HasValue ? SkyrimGroupBinaryOverlay<IExplosionGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ExplosionsLocation!.Value.Min, _ExplosionsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ExplosionsLocations;
+        private ISkyrimGroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? SkyrimGroupBinaryOverlay<IExplosionGetter>.SkyrimGroupFactory(_data, _ExplosionsLocations, _package) : default;
         public ISkyrimGroupGetter<IExplosionGetter> Explosions => _Explosions ?? new SkyrimGroup<Explosion>(this);
         #endregion
         #region Debris
-        private RangeInt64? _DebrisLocation;
-        private ISkyrimGroupGetter<IDebrisGetter>? _Debris => _DebrisLocation.HasValue ? SkyrimGroupBinaryOverlay<IDebrisGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DebrisLocation!.Value.Min, _DebrisLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _DebrisLocations;
+        private ISkyrimGroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? SkyrimGroupBinaryOverlay<IDebrisGetter>.SkyrimGroupFactory(_data, _DebrisLocations, _package) : default;
         public ISkyrimGroupGetter<IDebrisGetter> Debris => _Debris ?? new SkyrimGroup<Debris>(this);
         #endregion
         #region ImageSpaces
-        private RangeInt64? _ImageSpacesLocation;
-        private ISkyrimGroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocation.HasValue ? SkyrimGroupBinaryOverlay<IImageSpaceGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ImageSpacesLocation!.Value.Min, _ImageSpacesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ImageSpacesLocations;
+        private ISkyrimGroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? SkyrimGroupBinaryOverlay<IImageSpaceGetter>.SkyrimGroupFactory(_data, _ImageSpacesLocations, _package) : default;
         public ISkyrimGroupGetter<IImageSpaceGetter> ImageSpaces => _ImageSpaces ?? new SkyrimGroup<ImageSpace>(this);
         #endregion
         #region ImageSpaceAdapters
-        private RangeInt64? _ImageSpaceAdaptersLocation;
-        private ISkyrimGroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocation.HasValue ? SkyrimGroupBinaryOverlay<IImageSpaceAdapterGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ImageSpaceAdaptersLocation!.Value.Min, _ImageSpaceAdaptersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ImageSpaceAdaptersLocations;
+        private ISkyrimGroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? SkyrimGroupBinaryOverlay<IImageSpaceAdapterGetter>.SkyrimGroupFactory(_data, _ImageSpaceAdaptersLocations, _package) : default;
         public ISkyrimGroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters => _ImageSpaceAdapters ?? new SkyrimGroup<ImageSpaceAdapter>(this);
         #endregion
         #region FormLists
-        private RangeInt64? _FormListsLocation;
-        private ISkyrimGroupGetter<IFormListGetter>? _FormLists => _FormListsLocation.HasValue ? SkyrimGroupBinaryOverlay<IFormListGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FormListsLocation!.Value.Min, _FormListsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _FormListsLocations;
+        private ISkyrimGroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? SkyrimGroupBinaryOverlay<IFormListGetter>.SkyrimGroupFactory(_data, _FormListsLocations, _package) : default;
         public ISkyrimGroupGetter<IFormListGetter> FormLists => _FormLists ?? new SkyrimGroup<FormList>(this);
         #endregion
         #region Perks
-        private RangeInt64? _PerksLocation;
-        private ISkyrimGroupGetter<IPerkGetter>? _Perks => _PerksLocation.HasValue ? SkyrimGroupBinaryOverlay<IPerkGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _PerksLocation!.Value.Min, _PerksLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _PerksLocations;
+        private ISkyrimGroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? SkyrimGroupBinaryOverlay<IPerkGetter>.SkyrimGroupFactory(_data, _PerksLocations, _package) : default;
         public ISkyrimGroupGetter<IPerkGetter> Perks => _Perks ?? new SkyrimGroup<Perk>(this);
         #endregion
         #region BodyParts
-        private RangeInt64? _BodyPartsLocation;
-        private ISkyrimGroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocation.HasValue ? SkyrimGroupBinaryOverlay<IBodyPartDataGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _BodyPartsLocation!.Value.Min, _BodyPartsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _BodyPartsLocations;
+        private ISkyrimGroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? SkyrimGroupBinaryOverlay<IBodyPartDataGetter>.SkyrimGroupFactory(_data, _BodyPartsLocations, _package) : default;
         public ISkyrimGroupGetter<IBodyPartDataGetter> BodyParts => _BodyParts ?? new SkyrimGroup<BodyPartData>(this);
         #endregion
         #region AddonNodes
-        private RangeInt64? _AddonNodesLocation;
-        private ISkyrimGroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocation.HasValue ? SkyrimGroupBinaryOverlay<IAddonNodeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AddonNodesLocation!.Value.Min, _AddonNodesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _AddonNodesLocations;
+        private ISkyrimGroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? SkyrimGroupBinaryOverlay<IAddonNodeGetter>.SkyrimGroupFactory(_data, _AddonNodesLocations, _package) : default;
         public ISkyrimGroupGetter<IAddonNodeGetter> AddonNodes => _AddonNodes ?? new SkyrimGroup<AddonNode>(this);
         #endregion
         #region ActorValueInformation
-        private RangeInt64? _ActorValueInformationLocation;
-        private ISkyrimGroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocation.HasValue ? SkyrimGroupBinaryOverlay<IActorValueInformationGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ActorValueInformationLocation!.Value.Min, _ActorValueInformationLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ActorValueInformationLocations;
+        private ISkyrimGroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocations != null ? SkyrimGroupBinaryOverlay<IActorValueInformationGetter>.SkyrimGroupFactory(_data, _ActorValueInformationLocations, _package) : default;
         public ISkyrimGroupGetter<IActorValueInformationGetter> ActorValueInformation => _ActorValueInformation ?? new SkyrimGroup<ActorValueInformation>(this);
         #endregion
         #region CameraShots
-        private RangeInt64? _CameraShotsLocation;
-        private ISkyrimGroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocation.HasValue ? SkyrimGroupBinaryOverlay<ICameraShotGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CameraShotsLocation!.Value.Min, _CameraShotsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _CameraShotsLocations;
+        private ISkyrimGroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? SkyrimGroupBinaryOverlay<ICameraShotGetter>.SkyrimGroupFactory(_data, _CameraShotsLocations, _package) : default;
         public ISkyrimGroupGetter<ICameraShotGetter> CameraShots => _CameraShots ?? new SkyrimGroup<CameraShot>(this);
         #endregion
         #region CameraPaths
-        private RangeInt64? _CameraPathsLocation;
-        private ISkyrimGroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocation.HasValue ? SkyrimGroupBinaryOverlay<ICameraPathGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CameraPathsLocation!.Value.Min, _CameraPathsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _CameraPathsLocations;
+        private ISkyrimGroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? SkyrimGroupBinaryOverlay<ICameraPathGetter>.SkyrimGroupFactory(_data, _CameraPathsLocations, _package) : default;
         public ISkyrimGroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new SkyrimGroup<CameraPath>(this);
         #endregion
         #region VoiceTypes
-        private RangeInt64? _VoiceTypesLocation;
-        private ISkyrimGroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocation.HasValue ? SkyrimGroupBinaryOverlay<IVoiceTypeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _VoiceTypesLocation!.Value.Min, _VoiceTypesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _VoiceTypesLocations;
+        private ISkyrimGroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? SkyrimGroupBinaryOverlay<IVoiceTypeGetter>.SkyrimGroupFactory(_data, _VoiceTypesLocations, _package) : default;
         public ISkyrimGroupGetter<IVoiceTypeGetter> VoiceTypes => _VoiceTypes ?? new SkyrimGroup<VoiceType>(this);
         #endregion
         #region MaterialTypes
-        private RangeInt64? _MaterialTypesLocation;
-        private ISkyrimGroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocation.HasValue ? SkyrimGroupBinaryOverlay<IMaterialTypeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MaterialTypesLocation!.Value.Min, _MaterialTypesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _MaterialTypesLocations;
+        private ISkyrimGroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? SkyrimGroupBinaryOverlay<IMaterialTypeGetter>.SkyrimGroupFactory(_data, _MaterialTypesLocations, _package) : default;
         public ISkyrimGroupGetter<IMaterialTypeGetter> MaterialTypes => _MaterialTypes ?? new SkyrimGroup<MaterialType>(this);
         #endregion
         #region Impacts
-        private RangeInt64? _ImpactsLocation;
-        private ISkyrimGroupGetter<IImpactGetter>? _Impacts => _ImpactsLocation.HasValue ? SkyrimGroupBinaryOverlay<IImpactGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ImpactsLocation!.Value.Min, _ImpactsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ImpactsLocations;
+        private ISkyrimGroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? SkyrimGroupBinaryOverlay<IImpactGetter>.SkyrimGroupFactory(_data, _ImpactsLocations, _package) : default;
         public ISkyrimGroupGetter<IImpactGetter> Impacts => _Impacts ?? new SkyrimGroup<Impact>(this);
         #endregion
         #region ImpactDataSets
-        private RangeInt64? _ImpactDataSetsLocation;
-        private ISkyrimGroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocation.HasValue ? SkyrimGroupBinaryOverlay<IImpactDataSetGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ImpactDataSetsLocation!.Value.Min, _ImpactDataSetsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ImpactDataSetsLocations;
+        private ISkyrimGroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? SkyrimGroupBinaryOverlay<IImpactDataSetGetter>.SkyrimGroupFactory(_data, _ImpactDataSetsLocations, _package) : default;
         public ISkyrimGroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new SkyrimGroup<ImpactDataSet>(this);
         #endregion
         #region ArmorAddons
-        private RangeInt64? _ArmorAddonsLocation;
-        private ISkyrimGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocation.HasValue ? SkyrimGroupBinaryOverlay<IArmorAddonGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ArmorAddonsLocation!.Value.Min, _ArmorAddonsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ArmorAddonsLocations;
+        private ISkyrimGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? SkyrimGroupBinaryOverlay<IArmorAddonGetter>.SkyrimGroupFactory(_data, _ArmorAddonsLocations, _package) : default;
         public ISkyrimGroupGetter<IArmorAddonGetter> ArmorAddons => _ArmorAddons ?? new SkyrimGroup<ArmorAddon>(this);
         #endregion
         #region EncounterZones
-        private RangeInt64? _EncounterZonesLocation;
-        private ISkyrimGroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocation.HasValue ? SkyrimGroupBinaryOverlay<IEncounterZoneGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EncounterZonesLocation!.Value.Min, _EncounterZonesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _EncounterZonesLocations;
+        private ISkyrimGroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocations != null ? SkyrimGroupBinaryOverlay<IEncounterZoneGetter>.SkyrimGroupFactory(_data, _EncounterZonesLocations, _package) : default;
         public ISkyrimGroupGetter<IEncounterZoneGetter> EncounterZones => _EncounterZones ?? new SkyrimGroup<EncounterZone>(this);
         #endregion
         #region Locations
-        private RangeInt64? _LocationsLocation;
-        private ISkyrimGroupGetter<ILocationGetter>? _Locations => _LocationsLocation.HasValue ? SkyrimGroupBinaryOverlay<ILocationGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LocationsLocation!.Value.Min, _LocationsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LocationsLocations;
+        private ISkyrimGroupGetter<ILocationGetter>? _Locations => _LocationsLocations != null ? SkyrimGroupBinaryOverlay<ILocationGetter>.SkyrimGroupFactory(_data, _LocationsLocations, _package) : default;
         public ISkyrimGroupGetter<ILocationGetter> Locations => _Locations ?? new SkyrimGroup<Location>(this);
         #endregion
         #region Messages
-        private RangeInt64? _MessagesLocation;
-        private ISkyrimGroupGetter<IMessageGetter>? _Messages => _MessagesLocation.HasValue ? SkyrimGroupBinaryOverlay<IMessageGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MessagesLocation!.Value.Min, _MessagesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _MessagesLocations;
+        private ISkyrimGroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? SkyrimGroupBinaryOverlay<IMessageGetter>.SkyrimGroupFactory(_data, _MessagesLocations, _package) : default;
         public ISkyrimGroupGetter<IMessageGetter> Messages => _Messages ?? new SkyrimGroup<Message>(this);
         #endregion
         #region DefaultObjectManagers
-        private RangeInt64? _DefaultObjectManagersLocation;
-        private ISkyrimGroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocation.HasValue ? SkyrimGroupBinaryOverlay<IDefaultObjectManagerGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DefaultObjectManagersLocation!.Value.Min, _DefaultObjectManagersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _DefaultObjectManagersLocations;
+        private ISkyrimGroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? SkyrimGroupBinaryOverlay<IDefaultObjectManagerGetter>.SkyrimGroupFactory(_data, _DefaultObjectManagersLocations, _package) : default;
         public ISkyrimGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers => _DefaultObjectManagers ?? new SkyrimGroup<DefaultObjectManager>(this);
         #endregion
         #region LightingTemplates
-        private RangeInt64? _LightingTemplatesLocation;
-        private ISkyrimGroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocation.HasValue ? SkyrimGroupBinaryOverlay<ILightingTemplateGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LightingTemplatesLocation!.Value.Min, _LightingTemplatesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LightingTemplatesLocations;
+        private ISkyrimGroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? SkyrimGroupBinaryOverlay<ILightingTemplateGetter>.SkyrimGroupFactory(_data, _LightingTemplatesLocations, _package) : default;
         public ISkyrimGroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new SkyrimGroup<LightingTemplate>(this);
         #endregion
         #region MusicTypes
-        private RangeInt64? _MusicTypesLocation;
-        private ISkyrimGroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocation.HasValue ? SkyrimGroupBinaryOverlay<IMusicTypeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MusicTypesLocation!.Value.Min, _MusicTypesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _MusicTypesLocations;
+        private ISkyrimGroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? SkyrimGroupBinaryOverlay<IMusicTypeGetter>.SkyrimGroupFactory(_data, _MusicTypesLocations, _package) : default;
         public ISkyrimGroupGetter<IMusicTypeGetter> MusicTypes => _MusicTypes ?? new SkyrimGroup<MusicType>(this);
         #endregion
         #region Footsteps
-        private RangeInt64? _FootstepsLocation;
-        private ISkyrimGroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocation.HasValue ? SkyrimGroupBinaryOverlay<IFootstepGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FootstepsLocation!.Value.Min, _FootstepsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _FootstepsLocations;
+        private ISkyrimGroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocations != null ? SkyrimGroupBinaryOverlay<IFootstepGetter>.SkyrimGroupFactory(_data, _FootstepsLocations, _package) : default;
         public ISkyrimGroupGetter<IFootstepGetter> Footsteps => _Footsteps ?? new SkyrimGroup<Footstep>(this);
         #endregion
         #region FootstepSets
-        private RangeInt64? _FootstepSetsLocation;
-        private ISkyrimGroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocation.HasValue ? SkyrimGroupBinaryOverlay<IFootstepSetGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FootstepSetsLocation!.Value.Min, _FootstepSetsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _FootstepSetsLocations;
+        private ISkyrimGroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocations != null ? SkyrimGroupBinaryOverlay<IFootstepSetGetter>.SkyrimGroupFactory(_data, _FootstepSetsLocations, _package) : default;
         public ISkyrimGroupGetter<IFootstepSetGetter> FootstepSets => _FootstepSets ?? new SkyrimGroup<FootstepSet>(this);
         #endregion
         #region StoryManagerBranchNodes
-        private RangeInt64? _StoryManagerBranchNodesLocation;
-        private ISkyrimGroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocation.HasValue ? SkyrimGroupBinaryOverlay<IStoryManagerBranchNodeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _StoryManagerBranchNodesLocation!.Value.Min, _StoryManagerBranchNodesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _StoryManagerBranchNodesLocations;
+        private ISkyrimGroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocations != null ? SkyrimGroupBinaryOverlay<IStoryManagerBranchNodeGetter>.SkyrimGroupFactory(_data, _StoryManagerBranchNodesLocations, _package) : default;
         public ISkyrimGroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes => _StoryManagerBranchNodes ?? new SkyrimGroup<StoryManagerBranchNode>(this);
         #endregion
         #region StoryManagerQuestNodes
-        private RangeInt64? _StoryManagerQuestNodesLocation;
-        private ISkyrimGroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocation.HasValue ? SkyrimGroupBinaryOverlay<IStoryManagerQuestNodeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _StoryManagerQuestNodesLocation!.Value.Min, _StoryManagerQuestNodesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _StoryManagerQuestNodesLocations;
+        private ISkyrimGroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocations != null ? SkyrimGroupBinaryOverlay<IStoryManagerQuestNodeGetter>.SkyrimGroupFactory(_data, _StoryManagerQuestNodesLocations, _package) : default;
         public ISkyrimGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes => _StoryManagerQuestNodes ?? new SkyrimGroup<StoryManagerQuestNode>(this);
         #endregion
         #region StoryManagerEventNodes
-        private RangeInt64? _StoryManagerEventNodesLocation;
-        private ISkyrimGroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocation.HasValue ? SkyrimGroupBinaryOverlay<IStoryManagerEventNodeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _StoryManagerEventNodesLocation!.Value.Min, _StoryManagerEventNodesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _StoryManagerEventNodesLocations;
+        private ISkyrimGroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocations != null ? SkyrimGroupBinaryOverlay<IStoryManagerEventNodeGetter>.SkyrimGroupFactory(_data, _StoryManagerEventNodesLocations, _package) : default;
         public ISkyrimGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes => _StoryManagerEventNodes ?? new SkyrimGroup<StoryManagerEventNode>(this);
         #endregion
         #region DialogBranches
-        private RangeInt64? _DialogBranchesLocation;
-        private ISkyrimGroupGetter<IDialogBranchGetter>? _DialogBranches => _DialogBranchesLocation.HasValue ? SkyrimGroupBinaryOverlay<IDialogBranchGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DialogBranchesLocation!.Value.Min, _DialogBranchesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _DialogBranchesLocations;
+        private ISkyrimGroupGetter<IDialogBranchGetter>? _DialogBranches => _DialogBranchesLocations != null ? SkyrimGroupBinaryOverlay<IDialogBranchGetter>.SkyrimGroupFactory(_data, _DialogBranchesLocations, _package) : default;
         public ISkyrimGroupGetter<IDialogBranchGetter> DialogBranches => _DialogBranches ?? new SkyrimGroup<DialogBranch>(this);
         #endregion
         #region MusicTracks
-        private RangeInt64? _MusicTracksLocation;
-        private ISkyrimGroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocation.HasValue ? SkyrimGroupBinaryOverlay<IMusicTrackGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MusicTracksLocation!.Value.Min, _MusicTracksLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _MusicTracksLocations;
+        private ISkyrimGroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocations != null ? SkyrimGroupBinaryOverlay<IMusicTrackGetter>.SkyrimGroupFactory(_data, _MusicTracksLocations, _package) : default;
         public ISkyrimGroupGetter<IMusicTrackGetter> MusicTracks => _MusicTracks ?? new SkyrimGroup<MusicTrack>(this);
         #endregion
         #region DialogViews
-        private RangeInt64? _DialogViewsLocation;
-        private ISkyrimGroupGetter<IDialogViewGetter>? _DialogViews => _DialogViewsLocation.HasValue ? SkyrimGroupBinaryOverlay<IDialogViewGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DialogViewsLocation!.Value.Min, _DialogViewsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _DialogViewsLocations;
+        private ISkyrimGroupGetter<IDialogViewGetter>? _DialogViews => _DialogViewsLocations != null ? SkyrimGroupBinaryOverlay<IDialogViewGetter>.SkyrimGroupFactory(_data, _DialogViewsLocations, _package) : default;
         public ISkyrimGroupGetter<IDialogViewGetter> DialogViews => _DialogViews ?? new SkyrimGroup<DialogView>(this);
         #endregion
         #region WordsOfPower
-        private RangeInt64? _WordsOfPowerLocation;
-        private ISkyrimGroupGetter<IWordOfPowerGetter>? _WordsOfPower => _WordsOfPowerLocation.HasValue ? SkyrimGroupBinaryOverlay<IWordOfPowerGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WordsOfPowerLocation!.Value.Min, _WordsOfPowerLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _WordsOfPowerLocations;
+        private ISkyrimGroupGetter<IWordOfPowerGetter>? _WordsOfPower => _WordsOfPowerLocations != null ? SkyrimGroupBinaryOverlay<IWordOfPowerGetter>.SkyrimGroupFactory(_data, _WordsOfPowerLocations, _package) : default;
         public ISkyrimGroupGetter<IWordOfPowerGetter> WordsOfPower => _WordsOfPower ?? new SkyrimGroup<WordOfPower>(this);
         #endregion
         #region Shouts
-        private RangeInt64? _ShoutsLocation;
-        private ISkyrimGroupGetter<IShoutGetter>? _Shouts => _ShoutsLocation.HasValue ? SkyrimGroupBinaryOverlay<IShoutGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ShoutsLocation!.Value.Min, _ShoutsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ShoutsLocations;
+        private ISkyrimGroupGetter<IShoutGetter>? _Shouts => _ShoutsLocations != null ? SkyrimGroupBinaryOverlay<IShoutGetter>.SkyrimGroupFactory(_data, _ShoutsLocations, _package) : default;
         public ISkyrimGroupGetter<IShoutGetter> Shouts => _Shouts ?? new SkyrimGroup<Shout>(this);
         #endregion
         #region EquipTypes
-        private RangeInt64? _EquipTypesLocation;
-        private ISkyrimGroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocation.HasValue ? SkyrimGroupBinaryOverlay<IEquipTypeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EquipTypesLocation!.Value.Min, _EquipTypesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _EquipTypesLocations;
+        private ISkyrimGroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocations != null ? SkyrimGroupBinaryOverlay<IEquipTypeGetter>.SkyrimGroupFactory(_data, _EquipTypesLocations, _package) : default;
         public ISkyrimGroupGetter<IEquipTypeGetter> EquipTypes => _EquipTypes ?? new SkyrimGroup<EquipType>(this);
         #endregion
         #region Relationships
-        private RangeInt64? _RelationshipsLocation;
-        private ISkyrimGroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocation.HasValue ? SkyrimGroupBinaryOverlay<IRelationshipGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _RelationshipsLocation!.Value.Min, _RelationshipsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _RelationshipsLocations;
+        private ISkyrimGroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocations != null ? SkyrimGroupBinaryOverlay<IRelationshipGetter>.SkyrimGroupFactory(_data, _RelationshipsLocations, _package) : default;
         public ISkyrimGroupGetter<IRelationshipGetter> Relationships => _Relationships ?? new SkyrimGroup<Relationship>(this);
         #endregion
         #region Scenes
-        private RangeInt64? _ScenesLocation;
-        private ISkyrimGroupGetter<ISceneGetter>? _Scenes => _ScenesLocation.HasValue ? SkyrimGroupBinaryOverlay<ISceneGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ScenesLocation!.Value.Min, _ScenesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ScenesLocations;
+        private ISkyrimGroupGetter<ISceneGetter>? _Scenes => _ScenesLocations != null ? SkyrimGroupBinaryOverlay<ISceneGetter>.SkyrimGroupFactory(_data, _ScenesLocations, _package) : default;
         public ISkyrimGroupGetter<ISceneGetter> Scenes => _Scenes ?? new SkyrimGroup<Scene>(this);
         #endregion
         #region AssociationTypes
-        private RangeInt64? _AssociationTypesLocation;
-        private ISkyrimGroupGetter<IAssociationTypeGetter>? _AssociationTypes => _AssociationTypesLocation.HasValue ? SkyrimGroupBinaryOverlay<IAssociationTypeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AssociationTypesLocation!.Value.Min, _AssociationTypesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _AssociationTypesLocations;
+        private ISkyrimGroupGetter<IAssociationTypeGetter>? _AssociationTypes => _AssociationTypesLocations != null ? SkyrimGroupBinaryOverlay<IAssociationTypeGetter>.SkyrimGroupFactory(_data, _AssociationTypesLocations, _package) : default;
         public ISkyrimGroupGetter<IAssociationTypeGetter> AssociationTypes => _AssociationTypes ?? new SkyrimGroup<AssociationType>(this);
         #endregion
         #region Outfits
-        private RangeInt64? _OutfitsLocation;
-        private ISkyrimGroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocation.HasValue ? SkyrimGroupBinaryOverlay<IOutfitGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _OutfitsLocation!.Value.Min, _OutfitsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _OutfitsLocations;
+        private ISkyrimGroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocations != null ? SkyrimGroupBinaryOverlay<IOutfitGetter>.SkyrimGroupFactory(_data, _OutfitsLocations, _package) : default;
         public ISkyrimGroupGetter<IOutfitGetter> Outfits => _Outfits ?? new SkyrimGroup<Outfit>(this);
         #endregion
         #region ArtObjects
-        private RangeInt64? _ArtObjectsLocation;
-        private ISkyrimGroupGetter<IArtObjectGetter>? _ArtObjects => _ArtObjectsLocation.HasValue ? SkyrimGroupBinaryOverlay<IArtObjectGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ArtObjectsLocation!.Value.Min, _ArtObjectsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ArtObjectsLocations;
+        private ISkyrimGroupGetter<IArtObjectGetter>? _ArtObjects => _ArtObjectsLocations != null ? SkyrimGroupBinaryOverlay<IArtObjectGetter>.SkyrimGroupFactory(_data, _ArtObjectsLocations, _package) : default;
         public ISkyrimGroupGetter<IArtObjectGetter> ArtObjects => _ArtObjects ?? new SkyrimGroup<ArtObject>(this);
         #endregion
         #region MaterialObjects
-        private RangeInt64? _MaterialObjectsLocation;
-        private ISkyrimGroupGetter<IMaterialObjectGetter>? _MaterialObjects => _MaterialObjectsLocation.HasValue ? SkyrimGroupBinaryOverlay<IMaterialObjectGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MaterialObjectsLocation!.Value.Min, _MaterialObjectsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _MaterialObjectsLocations;
+        private ISkyrimGroupGetter<IMaterialObjectGetter>? _MaterialObjects => _MaterialObjectsLocations != null ? SkyrimGroupBinaryOverlay<IMaterialObjectGetter>.SkyrimGroupFactory(_data, _MaterialObjectsLocations, _package) : default;
         public ISkyrimGroupGetter<IMaterialObjectGetter> MaterialObjects => _MaterialObjects ?? new SkyrimGroup<MaterialObject>(this);
         #endregion
         #region MovementTypes
-        private RangeInt64? _MovementTypesLocation;
-        private ISkyrimGroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocation.HasValue ? SkyrimGroupBinaryOverlay<IMovementTypeGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MovementTypesLocation!.Value.Min, _MovementTypesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _MovementTypesLocations;
+        private ISkyrimGroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocations != null ? SkyrimGroupBinaryOverlay<IMovementTypeGetter>.SkyrimGroupFactory(_data, _MovementTypesLocations, _package) : default;
         public ISkyrimGroupGetter<IMovementTypeGetter> MovementTypes => _MovementTypes ?? new SkyrimGroup<MovementType>(this);
         #endregion
         #region SoundDescriptors
-        private RangeInt64? _SoundDescriptorsLocation;
-        private ISkyrimGroupGetter<ISoundDescriptorGetter>? _SoundDescriptors => _SoundDescriptorsLocation.HasValue ? SkyrimGroupBinaryOverlay<ISoundDescriptorGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoundDescriptorsLocation!.Value.Min, _SoundDescriptorsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SoundDescriptorsLocations;
+        private ISkyrimGroupGetter<ISoundDescriptorGetter>? _SoundDescriptors => _SoundDescriptorsLocations != null ? SkyrimGroupBinaryOverlay<ISoundDescriptorGetter>.SkyrimGroupFactory(_data, _SoundDescriptorsLocations, _package) : default;
         public ISkyrimGroupGetter<ISoundDescriptorGetter> SoundDescriptors => _SoundDescriptors ?? new SkyrimGroup<SoundDescriptor>(this);
         #endregion
         #region DualCastData
-        private RangeInt64? _DualCastDataLocation;
-        private ISkyrimGroupGetter<IDualCastDataGetter>? _DualCastData => _DualCastDataLocation.HasValue ? SkyrimGroupBinaryOverlay<IDualCastDataGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DualCastDataLocation!.Value.Min, _DualCastDataLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _DualCastDataLocations;
+        private ISkyrimGroupGetter<IDualCastDataGetter>? _DualCastData => _DualCastDataLocations != null ? SkyrimGroupBinaryOverlay<IDualCastDataGetter>.SkyrimGroupFactory(_data, _DualCastDataLocations, _package) : default;
         public ISkyrimGroupGetter<IDualCastDataGetter> DualCastData => _DualCastData ?? new SkyrimGroup<DualCastData>(this);
         #endregion
         #region SoundCategories
-        private RangeInt64? _SoundCategoriesLocation;
-        private ISkyrimGroupGetter<ISoundCategoryGetter>? _SoundCategories => _SoundCategoriesLocation.HasValue ? SkyrimGroupBinaryOverlay<ISoundCategoryGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoundCategoriesLocation!.Value.Min, _SoundCategoriesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SoundCategoriesLocations;
+        private ISkyrimGroupGetter<ISoundCategoryGetter>? _SoundCategories => _SoundCategoriesLocations != null ? SkyrimGroupBinaryOverlay<ISoundCategoryGetter>.SkyrimGroupFactory(_data, _SoundCategoriesLocations, _package) : default;
         public ISkyrimGroupGetter<ISoundCategoryGetter> SoundCategories => _SoundCategories ?? new SkyrimGroup<SoundCategory>(this);
         #endregion
         #region SoundOutputModels
-        private RangeInt64? _SoundOutputModelsLocation;
-        private ISkyrimGroupGetter<ISoundOutputModelGetter>? _SoundOutputModels => _SoundOutputModelsLocation.HasValue ? SkyrimGroupBinaryOverlay<ISoundOutputModelGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoundOutputModelsLocation!.Value.Min, _SoundOutputModelsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SoundOutputModelsLocations;
+        private ISkyrimGroupGetter<ISoundOutputModelGetter>? _SoundOutputModels => _SoundOutputModelsLocations != null ? SkyrimGroupBinaryOverlay<ISoundOutputModelGetter>.SkyrimGroupFactory(_data, _SoundOutputModelsLocations, _package) : default;
         public ISkyrimGroupGetter<ISoundOutputModelGetter> SoundOutputModels => _SoundOutputModels ?? new SkyrimGroup<SoundOutputModel>(this);
         #endregion
         #region CollisionLayers
-        private RangeInt64? _CollisionLayersLocation;
-        private ISkyrimGroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocation.HasValue ? SkyrimGroupBinaryOverlay<ICollisionLayerGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CollisionLayersLocation!.Value.Min, _CollisionLayersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _CollisionLayersLocations;
+        private ISkyrimGroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocations != null ? SkyrimGroupBinaryOverlay<ICollisionLayerGetter>.SkyrimGroupFactory(_data, _CollisionLayersLocations, _package) : default;
         public ISkyrimGroupGetter<ICollisionLayerGetter> CollisionLayers => _CollisionLayers ?? new SkyrimGroup<CollisionLayer>(this);
         #endregion
         #region Colors
-        private RangeInt64? _ColorsLocation;
-        private ISkyrimGroupGetter<IColorRecordGetter>? _Colors => _ColorsLocation.HasValue ? SkyrimGroupBinaryOverlay<IColorRecordGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ColorsLocation!.Value.Min, _ColorsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ColorsLocations;
+        private ISkyrimGroupGetter<IColorRecordGetter>? _Colors => _ColorsLocations != null ? SkyrimGroupBinaryOverlay<IColorRecordGetter>.SkyrimGroupFactory(_data, _ColorsLocations, _package) : default;
         public ISkyrimGroupGetter<IColorRecordGetter> Colors => _Colors ?? new SkyrimGroup<ColorRecord>(this);
         #endregion
         #region ReverbParameters
-        private RangeInt64? _ReverbParametersLocation;
-        private ISkyrimGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocation.HasValue ? SkyrimGroupBinaryOverlay<IReverbParametersGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ReverbParametersLocation!.Value.Min, _ReverbParametersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ReverbParametersLocations;
+        private ISkyrimGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocations != null ? SkyrimGroupBinaryOverlay<IReverbParametersGetter>.SkyrimGroupFactory(_data, _ReverbParametersLocations, _package) : default;
         public ISkyrimGroupGetter<IReverbParametersGetter> ReverbParameters => _ReverbParameters ?? new SkyrimGroup<ReverbParameters>(this);
         #endregion
         #region VolumetricLightings
-        private RangeInt64? _VolumetricLightingsLocation;
-        private ISkyrimGroupGetter<IVolumetricLightingGetter>? _VolumetricLightings => _VolumetricLightingsLocation.HasValue ? SkyrimGroupBinaryOverlay<IVolumetricLightingGetter>.SkyrimGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _VolumetricLightingsLocation!.Value.Min, _VolumetricLightingsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _VolumetricLightingsLocations;
+        private ISkyrimGroupGetter<IVolumetricLightingGetter>? _VolumetricLightings => _VolumetricLightingsLocations != null ? SkyrimGroupBinaryOverlay<IVolumetricLightingGetter>.SkyrimGroupFactory(_data, _VolumetricLightingsLocations, _package) : default;
         public ISkyrimGroupGetter<IVolumetricLightingGetter> VolumetricLightings => _VolumetricLightings ?? new SkyrimGroup<VolumetricLighting>(this);
         #endregion
         protected SkyrimModBinaryOverlay(
@@ -24850,267 +24850,320 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.GMST:
                 {
-                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GameSettingsLocations ??= new();
+                    _GameSettingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.KYWD:
                 {
-                    _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _KeywordsLocations ??= new();
+                    _KeywordsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.LCRT:
                 {
-                    _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LocationReferenceTypesLocations ??= new();
+                    _LocationReferenceTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LocationReferenceTypes;
                 }
                 case RecordTypeInts.AACT:
                 {
-                    _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ActionsLocations ??= new();
+                    _ActionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Actions;
                 }
                 case RecordTypeInts.TXST:
                 {
-                    _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _TextureSetsLocations ??= new();
+                    _TextureSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.TextureSets;
                 }
                 case RecordTypeInts.GLOB:
                 {
-                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GlobalsLocations ??= new();
+                    _GlobalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
-                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ClassesLocations ??= new();
+                    _ClassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
-                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FactionsLocations ??= new();
+                    _FactionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HDPT:
                 {
-                    _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _HeadPartsLocations ??= new();
+                    _HeadPartsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HAIR:
                 {
-                    _HairsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _HairsLocations ??= new();
+                    _HairsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
-                    _EyesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EyesLocations ??= new();
+                    _EyesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
-                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _RacesLocations ??= new();
+                    _RacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
-                    _SoundMarkersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoundMarkersLocations ??= new();
+                    _SoundMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.SoundMarkers;
                 }
                 case RecordTypeInts.ASPC:
                 {
-                    _AcousticSpacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AcousticSpacesLocations ??= new();
+                    _AcousticSpacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.AcousticSpaces;
                 }
                 case RecordTypeInts.MGEF:
                 {
-                    _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MagicEffectsLocations ??= new();
+                    _MagicEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.LTEX:
                 {
-                    _LandscapeTexturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LandscapeTexturesLocations ??= new();
+                    _LandscapeTexturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LandscapeTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
-                    _ObjectEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ObjectEffectsLocations ??= new();
+                    _ObjectEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ObjectEffects;
                 }
                 case RecordTypeInts.SPEL:
                 {
-                    _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SpellsLocations ??= new();
+                    _SpellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.SCRL:
                 {
-                    _ScrollsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ScrollsLocations ??= new();
+                    _ScrollsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Scrolls;
                 }
                 case RecordTypeInts.ACTI:
                 {
-                    _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ActivatorsLocations ??= new();
+                    _ActivatorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.TACT:
                 {
-                    _TalkingActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _TalkingActivatorsLocations ??= new();
+                    _TalkingActivatorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.TalkingActivators;
                 }
                 case RecordTypeInts.ARMO:
                 {
-                    _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ArmorsLocations ??= new();
+                    _ArmorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
-                    _BooksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _BooksLocations ??= new();
+                    _BooksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CONT:
                 {
-                    _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ContainersLocations ??= new();
+                    _ContainersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
-                    _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DoorsLocations ??= new();
+                    _DoorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
-                    _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IngredientsLocations ??= new();
+                    _IngredientsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
-                    _LightsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LightsLocations ??= new();
+                    _LightsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
-                    _MiscItemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MiscItemsLocations ??= new();
+                    _MiscItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MiscItems;
                 }
                 case RecordTypeInts.APPA:
                 {
-                    _AlchemicalApparatusesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AlchemicalApparatusesLocations ??= new();
+                    _AlchemicalApparatusesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.AlchemicalApparatuses;
                 }
                 case RecordTypeInts.STAT:
                 {
-                    _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _StaticsLocations ??= new();
+                    _StaticsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.MSTT:
                 {
-                    _MoveableStaticsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MoveableStaticsLocations ??= new();
+                    _MoveableStaticsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MoveableStatics;
                 }
                 case RecordTypeInts.GRAS:
                 {
-                    _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GrassesLocations ??= new();
+                    _GrassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
-                    _TreesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _TreesLocations ??= new();
+                    _TreesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
-                    _FloraeLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FloraeLocations ??= new();
+                    _FloraeLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Florae;
                 }
                 case RecordTypeInts.FURN:
                 {
-                    _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FurnitureLocations ??= new();
+                    _FurnitureLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
-                    _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WeaponsLocations ??= new();
+                    _WeaponsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
-                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AmmunitionsLocations ??= new();
+                    _AmmunitionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
-                    _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _NpcsLocations ??= new();
+                    _NpcsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.LVLN:
                 {
-                    _LeveledNpcsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledNpcsLocations ??= new();
+                    _LeveledNpcsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LeveledNpcs;
                 }
                 case RecordTypeInts.KEYM:
                 {
-                    _KeysLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _KeysLocations ??= new();
+                    _KeysLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
-                    _IngestiblesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IngestiblesLocations ??= new();
+                    _IngestiblesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Ingestibles;
                 }
                 case RecordTypeInts.IDLM:
                 {
-                    _IdleMarkersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IdleMarkersLocations ??= new();
+                    _IdleMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.IdleMarkers;
                 }
                 case RecordTypeInts.COBJ:
                 {
-                    _ConstructibleObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ConstructibleObjectsLocations ??= new();
+                    _ConstructibleObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ConstructibleObjects;
                 }
                 case RecordTypeInts.PROJ:
                 {
-                    _ProjectilesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ProjectilesLocations ??= new();
+                    _ProjectilesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Projectiles;
                 }
                 case RecordTypeInts.HAZD:
                 {
-                    _HazardsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _HazardsLocations ??= new();
+                    _HazardsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Hazards;
                 }
                 case RecordTypeInts.SLGM:
                 {
-                    _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoulGemsLocations ??= new();
+                    _SoulGemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.LVLI:
                 {
-                    _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledItemsLocations ??= new();
+                    _LeveledItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
-                    _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WeathersLocations ??= new();
+                    _WeathersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
-                    _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ClimatesLocations ??= new();
+                    _ClimatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.SPGD:
                 {
-                    _ShaderParticleGeometriesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ShaderParticleGeometriesLocations ??= new();
+                    _ShaderParticleGeometriesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ShaderParticleGeometries;
                 }
                 case RecordTypeInts.RFCT:
                 {
-                    _VisualEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _VisualEffectsLocations ??= new();
+                    _VisualEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.VisualEffects;
                 }
                 case RecordTypeInts.REGN:
                 {
-                    _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _RegionsLocations ??= new();
+                    _RegionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.NAVI:
                 {
-                    _NavigationMeshInfoMapsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _NavigationMeshInfoMapsLocations ??= new();
+                    _NavigationMeshInfoMapsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps;
                 }
                 case RecordTypeInts.CELL:
@@ -25120,297 +25173,356 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.WRLD:
                 {
-                    _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WorldspacesLocations ??= new();
+                    _WorldspacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
-                    _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DialogTopicsLocations ??= new();
+                    _DialogTopicsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
-                    _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _QuestsLocations ??= new();
+                    _QuestsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
-                    _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IdleAnimationsLocations ??= new();
+                    _IdleAnimationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
-                    _PackagesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _PackagesLocations ??= new();
+                    _PackagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Packages;
                 }
                 case RecordTypeInts.CSTY:
                 {
-                    _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CombatStylesLocations ??= new();
+                    _CombatStylesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
-                    _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LoadScreensLocations ??= new();
+                    _LoadScreensLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
-                    _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledSpellsLocations ??= new();
+                    _LeveledSpellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
-                    _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AnimatedObjectsLocations ??= new();
+                    _AnimatedObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
-                    _WatersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WatersLocations ??= new();
+                    _WatersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
-                    _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EffectShadersLocations ??= new();
+                    _EffectShadersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.EffectShaders;
                 }
                 case RecordTypeInts.EXPL:
                 {
-                    _ExplosionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ExplosionsLocations ??= new();
+                    _ExplosionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Explosions;
                 }
                 case RecordTypeInts.DEBR:
                 {
-                    _DebrisLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DebrisLocations ??= new();
+                    _DebrisLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Debris;
                 }
                 case RecordTypeInts.IMGS:
                 {
-                    _ImageSpacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ImageSpacesLocations ??= new();
+                    _ImageSpacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ImageSpaces;
                 }
                 case RecordTypeInts.IMAD:
                 {
-                    _ImageSpaceAdaptersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ImageSpaceAdaptersLocations ??= new();
+                    _ImageSpaceAdaptersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ImageSpaceAdapters;
                 }
                 case RecordTypeInts.FLST:
                 {
-                    _FormListsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FormListsLocations ??= new();
+                    _FormListsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.FormLists;
                 }
                 case RecordTypeInts.PERK:
                 {
-                    _PerksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _PerksLocations ??= new();
+                    _PerksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Perks;
                 }
                 case RecordTypeInts.BPTD:
                 {
-                    _BodyPartsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _BodyPartsLocations ??= new();
+                    _BodyPartsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.BodyParts;
                 }
                 case RecordTypeInts.ADDN:
                 {
-                    _AddonNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AddonNodesLocations ??= new();
+                    _AddonNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.AddonNodes;
                 }
                 case RecordTypeInts.AVIF:
                 {
-                    _ActorValueInformationLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ActorValueInformationLocations ??= new();
+                    _ActorValueInformationLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ActorValueInformation;
                 }
                 case RecordTypeInts.CAMS:
                 {
-                    _CameraShotsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CameraShotsLocations ??= new();
+                    _CameraShotsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.CameraShots;
                 }
                 case RecordTypeInts.CPTH:
                 {
-                    _CameraPathsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CameraPathsLocations ??= new();
+                    _CameraPathsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.CameraPaths;
                 }
                 case RecordTypeInts.VTYP:
                 {
-                    _VoiceTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _VoiceTypesLocations ??= new();
+                    _VoiceTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.MATT:
                 {
-                    _MaterialTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MaterialTypesLocations ??= new();
+                    _MaterialTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MaterialTypes;
                 }
                 case RecordTypeInts.IPCT:
                 {
-                    _ImpactsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ImpactsLocations ??= new();
+                    _ImpactsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Impacts;
                 }
                 case RecordTypeInts.IPDS:
                 {
-                    _ImpactDataSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ImpactDataSetsLocations ??= new();
+                    _ImpactDataSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ImpactDataSets;
                 }
                 case RecordTypeInts.ARMA:
                 {
-                    _ArmorAddonsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ArmorAddonsLocations ??= new();
+                    _ArmorAddonsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ArmorAddons;
                 }
                 case RecordTypeInts.ECZN:
                 {
-                    _EncounterZonesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EncounterZonesLocations ??= new();
+                    _EncounterZonesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.EncounterZones;
                 }
                 case RecordTypeInts.LCTN:
                 {
-                    _LocationsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LocationsLocations ??= new();
+                    _LocationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Locations;
                 }
                 case RecordTypeInts.MESG:
                 {
-                    _MessagesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MessagesLocations ??= new();
+                    _MessagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Messages;
                 }
                 case RecordTypeInts.DOBJ:
                 {
-                    _DefaultObjectManagersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DefaultObjectManagersLocations ??= new();
+                    _DefaultObjectManagersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.DefaultObjectManagers;
                 }
                 case RecordTypeInts.LGTM:
                 {
-                    _LightingTemplatesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LightingTemplatesLocations ??= new();
+                    _LightingTemplatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LightingTemplates;
                 }
                 case RecordTypeInts.MUSC:
                 {
-                    _MusicTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MusicTypesLocations ??= new();
+                    _MusicTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MusicTypes;
                 }
                 case RecordTypeInts.FSTP:
                 {
-                    _FootstepsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FootstepsLocations ??= new();
+                    _FootstepsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Footsteps;
                 }
                 case RecordTypeInts.FSTS:
                 {
-                    _FootstepSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FootstepSetsLocations ??= new();
+                    _FootstepSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.FootstepSets;
                 }
                 case RecordTypeInts.SMBN:
                 {
-                    _StoryManagerBranchNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _StoryManagerBranchNodesLocations ??= new();
+                    _StoryManagerBranchNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.StoryManagerBranchNodes;
                 }
                 case RecordTypeInts.SMQN:
                 {
-                    _StoryManagerQuestNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _StoryManagerQuestNodesLocations ??= new();
+                    _StoryManagerQuestNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.StoryManagerQuestNodes;
                 }
                 case RecordTypeInts.SMEN:
                 {
-                    _StoryManagerEventNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _StoryManagerEventNodesLocations ??= new();
+                    _StoryManagerEventNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.StoryManagerEventNodes;
                 }
                 case RecordTypeInts.DLBR:
                 {
-                    _DialogBranchesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DialogBranchesLocations ??= new();
+                    _DialogBranchesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.DialogBranches;
                 }
                 case RecordTypeInts.MUST:
                 {
-                    _MusicTracksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MusicTracksLocations ??= new();
+                    _MusicTracksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MusicTracks;
                 }
                 case RecordTypeInts.DLVW:
                 {
-                    _DialogViewsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DialogViewsLocations ??= new();
+                    _DialogViewsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.DialogViews;
                 }
                 case RecordTypeInts.WOOP:
                 {
-                    _WordsOfPowerLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WordsOfPowerLocations ??= new();
+                    _WordsOfPowerLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.WordsOfPower;
                 }
                 case RecordTypeInts.SHOU:
                 {
-                    _ShoutsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ShoutsLocations ??= new();
+                    _ShoutsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Shouts;
                 }
                 case RecordTypeInts.EQUP:
                 {
-                    _EquipTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EquipTypesLocations ??= new();
+                    _EquipTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.EquipTypes;
                 }
                 case RecordTypeInts.RELA:
                 {
-                    _RelationshipsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _RelationshipsLocations ??= new();
+                    _RelationshipsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Relationships;
                 }
                 case RecordTypeInts.SCEN:
                 {
-                    _ScenesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ScenesLocations ??= new();
+                    _ScenesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Scenes;
                 }
                 case RecordTypeInts.ASTP:
                 {
-                    _AssociationTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AssociationTypesLocations ??= new();
+                    _AssociationTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.AssociationTypes;
                 }
                 case RecordTypeInts.OTFT:
                 {
-                    _OutfitsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _OutfitsLocations ??= new();
+                    _OutfitsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Outfits;
                 }
                 case RecordTypeInts.ARTO:
                 {
-                    _ArtObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ArtObjectsLocations ??= new();
+                    _ArtObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ArtObjects;
                 }
                 case RecordTypeInts.MATO:
                 {
-                    _MaterialObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MaterialObjectsLocations ??= new();
+                    _MaterialObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MaterialObjects;
                 }
                 case RecordTypeInts.MOVT:
                 {
-                    _MovementTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MovementTypesLocations ??= new();
+                    _MovementTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MovementTypes;
                 }
                 case RecordTypeInts.SNDR:
                 {
-                    _SoundDescriptorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoundDescriptorsLocations ??= new();
+                    _SoundDescriptorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.SoundDescriptors;
                 }
                 case RecordTypeInts.DUAL:
                 {
-                    _DualCastDataLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DualCastDataLocations ??= new();
+                    _DualCastDataLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.DualCastData;
                 }
                 case RecordTypeInts.SNCT:
                 {
-                    _SoundCategoriesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoundCategoriesLocations ??= new();
+                    _SoundCategoriesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.SoundCategories;
                 }
                 case RecordTypeInts.SOPM:
                 {
-                    _SoundOutputModelsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoundOutputModelsLocations ??= new();
+                    _SoundOutputModelsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.SoundOutputModels;
                 }
                 case RecordTypeInts.COLL:
                 {
-                    _CollisionLayersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CollisionLayersLocations ??= new();
+                    _CollisionLayersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.CollisionLayers;
                 }
                 case RecordTypeInts.CLFM:
                 {
-                    _ColorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ColorsLocations ??= new();
+                    _ColorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Colors;
                 }
                 case RecordTypeInts.REVB:
                 {
-                    _ReverbParametersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ReverbParametersLocations ??= new();
+                    _ReverbParametersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ReverbParameters;
                 }
                 case RecordTypeInts.VOLI:
                 {
-                    _VolumetricLightingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _VolumetricLightingsLocations ??= new();
+                    _VolumetricLightingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.VolumetricLightings;
                 }
                 default:

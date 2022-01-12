@@ -1470,6 +1470,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.CustomCtor();
         }
 
+        public static IOblivionGroupGetter<T> OblivionGroupFactory(
+            IBinaryReadStream stream,
+            IReadOnlyList<RangeInt64> locs,
+            BinaryOverlayFactoryPackage package)
+        {
+            if (locs.Count == 1)
+            {
+                return OblivionGroupFactory(
+                    new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package),
+                    package);
+            }
+            throw new NotImplementedException();
+        }
+
         public static OblivionGroupBinaryOverlay<T> OblivionGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,

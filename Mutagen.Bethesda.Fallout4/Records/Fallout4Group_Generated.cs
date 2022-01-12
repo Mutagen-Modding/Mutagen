@@ -30,6 +30,8 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Text;
+using Mutagen.Bethesda.Fallout4.Records;
+
 #endregion
 
 #nullable enable
@@ -1494,6 +1496,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 package: package)
         {
             this.CustomCtor();
+        }
+
+        public static IFallout4GroupGetter<T> Fallout4GroupFactory(
+            IBinaryReadStream stream,
+            IReadOnlyList<RangeInt64> locs,
+            BinaryOverlayFactoryPackage package)
+        {
+            return new Fallout4Wrapper<T>(
+                new GroupMergeGetter<IFallout4GroupGetter<T>, T>(
+                    locs.Select(x => Fallout4GroupFactory(
+                            new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package),
+                            package))
+                        .ToArray())
+            );
         }
 
         public static Fallout4GroupBinaryOverlay<T> Fallout4GroupFactory(

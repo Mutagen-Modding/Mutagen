@@ -52,6 +52,7 @@
     <Compile Include="Records\Fallout4Group.cs">
       <DependentUpon>Fallout4Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Fallout4Wrapper.cs" />
     <Compile Include="Records\Major Records\ActionRecord.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>

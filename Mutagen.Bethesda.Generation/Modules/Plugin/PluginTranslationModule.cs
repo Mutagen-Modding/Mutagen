@@ -2135,6 +2135,34 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         fg.AppendLine();
                     }
 
+                    if (obj.IsTopLevelGroup())
+                    {
+                        using (var args = new FunctionWrapper(fg,
+                                   $"public static {obj.Interface(getter: true)} {obj.Name}Factory"))
+                        {
+                            args.Add($"{nameof(IBinaryReadStream)} stream");
+                            args.Add("IReadOnlyList<RangeInt64> locs");
+                            args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine("if (locs.Count == 1)");
+                            using (new BraceWrapper(fg))
+                            {
+                                using (var args = new ArgsWrapper(fg,
+                                           $"return {obj.Name}Factory"))
+                                {
+                                    args.Add(
+                                        $"new {nameof(OverlayStream)}({nameof(PluginBinaryOverlay.LockExtractMemory)}(stream, locs[0].Min, locs[0].Max), package)");
+                                    args.Add("package");
+                                }
+                            }
+                            
+                            fg.AppendLine("throw new NotImplementedException();");
+                        }
+                        fg.AppendLine();
+                    }
+
                     using (var args = new FunctionWrapper(fg,
                         $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                     {
@@ -2284,7 +2312,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
 
                         // Parse struct section ending positions 
-                        string structPassedAccessor = null;
+                        string? structPassedAccessor = null;
                         int? structPassedLen = 0;
                         await foreach (var lengths in IteratePassedLengths(
                             obj,

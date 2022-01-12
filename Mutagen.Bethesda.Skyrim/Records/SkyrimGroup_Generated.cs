@@ -1496,6 +1496,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
+        public static ISkyrimGroupGetter<T> SkyrimGroupFactory(
+            IBinaryReadStream stream,
+            IReadOnlyList<RangeInt64> locs,
+            BinaryOverlayFactoryPackage package)
+        {
+            if (locs.Count == 1)
+            {
+                return SkyrimGroupFactory(
+                    new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package),
+                    package);
+            }
+            throw new NotImplementedException();
+        }
+
         public static SkyrimGroupBinaryOverlay<T> SkyrimGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
