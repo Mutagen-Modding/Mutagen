@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Skyrim.Records;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -1501,13 +1502,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IReadOnlyList<RangeInt64> locs,
             BinaryOverlayFactoryPackage package)
         {
-            if (locs.Count == 1)
-            {
-                return SkyrimGroupFactory(
-                    new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package),
-                    package);
-            }
-            throw new NotImplementedException();
+            var subGroups = locs.Select(x => SkyrimGroupFactory(
+                new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package),
+                package)).ToArray();
+            return new SkyrimGroupWrapper<T>(new GroupMergeGetter<ISkyrimGroupGetter<T>, T>(subGroups));
         }
 
         public static SkyrimGroupBinaryOverlay<T> SkyrimGroupFactory(

@@ -8,6 +8,7 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Fallout4.Records;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -30,8 +31,6 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Text;
-using Mutagen.Bethesda.Fallout4.Records;
-
 #endregion
 
 #nullable enable
@@ -1503,13 +1502,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IReadOnlyList<RangeInt64> locs,
             BinaryOverlayFactoryPackage package)
         {
-            return new Fallout4Wrapper<T>(
-                new GroupMergeGetter<IFallout4GroupGetter<T>, T>(
-                    locs.Select(x => Fallout4GroupFactory(
-                            new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package),
-                            package))
-                        .ToArray())
-            );
+            var subGroups = locs.Select(x => Fallout4GroupFactory(
+                new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package),
+                package)).ToArray();
+            return new Fallout4GroupWrapper<T>(new GroupMergeGetter<IFallout4GroupGetter<T>, T>(subGroups));
         }
 
         public static Fallout4GroupBinaryOverlay<T> Fallout4GroupFactory(

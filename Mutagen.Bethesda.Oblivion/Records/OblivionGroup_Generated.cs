@@ -9,6 +9,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Oblivion.Records;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -1475,13 +1476,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IReadOnlyList<RangeInt64> locs,
             BinaryOverlayFactoryPackage package)
         {
-            if (locs.Count == 1)
-            {
-                return OblivionGroupFactory(
-                    new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package),
-                    package);
-            }
-            throw new NotImplementedException();
+            var subGroups = locs.Select(x => OblivionGroupFactory(
+                new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package),
+                package)).ToArray();
+            return new OblivionGroupWrapper<T>(new GroupMergeGetter<IOblivionGroupGetter<T>, T>(subGroups));
         }
 
         public static OblivionGroupBinaryOverlay<T> OblivionGroupFactory(

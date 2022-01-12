@@ -14,12 +14,12 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Fallout4.Records;
 
-public class Fallout4Wrapper<TMajor> : IFallout4GroupGetter<TMajor>
+internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
     where TMajor : class, IFallout4MajorRecordGetter, IBinaryItem
 {
     private readonly GroupMergeGetter<IFallout4GroupGetter<TMajor>, TMajor> _groupMerge;
 
-    public Fallout4Wrapper(GroupMergeGetter<IFallout4GroupGetter<TMajor>, TMajor> groupMerge)
+    public Fallout4GroupWrapper(GroupMergeGetter<IFallout4GroupGetter<TMajor>, TMajor> groupMerge)
     {
         _groupMerge = groupMerge;
     }

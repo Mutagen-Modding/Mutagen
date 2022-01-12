@@ -128,6 +128,9 @@
     <Compile Include="Records\Common Subrecords\WaterReflection.cs">
       <DependentUpon>WaterReflection.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\SkyrimGroupWrapper.cs">
+      <DependentUpon>SkyrimGroup.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\SkyrimGroup.cs">
       <DependentUpon>SkyrimGroup.xml</DependentUpon>
     </Compile>

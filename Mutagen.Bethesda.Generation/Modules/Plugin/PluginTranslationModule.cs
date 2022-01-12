@@ -619,6 +619,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             yield return "Mutagen.Bethesda.Plugins.Binary.Translations";
             yield return "Mutagen.Bethesda.Plugins.Binary.Streams";
             yield return "Mutagen.Bethesda.Plugins.Exceptions";
+            
+            if (obj.GetObjectType() == ObjectType.Group && !obj.IsListGroup())
+            {
+                yield return $"Mutagen.Bethesda.{obj.ProtoGen.Protocol.Namespace}.Records";
+            }
 
             if (await LinkModule.HasLinks(obj, includeBaseClass: false) != LinkModule.LinkCase.No
                 || obj.IterateFields().Any(f => f is FormKeyType))
@@ -2146,19 +2151,18 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine("if (locs.Count == 1)");
-                            using (new BraceWrapper(fg))
+                            using (var args = new ArgsWrapper(fg,
+                                       $"var subGroups = locs.Select(x => {obj.ProtoGen.Protocol.Namespace}GroupFactory",
+                                       suffixLine: ").ToArray()"))
                             {
-                                using (var args = new ArgsWrapper(fg,
-                                           $"return {obj.Name}Factory"))
-                                {
-                                    args.Add(
-                                        $"new {nameof(OverlayStream)}({nameof(PluginBinaryOverlay.LockExtractMemory)}(stream, locs[0].Min, locs[0].Max), package)");
-                                    args.Add("package");
-                                }
+                                args.Add("new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package)");
+                                args.Add("package");
                             }
-                            
-                            fg.AppendLine("throw new NotImplementedException();");
+                            using (var args = new ArgsWrapper(fg,
+                                       $"return new {obj.ProtoGen.Protocol.Namespace}GroupWrapper<T>"))
+                            {
+                                args.Add($"new GroupMergeGetter<I{obj.ProtoGen.Protocol.Namespace}GroupGetter<T>, T>(subGroups)");
+                            }
                         }
                         fg.AppendLine();
                     }
