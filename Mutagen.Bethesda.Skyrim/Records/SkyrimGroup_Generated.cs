@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimGroupCommon<T>.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimGroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimGroupCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

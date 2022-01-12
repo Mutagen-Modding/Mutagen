@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionGroupCommon<T>.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionGroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionGroupCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

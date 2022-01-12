@@ -149,6 +149,9 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         /// <inheritdoc />
         public bool ContainsKey(FormKey key) => InternalCache.ContainsKey(key);
+
+        /// <inheritdoc />
+        public abstract IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
     }
 
     namespace Internals
@@ -325,7 +328,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             }
         }
 
-        public class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGroupGetter<TMajor>
+        public abstract class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGroupGetter<TMajor>
             where TMajor : class, IMajorRecordGetter
         {
             protected IReadOnlyCache<TMajor, FormKey> _recordCache = null!;
@@ -340,6 +343,8 @@ namespace Mutagen.Bethesda.Plugins.Records
             public IEnumerable<TMajor> Items => _recordCache.Items;
             IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => _recordCache;
             IEnumerable<IMajorRecordGetter> IGroupGetter.Records => _recordCache.Items;
+
+            public abstract IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
 
             public bool ContainsKey(FormKey key)
             {

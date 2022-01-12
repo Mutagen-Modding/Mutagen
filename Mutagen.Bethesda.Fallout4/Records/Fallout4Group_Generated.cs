@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4GroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4GroupCommon<T>.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4GroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4GroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4GroupCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
