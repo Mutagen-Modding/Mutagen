@@ -62,11 +62,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");
                 }
-                if (groupMeta.ContentLength == 0)
-                {
-                    stream.Position += groupMeta.TotalLength;
-                    continue;
-                }
                 minimumFinalPos = checked((int)(stream.Position + groupMeta.TotalLength));
                 var parsed = fill(
                     stream: stream,

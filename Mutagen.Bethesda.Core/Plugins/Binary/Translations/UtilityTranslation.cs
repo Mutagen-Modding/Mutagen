@@ -347,11 +347,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
                 var len = checked((int)groupHeader.ContentLength);
                 var finalPos = frame.Position + groupHeader.TotalLength;
-                if (len == 0)
-                {
-                    frame.Position = finalPos;
-                    continue;
-                }
 
                 var parsed = fillTyped(
                     record: record,
