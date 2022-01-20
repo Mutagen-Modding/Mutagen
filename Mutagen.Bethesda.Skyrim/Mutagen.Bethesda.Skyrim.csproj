@@ -28,7 +28,6 @@
     <None Remove="Pex\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\SkyrimAssetTypes.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Agression.cs" />

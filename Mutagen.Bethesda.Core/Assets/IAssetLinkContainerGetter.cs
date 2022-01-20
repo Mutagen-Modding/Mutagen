@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace Mutagen.Bethesda.Assets; 
+namespace Mutagen.Bethesda.Assets;
 
 /// <summary>
 /// An interface for classes that contain assets and can enumerate them.
 /// </summary>
-public interface IAssetLinkContainer : IAssetLinkContainerGetter {
+public interface IAssetLinkContainer : IAssetLinkContainerGetter
+{
     /// <summary>
     /// Swaps out all links to point to new assets
     /// </summary>
@@ -15,7 +16,8 @@ public interface IAssetLinkContainer : IAssetLinkContainerGetter {
 /// <summary>
 /// An interface for classes that contain assets and can enumerate them.
 /// </summary>
-public interface IAssetLinkContainerGetter {
+public interface IAssetLinkContainerGetter
+{
     /// <summary>
     /// Enumerable of all contained assets
     /// </summary>
