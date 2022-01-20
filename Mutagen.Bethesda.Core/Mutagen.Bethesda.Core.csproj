@@ -99,7 +99,7 @@
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Archives\IArchiveReader.cs" />
     <Compile Include="Assets\AssetLink.cs" />
-    <Compile Include="Assets\IAssetLinkContainerGetter.cs" />
+    <Compile Include="Assets\IAssetLinkContainer.cs" />
     <Compile Include="Assets\IAssetLink.cs" />
     <Compile Include="Assets\IAssetType.cs" />
     <Compile Include="Environments\DI\GameEnvironmentProvider.cs" />
