@@ -18,22 +18,21 @@ public interface IAssetPath
     string Extension { get; }
 }
 
-public interface IAssetLinkGetter : IAssetPath
-{
-    IAssetType AssetType { get; }
-}
-
-public interface IAssetLinkGetter<TAssetType> where TAssetType : IAssetType
-{
-}
-
-public interface IAssetLink : IAssetLinkGetter
+public interface IAssetLinkGetter<out TAssetType> where TAssetType : IAssetType
 {
     /// <summary>
-    /// Raw path pointing to the asset
+    /// Type of asset`
     /// </summary>
-    new IAssetType AssetType { get; set; }
+    TAssetType AssetType { get; }
+}
 
+public interface IAssetLinkGetter : IAssetLinkGetter<IAssetType>
+{
+}
+
+public interface IAssetLink<out TAssetType> : IAssetLinkGetter<TAssetType>
+    where TAssetType : IAssetType
+{
     /// <summary>
     /// Raw path relative to the game's data directory
     /// </summary>
@@ -47,6 +46,6 @@ public interface IAssetLink : IAssetLinkGetter
     void SetToNull();
 }
 
-public interface IAssetLink<TAssetType> where TAssetType : IAssetType
+public interface IAssetLink : IAssetLink<IAssetType>
 {
 }
