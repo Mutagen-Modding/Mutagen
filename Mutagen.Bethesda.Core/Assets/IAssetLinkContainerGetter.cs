@@ -11,6 +11,11 @@ public interface IAssetLinkContainer : IAssetLinkContainerGetter
     /// Swaps out all links to point to new assets
     /// </summary>
     void RemapLinks(IReadOnlyDictionary<string, string> mapping);
+    
+    /// <summary>
+    /// Enumerable of all contained assets
+    /// </summary>
+    new IEnumerable<IAssetLink> ContainedAssetLinks { get; }
 }
 
 /// <summary>
