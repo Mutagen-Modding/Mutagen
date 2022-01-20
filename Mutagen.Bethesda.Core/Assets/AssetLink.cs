@@ -19,9 +19,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
     public string RawPath { get; }
     public IAssetType AssetType { get; }
 
-    public string DataRelativePath => RawPath.StartsWith(AssetType.BaseFolder)
-        ? RawPath
-        : Path.Combine(AssetType.BaseFolder, RawPath);
+    public string DataRelativePath => Path.Combine(AssetType.BaseFolder, RawPath);
 
     public string Extension => Path.GetExtension(RawPath).TrimStart('.');
 
