@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Translations.Binary;
 using System;
 using System.Threading.Tasks;
+using PercentType = Mutagen.Bethesda.Generation.Fields.PercentType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
@@ -21,7 +22,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             if (typeGen.GetFieldData().Binary != BinaryGenerationType.Normal) return await base.ExpectedLength(objGen, typeGen);
-            var percType = typeGen as Mutagen.Bethesda.Generation.PercentType;
+            var percType = typeGen as PercentType;
             switch (percType.IntegerType)
             {
                 case FloatIntegerType.UInt:
@@ -41,13 +42,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             Accessor dataAccessor,
             Accessor packageAccessor)
         {
-            var percType = typeGen as Mutagen.Bethesda.Generation.PercentType;
+            var percType = typeGen as PercentType;
             return $"{nameof(PercentBinaryTranslation)}.GetPercent({dataAccessor}, {nameof(FloatIntegerType)}.{percType.IntegerType})";
         }
 
         bool ReadPercent(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor reader, Accessor item)
         {
-            var percType = typeGen as Mutagen.Bethesda.Generation.PercentType;
+            var percType = typeGen as PercentType;
             using (var args = new ArgsWrapper(fg,
                 $"{item} = {nameof(PercentBinaryTranslation)}.Parse"))
             {
@@ -59,7 +60,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
         bool WritePercent(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writer, Accessor item)
         {
-            var percType = typeGen as Mutagen.Bethesda.Generation.PercentType;
+            var percType = typeGen as PercentType;
             var data = percType.GetFieldData();
             using (var args = new ArgsWrapper(fg,
                 $"{nameof(PercentBinaryTranslation)}.Write"))

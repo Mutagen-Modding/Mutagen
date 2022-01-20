@@ -1,27 +1,22 @@
-using Loqui.Generation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Loqui.Generation;
 using Noggog;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Fields;
+
+public class BufferType : ByteArrayType
 {
-    public class BufferType : ByteArrayType
+    public bool Static;
+
+    public override CopyLevel CopyLevel => CopyLevel.None;
+
+    public override async Task Load(XElement node, bool requireName = true)
     {
-        public bool Static;
-
-        public override CopyLevel CopyLevel => CopyLevel.None;
-
-        public override async Task Load(XElement node, bool requireName = true)
-        {
-            this.NullableProperty.OnNext((false, true));
-            await base.Load(node, requireName);
-            this.IntegrateField = false;
-            this.Static = node.GetAttribute<bool>("static");
-            this.NotifyingProperty.OnNext((Loqui.NotifyingType.None, true));
-        }
+        this.NullableProperty.OnNext((false, true));
+        await base.Load(node, requireName);
+        this.IntegrateField = false;
+        this.Static = node.GetAttribute<bool>("static");
+        this.NotifyingProperty.OnNext((Loqui.NotifyingType.None, true));
     }
 }

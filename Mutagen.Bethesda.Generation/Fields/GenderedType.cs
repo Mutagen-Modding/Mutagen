@@ -1,284 +1,283 @@
-using Loqui;
-using Loqui.Generation;
 using System;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Noggog;
-using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Records.Internals;
+using Loqui;
+using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Noggog;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Fields;
+
+public class GenderedType : WrapperType
 {
-    public class GenderedType : WrapperType
+    public override bool HasDefault => false;
+    public override bool CopyNeedsTryCatch => true;
+    public override bool IsEnumerable => true;
+    public override bool IsClass => true;
+    public bool ItemNullable
     {
-        public override bool HasDefault => false;
-        public override bool CopyNeedsTryCatch => true;
-        public override bool IsEnumerable => true;
-        public override bool IsClass => true;
-        public bool ItemNullable
+        get
         {
-            get
+            if (MaleMarker.HasValue) return true;
+            if (this.SubTypeGeneration is LoquiType loqui)
             {
-                if (MaleMarker.HasValue) return true;
-                if (this.SubTypeGeneration is LoquiType loqui)
-                {
-                    return loqui.GetFieldData().HasTrigger;
-                }
-                return false;
+                return loqui.GetFieldData().HasTrigger;
             }
+            return false;
         }
-        public override bool CanBeNullable(bool getter) => true;
-        public RecordTypeConverter? FemaleConversions;
-        public RecordTypeConverter? MaleConversions;
+    }
+    public override bool CanBeNullable(bool getter) => true;
+    public RecordTypeConverter? FemaleConversions;
+    public RecordTypeConverter? MaleConversions;
 
-        public RecordType? MaleMarker;
-        public RecordType? FemaleMarker;
-        public bool MarkerPerGender;
+    public RecordType? MaleMarker;
+    public RecordType? FemaleMarker;
+    public bool MarkerPerGender;
 
-        public override void GenerateClear(FileGeneration fg, Accessor accessorPrefix)
+    public override void GenerateClear(FileGeneration fg, Accessor accessorPrefix)
+    {
+        if (this.Nullable)
         {
-            if (this.Nullable)
-            {
-                fg.AppendLine($"{accessorPrefix} = null;");
-            }
-            else if (SubTypeGeneration is FormLinkType linkType)
-            {
-                fg.AppendLine($"{accessorPrefix}.Male = {linkType.DirectTypeName(getter: false)}.Null;");
-                fg.AppendLine($"{accessorPrefix}.Female = {linkType.DirectTypeName(getter: false)}.Null;");
-            }
-            else
-            {
-                SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix}.Male");
-                SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix}.Female");
-            }
+            fg.AppendLine($"{accessorPrefix} = null;");
         }
-
-        public override void GenerateForClass(FileGeneration fg)
+        else if (SubTypeGeneration is FormLinkType linkType)
         {
-            fg.AppendLine($"public IGenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}{(this.Nullable ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{(this.ItemNullable ? "?" : null)}>({this.SubTypeGeneration.GetDefault(getter: false)}, {this.SubTypeGeneration.GetDefault(getter: false)});")}");
-            fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
+            fg.AppendLine($"{accessorPrefix}.Male = {linkType.DirectTypeName(getter: false)}.Null;");
+            fg.AppendLine($"{accessorPrefix}.Female = {linkType.DirectTypeName(getter: false)}.Null;");
         }
+        else
+        {
+            SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix}.Male");
+            SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix}.Female");
+        }
+    }
 
-        public override string GenerateACopy(string rhsAccessor)
+    public override void GenerateForClass(FileGeneration fg)
+    {
+        fg.AppendLine($"public IGenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}{(this.Nullable ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{(this.ItemNullable ? "?" : null)}>({this.SubTypeGeneration.GetDefault(getter: false)}, {this.SubTypeGeneration.GetDefault(getter: false)});")}");
+        fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
+    }
+
+    public override string GenerateACopy(string rhsAccessor)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
+    {
+        if (!deepCopy)
         {
             throw new NotImplementedException();
         }
-
-        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
+        if (this.Nullable)
         {
-            if (!deepCopy)
-            {
-                throw new NotImplementedException();
-            }
-            if (this.Nullable)
-            {
-                fg.AppendLine($"if ({rhs} is not {{}} rhs{this.Name}item)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"{accessor} = null;");
-                }
-                fg.AppendLine("else");
-                rhs = $"rhs{this.Name}item";
-            }
-            using (new BraceWrapper(fg, doIt: this.Nullable))
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"{accessor} = new GenderedItem<{this.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>"))
-                {
-                    if (this.isLoquiSingle)
-                    {
-                        LoquiType loqui = this.SubTypeGeneration as LoquiType;
-                        args.Add(subFg =>
-                        {
-                            loqui.GenerateTypicalMakeCopy(
-                                subFg,
-                                retAccessor: $"male: ",
-                                rhsAccessor: $"{rhs}.Male{this.SubTypeGeneration.NullChar}",
-                                copyMaskAccessor: $"{copyMaskAccessor}.Male",
-                                deepCopy: deepCopy,
-                                doTranslationMask: false);
-                        });
-                        args.Add(subFg =>
-                        {
-                            loqui.GenerateTypicalMakeCopy(
-                                subFg,
-                                retAccessor: $"female: ",
-                                rhsAccessor: $"{rhs}.Female{this.SubTypeGeneration.NullChar}",
-                                copyMaskAccessor: $"{copyMaskAccessor}.Female",
-                                deepCopy: deepCopy,
-                                doTranslationMask: false);
-                        });
-                    }
-                    else
-                    {
-                        args.Add($"male: {this.SubTypeGeneration.GetDuplicate($"{rhs}.Male")}");
-                        args.Add($"female: {this.SubTypeGeneration.GetDuplicate($"{rhs}.Female")}");
-                    }
-                }
-            }
-        }
-
-        public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, Accessor maskAccessor)
-        {
-            fg.AppendLine($"if ({this.GetTranslationIfAccessor(maskAccessor)})");
+            fg.AppendLine($"if ({rhs} is not {{}} rhs{this.Name}item)");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"if (!Equals({accessor}, {rhsAccessor})) return false;");
+                fg.AppendLine($"{accessor} = null;");
+            }
+            fg.AppendLine("else");
+            rhs = $"rhs{this.Name}item";
+        }
+        using (new BraceWrapper(fg, doIt: this.Nullable))
+        {
+            using (var args = new ArgsWrapper(fg,
+                       $"{accessor} = new GenderedItem<{this.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>"))
+            {
+                if (this.isLoquiSingle)
+                {
+                    LoquiType loqui = this.SubTypeGeneration as LoquiType;
+                    args.Add(subFg =>
+                    {
+                        loqui.GenerateTypicalMakeCopy(
+                            subFg,
+                            retAccessor: $"male: ",
+                            rhsAccessor: $"{rhs}.Male{this.SubTypeGeneration.NullChar}",
+                            copyMaskAccessor: $"{copyMaskAccessor}.Male",
+                            deepCopy: deepCopy,
+                            doTranslationMask: false);
+                    });
+                    args.Add(subFg =>
+                    {
+                        loqui.GenerateTypicalMakeCopy(
+                            subFg,
+                            retAccessor: $"female: ",
+                            rhsAccessor: $"{rhs}.Female{this.SubTypeGeneration.NullChar}",
+                            copyMaskAccessor: $"{copyMaskAccessor}.Female",
+                            deepCopy: deepCopy,
+                            doTranslationMask: false);
+                    });
+                }
+                else
+                {
+                    args.Add($"male: {this.SubTypeGeneration.GetDuplicate($"{rhs}.Male")}");
+                    args.Add($"female: {this.SubTypeGeneration.GetDuplicate($"{rhs}.Female")}");
+                }
             }
         }
+    }
 
-        public override void GenerateForEqualsMask(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, string retAccessor)
+    public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, Accessor maskAccessor)
+    {
+        fg.AppendLine($"if ({this.GetTranslationIfAccessor(maskAccessor)})");
+        using (new BraceWrapper(fg))
         {
-            LoquiType loqui = this.SubTypeGeneration as LoquiType;
+            fg.AppendLine($"if (!Equals({accessor}, {rhsAccessor})) return false;");
+        }
+    }
 
-            if (this.Nullable || loqui != null)
+    public override void GenerateForEqualsMask(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, string retAccessor)
+    {
+        LoquiType loqui = this.SubTypeGeneration as LoquiType;
+
+        if (this.Nullable || loqui != null)
+        {
+            using (var args = new ArgsWrapper(fg,
+                       $"ret.{this.Name} = {nameof(GenderedItem)}.{nameof(GenderedItem.EqualityMaskHelper)}"))
             {
-                using (var args = new ArgsWrapper(fg,
-                    $"ret.{this.Name} = {nameof(GenderedItem)}.{nameof(GenderedItem.EqualityMaskHelper)}"))
+                args.Add($"lhs: {accessor}");
+                args.Add($"rhs: {rhsAccessor}");
+                if (loqui == null)
                 {
-                    args.Add($"lhs: {accessor}");
-                    args.Add($"rhs: {rhsAccessor}");
-                    if (loqui == null)
+                    args.Add($"maskGetter: (l, r, i) => EqualityComparer<{this.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>.Default.Equals(l, r)");
+                }
+                else
+                {
+                    if (this.ItemNullable)
                     {
-                        args.Add($"maskGetter: (l, r, i) => EqualityComparer<{this.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>.Default.Equals(l, r)");
+                        args.Add($"maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i)");
                     }
                     else
                     {
-                        if (this.ItemNullable)
-                        {
-                            args.Add($"maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i)");
-                        }
-                        else
-                        {
-                            args.Add("maskGetter: (l, r, i) => l.GetEqualsMask(r, i)");
-                        }
+                        args.Add("maskGetter: (l, r, i) => l.GetEqualsMask(r, i)");
                     }
-                    args.AddPassArg("include");
                 }
+                args.AddPassArg("include");
             }
-            else
+        }
+        else
+        {
+            using (var args = new ArgsWrapper(fg,
+                       $"ret.{this.Name} = new GenderedItem<bool>"))
             {
-                using (var args = new ArgsWrapper(fg,
-                    $"ret.{this.Name} = new GenderedItem<bool>"))
-                {
-                    args.Add($"male: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Male", $"{rhsAccessor}.Male")}");
-                    args.Add($"female: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Female", $"{rhsAccessor}.Female")}");
-                }
+                args.Add($"male: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Male", $"{rhsAccessor}.Male")}");
+                args.Add($"female: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Female", $"{rhsAccessor}.Female")}");
             }
         }
+    }
 
-        public override void GenerateForNullableCheck(FileGeneration fg, Accessor accessor, string checkMaskAccessor)
+    public override void GenerateForNullableCheck(FileGeneration fg, Accessor accessor, string checkMaskAccessor)
+    {
+        if (this.Nullable)
         {
-            if (this.Nullable)
+            fg.AppendLine($"if ({checkMaskAccessor}?.Overall ?? false) return false;");
+        }
+        else if (this.ItemNullable)
+        {
+            fg.AppendLine($"throw new NotImplementedException();");
+        }
+    }
+
+    public override void GenerateForHash(FileGeneration fg, Accessor accessor, string hashResultAccessor)
+    {
+        if (this.Nullable)
+        {
+            fg.AppendLine($"if ({accessor} is {{}} {this.Name}item)");
+            using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"if ({checkMaskAccessor}?.Overall ?? false) return false;");
-            }
-            else if (this.ItemNullable)
-            {
-                fg.AppendLine($"throw new NotImplementedException();");
+                fg.AppendLine($"{hashResultAccessor}.Add(HashCode.Combine({this.Name}item.Male, {this.Name}item.Female));");
             }
         }
-
-        public override void GenerateForHash(FileGeneration fg, Accessor accessor, string hashResultAccessor)
+        else
         {
-            if (this.Nullable)
-            {
-                fg.AppendLine($"if ({accessor} is {{}} {this.Name}item)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"{hashResultAccessor}.Add(HashCode.Combine({this.Name}item.Male, {this.Name}item.Female));");
-                }
-            }
-            else
-            {
-                fg.AppendLine($"{hashResultAccessor}.Add(HashCode.Combine({accessor}.Male, {accessor}.Female));");
-            }
+            fg.AppendLine($"{hashResultAccessor}.Add(HashCode.Combine({accessor}.Male, {accessor}.Female));");
+        }
+    }
+
+    public override void GenerateForInterface(FileGeneration fg, bool getter, bool internalInterface)
+    {
+        if (getter)
+        {
+            fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; }}");
+        }
+        else
+        {
+            fg.AppendLine($"new IGenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}");
+        }
+    }
+
+    public override void GenerateGetNth(FileGeneration fg, Accessor identifier)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void GenerateSetNth(FileGeneration fg, Accessor accessor, Accessor rhs, bool internalUse)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void GenerateToString(FileGeneration fg, string name, Accessor accessor, string fgAccessor)
+    {
+        fg.AppendLine($"{accessor}{(this.Nullable ? "?" : null)}.ToString({fgAccessor}, \"{name}\");");
+    }
+
+    public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override string SkipCheck(Accessor copyMaskAccessor, bool deepCopy)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override string TypeName(bool getter, bool needsCovariance = false)
+    {
+        return $"{(getter ? "IGenderedItemGetter" : "IGenderedItem")}<{SubTypeGeneration.TypeName(getter, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>";
+    }
+
+    public override string GetDuplicate(Accessor accessor)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override async Task Load(XElement node, bool requireName = true)
+    {
+        await base.Load(node, requireName);
+
+        if (node.TryGetAttribute<string>("maleMarker", out var maleMarker))
+        {
+            MaleMarker = new RecordType(maleMarker);
         }
 
-        public override void GenerateForInterface(FileGeneration fg, bool getter, bool internalInterface)
+        if (node.TryGetAttribute<string>("femaleMarker", out var femaleMarker))
         {
-            if (getter)
-            {
-                fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; }}");
-            }
-            else
-            {
-                fg.AppendLine($"new IGenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}");
-            }
+            FemaleMarker = new RecordType(femaleMarker);
         }
 
-        public override void GenerateGetNth(FileGeneration fg, Accessor identifier)
+        if (MaleMarker.HasValue != FemaleMarker.HasValue)
         {
-            throw new NotImplementedException();
+            throw new ArgumentException("Both submarkers must be set at once.");
         }
 
-        public override void GenerateSetNth(FileGeneration fg, Accessor accessor, Accessor rhs, bool internalUse)
+        this.MarkerPerGender = node.GetAttribute<bool>("markerPerGender");
+
+        if (MaleMarker.HasValue)
         {
-            throw new NotImplementedException();
+            this.SubTypeGeneration.NullableProperty.OnNext((true, true));
         }
 
-        public override void GenerateToString(FileGeneration fg, string name, Accessor accessor, string fgAccessor)
-        {
-            fg.AppendLine($"{accessor}{(this.Nullable ? "?" : null)}.ToString({fgAccessor}, \"{name}\");");
-        }
+        FemaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("FemaleTypeOverrides", LoquiGenerator.Namespace)));
+        MaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("MaleTypeOverrides", LoquiGenerator.Namespace)));
+    }
 
-        public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string SkipCheck(Accessor copyMaskAccessor, bool deepCopy)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string TypeName(bool getter, bool needsCovariance = false)
-        {
-            return $"{(getter ? "IGenderedItemGetter" : "IGenderedItem")}<{SubTypeGeneration.TypeName(getter, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>";
-        }
-
-        public override string GetDuplicate(Accessor accessor)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override async Task Load(XElement node, bool requireName = true)
-        {
-            await base.Load(node, requireName);
-
-            if (node.TryGetAttribute<string>("maleMarker", out var maleMarker))
-            {
-                MaleMarker = new RecordType(maleMarker);
-            }
-
-            if (node.TryGetAttribute<string>("femaleMarker", out var femaleMarker))
-            {
-                FemaleMarker = new RecordType(femaleMarker);
-            }
-
-            if (MaleMarker.HasValue != FemaleMarker.HasValue)
-            {
-                throw new ArgumentException("Both submarkers must be set at once.");
-            }
-
-            this.MarkerPerGender = node.GetAttribute<bool>("markerPerGender");
-
-            if (MaleMarker.HasValue)
-            {
-                this.SubTypeGeneration.NullableProperty.OnNext((true, true));
-            }
-
-            FemaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("FemaleTypeOverrides", LoquiGenerator.Namespace)));
-            MaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("MaleTypeOverrides", LoquiGenerator.Namespace)));
-        }
-
-        public override void GenerateInRegistration(FileGeneration fg)
-        {
-            base.GenerateInRegistration(fg);
-            RecordTypeConverterModule.GenerateConverterMember(fg, this.ObjectGen, this.FemaleConversions, $"{this.Name}Female");
-            RecordTypeConverterModule.GenerateConverterMember(fg, this.ObjectGen, this.MaleConversions, $"{this.Name}Male");
-        }
+    public override void GenerateInRegistration(FileGeneration fg)
+    {
+        base.GenerateInRegistration(fg);
+        RecordTypeConverterModule.GenerateConverterMember(fg, this.ObjectGen, this.FemaleConversions, $"{this.Name}Female");
+        RecordTypeConverterModule.GenerateConverterMember(fg, this.ObjectGen, this.MaleConversions, $"{this.Name}Male");
     }
 }
