@@ -1108,6 +1108,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Furniture>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IFurniture);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1266,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Furniture_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Furniture_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -2524,7 +2526,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Furniture_Registration.Instance;
-        public new static Furniture_Registration Registration => Furniture_Registration.Instance;
+        public new static Furniture_Registration StaticRegistration => Furniture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FurnitureCommon.Instance;
         [DebuggerStepThrough]
@@ -2936,7 +2938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Furniture_Registration.Instance;
-        public new static Furniture_Registration Registration => Furniture_Registration.Instance;
+        public new static Furniture_Registration StaticRegistration => Furniture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FurnitureCommon.Instance;
         [DebuggerStepThrough]
@@ -2958,6 +2960,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IFurniture);
+
         public Furniture.MajorFlag MajorFlags => (Furniture.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

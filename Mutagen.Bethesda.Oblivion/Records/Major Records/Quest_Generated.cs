@@ -865,6 +865,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Quest>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IQuest);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -980,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Quest_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Quest_Registration.Instance;
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         #region Name
         /// <summary>
@@ -1960,7 +1962,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Quest_Registration.Instance;
-        public new static Quest_Registration Registration => Quest_Registration.Instance;
+        public new static Quest_Registration StaticRegistration => Quest_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => QuestCommon.Instance;
         [DebuggerStepThrough]
@@ -2231,7 +2233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Quest_Registration.Instance;
-        public new static Quest_Registration Registration => Quest_Registration.Instance;
+        public new static Quest_Registration StaticRegistration => Quest_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => QuestCommon.Instance;
         [DebuggerStepThrough]
@@ -2253,6 +2255,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IQuest);
+
 
         #region Script
         private int? _ScriptLocation;

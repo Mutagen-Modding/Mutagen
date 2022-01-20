@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorldspaceObjectBounds_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorldspaceObjectBounds_Registration.Instance;
         P2Float Min { get; }
         P2Float Max { get; }
 
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceObjectBounds_Registration.Instance;
-        public static WorldspaceObjectBounds_Registration Registration => WorldspaceObjectBounds_Registration.Instance;
+        public static WorldspaceObjectBounds_Registration StaticRegistration => WorldspaceObjectBounds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceObjectBoundsCommon.Instance;
         [DebuggerStepThrough]
@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceObjectBounds_Registration.Instance;
-        public static WorldspaceObjectBounds_Registration Registration => WorldspaceObjectBounds_Registration.Instance;
+        public static WorldspaceObjectBounds_Registration StaticRegistration => WorldspaceObjectBounds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceObjectBoundsCommon.Instance;
         [DebuggerStepThrough]

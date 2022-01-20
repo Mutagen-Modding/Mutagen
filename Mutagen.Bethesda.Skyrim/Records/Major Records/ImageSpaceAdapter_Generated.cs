@@ -6987,6 +6987,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ImageSpaceAdapter>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IImageSpaceAdapter);
+
         [Flags]
         public enum DNAMDataType
         {
@@ -7151,7 +7153,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IImageSpaceAdapterGetter>,
         IMapsToGetter<IImageSpaceAdapterGetter>
     {
-        static new ILoquiRegistration Registration => ImageSpaceAdapter_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
         ImageSpaceAdapter.Flag Flags { get; }
         Single Duration { get; }
         ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; }
@@ -11408,7 +11410,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceAdapter_Registration.Instance;
-        public new static ImageSpaceAdapter_Registration Registration => ImageSpaceAdapter_Registration.Instance;
+        public new static ImageSpaceAdapter_Registration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -12893,7 +12895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceAdapter_Registration.Instance;
-        public new static ImageSpaceAdapter_Registration Registration => ImageSpaceAdapter_Registration.Instance;
+        public new static ImageSpaceAdapter_Registration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -12914,6 +12916,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IImageSpaceAdapter);
+
 
         private int? _DNAMLocation;
         public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; private set; }

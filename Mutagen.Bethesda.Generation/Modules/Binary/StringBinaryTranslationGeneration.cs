@@ -9,6 +9,8 @@ using Mutagen.Bethesda.Strings;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Fields;
+using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
@@ -21,7 +23,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             TypeGeneration typeGen,
             bool squashedRepeatedList)
         {
-            var str = typeGen as Mutagen.Bethesda.Generation.StringType;
+            var str = typeGen as StringType;
             if (str.BinaryType != StringBinaryType.NullTerminate) return false;
             if (str.Translated.HasValue) return false;
             return !squashedRepeatedList;
@@ -29,7 +31,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
         public override bool AllowDirectWrite(ObjectGeneration objGen, TypeGeneration typeGen)
         {
-            var str = typeGen as Mutagen.Bethesda.Generation.StringType;
+            var str = typeGen as StringType;
             if (str.BinaryType != StringBinaryType.NullTerminate) return false;
             if (str.Translated.HasValue) return false;
             return true;
@@ -50,7 +52,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             Accessor translationMaskAccessor,
             Accessor converterAccessor)
         {
-            var stringType = typeGen as Mutagen.Bethesda.Generation.StringType;
+            var stringType = typeGen as StringType;
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{this.NamespacePrefix}StringBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))

@@ -677,6 +677,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<MagicEffect>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMagicEffect);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -796,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffect_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1724,7 +1726,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
-        public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
+        public new static MagicEffect_Registration StaticRegistration => MagicEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1968,7 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
-        public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
+        public new static MagicEffect_Registration StaticRegistration => MagicEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1990,6 +1992,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMagicEffect);
+
 
         #region Name
         private int? _NameLocation;

@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ContainerData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ContainerData_Registration.Instance;
         Container.ContainerFlag Flags { get; }
         Single Weight { get; }
 
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerData_Registration.Instance;
-        public static ContainerData_Registration Registration => ContainerData_Registration.Instance;
+        public static ContainerData_Registration StaticRegistration => ContainerData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerData_Registration.Instance;
-        public static ContainerData_Registration Registration => ContainerData_Registration.Instance;
+        public static ContainerData_Registration StaticRegistration => ContainerData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerDataCommon.Instance;
         [DebuggerStepThrough]

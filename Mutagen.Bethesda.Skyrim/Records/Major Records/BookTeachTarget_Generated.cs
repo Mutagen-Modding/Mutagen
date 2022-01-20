@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => BookTeachTarget_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => BookTeachTarget_Registration.Instance;
 
     }
 
@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookTeachTarget_Registration.Instance;
-        public static BookTeachTarget_Registration Registration => BookTeachTarget_Registration.Instance;
+        public static BookTeachTarget_Registration StaticRegistration => BookTeachTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => BookTeachTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -926,14 +926,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class BookTeachTargetBinaryOverlay :
+    public abstract partial class BookTeachTargetBinaryOverlay :
         PluginBinaryOverlay,
         IBookTeachTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookTeachTarget_Registration.Instance;
-        public static BookTeachTarget_Registration Registration => BookTeachTarget_Registration.Instance;
+        public static BookTeachTarget_Registration StaticRegistration => BookTeachTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => BookTeachTargetCommon.Instance;
         [DebuggerStepThrough]

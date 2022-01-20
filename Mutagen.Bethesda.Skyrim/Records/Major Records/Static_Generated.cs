@@ -706,6 +706,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Static>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IStatic);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -845,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         IRegionTargetGetter
     {
-        static new ILoquiRegistration Registration => Static_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Static_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -1785,7 +1787,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Static_Registration.Instance;
-        public new static Static_Registration Registration => Static_Registration.Instance;
+        public new static Static_Registration StaticRegistration => Static_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StaticCommon.Instance;
         [DebuggerStepThrough]
@@ -2025,7 +2027,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Static_Registration.Instance;
-        public new static Static_Registration Registration => Static_Registration.Instance;
+        public new static Static_Registration StaticRegistration => Static_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StaticCommon.Instance;
         [DebuggerStepThrough]
@@ -2047,6 +2049,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IStatic);
+
         public Static.MajorFlag MajorFlags => (Static.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds

@@ -447,6 +447,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Grass>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGrass);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -553,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IGrassGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Grass_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Grass_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1347,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
-        public new static Grass_Registration Registration => Grass_Registration.Instance;
+        public new static Grass_Registration StaticRegistration => Grass_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GrassCommon.Instance;
         [DebuggerStepThrough]
@@ -1532,7 +1534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
-        public new static Grass_Registration Registration => Grass_Registration.Instance;
+        public new static Grass_Registration StaticRegistration => Grass_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GrassCommon.Instance;
         [DebuggerStepThrough]
@@ -1553,6 +1555,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGrass);
+
 
         public IModelGetter? Model { get; private set; }
         #region Data

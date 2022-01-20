@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<ILocationObjectIdGetter>
     {
-        static new ILoquiRegistration Registration => LocationObjectId_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LocationObjectId_Registration.Instance;
         IFormLinkGetter<IObjectIdGetter> Link { get; }
 
     }
@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationObjectId_Registration.Instance;
-        public new static LocationObjectId_Registration Registration => LocationObjectId_Registration.Instance;
+        public new static LocationObjectId_Registration StaticRegistration => LocationObjectId_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationObjectIdCommon.Instance;
         [DebuggerStepThrough]
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationObjectId_Registration.Instance;
-        public new static LocationObjectId_Registration Registration => LocationObjectId_Registration.Instance;
+        public new static LocationObjectId_Registration StaticRegistration => LocationObjectId_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationObjectIdCommon.Instance;
         [DebuggerStepThrough]

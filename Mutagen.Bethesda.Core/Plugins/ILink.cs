@@ -5,16 +5,19 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins
 {
-    /// <summary>
-    /// An interface for an object that is able to resolve against a LinkCache
-    /// </summary>
-    public interface ILink
+    public interface ILinkIdentifier
     {
         /// <summary>
         /// The MajorRecord Type that the link is associated with
         /// </summary>
         Type Type { get; }
-        
+    }
+    
+    /// <summary>
+    /// An interface for an object that is able to resolve against a LinkCache
+    /// </summary>
+    public interface ILink : ILinkIdentifier
+    {
         /// <summary>
         /// Attempts to locate an associated ModKey from the link
         /// </summary>
@@ -36,7 +39,7 @@ namespace Mutagen.Bethesda.Plugins
         /// <param name="cache">Link Cache to resolve against</param>
         /// <param name="majorRecord">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRecord);
+        bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordGetter majorRecord);
     }
 
     /// <summary>
@@ -44,7 +47,7 @@ namespace Mutagen.Bethesda.Plugins
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
     public interface ILink<out TMajor> : ILink
-        where TMajor : IMajorRecordCommonGetter
+        where TMajor : IMajorRecordGetter
     {
         /// <summary>
         /// Attempts to locate link target in given Link Cache.

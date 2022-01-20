@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         ILoquiObject<IRegionGrassesGetter>
     {
-        static new ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => RegionGrasses_Registration.Instance;
         IReadOnlyList<IRegionGrassGetter>? Grasses { get; }
 
     }
@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionGrasses_Registration.Instance;
-        public new static RegionGrasses_Registration Registration => RegionGrasses_Registration.Instance;
+        public new static RegionGrasses_Registration StaticRegistration => RegionGrasses_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionGrassesCommon.Instance;
         [DebuggerStepThrough]
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionGrasses_Registration.Instance;
-        public new static RegionGrasses_Registration Registration => RegionGrasses_Registration.Instance;
+        public new static RegionGrasses_Registration StaticRegistration => RegionGrasses_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionGrassesCommon.Instance;
         [DebuggerStepThrough]

@@ -1181,6 +1181,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Explosion>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IExplosion);
+
         [Flags]
         public enum DATADataType
         {
@@ -1337,7 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Explosion_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Explosion_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -2519,7 +2521,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Explosion_Registration.Instance;
-        public new static Explosion_Registration Registration => Explosion_Registration.Instance;
+        public new static Explosion_Registration StaticRegistration => Explosion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ExplosionCommon.Instance;
         [DebuggerStepThrough]
@@ -2849,7 +2851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Explosion_Registration.Instance;
-        public new static Explosion_Registration Registration => Explosion_Registration.Instance;
+        public new static Explosion_Registration StaticRegistration => Explosion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ExplosionCommon.Instance;
         [DebuggerStepThrough]
@@ -2871,6 +2873,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IExplosion);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

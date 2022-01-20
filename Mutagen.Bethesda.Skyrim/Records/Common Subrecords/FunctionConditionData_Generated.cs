@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IFunctionConditionDataGetter>
     {
-        static new ILoquiRegistration Registration => FunctionConditionData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => FunctionConditionData_Registration.Instance;
         Condition.Function Function { get; }
         UInt16 Unknown2 { get; }
         IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FunctionConditionData_Registration.Instance;
-        public new static FunctionConditionData_Registration Registration => FunctionConditionData_Registration.Instance;
+        public new static FunctionConditionData_Registration StaticRegistration => FunctionConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FunctionConditionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FunctionConditionData_Registration.Instance;
-        public new static FunctionConditionData_Registration Registration => FunctionConditionData_Registration.Instance;
+        public new static FunctionConditionData_Registration StaticRegistration => FunctionConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FunctionConditionDataCommon.Instance;
         [DebuggerStepThrough]

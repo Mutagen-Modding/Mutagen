@@ -3945,6 +3945,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<EffectShader>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IEffectShader);
+
         [Flags]
         public enum DATADataType
         {
@@ -4160,7 +4162,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IEffectShaderGetter>,
         IMapsToGetter<IEffectShaderGetter>
     {
-        static new ILoquiRegistration Registration => EffectShader_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
         String? FillTexture { get; }
         String? ParticleShaderTexture { get; }
         String? HolesTexture { get; }
@@ -6676,7 +6678,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
-        public new static EffectShader_Registration Registration => EffectShader_Registration.Instance;
+        public new static EffectShader_Registration StaticRegistration => EffectShader_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
         [DebuggerStepThrough]
@@ -7355,7 +7357,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
-        public new static EffectShader_Registration Registration => EffectShader_Registration.Instance;
+        public new static EffectShader_Registration StaticRegistration => EffectShader_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
         [DebuggerStepThrough]
@@ -7377,6 +7379,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IEffectShader);
+
 
         #region FillTexture
         private int? _FillTextureLocation;

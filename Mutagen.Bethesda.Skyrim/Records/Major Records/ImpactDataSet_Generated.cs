@@ -486,6 +486,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ImpactDataSet>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IImpactDataSet);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -588,7 +590,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IImpactDataSetGetter>,
         IMapsToGetter<IImpactDataSetGetter>
     {
-        static new ILoquiRegistration Registration => ImpactDataSet_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ImpactDataSet_Registration.Instance;
         IReadOnlyList<IImpactDataGetter> Impacts { get; }
 
     }
@@ -1337,7 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImpactDataSet_Registration.Instance;
-        public new static ImpactDataSet_Registration Registration => ImpactDataSet_Registration.Instance;
+        public new static ImpactDataSet_Registration StaticRegistration => ImpactDataSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactDataSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1517,7 +1519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImpactDataSet_Registration.Instance;
-        public new static ImpactDataSet_Registration Registration => ImpactDataSet_Registration.Instance;
+        public new static ImpactDataSet_Registration StaticRegistration => ImpactDataSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactDataSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1539,6 +1541,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IImpactDataSet);
+
 
         public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = ListExt.Empty<ImpactDataBinaryOverlay>();
         partial void CustomFactoryEnd(

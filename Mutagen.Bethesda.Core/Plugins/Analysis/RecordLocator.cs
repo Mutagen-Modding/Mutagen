@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Plugins.Analysis
             public List<long> FromStartPositions = new();
             public List<long> FromEndPositions = new();
             public List<RecordLocationMarker> FormKeys = new();
-            public List<long> GrupLocations = new();
+            public List<GroupLocationMarker> GrupLocations = new();
             public FormKey LastParsed;
             public long LastLoc;
             public GameConstants MetaData { get; }
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Plugins.Analysis
         {
             var grupLoc = reader.Position;
             GroupHeader groupMeta = reader.GetGroup();
-            fileLocs.GrupLocations.Add(reader.Position);
+            fileLocs.GrupLocations.Add(new GroupLocationMarker(RangeInt64.FactoryFromLength(reader.Position, groupMeta.TotalLength), groupMeta.ContainedRecordType));
             var grupRec = grupRecOverride ?? groupMeta.ContainedRecordType;
 
             if (checkOverallGrupType
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Plugins.Analysis
             {
                 throw new DataMisalignedException("Group was not read in where expected: 0x" + (frame.Position - 4).ToString("X"));
             }
-            fileLocs.GrupLocations.Add(grupLoc);
+            fileLocs.GrupLocations.Add(new GroupLocationMarker(RangeInt64.FactoryFromLength(grupLoc, groupMeta.TotalLength), groupMeta.ContainedRecordType));
             var grupType = groupMeta.GroupType;
             if (grupType == frame.MetaData.Constants.GroupConstants.Cell.TopGroupType)
             {
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Plugins.Analysis
                 {
                     throw new ArgumentException();
                 }
-                fileLocs.GrupLocations.Add(grupLoc);
+                fileLocs.GrupLocations.Add(new GroupLocationMarker(RangeInt64.FactoryFromLength(grupLoc, groupMeta.TotalLength), groupMeta.ContainedRecordType));
                 if (frame.MetaData.Constants.GroupConstants.World.CellSubGroupTypes.Contains(groupMeta.GroupType))
                 {
                     ParseTopLevelGRUP(
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Plugins.Analysis
             {
                 var grupLoc = frame.Position;
                 var groupMeta = frame.GetGroup();
-                fileLocs.GrupLocations.Add(grupLoc);
+                fileLocs.GrupLocations.Add(new GroupLocationMarker(RangeInt64.FactoryFromLength(grupLoc, groupMeta.TotalLength), groupMeta.ContainedRecordType));
                 if (frame.MetaData.Constants.GroupConstants.Cell.SubTypes.Contains(groupMeta.GroupType))
                 {
                     ParseTopLevelGRUP(

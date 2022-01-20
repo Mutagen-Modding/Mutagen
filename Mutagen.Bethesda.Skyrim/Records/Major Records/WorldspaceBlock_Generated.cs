@@ -608,17 +608,17 @@ namespace Mutagen.Bethesda.Skyrim
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceBlockCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceBlockSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorldspaceBlock_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorldspaceBlock_Registration.Instance;
         Int16 BlockNumberY { get; }
         Int16 BlockNumberX { get; }
         GroupTypeEnum GroupType { get; }
@@ -882,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IWorldspaceBlockGetter obj)
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IWorldspaceBlockGetter obj)
         {
             return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
         }
@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IWorldspaceBlockGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -901,7 +901,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             this IWorldspaceBlockGetter obj,
             Type type,
             bool throwIfUnknown = true)
@@ -910,18 +910,18 @@ namespace Mutagen.Bethesda.Skyrim
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommonGetter)m);
+                .Select(m => (IMajorRecordGetter)m);
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IWorldspaceBlock obj)
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IWorldspaceBlock obj)
         {
             return ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceBlock obj)
-            where TMajor : class, IMajorRecordCommon
+            where TMajor : class, IMajorRecord
         {
             return ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
             this IWorldspaceBlock obj,
             Type? type,
             bool throwIfUnknown = true)
@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommon)m);
+                .Select(m => (IMajorRecord)m);
         }
 
         [DebuggerStepThrough]
@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IWorldspaceBlock obj,
             TMajor record,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(record.FormKey);
@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IWorldspaceBlock obj,
             IEnumerable<TMajor> records,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IWorldspaceBlock obj,
             FormKey key,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IWorldspaceBlock obj,
             IEnumerable<FormKey> keys,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IWorldspaceBlock obj,
             HashSet<FormKey> keys,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -1227,15 +1227,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Items.RemapLinks(mapping);
         }
         
-        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IWorldspaceBlock obj)
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(IWorldspaceBlock obj)
         {
             foreach (var item in WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj))
             {
-                yield return (item as IMajorRecordCommon)!;
+                yield return (item as IMajorRecord)!;
             }
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
             IWorldspaceBlock obj,
             Type? type,
             bool throwIfUnknown)
@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             IWorldspaceBlock obj,
             Type type,
             bool throwIfUnknown)
@@ -1271,13 +1271,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
                 case "SkyrimMajorRecord":
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "ISkyrimMajorRecordGetter":
                     if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
@@ -1616,7 +1614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IWorldspaceBlockGetter obj)
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IWorldspaceBlockGetter obj)
         {
             foreach (var subItem in obj.Items)
             {
@@ -1627,7 +1625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
             IWorldspaceBlockGetter obj,
             Type? type,
             bool throwIfUnknown)
@@ -1636,14 +1634,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             IWorldspaceBlockGetter obj,
             Type type,
             bool throwIfUnknown)
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
@@ -1655,7 +1652,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "ISkyrimMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
@@ -2062,7 +2058,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
-        public static WorldspaceBlock_Registration Registration => WorldspaceBlock_Registration.Instance;
+        public static WorldspaceBlock_Registration StaticRegistration => WorldspaceBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -2234,7 +2230,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
-        public static WorldspaceBlock_Registration Registration => WorldspaceBlock_Registration.Instance;
+        public static WorldspaceBlock_Registration StaticRegistration => WorldspaceBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -2252,11 +2248,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceBlockCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceBlockBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

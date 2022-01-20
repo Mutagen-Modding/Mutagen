@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => AScriptReference_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => AScriptReference_Registration.Instance;
 
     }
 
@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AScriptReference_Registration.Instance;
-        public static AScriptReference_Registration Registration => AScriptReference_Registration.Instance;
+        public static AScriptReference_Registration StaticRegistration => AScriptReference_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => AScriptReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -938,14 +938,14 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class AScriptReferenceBinaryOverlay :
+    public abstract partial class AScriptReferenceBinaryOverlay :
         PluginBinaryOverlay,
         IAScriptReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AScriptReference_Registration.Instance;
-        public static AScriptReference_Registration Registration => AScriptReference_Registration.Instance;
+        public static AScriptReference_Registration StaticRegistration => AScriptReference_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => AScriptReferenceCommon.Instance;
         [DebuggerStepThrough]

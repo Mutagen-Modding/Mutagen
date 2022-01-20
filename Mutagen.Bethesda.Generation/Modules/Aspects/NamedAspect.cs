@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Plugins.Aspects;
+using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {

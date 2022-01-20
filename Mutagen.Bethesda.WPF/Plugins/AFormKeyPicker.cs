@@ -641,7 +641,6 @@ namespace Mutagen.Bethesda.WPF.Plugins
                             foreach (var item in x.LinkCache.AllIdentifiers(scopedTypes, cancel))
                             {
                                 if (cancel.IsCancellationRequested) return;
-                                var edid = item.EditorID;
                                 obs.OnNext(item);
                             }
                         }
@@ -735,7 +734,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
             var scopedTypes = types as IEnumerable<Type>;
             if (scopedTypes == null || !scopedTypes.Any())
             {
-                scopedTypes = typeof(IMajorRecordCommonGetter).AsEnumerable();
+                scopedTypes = typeof(IMajorRecordGetter).AsEnumerable();
             }
             return scopedTypes;
         }

@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PathGridPoint_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PathGridPoint_Registration.Instance;
         P3Float Point { get; }
         Byte NumConnections { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
-        public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
+        public static PathGridPoint_Registration StaticRegistration => PathGridPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PathGridPointCommon.Instance;
         [DebuggerStepThrough]
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
-        public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
+        public static PathGridPoint_Registration StaticRegistration => PathGridPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PathGridPointCommon.Instance;
         [DebuggerStepThrough]

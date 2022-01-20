@@ -640,6 +640,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<EncounterZone>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IEncounterZone);
+
         [Flags]
         public enum DATADataType
         {
@@ -753,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IEncounterZoneGetter>,
         IMapsToGetter<IEncounterZoneGetter>
     {
-        static new ILoquiRegistration Registration => EncounterZone_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => EncounterZone_Registration.Instance;
         IFormLinkGetter<IOwnerGetter> Owner { get; }
         IFormLinkGetter<ILocationGetter> Location { get; }
         SByte Rank { get; }
@@ -1566,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EncounterZone_Registration.Instance;
-        public new static EncounterZone_Registration Registration => EncounterZone_Registration.Instance;
+        public new static EncounterZone_Registration StaticRegistration => EncounterZone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EncounterZoneCommon.Instance;
         [DebuggerStepThrough]
@@ -1772,7 +1774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EncounterZone_Registration.Instance;
-        public new static EncounterZone_Registration Registration => EncounterZone_Registration.Instance;
+        public new static EncounterZone_Registration StaticRegistration => EncounterZone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EncounterZoneCommon.Instance;
         [DebuggerStepThrough]
@@ -1794,6 +1796,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IEncounterZone);
+
 
         private int? _DATALocation;
         public EncounterZone.DATADataType DATADataTypeState { get; private set; }

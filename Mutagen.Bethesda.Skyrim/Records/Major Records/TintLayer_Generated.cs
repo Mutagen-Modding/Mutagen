@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => TintLayer_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => TintLayer_Registration.Instance;
         UInt16? Index { get; }
         Color? Color { get; }
         Single? InterpolationValue { get; }
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintLayer_Registration.Instance;
-        public static TintLayer_Registration Registration => TintLayer_Registration.Instance;
+        public static TintLayer_Registration StaticRegistration => TintLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintLayer_Registration.Instance;
-        public static TintLayer_Registration Registration => TintLayer_Registration.Instance;
+        public static TintLayer_Registration StaticRegistration => TintLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintLayerCommon.Instance;
         [DebuggerStepThrough]

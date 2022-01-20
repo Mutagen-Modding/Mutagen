@@ -2,11 +2,11 @@
 
 namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
 {
-    public interface IOtherTestMajorRecordGetter : IMajorRecordCommonGetter
+    public interface IOtherTestMajorRecordGetter : IMajorRecordGetter
     {
     }
 
-    public interface IOtherTestMajorRecord : ITestMajorRecordGetter, IMajorRecordCommon
+    public interface IOtherTestMajorRecord : ITestMajorRecordGetter, IMajorRecord
     {
     }
 }

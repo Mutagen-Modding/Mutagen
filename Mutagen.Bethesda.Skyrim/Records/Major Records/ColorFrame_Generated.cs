@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ColorFrame_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ColorFrame_Registration.Instance;
         Single Time { get; }
         Color Color { get; }
 
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ColorFrame_Registration.Instance;
-        public static ColorFrame_Registration Registration => ColorFrame_Registration.Instance;
+        public static ColorFrame_Registration StaticRegistration => ColorFrame_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ColorFrameCommon.Instance;
         [DebuggerStepThrough]
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ColorFrame_Registration.Instance;
-        public static ColorFrame_Registration Registration => ColorFrame_Registration.Instance;
+        public static ColorFrame_Registration StaticRegistration => ColorFrame_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ColorFrameCommon.Instance;
         [DebuggerStepThrough]

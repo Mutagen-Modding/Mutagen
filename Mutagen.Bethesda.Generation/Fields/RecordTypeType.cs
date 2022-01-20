@@ -1,24 +1,23 @@
+using System;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
-using System;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Fields;
+
+public class RecordTypeType : PrimitiveType
 {
-    public class RecordTypeType : PrimitiveType
-    {
-        public override Type Type(bool getter) => typeof(RecordType);
-        public override bool IsClass => false;
+    public override Type Type(bool getter) => typeof(RecordType);
+    public override bool IsClass => false;
 
-        public override string GetDefault(bool getter)
+    public override string GetDefault(bool getter)
+    {
+        if (this.Nullable)
         {
-            if (this.Nullable)
-            {
-                return $"default(RecordType?)";
-            }
-            else
-            {
-                return "RecordType.Null";
-            }
+            return $"default(RecordType?)";
+        }
+        else
+        {
+            return "RecordType.Null";
         }
     }
 }

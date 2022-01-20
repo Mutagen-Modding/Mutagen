@@ -477,6 +477,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<DamageType>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDamageType);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -579,7 +581,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IDamageTypeGetter>,
         IMapsToGetter<IDamageTypeGetter>
     {
-        static new ILoquiRegistration Registration => DamageType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DamageType_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<IDamageTypeTargetGetter>>? DamageTypes { get; }
 
     }
@@ -1429,7 +1431,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DamageType_Registration.Instance;
-        public new static DamageType_Registration Registration => DamageType_Registration.Instance;
+        public new static DamageType_Registration StaticRegistration => DamageType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DamageTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1619,7 +1621,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DamageType_Registration.Instance;
-        public new static DamageType_Registration Registration => DamageType_Registration.Instance;
+        public new static DamageType_Registration StaticRegistration => DamageType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DamageTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1641,6 +1643,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDamageType);
+
 
         public IReadOnlyList<IFormLinkGetter<IDamageTypeTargetGetter>>? DamageTypes { get; private set; }
         partial void CustomFactoryEnd(

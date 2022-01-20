@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DoorTriangle_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DoorTriangle_Registration.Instance;
         Int16 TriangleBeforeDoor { get; }
         Int32 Unknown { get; }
         IFormLinkGetter<IPlacedObjectGetter> Door { get; }
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DoorTriangle_Registration.Instance;
-        public static DoorTriangle_Registration Registration => DoorTriangle_Registration.Instance;
+        public static DoorTriangle_Registration StaticRegistration => DoorTriangle_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DoorTriangleCommon.Instance;
         [DebuggerStepThrough]
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DoorTriangle_Registration.Instance;
-        public static DoorTriangle_Registration Registration => DoorTriangle_Registration.Instance;
+        public static DoorTriangle_Registration StaticRegistration => DoorTriangle_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DoorTriangleCommon.Instance;
         [DebuggerStepThrough]

@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<ILocationCellGetter>
     {
-        static new ILoquiRegistration Registration => LocationCell_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LocationCell_Registration.Instance;
         IFormLinkGetter<ICellGetter> Link { get; }
 
     }
@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCell_Registration.Instance;
-        public new static LocationCell_Registration Registration => LocationCell_Registration.Instance;
+        public new static LocationCell_Registration StaticRegistration => LocationCell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationCellCommon.Instance;
         [DebuggerStepThrough]
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCell_Registration.Instance;
-        public new static LocationCell_Registration Registration => LocationCell_Registration.Instance;
+        public new static LocationCell_Registration StaticRegistration => LocationCell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationCellCommon.Instance;
         [DebuggerStepThrough]

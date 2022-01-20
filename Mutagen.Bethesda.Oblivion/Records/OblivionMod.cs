@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         public partial class OblivionModCommon
         {
             public static void WriteCellsParallel(
-                IListGroupGetter<ICellBlockGetter> group,
+                IOblivionListGroupGetter<ICellBlockGetter> group,
                 IMasterReferenceReader masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
                 {
                     stream.Position += 8;
-                    ListGroupBinaryWriteTranslation.WriteEmbedded<ICellBlockGetter>(group, stream);
+                    OblivionListGroupBinaryWriteTranslation.WriteEmbedded<ICellBlockGetter>(group, stream);
                 }
                 streams[0] = groupByteStream;
                 Parallel.ForEach(group.Records, (cellBlock, state, counter) =>
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static void WriteWorldspacesParallel(
-                IGroupGetter<IWorldspaceGetter> group,
+                IOblivionGroupGetter<IWorldspaceGetter> group,
                 IMasterReferenceReader masters,
                 int targetIndex,
                 Stream[] streamDepositArray)
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
                 {
                     stream.Position += 8;
-                    GroupBinaryWriteTranslation.WriteEmbedded<IWorldspaceGetter>(group, stream);
+                    OblivionGroupBinaryWriteTranslation.WriteEmbedded<IWorldspaceGetter>(group, stream);
                 }
                 streams[0] = groupByteStream;
                 Parallel.ForEach(group, (worldspace, worldspaceState, worldspaceCounter) =>
@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public static void WriteDialogTopicsParallel(
-                IGroupGetter<IDialogTopicGetter> group,
+                IOblivionGroupGetter<IDialogTopicGetter> group,
                 IMasterReferenceReader masters,
                 int targetIndex,
                 Stream[] streamDepositArray)

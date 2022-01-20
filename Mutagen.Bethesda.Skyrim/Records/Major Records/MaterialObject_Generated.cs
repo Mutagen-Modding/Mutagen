@@ -893,6 +893,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MaterialObject>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMaterialObject);
+
         [Flags]
         public enum DATADataType
         {
@@ -1018,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IMaterialObjectGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => MaterialObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MaterialObject_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1991,7 +1993,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialObject_Registration.Instance;
-        public new static MaterialObject_Registration Registration => MaterialObject_Registration.Instance;
+        public new static MaterialObject_Registration StaticRegistration => MaterialObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -2260,7 +2262,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialObject_Registration.Instance;
-        public new static MaterialObject_Registration Registration => MaterialObject_Registration.Instance;
+        public new static MaterialObject_Registration StaticRegistration => MaterialObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -2282,6 +2284,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMaterialObject);
+
 
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<ReadOnlyMemorySlice<Byte>> DNAMs { get; private set; } = ListExt.Empty<ReadOnlyMemorySlice<Byte>>();

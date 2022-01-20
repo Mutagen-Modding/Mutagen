@@ -380,6 +380,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Subspace>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISubspace);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -480,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ISubspaceGetter>,
         IMapsToGetter<ISubspaceGetter>
     {
-        static new ILoquiRegistration Registration => Subspace_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Subspace_Registration.Instance;
         P3Float? Point { get; }
 
     }
@@ -1188,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
-        public new static Subspace_Registration Registration => Subspace_Registration.Instance;
+        public new static Subspace_Registration StaticRegistration => Subspace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SubspaceCommon.Instance;
         [DebuggerStepThrough]
@@ -1357,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
-        public new static Subspace_Registration Registration => Subspace_Registration.Instance;
+        public new static Subspace_Registration StaticRegistration => Subspace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SubspaceCommon.Instance;
         [DebuggerStepThrough]
@@ -1378,6 +1380,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISubspace);
+
 
         #region Point
         private int? _PointLocation;

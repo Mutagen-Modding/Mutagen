@@ -600,6 +600,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Ammunition>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAmmunition);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -721,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Ammunition_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Ammunition_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1605,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ammunition_Registration.Instance;
-        public new static Ammunition_Registration Registration => Ammunition_Registration.Instance;
+        public new static Ammunition_Registration StaticRegistration => Ammunition_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AmmunitionCommon.Instance;
         [DebuggerStepThrough]
@@ -1836,7 +1838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ammunition_Registration.Instance;
-        public new static Ammunition_Registration Registration => Ammunition_Registration.Instance;
+        public new static Ammunition_Registration StaticRegistration => Ammunition_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AmmunitionCommon.Instance;
         [DebuggerStepThrough]
@@ -1858,6 +1860,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAmmunition);
+
 
         #region Name
         private int? _NameLocation;

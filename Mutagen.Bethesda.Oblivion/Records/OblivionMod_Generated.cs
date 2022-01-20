@@ -57,61 +57,61 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         protected OblivionMod()
         {
-            _GameSettings_Object = new Group<GameSetting>(this);
-            _Globals_Object = new Group<Global>(this);
-            _Classes_Object = new Group<Class>(this);
-            _Factions_Object = new Group<Faction>(this);
-            _Hairs_Object = new Group<Hair>(this);
-            _Eyes_Object = new Group<Eye>(this);
-            _Races_Object = new Group<Race>(this);
-            _Sounds_Object = new Group<Sound>(this);
-            _Skills_Object = new Group<SkillRecord>(this);
-            _MagicEffects_Object = new Group<MagicEffect>(this);
-            _Scripts_Object = new Group<Script>(this);
-            _LandTextures_Object = new Group<LandTexture>(this);
-            _Enchantments_Object = new Group<Enchantment>(this);
-            _Spells_Object = new Group<SpellUnleveled>(this);
-            _Birthsigns_Object = new Group<Birthsign>(this);
-            _Activators_Object = new Group<Activator>(this);
-            _AlchemicalApparatus_Object = new Group<AlchemicalApparatus>(this);
-            _Armors_Object = new Group<Armor>(this);
-            _Books_Object = new Group<Book>(this);
-            _Clothes_Object = new Group<Clothing>(this);
-            _Containers_Object = new Group<Container>(this);
-            _Doors_Object = new Group<Door>(this);
-            _Ingredients_Object = new Group<Ingredient>(this);
-            _Lights_Object = new Group<Light>(this);
-            _Miscellaneous_Object = new Group<Miscellaneous>(this);
-            _Statics_Object = new Group<Static>(this);
-            _Grasses_Object = new Group<Grass>(this);
-            _Trees_Object = new Group<Tree>(this);
-            _Flora_Object = new Group<Flora>(this);
-            _Furniture_Object = new Group<Furniture>(this);
-            _Weapons_Object = new Group<Weapon>(this);
-            _Ammunitions_Object = new Group<Ammunition>(this);
-            _Npcs_Object = new Group<Npc>(this);
-            _Creatures_Object = new Group<Creature>(this);
-            _LeveledCreatures_Object = new Group<LeveledCreature>(this);
-            _SoulGems_Object = new Group<SoulGem>(this);
-            _Keys_Object = new Group<Key>(this);
-            _Potions_Object = new Group<Potion>(this);
-            _Subspaces_Object = new Group<Subspace>(this);
-            _SigilStones_Object = new Group<SigilStone>(this);
-            _LeveledItems_Object = new Group<LeveledItem>(this);
-            _Weathers_Object = new Group<Weather>(this);
-            _Climates_Object = new Group<Climate>(this);
-            _Regions_Object = new Group<Region>(this);
-            _Worldspaces_Object = new Group<Worldspace>(this);
-            _DialogTopics_Object = new Group<DialogTopic>(this);
-            _Quests_Object = new Group<Quest>(this);
-            _IdleAnimations_Object = new Group<IdleAnimation>(this);
-            _AIPackages_Object = new Group<AIPackage>(this);
-            _CombatStyles_Object = new Group<CombatStyle>(this);
-            _LoadScreens_Object = new Group<LoadScreen>(this);
-            _LeveledSpells_Object = new Group<LeveledSpell>(this);
-            _AnimatedObjects_Object = new Group<AnimatedObject>(this);
-            _Waters_Object = new Group<Water>(this);
-            _EffectShaders_Object = new Group<EffectShader>(this);
+            _GameSettings_Object = new OblivionGroup<GameSetting>(this);
+            _Globals_Object = new OblivionGroup<Global>(this);
+            _Classes_Object = new OblivionGroup<Class>(this);
+            _Factions_Object = new OblivionGroup<Faction>(this);
+            _Hairs_Object = new OblivionGroup<Hair>(this);
+            _Eyes_Object = new OblivionGroup<Eye>(this);
+            _Races_Object = new OblivionGroup<Race>(this);
+            _Sounds_Object = new OblivionGroup<Sound>(this);
+            _Skills_Object = new OblivionGroup<SkillRecord>(this);
+            _MagicEffects_Object = new OblivionGroup<MagicEffect>(this);
+            _Scripts_Object = new OblivionGroup<Script>(this);
+            _LandTextures_Object = new OblivionGroup<LandTexture>(this);
+            _Enchantments_Object = new OblivionGroup<Enchantment>(this);
+            _Spells_Object = new OblivionGroup<SpellUnleveled>(this);
+            _Birthsigns_Object = new OblivionGroup<Birthsign>(this);
+            _Activators_Object = new OblivionGroup<Activator>(this);
+            _AlchemicalApparatus_Object = new OblivionGroup<AlchemicalApparatus>(this);
+            _Armors_Object = new OblivionGroup<Armor>(this);
+            _Books_Object = new OblivionGroup<Book>(this);
+            _Clothes_Object = new OblivionGroup<Clothing>(this);
+            _Containers_Object = new OblivionGroup<Container>(this);
+            _Doors_Object = new OblivionGroup<Door>(this);
+            _Ingredients_Object = new OblivionGroup<Ingredient>(this);
+            _Lights_Object = new OblivionGroup<Light>(this);
+            _Miscellaneous_Object = new OblivionGroup<Miscellaneous>(this);
+            _Statics_Object = new OblivionGroup<Static>(this);
+            _Grasses_Object = new OblivionGroup<Grass>(this);
+            _Trees_Object = new OblivionGroup<Tree>(this);
+            _Flora_Object = new OblivionGroup<Flora>(this);
+            _Furniture_Object = new OblivionGroup<Furniture>(this);
+            _Weapons_Object = new OblivionGroup<Weapon>(this);
+            _Ammunitions_Object = new OblivionGroup<Ammunition>(this);
+            _Npcs_Object = new OblivionGroup<Npc>(this);
+            _Creatures_Object = new OblivionGroup<Creature>(this);
+            _LeveledCreatures_Object = new OblivionGroup<LeveledCreature>(this);
+            _SoulGems_Object = new OblivionGroup<SoulGem>(this);
+            _Keys_Object = new OblivionGroup<Key>(this);
+            _Potions_Object = new OblivionGroup<Potion>(this);
+            _Subspaces_Object = new OblivionGroup<Subspace>(this);
+            _SigilStones_Object = new OblivionGroup<SigilStone>(this);
+            _LeveledItems_Object = new OblivionGroup<LeveledItem>(this);
+            _Weathers_Object = new OblivionGroup<Weather>(this);
+            _Climates_Object = new OblivionGroup<Climate>(this);
+            _Regions_Object = new OblivionGroup<Region>(this);
+            _Worldspaces_Object = new OblivionGroup<Worldspace>(this);
+            _DialogTopics_Object = new OblivionGroup<DialogTopic>(this);
+            _Quests_Object = new OblivionGroup<Quest>(this);
+            _IdleAnimations_Object = new OblivionGroup<IdleAnimation>(this);
+            _AIPackages_Object = new OblivionGroup<AIPackage>(this);
+            _CombatStyles_Object = new OblivionGroup<CombatStyle>(this);
+            _LoadScreens_Object = new OblivionGroup<LoadScreen>(this);
+            _LeveledSpells_Object = new OblivionGroup<LeveledSpell>(this);
+            _AnimatedObjects_Object = new OblivionGroup<AnimatedObject>(this);
+            _Waters_Object = new OblivionGroup<Water>(this);
+            _EffectShaders_Object = new OblivionGroup<EffectShader>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -126,395 +126,395 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<GameSetting> _GameSettings_Object;
-        public Group<GameSetting> GameSettings => _GameSettings_Object;
+        private OblivionGroup<GameSetting> _GameSettings_Object;
+        public OblivionGroup<GameSetting> GameSettings => _GameSettings_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IGameSettingGetter> IOblivionModGetter.GameSettings => _GameSettings_Object;
+        IOblivionGroupGetter<IGameSettingGetter> IOblivionModGetter.GameSettings => _GameSettings_Object;
         #endregion
         #region Globals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Global> _Globals_Object;
-        public Group<Global> Globals => _Globals_Object;
+        private OblivionGroup<Global> _Globals_Object;
+        public OblivionGroup<Global> Globals => _Globals_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IGlobalGetter> IOblivionModGetter.Globals => _Globals_Object;
+        IOblivionGroupGetter<IGlobalGetter> IOblivionModGetter.Globals => _Globals_Object;
         #endregion
         #region Classes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Class> _Classes_Object;
-        public Group<Class> Classes => _Classes_Object;
+        private OblivionGroup<Class> _Classes_Object;
+        public OblivionGroup<Class> Classes => _Classes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IClassGetter> IOblivionModGetter.Classes => _Classes_Object;
+        IOblivionGroupGetter<IClassGetter> IOblivionModGetter.Classes => _Classes_Object;
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Faction> _Factions_Object;
-        public Group<Faction> Factions => _Factions_Object;
+        private OblivionGroup<Faction> _Factions_Object;
+        public OblivionGroup<Faction> Factions => _Factions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IFactionGetter> IOblivionModGetter.Factions => _Factions_Object;
+        IOblivionGroupGetter<IFactionGetter> IOblivionModGetter.Factions => _Factions_Object;
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Hair> _Hairs_Object;
-        public Group<Hair> Hairs => _Hairs_Object;
+        private OblivionGroup<Hair> _Hairs_Object;
+        public OblivionGroup<Hair> Hairs => _Hairs_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IHairGetter> IOblivionModGetter.Hairs => _Hairs_Object;
+        IOblivionGroupGetter<IHairGetter> IOblivionModGetter.Hairs => _Hairs_Object;
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Eye> _Eyes_Object;
-        public Group<Eye> Eyes => _Eyes_Object;
+        private OblivionGroup<Eye> _Eyes_Object;
+        public OblivionGroup<Eye> Eyes => _Eyes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IEyeGetter> IOblivionModGetter.Eyes => _Eyes_Object;
+        IOblivionGroupGetter<IEyeGetter> IOblivionModGetter.Eyes => _Eyes_Object;
         #endregion
         #region Races
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Race> _Races_Object;
-        public Group<Race> Races => _Races_Object;
+        private OblivionGroup<Race> _Races_Object;
+        public OblivionGroup<Race> Races => _Races_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IRaceGetter> IOblivionModGetter.Races => _Races_Object;
+        IOblivionGroupGetter<IRaceGetter> IOblivionModGetter.Races => _Races_Object;
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Sound> _Sounds_Object;
-        public Group<Sound> Sounds => _Sounds_Object;
+        private OblivionGroup<Sound> _Sounds_Object;
+        public OblivionGroup<Sound> Sounds => _Sounds_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISoundGetter> IOblivionModGetter.Sounds => _Sounds_Object;
+        IOblivionGroupGetter<ISoundGetter> IOblivionModGetter.Sounds => _Sounds_Object;
         #endregion
         #region Skills
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<SkillRecord> _Skills_Object;
-        public Group<SkillRecord> Skills => _Skills_Object;
+        private OblivionGroup<SkillRecord> _Skills_Object;
+        public OblivionGroup<SkillRecord> Skills => _Skills_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISkillRecordGetter> IOblivionModGetter.Skills => _Skills_Object;
+        IOblivionGroupGetter<ISkillRecordGetter> IOblivionModGetter.Skills => _Skills_Object;
         #endregion
         #region MagicEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<MagicEffect> _MagicEffects_Object;
-        public Group<MagicEffect> MagicEffects => _MagicEffects_Object;
+        private OblivionGroup<MagicEffect> _MagicEffects_Object;
+        public OblivionGroup<MagicEffect> MagicEffects => _MagicEffects_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IMagicEffectGetter> IOblivionModGetter.MagicEffects => _MagicEffects_Object;
+        IOblivionGroupGetter<IMagicEffectGetter> IOblivionModGetter.MagicEffects => _MagicEffects_Object;
         #endregion
         #region Scripts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Script> _Scripts_Object;
-        public Group<Script> Scripts => _Scripts_Object;
+        private OblivionGroup<Script> _Scripts_Object;
+        public OblivionGroup<Script> Scripts => _Scripts_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IScriptGetter> IOblivionModGetter.Scripts => _Scripts_Object;
+        IOblivionGroupGetter<IScriptGetter> IOblivionModGetter.Scripts => _Scripts_Object;
         #endregion
         #region LandTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LandTexture> _LandTextures_Object;
-        public Group<LandTexture> LandTextures => _LandTextures_Object;
+        private OblivionGroup<LandTexture> _LandTextures_Object;
+        public OblivionGroup<LandTexture> LandTextures => _LandTextures_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILandTextureGetter> IOblivionModGetter.LandTextures => _LandTextures_Object;
+        IOblivionGroupGetter<ILandTextureGetter> IOblivionModGetter.LandTextures => _LandTextures_Object;
         #endregion
         #region Enchantments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Enchantment> _Enchantments_Object;
-        public Group<Enchantment> Enchantments => _Enchantments_Object;
+        private OblivionGroup<Enchantment> _Enchantments_Object;
+        public OblivionGroup<Enchantment> Enchantments => _Enchantments_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IEnchantmentGetter> IOblivionModGetter.Enchantments => _Enchantments_Object;
+        IOblivionGroupGetter<IEnchantmentGetter> IOblivionModGetter.Enchantments => _Enchantments_Object;
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<SpellUnleveled> _Spells_Object;
-        public Group<SpellUnleveled> Spells => _Spells_Object;
+        private OblivionGroup<SpellUnleveled> _Spells_Object;
+        public OblivionGroup<SpellUnleveled> Spells => _Spells_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISpellUnleveledGetter> IOblivionModGetter.Spells => _Spells_Object;
+        IOblivionGroupGetter<ISpellUnleveledGetter> IOblivionModGetter.Spells => _Spells_Object;
         #endregion
         #region Birthsigns
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Birthsign> _Birthsigns_Object;
-        public Group<Birthsign> Birthsigns => _Birthsigns_Object;
+        private OblivionGroup<Birthsign> _Birthsigns_Object;
+        public OblivionGroup<Birthsign> Birthsigns => _Birthsigns_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IBirthsignGetter> IOblivionModGetter.Birthsigns => _Birthsigns_Object;
+        IOblivionGroupGetter<IBirthsignGetter> IOblivionModGetter.Birthsigns => _Birthsigns_Object;
         #endregion
         #region Activators
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Activator> _Activators_Object;
-        public Group<Activator> Activators => _Activators_Object;
+        private OblivionGroup<Activator> _Activators_Object;
+        public OblivionGroup<Activator> Activators => _Activators_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IActivatorGetter> IOblivionModGetter.Activators => _Activators_Object;
+        IOblivionGroupGetter<IActivatorGetter> IOblivionModGetter.Activators => _Activators_Object;
         #endregion
         #region AlchemicalApparatus
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<AlchemicalApparatus> _AlchemicalApparatus_Object;
-        public Group<AlchemicalApparatus> AlchemicalApparatus => _AlchemicalApparatus_Object;
+        private OblivionGroup<AlchemicalApparatus> _AlchemicalApparatus_Object;
+        public OblivionGroup<AlchemicalApparatus> AlchemicalApparatus => _AlchemicalApparatus_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IAlchemicalApparatusGetter> IOblivionModGetter.AlchemicalApparatus => _AlchemicalApparatus_Object;
+        IOblivionGroupGetter<IAlchemicalApparatusGetter> IOblivionModGetter.AlchemicalApparatus => _AlchemicalApparatus_Object;
         #endregion
         #region Armors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Armor> _Armors_Object;
-        public Group<Armor> Armors => _Armors_Object;
+        private OblivionGroup<Armor> _Armors_Object;
+        public OblivionGroup<Armor> Armors => _Armors_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IArmorGetter> IOblivionModGetter.Armors => _Armors_Object;
+        IOblivionGroupGetter<IArmorGetter> IOblivionModGetter.Armors => _Armors_Object;
         #endregion
         #region Books
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Book> _Books_Object;
-        public Group<Book> Books => _Books_Object;
+        private OblivionGroup<Book> _Books_Object;
+        public OblivionGroup<Book> Books => _Books_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IBookGetter> IOblivionModGetter.Books => _Books_Object;
+        IOblivionGroupGetter<IBookGetter> IOblivionModGetter.Books => _Books_Object;
         #endregion
         #region Clothes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Clothing> _Clothes_Object;
-        public Group<Clothing> Clothes => _Clothes_Object;
+        private OblivionGroup<Clothing> _Clothes_Object;
+        public OblivionGroup<Clothing> Clothes => _Clothes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IClothingGetter> IOblivionModGetter.Clothes => _Clothes_Object;
+        IOblivionGroupGetter<IClothingGetter> IOblivionModGetter.Clothes => _Clothes_Object;
         #endregion
         #region Containers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Container> _Containers_Object;
-        public Group<Container> Containers => _Containers_Object;
+        private OblivionGroup<Container> _Containers_Object;
+        public OblivionGroup<Container> Containers => _Containers_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IContainerGetter> IOblivionModGetter.Containers => _Containers_Object;
+        IOblivionGroupGetter<IContainerGetter> IOblivionModGetter.Containers => _Containers_Object;
         #endregion
         #region Doors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Door> _Doors_Object;
-        public Group<Door> Doors => _Doors_Object;
+        private OblivionGroup<Door> _Doors_Object;
+        public OblivionGroup<Door> Doors => _Doors_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IDoorGetter> IOblivionModGetter.Doors => _Doors_Object;
+        IOblivionGroupGetter<IDoorGetter> IOblivionModGetter.Doors => _Doors_Object;
         #endregion
         #region Ingredients
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Ingredient> _Ingredients_Object;
-        public Group<Ingredient> Ingredients => _Ingredients_Object;
+        private OblivionGroup<Ingredient> _Ingredients_Object;
+        public OblivionGroup<Ingredient> Ingredients => _Ingredients_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IIngredientGetter> IOblivionModGetter.Ingredients => _Ingredients_Object;
+        IOblivionGroupGetter<IIngredientGetter> IOblivionModGetter.Ingredients => _Ingredients_Object;
         #endregion
         #region Lights
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Light> _Lights_Object;
-        public Group<Light> Lights => _Lights_Object;
+        private OblivionGroup<Light> _Lights_Object;
+        public OblivionGroup<Light> Lights => _Lights_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILightGetter> IOblivionModGetter.Lights => _Lights_Object;
+        IOblivionGroupGetter<ILightGetter> IOblivionModGetter.Lights => _Lights_Object;
         #endregion
         #region Miscellaneous
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Miscellaneous> _Miscellaneous_Object;
-        public Group<Miscellaneous> Miscellaneous => _Miscellaneous_Object;
+        private OblivionGroup<Miscellaneous> _Miscellaneous_Object;
+        public OblivionGroup<Miscellaneous> Miscellaneous => _Miscellaneous_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IMiscellaneousGetter> IOblivionModGetter.Miscellaneous => _Miscellaneous_Object;
+        IOblivionGroupGetter<IMiscellaneousGetter> IOblivionModGetter.Miscellaneous => _Miscellaneous_Object;
         #endregion
         #region Statics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Static> _Statics_Object;
-        public Group<Static> Statics => _Statics_Object;
+        private OblivionGroup<Static> _Statics_Object;
+        public OblivionGroup<Static> Statics => _Statics_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IStaticGetter> IOblivionModGetter.Statics => _Statics_Object;
+        IOblivionGroupGetter<IStaticGetter> IOblivionModGetter.Statics => _Statics_Object;
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Grass> _Grasses_Object;
-        public Group<Grass> Grasses => _Grasses_Object;
+        private OblivionGroup<Grass> _Grasses_Object;
+        public OblivionGroup<Grass> Grasses => _Grasses_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IGrassGetter> IOblivionModGetter.Grasses => _Grasses_Object;
+        IOblivionGroupGetter<IGrassGetter> IOblivionModGetter.Grasses => _Grasses_Object;
         #endregion
         #region Trees
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Tree> _Trees_Object;
-        public Group<Tree> Trees => _Trees_Object;
+        private OblivionGroup<Tree> _Trees_Object;
+        public OblivionGroup<Tree> Trees => _Trees_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ITreeGetter> IOblivionModGetter.Trees => _Trees_Object;
+        IOblivionGroupGetter<ITreeGetter> IOblivionModGetter.Trees => _Trees_Object;
         #endregion
         #region Flora
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Flora> _Flora_Object;
-        public Group<Flora> Flora => _Flora_Object;
+        private OblivionGroup<Flora> _Flora_Object;
+        public OblivionGroup<Flora> Flora => _Flora_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IFloraGetter> IOblivionModGetter.Flora => _Flora_Object;
+        IOblivionGroupGetter<IFloraGetter> IOblivionModGetter.Flora => _Flora_Object;
         #endregion
         #region Furniture
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Furniture> _Furniture_Object;
-        public Group<Furniture> Furniture => _Furniture_Object;
+        private OblivionGroup<Furniture> _Furniture_Object;
+        public OblivionGroup<Furniture> Furniture => _Furniture_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IFurnitureGetter> IOblivionModGetter.Furniture => _Furniture_Object;
+        IOblivionGroupGetter<IFurnitureGetter> IOblivionModGetter.Furniture => _Furniture_Object;
         #endregion
         #region Weapons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Weapon> _Weapons_Object;
-        public Group<Weapon> Weapons => _Weapons_Object;
+        private OblivionGroup<Weapon> _Weapons_Object;
+        public OblivionGroup<Weapon> Weapons => _Weapons_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IWeaponGetter> IOblivionModGetter.Weapons => _Weapons_Object;
+        IOblivionGroupGetter<IWeaponGetter> IOblivionModGetter.Weapons => _Weapons_Object;
         #endregion
         #region Ammunitions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Ammunition> _Ammunitions_Object;
-        public Group<Ammunition> Ammunitions => _Ammunitions_Object;
+        private OblivionGroup<Ammunition> _Ammunitions_Object;
+        public OblivionGroup<Ammunition> Ammunitions => _Ammunitions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IAmmunitionGetter> IOblivionModGetter.Ammunitions => _Ammunitions_Object;
+        IOblivionGroupGetter<IAmmunitionGetter> IOblivionModGetter.Ammunitions => _Ammunitions_Object;
         #endregion
         #region Npcs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Npc> _Npcs_Object;
-        public Group<Npc> Npcs => _Npcs_Object;
+        private OblivionGroup<Npc> _Npcs_Object;
+        public OblivionGroup<Npc> Npcs => _Npcs_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<INpcGetter> IOblivionModGetter.Npcs => _Npcs_Object;
+        IOblivionGroupGetter<INpcGetter> IOblivionModGetter.Npcs => _Npcs_Object;
         #endregion
         #region Creatures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Creature> _Creatures_Object;
-        public Group<Creature> Creatures => _Creatures_Object;
+        private OblivionGroup<Creature> _Creatures_Object;
+        public OblivionGroup<Creature> Creatures => _Creatures_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ICreatureGetter> IOblivionModGetter.Creatures => _Creatures_Object;
+        IOblivionGroupGetter<ICreatureGetter> IOblivionModGetter.Creatures => _Creatures_Object;
         #endregion
         #region LeveledCreatures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LeveledCreature> _LeveledCreatures_Object;
-        public Group<LeveledCreature> LeveledCreatures => _LeveledCreatures_Object;
+        private OblivionGroup<LeveledCreature> _LeveledCreatures_Object;
+        public OblivionGroup<LeveledCreature> LeveledCreatures => _LeveledCreatures_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILeveledCreatureGetter> IOblivionModGetter.LeveledCreatures => _LeveledCreatures_Object;
+        IOblivionGroupGetter<ILeveledCreatureGetter> IOblivionModGetter.LeveledCreatures => _LeveledCreatures_Object;
         #endregion
         #region SoulGems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<SoulGem> _SoulGems_Object;
-        public Group<SoulGem> SoulGems => _SoulGems_Object;
+        private OblivionGroup<SoulGem> _SoulGems_Object;
+        public OblivionGroup<SoulGem> SoulGems => _SoulGems_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISoulGemGetter> IOblivionModGetter.SoulGems => _SoulGems_Object;
+        IOblivionGroupGetter<ISoulGemGetter> IOblivionModGetter.SoulGems => _SoulGems_Object;
         #endregion
         #region Keys
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Key> _Keys_Object;
-        public Group<Key> Keys => _Keys_Object;
+        private OblivionGroup<Key> _Keys_Object;
+        public OblivionGroup<Key> Keys => _Keys_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IKeyGetter> IOblivionModGetter.Keys => _Keys_Object;
+        IOblivionGroupGetter<IKeyGetter> IOblivionModGetter.Keys => _Keys_Object;
         #endregion
         #region Potions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Potion> _Potions_Object;
-        public Group<Potion> Potions => _Potions_Object;
+        private OblivionGroup<Potion> _Potions_Object;
+        public OblivionGroup<Potion> Potions => _Potions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IPotionGetter> IOblivionModGetter.Potions => _Potions_Object;
+        IOblivionGroupGetter<IPotionGetter> IOblivionModGetter.Potions => _Potions_Object;
         #endregion
         #region Subspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Subspace> _Subspaces_Object;
-        public Group<Subspace> Subspaces => _Subspaces_Object;
+        private OblivionGroup<Subspace> _Subspaces_Object;
+        public OblivionGroup<Subspace> Subspaces => _Subspaces_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISubspaceGetter> IOblivionModGetter.Subspaces => _Subspaces_Object;
+        IOblivionGroupGetter<ISubspaceGetter> IOblivionModGetter.Subspaces => _Subspaces_Object;
         #endregion
         #region SigilStones
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<SigilStone> _SigilStones_Object;
-        public Group<SigilStone> SigilStones => _SigilStones_Object;
+        private OblivionGroup<SigilStone> _SigilStones_Object;
+        public OblivionGroup<SigilStone> SigilStones => _SigilStones_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISigilStoneGetter> IOblivionModGetter.SigilStones => _SigilStones_Object;
+        IOblivionGroupGetter<ISigilStoneGetter> IOblivionModGetter.SigilStones => _SigilStones_Object;
         #endregion
         #region LeveledItems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LeveledItem> _LeveledItems_Object;
-        public Group<LeveledItem> LeveledItems => _LeveledItems_Object;
+        private OblivionGroup<LeveledItem> _LeveledItems_Object;
+        public OblivionGroup<LeveledItem> LeveledItems => _LeveledItems_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILeveledItemGetter> IOblivionModGetter.LeveledItems => _LeveledItems_Object;
+        IOblivionGroupGetter<ILeveledItemGetter> IOblivionModGetter.LeveledItems => _LeveledItems_Object;
         #endregion
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Weather> _Weathers_Object;
-        public Group<Weather> Weathers => _Weathers_Object;
+        private OblivionGroup<Weather> _Weathers_Object;
+        public OblivionGroup<Weather> Weathers => _Weathers_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IWeatherGetter> IOblivionModGetter.Weathers => _Weathers_Object;
+        IOblivionGroupGetter<IWeatherGetter> IOblivionModGetter.Weathers => _Weathers_Object;
         #endregion
         #region Climates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Climate> _Climates_Object;
-        public Group<Climate> Climates => _Climates_Object;
+        private OblivionGroup<Climate> _Climates_Object;
+        public OblivionGroup<Climate> Climates => _Climates_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IClimateGetter> IOblivionModGetter.Climates => _Climates_Object;
+        IOblivionGroupGetter<IClimateGetter> IOblivionModGetter.Climates => _Climates_Object;
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Region> _Regions_Object;
-        public Group<Region> Regions => _Regions_Object;
+        private OblivionGroup<Region> _Regions_Object;
+        public OblivionGroup<Region> Regions => _Regions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IRegionGetter> IOblivionModGetter.Regions => _Regions_Object;
+        IOblivionGroupGetter<IRegionGetter> IOblivionModGetter.Regions => _Regions_Object;
         #endregion
         #region Cells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ListGroup<CellBlock> _Cells_Object = new ListGroup<CellBlock>();
-        public ListGroup<CellBlock> Cells => _Cells_Object;
+        private readonly OblivionListGroup<CellBlock> _Cells_Object = new OblivionListGroup<CellBlock>();
+        public OblivionListGroup<CellBlock> Cells => _Cells_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IListGroupGetter<ICellBlockGetter> IOblivionModGetter.Cells => _Cells_Object;
+        IOblivionListGroupGetter<ICellBlockGetter> IOblivionModGetter.Cells => _Cells_Object;
         #endregion
         #region Worldspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Worldspace> _Worldspaces_Object;
-        public Group<Worldspace> Worldspaces => _Worldspaces_Object;
+        private OblivionGroup<Worldspace> _Worldspaces_Object;
+        public OblivionGroup<Worldspace> Worldspaces => _Worldspaces_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IWorldspaceGetter> IOblivionModGetter.Worldspaces => _Worldspaces_Object;
+        IOblivionGroupGetter<IWorldspaceGetter> IOblivionModGetter.Worldspaces => _Worldspaces_Object;
         #endregion
         #region DialogTopics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<DialogTopic> _DialogTopics_Object;
-        public Group<DialogTopic> DialogTopics => _DialogTopics_Object;
+        private OblivionGroup<DialogTopic> _DialogTopics_Object;
+        public OblivionGroup<DialogTopic> DialogTopics => _DialogTopics_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IDialogTopicGetter> IOblivionModGetter.DialogTopics => _DialogTopics_Object;
+        IOblivionGroupGetter<IDialogTopicGetter> IOblivionModGetter.DialogTopics => _DialogTopics_Object;
         #endregion
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Quest> _Quests_Object;
-        public Group<Quest> Quests => _Quests_Object;
+        private OblivionGroup<Quest> _Quests_Object;
+        public OblivionGroup<Quest> Quests => _Quests_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IQuestGetter> IOblivionModGetter.Quests => _Quests_Object;
+        IOblivionGroupGetter<IQuestGetter> IOblivionModGetter.Quests => _Quests_Object;
         #endregion
         #region IdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<IdleAnimation> _IdleAnimations_Object;
-        public Group<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
+        private OblivionGroup<IdleAnimation> _IdleAnimations_Object;
+        public OblivionGroup<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IIdleAnimationGetter> IOblivionModGetter.IdleAnimations => _IdleAnimations_Object;
+        IOblivionGroupGetter<IIdleAnimationGetter> IOblivionModGetter.IdleAnimations => _IdleAnimations_Object;
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<AIPackage> _AIPackages_Object;
-        public Group<AIPackage> AIPackages => _AIPackages_Object;
+        private OblivionGroup<AIPackage> _AIPackages_Object;
+        public OblivionGroup<AIPackage> AIPackages => _AIPackages_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IAIPackageGetter> IOblivionModGetter.AIPackages => _AIPackages_Object;
+        IOblivionGroupGetter<IAIPackageGetter> IOblivionModGetter.AIPackages => _AIPackages_Object;
         #endregion
         #region CombatStyles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<CombatStyle> _CombatStyles_Object;
-        public Group<CombatStyle> CombatStyles => _CombatStyles_Object;
+        private OblivionGroup<CombatStyle> _CombatStyles_Object;
+        public OblivionGroup<CombatStyle> CombatStyles => _CombatStyles_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ICombatStyleGetter> IOblivionModGetter.CombatStyles => _CombatStyles_Object;
+        IOblivionGroupGetter<ICombatStyleGetter> IOblivionModGetter.CombatStyles => _CombatStyles_Object;
         #endregion
         #region LoadScreens
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LoadScreen> _LoadScreens_Object;
-        public Group<LoadScreen> LoadScreens => _LoadScreens_Object;
+        private OblivionGroup<LoadScreen> _LoadScreens_Object;
+        public OblivionGroup<LoadScreen> LoadScreens => _LoadScreens_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILoadScreenGetter> IOblivionModGetter.LoadScreens => _LoadScreens_Object;
+        IOblivionGroupGetter<ILoadScreenGetter> IOblivionModGetter.LoadScreens => _LoadScreens_Object;
         #endregion
         #region LeveledSpells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LeveledSpell> _LeveledSpells_Object;
-        public Group<LeveledSpell> LeveledSpells => _LeveledSpells_Object;
+        private OblivionGroup<LeveledSpell> _LeveledSpells_Object;
+        public OblivionGroup<LeveledSpell> LeveledSpells => _LeveledSpells_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILeveledSpellGetter> IOblivionModGetter.LeveledSpells => _LeveledSpells_Object;
+        IOblivionGroupGetter<ILeveledSpellGetter> IOblivionModGetter.LeveledSpells => _LeveledSpells_Object;
         #endregion
         #region AnimatedObjects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<AnimatedObject> _AnimatedObjects_Object;
-        public Group<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
+        private OblivionGroup<AnimatedObject> _AnimatedObjects_Object;
+        public OblivionGroup<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IAnimatedObjectGetter> IOblivionModGetter.AnimatedObjects => _AnimatedObjects_Object;
+        IOblivionGroupGetter<IAnimatedObjectGetter> IOblivionModGetter.AnimatedObjects => _AnimatedObjects_Object;
         #endregion
         #region Waters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Water> _Waters_Object;
-        public Group<Water> Waters => _Waters_Object;
+        private OblivionGroup<Water> _Waters_Object;
+        public OblivionGroup<Water> Waters => _Waters_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IWaterGetter> IOblivionModGetter.Waters => _Waters_Object;
+        IOblivionGroupGetter<IWaterGetter> IOblivionModGetter.Waters => _Waters_Object;
         #endregion
         #region EffectShaders
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<EffectShader> _EffectShaders_Object;
-        public Group<EffectShader> EffectShaders => _EffectShaders_Object;
+        private OblivionGroup<EffectShader> _EffectShaders_Object;
+        public OblivionGroup<EffectShader> EffectShaders => _EffectShaders_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IEffectShaderGetter> IOblivionModGetter.EffectShaders => _EffectShaders_Object;
+        IOblivionGroupGetter<IEffectShaderGetter> IOblivionModGetter.EffectShaders => _EffectShaders_Object;
         #endregion
 
         #region To String
@@ -555,62 +555,62 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             {
                 this.ModHeader = new MaskItem<TItem, OblivionModHeader.Mask<TItem>?>(initialValue, new OblivionModHeader.Mask<TItem>(initialValue));
-                this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Sounds = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Skills = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.MagicEffects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Scripts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LandTextures = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Enchantments = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Spells = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Birthsigns = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Activators = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.AlchemicalApparatus = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Armors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Books = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Clothes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Containers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Doors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Lights = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Miscellaneous = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Statics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Grasses = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Trees = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Flora = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Furniture = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Creatures = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LeveledCreatures = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.SoulGems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Keys = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Potions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Subspaces = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.SigilStones = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LeveledItems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Weathers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Climates = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Regions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Cells = new MaskItem<TItem, ListGroup.Mask<TItem>?>(initialValue, new ListGroup.Mask<TItem>(initialValue));
-                this.Worldspaces = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.DialogTopics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Quests = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.IdleAnimations = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.AIPackages = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.CombatStyles = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LoadScreens = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LeveledSpells = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.AnimatedObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Waters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.EffectShaders = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.GameSettings = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Globals = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Classes = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Factions = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Hairs = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Eyes = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Races = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Sounds = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Skills = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.MagicEffects = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Scripts = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.LandTextures = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Enchantments = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Spells = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Birthsigns = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Activators = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.AlchemicalApparatus = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Armors = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Books = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Clothes = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Containers = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Doors = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Ingredients = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Lights = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Miscellaneous = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Statics = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Grasses = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Trees = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Flora = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Furniture = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Weapons = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Ammunitions = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Npcs = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Creatures = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.LeveledCreatures = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.SoulGems = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Keys = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Potions = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Subspaces = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.SigilStones = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.LeveledItems = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Weathers = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Climates = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Regions = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Cells = new MaskItem<TItem, OblivionListGroup.Mask<TItem>?>(initialValue, new OblivionListGroup.Mask<TItem>(initialValue));
+                this.Worldspaces = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.DialogTopics = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Quests = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.IdleAnimations = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.AIPackages = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.CombatStyles = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.LoadScreens = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.LeveledSpells = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.AnimatedObjects = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.Waters = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
+                this.EffectShaders = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(initialValue, new OblivionGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -673,62 +673,62 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem EffectShaders)
             {
                 this.ModHeader = new MaskItem<TItem, OblivionModHeader.Mask<TItem>?>(ModHeader, new OblivionModHeader.Mask<TItem>(ModHeader));
-                this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
-                this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(Globals, new Group.Mask<TItem>(Globals));
-                this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(Classes, new Group.Mask<TItem>(Classes));
-                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(Factions, new Group.Mask<TItem>(Factions));
-                this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(Hairs, new Group.Mask<TItem>(Hairs));
-                this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(Eyes, new Group.Mask<TItem>(Eyes));
-                this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(Races, new Group.Mask<TItem>(Races));
-                this.Sounds = new MaskItem<TItem, Group.Mask<TItem>?>(Sounds, new Group.Mask<TItem>(Sounds));
-                this.Skills = new MaskItem<TItem, Group.Mask<TItem>?>(Skills, new Group.Mask<TItem>(Skills));
-                this.MagicEffects = new MaskItem<TItem, Group.Mask<TItem>?>(MagicEffects, new Group.Mask<TItem>(MagicEffects));
-                this.Scripts = new MaskItem<TItem, Group.Mask<TItem>?>(Scripts, new Group.Mask<TItem>(Scripts));
-                this.LandTextures = new MaskItem<TItem, Group.Mask<TItem>?>(LandTextures, new Group.Mask<TItem>(LandTextures));
-                this.Enchantments = new MaskItem<TItem, Group.Mask<TItem>?>(Enchantments, new Group.Mask<TItem>(Enchantments));
-                this.Spells = new MaskItem<TItem, Group.Mask<TItem>?>(Spells, new Group.Mask<TItem>(Spells));
-                this.Birthsigns = new MaskItem<TItem, Group.Mask<TItem>?>(Birthsigns, new Group.Mask<TItem>(Birthsigns));
-                this.Activators = new MaskItem<TItem, Group.Mask<TItem>?>(Activators, new Group.Mask<TItem>(Activators));
-                this.AlchemicalApparatus = new MaskItem<TItem, Group.Mask<TItem>?>(AlchemicalApparatus, new Group.Mask<TItem>(AlchemicalApparatus));
-                this.Armors = new MaskItem<TItem, Group.Mask<TItem>?>(Armors, new Group.Mask<TItem>(Armors));
-                this.Books = new MaskItem<TItem, Group.Mask<TItem>?>(Books, new Group.Mask<TItem>(Books));
-                this.Clothes = new MaskItem<TItem, Group.Mask<TItem>?>(Clothes, new Group.Mask<TItem>(Clothes));
-                this.Containers = new MaskItem<TItem, Group.Mask<TItem>?>(Containers, new Group.Mask<TItem>(Containers));
-                this.Doors = new MaskItem<TItem, Group.Mask<TItem>?>(Doors, new Group.Mask<TItem>(Doors));
-                this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(Ingredients, new Group.Mask<TItem>(Ingredients));
-                this.Lights = new MaskItem<TItem, Group.Mask<TItem>?>(Lights, new Group.Mask<TItem>(Lights));
-                this.Miscellaneous = new MaskItem<TItem, Group.Mask<TItem>?>(Miscellaneous, new Group.Mask<TItem>(Miscellaneous));
-                this.Statics = new MaskItem<TItem, Group.Mask<TItem>?>(Statics, new Group.Mask<TItem>(Statics));
-                this.Grasses = new MaskItem<TItem, Group.Mask<TItem>?>(Grasses, new Group.Mask<TItem>(Grasses));
-                this.Trees = new MaskItem<TItem, Group.Mask<TItem>?>(Trees, new Group.Mask<TItem>(Trees));
-                this.Flora = new MaskItem<TItem, Group.Mask<TItem>?>(Flora, new Group.Mask<TItem>(Flora));
-                this.Furniture = new MaskItem<TItem, Group.Mask<TItem>?>(Furniture, new Group.Mask<TItem>(Furniture));
-                this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(Weapons, new Group.Mask<TItem>(Weapons));
-                this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(Ammunitions, new Group.Mask<TItem>(Ammunitions));
-                this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(Npcs, new Group.Mask<TItem>(Npcs));
-                this.Creatures = new MaskItem<TItem, Group.Mask<TItem>?>(Creatures, new Group.Mask<TItem>(Creatures));
-                this.LeveledCreatures = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledCreatures, new Group.Mask<TItem>(LeveledCreatures));
-                this.SoulGems = new MaskItem<TItem, Group.Mask<TItem>?>(SoulGems, new Group.Mask<TItem>(SoulGems));
-                this.Keys = new MaskItem<TItem, Group.Mask<TItem>?>(Keys, new Group.Mask<TItem>(Keys));
-                this.Potions = new MaskItem<TItem, Group.Mask<TItem>?>(Potions, new Group.Mask<TItem>(Potions));
-                this.Subspaces = new MaskItem<TItem, Group.Mask<TItem>?>(Subspaces, new Group.Mask<TItem>(Subspaces));
-                this.SigilStones = new MaskItem<TItem, Group.Mask<TItem>?>(SigilStones, new Group.Mask<TItem>(SigilStones));
-                this.LeveledItems = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledItems, new Group.Mask<TItem>(LeveledItems));
-                this.Weathers = new MaskItem<TItem, Group.Mask<TItem>?>(Weathers, new Group.Mask<TItem>(Weathers));
-                this.Climates = new MaskItem<TItem, Group.Mask<TItem>?>(Climates, new Group.Mask<TItem>(Climates));
-                this.Regions = new MaskItem<TItem, Group.Mask<TItem>?>(Regions, new Group.Mask<TItem>(Regions));
-                this.Cells = new MaskItem<TItem, ListGroup.Mask<TItem>?>(Cells, new ListGroup.Mask<TItem>(Cells));
-                this.Worldspaces = new MaskItem<TItem, Group.Mask<TItem>?>(Worldspaces, new Group.Mask<TItem>(Worldspaces));
-                this.DialogTopics = new MaskItem<TItem, Group.Mask<TItem>?>(DialogTopics, new Group.Mask<TItem>(DialogTopics));
-                this.Quests = new MaskItem<TItem, Group.Mask<TItem>?>(Quests, new Group.Mask<TItem>(Quests));
-                this.IdleAnimations = new MaskItem<TItem, Group.Mask<TItem>?>(IdleAnimations, new Group.Mask<TItem>(IdleAnimations));
-                this.AIPackages = new MaskItem<TItem, Group.Mask<TItem>?>(AIPackages, new Group.Mask<TItem>(AIPackages));
-                this.CombatStyles = new MaskItem<TItem, Group.Mask<TItem>?>(CombatStyles, new Group.Mask<TItem>(CombatStyles));
-                this.LoadScreens = new MaskItem<TItem, Group.Mask<TItem>?>(LoadScreens, new Group.Mask<TItem>(LoadScreens));
-                this.LeveledSpells = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledSpells, new Group.Mask<TItem>(LeveledSpells));
-                this.AnimatedObjects = new MaskItem<TItem, Group.Mask<TItem>?>(AnimatedObjects, new Group.Mask<TItem>(AnimatedObjects));
-                this.Waters = new MaskItem<TItem, Group.Mask<TItem>?>(Waters, new Group.Mask<TItem>(Waters));
-                this.EffectShaders = new MaskItem<TItem, Group.Mask<TItem>?>(EffectShaders, new Group.Mask<TItem>(EffectShaders));
+                this.GameSettings = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(GameSettings, new OblivionGroup.Mask<TItem>(GameSettings));
+                this.Globals = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Globals, new OblivionGroup.Mask<TItem>(Globals));
+                this.Classes = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Classes, new OblivionGroup.Mask<TItem>(Classes));
+                this.Factions = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Factions, new OblivionGroup.Mask<TItem>(Factions));
+                this.Hairs = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Hairs, new OblivionGroup.Mask<TItem>(Hairs));
+                this.Eyes = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Eyes, new OblivionGroup.Mask<TItem>(Eyes));
+                this.Races = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Races, new OblivionGroup.Mask<TItem>(Races));
+                this.Sounds = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Sounds, new OblivionGroup.Mask<TItem>(Sounds));
+                this.Skills = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Skills, new OblivionGroup.Mask<TItem>(Skills));
+                this.MagicEffects = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(MagicEffects, new OblivionGroup.Mask<TItem>(MagicEffects));
+                this.Scripts = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Scripts, new OblivionGroup.Mask<TItem>(Scripts));
+                this.LandTextures = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(LandTextures, new OblivionGroup.Mask<TItem>(LandTextures));
+                this.Enchantments = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Enchantments, new OblivionGroup.Mask<TItem>(Enchantments));
+                this.Spells = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Spells, new OblivionGroup.Mask<TItem>(Spells));
+                this.Birthsigns = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Birthsigns, new OblivionGroup.Mask<TItem>(Birthsigns));
+                this.Activators = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Activators, new OblivionGroup.Mask<TItem>(Activators));
+                this.AlchemicalApparatus = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(AlchemicalApparatus, new OblivionGroup.Mask<TItem>(AlchemicalApparatus));
+                this.Armors = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Armors, new OblivionGroup.Mask<TItem>(Armors));
+                this.Books = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Books, new OblivionGroup.Mask<TItem>(Books));
+                this.Clothes = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Clothes, new OblivionGroup.Mask<TItem>(Clothes));
+                this.Containers = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Containers, new OblivionGroup.Mask<TItem>(Containers));
+                this.Doors = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Doors, new OblivionGroup.Mask<TItem>(Doors));
+                this.Ingredients = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Ingredients, new OblivionGroup.Mask<TItem>(Ingredients));
+                this.Lights = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Lights, new OblivionGroup.Mask<TItem>(Lights));
+                this.Miscellaneous = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Miscellaneous, new OblivionGroup.Mask<TItem>(Miscellaneous));
+                this.Statics = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Statics, new OblivionGroup.Mask<TItem>(Statics));
+                this.Grasses = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Grasses, new OblivionGroup.Mask<TItem>(Grasses));
+                this.Trees = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Trees, new OblivionGroup.Mask<TItem>(Trees));
+                this.Flora = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Flora, new OblivionGroup.Mask<TItem>(Flora));
+                this.Furniture = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Furniture, new OblivionGroup.Mask<TItem>(Furniture));
+                this.Weapons = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Weapons, new OblivionGroup.Mask<TItem>(Weapons));
+                this.Ammunitions = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Ammunitions, new OblivionGroup.Mask<TItem>(Ammunitions));
+                this.Npcs = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Npcs, new OblivionGroup.Mask<TItem>(Npcs));
+                this.Creatures = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Creatures, new OblivionGroup.Mask<TItem>(Creatures));
+                this.LeveledCreatures = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(LeveledCreatures, new OblivionGroup.Mask<TItem>(LeveledCreatures));
+                this.SoulGems = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(SoulGems, new OblivionGroup.Mask<TItem>(SoulGems));
+                this.Keys = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Keys, new OblivionGroup.Mask<TItem>(Keys));
+                this.Potions = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Potions, new OblivionGroup.Mask<TItem>(Potions));
+                this.Subspaces = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Subspaces, new OblivionGroup.Mask<TItem>(Subspaces));
+                this.SigilStones = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(SigilStones, new OblivionGroup.Mask<TItem>(SigilStones));
+                this.LeveledItems = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(LeveledItems, new OblivionGroup.Mask<TItem>(LeveledItems));
+                this.Weathers = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Weathers, new OblivionGroup.Mask<TItem>(Weathers));
+                this.Climates = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Climates, new OblivionGroup.Mask<TItem>(Climates));
+                this.Regions = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Regions, new OblivionGroup.Mask<TItem>(Regions));
+                this.Cells = new MaskItem<TItem, OblivionListGroup.Mask<TItem>?>(Cells, new OblivionListGroup.Mask<TItem>(Cells));
+                this.Worldspaces = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Worldspaces, new OblivionGroup.Mask<TItem>(Worldspaces));
+                this.DialogTopics = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(DialogTopics, new OblivionGroup.Mask<TItem>(DialogTopics));
+                this.Quests = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Quests, new OblivionGroup.Mask<TItem>(Quests));
+                this.IdleAnimations = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(IdleAnimations, new OblivionGroup.Mask<TItem>(IdleAnimations));
+                this.AIPackages = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(AIPackages, new OblivionGroup.Mask<TItem>(AIPackages));
+                this.CombatStyles = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(CombatStyles, new OblivionGroup.Mask<TItem>(CombatStyles));
+                this.LoadScreens = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(LoadScreens, new OblivionGroup.Mask<TItem>(LoadScreens));
+                this.LeveledSpells = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(LeveledSpells, new OblivionGroup.Mask<TItem>(LeveledSpells));
+                this.AnimatedObjects = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(AnimatedObjects, new OblivionGroup.Mask<TItem>(AnimatedObjects));
+                this.Waters = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(Waters, new OblivionGroup.Mask<TItem>(Waters));
+                this.EffectShaders = new MaskItem<TItem, OblivionGroup.Mask<TItem>?>(EffectShaders, new OblivionGroup.Mask<TItem>(EffectShaders));
             }
 
             #pragma warning disable CS8618
@@ -741,62 +741,62 @@ namespace Mutagen.Bethesda.Oblivion
 
             #region Members
             public MaskItem<TItem, OblivionModHeader.Mask<TItem>?>? ModHeader { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? GameSettings { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Globals { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Classes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Factions { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Hairs { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Eyes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Races { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Sounds { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Skills { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? MagicEffects { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Scripts { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LandTextures { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Enchantments { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Spells { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Birthsigns { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Activators { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? AlchemicalApparatus { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Armors { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Books { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Clothes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Containers { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Doors { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Ingredients { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Lights { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Miscellaneous { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Statics { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Grasses { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Trees { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Flora { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Furniture { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Weapons { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Ammunitions { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Npcs { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Creatures { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LeveledCreatures { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? SoulGems { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Keys { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Potions { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Subspaces { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? SigilStones { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LeveledItems { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Weathers { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Climates { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Regions { get; set; }
-            public MaskItem<TItem, ListGroup.Mask<TItem>?>? Cells { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Worldspaces { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? DialogTopics { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Quests { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? IdleAnimations { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? AIPackages { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? CombatStyles { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LoadScreens { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LeveledSpells { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? AnimatedObjects { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Waters { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? EffectShaders { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? GameSettings { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Globals { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Classes { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Factions { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Hairs { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Eyes { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Races { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Sounds { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Skills { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? MagicEffects { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Scripts { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? LandTextures { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Enchantments { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Spells { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Birthsigns { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Activators { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? AlchemicalApparatus { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Armors { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Books { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Clothes { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Containers { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Doors { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Ingredients { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Lights { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Miscellaneous { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Statics { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Grasses { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Trees { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Flora { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Furniture { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Weapons { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Ammunitions { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Npcs { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Creatures { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? LeveledCreatures { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? SoulGems { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Keys { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Potions { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Subspaces { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? SigilStones { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? LeveledItems { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Weathers { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Climates { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Regions { get; set; }
+            public MaskItem<TItem, OblivionListGroup.Mask<TItem>?>? Cells { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Worldspaces { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? DialogTopics { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Quests { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? IdleAnimations { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? AIPackages { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? CombatStyles { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? LoadScreens { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? LeveledSpells { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? AnimatedObjects { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? Waters { get; set; }
+            public MaskItem<TItem, OblivionGroup.Mask<TItem>?>? EffectShaders { get; set; }
             #endregion
 
             #region Equals
@@ -1528,62 +1528,62 @@ namespace Mutagen.Bethesda.Oblivion
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, OblivionModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
-                obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
-                obj.Globals = this.Globals == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
-                obj.Classes = this.Classes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
-                obj.Factions = this.Factions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
-                obj.Hairs = this.Hairs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Hairs.Overall), this.Hairs.Specific?.Translate(eval));
-                obj.Eyes = this.Eyes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Eyes.Overall), this.Eyes.Specific?.Translate(eval));
-                obj.Races = this.Races == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
-                obj.Sounds = this.Sounds == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
-                obj.Skills = this.Skills == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Skills.Overall), this.Skills.Specific?.Translate(eval));
-                obj.MagicEffects = this.MagicEffects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MagicEffects.Overall), this.MagicEffects.Specific?.Translate(eval));
-                obj.Scripts = this.Scripts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Scripts.Overall), this.Scripts.Specific?.Translate(eval));
-                obj.LandTextures = this.LandTextures == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LandTextures.Overall), this.LandTextures.Specific?.Translate(eval));
-                obj.Enchantments = this.Enchantments == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Enchantments.Overall), this.Enchantments.Specific?.Translate(eval));
-                obj.Spells = this.Spells == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Spells.Overall), this.Spells.Specific?.Translate(eval));
-                obj.Birthsigns = this.Birthsigns == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Birthsigns.Overall), this.Birthsigns.Specific?.Translate(eval));
-                obj.Activators = this.Activators == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
-                obj.AlchemicalApparatus = this.AlchemicalApparatus == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AlchemicalApparatus.Overall), this.AlchemicalApparatus.Specific?.Translate(eval));
-                obj.Armors = this.Armors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
-                obj.Books = this.Books == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
-                obj.Clothes = this.Clothes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Clothes.Overall), this.Clothes.Specific?.Translate(eval));
-                obj.Containers = this.Containers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
-                obj.Doors = this.Doors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
-                obj.Ingredients = this.Ingredients == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ingredients.Overall), this.Ingredients.Specific?.Translate(eval));
-                obj.Lights = this.Lights == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Lights.Overall), this.Lights.Specific?.Translate(eval));
-                obj.Miscellaneous = this.Miscellaneous == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Miscellaneous.Overall), this.Miscellaneous.Specific?.Translate(eval));
-                obj.Statics = this.Statics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
-                obj.Grasses = this.Grasses == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
-                obj.Trees = this.Trees == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Trees.Overall), this.Trees.Specific?.Translate(eval));
-                obj.Flora = this.Flora == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Flora.Overall), this.Flora.Specific?.Translate(eval));
-                obj.Furniture = this.Furniture == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Furniture.Overall), this.Furniture.Specific?.Translate(eval));
-                obj.Weapons = this.Weapons == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
-                obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
-                obj.Npcs = this.Npcs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
-                obj.Creatures = this.Creatures == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Creatures.Overall), this.Creatures.Specific?.Translate(eval));
-                obj.LeveledCreatures = this.LeveledCreatures == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledCreatures.Overall), this.LeveledCreatures.Specific?.Translate(eval));
-                obj.SoulGems = this.SoulGems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoulGems.Overall), this.SoulGems.Specific?.Translate(eval));
-                obj.Keys = this.Keys == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Keys.Overall), this.Keys.Specific?.Translate(eval));
-                obj.Potions = this.Potions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Potions.Overall), this.Potions.Specific?.Translate(eval));
-                obj.Subspaces = this.Subspaces == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Subspaces.Overall), this.Subspaces.Specific?.Translate(eval));
-                obj.SigilStones = this.SigilStones == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SigilStones.Overall), this.SigilStones.Specific?.Translate(eval));
-                obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
-                obj.Weathers = this.Weathers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
-                obj.Climates = this.Climates == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Climates.Overall), this.Climates.Specific?.Translate(eval));
-                obj.Regions = this.Regions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
-                obj.Cells = this.Cells == null ? null : new MaskItem<R, ListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
-                obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
-                obj.DialogTopics = this.DialogTopics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DialogTopics.Overall), this.DialogTopics.Specific?.Translate(eval));
-                obj.Quests = this.Quests == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
-                obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
-                obj.AIPackages = this.AIPackages == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AIPackages.Overall), this.AIPackages.Specific?.Translate(eval));
-                obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
-                obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
-                obj.LeveledSpells = this.LeveledSpells == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledSpells.Overall), this.LeveledSpells.Specific?.Translate(eval));
-                obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
-                obj.Waters = this.Waters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
-                obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
+                obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
+                obj.Globals = this.Globals == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
+                obj.Classes = this.Classes == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
+                obj.Factions = this.Factions == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
+                obj.Hairs = this.Hairs == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Hairs.Overall), this.Hairs.Specific?.Translate(eval));
+                obj.Eyes = this.Eyes == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Eyes.Overall), this.Eyes.Specific?.Translate(eval));
+                obj.Races = this.Races == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
+                obj.Sounds = this.Sounds == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
+                obj.Skills = this.Skills == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Skills.Overall), this.Skills.Specific?.Translate(eval));
+                obj.MagicEffects = this.MagicEffects == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.MagicEffects.Overall), this.MagicEffects.Specific?.Translate(eval));
+                obj.Scripts = this.Scripts == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Scripts.Overall), this.Scripts.Specific?.Translate(eval));
+                obj.LandTextures = this.LandTextures == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.LandTextures.Overall), this.LandTextures.Specific?.Translate(eval));
+                obj.Enchantments = this.Enchantments == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Enchantments.Overall), this.Enchantments.Specific?.Translate(eval));
+                obj.Spells = this.Spells == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Spells.Overall), this.Spells.Specific?.Translate(eval));
+                obj.Birthsigns = this.Birthsigns == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Birthsigns.Overall), this.Birthsigns.Specific?.Translate(eval));
+                obj.Activators = this.Activators == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
+                obj.AlchemicalApparatus = this.AlchemicalApparatus == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.AlchemicalApparatus.Overall), this.AlchemicalApparatus.Specific?.Translate(eval));
+                obj.Armors = this.Armors == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
+                obj.Books = this.Books == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
+                obj.Clothes = this.Clothes == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Clothes.Overall), this.Clothes.Specific?.Translate(eval));
+                obj.Containers = this.Containers == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
+                obj.Doors = this.Doors == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
+                obj.Ingredients = this.Ingredients == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Ingredients.Overall), this.Ingredients.Specific?.Translate(eval));
+                obj.Lights = this.Lights == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Lights.Overall), this.Lights.Specific?.Translate(eval));
+                obj.Miscellaneous = this.Miscellaneous == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Miscellaneous.Overall), this.Miscellaneous.Specific?.Translate(eval));
+                obj.Statics = this.Statics == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
+                obj.Grasses = this.Grasses == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
+                obj.Trees = this.Trees == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Trees.Overall), this.Trees.Specific?.Translate(eval));
+                obj.Flora = this.Flora == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Flora.Overall), this.Flora.Specific?.Translate(eval));
+                obj.Furniture = this.Furniture == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Furniture.Overall), this.Furniture.Specific?.Translate(eval));
+                obj.Weapons = this.Weapons == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
+                obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
+                obj.Npcs = this.Npcs == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
+                obj.Creatures = this.Creatures == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Creatures.Overall), this.Creatures.Specific?.Translate(eval));
+                obj.LeveledCreatures = this.LeveledCreatures == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.LeveledCreatures.Overall), this.LeveledCreatures.Specific?.Translate(eval));
+                obj.SoulGems = this.SoulGems == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.SoulGems.Overall), this.SoulGems.Specific?.Translate(eval));
+                obj.Keys = this.Keys == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Keys.Overall), this.Keys.Specific?.Translate(eval));
+                obj.Potions = this.Potions == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Potions.Overall), this.Potions.Specific?.Translate(eval));
+                obj.Subspaces = this.Subspaces == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Subspaces.Overall), this.Subspaces.Specific?.Translate(eval));
+                obj.SigilStones = this.SigilStones == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.SigilStones.Overall), this.SigilStones.Specific?.Translate(eval));
+                obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
+                obj.Weathers = this.Weathers == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
+                obj.Climates = this.Climates == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Climates.Overall), this.Climates.Specific?.Translate(eval));
+                obj.Regions = this.Regions == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
+                obj.Cells = this.Cells == null ? null : new MaskItem<R, OblivionListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
+                obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
+                obj.DialogTopics = this.DialogTopics == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.DialogTopics.Overall), this.DialogTopics.Specific?.Translate(eval));
+                obj.Quests = this.Quests == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
+                obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
+                obj.AIPackages = this.AIPackages == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.AIPackages.Overall), this.AIPackages.Specific?.Translate(eval));
+                obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
+                obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
+                obj.LeveledSpells = this.LeveledSpells == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.LeveledSpells.Overall), this.LeveledSpells.Specific?.Translate(eval));
+                obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
+                obj.Waters = this.Waters == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
+                obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, OblivionGroup.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1860,62 +1860,62 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
             public MaskItem<Exception?, OblivionModHeader.ErrorMask?>? ModHeader;
-            public MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
-            public MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>? Globals;
-            public MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>? Classes;
-            public MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>? Factions;
-            public MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>? Hairs;
-            public MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>? Eyes;
-            public MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>? Races;
-            public MaskItem<Exception?, Group.ErrorMask<Sound.ErrorMask>?>? Sounds;
-            public MaskItem<Exception?, Group.ErrorMask<SkillRecord.ErrorMask>?>? Skills;
-            public MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>? MagicEffects;
-            public MaskItem<Exception?, Group.ErrorMask<Script.ErrorMask>?>? Scripts;
-            public MaskItem<Exception?, Group.ErrorMask<LandTexture.ErrorMask>?>? LandTextures;
-            public MaskItem<Exception?, Group.ErrorMask<Enchantment.ErrorMask>?>? Enchantments;
-            public MaskItem<Exception?, Group.ErrorMask<SpellUnleveled.ErrorMask>?>? Spells;
-            public MaskItem<Exception?, Group.ErrorMask<Birthsign.ErrorMask>?>? Birthsigns;
-            public MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>? Activators;
-            public MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>? AlchemicalApparatus;
-            public MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>? Armors;
-            public MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>? Books;
-            public MaskItem<Exception?, Group.ErrorMask<Clothing.ErrorMask>?>? Clothes;
-            public MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>? Containers;
-            public MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>? Doors;
-            public MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>? Ingredients;
-            public MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>? Lights;
-            public MaskItem<Exception?, Group.ErrorMask<Miscellaneous.ErrorMask>?>? Miscellaneous;
-            public MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>? Statics;
-            public MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>? Grasses;
-            public MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>? Trees;
-            public MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>? Flora;
-            public MaskItem<Exception?, Group.ErrorMask<Furniture.ErrorMask>?>? Furniture;
-            public MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>? Weapons;
-            public MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
-            public MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>? Npcs;
-            public MaskItem<Exception?, Group.ErrorMask<Creature.ErrorMask>?>? Creatures;
-            public MaskItem<Exception?, Group.ErrorMask<LeveledCreature.ErrorMask>?>? LeveledCreatures;
-            public MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>? SoulGems;
-            public MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>? Keys;
-            public MaskItem<Exception?, Group.ErrorMask<Potion.ErrorMask>?>? Potions;
-            public MaskItem<Exception?, Group.ErrorMask<Subspace.ErrorMask>?>? Subspaces;
-            public MaskItem<Exception?, Group.ErrorMask<SigilStone.ErrorMask>?>? SigilStones;
-            public MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
-            public MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>? Weathers;
-            public MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>? Climates;
-            public MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>? Regions;
-            public MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
-            public MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
-            public MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>? DialogTopics;
-            public MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>? Quests;
-            public MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
-            public MaskItem<Exception?, Group.ErrorMask<AIPackage.ErrorMask>?>? AIPackages;
-            public MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>? CombatStyles;
-            public MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
-            public MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>? LeveledSpells;
-            public MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
-            public MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>? Waters;
-            public MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Global.ErrorMask>?>? Globals;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Class.ErrorMask>?>? Classes;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Faction.ErrorMask>?>? Factions;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Hair.ErrorMask>?>? Hairs;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Eye.ErrorMask>?>? Eyes;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Race.ErrorMask>?>? Races;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Sound.ErrorMask>?>? Sounds;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<SkillRecord.ErrorMask>?>? Skills;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<MagicEffect.ErrorMask>?>? MagicEffects;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Script.ErrorMask>?>? Scripts;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<LandTexture.ErrorMask>?>? LandTextures;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Enchantment.ErrorMask>?>? Enchantments;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<SpellUnleveled.ErrorMask>?>? Spells;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Birthsign.ErrorMask>?>? Birthsigns;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Activator.ErrorMask>?>? Activators;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<AlchemicalApparatus.ErrorMask>?>? AlchemicalApparatus;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Armor.ErrorMask>?>? Armors;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Book.ErrorMask>?>? Books;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Clothing.ErrorMask>?>? Clothes;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Container.ErrorMask>?>? Containers;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Door.ErrorMask>?>? Doors;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Ingredient.ErrorMask>?>? Ingredients;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Light.ErrorMask>?>? Lights;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Miscellaneous.ErrorMask>?>? Miscellaneous;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Static.ErrorMask>?>? Statics;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Grass.ErrorMask>?>? Grasses;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Tree.ErrorMask>?>? Trees;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Flora.ErrorMask>?>? Flora;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Furniture.ErrorMask>?>? Furniture;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Weapon.ErrorMask>?>? Weapons;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Npc.ErrorMask>?>? Npcs;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Creature.ErrorMask>?>? Creatures;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<LeveledCreature.ErrorMask>?>? LeveledCreatures;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<SoulGem.ErrorMask>?>? SoulGems;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Key.ErrorMask>?>? Keys;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Potion.ErrorMask>?>? Potions;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Subspace.ErrorMask>?>? Subspaces;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<SigilStone.ErrorMask>?>? SigilStones;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Weather.ErrorMask>?>? Weathers;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Climate.ErrorMask>?>? Climates;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Region.ErrorMask>?>? Regions;
+            public MaskItem<Exception?, OblivionListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<DialogTopic.ErrorMask>?>? DialogTopics;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Quest.ErrorMask>?>? Quests;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<AIPackage.ErrorMask>?>? AIPackages;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<CombatStyle.ErrorMask>?>? CombatStyles;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<LeveledSpell.ErrorMask>?>? LeveledSpells;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Water.ErrorMask>?>? Waters;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
             #endregion
 
             #region IErrorMask
@@ -2052,172 +2052,172 @@ namespace Mutagen.Bethesda.Oblivion
                         this.ModHeader = new MaskItem<Exception?, OblivionModHeader.ErrorMask?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.GameSettings:
-                        this.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
+                        this.GameSettings = new MaskItem<Exception?, OblivionGroup.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Globals:
-                        this.Globals = new MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>(ex, null);
+                        this.Globals = new MaskItem<Exception?, OblivionGroup.ErrorMask<Global.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Classes:
-                        this.Classes = new MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>(ex, null);
+                        this.Classes = new MaskItem<Exception?, OblivionGroup.ErrorMask<Class.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Factions:
-                        this.Factions = new MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>(ex, null);
+                        this.Factions = new MaskItem<Exception?, OblivionGroup.ErrorMask<Faction.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Hairs:
-                        this.Hairs = new MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>(ex, null);
+                        this.Hairs = new MaskItem<Exception?, OblivionGroup.ErrorMask<Hair.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Eyes:
-                        this.Eyes = new MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>(ex, null);
+                        this.Eyes = new MaskItem<Exception?, OblivionGroup.ErrorMask<Eye.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Races:
-                        this.Races = new MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>(ex, null);
+                        this.Races = new MaskItem<Exception?, OblivionGroup.ErrorMask<Race.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Sounds:
-                        this.Sounds = new MaskItem<Exception?, Group.ErrorMask<Sound.ErrorMask>?>(ex, null);
+                        this.Sounds = new MaskItem<Exception?, OblivionGroup.ErrorMask<Sound.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Skills:
-                        this.Skills = new MaskItem<Exception?, Group.ErrorMask<SkillRecord.ErrorMask>?>(ex, null);
+                        this.Skills = new MaskItem<Exception?, OblivionGroup.ErrorMask<SkillRecord.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.MagicEffects:
-                        this.MagicEffects = new MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>(ex, null);
+                        this.MagicEffects = new MaskItem<Exception?, OblivionGroup.ErrorMask<MagicEffect.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Scripts:
-                        this.Scripts = new MaskItem<Exception?, Group.ErrorMask<Script.ErrorMask>?>(ex, null);
+                        this.Scripts = new MaskItem<Exception?, OblivionGroup.ErrorMask<Script.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.LandTextures:
-                        this.LandTextures = new MaskItem<Exception?, Group.ErrorMask<LandTexture.ErrorMask>?>(ex, null);
+                        this.LandTextures = new MaskItem<Exception?, OblivionGroup.ErrorMask<LandTexture.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Enchantments:
-                        this.Enchantments = new MaskItem<Exception?, Group.ErrorMask<Enchantment.ErrorMask>?>(ex, null);
+                        this.Enchantments = new MaskItem<Exception?, OblivionGroup.ErrorMask<Enchantment.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Spells:
-                        this.Spells = new MaskItem<Exception?, Group.ErrorMask<SpellUnleveled.ErrorMask>?>(ex, null);
+                        this.Spells = new MaskItem<Exception?, OblivionGroup.ErrorMask<SpellUnleveled.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Birthsigns:
-                        this.Birthsigns = new MaskItem<Exception?, Group.ErrorMask<Birthsign.ErrorMask>?>(ex, null);
+                        this.Birthsigns = new MaskItem<Exception?, OblivionGroup.ErrorMask<Birthsign.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Activators:
-                        this.Activators = new MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>(ex, null);
+                        this.Activators = new MaskItem<Exception?, OblivionGroup.ErrorMask<Activator.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.AlchemicalApparatus:
-                        this.AlchemicalApparatus = new MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>(ex, null);
+                        this.AlchemicalApparatus = new MaskItem<Exception?, OblivionGroup.ErrorMask<AlchemicalApparatus.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Armors:
-                        this.Armors = new MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>(ex, null);
+                        this.Armors = new MaskItem<Exception?, OblivionGroup.ErrorMask<Armor.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Books:
-                        this.Books = new MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>(ex, null);
+                        this.Books = new MaskItem<Exception?, OblivionGroup.ErrorMask<Book.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Clothes:
-                        this.Clothes = new MaskItem<Exception?, Group.ErrorMask<Clothing.ErrorMask>?>(ex, null);
+                        this.Clothes = new MaskItem<Exception?, OblivionGroup.ErrorMask<Clothing.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Containers:
-                        this.Containers = new MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>(ex, null);
+                        this.Containers = new MaskItem<Exception?, OblivionGroup.ErrorMask<Container.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Doors:
-                        this.Doors = new MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>(ex, null);
+                        this.Doors = new MaskItem<Exception?, OblivionGroup.ErrorMask<Door.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Ingredients:
-                        this.Ingredients = new MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>(ex, null);
+                        this.Ingredients = new MaskItem<Exception?, OblivionGroup.ErrorMask<Ingredient.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Lights:
-                        this.Lights = new MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>(ex, null);
+                        this.Lights = new MaskItem<Exception?, OblivionGroup.ErrorMask<Light.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Miscellaneous:
-                        this.Miscellaneous = new MaskItem<Exception?, Group.ErrorMask<Miscellaneous.ErrorMask>?>(ex, null);
+                        this.Miscellaneous = new MaskItem<Exception?, OblivionGroup.ErrorMask<Miscellaneous.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Statics:
-                        this.Statics = new MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>(ex, null);
+                        this.Statics = new MaskItem<Exception?, OblivionGroup.ErrorMask<Static.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Grasses:
-                        this.Grasses = new MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>(ex, null);
+                        this.Grasses = new MaskItem<Exception?, OblivionGroup.ErrorMask<Grass.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Trees:
-                        this.Trees = new MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>(ex, null);
+                        this.Trees = new MaskItem<Exception?, OblivionGroup.ErrorMask<Tree.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Flora:
-                        this.Flora = new MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>(ex, null);
+                        this.Flora = new MaskItem<Exception?, OblivionGroup.ErrorMask<Flora.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Furniture:
-                        this.Furniture = new MaskItem<Exception?, Group.ErrorMask<Furniture.ErrorMask>?>(ex, null);
+                        this.Furniture = new MaskItem<Exception?, OblivionGroup.ErrorMask<Furniture.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Weapons:
-                        this.Weapons = new MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>(ex, null);
+                        this.Weapons = new MaskItem<Exception?, OblivionGroup.ErrorMask<Weapon.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Ammunitions:
-                        this.Ammunitions = new MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>(ex, null);
+                        this.Ammunitions = new MaskItem<Exception?, OblivionGroup.ErrorMask<Ammunition.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Npcs:
-                        this.Npcs = new MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>(ex, null);
+                        this.Npcs = new MaskItem<Exception?, OblivionGroup.ErrorMask<Npc.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Creatures:
-                        this.Creatures = new MaskItem<Exception?, Group.ErrorMask<Creature.ErrorMask>?>(ex, null);
+                        this.Creatures = new MaskItem<Exception?, OblivionGroup.ErrorMask<Creature.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.LeveledCreatures:
-                        this.LeveledCreatures = new MaskItem<Exception?, Group.ErrorMask<LeveledCreature.ErrorMask>?>(ex, null);
+                        this.LeveledCreatures = new MaskItem<Exception?, OblivionGroup.ErrorMask<LeveledCreature.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.SoulGems:
-                        this.SoulGems = new MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>(ex, null);
+                        this.SoulGems = new MaskItem<Exception?, OblivionGroup.ErrorMask<SoulGem.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Keys:
-                        this.Keys = new MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>(ex, null);
+                        this.Keys = new MaskItem<Exception?, OblivionGroup.ErrorMask<Key.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Potions:
-                        this.Potions = new MaskItem<Exception?, Group.ErrorMask<Potion.ErrorMask>?>(ex, null);
+                        this.Potions = new MaskItem<Exception?, OblivionGroup.ErrorMask<Potion.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Subspaces:
-                        this.Subspaces = new MaskItem<Exception?, Group.ErrorMask<Subspace.ErrorMask>?>(ex, null);
+                        this.Subspaces = new MaskItem<Exception?, OblivionGroup.ErrorMask<Subspace.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.SigilStones:
-                        this.SigilStones = new MaskItem<Exception?, Group.ErrorMask<SigilStone.ErrorMask>?>(ex, null);
+                        this.SigilStones = new MaskItem<Exception?, OblivionGroup.ErrorMask<SigilStone.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.LeveledItems:
-                        this.LeveledItems = new MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>(ex, null);
+                        this.LeveledItems = new MaskItem<Exception?, OblivionGroup.ErrorMask<LeveledItem.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Weathers:
-                        this.Weathers = new MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>(ex, null);
+                        this.Weathers = new MaskItem<Exception?, OblivionGroup.ErrorMask<Weather.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Climates:
-                        this.Climates = new MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>(ex, null);
+                        this.Climates = new MaskItem<Exception?, OblivionGroup.ErrorMask<Climate.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Regions:
-                        this.Regions = new MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>(ex, null);
+                        this.Regions = new MaskItem<Exception?, OblivionGroup.ErrorMask<Region.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Cells:
-                        this.Cells = new MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>(ex, null);
+                        this.Cells = new MaskItem<Exception?, OblivionListGroup.ErrorMask<CellBlock.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Worldspaces:
-                        this.Worldspaces = new MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>(ex, null);
+                        this.Worldspaces = new MaskItem<Exception?, OblivionGroup.ErrorMask<Worldspace.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.DialogTopics:
-                        this.DialogTopics = new MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>(ex, null);
+                        this.DialogTopics = new MaskItem<Exception?, OblivionGroup.ErrorMask<DialogTopic.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Quests:
-                        this.Quests = new MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>(ex, null);
+                        this.Quests = new MaskItem<Exception?, OblivionGroup.ErrorMask<Quest.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.IdleAnimations:
-                        this.IdleAnimations = new MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>(ex, null);
+                        this.IdleAnimations = new MaskItem<Exception?, OblivionGroup.ErrorMask<IdleAnimation.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.AIPackages:
-                        this.AIPackages = new MaskItem<Exception?, Group.ErrorMask<AIPackage.ErrorMask>?>(ex, null);
+                        this.AIPackages = new MaskItem<Exception?, OblivionGroup.ErrorMask<AIPackage.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.CombatStyles:
-                        this.CombatStyles = new MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>(ex, null);
+                        this.CombatStyles = new MaskItem<Exception?, OblivionGroup.ErrorMask<CombatStyle.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.LoadScreens:
-                        this.LoadScreens = new MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>(ex, null);
+                        this.LoadScreens = new MaskItem<Exception?, OblivionGroup.ErrorMask<LoadScreen.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.LeveledSpells:
-                        this.LeveledSpells = new MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>(ex, null);
+                        this.LeveledSpells = new MaskItem<Exception?, OblivionGroup.ErrorMask<LeveledSpell.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.AnimatedObjects:
-                        this.AnimatedObjects = new MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
+                        this.AnimatedObjects = new MaskItem<Exception?, OblivionGroup.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Waters:
-                        this.Waters = new MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>(ex, null);
+                        this.Waters = new MaskItem<Exception?, OblivionGroup.ErrorMask<Water.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.EffectShaders:
-                        this.EffectShaders = new MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>(ex, null);
+                        this.EffectShaders = new MaskItem<Exception?, OblivionGroup.ErrorMask<EffectShader.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2233,172 +2233,172 @@ namespace Mutagen.Bethesda.Oblivion
                         this.ModHeader = (MaskItem<Exception?, OblivionModHeader.ErrorMask?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.GameSettings:
-                        this.GameSettings = (MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>?)obj;
+                        this.GameSettings = (MaskItem<Exception?, OblivionGroup.ErrorMask<GameSetting.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Globals:
-                        this.Globals = (MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>?)obj;
+                        this.Globals = (MaskItem<Exception?, OblivionGroup.ErrorMask<Global.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Classes:
-                        this.Classes = (MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>?)obj;
+                        this.Classes = (MaskItem<Exception?, OblivionGroup.ErrorMask<Class.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Factions:
-                        this.Factions = (MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>?)obj;
+                        this.Factions = (MaskItem<Exception?, OblivionGroup.ErrorMask<Faction.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Hairs:
-                        this.Hairs = (MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>?)obj;
+                        this.Hairs = (MaskItem<Exception?, OblivionGroup.ErrorMask<Hair.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Eyes:
-                        this.Eyes = (MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>?)obj;
+                        this.Eyes = (MaskItem<Exception?, OblivionGroup.ErrorMask<Eye.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Races:
-                        this.Races = (MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>?)obj;
+                        this.Races = (MaskItem<Exception?, OblivionGroup.ErrorMask<Race.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Sounds:
-                        this.Sounds = (MaskItem<Exception?, Group.ErrorMask<Sound.ErrorMask>?>?)obj;
+                        this.Sounds = (MaskItem<Exception?, OblivionGroup.ErrorMask<Sound.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Skills:
-                        this.Skills = (MaskItem<Exception?, Group.ErrorMask<SkillRecord.ErrorMask>?>?)obj;
+                        this.Skills = (MaskItem<Exception?, OblivionGroup.ErrorMask<SkillRecord.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.MagicEffects:
-                        this.MagicEffects = (MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>?)obj;
+                        this.MagicEffects = (MaskItem<Exception?, OblivionGroup.ErrorMask<MagicEffect.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Scripts:
-                        this.Scripts = (MaskItem<Exception?, Group.ErrorMask<Script.ErrorMask>?>?)obj;
+                        this.Scripts = (MaskItem<Exception?, OblivionGroup.ErrorMask<Script.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.LandTextures:
-                        this.LandTextures = (MaskItem<Exception?, Group.ErrorMask<LandTexture.ErrorMask>?>?)obj;
+                        this.LandTextures = (MaskItem<Exception?, OblivionGroup.ErrorMask<LandTexture.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Enchantments:
-                        this.Enchantments = (MaskItem<Exception?, Group.ErrorMask<Enchantment.ErrorMask>?>?)obj;
+                        this.Enchantments = (MaskItem<Exception?, OblivionGroup.ErrorMask<Enchantment.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Spells:
-                        this.Spells = (MaskItem<Exception?, Group.ErrorMask<SpellUnleveled.ErrorMask>?>?)obj;
+                        this.Spells = (MaskItem<Exception?, OblivionGroup.ErrorMask<SpellUnleveled.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Birthsigns:
-                        this.Birthsigns = (MaskItem<Exception?, Group.ErrorMask<Birthsign.ErrorMask>?>?)obj;
+                        this.Birthsigns = (MaskItem<Exception?, OblivionGroup.ErrorMask<Birthsign.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Activators:
-                        this.Activators = (MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>?)obj;
+                        this.Activators = (MaskItem<Exception?, OblivionGroup.ErrorMask<Activator.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.AlchemicalApparatus:
-                        this.AlchemicalApparatus = (MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>?)obj;
+                        this.AlchemicalApparatus = (MaskItem<Exception?, OblivionGroup.ErrorMask<AlchemicalApparatus.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Armors:
-                        this.Armors = (MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>?)obj;
+                        this.Armors = (MaskItem<Exception?, OblivionGroup.ErrorMask<Armor.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Books:
-                        this.Books = (MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>?)obj;
+                        this.Books = (MaskItem<Exception?, OblivionGroup.ErrorMask<Book.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Clothes:
-                        this.Clothes = (MaskItem<Exception?, Group.ErrorMask<Clothing.ErrorMask>?>?)obj;
+                        this.Clothes = (MaskItem<Exception?, OblivionGroup.ErrorMask<Clothing.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Containers:
-                        this.Containers = (MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>?)obj;
+                        this.Containers = (MaskItem<Exception?, OblivionGroup.ErrorMask<Container.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Doors:
-                        this.Doors = (MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>?)obj;
+                        this.Doors = (MaskItem<Exception?, OblivionGroup.ErrorMask<Door.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Ingredients:
-                        this.Ingredients = (MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>?)obj;
+                        this.Ingredients = (MaskItem<Exception?, OblivionGroup.ErrorMask<Ingredient.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Lights:
-                        this.Lights = (MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>?)obj;
+                        this.Lights = (MaskItem<Exception?, OblivionGroup.ErrorMask<Light.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Miscellaneous:
-                        this.Miscellaneous = (MaskItem<Exception?, Group.ErrorMask<Miscellaneous.ErrorMask>?>?)obj;
+                        this.Miscellaneous = (MaskItem<Exception?, OblivionGroup.ErrorMask<Miscellaneous.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Statics:
-                        this.Statics = (MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>?)obj;
+                        this.Statics = (MaskItem<Exception?, OblivionGroup.ErrorMask<Static.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Grasses:
-                        this.Grasses = (MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>?)obj;
+                        this.Grasses = (MaskItem<Exception?, OblivionGroup.ErrorMask<Grass.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Trees:
-                        this.Trees = (MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>?)obj;
+                        this.Trees = (MaskItem<Exception?, OblivionGroup.ErrorMask<Tree.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Flora:
-                        this.Flora = (MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>?)obj;
+                        this.Flora = (MaskItem<Exception?, OblivionGroup.ErrorMask<Flora.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Furniture:
-                        this.Furniture = (MaskItem<Exception?, Group.ErrorMask<Furniture.ErrorMask>?>?)obj;
+                        this.Furniture = (MaskItem<Exception?, OblivionGroup.ErrorMask<Furniture.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Weapons:
-                        this.Weapons = (MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>?)obj;
+                        this.Weapons = (MaskItem<Exception?, OblivionGroup.ErrorMask<Weapon.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Ammunitions:
-                        this.Ammunitions = (MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>?)obj;
+                        this.Ammunitions = (MaskItem<Exception?, OblivionGroup.ErrorMask<Ammunition.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Npcs:
-                        this.Npcs = (MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>?)obj;
+                        this.Npcs = (MaskItem<Exception?, OblivionGroup.ErrorMask<Npc.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Creatures:
-                        this.Creatures = (MaskItem<Exception?, Group.ErrorMask<Creature.ErrorMask>?>?)obj;
+                        this.Creatures = (MaskItem<Exception?, OblivionGroup.ErrorMask<Creature.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.LeveledCreatures:
-                        this.LeveledCreatures = (MaskItem<Exception?, Group.ErrorMask<LeveledCreature.ErrorMask>?>?)obj;
+                        this.LeveledCreatures = (MaskItem<Exception?, OblivionGroup.ErrorMask<LeveledCreature.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.SoulGems:
-                        this.SoulGems = (MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>?)obj;
+                        this.SoulGems = (MaskItem<Exception?, OblivionGroup.ErrorMask<SoulGem.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Keys:
-                        this.Keys = (MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>?)obj;
+                        this.Keys = (MaskItem<Exception?, OblivionGroup.ErrorMask<Key.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Potions:
-                        this.Potions = (MaskItem<Exception?, Group.ErrorMask<Potion.ErrorMask>?>?)obj;
+                        this.Potions = (MaskItem<Exception?, OblivionGroup.ErrorMask<Potion.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Subspaces:
-                        this.Subspaces = (MaskItem<Exception?, Group.ErrorMask<Subspace.ErrorMask>?>?)obj;
+                        this.Subspaces = (MaskItem<Exception?, OblivionGroup.ErrorMask<Subspace.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.SigilStones:
-                        this.SigilStones = (MaskItem<Exception?, Group.ErrorMask<SigilStone.ErrorMask>?>?)obj;
+                        this.SigilStones = (MaskItem<Exception?, OblivionGroup.ErrorMask<SigilStone.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.LeveledItems:
-                        this.LeveledItems = (MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>?)obj;
+                        this.LeveledItems = (MaskItem<Exception?, OblivionGroup.ErrorMask<LeveledItem.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Weathers:
-                        this.Weathers = (MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>?)obj;
+                        this.Weathers = (MaskItem<Exception?, OblivionGroup.ErrorMask<Weather.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Climates:
-                        this.Climates = (MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>?)obj;
+                        this.Climates = (MaskItem<Exception?, OblivionGroup.ErrorMask<Climate.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Regions:
-                        this.Regions = (MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>?)obj;
+                        this.Regions = (MaskItem<Exception?, OblivionGroup.ErrorMask<Region.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Cells:
-                        this.Cells = (MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>?)obj;
+                        this.Cells = (MaskItem<Exception?, OblivionListGroup.ErrorMask<CellBlock.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Worldspaces:
-                        this.Worldspaces = (MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>?)obj;
+                        this.Worldspaces = (MaskItem<Exception?, OblivionGroup.ErrorMask<Worldspace.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.DialogTopics:
-                        this.DialogTopics = (MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>?)obj;
+                        this.DialogTopics = (MaskItem<Exception?, OblivionGroup.ErrorMask<DialogTopic.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Quests:
-                        this.Quests = (MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>?)obj;
+                        this.Quests = (MaskItem<Exception?, OblivionGroup.ErrorMask<Quest.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.IdleAnimations:
-                        this.IdleAnimations = (MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>?)obj;
+                        this.IdleAnimations = (MaskItem<Exception?, OblivionGroup.ErrorMask<IdleAnimation.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.AIPackages:
-                        this.AIPackages = (MaskItem<Exception?, Group.ErrorMask<AIPackage.ErrorMask>?>?)obj;
+                        this.AIPackages = (MaskItem<Exception?, OblivionGroup.ErrorMask<AIPackage.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.CombatStyles:
-                        this.CombatStyles = (MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>?)obj;
+                        this.CombatStyles = (MaskItem<Exception?, OblivionGroup.ErrorMask<CombatStyle.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.LoadScreens:
-                        this.LoadScreens = (MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>?)obj;
+                        this.LoadScreens = (MaskItem<Exception?, OblivionGroup.ErrorMask<LoadScreen.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.LeveledSpells:
-                        this.LeveledSpells = (MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>?)obj;
+                        this.LeveledSpells = (MaskItem<Exception?, OblivionGroup.ErrorMask<LeveledSpell.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.AnimatedObjects:
-                        this.AnimatedObjects = (MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
+                        this.AnimatedObjects = (MaskItem<Exception?, OblivionGroup.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Waters:
-                        this.Waters = (MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>?)obj;
+                        this.Waters = (MaskItem<Exception?, OblivionGroup.ErrorMask<Water.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.EffectShaders:
-                        this.EffectShaders = (MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>?)obj;
+                        this.EffectShaders = (MaskItem<Exception?, OblivionGroup.ErrorMask<EffectShader.ErrorMask>?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2645,62 +2645,62 @@ namespace Mutagen.Bethesda.Oblivion
             public readonly bool DefaultOn;
             public bool OnOverall;
             public OblivionModHeader.TranslationMask? ModHeader;
-            public Group.TranslationMask<GameSetting.TranslationMask>? GameSettings;
-            public Group.TranslationMask<Global.TranslationMask>? Globals;
-            public Group.TranslationMask<Class.TranslationMask>? Classes;
-            public Group.TranslationMask<Faction.TranslationMask>? Factions;
-            public Group.TranslationMask<Hair.TranslationMask>? Hairs;
-            public Group.TranslationMask<Eye.TranslationMask>? Eyes;
-            public Group.TranslationMask<Race.TranslationMask>? Races;
-            public Group.TranslationMask<Sound.TranslationMask>? Sounds;
-            public Group.TranslationMask<SkillRecord.TranslationMask>? Skills;
-            public Group.TranslationMask<MagicEffect.TranslationMask>? MagicEffects;
-            public Group.TranslationMask<Script.TranslationMask>? Scripts;
-            public Group.TranslationMask<LandTexture.TranslationMask>? LandTextures;
-            public Group.TranslationMask<Enchantment.TranslationMask>? Enchantments;
-            public Group.TranslationMask<SpellUnleveled.TranslationMask>? Spells;
-            public Group.TranslationMask<Birthsign.TranslationMask>? Birthsigns;
-            public Group.TranslationMask<Activator.TranslationMask>? Activators;
-            public Group.TranslationMask<AlchemicalApparatus.TranslationMask>? AlchemicalApparatus;
-            public Group.TranslationMask<Armor.TranslationMask>? Armors;
-            public Group.TranslationMask<Book.TranslationMask>? Books;
-            public Group.TranslationMask<Clothing.TranslationMask>? Clothes;
-            public Group.TranslationMask<Container.TranslationMask>? Containers;
-            public Group.TranslationMask<Door.TranslationMask>? Doors;
-            public Group.TranslationMask<Ingredient.TranslationMask>? Ingredients;
-            public Group.TranslationMask<Light.TranslationMask>? Lights;
-            public Group.TranslationMask<Miscellaneous.TranslationMask>? Miscellaneous;
-            public Group.TranslationMask<Static.TranslationMask>? Statics;
-            public Group.TranslationMask<Grass.TranslationMask>? Grasses;
-            public Group.TranslationMask<Tree.TranslationMask>? Trees;
-            public Group.TranslationMask<Flora.TranslationMask>? Flora;
-            public Group.TranslationMask<Furniture.TranslationMask>? Furniture;
-            public Group.TranslationMask<Weapon.TranslationMask>? Weapons;
-            public Group.TranslationMask<Ammunition.TranslationMask>? Ammunitions;
-            public Group.TranslationMask<Npc.TranslationMask>? Npcs;
-            public Group.TranslationMask<Creature.TranslationMask>? Creatures;
-            public Group.TranslationMask<LeveledCreature.TranslationMask>? LeveledCreatures;
-            public Group.TranslationMask<SoulGem.TranslationMask>? SoulGems;
-            public Group.TranslationMask<Key.TranslationMask>? Keys;
-            public Group.TranslationMask<Potion.TranslationMask>? Potions;
-            public Group.TranslationMask<Subspace.TranslationMask>? Subspaces;
-            public Group.TranslationMask<SigilStone.TranslationMask>? SigilStones;
-            public Group.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
-            public Group.TranslationMask<Weather.TranslationMask>? Weathers;
-            public Group.TranslationMask<Climate.TranslationMask>? Climates;
-            public Group.TranslationMask<Region.TranslationMask>? Regions;
-            public ListGroup.TranslationMask<CellBlock.TranslationMask>? Cells;
-            public Group.TranslationMask<Worldspace.TranslationMask>? Worldspaces;
-            public Group.TranslationMask<DialogTopic.TranslationMask>? DialogTopics;
-            public Group.TranslationMask<Quest.TranslationMask>? Quests;
-            public Group.TranslationMask<IdleAnimation.TranslationMask>? IdleAnimations;
-            public Group.TranslationMask<AIPackage.TranslationMask>? AIPackages;
-            public Group.TranslationMask<CombatStyle.TranslationMask>? CombatStyles;
-            public Group.TranslationMask<LoadScreen.TranslationMask>? LoadScreens;
-            public Group.TranslationMask<LeveledSpell.TranslationMask>? LeveledSpells;
-            public Group.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
-            public Group.TranslationMask<Water.TranslationMask>? Waters;
-            public Group.TranslationMask<EffectShader.TranslationMask>? EffectShaders;
+            public OblivionGroup.TranslationMask<GameSetting.TranslationMask>? GameSettings;
+            public OblivionGroup.TranslationMask<Global.TranslationMask>? Globals;
+            public OblivionGroup.TranslationMask<Class.TranslationMask>? Classes;
+            public OblivionGroup.TranslationMask<Faction.TranslationMask>? Factions;
+            public OblivionGroup.TranslationMask<Hair.TranslationMask>? Hairs;
+            public OblivionGroup.TranslationMask<Eye.TranslationMask>? Eyes;
+            public OblivionGroup.TranslationMask<Race.TranslationMask>? Races;
+            public OblivionGroup.TranslationMask<Sound.TranslationMask>? Sounds;
+            public OblivionGroup.TranslationMask<SkillRecord.TranslationMask>? Skills;
+            public OblivionGroup.TranslationMask<MagicEffect.TranslationMask>? MagicEffects;
+            public OblivionGroup.TranslationMask<Script.TranslationMask>? Scripts;
+            public OblivionGroup.TranslationMask<LandTexture.TranslationMask>? LandTextures;
+            public OblivionGroup.TranslationMask<Enchantment.TranslationMask>? Enchantments;
+            public OblivionGroup.TranslationMask<SpellUnleveled.TranslationMask>? Spells;
+            public OblivionGroup.TranslationMask<Birthsign.TranslationMask>? Birthsigns;
+            public OblivionGroup.TranslationMask<Activator.TranslationMask>? Activators;
+            public OblivionGroup.TranslationMask<AlchemicalApparatus.TranslationMask>? AlchemicalApparatus;
+            public OblivionGroup.TranslationMask<Armor.TranslationMask>? Armors;
+            public OblivionGroup.TranslationMask<Book.TranslationMask>? Books;
+            public OblivionGroup.TranslationMask<Clothing.TranslationMask>? Clothes;
+            public OblivionGroup.TranslationMask<Container.TranslationMask>? Containers;
+            public OblivionGroup.TranslationMask<Door.TranslationMask>? Doors;
+            public OblivionGroup.TranslationMask<Ingredient.TranslationMask>? Ingredients;
+            public OblivionGroup.TranslationMask<Light.TranslationMask>? Lights;
+            public OblivionGroup.TranslationMask<Miscellaneous.TranslationMask>? Miscellaneous;
+            public OblivionGroup.TranslationMask<Static.TranslationMask>? Statics;
+            public OblivionGroup.TranslationMask<Grass.TranslationMask>? Grasses;
+            public OblivionGroup.TranslationMask<Tree.TranslationMask>? Trees;
+            public OblivionGroup.TranslationMask<Flora.TranslationMask>? Flora;
+            public OblivionGroup.TranslationMask<Furniture.TranslationMask>? Furniture;
+            public OblivionGroup.TranslationMask<Weapon.TranslationMask>? Weapons;
+            public OblivionGroup.TranslationMask<Ammunition.TranslationMask>? Ammunitions;
+            public OblivionGroup.TranslationMask<Npc.TranslationMask>? Npcs;
+            public OblivionGroup.TranslationMask<Creature.TranslationMask>? Creatures;
+            public OblivionGroup.TranslationMask<LeveledCreature.TranslationMask>? LeveledCreatures;
+            public OblivionGroup.TranslationMask<SoulGem.TranslationMask>? SoulGems;
+            public OblivionGroup.TranslationMask<Key.TranslationMask>? Keys;
+            public OblivionGroup.TranslationMask<Potion.TranslationMask>? Potions;
+            public OblivionGroup.TranslationMask<Subspace.TranslationMask>? Subspaces;
+            public OblivionGroup.TranslationMask<SigilStone.TranslationMask>? SigilStones;
+            public OblivionGroup.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
+            public OblivionGroup.TranslationMask<Weather.TranslationMask>? Weathers;
+            public OblivionGroup.TranslationMask<Climate.TranslationMask>? Climates;
+            public OblivionGroup.TranslationMask<Region.TranslationMask>? Regions;
+            public OblivionListGroup.TranslationMask<CellBlock.TranslationMask>? Cells;
+            public OblivionGroup.TranslationMask<Worldspace.TranslationMask>? Worldspaces;
+            public OblivionGroup.TranslationMask<DialogTopic.TranslationMask>? DialogTopics;
+            public OblivionGroup.TranslationMask<Quest.TranslationMask>? Quests;
+            public OblivionGroup.TranslationMask<IdleAnimation.TranslationMask>? IdleAnimations;
+            public OblivionGroup.TranslationMask<AIPackage.TranslationMask>? AIPackages;
+            public OblivionGroup.TranslationMask<CombatStyle.TranslationMask>? CombatStyles;
+            public OblivionGroup.TranslationMask<LoadScreen.TranslationMask>? LoadScreens;
+            public OblivionGroup.TranslationMask<LeveledSpell.TranslationMask>? LeveledSpells;
+            public OblivionGroup.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
+            public OblivionGroup.TranslationMask<Water.TranslationMask>? Waters;
+            public OblivionGroup.TranslationMask<EffectShader.TranslationMask>? EffectShaders;
             #endregion
 
             #region Ctors
@@ -2795,9 +2795,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = OblivionMod_Registration.TriggeringRecordType;
         public override GameRelease GameRelease => GameRelease.Oblivion;
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
-        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroup IMod.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
@@ -2823,61 +2824,61 @@ namespace Mutagen.Bethesda.Oblivion
             : base(modKey)
         {
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
-            _GameSettings_Object = new Group<GameSetting>(this);
-            _Globals_Object = new Group<Global>(this);
-            _Classes_Object = new Group<Class>(this);
-            _Factions_Object = new Group<Faction>(this);
-            _Hairs_Object = new Group<Hair>(this);
-            _Eyes_Object = new Group<Eye>(this);
-            _Races_Object = new Group<Race>(this);
-            _Sounds_Object = new Group<Sound>(this);
-            _Skills_Object = new Group<SkillRecord>(this);
-            _MagicEffects_Object = new Group<MagicEffect>(this);
-            _Scripts_Object = new Group<Script>(this);
-            _LandTextures_Object = new Group<LandTexture>(this);
-            _Enchantments_Object = new Group<Enchantment>(this);
-            _Spells_Object = new Group<SpellUnleveled>(this);
-            _Birthsigns_Object = new Group<Birthsign>(this);
-            _Activators_Object = new Group<Activator>(this);
-            _AlchemicalApparatus_Object = new Group<AlchemicalApparatus>(this);
-            _Armors_Object = new Group<Armor>(this);
-            _Books_Object = new Group<Book>(this);
-            _Clothes_Object = new Group<Clothing>(this);
-            _Containers_Object = new Group<Container>(this);
-            _Doors_Object = new Group<Door>(this);
-            _Ingredients_Object = new Group<Ingredient>(this);
-            _Lights_Object = new Group<Light>(this);
-            _Miscellaneous_Object = new Group<Miscellaneous>(this);
-            _Statics_Object = new Group<Static>(this);
-            _Grasses_Object = new Group<Grass>(this);
-            _Trees_Object = new Group<Tree>(this);
-            _Flora_Object = new Group<Flora>(this);
-            _Furniture_Object = new Group<Furniture>(this);
-            _Weapons_Object = new Group<Weapon>(this);
-            _Ammunitions_Object = new Group<Ammunition>(this);
-            _Npcs_Object = new Group<Npc>(this);
-            _Creatures_Object = new Group<Creature>(this);
-            _LeveledCreatures_Object = new Group<LeveledCreature>(this);
-            _SoulGems_Object = new Group<SoulGem>(this);
-            _Keys_Object = new Group<Key>(this);
-            _Potions_Object = new Group<Potion>(this);
-            _Subspaces_Object = new Group<Subspace>(this);
-            _SigilStones_Object = new Group<SigilStone>(this);
-            _LeveledItems_Object = new Group<LeveledItem>(this);
-            _Weathers_Object = new Group<Weather>(this);
-            _Climates_Object = new Group<Climate>(this);
-            _Regions_Object = new Group<Region>(this);
-            _Worldspaces_Object = new Group<Worldspace>(this);
-            _DialogTopics_Object = new Group<DialogTopic>(this);
-            _Quests_Object = new Group<Quest>(this);
-            _IdleAnimations_Object = new Group<IdleAnimation>(this);
-            _AIPackages_Object = new Group<AIPackage>(this);
-            _CombatStyles_Object = new Group<CombatStyle>(this);
-            _LoadScreens_Object = new Group<LoadScreen>(this);
-            _LeveledSpells_Object = new Group<LeveledSpell>(this);
-            _AnimatedObjects_Object = new Group<AnimatedObject>(this);
-            _Waters_Object = new Group<Water>(this);
-            _EffectShaders_Object = new Group<EffectShader>(this);
+            _GameSettings_Object = new OblivionGroup<GameSetting>(this);
+            _Globals_Object = new OblivionGroup<Global>(this);
+            _Classes_Object = new OblivionGroup<Class>(this);
+            _Factions_Object = new OblivionGroup<Faction>(this);
+            _Hairs_Object = new OblivionGroup<Hair>(this);
+            _Eyes_Object = new OblivionGroup<Eye>(this);
+            _Races_Object = new OblivionGroup<Race>(this);
+            _Sounds_Object = new OblivionGroup<Sound>(this);
+            _Skills_Object = new OblivionGroup<SkillRecord>(this);
+            _MagicEffects_Object = new OblivionGroup<MagicEffect>(this);
+            _Scripts_Object = new OblivionGroup<Script>(this);
+            _LandTextures_Object = new OblivionGroup<LandTexture>(this);
+            _Enchantments_Object = new OblivionGroup<Enchantment>(this);
+            _Spells_Object = new OblivionGroup<SpellUnleveled>(this);
+            _Birthsigns_Object = new OblivionGroup<Birthsign>(this);
+            _Activators_Object = new OblivionGroup<Activator>(this);
+            _AlchemicalApparatus_Object = new OblivionGroup<AlchemicalApparatus>(this);
+            _Armors_Object = new OblivionGroup<Armor>(this);
+            _Books_Object = new OblivionGroup<Book>(this);
+            _Clothes_Object = new OblivionGroup<Clothing>(this);
+            _Containers_Object = new OblivionGroup<Container>(this);
+            _Doors_Object = new OblivionGroup<Door>(this);
+            _Ingredients_Object = new OblivionGroup<Ingredient>(this);
+            _Lights_Object = new OblivionGroup<Light>(this);
+            _Miscellaneous_Object = new OblivionGroup<Miscellaneous>(this);
+            _Statics_Object = new OblivionGroup<Static>(this);
+            _Grasses_Object = new OblivionGroup<Grass>(this);
+            _Trees_Object = new OblivionGroup<Tree>(this);
+            _Flora_Object = new OblivionGroup<Flora>(this);
+            _Furniture_Object = new OblivionGroup<Furniture>(this);
+            _Weapons_Object = new OblivionGroup<Weapon>(this);
+            _Ammunitions_Object = new OblivionGroup<Ammunition>(this);
+            _Npcs_Object = new OblivionGroup<Npc>(this);
+            _Creatures_Object = new OblivionGroup<Creature>(this);
+            _LeveledCreatures_Object = new OblivionGroup<LeveledCreature>(this);
+            _SoulGems_Object = new OblivionGroup<SoulGem>(this);
+            _Keys_Object = new OblivionGroup<Key>(this);
+            _Potions_Object = new OblivionGroup<Potion>(this);
+            _Subspaces_Object = new OblivionGroup<Subspace>(this);
+            _SigilStones_Object = new OblivionGroup<SigilStone>(this);
+            _LeveledItems_Object = new OblivionGroup<LeveledItem>(this);
+            _Weathers_Object = new OblivionGroup<Weather>(this);
+            _Climates_Object = new OblivionGroup<Climate>(this);
+            _Regions_Object = new OblivionGroup<Region>(this);
+            _Worldspaces_Object = new OblivionGroup<Worldspace>(this);
+            _DialogTopics_Object = new OblivionGroup<DialogTopic>(this);
+            _Quests_Object = new OblivionGroup<Quest>(this);
+            _IdleAnimations_Object = new OblivionGroup<IdleAnimation>(this);
+            _AIPackages_Object = new OblivionGroup<AIPackage>(this);
+            _CombatStyles_Object = new OblivionGroup<CombatStyle>(this);
+            _LoadScreens_Object = new OblivionGroup<LoadScreen>(this);
+            _LeveledSpells_Object = new OblivionGroup<LeveledSpell>(this);
+            _AnimatedObjects_Object = new OblivionGroup<AnimatedObject>(this);
+            _Waters_Object = new OblivionGroup<Water>(this);
+            _EffectShaders_Object = new OblivionGroup<EffectShader>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3186,17 +3187,17 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionModCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionModSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -3222,11 +3223,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordCommonGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IMajorRecordCommonGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -3402,62 +3403,62 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionModGetter
     {
         new OblivionModHeader ModHeader { get; }
-        new Group<GameSetting> GameSettings { get; }
-        new Group<Global> Globals { get; }
-        new Group<Class> Classes { get; }
-        new Group<Faction> Factions { get; }
-        new Group<Hair> Hairs { get; }
-        new Group<Eye> Eyes { get; }
-        new Group<Race> Races { get; }
-        new Group<Sound> Sounds { get; }
-        new Group<SkillRecord> Skills { get; }
-        new Group<MagicEffect> MagicEffects { get; }
-        new Group<Script> Scripts { get; }
-        new Group<LandTexture> LandTextures { get; }
-        new Group<Enchantment> Enchantments { get; }
-        new Group<SpellUnleveled> Spells { get; }
-        new Group<Birthsign> Birthsigns { get; }
-        new Group<Activator> Activators { get; }
-        new Group<AlchemicalApparatus> AlchemicalApparatus { get; }
-        new Group<Armor> Armors { get; }
-        new Group<Book> Books { get; }
-        new Group<Clothing> Clothes { get; }
-        new Group<Container> Containers { get; }
-        new Group<Door> Doors { get; }
-        new Group<Ingredient> Ingredients { get; }
-        new Group<Light> Lights { get; }
-        new Group<Miscellaneous> Miscellaneous { get; }
-        new Group<Static> Statics { get; }
-        new Group<Grass> Grasses { get; }
-        new Group<Tree> Trees { get; }
-        new Group<Flora> Flora { get; }
-        new Group<Furniture> Furniture { get; }
-        new Group<Weapon> Weapons { get; }
-        new Group<Ammunition> Ammunitions { get; }
-        new Group<Npc> Npcs { get; }
-        new Group<Creature> Creatures { get; }
-        new Group<LeveledCreature> LeveledCreatures { get; }
-        new Group<SoulGem> SoulGems { get; }
-        new Group<Key> Keys { get; }
-        new Group<Potion> Potions { get; }
-        new Group<Subspace> Subspaces { get; }
-        new Group<SigilStone> SigilStones { get; }
-        new Group<LeveledItem> LeveledItems { get; }
-        new Group<Weather> Weathers { get; }
-        new Group<Climate> Climates { get; }
-        new Group<Region> Regions { get; }
-        new ListGroup<CellBlock> Cells { get; }
-        new Group<Worldspace> Worldspaces { get; }
-        new Group<DialogTopic> DialogTopics { get; }
-        new Group<Quest> Quests { get; }
-        new Group<IdleAnimation> IdleAnimations { get; }
-        new Group<AIPackage> AIPackages { get; }
-        new Group<CombatStyle> CombatStyles { get; }
-        new Group<LoadScreen> LoadScreens { get; }
-        new Group<LeveledSpell> LeveledSpells { get; }
-        new Group<AnimatedObject> AnimatedObjects { get; }
-        new Group<Water> Waters { get; }
-        new Group<EffectShader> EffectShaders { get; }
+        new OblivionGroup<GameSetting> GameSettings { get; }
+        new OblivionGroup<Global> Globals { get; }
+        new OblivionGroup<Class> Classes { get; }
+        new OblivionGroup<Faction> Factions { get; }
+        new OblivionGroup<Hair> Hairs { get; }
+        new OblivionGroup<Eye> Eyes { get; }
+        new OblivionGroup<Race> Races { get; }
+        new OblivionGroup<Sound> Sounds { get; }
+        new OblivionGroup<SkillRecord> Skills { get; }
+        new OblivionGroup<MagicEffect> MagicEffects { get; }
+        new OblivionGroup<Script> Scripts { get; }
+        new OblivionGroup<LandTexture> LandTextures { get; }
+        new OblivionGroup<Enchantment> Enchantments { get; }
+        new OblivionGroup<SpellUnleveled> Spells { get; }
+        new OblivionGroup<Birthsign> Birthsigns { get; }
+        new OblivionGroup<Activator> Activators { get; }
+        new OblivionGroup<AlchemicalApparatus> AlchemicalApparatus { get; }
+        new OblivionGroup<Armor> Armors { get; }
+        new OblivionGroup<Book> Books { get; }
+        new OblivionGroup<Clothing> Clothes { get; }
+        new OblivionGroup<Container> Containers { get; }
+        new OblivionGroup<Door> Doors { get; }
+        new OblivionGroup<Ingredient> Ingredients { get; }
+        new OblivionGroup<Light> Lights { get; }
+        new OblivionGroup<Miscellaneous> Miscellaneous { get; }
+        new OblivionGroup<Static> Statics { get; }
+        new OblivionGroup<Grass> Grasses { get; }
+        new OblivionGroup<Tree> Trees { get; }
+        new OblivionGroup<Flora> Flora { get; }
+        new OblivionGroup<Furniture> Furniture { get; }
+        new OblivionGroup<Weapon> Weapons { get; }
+        new OblivionGroup<Ammunition> Ammunitions { get; }
+        new OblivionGroup<Npc> Npcs { get; }
+        new OblivionGroup<Creature> Creatures { get; }
+        new OblivionGroup<LeveledCreature> LeveledCreatures { get; }
+        new OblivionGroup<SoulGem> SoulGems { get; }
+        new OblivionGroup<Key> Keys { get; }
+        new OblivionGroup<Potion> Potions { get; }
+        new OblivionGroup<Subspace> Subspaces { get; }
+        new OblivionGroup<SigilStone> SigilStones { get; }
+        new OblivionGroup<LeveledItem> LeveledItems { get; }
+        new OblivionGroup<Weather> Weathers { get; }
+        new OblivionGroup<Climate> Climates { get; }
+        new OblivionGroup<Region> Regions { get; }
+        new OblivionListGroup<CellBlock> Cells { get; }
+        new OblivionGroup<Worldspace> Worldspaces { get; }
+        new OblivionGroup<DialogTopic> DialogTopics { get; }
+        new OblivionGroup<Quest> Quests { get; }
+        new OblivionGroup<IdleAnimation> IdleAnimations { get; }
+        new OblivionGroup<AIPackage> AIPackages { get; }
+        new OblivionGroup<CombatStyle> CombatStyles { get; }
+        new OblivionGroup<LoadScreen> LoadScreens { get; }
+        new OblivionGroup<LeveledSpell> LeveledSpells { get; }
+        new OblivionGroup<AnimatedObject> AnimatedObjects { get; }
+        new OblivionGroup<Water> Waters { get; }
+        new OblivionGroup<EffectShader> EffectShaders { get; }
     }
 
     public partial interface IOblivionModGetter :
@@ -3475,64 +3476,64 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => OblivionMod_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => OblivionMod_Registration.Instance;
         IOblivionModHeaderGetter ModHeader { get; }
-        IGroupGetter<IGameSettingGetter> GameSettings { get; }
-        IGroupGetter<IGlobalGetter> Globals { get; }
-        IGroupGetter<IClassGetter> Classes { get; }
-        IGroupGetter<IFactionGetter> Factions { get; }
-        IGroupGetter<IHairGetter> Hairs { get; }
-        IGroupGetter<IEyeGetter> Eyes { get; }
-        IGroupGetter<IRaceGetter> Races { get; }
-        IGroupGetter<ISoundGetter> Sounds { get; }
-        IGroupGetter<ISkillRecordGetter> Skills { get; }
-        IGroupGetter<IMagicEffectGetter> MagicEffects { get; }
-        IGroupGetter<IScriptGetter> Scripts { get; }
-        IGroupGetter<ILandTextureGetter> LandTextures { get; }
-        IGroupGetter<IEnchantmentGetter> Enchantments { get; }
-        IGroupGetter<ISpellUnleveledGetter> Spells { get; }
-        IGroupGetter<IBirthsignGetter> Birthsigns { get; }
-        IGroupGetter<IActivatorGetter> Activators { get; }
-        IGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatus { get; }
-        IGroupGetter<IArmorGetter> Armors { get; }
-        IGroupGetter<IBookGetter> Books { get; }
-        IGroupGetter<IClothingGetter> Clothes { get; }
-        IGroupGetter<IContainerGetter> Containers { get; }
-        IGroupGetter<IDoorGetter> Doors { get; }
-        IGroupGetter<IIngredientGetter> Ingredients { get; }
-        IGroupGetter<ILightGetter> Lights { get; }
-        IGroupGetter<IMiscellaneousGetter> Miscellaneous { get; }
-        IGroupGetter<IStaticGetter> Statics { get; }
-        IGroupGetter<IGrassGetter> Grasses { get; }
-        IGroupGetter<ITreeGetter> Trees { get; }
-        IGroupGetter<IFloraGetter> Flora { get; }
-        IGroupGetter<IFurnitureGetter> Furniture { get; }
-        IGroupGetter<IWeaponGetter> Weapons { get; }
-        IGroupGetter<IAmmunitionGetter> Ammunitions { get; }
-        IGroupGetter<INpcGetter> Npcs { get; }
-        IGroupGetter<ICreatureGetter> Creatures { get; }
-        IGroupGetter<ILeveledCreatureGetter> LeveledCreatures { get; }
-        IGroupGetter<ISoulGemGetter> SoulGems { get; }
-        IGroupGetter<IKeyGetter> Keys { get; }
-        IGroupGetter<IPotionGetter> Potions { get; }
-        IGroupGetter<ISubspaceGetter> Subspaces { get; }
-        IGroupGetter<ISigilStoneGetter> SigilStones { get; }
-        IGroupGetter<ILeveledItemGetter> LeveledItems { get; }
-        IGroupGetter<IWeatherGetter> Weathers { get; }
-        IGroupGetter<IClimateGetter> Climates { get; }
-        IGroupGetter<IRegionGetter> Regions { get; }
-        IListGroupGetter<ICellBlockGetter> Cells { get; }
-        IGroupGetter<IWorldspaceGetter> Worldspaces { get; }
-        IGroupGetter<IDialogTopicGetter> DialogTopics { get; }
-        IGroupGetter<IQuestGetter> Quests { get; }
-        IGroupGetter<IIdleAnimationGetter> IdleAnimations { get; }
-        IGroupGetter<IAIPackageGetter> AIPackages { get; }
-        IGroupGetter<ICombatStyleGetter> CombatStyles { get; }
-        IGroupGetter<ILoadScreenGetter> LoadScreens { get; }
-        IGroupGetter<ILeveledSpellGetter> LeveledSpells { get; }
-        IGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
-        IGroupGetter<IWaterGetter> Waters { get; }
-        IGroupGetter<IEffectShaderGetter> EffectShaders { get; }
+        IOblivionGroupGetter<IGameSettingGetter> GameSettings { get; }
+        IOblivionGroupGetter<IGlobalGetter> Globals { get; }
+        IOblivionGroupGetter<IClassGetter> Classes { get; }
+        IOblivionGroupGetter<IFactionGetter> Factions { get; }
+        IOblivionGroupGetter<IHairGetter> Hairs { get; }
+        IOblivionGroupGetter<IEyeGetter> Eyes { get; }
+        IOblivionGroupGetter<IRaceGetter> Races { get; }
+        IOblivionGroupGetter<ISoundGetter> Sounds { get; }
+        IOblivionGroupGetter<ISkillRecordGetter> Skills { get; }
+        IOblivionGroupGetter<IMagicEffectGetter> MagicEffects { get; }
+        IOblivionGroupGetter<IScriptGetter> Scripts { get; }
+        IOblivionGroupGetter<ILandTextureGetter> LandTextures { get; }
+        IOblivionGroupGetter<IEnchantmentGetter> Enchantments { get; }
+        IOblivionGroupGetter<ISpellUnleveledGetter> Spells { get; }
+        IOblivionGroupGetter<IBirthsignGetter> Birthsigns { get; }
+        IOblivionGroupGetter<IActivatorGetter> Activators { get; }
+        IOblivionGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatus { get; }
+        IOblivionGroupGetter<IArmorGetter> Armors { get; }
+        IOblivionGroupGetter<IBookGetter> Books { get; }
+        IOblivionGroupGetter<IClothingGetter> Clothes { get; }
+        IOblivionGroupGetter<IContainerGetter> Containers { get; }
+        IOblivionGroupGetter<IDoorGetter> Doors { get; }
+        IOblivionGroupGetter<IIngredientGetter> Ingredients { get; }
+        IOblivionGroupGetter<ILightGetter> Lights { get; }
+        IOblivionGroupGetter<IMiscellaneousGetter> Miscellaneous { get; }
+        IOblivionGroupGetter<IStaticGetter> Statics { get; }
+        IOblivionGroupGetter<IGrassGetter> Grasses { get; }
+        IOblivionGroupGetter<ITreeGetter> Trees { get; }
+        IOblivionGroupGetter<IFloraGetter> Flora { get; }
+        IOblivionGroupGetter<IFurnitureGetter> Furniture { get; }
+        IOblivionGroupGetter<IWeaponGetter> Weapons { get; }
+        IOblivionGroupGetter<IAmmunitionGetter> Ammunitions { get; }
+        IOblivionGroupGetter<INpcGetter> Npcs { get; }
+        IOblivionGroupGetter<ICreatureGetter> Creatures { get; }
+        IOblivionGroupGetter<ILeveledCreatureGetter> LeveledCreatures { get; }
+        IOblivionGroupGetter<ISoulGemGetter> SoulGems { get; }
+        IOblivionGroupGetter<IKeyGetter> Keys { get; }
+        IOblivionGroupGetter<IPotionGetter> Potions { get; }
+        IOblivionGroupGetter<ISubspaceGetter> Subspaces { get; }
+        IOblivionGroupGetter<ISigilStoneGetter> SigilStones { get; }
+        IOblivionGroupGetter<ILeveledItemGetter> LeveledItems { get; }
+        IOblivionGroupGetter<IWeatherGetter> Weathers { get; }
+        IOblivionGroupGetter<IClimateGetter> Climates { get; }
+        IOblivionGroupGetter<IRegionGetter> Regions { get; }
+        IOblivionListGroupGetter<ICellBlockGetter> Cells { get; }
+        IOblivionGroupGetter<IWorldspaceGetter> Worldspaces { get; }
+        IOblivionGroupGetter<IDialogTopicGetter> DialogTopics { get; }
+        IOblivionGroupGetter<IQuestGetter> Quests { get; }
+        IOblivionGroupGetter<IIdleAnimationGetter> IdleAnimations { get; }
+        IOblivionGroupGetter<IAIPackageGetter> AIPackages { get; }
+        IOblivionGroupGetter<ICombatStyleGetter> CombatStyles { get; }
+        IOblivionGroupGetter<ILoadScreenGetter> LoadScreens { get; }
+        IOblivionGroupGetter<ILeveledSpellGetter> LeveledSpells { get; }
+        IOblivionGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
+        IOblivionGroupGetter<IWaterGetter> Waters { get; }
+        IOblivionGroupGetter<IEffectShaderGetter> EffectShaders { get; }
 
     }
 
@@ -3679,29 +3680,38 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public static IGroupCommonGetter<T> GetTopLevelGroup<T>(this IOblivionModGetter obj)
-            where T : IMajorRecordCommonGetter
+        public static IGroupGetter<T> GetTopLevelGroup<T>(this IOblivionModGetter obj)
+            where T : IMajorRecordGetter
         {
-            return (IGroupCommonGetter<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroupCommonGetter<IMajorRecordCommonGetter> GetTopLevelGroup(
+        public static IGroupGetter GetTopLevelGroup(
             this IOblivionModGetter obj,
             Type type)
         {
-            return (IGroupCommonGetter<IMajorRecordCommonGetter>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
 
-        public static IGroupCommon<T> GetTopLevelGroup<T>(this IOblivionMod obj)
-            where T : IMajorRecordCommon
+        public static IGroup<T> GetTopLevelGroup<T>(this IOblivionMod obj)
+            where T : IMajorRecord
         {
-            return (IGroupCommon<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
+        }
+
+        public static IGroup GetTopLevelGroup(
+            this IOblivionMod obj,
+            Type type)
+        {
+            return (IGroup)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: type);
         }
 
         public static void WriteToBinaryParallel(
@@ -3737,7 +3747,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IOblivionModGetter obj)
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IOblivionModGetter obj)
         {
             return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
@@ -3746,7 +3756,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IOblivionModGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -3757,7 +3767,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             this IOblivionModGetter obj,
             Type type,
             bool throwIfUnknown = true)
@@ -3766,19 +3776,19 @@ namespace Mutagen.Bethesda.Oblivion
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommonGetter)m)
+                .Select(m => (IMajorRecordGetter)m)
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IOblivionMod obj)
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IOblivionMod obj)
         {
             return ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IOblivionMod obj)
-            where TMajor : class, IMajorRecordCommon
+            where TMajor : class, IMajorRecord
         {
             return ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -3789,7 +3799,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
             this IOblivionMod obj,
             Type? type,
             bool throwIfUnknown = true)
@@ -3798,7 +3808,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommon)m)
+                .Select(m => (IMajorRecord)m)
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
@@ -3883,7 +3893,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod obj,
             TMajor record,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(record.FormKey);
@@ -3899,7 +3909,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod obj,
             IEnumerable<TMajor> records,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -3913,7 +3923,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod obj,
             FormKey key,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
@@ -3929,7 +3939,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod obj,
             IEnumerable<FormKey> keys,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -3943,7 +3953,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod obj,
             HashSet<FormKey> keys,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -3957,20 +3967,20 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
-            where TSetter : class, IMajorRecordCommon, TGetter
-            where TGetter : class, IMajorRecordCommonGetter
+            where TSetter : class, IMajorRecord, TGetter
+            where TGetter : class, IMajorRecordGetter
         {
             return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecordContexts(
                 obj: obj,
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
+                .Select(m => m.AsType<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             this IOblivionModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -4327,15 +4337,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.EffectShaders.RemapLinks(mapping);
         }
         
-        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IOblivionMod obj)
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(IOblivionMod obj)
         {
             foreach (var item in OblivionModCommon.Instance.EnumerateMajorRecords(obj))
             {
-                yield return (item as IMajorRecordCommon)!;
+                yield return (item as IMajorRecord)!;
             }
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
             IOblivionMod obj,
             Type? type,
             bool throwIfUnknown)
@@ -4344,7 +4354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             IOblivionMod obj,
             Type type,
             bool throwIfUnknown)
@@ -4425,13 +4435,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "IOblivionMajorRecord":
                 case "OblivionMajorRecord":
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "IOblivionMajorRecordGetter":
                     if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
@@ -6301,7 +6309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public static void WriteGroupParallel<T>(
-            IGroupGetter<T> group,
+            IOblivionGroupGetter<T> group,
             IMasterReferenceReader masters,
             int targetIndex,
             Stream[] streamDepositArray)
@@ -6316,7 +6324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
             {
                 stream.Position += 8;
-                GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
+                OblivionGroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
             }
             subStreams[0] = groupByteStream;
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
@@ -6733,7 +6741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IOblivionModGetter obj)
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IOblivionModGetter obj)
         {
             foreach (var item in obj.GameSettings.EnumerateMajorRecords())
             {
@@ -6961,7 +6969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
             IOblivionModGetter obj,
             Type? type,
             bool throwIfUnknown)
@@ -6970,14 +6978,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             IOblivionModGetter obj,
             Type type,
             bool throwIfUnknown)
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "IOblivionMajorRecord":
@@ -6989,7 +6996,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "IOblivionMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
@@ -7845,7 +7851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             IOblivionModGetter obj,
             ILinkCache linkCache)
         {
@@ -8324,7 +8330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             IOblivionModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -8332,7 +8338,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "IOblivionMajorRecord":
@@ -8346,7 +8351,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "IOblivionMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecordContexts(
                         obj,
@@ -10743,7 +10747,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
-        public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
+        public static OblivionMod_Registration StaticRegistration => OblivionMod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => OblivionModCommon.Instance;
         [DebuggerStepThrough]
@@ -10924,7 +10928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var GameSettingsItem = item.GameSettings;
                 if (GameSettingsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
                         item: GameSettingsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -10935,7 +10939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var GlobalsItem = item.Globals;
                 if (GlobalsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -10946,7 +10950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var ClassesItem = item.Classes;
                 if (ClassesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -10957,7 +10961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var FactionsItem = item.Factions;
                 if (FactionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: FactionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -10968,7 +10972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var HairsItem = item.Hairs;
                 if (HairsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
                         item: HairsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -10979,7 +10983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var EyesItem = item.Eyes;
                 if (EyesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyeGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyeGetter>(
                         item: EyesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -10990,7 +10994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var RacesItem = item.Races;
                 if (RacesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
                         item: RacesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11001,7 +11005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var SoundsItem = item.Sounds;
                 if (SoundsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoundsItem).BinaryWriteTranslator).Write<ISoundGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)SoundsItem).BinaryWriteTranslator).Write<ISoundGetter>(
                         item: SoundsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11012,7 +11016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var SkillsItem = item.Skills;
                 if (SkillsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SkillsItem).BinaryWriteTranslator).Write<ISkillRecordGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)SkillsItem).BinaryWriteTranslator).Write<ISkillRecordGetter>(
                         item: SkillsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11023,7 +11027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var MagicEffectsItem = item.MagicEffects;
                 if (MagicEffectsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)MagicEffectsItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)MagicEffectsItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
                         item: MagicEffectsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11034,7 +11038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var ScriptsItem = item.Scripts;
                 if (ScriptsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ScriptsItem).BinaryWriteTranslator).Write<IScriptGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)ScriptsItem).BinaryWriteTranslator).Write<IScriptGetter>(
                         item: ScriptsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11045,7 +11049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var LandTexturesItem = item.LandTextures;
                 if (LandTexturesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LandTexturesItem).BinaryWriteTranslator).Write<ILandTextureGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)LandTexturesItem).BinaryWriteTranslator).Write<ILandTextureGetter>(
                         item: LandTexturesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11056,7 +11060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var EnchantmentsItem = item.Enchantments;
                 if (EnchantmentsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)EnchantmentsItem).BinaryWriteTranslator).Write<IEnchantmentGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)EnchantmentsItem).BinaryWriteTranslator).Write<IEnchantmentGetter>(
                         item: EnchantmentsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11067,7 +11071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var SpellsItem = item.Spells;
                 if (SpellsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SpellsItem).BinaryWriteTranslator).Write<ISpellUnleveledGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)SpellsItem).BinaryWriteTranslator).Write<ISpellUnleveledGetter>(
                         item: SpellsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11078,7 +11082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var BirthsignsItem = item.Birthsigns;
                 if (BirthsignsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)BirthsignsItem).BinaryWriteTranslator).Write<IBirthsignGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)BirthsignsItem).BinaryWriteTranslator).Write<IBirthsignGetter>(
                         item: BirthsignsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11089,7 +11093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var ActivatorsItem = item.Activators;
                 if (ActivatorsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ActivatorsItem).BinaryWriteTranslator).Write<IActivatorGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)ActivatorsItem).BinaryWriteTranslator).Write<IActivatorGetter>(
                         item: ActivatorsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11100,7 +11104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var AlchemicalApparatusItem = item.AlchemicalApparatus;
                 if (AlchemicalApparatusItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)AlchemicalApparatusItem).BinaryWriteTranslator).Write<IAlchemicalApparatusGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)AlchemicalApparatusItem).BinaryWriteTranslator).Write<IAlchemicalApparatusGetter>(
                         item: AlchemicalApparatusItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11111,7 +11115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var ArmorsItem = item.Armors;
                 if (ArmorsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)ArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
                         item: ArmorsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11122,7 +11126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var BooksItem = item.Books;
                 if (BooksItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)BooksItem).BinaryWriteTranslator).Write<IBookGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)BooksItem).BinaryWriteTranslator).Write<IBookGetter>(
                         item: BooksItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11133,7 +11137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var ClothesItem = item.Clothes;
                 if (ClothesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ClothesItem).BinaryWriteTranslator).Write<IClothingGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)ClothesItem).BinaryWriteTranslator).Write<IClothingGetter>(
                         item: ClothesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11144,7 +11148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var ContainersItem = item.Containers;
                 if (ContainersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ContainersItem).BinaryWriteTranslator).Write<IContainerGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)ContainersItem).BinaryWriteTranslator).Write<IContainerGetter>(
                         item: ContainersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11155,7 +11159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var DoorsItem = item.Doors;
                 if (DoorsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)DoorsItem).BinaryWriteTranslator).Write<IDoorGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)DoorsItem).BinaryWriteTranslator).Write<IDoorGetter>(
                         item: DoorsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11166,7 +11170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var IngredientsItem = item.Ingredients;
                 if (IngredientsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)IngredientsItem).BinaryWriteTranslator).Write<IIngredientGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)IngredientsItem).BinaryWriteTranslator).Write<IIngredientGetter>(
                         item: IngredientsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11177,7 +11181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var LightsItem = item.Lights;
                 if (LightsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LightsItem).BinaryWriteTranslator).Write<ILightGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)LightsItem).BinaryWriteTranslator).Write<ILightGetter>(
                         item: LightsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11188,7 +11192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var MiscellaneousItem = item.Miscellaneous;
                 if (MiscellaneousItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)MiscellaneousItem).BinaryWriteTranslator).Write<IMiscellaneousGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)MiscellaneousItem).BinaryWriteTranslator).Write<IMiscellaneousGetter>(
                         item: MiscellaneousItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11199,7 +11203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var StaticsItem = item.Statics;
                 if (StaticsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)StaticsItem).BinaryWriteTranslator).Write<IStaticGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)StaticsItem).BinaryWriteTranslator).Write<IStaticGetter>(
                         item: StaticsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11210,7 +11214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var GrassesItem = item.Grasses;
                 if (GrassesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)GrassesItem).BinaryWriteTranslator).Write<IGrassGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)GrassesItem).BinaryWriteTranslator).Write<IGrassGetter>(
                         item: GrassesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11221,7 +11225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var TreesItem = item.Trees;
                 if (TreesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)TreesItem).BinaryWriteTranslator).Write<ITreeGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)TreesItem).BinaryWriteTranslator).Write<ITreeGetter>(
                         item: TreesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11232,7 +11236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var FloraItem = item.Flora;
                 if (FloraItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)FloraItem).BinaryWriteTranslator).Write<IFloraGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)FloraItem).BinaryWriteTranslator).Write<IFloraGetter>(
                         item: FloraItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11243,7 +11247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var FurnitureItem = item.Furniture;
                 if (FurnitureItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)FurnitureItem).BinaryWriteTranslator).Write<IFurnitureGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)FurnitureItem).BinaryWriteTranslator).Write<IFurnitureGetter>(
                         item: FurnitureItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11254,7 +11258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var WeaponsItem = item.Weapons;
                 if (WeaponsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)WeaponsItem).BinaryWriteTranslator).Write<IWeaponGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)WeaponsItem).BinaryWriteTranslator).Write<IWeaponGetter>(
                         item: WeaponsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11265,7 +11269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var AmmunitionsItem = item.Ammunitions;
                 if (AmmunitionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)AmmunitionsItem).BinaryWriteTranslator).Write<IAmmunitionGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)AmmunitionsItem).BinaryWriteTranslator).Write<IAmmunitionGetter>(
                         item: AmmunitionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11276,7 +11280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var NpcsItem = item.Npcs;
                 if (NpcsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)NpcsItem).BinaryWriteTranslator).Write<INpcGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)NpcsItem).BinaryWriteTranslator).Write<INpcGetter>(
                         item: NpcsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11287,7 +11291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var CreaturesItem = item.Creatures;
                 if (CreaturesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)CreaturesItem).BinaryWriteTranslator).Write<ICreatureGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)CreaturesItem).BinaryWriteTranslator).Write<ICreatureGetter>(
                         item: CreaturesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11298,7 +11302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var LeveledCreaturesItem = item.LeveledCreatures;
                 if (LeveledCreaturesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledCreaturesItem).BinaryWriteTranslator).Write<ILeveledCreatureGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)LeveledCreaturesItem).BinaryWriteTranslator).Write<ILeveledCreatureGetter>(
                         item: LeveledCreaturesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11309,7 +11313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var SoulGemsItem = item.SoulGems;
                 if (SoulGemsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoulGemsItem).BinaryWriteTranslator).Write<ISoulGemGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)SoulGemsItem).BinaryWriteTranslator).Write<ISoulGemGetter>(
                         item: SoulGemsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11320,7 +11324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var KeysItem = item.Keys;
                 if (KeysItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)KeysItem).BinaryWriteTranslator).Write<IKeyGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)KeysItem).BinaryWriteTranslator).Write<IKeyGetter>(
                         item: KeysItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11331,7 +11335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var PotionsItem = item.Potions;
                 if (PotionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)PotionsItem).BinaryWriteTranslator).Write<IPotionGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)PotionsItem).BinaryWriteTranslator).Write<IPotionGetter>(
                         item: PotionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11342,7 +11346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var SubspacesItem = item.Subspaces;
                 if (SubspacesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SubspacesItem).BinaryWriteTranslator).Write<ISubspaceGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)SubspacesItem).BinaryWriteTranslator).Write<ISubspaceGetter>(
                         item: SubspacesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11353,7 +11357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var SigilStonesItem = item.SigilStones;
                 if (SigilStonesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SigilStonesItem).BinaryWriteTranslator).Write<ISigilStoneGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)SigilStonesItem).BinaryWriteTranslator).Write<ISigilStoneGetter>(
                         item: SigilStonesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11364,7 +11368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var LeveledItemsItem = item.LeveledItems;
                 if (LeveledItemsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledItemsItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)LeveledItemsItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
                         item: LeveledItemsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11375,7 +11379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var WeathersItem = item.Weathers;
                 if (WeathersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
                         item: WeathersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11386,7 +11390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var ClimatesItem = item.Climates;
                 if (ClimatesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ClimatesItem).BinaryWriteTranslator).Write<IClimateGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)ClimatesItem).BinaryWriteTranslator).Write<IClimateGetter>(
                         item: ClimatesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11397,7 +11401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var RegionsItem = item.Regions;
                 if (RegionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)RegionsItem).BinaryWriteTranslator).Write<IRegionGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)RegionsItem).BinaryWriteTranslator).Write<IRegionGetter>(
                         item: RegionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11408,7 +11412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var CellsItem = item.Cells;
                 if (CellsItem.Records.Count > 0)
                 {
-                    ((ListGroupBinaryWriteTranslation)((IBinaryItem)CellsItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
+                    ((OblivionListGroupBinaryWriteTranslation)((IBinaryItem)CellsItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
                         item: CellsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11419,7 +11423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var WorldspacesItem = item.Worldspaces;
                 if (WorldspacesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)WorldspacesItem).BinaryWriteTranslator).Write<IWorldspaceGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)WorldspacesItem).BinaryWriteTranslator).Write<IWorldspaceGetter>(
                         item: WorldspacesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11430,7 +11434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var DialogTopicsItem = item.DialogTopics;
                 if (DialogTopicsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)DialogTopicsItem).BinaryWriteTranslator).Write<IDialogTopicGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)DialogTopicsItem).BinaryWriteTranslator).Write<IDialogTopicGetter>(
                         item: DialogTopicsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11441,7 +11445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var QuestsItem = item.Quests;
                 if (QuestsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
                         item: QuestsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11452,7 +11456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var IdleAnimationsItem = item.IdleAnimations;
                 if (IdleAnimationsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
                         item: IdleAnimationsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11463,7 +11467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var AIPackagesItem = item.AIPackages;
                 if (AIPackagesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)AIPackagesItem).BinaryWriteTranslator).Write<IAIPackageGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)AIPackagesItem).BinaryWriteTranslator).Write<IAIPackageGetter>(
                         item: AIPackagesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11474,7 +11478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var CombatStylesItem = item.CombatStyles;
                 if (CombatStylesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)CombatStylesItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)CombatStylesItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
                         item: CombatStylesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11485,7 +11489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var LoadScreensItem = item.LoadScreens;
                 if (LoadScreensItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LoadScreensItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)LoadScreensItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
                         item: LoadScreensItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11496,7 +11500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var LeveledSpellsItem = item.LeveledSpells;
                 if (LeveledSpellsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledSpellsItem).BinaryWriteTranslator).Write<ILeveledSpellGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)LeveledSpellsItem).BinaryWriteTranslator).Write<ILeveledSpellGetter>(
                         item: LeveledSpellsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11507,7 +11511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var AnimatedObjectsItem = item.AnimatedObjects;
                 if (AnimatedObjectsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
                         item: AnimatedObjectsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11518,7 +11522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var WatersItem = item.Waters;
                 if (WatersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)WatersItem).BinaryWriteTranslator).Write<IWaterGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)WatersItem).BinaryWriteTranslator).Write<IWaterGetter>(
                         item: WatersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11529,7 +11533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 var EffectShadersItem = item.EffectShaders;
                 if (EffectShadersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
                         item: EffectShadersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -12483,7 +12487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
-        public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
+        public static OblivionMod_Registration StaticRegistration => OblivionMod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => OblivionModCommon.Instance;
         [DebuggerStepThrough]
@@ -12500,8 +12504,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public GameRelease GameRelease => GameRelease.Oblivion;
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
@@ -12511,17 +12515,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordCommonGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IMajorRecordCommonGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         uint IModGetter.NextFormID => ModHeader.Stats.NextFormID;
         public ModKey ModKey { get; }
         private readonly BinaryOverlayFactoryPackage _package;
@@ -12539,284 +12543,284 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IOblivionModHeaderGetter ModHeader => _ModHeader ?? new OblivionModHeader();
         #endregion
         #region GameSettings
-        private RangeInt64? _GameSettingsLocation;
-        private IGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocation.HasValue ? GroupBinaryOverlay<IGameSettingGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GameSettingsLocation!.Value.Min, _GameSettingsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
+        private List<RangeInt64>? _GameSettingsLocations;
+        private IOblivionGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? OblivionGroupBinaryOverlay<IGameSettingGetter>.OblivionGroupFactory(_data, _GameSettingsLocations, _package) : default;
+        public IOblivionGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new OblivionGroup<GameSetting>(this);
         #endregion
         #region Globals
-        private RangeInt64? _GlobalsLocation;
-        private IGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocation.HasValue ? GroupBinaryOverlay<IGlobalGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GlobalsLocation!.Value.Min, _GlobalsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IGlobalGetter> Globals => _Globals ?? new Group<Global>(this);
+        private List<RangeInt64>? _GlobalsLocations;
+        private IOblivionGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? OblivionGroupBinaryOverlay<IGlobalGetter>.OblivionGroupFactory(_data, _GlobalsLocations, _package) : default;
+        public IOblivionGroupGetter<IGlobalGetter> Globals => _Globals ?? new OblivionGroup<Global>(this);
         #endregion
         #region Classes
-        private RangeInt64? _ClassesLocation;
-        private IGroupGetter<IClassGetter>? _Classes => _ClassesLocation.HasValue ? GroupBinaryOverlay<IClassGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClassesLocation!.Value.Min, _ClassesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IClassGetter> Classes => _Classes ?? new Group<Class>(this);
+        private List<RangeInt64>? _ClassesLocations;
+        private IOblivionGroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? OblivionGroupBinaryOverlay<IClassGetter>.OblivionGroupFactory(_data, _ClassesLocations, _package) : default;
+        public IOblivionGroupGetter<IClassGetter> Classes => _Classes ?? new OblivionGroup<Class>(this);
         #endregion
         #region Factions
-        private RangeInt64? _FactionsLocation;
-        private IGroupGetter<IFactionGetter>? _Factions => _FactionsLocation.HasValue ? GroupBinaryOverlay<IFactionGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FactionsLocation!.Value.Min, _FactionsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IFactionGetter> Factions => _Factions ?? new Group<Faction>(this);
+        private List<RangeInt64>? _FactionsLocations;
+        private IOblivionGroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? OblivionGroupBinaryOverlay<IFactionGetter>.OblivionGroupFactory(_data, _FactionsLocations, _package) : default;
+        public IOblivionGroupGetter<IFactionGetter> Factions => _Factions ?? new OblivionGroup<Faction>(this);
         #endregion
         #region Hairs
-        private RangeInt64? _HairsLocation;
-        private IGroupGetter<IHairGetter>? _Hairs => _HairsLocation.HasValue ? GroupBinaryOverlay<IHairGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _HairsLocation!.Value.Min, _HairsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IHairGetter> Hairs => _Hairs ?? new Group<Hair>(this);
+        private List<RangeInt64>? _HairsLocations;
+        private IOblivionGroupGetter<IHairGetter>? _Hairs => _HairsLocations != null ? OblivionGroupBinaryOverlay<IHairGetter>.OblivionGroupFactory(_data, _HairsLocations, _package) : default;
+        public IOblivionGroupGetter<IHairGetter> Hairs => _Hairs ?? new OblivionGroup<Hair>(this);
         #endregion
         #region Eyes
-        private RangeInt64? _EyesLocation;
-        private IGroupGetter<IEyeGetter>? _Eyes => _EyesLocation.HasValue ? GroupBinaryOverlay<IEyeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EyesLocation!.Value.Min, _EyesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IEyeGetter> Eyes => _Eyes ?? new Group<Eye>(this);
+        private List<RangeInt64>? _EyesLocations;
+        private IOblivionGroupGetter<IEyeGetter>? _Eyes => _EyesLocations != null ? OblivionGroupBinaryOverlay<IEyeGetter>.OblivionGroupFactory(_data, _EyesLocations, _package) : default;
+        public IOblivionGroupGetter<IEyeGetter> Eyes => _Eyes ?? new OblivionGroup<Eye>(this);
         #endregion
         #region Races
-        private RangeInt64? _RacesLocation;
-        private IGroupGetter<IRaceGetter>? _Races => _RacesLocation.HasValue ? GroupBinaryOverlay<IRaceGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _RacesLocation!.Value.Min, _RacesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IRaceGetter> Races => _Races ?? new Group<Race>(this);
+        private List<RangeInt64>? _RacesLocations;
+        private IOblivionGroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? OblivionGroupBinaryOverlay<IRaceGetter>.OblivionGroupFactory(_data, _RacesLocations, _package) : default;
+        public IOblivionGroupGetter<IRaceGetter> Races => _Races ?? new OblivionGroup<Race>(this);
         #endregion
         #region Sounds
-        private RangeInt64? _SoundsLocation;
-        private IGroupGetter<ISoundGetter>? _Sounds => _SoundsLocation.HasValue ? GroupBinaryOverlay<ISoundGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoundsLocation!.Value.Min, _SoundsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISoundGetter> Sounds => _Sounds ?? new Group<Sound>(this);
+        private List<RangeInt64>? _SoundsLocations;
+        private IOblivionGroupGetter<ISoundGetter>? _Sounds => _SoundsLocations != null ? OblivionGroupBinaryOverlay<ISoundGetter>.OblivionGroupFactory(_data, _SoundsLocations, _package) : default;
+        public IOblivionGroupGetter<ISoundGetter> Sounds => _Sounds ?? new OblivionGroup<Sound>(this);
         #endregion
         #region Skills
-        private RangeInt64? _SkillsLocation;
-        private IGroupGetter<ISkillRecordGetter>? _Skills => _SkillsLocation.HasValue ? GroupBinaryOverlay<ISkillRecordGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SkillsLocation!.Value.Min, _SkillsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISkillRecordGetter> Skills => _Skills ?? new Group<SkillRecord>(this);
+        private List<RangeInt64>? _SkillsLocations;
+        private IOblivionGroupGetter<ISkillRecordGetter>? _Skills => _SkillsLocations != null ? OblivionGroupBinaryOverlay<ISkillRecordGetter>.OblivionGroupFactory(_data, _SkillsLocations, _package) : default;
+        public IOblivionGroupGetter<ISkillRecordGetter> Skills => _Skills ?? new OblivionGroup<SkillRecord>(this);
         #endregion
         #region MagicEffects
-        private RangeInt64? _MagicEffectsLocation;
-        private IGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocation.HasValue ? GroupBinaryOverlay<IMagicEffectGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MagicEffectsLocation!.Value.Min, _MagicEffectsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new Group<MagicEffect>(this);
+        private List<RangeInt64>? _MagicEffectsLocations;
+        private IOblivionGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? OblivionGroupBinaryOverlay<IMagicEffectGetter>.OblivionGroupFactory(_data, _MagicEffectsLocations, _package) : default;
+        public IOblivionGroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new OblivionGroup<MagicEffect>(this);
         #endregion
         #region Scripts
-        private RangeInt64? _ScriptsLocation;
-        private IGroupGetter<IScriptGetter>? _Scripts => _ScriptsLocation.HasValue ? GroupBinaryOverlay<IScriptGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ScriptsLocation!.Value.Min, _ScriptsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IScriptGetter> Scripts => _Scripts ?? new Group<Script>(this);
+        private List<RangeInt64>? _ScriptsLocations;
+        private IOblivionGroupGetter<IScriptGetter>? _Scripts => _ScriptsLocations != null ? OblivionGroupBinaryOverlay<IScriptGetter>.OblivionGroupFactory(_data, _ScriptsLocations, _package) : default;
+        public IOblivionGroupGetter<IScriptGetter> Scripts => _Scripts ?? new OblivionGroup<Script>(this);
         #endregion
         #region LandTextures
-        private RangeInt64? _LandTexturesLocation;
-        private IGroupGetter<ILandTextureGetter>? _LandTextures => _LandTexturesLocation.HasValue ? GroupBinaryOverlay<ILandTextureGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LandTexturesLocation!.Value.Min, _LandTexturesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILandTextureGetter> LandTextures => _LandTextures ?? new Group<LandTexture>(this);
+        private List<RangeInt64>? _LandTexturesLocations;
+        private IOblivionGroupGetter<ILandTextureGetter>? _LandTextures => _LandTexturesLocations != null ? OblivionGroupBinaryOverlay<ILandTextureGetter>.OblivionGroupFactory(_data, _LandTexturesLocations, _package) : default;
+        public IOblivionGroupGetter<ILandTextureGetter> LandTextures => _LandTextures ?? new OblivionGroup<LandTexture>(this);
         #endregion
         #region Enchantments
-        private RangeInt64? _EnchantmentsLocation;
-        private IGroupGetter<IEnchantmentGetter>? _Enchantments => _EnchantmentsLocation.HasValue ? GroupBinaryOverlay<IEnchantmentGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EnchantmentsLocation!.Value.Min, _EnchantmentsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IEnchantmentGetter> Enchantments => _Enchantments ?? new Group<Enchantment>(this);
+        private List<RangeInt64>? _EnchantmentsLocations;
+        private IOblivionGroupGetter<IEnchantmentGetter>? _Enchantments => _EnchantmentsLocations != null ? OblivionGroupBinaryOverlay<IEnchantmentGetter>.OblivionGroupFactory(_data, _EnchantmentsLocations, _package) : default;
+        public IOblivionGroupGetter<IEnchantmentGetter> Enchantments => _Enchantments ?? new OblivionGroup<Enchantment>(this);
         #endregion
         #region Spells
-        private RangeInt64? _SpellsLocation;
-        private IGroupGetter<ISpellUnleveledGetter>? _Spells => _SpellsLocation.HasValue ? GroupBinaryOverlay<ISpellUnleveledGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SpellsLocation!.Value.Min, _SpellsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISpellUnleveledGetter> Spells => _Spells ?? new Group<SpellUnleveled>(this);
+        private List<RangeInt64>? _SpellsLocations;
+        private IOblivionGroupGetter<ISpellUnleveledGetter>? _Spells => _SpellsLocations != null ? OblivionGroupBinaryOverlay<ISpellUnleveledGetter>.OblivionGroupFactory(_data, _SpellsLocations, _package) : default;
+        public IOblivionGroupGetter<ISpellUnleveledGetter> Spells => _Spells ?? new OblivionGroup<SpellUnleveled>(this);
         #endregion
         #region Birthsigns
-        private RangeInt64? _BirthsignsLocation;
-        private IGroupGetter<IBirthsignGetter>? _Birthsigns => _BirthsignsLocation.HasValue ? GroupBinaryOverlay<IBirthsignGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _BirthsignsLocation!.Value.Min, _BirthsignsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IBirthsignGetter> Birthsigns => _Birthsigns ?? new Group<Birthsign>(this);
+        private List<RangeInt64>? _BirthsignsLocations;
+        private IOblivionGroupGetter<IBirthsignGetter>? _Birthsigns => _BirthsignsLocations != null ? OblivionGroupBinaryOverlay<IBirthsignGetter>.OblivionGroupFactory(_data, _BirthsignsLocations, _package) : default;
+        public IOblivionGroupGetter<IBirthsignGetter> Birthsigns => _Birthsigns ?? new OblivionGroup<Birthsign>(this);
         #endregion
         #region Activators
-        private RangeInt64? _ActivatorsLocation;
-        private IGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocation.HasValue ? GroupBinaryOverlay<IActivatorGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ActivatorsLocation!.Value.Min, _ActivatorsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IActivatorGetter> Activators => _Activators ?? new Group<Activator>(this);
+        private List<RangeInt64>? _ActivatorsLocations;
+        private IOblivionGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? OblivionGroupBinaryOverlay<IActivatorGetter>.OblivionGroupFactory(_data, _ActivatorsLocations, _package) : default;
+        public IOblivionGroupGetter<IActivatorGetter> Activators => _Activators ?? new OblivionGroup<Activator>(this);
         #endregion
         #region AlchemicalApparatus
-        private RangeInt64? _AlchemicalApparatusLocation;
-        private IGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatus => _AlchemicalApparatusLocation.HasValue ? GroupBinaryOverlay<IAlchemicalApparatusGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AlchemicalApparatusLocation!.Value.Min, _AlchemicalApparatusLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatus => _AlchemicalApparatus ?? new Group<AlchemicalApparatus>(this);
+        private List<RangeInt64>? _AlchemicalApparatusLocations;
+        private IOblivionGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatus => _AlchemicalApparatusLocations != null ? OblivionGroupBinaryOverlay<IAlchemicalApparatusGetter>.OblivionGroupFactory(_data, _AlchemicalApparatusLocations, _package) : default;
+        public IOblivionGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatus => _AlchemicalApparatus ?? new OblivionGroup<AlchemicalApparatus>(this);
         #endregion
         #region Armors
-        private RangeInt64? _ArmorsLocation;
-        private IGroupGetter<IArmorGetter>? _Armors => _ArmorsLocation.HasValue ? GroupBinaryOverlay<IArmorGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ArmorsLocation!.Value.Min, _ArmorsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IArmorGetter> Armors => _Armors ?? new Group<Armor>(this);
+        private List<RangeInt64>? _ArmorsLocations;
+        private IOblivionGroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? OblivionGroupBinaryOverlay<IArmorGetter>.OblivionGroupFactory(_data, _ArmorsLocations, _package) : default;
+        public IOblivionGroupGetter<IArmorGetter> Armors => _Armors ?? new OblivionGroup<Armor>(this);
         #endregion
         #region Books
-        private RangeInt64? _BooksLocation;
-        private IGroupGetter<IBookGetter>? _Books => _BooksLocation.HasValue ? GroupBinaryOverlay<IBookGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _BooksLocation!.Value.Min, _BooksLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IBookGetter> Books => _Books ?? new Group<Book>(this);
+        private List<RangeInt64>? _BooksLocations;
+        private IOblivionGroupGetter<IBookGetter>? _Books => _BooksLocations != null ? OblivionGroupBinaryOverlay<IBookGetter>.OblivionGroupFactory(_data, _BooksLocations, _package) : default;
+        public IOblivionGroupGetter<IBookGetter> Books => _Books ?? new OblivionGroup<Book>(this);
         #endregion
         #region Clothes
-        private RangeInt64? _ClothesLocation;
-        private IGroupGetter<IClothingGetter>? _Clothes => _ClothesLocation.HasValue ? GroupBinaryOverlay<IClothingGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClothesLocation!.Value.Min, _ClothesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IClothingGetter> Clothes => _Clothes ?? new Group<Clothing>(this);
+        private List<RangeInt64>? _ClothesLocations;
+        private IOblivionGroupGetter<IClothingGetter>? _Clothes => _ClothesLocations != null ? OblivionGroupBinaryOverlay<IClothingGetter>.OblivionGroupFactory(_data, _ClothesLocations, _package) : default;
+        public IOblivionGroupGetter<IClothingGetter> Clothes => _Clothes ?? new OblivionGroup<Clothing>(this);
         #endregion
         #region Containers
-        private RangeInt64? _ContainersLocation;
-        private IGroupGetter<IContainerGetter>? _Containers => _ContainersLocation.HasValue ? GroupBinaryOverlay<IContainerGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ContainersLocation!.Value.Min, _ContainersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IContainerGetter> Containers => _Containers ?? new Group<Container>(this);
+        private List<RangeInt64>? _ContainersLocations;
+        private IOblivionGroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? OblivionGroupBinaryOverlay<IContainerGetter>.OblivionGroupFactory(_data, _ContainersLocations, _package) : default;
+        public IOblivionGroupGetter<IContainerGetter> Containers => _Containers ?? new OblivionGroup<Container>(this);
         #endregion
         #region Doors
-        private RangeInt64? _DoorsLocation;
-        private IGroupGetter<IDoorGetter>? _Doors => _DoorsLocation.HasValue ? GroupBinaryOverlay<IDoorGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DoorsLocation!.Value.Min, _DoorsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IDoorGetter> Doors => _Doors ?? new Group<Door>(this);
+        private List<RangeInt64>? _DoorsLocations;
+        private IOblivionGroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? OblivionGroupBinaryOverlay<IDoorGetter>.OblivionGroupFactory(_data, _DoorsLocations, _package) : default;
+        public IOblivionGroupGetter<IDoorGetter> Doors => _Doors ?? new OblivionGroup<Door>(this);
         #endregion
         #region Ingredients
-        private RangeInt64? _IngredientsLocation;
-        private IGroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocation.HasValue ? GroupBinaryOverlay<IIngredientGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IngredientsLocation!.Value.Min, _IngredientsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new Group<Ingredient>(this);
+        private List<RangeInt64>? _IngredientsLocations;
+        private IOblivionGroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocations != null ? OblivionGroupBinaryOverlay<IIngredientGetter>.OblivionGroupFactory(_data, _IngredientsLocations, _package) : default;
+        public IOblivionGroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new OblivionGroup<Ingredient>(this);
         #endregion
         #region Lights
-        private RangeInt64? _LightsLocation;
-        private IGroupGetter<ILightGetter>? _Lights => _LightsLocation.HasValue ? GroupBinaryOverlay<ILightGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LightsLocation!.Value.Min, _LightsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILightGetter> Lights => _Lights ?? new Group<Light>(this);
+        private List<RangeInt64>? _LightsLocations;
+        private IOblivionGroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? OblivionGroupBinaryOverlay<ILightGetter>.OblivionGroupFactory(_data, _LightsLocations, _package) : default;
+        public IOblivionGroupGetter<ILightGetter> Lights => _Lights ?? new OblivionGroup<Light>(this);
         #endregion
         #region Miscellaneous
-        private RangeInt64? _MiscellaneousLocation;
-        private IGroupGetter<IMiscellaneousGetter>? _Miscellaneous => _MiscellaneousLocation.HasValue ? GroupBinaryOverlay<IMiscellaneousGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MiscellaneousLocation!.Value.Min, _MiscellaneousLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IMiscellaneousGetter> Miscellaneous => _Miscellaneous ?? new Group<Miscellaneous>(this);
+        private List<RangeInt64>? _MiscellaneousLocations;
+        private IOblivionGroupGetter<IMiscellaneousGetter>? _Miscellaneous => _MiscellaneousLocations != null ? OblivionGroupBinaryOverlay<IMiscellaneousGetter>.OblivionGroupFactory(_data, _MiscellaneousLocations, _package) : default;
+        public IOblivionGroupGetter<IMiscellaneousGetter> Miscellaneous => _Miscellaneous ?? new OblivionGroup<Miscellaneous>(this);
         #endregion
         #region Statics
-        private RangeInt64? _StaticsLocation;
-        private IGroupGetter<IStaticGetter>? _Statics => _StaticsLocation.HasValue ? GroupBinaryOverlay<IStaticGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _StaticsLocation!.Value.Min, _StaticsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IStaticGetter> Statics => _Statics ?? new Group<Static>(this);
+        private List<RangeInt64>? _StaticsLocations;
+        private IOblivionGroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? OblivionGroupBinaryOverlay<IStaticGetter>.OblivionGroupFactory(_data, _StaticsLocations, _package) : default;
+        public IOblivionGroupGetter<IStaticGetter> Statics => _Statics ?? new OblivionGroup<Static>(this);
         #endregion
         #region Grasses
-        private RangeInt64? _GrassesLocation;
-        private IGroupGetter<IGrassGetter>? _Grasses => _GrassesLocation.HasValue ? GroupBinaryOverlay<IGrassGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GrassesLocation!.Value.Min, _GrassesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IGrassGetter> Grasses => _Grasses ?? new Group<Grass>(this);
+        private List<RangeInt64>? _GrassesLocations;
+        private IOblivionGroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? OblivionGroupBinaryOverlay<IGrassGetter>.OblivionGroupFactory(_data, _GrassesLocations, _package) : default;
+        public IOblivionGroupGetter<IGrassGetter> Grasses => _Grasses ?? new OblivionGroup<Grass>(this);
         #endregion
         #region Trees
-        private RangeInt64? _TreesLocation;
-        private IGroupGetter<ITreeGetter>? _Trees => _TreesLocation.HasValue ? GroupBinaryOverlay<ITreeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TreesLocation!.Value.Min, _TreesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ITreeGetter> Trees => _Trees ?? new Group<Tree>(this);
+        private List<RangeInt64>? _TreesLocations;
+        private IOblivionGroupGetter<ITreeGetter>? _Trees => _TreesLocations != null ? OblivionGroupBinaryOverlay<ITreeGetter>.OblivionGroupFactory(_data, _TreesLocations, _package) : default;
+        public IOblivionGroupGetter<ITreeGetter> Trees => _Trees ?? new OblivionGroup<Tree>(this);
         #endregion
         #region Flora
-        private RangeInt64? _FloraLocation;
-        private IGroupGetter<IFloraGetter>? _Flora => _FloraLocation.HasValue ? GroupBinaryOverlay<IFloraGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FloraLocation!.Value.Min, _FloraLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IFloraGetter> Flora => _Flora ?? new Group<Flora>(this);
+        private List<RangeInt64>? _FloraLocations;
+        private IOblivionGroupGetter<IFloraGetter>? _Flora => _FloraLocations != null ? OblivionGroupBinaryOverlay<IFloraGetter>.OblivionGroupFactory(_data, _FloraLocations, _package) : default;
+        public IOblivionGroupGetter<IFloraGetter> Flora => _Flora ?? new OblivionGroup<Flora>(this);
         #endregion
         #region Furniture
-        private RangeInt64? _FurnitureLocation;
-        private IGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocation.HasValue ? GroupBinaryOverlay<IFurnitureGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FurnitureLocation!.Value.Min, _FurnitureLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new Group<Furniture>(this);
+        private List<RangeInt64>? _FurnitureLocations;
+        private IOblivionGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? OblivionGroupBinaryOverlay<IFurnitureGetter>.OblivionGroupFactory(_data, _FurnitureLocations, _package) : default;
+        public IOblivionGroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new OblivionGroup<Furniture>(this);
         #endregion
         #region Weapons
-        private RangeInt64? _WeaponsLocation;
-        private IGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocation.HasValue ? GroupBinaryOverlay<IWeaponGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WeaponsLocation!.Value.Min, _WeaponsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new Group<Weapon>(this);
+        private List<RangeInt64>? _WeaponsLocations;
+        private IOblivionGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? OblivionGroupBinaryOverlay<IWeaponGetter>.OblivionGroupFactory(_data, _WeaponsLocations, _package) : default;
+        public IOblivionGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new OblivionGroup<Weapon>(this);
         #endregion
         #region Ammunitions
-        private RangeInt64? _AmmunitionsLocation;
-        private IGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocation.HasValue ? GroupBinaryOverlay<IAmmunitionGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AmmunitionsLocation!.Value.Min, _AmmunitionsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new Group<Ammunition>(this);
+        private List<RangeInt64>? _AmmunitionsLocations;
+        private IOblivionGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? OblivionGroupBinaryOverlay<IAmmunitionGetter>.OblivionGroupFactory(_data, _AmmunitionsLocations, _package) : default;
+        public IOblivionGroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new OblivionGroup<Ammunition>(this);
         #endregion
         #region Npcs
-        private RangeInt64? _NpcsLocation;
-        private IGroupGetter<INpcGetter>? _Npcs => _NpcsLocation.HasValue ? GroupBinaryOverlay<INpcGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _NpcsLocation!.Value.Min, _NpcsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<INpcGetter> Npcs => _Npcs ?? new Group<Npc>(this);
+        private List<RangeInt64>? _NpcsLocations;
+        private IOblivionGroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? OblivionGroupBinaryOverlay<INpcGetter>.OblivionGroupFactory(_data, _NpcsLocations, _package) : default;
+        public IOblivionGroupGetter<INpcGetter> Npcs => _Npcs ?? new OblivionGroup<Npc>(this);
         #endregion
         #region Creatures
-        private RangeInt64? _CreaturesLocation;
-        private IGroupGetter<ICreatureGetter>? _Creatures => _CreaturesLocation.HasValue ? GroupBinaryOverlay<ICreatureGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CreaturesLocation!.Value.Min, _CreaturesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ICreatureGetter> Creatures => _Creatures ?? new Group<Creature>(this);
+        private List<RangeInt64>? _CreaturesLocations;
+        private IOblivionGroupGetter<ICreatureGetter>? _Creatures => _CreaturesLocations != null ? OblivionGroupBinaryOverlay<ICreatureGetter>.OblivionGroupFactory(_data, _CreaturesLocations, _package) : default;
+        public IOblivionGroupGetter<ICreatureGetter> Creatures => _Creatures ?? new OblivionGroup<Creature>(this);
         #endregion
         #region LeveledCreatures
-        private RangeInt64? _LeveledCreaturesLocation;
-        private IGroupGetter<ILeveledCreatureGetter>? _LeveledCreatures => _LeveledCreaturesLocation.HasValue ? GroupBinaryOverlay<ILeveledCreatureGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledCreaturesLocation!.Value.Min, _LeveledCreaturesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILeveledCreatureGetter> LeveledCreatures => _LeveledCreatures ?? new Group<LeveledCreature>(this);
+        private List<RangeInt64>? _LeveledCreaturesLocations;
+        private IOblivionGroupGetter<ILeveledCreatureGetter>? _LeveledCreatures => _LeveledCreaturesLocations != null ? OblivionGroupBinaryOverlay<ILeveledCreatureGetter>.OblivionGroupFactory(_data, _LeveledCreaturesLocations, _package) : default;
+        public IOblivionGroupGetter<ILeveledCreatureGetter> LeveledCreatures => _LeveledCreatures ?? new OblivionGroup<LeveledCreature>(this);
         #endregion
         #region SoulGems
-        private RangeInt64? _SoulGemsLocation;
-        private IGroupGetter<ISoulGemGetter>? _SoulGems => _SoulGemsLocation.HasValue ? GroupBinaryOverlay<ISoulGemGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoulGemsLocation!.Value.Min, _SoulGemsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISoulGemGetter> SoulGems => _SoulGems ?? new Group<SoulGem>(this);
+        private List<RangeInt64>? _SoulGemsLocations;
+        private IOblivionGroupGetter<ISoulGemGetter>? _SoulGems => _SoulGemsLocations != null ? OblivionGroupBinaryOverlay<ISoulGemGetter>.OblivionGroupFactory(_data, _SoulGemsLocations, _package) : default;
+        public IOblivionGroupGetter<ISoulGemGetter> SoulGems => _SoulGems ?? new OblivionGroup<SoulGem>(this);
         #endregion
         #region Keys
-        private RangeInt64? _KeysLocation;
-        private IGroupGetter<IKeyGetter>? _Keys => _KeysLocation.HasValue ? GroupBinaryOverlay<IKeyGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _KeysLocation!.Value.Min, _KeysLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IKeyGetter> Keys => _Keys ?? new Group<Key>(this);
+        private List<RangeInt64>? _KeysLocations;
+        private IOblivionGroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? OblivionGroupBinaryOverlay<IKeyGetter>.OblivionGroupFactory(_data, _KeysLocations, _package) : default;
+        public IOblivionGroupGetter<IKeyGetter> Keys => _Keys ?? new OblivionGroup<Key>(this);
         #endregion
         #region Potions
-        private RangeInt64? _PotionsLocation;
-        private IGroupGetter<IPotionGetter>? _Potions => _PotionsLocation.HasValue ? GroupBinaryOverlay<IPotionGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _PotionsLocation!.Value.Min, _PotionsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IPotionGetter> Potions => _Potions ?? new Group<Potion>(this);
+        private List<RangeInt64>? _PotionsLocations;
+        private IOblivionGroupGetter<IPotionGetter>? _Potions => _PotionsLocations != null ? OblivionGroupBinaryOverlay<IPotionGetter>.OblivionGroupFactory(_data, _PotionsLocations, _package) : default;
+        public IOblivionGroupGetter<IPotionGetter> Potions => _Potions ?? new OblivionGroup<Potion>(this);
         #endregion
         #region Subspaces
-        private RangeInt64? _SubspacesLocation;
-        private IGroupGetter<ISubspaceGetter>? _Subspaces => _SubspacesLocation.HasValue ? GroupBinaryOverlay<ISubspaceGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SubspacesLocation!.Value.Min, _SubspacesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISubspaceGetter> Subspaces => _Subspaces ?? new Group<Subspace>(this);
+        private List<RangeInt64>? _SubspacesLocations;
+        private IOblivionGroupGetter<ISubspaceGetter>? _Subspaces => _SubspacesLocations != null ? OblivionGroupBinaryOverlay<ISubspaceGetter>.OblivionGroupFactory(_data, _SubspacesLocations, _package) : default;
+        public IOblivionGroupGetter<ISubspaceGetter> Subspaces => _Subspaces ?? new OblivionGroup<Subspace>(this);
         #endregion
         #region SigilStones
-        private RangeInt64? _SigilStonesLocation;
-        private IGroupGetter<ISigilStoneGetter>? _SigilStones => _SigilStonesLocation.HasValue ? GroupBinaryOverlay<ISigilStoneGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SigilStonesLocation!.Value.Min, _SigilStonesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISigilStoneGetter> SigilStones => _SigilStones ?? new Group<SigilStone>(this);
+        private List<RangeInt64>? _SigilStonesLocations;
+        private IOblivionGroupGetter<ISigilStoneGetter>? _SigilStones => _SigilStonesLocations != null ? OblivionGroupBinaryOverlay<ISigilStoneGetter>.OblivionGroupFactory(_data, _SigilStonesLocations, _package) : default;
+        public IOblivionGroupGetter<ISigilStoneGetter> SigilStones => _SigilStones ?? new OblivionGroup<SigilStone>(this);
         #endregion
         #region LeveledItems
-        private RangeInt64? _LeveledItemsLocation;
-        private IGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocation.HasValue ? GroupBinaryOverlay<ILeveledItemGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledItemsLocation!.Value.Min, _LeveledItemsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new Group<LeveledItem>(this);
+        private List<RangeInt64>? _LeveledItemsLocations;
+        private IOblivionGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? OblivionGroupBinaryOverlay<ILeveledItemGetter>.OblivionGroupFactory(_data, _LeveledItemsLocations, _package) : default;
+        public IOblivionGroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new OblivionGroup<LeveledItem>(this);
         #endregion
         #region Weathers
-        private RangeInt64? _WeathersLocation;
-        private IGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocation.HasValue ? GroupBinaryOverlay<IWeatherGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WeathersLocation!.Value.Min, _WeathersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new Group<Weather>(this);
+        private List<RangeInt64>? _WeathersLocations;
+        private IOblivionGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? OblivionGroupBinaryOverlay<IWeatherGetter>.OblivionGroupFactory(_data, _WeathersLocations, _package) : default;
+        public IOblivionGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new OblivionGroup<Weather>(this);
         #endregion
         #region Climates
-        private RangeInt64? _ClimatesLocation;
-        private IGroupGetter<IClimateGetter>? _Climates => _ClimatesLocation.HasValue ? GroupBinaryOverlay<IClimateGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClimatesLocation!.Value.Min, _ClimatesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IClimateGetter> Climates => _Climates ?? new Group<Climate>(this);
+        private List<RangeInt64>? _ClimatesLocations;
+        private IOblivionGroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? OblivionGroupBinaryOverlay<IClimateGetter>.OblivionGroupFactory(_data, _ClimatesLocations, _package) : default;
+        public IOblivionGroupGetter<IClimateGetter> Climates => _Climates ?? new OblivionGroup<Climate>(this);
         #endregion
         #region Regions
-        private RangeInt64? _RegionsLocation;
-        private IGroupGetter<IRegionGetter>? _Regions => _RegionsLocation.HasValue ? GroupBinaryOverlay<IRegionGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _RegionsLocation!.Value.Min, _RegionsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IRegionGetter> Regions => _Regions ?? new Group<Region>(this);
+        private List<RangeInt64>? _RegionsLocations;
+        private IOblivionGroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? OblivionGroupBinaryOverlay<IRegionGetter>.OblivionGroupFactory(_data, _RegionsLocations, _package) : default;
+        public IOblivionGroupGetter<IRegionGetter> Regions => _Regions ?? new OblivionGroup<Region>(this);
         #endregion
         #region Cells
         private RangeInt64? _CellsLocation;
-        private IListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? ListGroupBinaryOverlay<ICellBlockGetter>.ListGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package), _package) : default;
-        public IListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new ListGroup<CellBlock>();
+        private IOblivionListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? OblivionListGroupBinaryOverlay<ICellBlockGetter>.OblivionListGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package), _package) : default;
+        public IOblivionListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new OblivionListGroup<CellBlock>();
         #endregion
         #region Worldspaces
-        private RangeInt64? _WorldspacesLocation;
-        private IGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocation.HasValue ? GroupBinaryOverlay<IWorldspaceGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WorldspacesLocation!.Value.Min, _WorldspacesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new Group<Worldspace>(this);
+        private List<RangeInt64>? _WorldspacesLocations;
+        private IOblivionGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? OblivionGroupBinaryOverlay<IWorldspaceGetter>.OblivionGroupFactory(_data, _WorldspacesLocations, _package) : default;
+        public IOblivionGroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new OblivionGroup<Worldspace>(this);
         #endregion
         #region DialogTopics
-        private RangeInt64? _DialogTopicsLocation;
-        private IGroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocation.HasValue ? GroupBinaryOverlay<IDialogTopicGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DialogTopicsLocation!.Value.Min, _DialogTopicsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IDialogTopicGetter> DialogTopics => _DialogTopics ?? new Group<DialogTopic>(this);
+        private List<RangeInt64>? _DialogTopicsLocations;
+        private IOblivionGroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocations != null ? OblivionGroupBinaryOverlay<IDialogTopicGetter>.OblivionGroupFactory(_data, _DialogTopicsLocations, _package) : default;
+        public IOblivionGroupGetter<IDialogTopicGetter> DialogTopics => _DialogTopics ?? new OblivionGroup<DialogTopic>(this);
         #endregion
         #region Quests
-        private RangeInt64? _QuestsLocation;
-        private IGroupGetter<IQuestGetter>? _Quests => _QuestsLocation.HasValue ? GroupBinaryOverlay<IQuestGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _QuestsLocation!.Value.Min, _QuestsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IQuestGetter> Quests => _Quests ?? new Group<Quest>(this);
+        private List<RangeInt64>? _QuestsLocations;
+        private IOblivionGroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? OblivionGroupBinaryOverlay<IQuestGetter>.OblivionGroupFactory(_data, _QuestsLocations, _package) : default;
+        public IOblivionGroupGetter<IQuestGetter> Quests => _Quests ?? new OblivionGroup<Quest>(this);
         #endregion
         #region IdleAnimations
-        private RangeInt64? _IdleAnimationsLocation;
-        private IGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocation.HasValue ? GroupBinaryOverlay<IIdleAnimationGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IdleAnimationsLocation!.Value.Min, _IdleAnimationsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new Group<IdleAnimation>(this);
+        private List<RangeInt64>? _IdleAnimationsLocations;
+        private IOblivionGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? OblivionGroupBinaryOverlay<IIdleAnimationGetter>.OblivionGroupFactory(_data, _IdleAnimationsLocations, _package) : default;
+        public IOblivionGroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new OblivionGroup<IdleAnimation>(this);
         #endregion
         #region AIPackages
-        private RangeInt64? _AIPackagesLocation;
-        private IGroupGetter<IAIPackageGetter>? _AIPackages => _AIPackagesLocation.HasValue ? GroupBinaryOverlay<IAIPackageGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AIPackagesLocation!.Value.Min, _AIPackagesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IAIPackageGetter> AIPackages => _AIPackages ?? new Group<AIPackage>(this);
+        private List<RangeInt64>? _AIPackagesLocations;
+        private IOblivionGroupGetter<IAIPackageGetter>? _AIPackages => _AIPackagesLocations != null ? OblivionGroupBinaryOverlay<IAIPackageGetter>.OblivionGroupFactory(_data, _AIPackagesLocations, _package) : default;
+        public IOblivionGroupGetter<IAIPackageGetter> AIPackages => _AIPackages ?? new OblivionGroup<AIPackage>(this);
         #endregion
         #region CombatStyles
-        private RangeInt64? _CombatStylesLocation;
-        private IGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocation.HasValue ? GroupBinaryOverlay<ICombatStyleGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CombatStylesLocation!.Value.Min, _CombatStylesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new Group<CombatStyle>(this);
+        private List<RangeInt64>? _CombatStylesLocations;
+        private IOblivionGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? OblivionGroupBinaryOverlay<ICombatStyleGetter>.OblivionGroupFactory(_data, _CombatStylesLocations, _package) : default;
+        public IOblivionGroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new OblivionGroup<CombatStyle>(this);
         #endregion
         #region LoadScreens
-        private RangeInt64? _LoadScreensLocation;
-        private IGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocation.HasValue ? GroupBinaryOverlay<ILoadScreenGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LoadScreensLocation!.Value.Min, _LoadScreensLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new Group<LoadScreen>(this);
+        private List<RangeInt64>? _LoadScreensLocations;
+        private IOblivionGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? OblivionGroupBinaryOverlay<ILoadScreenGetter>.OblivionGroupFactory(_data, _LoadScreensLocations, _package) : default;
+        public IOblivionGroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new OblivionGroup<LoadScreen>(this);
         #endregion
         #region LeveledSpells
-        private RangeInt64? _LeveledSpellsLocation;
-        private IGroupGetter<ILeveledSpellGetter>? _LeveledSpells => _LeveledSpellsLocation.HasValue ? GroupBinaryOverlay<ILeveledSpellGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledSpellsLocation!.Value.Min, _LeveledSpellsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILeveledSpellGetter> LeveledSpells => _LeveledSpells ?? new Group<LeveledSpell>(this);
+        private List<RangeInt64>? _LeveledSpellsLocations;
+        private IOblivionGroupGetter<ILeveledSpellGetter>? _LeveledSpells => _LeveledSpellsLocations != null ? OblivionGroupBinaryOverlay<ILeveledSpellGetter>.OblivionGroupFactory(_data, _LeveledSpellsLocations, _package) : default;
+        public IOblivionGroupGetter<ILeveledSpellGetter> LeveledSpells => _LeveledSpells ?? new OblivionGroup<LeveledSpell>(this);
         #endregion
         #region AnimatedObjects
-        private RangeInt64? _AnimatedObjectsLocation;
-        private IGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocation.HasValue ? GroupBinaryOverlay<IAnimatedObjectGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AnimatedObjectsLocation!.Value.Min, _AnimatedObjectsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new Group<AnimatedObject>(this);
+        private List<RangeInt64>? _AnimatedObjectsLocations;
+        private IOblivionGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? OblivionGroupBinaryOverlay<IAnimatedObjectGetter>.OblivionGroupFactory(_data, _AnimatedObjectsLocations, _package) : default;
+        public IOblivionGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new OblivionGroup<AnimatedObject>(this);
         #endregion
         #region Waters
-        private RangeInt64? _WatersLocation;
-        private IGroupGetter<IWaterGetter>? _Waters => _WatersLocation.HasValue ? GroupBinaryOverlay<IWaterGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WatersLocation!.Value.Min, _WatersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IWaterGetter> Waters => _Waters ?? new Group<Water>(this);
+        private List<RangeInt64>? _WatersLocations;
+        private IOblivionGroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? OblivionGroupBinaryOverlay<IWaterGetter>.OblivionGroupFactory(_data, _WatersLocations, _package) : default;
+        public IOblivionGroupGetter<IWaterGetter> Waters => _Waters ?? new OblivionGroup<Water>(this);
         #endregion
         #region EffectShaders
-        private RangeInt64? _EffectShadersLocation;
-        private IGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocation.HasValue ? GroupBinaryOverlay<IEffectShaderGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EffectShadersLocation!.Value.Min, _EffectShadersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new Group<EffectShader>(this);
+        private List<RangeInt64>? _EffectShadersLocations;
+        private IOblivionGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? OblivionGroupBinaryOverlay<IEffectShaderGetter>.OblivionGroupFactory(_data, _EffectShadersLocations, _package) : default;
+        public IOblivionGroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new OblivionGroup<EffectShader>(this);
         #endregion
         protected OblivionModBinaryOverlay(
             IMutagenReadStream stream,
@@ -12897,222 +12901,266 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.GMST:
                 {
-                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GameSettingsLocations ??= new();
+                    _GameSettingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.GLOB:
                 {
-                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GlobalsLocations ??= new();
+                    _GlobalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
-                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ClassesLocations ??= new();
+                    _ClassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
-                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FactionsLocations ??= new();
+                    _FactionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HAIR:
                 {
-                    _HairsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _HairsLocations ??= new();
+                    _HairsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
-                    _EyesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EyesLocations ??= new();
+                    _EyesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
-                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _RacesLocations ??= new();
+                    _RacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
-                    _SoundsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoundsLocations ??= new();
+                    _SoundsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.SKIL:
                 {
-                    _SkillsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SkillsLocations ??= new();
+                    _SkillsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Skills;
                 }
                 case RecordTypeInts.MGEF:
                 {
-                    _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MagicEffectsLocations ??= new();
+                    _MagicEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.SCPT:
                 {
-                    _ScriptsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ScriptsLocations ??= new();
+                    _ScriptsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Scripts;
                 }
                 case RecordTypeInts.LTEX:
                 {
-                    _LandTexturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LandTexturesLocations ??= new();
+                    _LandTexturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.LandTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
-                    _EnchantmentsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EnchantmentsLocations ??= new();
+                    _EnchantmentsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Enchantments;
                 }
                 case RecordTypeInts.SPEL:
                 {
-                    _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SpellsLocations ??= new();
+                    _SpellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.BSGN:
                 {
-                    _BirthsignsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _BirthsignsLocations ??= new();
+                    _BirthsignsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Birthsigns;
                 }
                 case RecordTypeInts.ACTI:
                 {
-                    _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ActivatorsLocations ??= new();
+                    _ActivatorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.APPA:
                 {
-                    _AlchemicalApparatusLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AlchemicalApparatusLocations ??= new();
+                    _AlchemicalApparatusLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.AlchemicalApparatus;
                 }
                 case RecordTypeInts.ARMO:
                 {
-                    _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ArmorsLocations ??= new();
+                    _ArmorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
-                    _BooksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _BooksLocations ??= new();
+                    _BooksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CLOT:
                 {
-                    _ClothesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ClothesLocations ??= new();
+                    _ClothesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Clothes;
                 }
                 case RecordTypeInts.CONT:
                 {
-                    _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ContainersLocations ??= new();
+                    _ContainersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
-                    _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DoorsLocations ??= new();
+                    _DoorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
-                    _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IngredientsLocations ??= new();
+                    _IngredientsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
-                    _LightsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LightsLocations ??= new();
+                    _LightsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
-                    _MiscellaneousLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MiscellaneousLocations ??= new();
+                    _MiscellaneousLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Miscellaneous;
                 }
                 case RecordTypeInts.STAT:
                 {
-                    _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _StaticsLocations ??= new();
+                    _StaticsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.GRAS:
                 {
-                    _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GrassesLocations ??= new();
+                    _GrassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
-                    _TreesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _TreesLocations ??= new();
+                    _TreesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
-                    _FloraLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FloraLocations ??= new();
+                    _FloraLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Flora;
                 }
                 case RecordTypeInts.FURN:
                 {
-                    _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FurnitureLocations ??= new();
+                    _FurnitureLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
-                    _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WeaponsLocations ??= new();
+                    _WeaponsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
-                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AmmunitionsLocations ??= new();
+                    _AmmunitionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
-                    _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _NpcsLocations ??= new();
+                    _NpcsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.CREA:
                 {
-                    _CreaturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CreaturesLocations ??= new();
+                    _CreaturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Creatures;
                 }
                 case RecordTypeInts.LVLC:
                 {
-                    _LeveledCreaturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledCreaturesLocations ??= new();
+                    _LeveledCreaturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.LeveledCreatures;
                 }
                 case RecordTypeInts.SLGM:
                 {
-                    _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoulGemsLocations ??= new();
+                    _SoulGemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.KEYM:
                 {
-                    _KeysLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _KeysLocations ??= new();
+                    _KeysLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
-                    _PotionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _PotionsLocations ??= new();
+                    _PotionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Potions;
                 }
                 case RecordTypeInts.SBSP:
                 {
-                    _SubspacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SubspacesLocations ??= new();
+                    _SubspacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Subspaces;
                 }
                 case RecordTypeInts.SGST:
                 {
-                    _SigilStonesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SigilStonesLocations ??= new();
+                    _SigilStonesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.SigilStones;
                 }
                 case RecordTypeInts.LVLI:
                 {
-                    _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledItemsLocations ??= new();
+                    _LeveledItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
-                    _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WeathersLocations ??= new();
+                    _WeathersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
-                    _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ClimatesLocations ??= new();
+                    _ClimatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.REGN:
                 {
-                    _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _RegionsLocations ??= new();
+                    _RegionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.CELL:
@@ -13122,57 +13170,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.WRLD:
                 {
-                    _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WorldspacesLocations ??= new();
+                    _WorldspacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
-                    _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DialogTopicsLocations ??= new();
+                    _DialogTopicsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
-                    _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _QuestsLocations ??= new();
+                    _QuestsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
-                    _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IdleAnimationsLocations ??= new();
+                    _IdleAnimationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
-                    _AIPackagesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AIPackagesLocations ??= new();
+                    _AIPackagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.AIPackages;
                 }
                 case RecordTypeInts.CSTY:
                 {
-                    _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CombatStylesLocations ??= new();
+                    _CombatStylesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
-                    _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LoadScreensLocations ??= new();
+                    _LoadScreensLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
-                    _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledSpellsLocations ??= new();
+                    _LeveledSpellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
-                    _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AnimatedObjectsLocations ??= new();
+                    _AnimatedObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
-                    _WatersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WatersLocations ??= new();
+                    _WatersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
-                    _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EffectShadersLocations ??= new();
+                    _EffectShadersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.EffectShaders;
                 }
                 default:

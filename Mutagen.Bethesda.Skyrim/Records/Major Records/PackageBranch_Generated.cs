@@ -1005,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PackageBranch_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PackageBranch_Registration.Instance;
         String BranchType { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IPackageRootGetter? Root { get; }
@@ -1837,7 +1837,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageBranch_Registration.Instance;
-        public static PackageBranch_Registration Registration => PackageBranch_Registration.Instance;
+        public static PackageBranch_Registration StaticRegistration => PackageBranch_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageBranchCommon.Instance;
         [DebuggerStepThrough]
@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageBranch_Registration.Instance;
-        public static PackageBranch_Registration Registration => PackageBranch_Registration.Instance;
+        public static PackageBranch_Registration StaticRegistration => PackageBranch_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageBranchCommon.Instance;
         [DebuggerStepThrough]

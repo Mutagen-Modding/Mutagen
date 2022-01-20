@@ -8,6 +8,7 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Fallout4.Records;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -36,21 +37,21 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class Group<T> :
-        IEquatable<IGroupGetter<T>>,
-        IGroup<T>,
-        ILoquiObjectSetter<Group<T>>
+    public partial class Fallout4Group<T> :
+        IEquatable<IFallout4GroupGetter<T>>,
+        IFallout4Group<T>,
+        ILoquiObjectSetter<Fallout4Group<T>>
         where T : class, IFallout4MajorRecordInternal, IBinaryItem
     {
         #region Ctor
-        protected Group()
+        protected Fallout4Group()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        static Group()
+        static Fallout4Group()
         {
             T_RecordType = PluginUtilityTranslation.GetRecordType<T>();
         }
@@ -70,9 +71,9 @@ namespace Mutagen.Bethesda.Fallout4
         public ICache<T, FormKey> RecordCache => _RecordCache;
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ICache<T, FormKey> IGroup<T>.RecordCache => _RecordCache;
+        ICache<T, FormKey> IFallout4Group<T>.RecordCache => _RecordCache;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyCache<T, FormKey> IGroupGetter<T>.RecordCache => _RecordCache;
+        IReadOnlyCache<T, FormKey> IFallout4GroupGetter<T>.RecordCache => _RecordCache;
         #endregion
 
         #endregion
@@ -83,7 +84,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            GroupMixIn.ToString(
+            Fallout4GroupMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -93,35 +94,35 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IGroupGetter<T> rhs) return false;
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            if (obj is not IFallout4GroupGetter<T> rhs) return false;
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IGroupGetter<T>? obj)
+        public bool Equals(IFallout4GroupGetter<T>? obj)
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
+        public override int GetHashCode() => ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
         #endregion
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4GroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4GroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<T, TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<T, TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -148,25 +149,25 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => Fallout4GroupBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((Fallout4GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static Group<T> CreateFromBinary(
+        public static Fallout4Group<T> CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new Group<T>();
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
+            var ret = new Fallout4Group<T>();
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -177,7 +178,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Group<T> item,
+            out Fallout4Group<T> item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -192,22 +193,22 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)this).CommonSetterInstance(typeof(T))!).Clear(this);
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)this).CommonSetterInstance(typeof(T))!).Clear(this);
         }
 
-        internal static Group<T> GetNew()
+        internal static Fallout4Group<T> GetNew()
         {
-            return new Group<T>();
+            return new Fallout4Group<T>();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IGroup<T> :
+    public partial interface IFallout4Group<T> :
+        IFallout4GroupGetter<T>,
         IFormLinkContainer,
-        IGroupGetter<T>,
-        ILoquiObjectSetter<IGroup<T>>,
+        ILoquiObjectSetter<IFallout4Group<T>>,
         IMajorRecordEnumerable
         where T : class, IFallout4MajorRecordInternal, IBinaryItem
     {
@@ -217,11 +218,11 @@ namespace Mutagen.Bethesda.Fallout4
         new ICache<T, FormKey> RecordCache { get; }
     }
 
-    public partial interface IGroupGetter<out T> :
+    public partial interface IFallout4GroupGetter<out T> :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IGroupGetter<T>>,
+        ILoquiObject<IFallout4GroupGetter<T>>,
         IMajorRecordGetterEnumerable
         where T : class, IFallout4MajorRecordGetter, IBinaryItem
     {
@@ -231,7 +232,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance(Type type0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Group_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Fallout4Group_Registration.Instance;
         GroupTypeEnum Type { get; }
         Int32 LastModified { get; }
         Int32 Unknown { get; }
@@ -242,46 +243,46 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common MixIn
-    public static partial class GroupMixIn
+    public static partial class Fallout4GroupMixIn
     {
-        public static void Clear<T>(this IGroup<T> item)
+        public static void Clear<T>(this IFallout4Group<T> item)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).Clear(item: item);
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)item).CommonSetterInstance(typeof(T))!).Clear(item: item);
         }
 
-        public static Group.Mask<bool> GetEqualsMask<T>(
-            this IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
+        public static Fallout4Group.Mask<bool> GetEqualsMask<T>(
+            this IFallout4GroupGetter<T> item,
+            IFallout4GroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).GetEqualsMask(
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)item).CommonInstance(typeof(T))!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString<T>(
-            this IGroupGetter<T> item,
+            this IFallout4GroupGetter<T> item,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            Fallout4Group.Mask<bool>? printMask = null)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString<T>(
-            this IGroupGetter<T> item,
+            this IFallout4GroupGetter<T> item,
             FileGeneration fg,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            Fallout4Group.Mask<bool>? printMask = null)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -289,36 +290,36 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals<T>(
-            this IGroupGetter<T> item,
-            IGroupGetter<T> rhs)
+            this IFallout4GroupGetter<T> item,
+            IFallout4GroupGetter<T> rhs)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: null);
         }
 
         public static bool Equals<T, T_TranslMask>(
-            this IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
-            Group.TranslationMask<T_TranslMask> equalsMask)
+            this IFallout4GroupGetter<T> item,
+            IFallout4GroupGetter<T> rhs,
+            Fallout4Group.TranslationMask<T_TranslMask> equalsMask)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T, TGetter>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs)
+            this IFallout4Group<T> lhs,
+            IFallout4GroupGetter<TGetter> rhs)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -327,14 +328,14 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn<T, TGetter, T_TranslMask>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+            this IFallout4Group<T> lhs,
+            IFallout4GroupGetter<TGetter> rhs,
+            Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
         {
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -343,34 +344,34 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn<T, TGetter, T_ErrMask, T_TranslMask>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+            this IFallout4Group<T> lhs,
+            IFallout4GroupGetter<TGetter> rhs,
+            out Fallout4Group.ErrorMask<T_ErrMask> errorMask,
+            Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_ErrMask : Fallout4MajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = Fallout4Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn<T, TGetter>(
-            this IGroup<T> lhs,
-            IGroupGetter<TGetter> rhs,
+            this IFallout4Group<T> lhs,
+            IFallout4GroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -378,41 +379,41 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static Group<T> DeepCopy<T, TGetter, T_TranslMask>(
-            this IGroupGetter<TGetter> item,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public static Fallout4Group<T> DeepCopy<T, TGetter, T_TranslMask>(
+            this IFallout4GroupGetter<TGetter> item,
+            Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_TranslMask>(
+            return ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_TranslMask>(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Group<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
-            this IGroupGetter<TGetter> item,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public static Fallout4Group<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            this IFallout4GroupGetter<TGetter> item,
+            out Fallout4Group.ErrorMask<T_ErrMask> errorMask,
+            Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_ErrMask : Fallout4MajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            return ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Group<T> DeepCopy<T, TGetter>(
-            this IGroupGetter<TGetter> item,
+        public static Fallout4Group<T> DeepCopy<T, TGetter>(
+            this IFallout4GroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
+            return ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -420,20 +421,20 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(this IGroupGetter<T> obj)
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords<T>(this IFallout4GroupGetter<T> obj)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(
-            this IGroupGetter<T> obj,
+            this IFallout4GroupGetter<T> obj,
             bool throwIfUnknown = true)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
                 throwIfUnknown: throwIfUnknown)
@@ -441,32 +442,32 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(
-            this IGroupGetter<T> obj,
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords<T>(
+            this IFallout4GroupGetter<T> obj,
             Type type,
             bool throwIfUnknown = true)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommonGetter)m);
+                .Select(m => (IMajorRecordGetter)m);
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(this IGroup<T> obj)
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords<T>(this IFallout4Group<T> obj)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
+            return ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IGroup<T> obj)
+        public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IFallout4Group<T> obj)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
-            where TMajor : class, IMajorRecordCommon
+            where TMajor : class, IMajorRecord
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
+            return ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
                 throwIfUnknown: true)
@@ -474,57 +475,57 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(
-            this IGroup<T> obj,
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords<T>(
+            this IFallout4Group<T> obj,
             Type? type,
             bool throwIfUnknown = true)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumeratePotentiallyTypedMajorRecords(
+            return ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommon)m);
+                .Select(m => (IMajorRecord)m);
         }
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IFallout4Group<T> obj,
             FormKey key)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys);
         }
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IFallout4Group<T> obj,
             IEnumerable<FormKey> keys)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
         }
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IFallout4Group<T> obj,
             HashSet<FormKey> keys)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys);
         }
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IFallout4Group<T> obj,
             FormKey key,
             Type type,
             bool throwIfUnknown = true)
@@ -532,7 +533,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: type,
@@ -541,13 +542,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IFallout4Group<T> obj,
             IEnumerable<FormKey> keys,
             Type type,
             bool throwIfUnknown = true)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet(),
                 type: type,
@@ -556,13 +557,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<T>(
-            this IGroup<T> obj,
+            this IFallout4Group<T> obj,
             HashSet<FormKey> keys,
             Type type,
             bool throwIfUnknown = true)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: type,
@@ -571,15 +572,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this IFallout4Group<T> obj,
             TMajor record,
             bool throwIfUnknown = true)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(record.FormKey);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -588,13 +589,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this IFallout4Group<T> obj,
             IEnumerable<TMajor> records,
             bool throwIfUnknown = true)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: records.Select(m => m.FormKey).ToHashSet(),
                 type: typeof(TMajor),
@@ -603,15 +604,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this IFallout4Group<T> obj,
             FormKey key,
             bool throwIfUnknown = true)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -620,13 +621,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this IFallout4Group<T> obj,
             IEnumerable<FormKey> keys,
             bool throwIfUnknown = true)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet(),
                 type: typeof(TMajor),
@@ -635,13 +636,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<T, TMajor>(
-            this IGroup<T> obj,
+            this IFallout4Group<T> obj,
             HashSet<FormKey> keys,
             bool throwIfUnknown = true)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -652,12 +653,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary<T>(
-            this IGroup<T> item,
+            this IFallout4Group<T> item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
+            ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -673,7 +674,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
-    public enum Group_FieldIndex
+    public enum Fallout4Group_FieldIndex
     {
         Type = 0,
         LastModified = 1,
@@ -683,9 +684,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Group_Registration : ILoquiRegistration
+    public partial class Fallout4Group_Registration : ILoquiRegistration
     {
-        public static readonly Group_Registration Instance = new Group_Registration();
+        public static readonly Fallout4Group_Registration Instance = new Fallout4Group_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
@@ -700,32 +701,32 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(Group.Mask<>);
+        public static readonly Type MaskType = typeof(Fallout4Group.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Group.ErrorMask<>);
+        public static readonly Type ErrorMaskType = typeof(Fallout4Group.ErrorMask<>);
 
-        public static readonly Type ClassType = typeof(Group<>);
+        public static readonly Type ClassType = typeof(Fallout4Group<>);
 
-        public static readonly Type GetterType = typeof(IGroupGetter<>);
+        public static readonly Type GetterType = typeof(IFallout4GroupGetter<>);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IGroup<>);
+        public static readonly Type SetterType = typeof(IFallout4Group<>);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.Group";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.Fallout4Group";
 
-        public const string Name = "Group";
+        public const string Name = "Fallout4Group";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
         public const byte GenericCount = 1;
 
-        public static readonly Type? GenericRegistrationType = typeof(Group_Registration<>);
+        public static readonly Type? GenericRegistrationType = typeof(Fallout4Group_Registration<>);
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
-        public static readonly Type BinaryWriteTranslation = typeof(GroupBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(Fallout4GroupBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -756,23 +757,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public class Group_Registration<T> : Group_Registration
+    public class Fallout4Group_Registration<T> : Fallout4Group_Registration
         where T : Fallout4MajorRecord, IBinaryItem
     {
-        public static readonly Group_Registration<T> GenericInstance = new Group_Registration<T>();
+        public static readonly Fallout4Group_Registration<T> GenericInstance = new Fallout4Group_Registration<T>();
 
         public new static Type GetNthType(ushort index)
         {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
+            Fallout4Group_FieldIndex enu = (Fallout4Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.Type:
+                case Fallout4Group_FieldIndex.Type:
                     return typeof(GroupTypeEnum);
-                case Group_FieldIndex.LastModified:
+                case Fallout4Group_FieldIndex.LastModified:
                     return typeof(Int32);
-                case Group_FieldIndex.Unknown:
+                case Fallout4Group_FieldIndex.Unknown:
                     return typeof(Int32);
-                case Group_FieldIndex.RecordCache:
+                case Fallout4Group_FieldIndex.RecordCache:
                     return typeof(ICache<T, FormKey>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -783,14 +784,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class GroupSetterCommon<T>
+    public partial class Fallout4GroupSetterCommon<T>
         where T : class, IFallout4MajorRecordInternal, IBinaryItem
     {
-        public static readonly GroupSetterCommon<T> Instance = new GroupSetterCommon<T>();
+        public static readonly Fallout4GroupSetterCommon<T> Instance = new Fallout4GroupSetterCommon<T>();
 
         partial void ClearPartial();
         
-        public void Clear(IGroup<T> item)
+        public void Clear(IFallout4Group<T> item)
         {
             ClearPartial();
             item.Type = default;
@@ -800,21 +801,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public void RemapLinks(IGroup<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IFallout4Group<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.RecordCache.RemapLinks(mapping);
         }
         
-        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IGroup<T> obj)
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Group<T> obj)
         {
-            foreach (var item in GroupCommon<T>.Instance.EnumerateMajorRecords(obj))
+            foreach (var item in Fallout4GroupCommon<T>.Instance.EnumerateMajorRecords(obj))
             {
-                yield return (item as IMajorRecordCommon)!;
+                yield return (item as IMajorRecord)!;
             }
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
-            IGroup<T> obj,
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IFallout4Group<T> obj,
             Type? type,
             bool throwIfUnknown)
         {
@@ -822,41 +823,39 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
-            IGroup<T> obj,
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IFallout4Group<T> obj,
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in GroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            foreach (var item in Fallout4GroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
         }
         
         public void Remove(
-            IGroup<T> obj,
+            IFallout4Group<T> obj,
             HashSet<FormKey> keys)
         {
             obj.RecordCache.Remove(keys);
         }
         
         public void Remove(
-            IGroup<T> obj,
+            IFallout4Group<T> obj,
             HashSet<FormKey> keys,
             Type type,
             bool throwIfUnknown)
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "IFallout4MajorRecord":
                 case "Fallout4MajorRecord":
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "IFallout4MajorRecordGetter":
-                    if (!Group_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    if (!Fallout4Group_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
                 default:
@@ -876,7 +875,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IGroup<T> item,
+            IFallout4Group<T> item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -884,25 +883,25 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: GroupBinaryCreateTranslation<T>.FillBinaryStructs,
-                fillTyped: GroupBinaryCreateTranslation<T>.FillBinaryRecordTypes);
+                fillStructs: Fallout4GroupBinaryCreateTranslation<T>.FillBinaryStructs,
+                fillTyped: Fallout4GroupBinaryCreateTranslation<T>.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    public partial class GroupCommon<T>
+    public partial class Fallout4GroupCommon<T>
         where T : class, IFallout4MajorRecordGetter, IBinaryItem
     {
-        public static readonly GroupCommon<T> Instance = new GroupCommon<T>();
+        public static readonly Fallout4GroupCommon<T> Instance = new Fallout4GroupCommon<T>();
 
-        public Group.Mask<bool> GetEqualsMask(
-            IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
+        public Fallout4Group.Mask<bool> GetEqualsMask(
+            IFallout4GroupGetter<T> item,
+            IFallout4GroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Group.Mask<bool>(false);
-            ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).FillEqualsMask(
+            var ret = new Fallout4Group.Mask<bool>(false);
+            ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)item).CommonInstance(typeof(T))!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -911,9 +910,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void FillEqualsMask(
-            IGroupGetter<T> item,
-            IGroupGetter<T> rhs,
-            Group.Mask<bool> ret,
+            IFallout4GroupGetter<T> item,
+            IFallout4GroupGetter<T> rhs,
+            Fallout4Group.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -928,9 +927,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public string ToString(
-            IGroupGetter<T> item,
+            IFallout4GroupGetter<T> item,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            Fallout4Group.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -942,18 +941,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void ToString(
-            IGroupGetter<T> item,
+            IFallout4GroupGetter<T> item,
             FileGeneration fg,
             string? name = null,
-            Group.Mask<bool>? printMask = null)
+            Fallout4Group.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Group<{typeof(T).Name}> =>");
+                fg.AppendLine($"Fallout4Group<{typeof(T).Name}> =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Group<{typeof(T).Name}>) =>");
+                fg.AppendLine($"{name} (Fallout4Group<{typeof(T).Name}>) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -967,9 +966,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         protected static void ToStringFields(
-            IGroupGetter<T> item,
+            IFallout4GroupGetter<T> item,
             FileGeneration fg,
-            Group.Mask<bool>? printMask = null)
+            Fallout4Group.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
@@ -1005,31 +1004,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IGroupGetter<T>? lhs,
-            IGroupGetter<T>? rhs,
+            IFallout4GroupGetter<T>? lhs,
+            IFallout4GroupGetter<T>? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.Type) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Fallout4Group_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Fallout4Group_FieldIndex.LastModified) ?? true))
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.Unknown) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Fallout4Group_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Fallout4Group_FieldIndex.RecordCache) ?? true))
             {
                 if (!lhs.RecordCache.SequenceEqualNullable(rhs.RecordCache)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IGroupGetter<T> item)
+        public virtual int GetHashCode(IFallout4GroupGetter<T> item)
         {
             var hash = new HashCode();
             hash.Add(item.Type);
@@ -1045,11 +1044,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public object GetNew<T_Setter>()
             where T_Setter : class, IFallout4MajorRecordInternal, IBinaryItem
         {
-            return Group<T_Setter>.GetNew();
+            return Fallout4Group<T_Setter>.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGroupGetter<T> obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFallout4GroupGetter<T> obj)
         {
             foreach (var item in obj.RecordCache.Items.WhereCastable<T, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
@@ -1059,7 +1058,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             yield break;
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IGroupGetter<T> obj)
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IFallout4GroupGetter<T> obj)
         {
             foreach (var subItem in obj.RecordCache.Items)
             {
@@ -1071,8 +1070,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
-            IGroupGetter<T> obj,
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IFallout4GroupGetter<T> obj,
             Type? type,
             bool throwIfUnknown)
         {
@@ -1080,26 +1079,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
-            IGroupGetter<T> obj,
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IFallout4GroupGetter<T> obj,
             Type type,
             bool throwIfUnknown)
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "IFallout4MajorRecord":
                 case "Fallout4MajorRecord":
-                    if (!Group_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    if (!Fallout4Group_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "IFallout4MajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
@@ -1126,35 +1123,35 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GroupSetterTranslationCommon
+    public partial class Fallout4GroupSetterTranslationCommon
     {
-        public static readonly GroupSetterTranslationCommon Instance = new GroupSetterTranslationCommon();
+        public static readonly Fallout4GroupSetterTranslationCommon Instance = new Fallout4GroupSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn<T, TGetter>(
-            IGroup<T> item,
-            IGroupGetter<TGetter> rhs,
+            IFallout4Group<T> item,
+            IFallout4GroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.Type) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Group_FieldIndex.Type) ?? true))
             {
                 item.Type = rhs.Type;
             }
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Group_FieldIndex.LastModified) ?? true))
             {
                 item.LastModified = rhs.LastModified;
             }
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Group_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Group_FieldIndex.RecordCache) ?? true))
             {
-                errorMask?.PushIndex((int)Group_FieldIndex.RecordCache);
+                errorMask?.PushIndex((int)Fallout4Group_FieldIndex.RecordCache);
                 try
                 {
                     item.RecordCache.SetTo(
@@ -1178,15 +1175,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #endregion
         
-        public Group<T> DeepCopy<T, TGetter, T_TranslMask>(
-            IGroupGetter<TGetter> item,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public Fallout4Group<T> DeepCopy<T, TGetter, T_TranslMask>(
+            IFallout4GroupGetter<TGetter> item,
+            Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
         {
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            Fallout4Group<T> ret = (Fallout4Group<T>)((Fallout4GroupCommon<TGetter>)((IFallout4GroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1195,36 +1192,36 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
         
-        public Group<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
-            IGroupGetter<TGetter> item,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? copyMask = null)
+        public Fallout4Group<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            IFallout4GroupGetter<TGetter> item,
+            out Fallout4Group.ErrorMask<T_ErrMask> errorMask,
+            Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_ErrMask : Fallout4MajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            Fallout4Group<T> ret = (Fallout4Group<T>)((Fallout4GroupCommon<TGetter>)((IFallout4GroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = Fallout4Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Group<T> DeepCopy<T, TGetter>(
-            IGroupGetter<TGetter> item,
+        public Fallout4Group<T> DeepCopy<T, TGetter>(
+            IFallout4GroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
-            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+            Fallout4Group<T> ret = (Fallout4Group<T>)((Fallout4GroupCommon<TGetter>)((IFallout4GroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1240,27 +1237,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Group<T>
+    public partial class Fallout4Group<T>
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
-        public static Group_Registration Registration => Group_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Fallout4Group_Registration.Instance;
+        public static Fallout4Group_Registration StaticRegistration => Fallout4Group_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(GroupCommon<T>.Instance, typeof(T), type0);
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(Fallout4GroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
         protected object CommonSetterInstance(Type type0)
         {
-            return GenericCommonInstanceGetter.Get(GroupSetterCommon<T>.Instance, typeof(T), type0);
+            return GenericCommonInstanceGetter.Get(Fallout4GroupSetterCommon<T>.Instance, typeof(T), type0);
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => Fallout4GroupSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
+        object IFallout4GroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonSetterInstance(Type type0) => this.CommonSetterInstance(type0);
+        object IFallout4GroupGetter<T>.CommonSetterInstance(Type type0) => this.CommonSetterInstance(type0);
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFallout4GroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1271,16 +1268,16 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class GroupBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class Fallout4GroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
+        public readonly static Fallout4GroupBinaryWriteTranslation Instance = new Fallout4GroupBinaryWriteTranslation();
 
         public static void WriteEmbedded<T>(
-            IGroupGetter<T> item,
+            IFallout4GroupGetter<T> item,
             MutagenWriter writer)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
+            Fallout4GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
                 writer: writer,
                 item: item);
             EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1292,7 +1289,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         public static void WriteRecordTypes<T>(
-            IGroupGetter<T> item,
+            IFallout4GroupGetter<T> item,
             MutagenWriter writer,
             TypedWriteParams? translationParams)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
@@ -1313,12 +1310,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item)
+            IFallout4GroupGetter<T> item)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem;
 
         public static void WriteBinaryContainedRecordTypeParse<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item)
+            IFallout4GroupGetter<T> item)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
             WriteBinaryContainedRecordTypeParseCustom(
@@ -1328,7 +1325,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public void Write<T>(
             MutagenWriter writer,
-            IGroupGetter<T> item,
+            IFallout4GroupGetter<T> item,
             TypedWriteParams? translationParams = null)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
@@ -1356,16 +1353,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class GroupBinaryCreateTranslation<T>
+    public partial class Fallout4GroupBinaryCreateTranslation<T>
         where T : class, IFallout4MajorRecordInternal, IBinaryItem
     {
-        public readonly static GroupBinaryCreateTranslation<T> Instance = new GroupBinaryCreateTranslation<T>();
+        public readonly static Fallout4GroupBinaryCreateTranslation<T> Instance = new Fallout4GroupBinaryCreateTranslation<T>();
 
         public static void FillBinaryStructs(
-            IGroup<T> item,
+            IFallout4Group<T> item,
             MutagenFrame frame)
         {
-            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustom(
+            Fallout4GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustom(
                 frame: frame,
                 item: item);
             item.Type = EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -1376,7 +1373,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            IGroup<T> item,
+            IFallout4Group<T> item,
             MutagenFrame frame,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
@@ -1387,11 +1384,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             switch (nextRecordType.TypeInt)
             {
                 default:
-                    if (nextRecordType.Equals(Group<T>.T_RecordType))
+                    if (nextRecordType.Equals(Fallout4Group<T>.T_RecordType))
                     {
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Group<T>.T_RecordType,
+                            triggeringRecord: Fallout4Group<T>.T_RecordType,
                             item: item.RecordCache,
                             transl: LoquiBinaryTranslation<T>.Instance.Parse);
                         return ParseResult.Stop;
@@ -1403,7 +1400,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
-            IGroup<T> item);
+            IFallout4Group<T> item);
 
     }
 
@@ -1411,16 +1408,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class GroupBinaryTranslationMixIn
+    public static class Fallout4GroupBinaryTranslationMixIn
     {
         public static void WriteToBinary<T, T_ErrMask>(
-            this IGroupGetter<T> item,
+            this IFallout4GroupGetter<T> item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_ErrMask : Fallout4MajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
-            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((Fallout4GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1433,44 +1430,44 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class GroupBinaryOverlay<T> : IGroupGetter<T>
+    public partial class Fallout4GroupBinaryOverlay<T> : IFallout4GroupGetter<T>
         where T : class, IFallout4MajorRecordGetter, IBinaryItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
-        public static Group_Registration Registration => Group_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Fallout4Group_Registration.Instance;
+        public static Fallout4Group_Registration StaticRegistration => Fallout4Group_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(GroupCommon<T>.Instance, typeof(T), type0);
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(Fallout4GroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => Fallout4GroupSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
+        object IFallout4GroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object? IGroupGetter<T>.CommonSetterInstance(Type type0) => null;
+        object? IFallout4GroupGetter<T>.CommonSetterInstance(Type type0) => null;
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFallout4GroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4GroupCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<T, TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => Fallout4GroupBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((Fallout4GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1490,7 +1487,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             int offset);
 
         partial void CustomCtor();
-        protected GroupBinaryOverlay(
+        protected Fallout4GroupBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1500,12 +1497,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this.CustomCtor();
         }
 
-        public static GroupBinaryOverlay<T> GroupFactory(
+        public static IFallout4GroupGetter<T> Fallout4GroupFactory(
+            IBinaryReadStream stream,
+            IReadOnlyList<RangeInt64> locs,
+            BinaryOverlayFactoryPackage package)
+        {
+            var subGroups = locs.Select(x => Fallout4GroupFactory(
+                new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package),
+                package)).ToArray();
+            return new Fallout4GroupWrapper<T>(new GroupMergeGetter<IFallout4GroupGetter<T>, T>(subGroups));
+        }
+
+        public static Fallout4GroupBinaryOverlay<T> Fallout4GroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new GroupBinaryOverlay<T>(
+            var ret = new Fallout4GroupBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));
@@ -1524,12 +1532,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static GroupBinaryOverlay<T> GroupFactory(
+        public static Fallout4GroupBinaryOverlay<T> Fallout4GroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return GroupFactory(
+            return Fallout4GroupFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1557,7 +1565,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             string? name = null)
         {
-            GroupMixIn.ToString(
+            Fallout4GroupMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1567,16 +1575,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IGroupGetter<T> rhs) return false;
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            if (obj is not IFallout4GroupGetter<T> rhs) return false;
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IGroupGetter<T>? obj)
+        public bool Equals(IFallout4GroupGetter<T>? obj)
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
+        public override int GetHashCode() => ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
         #endregion
 
@@ -1589,7 +1597,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public static class Group
+    public static class Fallout4Group
     {
         public class Mask<TItem> :
             IEquatable<Mask<TItem>>,
@@ -1706,7 +1714,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Group.Mask<R>();
+                var ret = new Fallout4Group.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -1738,16 +1746,16 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
         
-            public string ToString(Group.Mask<bool>? printMask = null)
+            public string ToString(Fallout4Group.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
         
-            public void ToString(FileGeneration fg, Group.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Fallout4Group.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Group.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Fallout4Group.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -1826,16 +1834,16 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                Group_FieldIndex enu = (Group_FieldIndex)index;
+                Fallout4Group_FieldIndex enu = (Fallout4Group_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.Type:
+                    case Fallout4Group_FieldIndex.Type:
                         return Type;
-                    case Group_FieldIndex.LastModified:
+                    case Fallout4Group_FieldIndex.LastModified:
                         return LastModified;
-                    case Group_FieldIndex.Unknown:
+                    case Fallout4Group_FieldIndex.Unknown:
                         return Unknown;
-                    case Group_FieldIndex.RecordCache:
+                    case Fallout4Group_FieldIndex.RecordCache:
                         return RecordCache;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1844,19 +1852,19 @@ namespace Mutagen.Bethesda.Fallout4
         
             public void SetNthException(int index, Exception ex)
             {
-                Group_FieldIndex enu = (Group_FieldIndex)index;
+                Fallout4Group_FieldIndex enu = (Fallout4Group_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.Type:
+                    case Fallout4Group_FieldIndex.Type:
                         this.Type = ex;
                         break;
-                    case Group_FieldIndex.LastModified:
+                    case Fallout4Group_FieldIndex.LastModified:
                         this.LastModified = ex;
                         break;
-                    case Group_FieldIndex.Unknown:
+                    case Fallout4Group_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case Group_FieldIndex.RecordCache:
+                    case Fallout4Group_FieldIndex.RecordCache:
                         this.RecordCache = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ex, null);
                         break;
                     default:
@@ -1866,19 +1874,19 @@ namespace Mutagen.Bethesda.Fallout4
         
             public void SetNthMask(int index, object obj)
             {
-                Group_FieldIndex enu = (Group_FieldIndex)index;
+                Fallout4Group_FieldIndex enu = (Fallout4Group_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.Type:
+                    case Fallout4Group_FieldIndex.Type:
                         this.Type = (Exception?)obj;
                         break;
-                    case Group_FieldIndex.LastModified:
+                    case Fallout4Group_FieldIndex.LastModified:
                         this.LastModified = (Exception?)obj;
                         break;
-                    case Group_FieldIndex.Unknown:
+                    case Fallout4Group_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case Group_FieldIndex.RecordCache:
+                    case Fallout4Group_FieldIndex.RecordCache:
                         this.RecordCache = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>)obj;
                         break;
                     default:

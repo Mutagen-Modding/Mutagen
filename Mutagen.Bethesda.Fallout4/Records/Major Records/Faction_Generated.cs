@@ -1233,6 +1233,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Faction>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IFaction);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1363,7 +1365,7 @@ namespace Mutagen.Bethesda.Fallout4
         IOwnerGetter,
         IRelatableGetter
     {
-        static new ILoquiRegistration Registration => Faction_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Faction_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -2618,7 +2620,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
-        public new static Faction_Registration Registration => Faction_Registration.Instance;
+        public new static Faction_Registration StaticRegistration => Faction_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionCommon.Instance;
         [DebuggerStepThrough]
@@ -2995,7 +2997,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
-        public new static Faction_Registration Registration => Faction_Registration.Instance;
+        public new static Faction_Registration StaticRegistration => Faction_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionCommon.Instance;
         [DebuggerStepThrough]
@@ -3017,6 +3019,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IFaction);
+
 
         #region Name
         private int? _NameLocation;

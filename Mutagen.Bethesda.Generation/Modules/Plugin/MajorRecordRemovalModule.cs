@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Fields;
+using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -198,7 +200,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
                 args.Add($"TMajor record");
                 args.Add($"bool throwIfUnknown = true");
-                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordCommonGetter)}");
+                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordGetter)}");
             }
             using (new BraceWrapper(fg))
             {
@@ -224,7 +226,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
                 args.Add($"IEnumerable<TMajor> records");
                 args.Add($"bool throwIfUnknown = true");
-                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordCommonGetter)}");
+                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordGetter)}");
             }
             using (new BraceWrapper(fg))
             {
@@ -247,7 +249,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
                 args.Add($"{nameof(FormKey)} key");
                 args.Add($"bool throwIfUnknown = true");
-                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordCommonGetter)}");
+                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordGetter)}");
             }
             using (new BraceWrapper(fg))
             {
@@ -273,7 +275,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
                 args.Add($"IEnumerable<{nameof(FormKey)}> keys");
                 args.Add($"bool throwIfUnknown = true");
-                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordCommonGetter)}");
+                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordGetter)}");
             }
             using (new BraceWrapper(fg))
             {
@@ -297,7 +299,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
                 args.Add($"HashSet<{nameof(FormKey)}> keys");
                 args.Add($"bool throwIfUnknown = true");
-                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordCommonGetter)}");
+                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordGetter)}");
             }
             using (new BraceWrapper(fg))
             {
@@ -469,7 +471,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 using (new BraceWrapper(fg))
                 {
                     var gameCategory = obj.GetObjectData().GameCategory;
-                    fg.AppendLine($"case \"{nameof(IMajorRecordCommon)}\":");
                     fg.AppendLine($"case \"{nameof(IMajorRecord)}\":");
                     fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
                     if (gameCategory != null)
@@ -478,7 +479,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         fg.AppendLine($"case \"{gameCategory}MajorRecord\":");
                     }
                     fg.AppendLine($"case \"{nameof(IMajorRecordGetter)}\":");
-                    fg.AppendLine($"case \"{nameof(IMajorRecordCommonGetter)}\":");
                     if (gameCategory != null)
                     {
                         fg.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         await ApplyRemovalLines(field, fieldGen, accessor, removeSelf: applicable);
                     }
 
-                    bool doAdditionlDeepLogic = obj.Name != "ListGroup";
+                    bool doAdditionlDeepLogic = !obj.Name.EndsWith("ListGroup");
 
                     if (doAdditionlDeepLogic)
                     {

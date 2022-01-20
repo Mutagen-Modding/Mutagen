@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ArmorModel_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ArmorModel_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorModel_Registration.Instance;
-        public static ArmorModel_Registration Registration => ArmorModel_Registration.Instance;
+        public static ArmorModel_Registration StaticRegistration => ArmorModel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorModel_Registration.Instance;
-        public static ArmorModel_Registration Registration => ArmorModel_Registration.Instance;
+        public static ArmorModel_Registration StaticRegistration => ArmorModel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorModelCommon.Instance;
         [DebuggerStepThrough]

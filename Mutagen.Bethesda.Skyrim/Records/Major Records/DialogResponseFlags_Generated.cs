@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DialogResponseFlags_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DialogResponseFlags_Registration.Instance;
         DialogResponses.Flag Flags { get; }
         Single ResetHours { get; }
 
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponseFlags_Registration.Instance;
-        public static DialogResponseFlags_Registration Registration => DialogResponseFlags_Registration.Instance;
+        public static DialogResponseFlags_Registration StaticRegistration => DialogResponseFlags_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseFlagsCommon.Instance;
         [DebuggerStepThrough]
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponseFlags_Registration.Instance;
-        public static DialogResponseFlags_Registration Registration => DialogResponseFlags_Registration.Instance;
+        public static DialogResponseFlags_Registration StaticRegistration => DialogResponseFlags_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseFlagsCommon.Instance;
         [DebuggerStepThrough]

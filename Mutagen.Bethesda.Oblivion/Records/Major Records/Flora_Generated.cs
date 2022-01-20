@@ -572,6 +572,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Flora>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IFlora);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -690,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Flora_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Flora_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1554,7 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
-        public new static Flora_Registration Registration => Flora_Registration.Instance;
+        public new static Flora_Registration StaticRegistration => Flora_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FloraCommon.Instance;
         [DebuggerStepThrough]
@@ -1772,7 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
-        public new static Flora_Registration Registration => Flora_Registration.Instance;
+        public new static Flora_Registration StaticRegistration => Flora_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FloraCommon.Instance;
         [DebuggerStepThrough]
@@ -1794,6 +1796,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IFlora);
+
 
         #region Name
         private int? _NameLocation;

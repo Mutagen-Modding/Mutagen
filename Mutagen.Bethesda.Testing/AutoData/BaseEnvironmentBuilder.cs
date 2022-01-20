@@ -8,6 +8,7 @@ using AutoFixture.Kernel;
 using Mutagen.Bethesda.Environments.DI;
 using Noggog;
 using Noggog.Testing.AutoFixture;
+using Noggog.Testing.FileSystem;
 using NSubstitute;
 
 namespace Mutagen.Bethesda.Testing.AutoData
@@ -61,10 +62,9 @@ namespace Mutagen.Bethesda.Testing.AutoData
             {
                 if (_mockFileSystem == null)
                 {
-                    _mockFileSystem = new MockFileSystem(new Dictionary<string, MockFileData>())
-                    {
-                        FileSystemWatcher = context.Create<IFileSystemWatcherFactory>()
-                    };
+                    _mockFileSystem = new NoggogMockFileSystem(
+                        new Dictionary<string, MockFileData>(),
+                        fileSystemWatcher: context.Create<IFileSystemWatcherFactory>());
                     _mockFileSystem.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
                     _mockFileSystem.File.Create(PathBuilder.ExistingFile);
                     _mockFileSystem.Directory.CreateDirectory(Path.Combine(GameDirectory, "DataDirectory"));

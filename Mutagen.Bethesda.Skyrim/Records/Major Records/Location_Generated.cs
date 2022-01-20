@@ -2676,6 +2676,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Location>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILocation);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2820,7 +2822,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Location_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Location_Registration.Instance;
         IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; }
         IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; }
@@ -4834,7 +4836,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
-        public new static Location_Registration Registration => Location_Registration.Instance;
+        public new static Location_Registration StaticRegistration => Location_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]
@@ -5454,7 +5456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
-        public new static Location_Registration Registration => Location_Registration.Instance;
+        public new static Location_Registration StaticRegistration => Location_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]
@@ -5476,6 +5478,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILocation);
+
 
         public IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; private set; }
         public IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; private set; }

@@ -9,12 +9,6 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
     public class MajorRecordTypePrinter_Tests
     {
         [Fact]
-        public void CommonInterface()
-        {
-            MajorRecordPrinter<IMajorRecordCommonGetter>.TypeString.Should().Be("IMajorRecordCommonGetter");
-        }
-
-        [Fact]
         public void GameSpecificDirect()
         {
             MajorRecordPrinter<AcousticSpace>.TypeString.Should().Be("Skyrim.AcousticSpace");

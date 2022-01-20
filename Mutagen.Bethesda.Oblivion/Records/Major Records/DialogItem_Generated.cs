@@ -1093,6 +1093,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<DialogItem>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDialogItem);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1204,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IDialogItemGetter>,
         IMapsToGetter<IDialogItemGetter>
     {
-        static new ILoquiRegistration Registration => DialogItem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DialogItem_Registration.Instance;
         IDialogItemDataGetter? Data { get; }
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic { get; }
@@ -2300,7 +2302,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogItem_Registration.Instance;
-        public new static DialogItem_Registration Registration => DialogItem_Registration.Instance;
+        public new static DialogItem_Registration StaticRegistration => DialogItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogItemCommon.Instance;
         [DebuggerStepThrough]
@@ -2606,7 +2608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogItem_Registration.Instance;
-        public new static DialogItem_Registration Registration => DialogItem_Registration.Instance;
+        public new static DialogItem_Registration StaticRegistration => DialogItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogItemCommon.Instance;
         [DebuggerStepThrough]
@@ -2628,6 +2630,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDialogItem);
+
 
         #region Data
         private RangeInt32? _DataLocation;

@@ -834,6 +834,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Region>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IRegion);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -955,7 +957,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IRegionGetter>,
         IMapsToGetter<IRegionGetter>
     {
-        static new ILoquiRegistration Registration => Region_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Region_Registration.Instance;
         Color? MapColor { get; }
         IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
         IReadOnlyList<IRegionAreaGetter> RegionAreas { get; }
@@ -2084,7 +2086,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration Registration => Region_Registration.Instance;
+        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
@@ -2311,7 +2313,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration Registration => Region_Registration.Instance;
+        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
@@ -2333,6 +2335,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRegion);
+
         public Region.MajorFlag MajorFlags => (Region.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region MapColor

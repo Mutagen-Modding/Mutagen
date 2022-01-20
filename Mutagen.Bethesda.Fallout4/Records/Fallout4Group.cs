@@ -7,39 +7,39 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Group<T> : AGroup<T>
+    public partial class Fallout4Group<T> : AGroup<T>
     {
-        public Group(IModGetter getter) : base(getter)
+        public Fallout4Group(IModGetter getter) : base(getter)
         {
         }
 
-        public Group(IMod mod) : base(mod)
+        public Fallout4Group(IMod mod) : base(mod)
         {
         }
 
         protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
     }
 
-    public partial interface IGroup<T> : IGroupCommon<T>
-        where T : class, ISkyrimMajorRecordInternal, IBinaryItem
+    public partial interface IFallout4Group<T> : IGroup<T>
+        where T : class, IFallout4MajorRecordInternal, IBinaryItem
     {
     }
 
-    public partial interface IGroupGetter<out T> : IGroupCommonGetter<T>
-        where T : class, ISkyrimMajorRecordGetter, IBinaryItem
+    public partial interface IFallout4GroupGetter<out T> : IGroupGetter<T>
+        where T : class, IFallout4MajorRecordGetter, IBinaryItem
     {
     }
 
     namespace Internals
     {
-        public partial class GroupBinaryWriteTranslation
+        public partial class Fallout4GroupBinaryWriteTranslation
         {
             public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
-                IGroupGetter<T> item)
-                where T : class, ISkyrimMajorRecordGetter, IBinaryItem
+                IFallout4GroupGetter<T> item)
+                where T : class, IFallout4MajorRecordGetter, IBinaryItem
             {
                 Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
@@ -47,24 +47,24 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class GroupBinaryCreateTranslation<T>
+        public partial class Fallout4GroupBinaryCreateTranslation<T>
         {
             public static partial void FillBinaryContainedRecordTypeParseCustom(
                 MutagenFrame frame,
-                IGroup<T> item)
+                IFallout4Group<T> item)
             {
                 frame.Reader.Position += 4;
             }
         }
 
-        public partial class GroupBinaryOverlay<T> : AGroupBinaryOverlay<T>
+        public partial class Fallout4GroupBinaryOverlay<T> : AGroupBinaryOverlay<T>
         {
             partial void CustomFactoryEnd(
                 OverlayStream stream,
                 int finalPos,
                 int offset)
             {
-                _RecordCache = GroupMajorRecordCacheWrapper<T>.Factory(
+                _recordCache = GroupMajorRecordCacheWrapper<T>.Factory(
                     stream,
                     _data,
                     _package,

@@ -12,11 +12,11 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         where TKey : notnull
     {
         bool TryResolveSimpleContext<TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMajorGetter> majorRec)
-            where TMajorGetter : class, IMajorRecordCommonGetter;
+            where TMajorGetter : class, IMajorRecordGetter;
 
-        bool TryResolveSimpleContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec);
+        bool TryResolveSimpleContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec);
 
-        bool TryResolveUntypedSimpleContext(TKey key, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec);
+        bool TryResolveUntypedSimpleContext(TKey key, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec);
     }
 
     internal class ImmutableModLinkCacheSimpleContextCategory<TKey> : IImmutableModLinkCacheSimpleContextCategory<TKey>
@@ -26,17 +26,17 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         private readonly ILinkCache _linkCache;
         private readonly GameCategory _category;
         private readonly IMajorRecordSimpleContextEnumerable _contextEnumerable;
-        private readonly Func<IMajorRecordCommonGetter, TryGet<TKey>> _keyGetter;
+        private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
-        private readonly Lazy<IReadOnlyCache<IModContext<IMajorRecordCommonGetter>, TKey>> _untypedContexts;
-        private readonly Dictionary<Type, IReadOnlyCache<IModContext<IMajorRecordCommonGetter>, TKey>> _contexts = new();
+        private readonly Lazy<IReadOnlyCache<IModContext<IMajorRecordGetter>, TKey>> _untypedContexts;
+        private readonly Dictionary<Type, IReadOnlyCache<IModContext<IMajorRecordGetter>, TKey>> _contexts = new();
 
         public ImmutableModLinkCacheSimpleContextCategory(
             bool simple,
             ILinkCache linkCache,
             GameCategory category,
             IMajorRecordSimpleContextEnumerable contextEnumerable,
-            Func<IMajorRecordCommonGetter, TryGet<TKey>> keyGetter,
+            Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
         {
             _simple = simple;
@@ -45,15 +45,15 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             _contextEnumerable = contextEnumerable;
             _keyGetter = keyGetter;
             _shortCircuit = shortCircuit;
-            _untypedContexts = new Lazy<IReadOnlyCache<IModContext<IMajorRecordCommonGetter>, TKey>>(
+            _untypedContexts = new Lazy<IReadOnlyCache<IModContext<IMajorRecordGetter>, TKey>>(
                 isThreadSafe: true,
                 valueFactory: () => ConstructUntypedContextCache());
         }
 
-        private IReadOnlyCache<IModContext<IMajorRecordCommonGetter>, TKey> ConstructUntypedContextCache()
+        private IReadOnlyCache<IModContext<IMajorRecordGetter>, TKey> ConstructUntypedContextCache()
         {
-            var majorRecords = new Cache<IModContext<IMajorRecordCommonGetter>, TKey>(x => _keyGetter(x.Record).Value);
-            foreach (var majorRec in _contextEnumerable.EnumerateMajorRecordSimpleContexts<IMajorRecordCommonGetter>(_linkCache))
+            var majorRecords = new Cache<IModContext<IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
+            foreach (var majorRec in _contextEnumerable.EnumerateMajorRecordSimpleContexts<IMajorRecordGetter>(_linkCache))
             {
                 var key = _keyGetter(majorRec.Record);
                 if (key.Failed) continue;
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         }
 
         public bool TryResolveSimpleContext<TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMajorGetter> majorRec)
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             if (_shortCircuit(key))
             {
@@ -77,11 +77,11 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                 majorRec = default;
                 return false;
             }
-            majorRec = majorRecObj.AsType<IMajorRecordCommonGetter, TMajorGetter>();
+            majorRec = majorRecObj.AsType<IMajorRecordGetter, TMajorGetter>();
             return true;
         }
 
-        public bool TryResolveSimpleContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveSimpleContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec)
         {
             if (_shortCircuit(key))
             {
@@ -97,12 +97,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             return true;
         }
 
-        public bool TryResolveUntypedSimpleContext(TKey key, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveUntypedSimpleContext(TKey key, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec)
         {
             return _untypedContexts.Value.TryGetValue(key, out majorRec);
         }
 
-        private IReadOnlyCache<IModContext<IMajorRecordCommonGetter>, TKey> GetContextCache(Type type)
+        private IReadOnlyCache<IModContext<IMajorRecordGetter>, TKey> GetContextCache(Type type)
         {
             if (_simple)
             {
@@ -112,12 +112,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             {
                 if (!_contexts.TryGetValue(type, out var cache))
                 {
-                    if (type == typeof(IMajorRecordCommon)
-                        || type == typeof(IMajorRecordCommonGetter))
+                    if (type == typeof(IMajorRecord)
+                        || type == typeof(IMajorRecordGetter))
                     {
                         cache = ConstructContextCache(type);
-                        _contexts[typeof(IMajorRecordCommon)] = cache;
-                        _contexts[typeof(IMajorRecordCommonGetter)] = cache;
+                        _contexts[typeof(IMajorRecord)] = cache;
+                        _contexts[typeof(IMajorRecordGetter)] = cache;
                     }
                     else if (LoquiRegistration.TryGetRegister(type, out var registration))
                     {
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
-                        var majorRecords = new Cache<IModContext<IMajorRecordCommonGetter>, TKey>(x => _keyGetter(x.Record).Value);
+                        var majorRecords = new Cache<IModContext<IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
                         foreach (var objType in objs)
                         {
                             majorRecords.Set(
@@ -156,9 +156,9 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             }
         }
 
-        private IReadOnlyCache<IModContext<IMajorRecordCommonGetter>, TKey> ConstructContextCache(Type type)
+        private IReadOnlyCache<IModContext<IMajorRecordGetter>, TKey> ConstructContextCache(Type type)
         {
-            var cache = new Cache<IModContext<IMajorRecordCommonGetter>, TKey>(x => _keyGetter(x.Record).Value);
+            var cache = new Cache<IModContext<IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
             foreach (var majorRec in _contextEnumerable.EnumerateMajorRecordSimpleContexts(_linkCache, type))

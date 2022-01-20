@@ -344,6 +344,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Debris>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDebris);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -443,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IDebrisGetter>,
         IMapsToGetter<IDebrisGetter>
     {
-        static new ILoquiRegistration Registration => Debris_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Debris_Registration.Instance;
 
     }
 
@@ -1133,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
-        public new static Debris_Registration Registration => Debris_Registration.Instance;
+        public new static Debris_Registration StaticRegistration => Debris_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
-        public new static Debris_Registration Registration => Debris_Registration.Instance;
+        public new static Debris_Registration StaticRegistration => Debris_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]
@@ -1277,6 +1279,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDebris);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -20,8 +20,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
             var mod = new OblivionMod(TestConstants.PluginModKey);
             var conv = ConvertMod(mod);
             Assert.Empty(conv.EnumerateMajorRecords());
-            Assert.Empty(conv.EnumerateMajorRecords<IMajorRecordCommon>());
-            Assert.Empty(conv.EnumerateMajorRecords<IMajorRecordCommonGetter>());
+            Assert.Empty(conv.EnumerateMajorRecords<IMajorRecord>());
+            Assert.Empty(conv.EnumerateMajorRecords<IMajorRecordGetter>());
             Assert.Empty(conv.EnumerateMajorRecords<INpc>());
             Assert.Empty(conv.EnumerateMajorRecords<INpcGetter>());
             Assert.Empty(conv.EnumerateMajorRecords<Npc>());
@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
             mod.Npcs.AddNew();
             mod.Ammunitions.AddNew();
             var conv = ConvertMod(mod);
-            Assert.Equal(Getter ? 0 : 2, conv.EnumerateMajorRecords<IMajorRecordCommon>().Count());
-            Assert.Equal(2, conv.EnumerateMajorRecords<IMajorRecordCommonGetter>().Count());
+            Assert.Equal(Getter ? 0 : 2, conv.EnumerateMajorRecords<IMajorRecord>().Count());
+            Assert.Equal(2, conv.EnumerateMajorRecords<IMajorRecordGetter>().Count());
         }
 
         [Fact]

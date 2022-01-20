@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MagicEffectArchetype_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MagicEffectArchetype_Registration.Instance;
         MagicEffectArchetype.TypeEnum Type { get; }
         FormKey AssociationKey { get; }
         ActorValue ActorValue { get; }
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectArchetype_Registration.Instance;
-        public static MagicEffectArchetype_Registration Registration => MagicEffectArchetype_Registration.Instance;
+        public static MagicEffectArchetype_Registration StaticRegistration => MagicEffectArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => MagicEffectArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectArchetype_Registration.Instance;
-        public static MagicEffectArchetype_Registration Registration => MagicEffectArchetype_Registration.Instance;
+        public static MagicEffectArchetype_Registration StaticRegistration => MagicEffectArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => MagicEffectArchetypeCommon.Instance;
         [DebuggerStepThrough]

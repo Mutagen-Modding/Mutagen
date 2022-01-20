@@ -442,6 +442,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<PlacedCone>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedCone);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -546,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedConeGetter>,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedCone_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedCone_Registration.Instance;
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }
@@ -1400,7 +1402,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCone_Registration.Instance;
-        public new static PlacedCone_Registration Registration => PlacedCone_Registration.Instance;
+        public new static PlacedCone_Registration StaticRegistration => PlacedCone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedConeCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCone_Registration.Instance;
-        public new static PlacedCone_Registration Registration => PlacedCone_Registration.Instance;
+        public new static PlacedCone_Registration StaticRegistration => PlacedCone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedConeCommon.Instance;
         [DebuggerStepThrough]
@@ -1565,6 +1567,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedCone);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

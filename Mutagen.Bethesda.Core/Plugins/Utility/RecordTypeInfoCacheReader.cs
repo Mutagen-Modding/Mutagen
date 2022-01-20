@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Plugins.Utility
         }
 
         public bool IsOfRecordType<T>(FormKey formKey)
-            where T : IMajorRecordCommonGetter
+            where T : IMajorRecordGetter
         {
             if (formKey.IsNull) return false;
             lock (_cachedLocs)

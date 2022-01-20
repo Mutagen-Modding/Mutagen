@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CrimeValues_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CrimeValues_Registration.Instance;
         CrimeValues.VersioningBreaks Versioning { get; }
         Boolean Arrest { get; }
         Boolean AttackOnSight { get; }
@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CrimeValues_Registration.Instance;
-        public static CrimeValues_Registration Registration => CrimeValues_Registration.Instance;
+        public static CrimeValues_Registration StaticRegistration => CrimeValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CrimeValuesCommon.Instance;
         [DebuggerStepThrough]
@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CrimeValues_Registration.Instance;
-        public static CrimeValues_Registration Registration => CrimeValues_Registration.Instance;
+        public static CrimeValues_Registration StaticRegistration => CrimeValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CrimeValuesCommon.Instance;
         [DebuggerStepThrough]

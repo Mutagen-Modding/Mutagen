@@ -738,6 +738,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Landscape>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILandscape);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -847,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<ILandscapeGetter>,
         IPlacedGetter
     {
-        static new ILoquiRegistration Registration => Landscape_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Landscape_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         ReadOnlyMemorySlice<Byte>? VertexNormals { get; }
         ReadOnlyMemorySlice<Byte>? VertexHeightMap { get; }
@@ -1771,7 +1773,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
-        public new static Landscape_Registration Registration => Landscape_Registration.Instance;
+        public new static Landscape_Registration StaticRegistration => Landscape_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeCommon.Instance;
         [DebuggerStepThrough]
@@ -2031,7 +2033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
-        public new static Landscape_Registration Registration => Landscape_Registration.Instance;
+        public new static Landscape_Registration StaticRegistration => Landscape_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeCommon.Instance;
         [DebuggerStepThrough]
@@ -2053,6 +2055,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILandscape);
+
 
         #region DATA
         private int? _DATALocation;

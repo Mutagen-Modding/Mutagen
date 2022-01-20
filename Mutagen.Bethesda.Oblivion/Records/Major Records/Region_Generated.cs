@@ -802,6 +802,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Region>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IRegion);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -912,7 +914,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IRegionGetter>,
         IMapsToGetter<IRegionGetter>
     {
-        static new ILoquiRegistration Registration => Region_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Region_Registration.Instance;
         String? Icon { get; }
         Color? MapColor { get; }
         IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
@@ -2004,7 +2006,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration Registration => Region_Registration.Instance;
+        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
@@ -2244,7 +2246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration Registration => Region_Registration.Instance;
+        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
@@ -2266,6 +2268,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRegion);
+
 
         #region Icon
         partial void IconCustomParse(

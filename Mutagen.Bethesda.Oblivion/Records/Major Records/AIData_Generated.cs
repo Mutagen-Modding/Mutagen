@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => AIData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => AIData_Registration.Instance;
         Byte Aggression { get; }
         Byte Confidence { get; }
         Byte EnergyLevel { get; }
@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIData_Registration.Instance;
-        public static AIData_Registration Registration => AIData_Registration.Instance;
+        public static AIData_Registration StaticRegistration => AIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIData_Registration.Instance;
-        public static AIData_Registration Registration => AIData_Registration.Instance;
+        public static AIData_Registration StaticRegistration => AIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIDataCommon.Instance;
         [DebuggerStepThrough]

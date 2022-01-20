@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ScriptEffect_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ScriptEffect_Registration.Instance;
         IScriptEffectDataGetter? Data { get; }
         #region Name
         /// <summary>
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptEffect_Registration.Instance;
-        public static ScriptEffect_Registration Registration => ScriptEffect_Registration.Instance;
+        public static ScriptEffect_Registration StaticRegistration => ScriptEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptEffect_Registration.Instance;
-        public static ScriptEffect_Registration Registration => ScriptEffect_Registration.Instance;
+        public static ScriptEffect_Registration StaticRegistration => ScriptEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptEffectCommon.Instance;
         [DebuggerStepThrough]

@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IAStoryManagerNodeGetter>
     {
-        static new ILoquiRegistration Registration => AStoryManagerNode_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AStoryManagerNode_Registration.Instance;
         IFormLinkNullableGetter<IAStoryManagerNodeGetter> Parent { get; }
         IFormLinkNullableGetter<IAStoryManagerNodeGetter> PreviousSibling { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AStoryManagerNode_Registration.Instance;
-        public new static AStoryManagerNode_Registration Registration => AStoryManagerNode_Registration.Instance;
+        public new static AStoryManagerNode_Registration StaticRegistration => AStoryManagerNode_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AStoryManagerNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1632,14 +1632,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class AStoryManagerNodeBinaryOverlay :
+    public abstract partial class AStoryManagerNodeBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IAStoryManagerNodeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AStoryManagerNode_Registration.Instance;
-        public new static AStoryManagerNode_Registration Registration => AStoryManagerNode_Registration.Instance;
+        public new static AStoryManagerNode_Registration StaticRegistration => AStoryManagerNode_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AStoryManagerNodeCommon.Instance;
         [DebuggerStepThrough]

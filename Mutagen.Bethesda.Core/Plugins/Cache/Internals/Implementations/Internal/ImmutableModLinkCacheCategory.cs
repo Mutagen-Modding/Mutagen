@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             {
                 if (!_majorRecords.TryGetValue(type, out var cache))
                 {
-                    if (type.Equals(typeof(IMajorRecordCommon))
-                        || type.Equals(typeof(IMajorRecordCommonGetter)))
+                    if (type == typeof(IMajorRecord)
+                        || type == typeof(IMajorRecordGetter))
                     {
                         cache = ConstructTypedCache(type, sourceMod);
-                        _majorRecords[typeof(IMajorRecordCommon)] = cache;
-                        _majorRecords[typeof(IMajorRecordCommonGetter)] = cache;
+                        _majorRecords[typeof(IMajorRecord)] = cache;
+                        _majorRecords[typeof(IMajorRecordGetter)] = cache;
                     }
                     else if (LoquiRegistration.TryGetRegister(type, out var registration))
                     {

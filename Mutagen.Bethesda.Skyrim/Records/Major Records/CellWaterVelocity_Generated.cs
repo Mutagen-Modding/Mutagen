@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CellWaterVelocity_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CellWaterVelocity_Registration.Instance;
         P3Float Offset { get; }
         Int32 Unknown { get; }
         P3Float Angle { get; }
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellWaterVelocity_Registration.Instance;
-        public static CellWaterVelocity_Registration Registration => CellWaterVelocity_Registration.Instance;
+        public static CellWaterVelocity_Registration StaticRegistration => CellWaterVelocity_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellWaterVelocityCommon.Instance;
         [DebuggerStepThrough]
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellWaterVelocity_Registration.Instance;
-        public static CellWaterVelocity_Registration Registration => CellWaterVelocity_Registration.Instance;
+        public static CellWaterVelocity_Registration StaticRegistration => CellWaterVelocity_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellWaterVelocityCommon.Instance;
         [DebuggerStepThrough]

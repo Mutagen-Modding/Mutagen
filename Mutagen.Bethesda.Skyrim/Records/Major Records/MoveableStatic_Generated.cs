@@ -658,6 +658,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MoveableStatic>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMoveableStatic);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -801,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => MoveableStatic_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MoveableStatic_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -1727,7 +1729,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MoveableStatic_Registration.Instance;
-        public new static MoveableStatic_Registration Registration => MoveableStatic_Registration.Instance;
+        public new static MoveableStatic_Registration StaticRegistration => MoveableStatic_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MoveableStaticCommon.Instance;
         [DebuggerStepThrough]
@@ -1964,7 +1966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MoveableStatic_Registration.Instance;
-        public new static MoveableStatic_Registration Registration => MoveableStatic_Registration.Instance;
+        public new static MoveableStatic_Registration StaticRegistration => MoveableStatic_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MoveableStaticCommon.Instance;
         [DebuggerStepThrough]
@@ -1986,6 +1988,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMoveableStatic);
+
         public MoveableStatic.MajorFlag MajorFlags => (MoveableStatic.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds

@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Placement_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Placement_Registration.Instance;
         P3Float Position { get; }
         P3Float Rotation { get; }
 
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Placement_Registration.Instance;
-        public static Placement_Registration Registration => Placement_Registration.Instance;
+        public static Placement_Registration StaticRegistration => Placement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlacementCommon.Instance;
         [DebuggerStepThrough]
@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Placement_Registration.Instance;
-        public static Placement_Registration Registration => Placement_Registration.Instance;
+        public static Placement_Registration StaticRegistration => Placement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlacementCommon.Instance;
         [DebuggerStepThrough]

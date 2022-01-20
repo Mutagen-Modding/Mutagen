@@ -1528,6 +1528,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Projectile>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IProjectile);
+
         [Flags]
         public enum DATADataType
         {
@@ -1694,7 +1696,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Projectile_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Projectile_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -3082,7 +3084,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Projectile_Registration.Instance;
-        public new static Projectile_Registration Registration => Projectile_Registration.Instance;
+        public new static Projectile_Registration StaticRegistration => Projectile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ProjectileCommon.Instance;
         [DebuggerStepThrough]
@@ -3465,7 +3467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Projectile_Registration.Instance;
-        public new static Projectile_Registration Registration => Projectile_Registration.Instance;
+        public new static Projectile_Registration StaticRegistration => Projectile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ProjectileCommon.Instance;
         [DebuggerStepThrough]
@@ -3487,6 +3489,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IProjectile);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

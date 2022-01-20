@@ -1228,6 +1228,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Book>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IBook);
+
         [Flags]
         public enum DATADataType
         {
@@ -1398,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter
     {
-        static new ILoquiRegistration Registration => Book_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Book_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -2737,7 +2739,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
-        public new static Book_Registration Registration => Book_Registration.Instance;
+        public new static Book_Registration StaticRegistration => Book_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookCommon.Instance;
         [DebuggerStepThrough]
@@ -3141,7 +3143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
-        public new static Book_Registration Registration => Book_Registration.Instance;
+        public new static Book_Registration StaticRegistration => Book_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookCommon.Instance;
         [DebuggerStepThrough]
@@ -3163,6 +3165,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IBook);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

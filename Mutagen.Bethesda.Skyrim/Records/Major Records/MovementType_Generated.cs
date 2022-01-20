@@ -841,6 +841,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MovementType>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMovementType);
+
         [Flags]
         public enum SPEDDataType
         {
@@ -966,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => MovementType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MovementType_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1937,7 +1939,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MovementType_Registration.Instance;
-        public new static MovementType_Registration Registration => MovementType_Registration.Instance;
+        public new static MovementType_Registration StaticRegistration => MovementType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MovementTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -2200,7 +2202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MovementType_Registration.Instance;
-        public new static MovementType_Registration Registration => MovementType_Registration.Instance;
+        public new static MovementType_Registration StaticRegistration => MovementType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MovementTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -2221,6 +2223,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMovementType);
+
 
         #region Name
         private int? _NameLocation;

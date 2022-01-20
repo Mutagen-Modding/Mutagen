@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IQuestAdapterGetter>
     {
-        static new ILoquiRegistration Registration => QuestAdapter_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => QuestAdapter_Registration.Instance;
         QuestAdapter.VersioningBreaks Versioning { get; }
         Byte Unknown { get; }
         String FileName { get; }
@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestAdapter_Registration.Instance;
-        public new static QuestAdapter_Registration Registration => QuestAdapter_Registration.Instance;
+        public new static QuestAdapter_Registration StaticRegistration => QuestAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => QuestAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1645,7 +1645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestAdapter_Registration.Instance;
-        public new static QuestAdapter_Registration Registration => QuestAdapter_Registration.Instance;
+        public new static QuestAdapter_Registration StaticRegistration => QuestAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => QuestAdapterCommon.Instance;
         [DebuggerStepThrough]

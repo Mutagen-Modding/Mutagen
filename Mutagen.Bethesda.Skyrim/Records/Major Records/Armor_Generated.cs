@@ -1441,6 +1441,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Armor>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IArmor);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1619,7 +1621,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter
     {
-        static new ILoquiRegistration Registration => Armor_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Armor_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -3058,7 +3060,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
-        public new static Armor_Registration Registration => Armor_Registration.Instance;
+        public new static Armor_Registration StaticRegistration => Armor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorCommon.Instance;
         [DebuggerStepThrough]
@@ -3526,7 +3528,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
-        public new static Armor_Registration Registration => Armor_Registration.Instance;
+        public new static Armor_Registration StaticRegistration => Armor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorCommon.Instance;
         [DebuggerStepThrough]
@@ -3548,6 +3550,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IArmor);
+
         public Armor.MajorFlag MajorFlags => (Armor.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

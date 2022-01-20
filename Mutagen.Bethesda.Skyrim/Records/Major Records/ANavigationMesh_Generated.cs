@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IANavigationMeshGetter>
     {
-        static new ILoquiRegistration Registration => ANavigationMesh_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ANavigationMesh_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? ONAM { get; }
         ReadOnlyMemorySlice<Byte>? PNAM { get; }
         ReadOnlyMemorySlice<Byte>? NNAM { get; }
@@ -1350,7 +1350,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANavigationMesh_Registration.Instance;
-        public new static ANavigationMesh_Registration Registration => ANavigationMesh_Registration.Instance;
+        public new static ANavigationMesh_Registration StaticRegistration => ANavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ANavigationMeshCommon.Instance;
         [DebuggerStepThrough]
@@ -1575,14 +1575,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ANavigationMeshBinaryOverlay :
+    public abstract partial class ANavigationMeshBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IANavigationMeshGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANavigationMesh_Registration.Instance;
-        public new static ANavigationMesh_Registration Registration => ANavigationMesh_Registration.Instance;
+        public new static ANavigationMesh_Registration StaticRegistration => ANavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ANavigationMeshCommon.Instance;
         [DebuggerStepThrough]

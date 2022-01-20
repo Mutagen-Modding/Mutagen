@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Fields;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -28,19 +30,19 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public static void GenerateClassImplementation(ObjectGeneration obj, FileGeneration fg, bool onlyGetter = false)
         {
             fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
+            fg.AppendLine($"IEnumerable<{nameof(IMajorRecordGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
             fg.AppendLine("[DebuggerStepThrough]");
             fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(throwIfUnknown: throwIfUnknown);");
             fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
+            fg.AppendLine($"IEnumerable<{nameof(IMajorRecordGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
             if (!onlyGetter)
             {
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
+                fg.AppendLine($"IEnumerable<{nameof(IMajorRecord)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
                 fg.AppendLine("[DebuggerStepThrough]");
                 fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(throwIfUnknown: throwIfUnknown);");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<{nameof(IMajorRecord)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
             }
         }
 
@@ -52,7 +54,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             string enderSemi = needsCatch ? string.Empty : ";";
             fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
-                $"public static IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
+                $"public static IEnumerable<{nameof(IMajorRecordGetter)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
                 args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
@@ -73,7 +75,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 $"public static IEnumerable<TMajor> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
-                args.Wheres.Add($"where TMajor : class, IMajorRecordCommonGetter");
+                args.Wheres.Add($"where TMajor : class, IMajorRecordGetter");
                 args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
                 args.Add($"bool throwIfUnknown = true");
             }
@@ -99,7 +101,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
             fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
-                $"public static IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
+                $"public static IEnumerable<{nameof(IMajorRecordGetter)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
                 args.Add($"Type type");
@@ -117,7 +119,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
                 using (new DepthWrapper(fg))
                 {
-                    fg.AppendLine($".Select(m => ({nameof(IMajorRecordCommonGetter)})m){enderSemi}");
+                    fg.AppendLine($".Select(m => ({nameof(IMajorRecordGetter)})m){enderSemi}");
                     if (needsCatch)
                     {
                         fg.AppendLine($"{catchLine};");
@@ -128,7 +130,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
             fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
-                $"public static IEnumerable<{nameof(IMajorRecordCommon)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
+                $"public static IEnumerable<{nameof(IMajorRecord)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
                 args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
@@ -149,7 +151,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 $"public static IEnumerable<TMajor> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
-                args.Wheres.Add($"where TMajor : class, IMajorRecordCommon");
+                args.Wheres.Add($"where TMajor : class, IMajorRecord");
                 args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
             }
             using (new BraceWrapper(fg))
@@ -174,7 +176,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
             fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
-                $"public static IEnumerable<{nameof(IMajorRecordCommon)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
+                $"public static IEnumerable<{nameof(IMajorRecord)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
                 args.Add($"Type? type");
@@ -192,7 +194,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
                 using (new DepthWrapper(fg))
                 {
-                    fg.AppendLine($".Select(m => ({nameof(IMajorRecordCommon)})m){enderSemi}");
+                    fg.AppendLine($".Select(m => ({nameof(IMajorRecord)})m){enderSemi}");
                     if (needsCatch)
                     {
                         fg.AppendLine($"{catchLine};");
@@ -259,7 +261,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             var overrideStr = await obj.FunctionOverride(async c => await MajorRecordModule.HasMajorRecords(c, includeBaseClass: false, includeSelf: true) != Case.No);
 
             using (var args = new FunctionWrapper(fg,
-                $"public{overrideStr}IEnumerable<{nameof(IMajorRecordCommon)}{(getter ? "Getter" : null)}> EnumerateMajorRecords"))
+                $"public{overrideStr}IEnumerable<{nameof(IMajorRecord)}{(getter ? "Getter" : null)}> EnumerateMajorRecords"))
             {
                 args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
             }
@@ -270,7 +272,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     fg.AppendLine($"foreach (var item in {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecords(obj))");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"yield return (item as {nameof(IMajorRecordCommon)})!;");
+                        fg.AppendLine($"yield return (item as {nameof(IMajorRecord)})!;");
                     }
                 }
                 else
@@ -413,7 +415,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
                 {
                     using (var args = new FunctionWrapper(fg,
-                        $"public override IEnumerable<{nameof(IMajorRecordCommon)}{(getter ? "Getter" : null)}> EnumerateMajorRecords"))
+                        $"public override IEnumerable<{nameof(IMajorRecord)}{(getter ? "Getter" : null)}> EnumerateMajorRecords"))
                     {
                         args.Add($"{baseClass.Interface(getter: getter)} obj");
                     }
@@ -430,7 +432,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
 
             using (var args = new FunctionWrapper(fg,
-                $"public{overrideStr}IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumeratePotentiallyTypedMajorRecords"))
+                $"public{overrideStr}IEnumerable<{nameof(IMajorRecordGetter)}> EnumeratePotentiallyTypedMajorRecords"))
             {
                 args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
                 args.Add($"Type? type");
@@ -444,7 +446,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public{overrideStr}IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumerateMajorRecords"))
+                $"public{overrideStr}IEnumerable<{nameof(IMajorRecordGetter)}> EnumerateMajorRecords"))
             {
                 args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
                 args.Add($"Type type");
@@ -481,7 +483,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     using (new BraceWrapper(fg))
                     {
                         var gameCategory = obj.GetObjectData().GameCategory;
-                        fg.AppendLine($"case \"{nameof(IMajorRecordCommon)}\":");
                         fg.AppendLine($"case \"{nameof(IMajorRecord)}\":");
                         fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
                         if (gameCategory != null)
@@ -500,7 +501,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             fg.AppendLine("yield break;");
                         }
                         fg.AppendLine($"case \"{nameof(IMajorRecordGetter)}\":");
-                        fg.AppendLine($"case \"{nameof(IMajorRecordCommonGetter)}\":");
                         if (gameCategory != null)
                         {
                             fg.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             await ApplyIterationLines(field, fieldGen, accessor, getter);
                         }
 
-                        bool doAdditionlDeepLogic = obj.Name != "ListGroup";
+                        bool doAdditionlDeepLogic = !obj.Name.EndsWith("ListGroup");
 
                         if (doAdditionlDeepLogic)
                         {
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         $"public override IEnumerable<TMajor> EnumerateMajorRecords<TMajor>"))
                     {
                         args.Add($"{baseClass.Interface(getter: getter)} obj");
-                        args.Wheres.Add($"where TMajor : {nameof(IMajorRecordCommon)}{(getter ? "Getter" : null)}");
+                        args.Wheres.Add($"where TMajor : {nameof(IMajorRecord)}{(getter ? "Getter" : null)}");
                     }
                     using (new BraceWrapper(fg))
                     {
@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             fieldGen.AppendLine($"if (type.IsAssignableFrom(typeof({contLoqui.GenericDef.Name})))");
                             using (new BraceWrapper(fieldGen))
                             {
-                                fieldGen.AppendLine($"yield return ({nameof(IMajorRecordCommonGetter)})item;");
+                                fieldGen.AppendLine($"yield return ({nameof(IMajorRecordGetter)})item;");
                             }
                         }
                         fieldGen.AppendLine($"foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");

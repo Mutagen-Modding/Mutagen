@@ -769,6 +769,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ReverbParameters>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IReverbParameters);
+
         [Flags]
         public enum DATADataType
         {
@@ -885,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IReverbParametersGetter>,
         IMapsToGetter<IReverbParametersGetter>
     {
-        static new ILoquiRegistration Registration => ReverbParameters_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ReverbParameters_Registration.Instance;
         UInt16 DecayMilliseconds { get; }
         UInt16 HfReferenceHertz { get; }
         SByte RoomFilter { get; }
@@ -1796,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ReverbParameters_Registration.Instance;
-        public new static ReverbParameters_Registration Registration => ReverbParameters_Registration.Instance;
+        public new static ReverbParameters_Registration StaticRegistration => ReverbParameters_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ReverbParametersCommon.Instance;
         [DebuggerStepThrough]
@@ -2004,7 +2006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ReverbParameters_Registration.Instance;
-        public new static ReverbParameters_Registration Registration => ReverbParameters_Registration.Instance;
+        public new static ReverbParameters_Registration StaticRegistration => ReverbParameters_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ReverbParametersCommon.Instance;
         [DebuggerStepThrough]
@@ -2025,6 +2027,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IReverbParameters);
+
 
         private int? _DATALocation;
         public ReverbParameters.DATADataType DATADataTypeState { get; private set; }

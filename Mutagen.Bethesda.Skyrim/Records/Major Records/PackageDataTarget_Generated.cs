@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => PackageDataTarget_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PackageDataTarget_Registration.Instance;
         PackageDataTarget.Types Type { get; }
         IAPackageTargetGetter Target { get; }
 
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataTarget_Registration.Instance;
-        public new static PackageDataTarget_Registration Registration => PackageDataTarget_Registration.Instance;
+        public new static PackageDataTarget_Registration StaticRegistration => PackageDataTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataTarget_Registration.Instance;
-        public new static PackageDataTarget_Registration Registration => PackageDataTarget_Registration.Instance;
+        public new static PackageDataTarget_Registration StaticRegistration => PackageDataTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataTargetCommon.Instance;
         [DebuggerStepThrough]

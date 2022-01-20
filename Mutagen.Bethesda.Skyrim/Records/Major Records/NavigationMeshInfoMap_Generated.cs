@@ -604,6 +604,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<NavigationMeshInfoMap>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(INavigationMeshInfoMap);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -709,7 +711,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<INavigationMeshInfoMapGetter>,
         IMapsToGetter<INavigationMeshInfoMapGetter>
     {
-        static new ILoquiRegistration Registration => NavigationMeshInfoMap_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => NavigationMeshInfoMap_Registration.Instance;
         UInt32? NavMeshVersion { get; }
         IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; }
         IPreferredPathingGetter? PreferredPathing { get; }
@@ -1566,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationMeshInfoMap_Registration.Instance;
-        public new static NavigationMeshInfoMap_Registration Registration => NavigationMeshInfoMap_Registration.Instance;
+        public new static NavigationMeshInfoMap_Registration StaticRegistration => NavigationMeshInfoMap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NavigationMeshInfoMapCommon.Instance;
         [DebuggerStepThrough]
@@ -1778,7 +1780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationMeshInfoMap_Registration.Instance;
-        public new static NavigationMeshInfoMap_Registration Registration => NavigationMeshInfoMap_Registration.Instance;
+        public new static NavigationMeshInfoMap_Registration StaticRegistration => NavigationMeshInfoMap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NavigationMeshInfoMapCommon.Instance;
         [DebuggerStepThrough]
@@ -1800,6 +1802,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(INavigationMeshInfoMap);
+
 
         #region NavMeshVersion
         private int? _NavMeshVersionLocation;

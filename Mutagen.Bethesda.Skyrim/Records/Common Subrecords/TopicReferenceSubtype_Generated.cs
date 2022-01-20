@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<ITopicReferenceSubtypeGetter>
     {
-        static new ILoquiRegistration Registration => TopicReferenceSubtype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => TopicReferenceSubtype_Registration.Instance;
         RecordType Subtype { get; }
 
     }
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TopicReferenceSubtype_Registration.Instance;
-        public new static TopicReferenceSubtype_Registration Registration => TopicReferenceSubtype_Registration.Instance;
+        public new static TopicReferenceSubtype_Registration StaticRegistration => TopicReferenceSubtype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TopicReferenceSubtypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TopicReferenceSubtype_Registration.Instance;
-        public new static TopicReferenceSubtype_Registration Registration => TopicReferenceSubtype_Registration.Instance;
+        public new static TopicReferenceSubtype_Registration StaticRegistration => TopicReferenceSubtype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TopicReferenceSubtypeCommon.Instance;
         [DebuggerStepThrough]

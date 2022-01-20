@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MapData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MapData_Registration.Instance;
         P2Int UsableDimensions { get; }
         P2Int16 CellCoordinatesNWCell { get; }
         P2Int16 CellCoordinatesSECell { get; }
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
-        public static MapData_Registration Registration => MapData_Registration.Instance;
+        public static MapData_Registration StaticRegistration => MapData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
-        public static MapData_Registration Registration => MapData_Registration.Instance;
+        public static MapData_Registration StaticRegistration => MapData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapDataCommon.Instance;
         [DebuggerStepThrough]

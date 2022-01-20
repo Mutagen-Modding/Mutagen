@@ -602,6 +602,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Keyword>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IKeyword);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -730,7 +732,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Keyword_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Keyword_Registration.Instance;
         Color? Color { get; }
         String? Notes { get; }
         Keyword.TypeEnum? Type { get; }
@@ -1552,7 +1554,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
-        public new static Keyword_Registration Registration => Keyword_Registration.Instance;
+        public new static Keyword_Registration StaticRegistration => Keyword_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => KeywordCommon.Instance;
         [DebuggerStepThrough]
@@ -1785,7 +1787,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
-        public new static Keyword_Registration Registration => Keyword_Registration.Instance;
+        public new static Keyword_Registration StaticRegistration => Keyword_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => KeywordCommon.Instance;
         [DebuggerStepThrough]
@@ -1807,6 +1809,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IKeyword);
+
 
         #region Color
         private int? _ColorLocation;

@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NpcConfiguration_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NpcConfiguration_Registration.Instance;
         NpcConfiguration.Flag Flags { get; }
         Int16 MagickaOffset { get; }
         Int16 StaminaOffset { get; }
@@ -1440,7 +1440,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcConfiguration_Registration.Instance;
-        public static NpcConfiguration_Registration Registration => NpcConfiguration_Registration.Instance;
+        public static NpcConfiguration_Registration StaticRegistration => NpcConfiguration_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcConfigurationCommon.Instance;
         [DebuggerStepThrough]
@@ -1618,7 +1618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcConfiguration_Registration.Instance;
-        public static NpcConfiguration_Registration Registration => NpcConfiguration_Registration.Instance;
+        public static NpcConfiguration_Registration StaticRegistration => NpcConfiguration_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcConfigurationCommon.Instance;
         [DebuggerStepThrough]

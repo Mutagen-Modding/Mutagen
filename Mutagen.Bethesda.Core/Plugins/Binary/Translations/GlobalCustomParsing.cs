@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public static T Create<T>(
             MutagenFrame frame,
             Func<MutagenFrame, char?, T> getter)
-            where T : IMajorRecordCommon, IGlobalCommon
+            where T : IMajorRecord, IGlobalCommon
         {
             var initialPos = frame.Position;
             var majorMeta = frame.GetMajorRecordFrame();

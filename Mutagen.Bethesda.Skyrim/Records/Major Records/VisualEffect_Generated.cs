@@ -507,6 +507,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<VisualEffect>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IVisualEffect);
+
         [Flags]
         public enum DATADataType
         {
@@ -616,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IVisualEffectGetter>,
         IMapsToGetter<IVisualEffectGetter>
     {
-        static new ILoquiRegistration Registration => VisualEffect_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => VisualEffect_Registration.Instance;
         IFormLinkGetter<IArtObjectGetter> EffectArt { get; }
         IFormLinkGetter<IEffectShaderGetter> Shader { get; }
         VisualEffect.Flag Flags { get; }
@@ -1378,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VisualEffect_Registration.Instance;
-        public new static VisualEffect_Registration Registration => VisualEffect_Registration.Instance;
+        public new static VisualEffect_Registration StaticRegistration => VisualEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VisualEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1570,7 +1572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VisualEffect_Registration.Instance;
-        public new static VisualEffect_Registration Registration => VisualEffect_Registration.Instance;
+        public new static VisualEffect_Registration StaticRegistration => VisualEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VisualEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1592,6 +1594,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IVisualEffect);
+
 
         private int? _DATALocation;
         public VisualEffect.DATADataType DATADataTypeState { get; private set; }

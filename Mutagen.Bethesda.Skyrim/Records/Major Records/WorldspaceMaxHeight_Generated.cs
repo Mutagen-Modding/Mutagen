@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorldspaceMaxHeight_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorldspaceMaxHeight_Registration.Instance;
         P2Int16 Min { get; }
         P2Int16 Max { get; }
         ReadOnlyMemorySlice<Byte> CellData { get; }
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMaxHeight_Registration.Instance;
-        public static WorldspaceMaxHeight_Registration Registration => WorldspaceMaxHeight_Registration.Instance;
+        public static WorldspaceMaxHeight_Registration StaticRegistration => WorldspaceMaxHeight_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMaxHeightCommon.Instance;
         [DebuggerStepThrough]
@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMaxHeight_Registration.Instance;
-        public static WorldspaceMaxHeight_Registration Registration => WorldspaceMaxHeight_Registration.Instance;
+        public static WorldspaceMaxHeight_Registration StaticRegistration => WorldspaceMaxHeight_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMaxHeightCommon.Instance;
         [DebuggerStepThrough]

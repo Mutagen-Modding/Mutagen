@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             TypedParseParams? translationParams,
             RecordStructFill<M> fillStructs,
             MajorRecordFill<M> fillTyped)
-            where M : IMajorRecordCommonGetter
+            where M : IMajorRecordGetter
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(frame.Reader));
             fillStructs(
@@ -325,8 +325,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             TImportMask importMask,
             RecordStructFill<TMod> fillStructs,
             ModRecordTypeFill<TMod, TImportMask> fillTyped)
-            where TMod : IMod
+            where TMod : IMod, IClearable
         {
+            record.Clear();
             var modHeader = frame.Reader.GetModHeader();
             fillTyped(
                 record: record,
@@ -346,11 +347,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
                 var len = checked((int)groupHeader.ContentLength);
                 var finalPos = frame.Position + groupHeader.TotalLength;
-                if (len == 0)
-                {
-                    frame.Position = finalPos;
-                    continue;
-                }
 
                 var parsed = fillTyped(
                     record: record,

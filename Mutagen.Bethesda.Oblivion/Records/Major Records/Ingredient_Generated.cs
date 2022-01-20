@@ -717,6 +717,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Ingredient>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IIngredient);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -839,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Ingredient_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Ingredient_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1782,7 +1784,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
-        public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
+        public new static Ingredient_Registration StaticRegistration => Ingredient_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngredientCommon.Instance;
         [DebuggerStepThrough]
@@ -2035,7 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
-        public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
+        public new static Ingredient_Registration StaticRegistration => Ingredient_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngredientCommon.Instance;
         [DebuggerStepThrough]
@@ -2057,6 +2059,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IIngredient);
+
 
         #region Name
         private int? _NameLocation;

@@ -578,6 +578,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Birthsign>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IBirthsign);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -690,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Birthsign_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Birthsign_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1499,7 +1501,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Birthsign_Registration.Instance;
-        public new static Birthsign_Registration Registration => Birthsign_Registration.Instance;
+        public new static Birthsign_Registration StaticRegistration => Birthsign_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BirthsignCommon.Instance;
         [DebuggerStepThrough]
@@ -1716,7 +1718,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Birthsign_Registration.Instance;
-        public new static Birthsign_Registration Registration => Birthsign_Registration.Instance;
+        public new static Birthsign_Registration StaticRegistration => Birthsign_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BirthsignCommon.Instance;
         [DebuggerStepThrough]
@@ -1738,6 +1740,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IBirthsign);
+
 
         #region Name
         private int? _NameLocation;

@@ -533,6 +533,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<LoadScreen>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILoadScreen);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -637,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ILoadScreenGetter>,
         IMapsToGetter<ILoadScreenGetter>
     {
-        static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LoadScreen_Registration.Instance;
         String? Icon { get; }
         String? Description { get; }
         IReadOnlyList<ILoadScreenLocationGetter> Locations { get; }
@@ -1425,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreen_Registration.Instance;
-        public new static LoadScreen_Registration Registration => LoadScreen_Registration.Instance;
+        public new static LoadScreen_Registration StaticRegistration => LoadScreen_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LoadScreenCommon.Instance;
         [DebuggerStepThrough]
@@ -1631,7 +1633,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreen_Registration.Instance;
-        public new static LoadScreen_Registration Registration => LoadScreen_Registration.Instance;
+        public new static LoadScreen_Registration StaticRegistration => LoadScreen_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LoadScreenCommon.Instance;
         [DebuggerStepThrough]
@@ -1653,6 +1655,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILoadScreen);
+
 
         #region Icon
         private int? _IconLocation;

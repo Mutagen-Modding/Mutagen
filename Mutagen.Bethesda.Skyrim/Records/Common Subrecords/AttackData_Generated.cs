@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => AttackData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => AttackData_Registration.Instance;
         Single DamageMult { get; }
         Single Chance { get; }
         IFormLinkGetter<ISpellRecordGetter> Spell { get; }
@@ -1437,7 +1437,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttackData_Registration.Instance;
-        public static AttackData_Registration Registration => AttackData_Registration.Instance;
+        public static AttackData_Registration StaticRegistration => AttackData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AttackDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1593,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttackData_Registration.Instance;
-        public static AttackData_Registration Registration => AttackData_Registration.Instance;
+        public static AttackData_Registration StaticRegistration => AttackData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AttackDataCommon.Instance;
         [DebuggerStepThrough]

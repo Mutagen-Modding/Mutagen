@@ -1232,6 +1232,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<LightingTemplate>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILightingTemplate);
+
         [Flags]
         public enum DATADataType
         {
@@ -1364,7 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ILightingTemplateGetter>,
         IMapsToGetter<ILightingTemplateGetter>
     {
-        static new ILoquiRegistration Registration => LightingTemplate_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LightingTemplate_Registration.Instance;
         Color AmbientColor { get; }
         Color DirectionalColor { get; }
         Color FogNearColor { get; }
@@ -2513,7 +2515,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LightingTemplate_Registration.Instance;
-        public new static LightingTemplate_Registration Registration => LightingTemplate_Registration.Instance;
+        public new static LightingTemplate_Registration StaticRegistration => LightingTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LightingTemplateCommon.Instance;
         [DebuggerStepThrough]
@@ -2808,7 +2810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LightingTemplate_Registration.Instance;
-        public new static LightingTemplate_Registration Registration => LightingTemplate_Registration.Instance;
+        public new static LightingTemplate_Registration StaticRegistration => LightingTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LightingTemplateCommon.Instance;
         [DebuggerStepThrough]
@@ -2829,6 +2831,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILightingTemplate);
+
 
         private int? _DATALocation;
         public LightingTemplate.DATADataType DATADataTypeState { get; private set; }

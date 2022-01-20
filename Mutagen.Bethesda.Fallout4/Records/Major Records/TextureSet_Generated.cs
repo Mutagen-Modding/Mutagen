@@ -789,6 +789,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<TextureSet>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ITextureSet);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -909,7 +911,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundedOptionalGetter,
         IObjectIdGetter
     {
-        static new ILoquiRegistration Registration => TextureSet_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -1900,7 +1902,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration Registration => TextureSet_Registration.Instance;
+        public new static TextureSet_Registration StaticRegistration => TextureSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TextureSetCommon.Instance;
         [DebuggerStepThrough]
@@ -2211,7 +2213,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration Registration => TextureSet_Registration.Instance;
+        public new static TextureSet_Registration StaticRegistration => TextureSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TextureSetCommon.Instance;
         [DebuggerStepThrough]
@@ -2232,6 +2234,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ITextureSet);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

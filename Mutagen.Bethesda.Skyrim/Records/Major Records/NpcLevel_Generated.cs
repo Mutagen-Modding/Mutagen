@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<INpcLevelGetter>
     {
-        static new ILoquiRegistration Registration => NpcLevel_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => NpcLevel_Registration.Instance;
         Int16 Level { get; }
 
     }
@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcLevel_Registration.Instance;
-        public new static NpcLevel_Registration Registration => NpcLevel_Registration.Instance;
+        public new static NpcLevel_Registration StaticRegistration => NpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcLevelCommon.Instance;
         [DebuggerStepThrough]
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcLevel_Registration.Instance;
-        public new static NpcLevel_Registration Registration => NpcLevel_Registration.Instance;
+        public new static NpcLevel_Registration StaticRegistration => NpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcLevelCommon.Instance;
         [DebuggerStepThrough]

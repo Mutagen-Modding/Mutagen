@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPackageTargetSelfGetter>
     {
-        static new ILoquiRegistration Registration => PackageTargetSelf_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PackageTargetSelf_Registration.Instance;
         Int32 Data { get; }
 
     }
@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageTargetSelf_Registration.Instance;
-        public new static PackageTargetSelf_Registration Registration => PackageTargetSelf_Registration.Instance;
+        public new static PackageTargetSelf_Registration StaticRegistration => PackageTargetSelf_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageTargetSelfCommon.Instance;
         [DebuggerStepThrough]
@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageTargetSelf_Registration.Instance;
-        public new static PackageTargetSelf_Registration Registration => PackageTargetSelf_Registration.Instance;
+        public new static PackageTargetSelf_Registration StaticRegistration => PackageTargetSelf_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageTargetSelfCommon.Instance;
         [DebuggerStepThrough]

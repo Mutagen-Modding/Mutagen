@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => AmmunitionData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => AmmunitionData_Registration.Instance;
         Single Speed { get; }
         AmmunitionData.Flag Flags { get; }
         UInt32 Value { get; }
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AmmunitionData_Registration.Instance;
-        public static AmmunitionData_Registration Registration => AmmunitionData_Registration.Instance;
+        public static AmmunitionData_Registration StaticRegistration => AmmunitionData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AmmunitionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AmmunitionData_Registration.Instance;
-        public static AmmunitionData_Registration Registration => AmmunitionData_Registration.Instance;
+        public static AmmunitionData_Registration StaticRegistration => AmmunitionData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AmmunitionDataCommon.Instance;
         [DebuggerStepThrough]

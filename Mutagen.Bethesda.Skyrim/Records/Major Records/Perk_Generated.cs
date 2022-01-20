@@ -1024,6 +1024,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Perk>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPerk);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1167,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Perk_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Perk_Registration.Instance;
         IPerkAdapterGetter? VirtualMachineAdapter { get; }
         #region Name
         /// <summary>
@@ -2263,7 +2265,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Perk_Registration.Instance;
-        public new static Perk_Registration Registration => Perk_Registration.Instance;
+        public new static Perk_Registration StaticRegistration => Perk_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkCommon.Instance;
         [DebuggerStepThrough]
@@ -2564,7 +2566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Perk_Registration.Instance;
-        public new static Perk_Registration Registration => Perk_Registration.Instance;
+        public new static Perk_Registration StaticRegistration => Perk_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkCommon.Instance;
         [DebuggerStepThrough]
@@ -2586,6 +2588,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPerk);
+
         public Perk.MajorFlag MajorFlags => (Perk.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

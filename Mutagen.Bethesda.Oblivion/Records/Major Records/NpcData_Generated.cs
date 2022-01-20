@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NpcData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NpcData_Registration.Instance;
         Byte Armorer { get; }
         Byte Athletics { get; }
         Byte Blade { get; }
@@ -2344,7 +2344,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcData_Registration.Instance;
-        public static NpcData_Registration Registration => NpcData_Registration.Instance;
+        public static NpcData_Registration StaticRegistration => NpcData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2513,7 +2513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcData_Registration.Instance;
-        public static NpcData_Registration Registration => NpcData_Registration.Instance;
+        public static NpcData_Registration StaticRegistration => NpcData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcDataCommon.Instance;
         [DebuggerStepThrough]

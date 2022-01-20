@@ -4,6 +4,7 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using FloatType = Mutagen.Bethesda.Generation.Fields.FloatType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
@@ -24,7 +25,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
            ObjectGeneration objGen,
            TypeGeneration typeGen)
         {
-            var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
+            var floatType = typeGen as FloatType;
             if (floatType.IntegerType == null
                 && !floatType.Multiplier.EqualsWithin(1))
             {
@@ -36,7 +37,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             if (typeGen.GetFieldData().Binary != BinaryGenerationType.Normal) return await base.ExpectedLength(objGen, typeGen);
-            var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
+            var floatType = typeGen as FloatType;
             if (floatType.IntegerType.HasValue)
             {
                 return floatType.IntegerType switch
@@ -59,7 +60,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             Accessor dataAccessor,
             Accessor packageAccessor)
         {
-            var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
+            var floatType = typeGen as FloatType;
             if (floatType.IntegerType.HasValue)
             {
                 return $"{GetTranslatorInstance(typeGen, getter: true)}.GetFloat({dataAccessor}, {nameof(FloatIntegerType)}.{floatType.IntegerType}, {floatType.Multiplier})";
@@ -76,7 +77,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
         bool ReadFloat(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor reader, Accessor item)
         {
-            var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
+            var floatType = typeGen as FloatType;
             if (floatType.IntegerType.HasValue)
             {
                 using (var args = new ArgsWrapper(fg,
@@ -96,7 +97,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
         bool WriteFloat(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writer, Accessor item)
         {
-            var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
+            var floatType = typeGen as FloatType;
             var data = floatType.GetFieldData();
             if (floatType.IntegerType.HasValue)
             {

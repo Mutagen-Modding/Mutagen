@@ -1259,6 +1259,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Faction>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IFaction);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1393,7 +1395,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Faction_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Faction_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -2648,7 +2650,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
-        public new static Faction_Registration Registration => Faction_Registration.Instance;
+        public new static Faction_Registration StaticRegistration => Faction_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionCommon.Instance;
         [DebuggerStepThrough]
@@ -3027,7 +3029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
-        public new static Faction_Registration Registration => Faction_Registration.Instance;
+        public new static Faction_Registration StaticRegistration => Faction_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionCommon.Instance;
         [DebuggerStepThrough]
@@ -3049,6 +3051,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IFaction);
+
 
         #region Name
         private int? _NameLocation;

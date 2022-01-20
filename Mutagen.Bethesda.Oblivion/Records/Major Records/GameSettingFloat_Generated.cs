@@ -380,6 +380,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<GameSettingFloat>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGameSettingFloat);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -480,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IGameSettingFloatGetter>,
         IMapsToGetter<IGameSettingFloatGetter>
     {
-        static new ILoquiRegistration Registration => GameSettingFloat_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GameSettingFloat_Registration.Instance;
         Single? Data { get; }
 
     }
@@ -1280,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingFloat_Registration.Instance;
-        public new static GameSettingFloat_Registration Registration => GameSettingFloat_Registration.Instance;
+        public new static GameSettingFloat_Registration StaticRegistration => GameSettingFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1460,7 +1462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingFloat_Registration.Instance;
-        public new static GameSettingFloat_Registration Registration => GameSettingFloat_Registration.Instance;
+        public new static GameSettingFloat_Registration StaticRegistration => GameSettingFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1481,6 +1483,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGameSettingFloat);
+
 
         #region Data
         private int? _DataLocation;

@@ -464,6 +464,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Road>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IRoad);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -564,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IRoadGetter>,
         IMapsToGetter<IRoadGetter>
     {
-        static new ILoquiRegistration Registration => Road_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Road_Registration.Instance;
         IReadOnlyList<IRoadPointGetter>? Points { get; }
 
     }
@@ -1314,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Road_Registration.Instance;
-        public new static Road_Registration Registration => Road_Registration.Instance;
+        public new static Road_Registration StaticRegistration => Road_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RoadCommon.Instance;
         [DebuggerStepThrough]
@@ -1500,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Road_Registration.Instance;
-        public new static Road_Registration Registration => Road_Registration.Instance;
+        public new static Road_Registration StaticRegistration => Road_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RoadCommon.Instance;
         [DebuggerStepThrough]
@@ -1521,6 +1523,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRoad);
+
 
         #region Points
         partial void PointsCustomParse(

@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => APerkEffect_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => APerkEffect_Registration.Instance;
         Byte Rank { get; }
         Byte Priority { get; }
         IReadOnlyList<IPerkConditionGetter> Conditions { get; }
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEffect_Registration.Instance;
-        public static APerkEffect_Registration Registration => APerkEffect_Registration.Instance;
+        public static APerkEffect_Registration StaticRegistration => APerkEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APerkEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1323,14 +1323,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class APerkEffectBinaryOverlay :
+    public abstract partial class APerkEffectBinaryOverlay :
         PluginBinaryOverlay,
         IAPerkEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEffect_Registration.Instance;
-        public static APerkEffect_Registration Registration => APerkEffect_Registration.Instance;
+        public static APerkEffect_Registration StaticRegistration => APerkEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APerkEffectCommon.Instance;
         [DebuggerStepThrough]

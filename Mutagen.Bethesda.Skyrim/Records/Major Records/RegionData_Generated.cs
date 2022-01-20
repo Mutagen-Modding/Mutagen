@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => RegionData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => RegionData_Registration.Instance;
         IRegionDataHeaderGetter? Header { get; }
         #region Icons
         /// <summary>
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionData_Registration.Instance;
-        public static RegionData_Registration Registration => RegionData_Registration.Instance;
+        public static RegionData_Registration StaticRegistration => RegionData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => RegionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1215,14 +1215,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class RegionDataBinaryOverlay :
+    public abstract partial class RegionDataBinaryOverlay :
         PluginBinaryOverlay,
         IRegionDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionData_Registration.Instance;
-        public static RegionData_Registration Registration => RegionData_Registration.Instance;
+        public static RegionData_Registration StaticRegistration => RegionData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => RegionDataCommon.Instance;
         [DebuggerStepThrough]

@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IScriptBoolListPropertyGetter>,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ScriptBoolListProperty_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ScriptBoolListProperty_Registration.Instance;
         IReadOnlyList<Boolean> Data { get; }
 
     }
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptBoolListProperty_Registration.Instance;
-        public new static ScriptBoolListProperty_Registration Registration => ScriptBoolListProperty_Registration.Instance;
+        public new static ScriptBoolListProperty_Registration StaticRegistration => ScriptBoolListProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptBoolListPropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptBoolListProperty_Registration.Instance;
-        public new static ScriptBoolListProperty_Registration Registration => ScriptBoolListProperty_Registration.Instance;
+        public new static ScriptBoolListProperty_Registration StaticRegistration => ScriptBoolListProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptBoolListPropertyCommon.Instance;
         [DebuggerStepThrough]

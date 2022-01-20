@@ -438,6 +438,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Footstep>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IFootstep);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -541,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IFootstepGetter>,
         IMapsToGetter<IFootstepGetter>
     {
-        static new ILoquiRegistration Registration => Footstep_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Footstep_Registration.Instance;
         IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
         String Tag { get; }
 
@@ -1267,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Footstep_Registration.Instance;
-        public new static Footstep_Registration Registration => Footstep_Registration.Instance;
+        public new static Footstep_Registration StaticRegistration => Footstep_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FootstepCommon.Instance;
         [DebuggerStepThrough]
@@ -1449,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Footstep_Registration.Instance;
-        public new static Footstep_Registration Registration => Footstep_Registration.Instance;
+        public new static Footstep_Registration StaticRegistration => Footstep_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FootstepCommon.Instance;
         [DebuggerStepThrough]
@@ -1471,6 +1473,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IFootstep);
+
 
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;

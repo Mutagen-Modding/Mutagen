@@ -10,17 +10,17 @@ namespace Mutagen.Bethesda.Plugins.Meta
         /// <summary>
         /// Offset in the header where flags are located
         /// </summary>
-        public sbyte FlagLocationOffset { get; }
+        public byte FlagLocationOffset { get; }
 
         /// <summary>
         /// Offset in the header where the FormID is located
         /// </summary>
-        public sbyte FormIDLocationOffset { get; }
+        public byte FormIDLocationOffset { get; }
 
         /// <summary>
         /// Offset in the header where the Form Version is located
         /// </summary>
-        public sbyte? FormVersionLocationOffset { get; }
+        public byte? FormVersionLocationOffset { get; }
 
         /// <summary>
         /// Constructor
@@ -31,16 +31,16 @@ namespace Mutagen.Bethesda.Plugins.Meta
         /// <param name="formIDloc">Offset in the header where the FormID is located</param>
         /// <param name="formVersionLoc">Offset in the header where the Form Version is located</param>
         public MajorRecordConstants(
-            sbyte headerLength,
-            sbyte lengthLength,
-            sbyte flagsLoc,
-            sbyte formIDloc,
-            sbyte? formVersionLoc)
+            byte headerLength,
+            byte lengthLength,
+            byte flagsLoc,
+            byte formIDloc,
+            byte? formVersionLoc)
             : base(Records.Internals.ObjectType.Record, headerLength, lengthLength)
         {
-            this.FlagLocationOffset = flagsLoc;
-            this.FormIDLocationOffset = formIDloc;
-            this.FormVersionLocationOffset = formVersionLoc;
+            FlagLocationOffset = flagsLoc;
+            FormIDLocationOffset = formIDloc;
+            FormVersionLocationOffset = formVersionLoc;
         }
     }
 }

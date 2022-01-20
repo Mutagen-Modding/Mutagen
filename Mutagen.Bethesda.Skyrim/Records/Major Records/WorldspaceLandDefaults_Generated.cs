@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorldspaceLandDefaults_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
         Single DefaultLandHeight { get; }
         Single DefaultWaterHeight { get; }
 
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceLandDefaults_Registration.Instance;
-        public static WorldspaceLandDefaults_Registration Registration => WorldspaceLandDefaults_Registration.Instance;
+        public static WorldspaceLandDefaults_Registration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceLandDefaultsCommon.Instance;
         [DebuggerStepThrough]
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceLandDefaults_Registration.Instance;
-        public static WorldspaceLandDefaults_Registration Registration => WorldspaceLandDefaults_Registration.Instance;
+        public static WorldspaceLandDefaults_Registration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceLandDefaultsCommon.Instance;
         [DebuggerStepThrough]

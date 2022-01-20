@@ -1109,6 +1109,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Ammunition>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAmmunition);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1281,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter
     {
-        static new ILoquiRegistration Registration => Ammunition_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Ammunition_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -2485,7 +2487,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ammunition_Registration.Instance;
-        public new static Ammunition_Registration Registration => Ammunition_Registration.Instance;
+        public new static Ammunition_Registration StaticRegistration => Ammunition_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AmmunitionCommon.Instance;
         [DebuggerStepThrough]
@@ -2839,7 +2841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ammunition_Registration.Instance;
-        public new static Ammunition_Registration Registration => Ammunition_Registration.Instance;
+        public new static Ammunition_Registration StaticRegistration => Ammunition_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AmmunitionCommon.Instance;
         [DebuggerStepThrough]
@@ -2861,6 +2863,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAmmunition);
+
         public Ammunition.MajorFlag MajorFlags => (Ammunition.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds

@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeatherType_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeatherType_Registration.Instance;
         IFormLinkGetter<IWeatherGetter> Weather { get; }
         Int32 Chance { get; }
 
@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherType_Registration.Instance;
-        public static WeatherType_Registration Registration => WeatherType_Registration.Instance;
+        public static WeatherType_Registration StaticRegistration => WeatherType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherType_Registration.Instance;
-        public static WeatherType_Registration Registration => WeatherType_Registration.Instance;
+        public static WeatherType_Registration StaticRegistration => WeatherType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherTypeCommon.Instance;
         [DebuggerStepThrough]

@@ -577,6 +577,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<LandTexture>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILandTexture);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -682,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ILandTextureGetter>,
         IMapsToGetter<ILandTextureGetter>
     {
-        static new ILoquiRegistration Registration => LandTexture_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LandTexture_Registration.Instance;
         String? Icon { get; }
         IHavokDataGetter? Havok { get; }
         Byte? TextureSpecularExponent { get; }
@@ -1516,7 +1518,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
-        public new static LandTexture_Registration Registration => LandTexture_Registration.Instance;
+        public new static LandTexture_Registration StaticRegistration => LandTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandTextureCommon.Instance;
         [DebuggerStepThrough]
@@ -1729,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
-        public new static LandTexture_Registration Registration => LandTexture_Registration.Instance;
+        public new static LandTexture_Registration StaticRegistration => LandTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandTextureCommon.Instance;
         [DebuggerStepThrough]
@@ -1751,6 +1753,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILandTexture);
+
 
         #region Icon
         private int? _IconLocation;

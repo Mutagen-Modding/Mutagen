@@ -344,6 +344,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<AttractionRule>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAttractionRule);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -443,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IAttractionRuleGetter>,
         IMapsToGetter<IAttractionRuleGetter>
     {
-        static new ILoquiRegistration Registration => AttractionRule_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AttractionRule_Registration.Instance;
 
     }
 
@@ -1133,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttractionRule_Registration.Instance;
-        public new static AttractionRule_Registration Registration => AttractionRule_Registration.Instance;
+        public new static AttractionRule_Registration StaticRegistration => AttractionRule_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AttractionRuleCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttractionRule_Registration.Instance;
-        public new static AttractionRule_Registration Registration => AttractionRule_Registration.Instance;
+        public new static AttractionRule_Registration StaticRegistration => AttractionRule_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AttractionRuleCommon.Instance;
         [DebuggerStepThrough]
@@ -1277,6 +1279,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAttractionRule);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

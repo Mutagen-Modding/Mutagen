@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NpcFaceParts_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NpcFaceParts_Registration.Instance;
         UInt32 Nose { get; }
         UInt32 Unknown { get; }
         UInt32 Eyes { get; }
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceParts_Registration.Instance;
-        public static NpcFaceParts_Registration Registration => NpcFaceParts_Registration.Instance;
+        public static NpcFaceParts_Registration StaticRegistration => NpcFaceParts_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFacePartsCommon.Instance;
         [DebuggerStepThrough]
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceParts_Registration.Instance;
-        public static NpcFaceParts_Registration Registration => NpcFaceParts_Registration.Instance;
+        public static NpcFaceParts_Registration StaticRegistration => NpcFaceParts_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFacePartsCommon.Instance;
         [DebuggerStepThrough]

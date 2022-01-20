@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ImageSpaceCinematic_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ImageSpaceCinematic_Registration.Instance;
         Single Saturation { get; }
         Single Brightness { get; }
         Single Contrast { get; }
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceCinematic_Registration.Instance;
-        public static ImageSpaceCinematic_Registration Registration => ImageSpaceCinematic_Registration.Instance;
+        public static ImageSpaceCinematic_Registration StaticRegistration => ImageSpaceCinematic_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceCinematicCommon.Instance;
         [DebuggerStepThrough]
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceCinematic_Registration.Instance;
-        public static ImageSpaceCinematic_Registration Registration => ImageSpaceCinematic_Registration.Instance;
+        public static ImageSpaceCinematic_Registration StaticRegistration => ImageSpaceCinematic_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceCinematicCommon.Instance;
         [DebuggerStepThrough]

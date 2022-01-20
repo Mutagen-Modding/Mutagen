@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LayerHeader_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LayerHeader_Registration.Instance;
         IFormLinkGetter<ILandscapeTextureGetter> Texture { get; }
         Quadrant Quadrant { get; }
         UInt16 LayerNumber { get; }
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LayerHeader_Registration.Instance;
-        public static LayerHeader_Registration Registration => LayerHeader_Registration.Instance;
+        public static LayerHeader_Registration StaticRegistration => LayerHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LayerHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LayerHeader_Registration.Instance;
-        public static LayerHeader_Registration Registration => LayerHeader_Registration.Instance;
+        public static LayerHeader_Registration StaticRegistration => LayerHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LayerHeaderCommon.Instance;
         [DebuggerStepThrough]

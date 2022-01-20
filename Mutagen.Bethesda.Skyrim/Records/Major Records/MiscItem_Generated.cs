@@ -986,6 +986,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MiscItem>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMiscItem);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1160,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter
     {
-        static new ILoquiRegistration Registration => MiscItem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MiscItem_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -2333,7 +2335,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MiscItem_Registration.Instance;
-        public new static MiscItem_Registration Registration => MiscItem_Registration.Instance;
+        public new static MiscItem_Registration StaticRegistration => MiscItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MiscItemCommon.Instance;
         [DebuggerStepThrough]
@@ -2642,7 +2644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MiscItem_Registration.Instance;
-        public new static MiscItem_Registration Registration => MiscItem_Registration.Instance;
+        public new static MiscItem_Registration StaticRegistration => MiscItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MiscItemCommon.Instance;
         [DebuggerStepThrough]
@@ -2664,6 +2666,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMiscItem);
+
         public MiscItem.MajorFlag MajorFlags => (MiscItem.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

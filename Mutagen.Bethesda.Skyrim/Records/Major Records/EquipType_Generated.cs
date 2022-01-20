@@ -517,6 +517,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<EquipType>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IEquipType);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -620,7 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IEquipTypeGetter>,
         IMapsToGetter<IEquipTypeGetter>
     {
-        static new ILoquiRegistration Registration => EquipType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => EquipType_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; }
         Boolean? UseAllParents { get; }
 
@@ -1397,7 +1399,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EquipType_Registration.Instance;
-        public new static EquipType_Registration Registration => EquipType_Registration.Instance;
+        public new static EquipType_Registration StaticRegistration => EquipType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EquipTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1589,7 +1591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EquipType_Registration.Instance;
-        public new static EquipType_Registration Registration => EquipType_Registration.Instance;
+        public new static EquipType_Registration StaticRegistration => EquipType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EquipTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1611,6 +1613,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IEquipType);
+
 
         public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; private set; }
         #region UseAllParents

@@ -344,6 +344,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<MaterialSwap>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMaterialSwap);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -443,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IMaterialSwapGetter>,
         IMapsToGetter<IMaterialSwapGetter>
     {
-        static new ILoquiRegistration Registration => MaterialSwap_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MaterialSwap_Registration.Instance;
 
     }
 
@@ -1133,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialSwap_Registration.Instance;
-        public new static MaterialSwap_Registration Registration => MaterialSwap_Registration.Instance;
+        public new static MaterialSwap_Registration StaticRegistration => MaterialSwap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialSwapCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialSwap_Registration.Instance;
-        public new static MaterialSwap_Registration Registration => MaterialSwap_Registration.Instance;
+        public new static MaterialSwap_Registration StaticRegistration => MaterialSwap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialSwapCommon.Instance;
         [DebuggerStepThrough]
@@ -1277,6 +1279,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMaterialSwap);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

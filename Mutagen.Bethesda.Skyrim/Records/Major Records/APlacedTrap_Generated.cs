@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedThingGetter,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => APlacedTrap_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => APlacedTrap_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -2915,7 +2915,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APlacedTrap_Registration.Instance;
-        public new static APlacedTrap_Registration Registration => APlacedTrap_Registration.Instance;
+        public new static APlacedTrap_Registration StaticRegistration => APlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APlacedTrapCommon.Instance;
         [DebuggerStepThrough]
@@ -3301,14 +3301,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class APlacedTrapBinaryOverlay :
+    public abstract partial class APlacedTrapBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IAPlacedTrapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APlacedTrap_Registration.Instance;
-        public new static APlacedTrap_Registration Registration => APlacedTrap_Registration.Instance;
+        public new static APlacedTrap_Registration StaticRegistration => APlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APlacedTrapCommon.Instance;
         [DebuggerStepThrough]

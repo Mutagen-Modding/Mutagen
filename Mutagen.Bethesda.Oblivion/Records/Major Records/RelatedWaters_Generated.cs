@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => RelatedWaters_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => RelatedWaters_Registration.Instance;
         IFormLinkGetter<IWaterGetter> RelatedWaterDaytime { get; }
         IFormLinkGetter<IWaterGetter> RelatedWaterNighttime { get; }
         IFormLinkGetter<IWaterGetter> RelatedWaterUnderwater { get; }
@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
-        public static RelatedWaters_Registration Registration => RelatedWaters_Registration.Instance;
+        public static RelatedWaters_Registration StaticRegistration => RelatedWaters_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelatedWatersCommon.Instance;
         [DebuggerStepThrough]
@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
-        public static RelatedWaters_Registration Registration => RelatedWaters_Registration.Instance;
+        public static RelatedWaters_Registration StaticRegistration => RelatedWaters_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelatedWatersCommon.Instance;
         [DebuggerStepThrough]

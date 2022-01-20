@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ANavigationMeshData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ANavigationMeshData_Registration.Instance;
         UInt32 NavmeshVersion { get; }
         UInt32 Magic { get; }
         IReadOnlyList<P3Float> Vertices { get; }
@@ -1944,7 +1944,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANavigationMeshData_Registration.Instance;
-        public static ANavigationMeshData_Registration Registration => ANavigationMeshData_Registration.Instance;
+        public static ANavigationMeshData_Registration StaticRegistration => ANavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2191,14 +2191,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ANavigationMeshDataBinaryOverlay :
+    public abstract partial class ANavigationMeshDataBinaryOverlay :
         PluginBinaryOverlay,
         IANavigationMeshDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANavigationMeshData_Registration.Instance;
-        public static ANavigationMeshData_Registration Registration => ANavigationMeshData_Registration.Instance;
+        public static ANavigationMeshData_Registration StaticRegistration => ANavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]

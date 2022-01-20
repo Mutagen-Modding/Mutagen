@@ -822,6 +822,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ShaderParticleGeometry>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IShaderParticleGeometry);
+
         [Flags]
         public enum DATADataType
         {
@@ -940,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IShaderParticleGeometryGetter>,
         IMapsToGetter<IShaderParticleGeometryGetter>
     {
-        static new ILoquiRegistration Registration => ShaderParticleGeometry_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ShaderParticleGeometry_Registration.Instance;
         Single GravityVelocity { get; }
         Single RotationVelocity { get; }
         Single ParticleSizeX { get; }
@@ -1872,7 +1874,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ShaderParticleGeometry_Registration.Instance;
-        public new static ShaderParticleGeometry_Registration Registration => ShaderParticleGeometry_Registration.Instance;
+        public new static ShaderParticleGeometry_Registration StaticRegistration => ShaderParticleGeometry_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ShaderParticleGeometryCommon.Instance;
         [DebuggerStepThrough]
@@ -2115,7 +2117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ShaderParticleGeometry_Registration.Instance;
-        public new static ShaderParticleGeometry_Registration Registration => ShaderParticleGeometry_Registration.Instance;
+        public new static ShaderParticleGeometry_Registration StaticRegistration => ShaderParticleGeometry_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ShaderParticleGeometryCommon.Instance;
         [DebuggerStepThrough]
@@ -2136,6 +2138,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IShaderParticleGeometry);
+
 
         private int? _DATALocation;
         public ShaderParticleGeometry.DATADataType DATADataTypeState { get; private set; }

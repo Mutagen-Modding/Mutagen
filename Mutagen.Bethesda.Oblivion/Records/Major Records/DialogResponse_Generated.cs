@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DialogResponse_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DialogResponse_Registration.Instance;
         IDialogResponseDataGetter? Data { get; }
         String? ResponseText { get; }
         String? ActorNotes { get; }
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
-        public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
+        public static DialogResponse_Registration StaticRegistration => DialogResponse_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseCommon.Instance;
         [DebuggerStepThrough]
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
-        public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
+        public static DialogResponse_Registration StaticRegistration => DialogResponse_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseCommon.Instance;
         [DebuggerStepThrough]

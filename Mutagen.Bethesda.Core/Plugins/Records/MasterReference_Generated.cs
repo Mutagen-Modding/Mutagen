@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MasterReference_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MasterReference_Registration.Instance;
         ModKey Master { get; }
         UInt64 FileSize { get; }
 
@@ -969,7 +969,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
-        public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        public static MasterReference_Registration StaticRegistration => MasterReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MasterReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
-        public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        public static MasterReference_Registration StaticRegistration => MasterReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MasterReferenceCommon.Instance;
         [DebuggerStepThrough]

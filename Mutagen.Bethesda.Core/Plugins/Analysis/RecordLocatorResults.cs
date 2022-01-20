@@ -12,8 +12,8 @@ namespace Mutagen.Bethesda.Plugins.Analysis
 
         private readonly SortingListDictionary<long, RecordLocationMarker> _fromStart;
         private readonly SortingListDictionary<long, RecordLocationMarker> _fromEnd;
-        private readonly SortingListDictionary<long, long> _grupLocations;
-        public ISortedListGetter<long> GrupLocations => _grupLocations.Keys;
+        private readonly SortingListDictionary<long, GroupLocationMarker> _grupLocations;
+        public ISortingListDictionaryGetter<long, GroupLocationMarker> GrupLocations => _grupLocations;
 
         public SortingListDictionary<long, RecordLocationMarker> ListedRecords =>
             _fromStart;
@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Plugins.Analysis
                 constructor.FromEndPositions,
                 constructor.FormKeys);
             _grupLocations =
-                new SortingListDictionary<long, long>(
-                    constructor.GrupLocations.Select(i => new KeyValuePair<long, long>(i, i)));
+                new SortingListDictionary<long, GroupLocationMarker>(
+                    constructor.GrupLocations.Select(i => new KeyValuePair<long, GroupLocationMarker>(i.Location.Min, i)));
         }
 
         public bool TryGetSection(FormKey formKey, out RangeInt64 section)

@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MapMarker_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MapMarker_Registration.Instance;
         MapMarker.Flag? Flags { get; }
         #region Name
         /// <summary>
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
-        public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
+        public static MapMarker_Registration StaticRegistration => MapMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
-        public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
+        public static MapMarker_Registration StaticRegistration => MapMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapMarkerCommon.Instance;
         [DebuggerStepThrough]

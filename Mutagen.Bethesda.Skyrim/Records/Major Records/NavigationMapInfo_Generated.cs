@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NavigationMapInfo_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NavigationMapInfo_Registration.Instance;
         IFormLinkGetter<IANavigationMeshGetter> NavigationMesh { get; }
         Int32 Unknown { get; }
         P3Float Point { get; }
@@ -1915,7 +1915,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationMapInfo_Registration.Instance;
-        public static NavigationMapInfo_Registration Registration => NavigationMapInfo_Registration.Instance;
+        public static NavigationMapInfo_Registration StaticRegistration => NavigationMapInfo_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavigationMapInfoCommon.Instance;
         [DebuggerStepThrough]
@@ -2136,7 +2136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationMapInfo_Registration.Instance;
-        public static NavigationMapInfo_Registration Registration => NavigationMapInfo_Registration.Instance;
+        public static NavigationMapInfo_Registration StaticRegistration => NavigationMapInfo_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavigationMapInfoCommon.Instance;
         [DebuggerStepThrough]

@@ -778,6 +778,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<CameraPath>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ICameraPath);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -884,7 +886,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ICameraPathGetter>,
         IMapsToGetter<ICameraPathGetter>
     {
-        static new ILoquiRegistration Registration => CameraPath_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CameraPath_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; }
         CameraPath.ZoomType Zoom { get; }
@@ -1776,7 +1778,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CameraPath_Registration.Instance;
-        public new static CameraPath_Registration Registration => CameraPath_Registration.Instance;
+        public new static CameraPath_Registration StaticRegistration => CameraPath_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CameraPathCommon.Instance;
         [DebuggerStepThrough]
@@ -2030,7 +2032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CameraPath_Registration.Instance;
-        public new static CameraPath_Registration Registration => CameraPath_Registration.Instance;
+        public new static CameraPath_Registration StaticRegistration => CameraPath_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CameraPathCommon.Instance;
         [DebuggerStepThrough]
@@ -2052,6 +2054,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ICameraPath);
+
 
         #region Conditions
         partial void ConditionsCustomParse(

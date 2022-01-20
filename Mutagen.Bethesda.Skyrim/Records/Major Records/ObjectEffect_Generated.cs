@@ -931,6 +931,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ObjectEffect>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IObjectEffect);
+
         [Flags]
         public enum ENITDataType
         {
@@ -1070,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ObjectEffect_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ObjectEffect_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -2063,7 +2065,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectEffect_Registration.Instance;
-        public new static ObjectEffect_Registration Registration => ObjectEffect_Registration.Instance;
+        public new static ObjectEffect_Registration StaticRegistration => ObjectEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ObjectEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -2340,7 +2342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectEffect_Registration.Instance;
-        public new static ObjectEffect_Registration Registration => ObjectEffect_Registration.Instance;
+        public new static ObjectEffect_Registration StaticRegistration => ObjectEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ObjectEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -2362,6 +2364,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IObjectEffect);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

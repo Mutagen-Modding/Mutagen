@@ -57,118 +57,118 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         protected SkyrimMod()
         {
-            _GameSettings_Object = new Group<GameSetting>(this);
-            _Keywords_Object = new Group<Keyword>(this);
-            _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
-            _Actions_Object = new Group<ActionRecord>(this);
-            _TextureSets_Object = new Group<TextureSet>(this);
-            _Globals_Object = new Group<Global>(this);
-            _Classes_Object = new Group<Class>(this);
-            _Factions_Object = new Group<Faction>(this);
-            _HeadParts_Object = new Group<HeadPart>(this);
-            _Hairs_Object = new Group<Hair>(this);
-            _Eyes_Object = new Group<Eyes>(this);
-            _Races_Object = new Group<Race>(this);
-            _SoundMarkers_Object = new Group<SoundMarker>(this);
-            _AcousticSpaces_Object = new Group<AcousticSpace>(this);
-            _MagicEffects_Object = new Group<MagicEffect>(this);
-            _LandscapeTextures_Object = new Group<LandscapeTexture>(this);
-            _ObjectEffects_Object = new Group<ObjectEffect>(this);
-            _Spells_Object = new Group<Spell>(this);
-            _Scrolls_Object = new Group<Scroll>(this);
-            _Activators_Object = new Group<Activator>(this);
-            _TalkingActivators_Object = new Group<TalkingActivator>(this);
-            _Armors_Object = new Group<Armor>(this);
-            _Books_Object = new Group<Book>(this);
-            _Containers_Object = new Group<Container>(this);
-            _Doors_Object = new Group<Door>(this);
-            _Ingredients_Object = new Group<Ingredient>(this);
-            _Lights_Object = new Group<Light>(this);
-            _MiscItems_Object = new Group<MiscItem>(this);
-            _AlchemicalApparatuses_Object = new Group<AlchemicalApparatus>(this);
-            _Statics_Object = new Group<Static>(this);
-            _MoveableStatics_Object = new Group<MoveableStatic>(this);
-            _Grasses_Object = new Group<Grass>(this);
-            _Trees_Object = new Group<Tree>(this);
-            _Florae_Object = new Group<Flora>(this);
-            _Furniture_Object = new Group<Furniture>(this);
-            _Weapons_Object = new Group<Weapon>(this);
-            _Ammunitions_Object = new Group<Ammunition>(this);
-            _Npcs_Object = new Group<Npc>(this);
-            _LeveledNpcs_Object = new Group<LeveledNpc>(this);
-            _Keys_Object = new Group<Key>(this);
-            _Ingestibles_Object = new Group<Ingestible>(this);
-            _IdleMarkers_Object = new Group<IdleMarker>(this);
-            _ConstructibleObjects_Object = new Group<ConstructibleObject>(this);
-            _Projectiles_Object = new Group<Projectile>(this);
-            _Hazards_Object = new Group<Hazard>(this);
-            _SoulGems_Object = new Group<SoulGem>(this);
-            _LeveledItems_Object = new Group<LeveledItem>(this);
-            _Weathers_Object = new Group<Weather>(this);
-            _Climates_Object = new Group<Climate>(this);
-            _ShaderParticleGeometries_Object = new Group<ShaderParticleGeometry>(this);
-            _VisualEffects_Object = new Group<VisualEffect>(this);
-            _Regions_Object = new Group<Region>(this);
-            _NavigationMeshInfoMaps_Object = new Group<NavigationMeshInfoMap>(this);
-            _Worldspaces_Object = new Group<Worldspace>(this);
-            _DialogTopics_Object = new Group<DialogTopic>(this);
-            _Quests_Object = new Group<Quest>(this);
-            _IdleAnimations_Object = new Group<IdleAnimation>(this);
-            _Packages_Object = new Group<Package>(this);
-            _CombatStyles_Object = new Group<CombatStyle>(this);
-            _LoadScreens_Object = new Group<LoadScreen>(this);
-            _LeveledSpells_Object = new Group<LeveledSpell>(this);
-            _AnimatedObjects_Object = new Group<AnimatedObject>(this);
-            _Waters_Object = new Group<Water>(this);
-            _EffectShaders_Object = new Group<EffectShader>(this);
-            _Explosions_Object = new Group<Explosion>(this);
-            _Debris_Object = new Group<Debris>(this);
-            _ImageSpaces_Object = new Group<ImageSpace>(this);
-            _ImageSpaceAdapters_Object = new Group<ImageSpaceAdapter>(this);
-            _FormLists_Object = new Group<FormList>(this);
-            _Perks_Object = new Group<Perk>(this);
-            _BodyParts_Object = new Group<BodyPartData>(this);
-            _AddonNodes_Object = new Group<AddonNode>(this);
-            _ActorValueInformation_Object = new Group<ActorValueInformation>(this);
-            _CameraShots_Object = new Group<CameraShot>(this);
-            _CameraPaths_Object = new Group<CameraPath>(this);
-            _VoiceTypes_Object = new Group<VoiceType>(this);
-            _MaterialTypes_Object = new Group<MaterialType>(this);
-            _Impacts_Object = new Group<Impact>(this);
-            _ImpactDataSets_Object = new Group<ImpactDataSet>(this);
-            _ArmorAddons_Object = new Group<ArmorAddon>(this);
-            _EncounterZones_Object = new Group<EncounterZone>(this);
-            _Locations_Object = new Group<Location>(this);
-            _Messages_Object = new Group<Message>(this);
-            _DefaultObjectManagers_Object = new Group<DefaultObjectManager>(this);
-            _LightingTemplates_Object = new Group<LightingTemplate>(this);
-            _MusicTypes_Object = new Group<MusicType>(this);
-            _Footsteps_Object = new Group<Footstep>(this);
-            _FootstepSets_Object = new Group<FootstepSet>(this);
-            _StoryManagerBranchNodes_Object = new Group<StoryManagerBranchNode>(this);
-            _StoryManagerQuestNodes_Object = new Group<StoryManagerQuestNode>(this);
-            _StoryManagerEventNodes_Object = new Group<StoryManagerEventNode>(this);
-            _DialogBranches_Object = new Group<DialogBranch>(this);
-            _MusicTracks_Object = new Group<MusicTrack>(this);
-            _DialogViews_Object = new Group<DialogView>(this);
-            _WordsOfPower_Object = new Group<WordOfPower>(this);
-            _Shouts_Object = new Group<Shout>(this);
-            _EquipTypes_Object = new Group<EquipType>(this);
-            _Relationships_Object = new Group<Relationship>(this);
-            _Scenes_Object = new Group<Scene>(this);
-            _AssociationTypes_Object = new Group<AssociationType>(this);
-            _Outfits_Object = new Group<Outfit>(this);
-            _ArtObjects_Object = new Group<ArtObject>(this);
-            _MaterialObjects_Object = new Group<MaterialObject>(this);
-            _MovementTypes_Object = new Group<MovementType>(this);
-            _SoundDescriptors_Object = new Group<SoundDescriptor>(this);
-            _DualCastData_Object = new Group<DualCastData>(this);
-            _SoundCategories_Object = new Group<SoundCategory>(this);
-            _SoundOutputModels_Object = new Group<SoundOutputModel>(this);
-            _CollisionLayers_Object = new Group<CollisionLayer>(this);
-            _Colors_Object = new Group<ColorRecord>(this);
-            _ReverbParameters_Object = new Group<ReverbParameters>(this);
-            _VolumetricLightings_Object = new Group<VolumetricLighting>(this);
+            _GameSettings_Object = new SkyrimGroup<GameSetting>(this);
+            _Keywords_Object = new SkyrimGroup<Keyword>(this);
+            _LocationReferenceTypes_Object = new SkyrimGroup<LocationReferenceType>(this);
+            _Actions_Object = new SkyrimGroup<ActionRecord>(this);
+            _TextureSets_Object = new SkyrimGroup<TextureSet>(this);
+            _Globals_Object = new SkyrimGroup<Global>(this);
+            _Classes_Object = new SkyrimGroup<Class>(this);
+            _Factions_Object = new SkyrimGroup<Faction>(this);
+            _HeadParts_Object = new SkyrimGroup<HeadPart>(this);
+            _Hairs_Object = new SkyrimGroup<Hair>(this);
+            _Eyes_Object = new SkyrimGroup<Eyes>(this);
+            _Races_Object = new SkyrimGroup<Race>(this);
+            _SoundMarkers_Object = new SkyrimGroup<SoundMarker>(this);
+            _AcousticSpaces_Object = new SkyrimGroup<AcousticSpace>(this);
+            _MagicEffects_Object = new SkyrimGroup<MagicEffect>(this);
+            _LandscapeTextures_Object = new SkyrimGroup<LandscapeTexture>(this);
+            _ObjectEffects_Object = new SkyrimGroup<ObjectEffect>(this);
+            _Spells_Object = new SkyrimGroup<Spell>(this);
+            _Scrolls_Object = new SkyrimGroup<Scroll>(this);
+            _Activators_Object = new SkyrimGroup<Activator>(this);
+            _TalkingActivators_Object = new SkyrimGroup<TalkingActivator>(this);
+            _Armors_Object = new SkyrimGroup<Armor>(this);
+            _Books_Object = new SkyrimGroup<Book>(this);
+            _Containers_Object = new SkyrimGroup<Container>(this);
+            _Doors_Object = new SkyrimGroup<Door>(this);
+            _Ingredients_Object = new SkyrimGroup<Ingredient>(this);
+            _Lights_Object = new SkyrimGroup<Light>(this);
+            _MiscItems_Object = new SkyrimGroup<MiscItem>(this);
+            _AlchemicalApparatuses_Object = new SkyrimGroup<AlchemicalApparatus>(this);
+            _Statics_Object = new SkyrimGroup<Static>(this);
+            _MoveableStatics_Object = new SkyrimGroup<MoveableStatic>(this);
+            _Grasses_Object = new SkyrimGroup<Grass>(this);
+            _Trees_Object = new SkyrimGroup<Tree>(this);
+            _Florae_Object = new SkyrimGroup<Flora>(this);
+            _Furniture_Object = new SkyrimGroup<Furniture>(this);
+            _Weapons_Object = new SkyrimGroup<Weapon>(this);
+            _Ammunitions_Object = new SkyrimGroup<Ammunition>(this);
+            _Npcs_Object = new SkyrimGroup<Npc>(this);
+            _LeveledNpcs_Object = new SkyrimGroup<LeveledNpc>(this);
+            _Keys_Object = new SkyrimGroup<Key>(this);
+            _Ingestibles_Object = new SkyrimGroup<Ingestible>(this);
+            _IdleMarkers_Object = new SkyrimGroup<IdleMarker>(this);
+            _ConstructibleObjects_Object = new SkyrimGroup<ConstructibleObject>(this);
+            _Projectiles_Object = new SkyrimGroup<Projectile>(this);
+            _Hazards_Object = new SkyrimGroup<Hazard>(this);
+            _SoulGems_Object = new SkyrimGroup<SoulGem>(this);
+            _LeveledItems_Object = new SkyrimGroup<LeveledItem>(this);
+            _Weathers_Object = new SkyrimGroup<Weather>(this);
+            _Climates_Object = new SkyrimGroup<Climate>(this);
+            _ShaderParticleGeometries_Object = new SkyrimGroup<ShaderParticleGeometry>(this);
+            _VisualEffects_Object = new SkyrimGroup<VisualEffect>(this);
+            _Regions_Object = new SkyrimGroup<Region>(this);
+            _NavigationMeshInfoMaps_Object = new SkyrimGroup<NavigationMeshInfoMap>(this);
+            _Worldspaces_Object = new SkyrimGroup<Worldspace>(this);
+            _DialogTopics_Object = new SkyrimGroup<DialogTopic>(this);
+            _Quests_Object = new SkyrimGroup<Quest>(this);
+            _IdleAnimations_Object = new SkyrimGroup<IdleAnimation>(this);
+            _Packages_Object = new SkyrimGroup<Package>(this);
+            _CombatStyles_Object = new SkyrimGroup<CombatStyle>(this);
+            _LoadScreens_Object = new SkyrimGroup<LoadScreen>(this);
+            _LeveledSpells_Object = new SkyrimGroup<LeveledSpell>(this);
+            _AnimatedObjects_Object = new SkyrimGroup<AnimatedObject>(this);
+            _Waters_Object = new SkyrimGroup<Water>(this);
+            _EffectShaders_Object = new SkyrimGroup<EffectShader>(this);
+            _Explosions_Object = new SkyrimGroup<Explosion>(this);
+            _Debris_Object = new SkyrimGroup<Debris>(this);
+            _ImageSpaces_Object = new SkyrimGroup<ImageSpace>(this);
+            _ImageSpaceAdapters_Object = new SkyrimGroup<ImageSpaceAdapter>(this);
+            _FormLists_Object = new SkyrimGroup<FormList>(this);
+            _Perks_Object = new SkyrimGroup<Perk>(this);
+            _BodyParts_Object = new SkyrimGroup<BodyPartData>(this);
+            _AddonNodes_Object = new SkyrimGroup<AddonNode>(this);
+            _ActorValueInformation_Object = new SkyrimGroup<ActorValueInformation>(this);
+            _CameraShots_Object = new SkyrimGroup<CameraShot>(this);
+            _CameraPaths_Object = new SkyrimGroup<CameraPath>(this);
+            _VoiceTypes_Object = new SkyrimGroup<VoiceType>(this);
+            _MaterialTypes_Object = new SkyrimGroup<MaterialType>(this);
+            _Impacts_Object = new SkyrimGroup<Impact>(this);
+            _ImpactDataSets_Object = new SkyrimGroup<ImpactDataSet>(this);
+            _ArmorAddons_Object = new SkyrimGroup<ArmorAddon>(this);
+            _EncounterZones_Object = new SkyrimGroup<EncounterZone>(this);
+            _Locations_Object = new SkyrimGroup<Location>(this);
+            _Messages_Object = new SkyrimGroup<Message>(this);
+            _DefaultObjectManagers_Object = new SkyrimGroup<DefaultObjectManager>(this);
+            _LightingTemplates_Object = new SkyrimGroup<LightingTemplate>(this);
+            _MusicTypes_Object = new SkyrimGroup<MusicType>(this);
+            _Footsteps_Object = new SkyrimGroup<Footstep>(this);
+            _FootstepSets_Object = new SkyrimGroup<FootstepSet>(this);
+            _StoryManagerBranchNodes_Object = new SkyrimGroup<StoryManagerBranchNode>(this);
+            _StoryManagerQuestNodes_Object = new SkyrimGroup<StoryManagerQuestNode>(this);
+            _StoryManagerEventNodes_Object = new SkyrimGroup<StoryManagerEventNode>(this);
+            _DialogBranches_Object = new SkyrimGroup<DialogBranch>(this);
+            _MusicTracks_Object = new SkyrimGroup<MusicTrack>(this);
+            _DialogViews_Object = new SkyrimGroup<DialogView>(this);
+            _WordsOfPower_Object = new SkyrimGroup<WordOfPower>(this);
+            _Shouts_Object = new SkyrimGroup<Shout>(this);
+            _EquipTypes_Object = new SkyrimGroup<EquipType>(this);
+            _Relationships_Object = new SkyrimGroup<Relationship>(this);
+            _Scenes_Object = new SkyrimGroup<Scene>(this);
+            _AssociationTypes_Object = new SkyrimGroup<AssociationType>(this);
+            _Outfits_Object = new SkyrimGroup<Outfit>(this);
+            _ArtObjects_Object = new SkyrimGroup<ArtObject>(this);
+            _MaterialObjects_Object = new SkyrimGroup<MaterialObject>(this);
+            _MovementTypes_Object = new SkyrimGroup<MovementType>(this);
+            _SoundDescriptors_Object = new SkyrimGroup<SoundDescriptor>(this);
+            _DualCastData_Object = new SkyrimGroup<DualCastData>(this);
+            _SoundCategories_Object = new SkyrimGroup<SoundCategory>(this);
+            _SoundOutputModels_Object = new SkyrimGroup<SoundOutputModel>(this);
+            _CollisionLayers_Object = new SkyrimGroup<CollisionLayer>(this);
+            _Colors_Object = new SkyrimGroup<ColorRecord>(this);
+            _ReverbParameters_Object = new SkyrimGroup<ReverbParameters>(this);
+            _VolumetricLightings_Object = new SkyrimGroup<VolumetricLighting>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -183,794 +183,794 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<GameSetting> _GameSettings_Object;
-        public Group<GameSetting> GameSettings => _GameSettings_Object;
+        private SkyrimGroup<GameSetting> _GameSettings_Object;
+        public SkyrimGroup<GameSetting> GameSettings => _GameSettings_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IGameSettingGetter> ISkyrimModGetter.GameSettings => _GameSettings_Object;
+        ISkyrimGroupGetter<IGameSettingGetter> ISkyrimModGetter.GameSettings => _GameSettings_Object;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Keyword> _Keywords_Object;
-        public Group<Keyword> Keywords => _Keywords_Object;
+        private SkyrimGroup<Keyword> _Keywords_Object;
+        public SkyrimGroup<Keyword> Keywords => _Keywords_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IKeywordGetter> ISkyrimModGetter.Keywords => _Keywords_Object;
+        ISkyrimGroupGetter<IKeywordGetter> ISkyrimModGetter.Keywords => _Keywords_Object;
         #endregion
         #region LocationReferenceTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LocationReferenceType> _LocationReferenceTypes_Object;
-        public Group<LocationReferenceType> LocationReferenceTypes => _LocationReferenceTypes_Object;
+        private SkyrimGroup<LocationReferenceType> _LocationReferenceTypes_Object;
+        public SkyrimGroup<LocationReferenceType> LocationReferenceTypes => _LocationReferenceTypes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILocationReferenceTypeGetter> ISkyrimModGetter.LocationReferenceTypes => _LocationReferenceTypes_Object;
+        ISkyrimGroupGetter<ILocationReferenceTypeGetter> ISkyrimModGetter.LocationReferenceTypes => _LocationReferenceTypes_Object;
         #endregion
         #region Actions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ActionRecord> _Actions_Object;
-        public Group<ActionRecord> Actions => _Actions_Object;
+        private SkyrimGroup<ActionRecord> _Actions_Object;
+        public SkyrimGroup<ActionRecord> Actions => _Actions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IActionRecordGetter> ISkyrimModGetter.Actions => _Actions_Object;
+        ISkyrimGroupGetter<IActionRecordGetter> ISkyrimModGetter.Actions => _Actions_Object;
         #endregion
         #region TextureSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<TextureSet> _TextureSets_Object;
-        public Group<TextureSet> TextureSets => _TextureSets_Object;
+        private SkyrimGroup<TextureSet> _TextureSets_Object;
+        public SkyrimGroup<TextureSet> TextureSets => _TextureSets_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ITextureSetGetter> ISkyrimModGetter.TextureSets => _TextureSets_Object;
+        ISkyrimGroupGetter<ITextureSetGetter> ISkyrimModGetter.TextureSets => _TextureSets_Object;
         #endregion
         #region Globals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Global> _Globals_Object;
-        public Group<Global> Globals => _Globals_Object;
+        private SkyrimGroup<Global> _Globals_Object;
+        public SkyrimGroup<Global> Globals => _Globals_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IGlobalGetter> ISkyrimModGetter.Globals => _Globals_Object;
+        ISkyrimGroupGetter<IGlobalGetter> ISkyrimModGetter.Globals => _Globals_Object;
         #endregion
         #region Classes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Class> _Classes_Object;
-        public Group<Class> Classes => _Classes_Object;
+        private SkyrimGroup<Class> _Classes_Object;
+        public SkyrimGroup<Class> Classes => _Classes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IClassGetter> ISkyrimModGetter.Classes => _Classes_Object;
+        ISkyrimGroupGetter<IClassGetter> ISkyrimModGetter.Classes => _Classes_Object;
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Faction> _Factions_Object;
-        public Group<Faction> Factions => _Factions_Object;
+        private SkyrimGroup<Faction> _Factions_Object;
+        public SkyrimGroup<Faction> Factions => _Factions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IFactionGetter> ISkyrimModGetter.Factions => _Factions_Object;
+        ISkyrimGroupGetter<IFactionGetter> ISkyrimModGetter.Factions => _Factions_Object;
         #endregion
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<HeadPart> _HeadParts_Object;
-        public Group<HeadPart> HeadParts => _HeadParts_Object;
+        private SkyrimGroup<HeadPart> _HeadParts_Object;
+        public SkyrimGroup<HeadPart> HeadParts => _HeadParts_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IHeadPartGetter> ISkyrimModGetter.HeadParts => _HeadParts_Object;
+        ISkyrimGroupGetter<IHeadPartGetter> ISkyrimModGetter.HeadParts => _HeadParts_Object;
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Hair> _Hairs_Object;
-        public Group<Hair> Hairs => _Hairs_Object;
+        private SkyrimGroup<Hair> _Hairs_Object;
+        public SkyrimGroup<Hair> Hairs => _Hairs_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IHairGetter> ISkyrimModGetter.Hairs => _Hairs_Object;
+        ISkyrimGroupGetter<IHairGetter> ISkyrimModGetter.Hairs => _Hairs_Object;
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Eyes> _Eyes_Object;
-        public Group<Eyes> Eyes => _Eyes_Object;
+        private SkyrimGroup<Eyes> _Eyes_Object;
+        public SkyrimGroup<Eyes> Eyes => _Eyes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IEyesGetter> ISkyrimModGetter.Eyes => _Eyes_Object;
+        ISkyrimGroupGetter<IEyesGetter> ISkyrimModGetter.Eyes => _Eyes_Object;
         #endregion
         #region Races
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Race> _Races_Object;
-        public Group<Race> Races => _Races_Object;
+        private SkyrimGroup<Race> _Races_Object;
+        public SkyrimGroup<Race> Races => _Races_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IRaceGetter> ISkyrimModGetter.Races => _Races_Object;
+        ISkyrimGroupGetter<IRaceGetter> ISkyrimModGetter.Races => _Races_Object;
         #endregion
         #region SoundMarkers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<SoundMarker> _SoundMarkers_Object;
-        public Group<SoundMarker> SoundMarkers => _SoundMarkers_Object;
+        private SkyrimGroup<SoundMarker> _SoundMarkers_Object;
+        public SkyrimGroup<SoundMarker> SoundMarkers => _SoundMarkers_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISoundMarkerGetter> ISkyrimModGetter.SoundMarkers => _SoundMarkers_Object;
+        ISkyrimGroupGetter<ISoundMarkerGetter> ISkyrimModGetter.SoundMarkers => _SoundMarkers_Object;
         #endregion
         #region AcousticSpaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<AcousticSpace> _AcousticSpaces_Object;
-        public Group<AcousticSpace> AcousticSpaces => _AcousticSpaces_Object;
+        private SkyrimGroup<AcousticSpace> _AcousticSpaces_Object;
+        public SkyrimGroup<AcousticSpace> AcousticSpaces => _AcousticSpaces_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IAcousticSpaceGetter> ISkyrimModGetter.AcousticSpaces => _AcousticSpaces_Object;
+        ISkyrimGroupGetter<IAcousticSpaceGetter> ISkyrimModGetter.AcousticSpaces => _AcousticSpaces_Object;
         #endregion
         #region MagicEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<MagicEffect> _MagicEffects_Object;
-        public Group<MagicEffect> MagicEffects => _MagicEffects_Object;
+        private SkyrimGroup<MagicEffect> _MagicEffects_Object;
+        public SkyrimGroup<MagicEffect> MagicEffects => _MagicEffects_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IMagicEffectGetter> ISkyrimModGetter.MagicEffects => _MagicEffects_Object;
+        ISkyrimGroupGetter<IMagicEffectGetter> ISkyrimModGetter.MagicEffects => _MagicEffects_Object;
         #endregion
         #region LandscapeTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LandscapeTexture> _LandscapeTextures_Object;
-        public Group<LandscapeTexture> LandscapeTextures => _LandscapeTextures_Object;
+        private SkyrimGroup<LandscapeTexture> _LandscapeTextures_Object;
+        public SkyrimGroup<LandscapeTexture> LandscapeTextures => _LandscapeTextures_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILandscapeTextureGetter> ISkyrimModGetter.LandscapeTextures => _LandscapeTextures_Object;
+        ISkyrimGroupGetter<ILandscapeTextureGetter> ISkyrimModGetter.LandscapeTextures => _LandscapeTextures_Object;
         #endregion
         #region ObjectEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ObjectEffect> _ObjectEffects_Object;
-        public Group<ObjectEffect> ObjectEffects => _ObjectEffects_Object;
+        private SkyrimGroup<ObjectEffect> _ObjectEffects_Object;
+        public SkyrimGroup<ObjectEffect> ObjectEffects => _ObjectEffects_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IObjectEffectGetter> ISkyrimModGetter.ObjectEffects => _ObjectEffects_Object;
+        ISkyrimGroupGetter<IObjectEffectGetter> ISkyrimModGetter.ObjectEffects => _ObjectEffects_Object;
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Spell> _Spells_Object;
-        public Group<Spell> Spells => _Spells_Object;
+        private SkyrimGroup<Spell> _Spells_Object;
+        public SkyrimGroup<Spell> Spells => _Spells_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISpellGetter> ISkyrimModGetter.Spells => _Spells_Object;
+        ISkyrimGroupGetter<ISpellGetter> ISkyrimModGetter.Spells => _Spells_Object;
         #endregion
         #region Scrolls
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Scroll> _Scrolls_Object;
-        public Group<Scroll> Scrolls => _Scrolls_Object;
+        private SkyrimGroup<Scroll> _Scrolls_Object;
+        public SkyrimGroup<Scroll> Scrolls => _Scrolls_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IScrollGetter> ISkyrimModGetter.Scrolls => _Scrolls_Object;
+        ISkyrimGroupGetter<IScrollGetter> ISkyrimModGetter.Scrolls => _Scrolls_Object;
         #endregion
         #region Activators
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Activator> _Activators_Object;
-        public Group<Activator> Activators => _Activators_Object;
+        private SkyrimGroup<Activator> _Activators_Object;
+        public SkyrimGroup<Activator> Activators => _Activators_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IActivatorGetter> ISkyrimModGetter.Activators => _Activators_Object;
+        ISkyrimGroupGetter<IActivatorGetter> ISkyrimModGetter.Activators => _Activators_Object;
         #endregion
         #region TalkingActivators
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<TalkingActivator> _TalkingActivators_Object;
-        public Group<TalkingActivator> TalkingActivators => _TalkingActivators_Object;
+        private SkyrimGroup<TalkingActivator> _TalkingActivators_Object;
+        public SkyrimGroup<TalkingActivator> TalkingActivators => _TalkingActivators_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ITalkingActivatorGetter> ISkyrimModGetter.TalkingActivators => _TalkingActivators_Object;
+        ISkyrimGroupGetter<ITalkingActivatorGetter> ISkyrimModGetter.TalkingActivators => _TalkingActivators_Object;
         #endregion
         #region Armors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Armor> _Armors_Object;
-        public Group<Armor> Armors => _Armors_Object;
+        private SkyrimGroup<Armor> _Armors_Object;
+        public SkyrimGroup<Armor> Armors => _Armors_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IArmorGetter> ISkyrimModGetter.Armors => _Armors_Object;
+        ISkyrimGroupGetter<IArmorGetter> ISkyrimModGetter.Armors => _Armors_Object;
         #endregion
         #region Books
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Book> _Books_Object;
-        public Group<Book> Books => _Books_Object;
+        private SkyrimGroup<Book> _Books_Object;
+        public SkyrimGroup<Book> Books => _Books_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IBookGetter> ISkyrimModGetter.Books => _Books_Object;
+        ISkyrimGroupGetter<IBookGetter> ISkyrimModGetter.Books => _Books_Object;
         #endregion
         #region Containers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Container> _Containers_Object;
-        public Group<Container> Containers => _Containers_Object;
+        private SkyrimGroup<Container> _Containers_Object;
+        public SkyrimGroup<Container> Containers => _Containers_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IContainerGetter> ISkyrimModGetter.Containers => _Containers_Object;
+        ISkyrimGroupGetter<IContainerGetter> ISkyrimModGetter.Containers => _Containers_Object;
         #endregion
         #region Doors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Door> _Doors_Object;
-        public Group<Door> Doors => _Doors_Object;
+        private SkyrimGroup<Door> _Doors_Object;
+        public SkyrimGroup<Door> Doors => _Doors_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IDoorGetter> ISkyrimModGetter.Doors => _Doors_Object;
+        ISkyrimGroupGetter<IDoorGetter> ISkyrimModGetter.Doors => _Doors_Object;
         #endregion
         #region Ingredients
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Ingredient> _Ingredients_Object;
-        public Group<Ingredient> Ingredients => _Ingredients_Object;
+        private SkyrimGroup<Ingredient> _Ingredients_Object;
+        public SkyrimGroup<Ingredient> Ingredients => _Ingredients_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IIngredientGetter> ISkyrimModGetter.Ingredients => _Ingredients_Object;
+        ISkyrimGroupGetter<IIngredientGetter> ISkyrimModGetter.Ingredients => _Ingredients_Object;
         #endregion
         #region Lights
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Light> _Lights_Object;
-        public Group<Light> Lights => _Lights_Object;
+        private SkyrimGroup<Light> _Lights_Object;
+        public SkyrimGroup<Light> Lights => _Lights_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILightGetter> ISkyrimModGetter.Lights => _Lights_Object;
+        ISkyrimGroupGetter<ILightGetter> ISkyrimModGetter.Lights => _Lights_Object;
         #endregion
         #region MiscItems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<MiscItem> _MiscItems_Object;
-        public Group<MiscItem> MiscItems => _MiscItems_Object;
+        private SkyrimGroup<MiscItem> _MiscItems_Object;
+        public SkyrimGroup<MiscItem> MiscItems => _MiscItems_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IMiscItemGetter> ISkyrimModGetter.MiscItems => _MiscItems_Object;
+        ISkyrimGroupGetter<IMiscItemGetter> ISkyrimModGetter.MiscItems => _MiscItems_Object;
         #endregion
         #region AlchemicalApparatuses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<AlchemicalApparatus> _AlchemicalApparatuses_Object;
-        public Group<AlchemicalApparatus> AlchemicalApparatuses => _AlchemicalApparatuses_Object;
+        private SkyrimGroup<AlchemicalApparatus> _AlchemicalApparatuses_Object;
+        public SkyrimGroup<AlchemicalApparatus> AlchemicalApparatuses => _AlchemicalApparatuses_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IAlchemicalApparatusGetter> ISkyrimModGetter.AlchemicalApparatuses => _AlchemicalApparatuses_Object;
+        ISkyrimGroupGetter<IAlchemicalApparatusGetter> ISkyrimModGetter.AlchemicalApparatuses => _AlchemicalApparatuses_Object;
         #endregion
         #region Statics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Static> _Statics_Object;
-        public Group<Static> Statics => _Statics_Object;
+        private SkyrimGroup<Static> _Statics_Object;
+        public SkyrimGroup<Static> Statics => _Statics_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IStaticGetter> ISkyrimModGetter.Statics => _Statics_Object;
+        ISkyrimGroupGetter<IStaticGetter> ISkyrimModGetter.Statics => _Statics_Object;
         #endregion
         #region MoveableStatics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<MoveableStatic> _MoveableStatics_Object;
-        public Group<MoveableStatic> MoveableStatics => _MoveableStatics_Object;
+        private SkyrimGroup<MoveableStatic> _MoveableStatics_Object;
+        public SkyrimGroup<MoveableStatic> MoveableStatics => _MoveableStatics_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IMoveableStaticGetter> ISkyrimModGetter.MoveableStatics => _MoveableStatics_Object;
+        ISkyrimGroupGetter<IMoveableStaticGetter> ISkyrimModGetter.MoveableStatics => _MoveableStatics_Object;
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Grass> _Grasses_Object;
-        public Group<Grass> Grasses => _Grasses_Object;
+        private SkyrimGroup<Grass> _Grasses_Object;
+        public SkyrimGroup<Grass> Grasses => _Grasses_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IGrassGetter> ISkyrimModGetter.Grasses => _Grasses_Object;
+        ISkyrimGroupGetter<IGrassGetter> ISkyrimModGetter.Grasses => _Grasses_Object;
         #endregion
         #region Trees
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Tree> _Trees_Object;
-        public Group<Tree> Trees => _Trees_Object;
+        private SkyrimGroup<Tree> _Trees_Object;
+        public SkyrimGroup<Tree> Trees => _Trees_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ITreeGetter> ISkyrimModGetter.Trees => _Trees_Object;
+        ISkyrimGroupGetter<ITreeGetter> ISkyrimModGetter.Trees => _Trees_Object;
         #endregion
         #region Florae
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Flora> _Florae_Object;
-        public Group<Flora> Florae => _Florae_Object;
+        private SkyrimGroup<Flora> _Florae_Object;
+        public SkyrimGroup<Flora> Florae => _Florae_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IFloraGetter> ISkyrimModGetter.Florae => _Florae_Object;
+        ISkyrimGroupGetter<IFloraGetter> ISkyrimModGetter.Florae => _Florae_Object;
         #endregion
         #region Furniture
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Furniture> _Furniture_Object;
-        public Group<Furniture> Furniture => _Furniture_Object;
+        private SkyrimGroup<Furniture> _Furniture_Object;
+        public SkyrimGroup<Furniture> Furniture => _Furniture_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IFurnitureGetter> ISkyrimModGetter.Furniture => _Furniture_Object;
+        ISkyrimGroupGetter<IFurnitureGetter> ISkyrimModGetter.Furniture => _Furniture_Object;
         #endregion
         #region Weapons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Weapon> _Weapons_Object;
-        public Group<Weapon> Weapons => _Weapons_Object;
+        private SkyrimGroup<Weapon> _Weapons_Object;
+        public SkyrimGroup<Weapon> Weapons => _Weapons_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IWeaponGetter> ISkyrimModGetter.Weapons => _Weapons_Object;
+        ISkyrimGroupGetter<IWeaponGetter> ISkyrimModGetter.Weapons => _Weapons_Object;
         #endregion
         #region Ammunitions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Ammunition> _Ammunitions_Object;
-        public Group<Ammunition> Ammunitions => _Ammunitions_Object;
+        private SkyrimGroup<Ammunition> _Ammunitions_Object;
+        public SkyrimGroup<Ammunition> Ammunitions => _Ammunitions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IAmmunitionGetter> ISkyrimModGetter.Ammunitions => _Ammunitions_Object;
+        ISkyrimGroupGetter<IAmmunitionGetter> ISkyrimModGetter.Ammunitions => _Ammunitions_Object;
         #endregion
         #region Npcs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Npc> _Npcs_Object;
-        public Group<Npc> Npcs => _Npcs_Object;
+        private SkyrimGroup<Npc> _Npcs_Object;
+        public SkyrimGroup<Npc> Npcs => _Npcs_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<INpcGetter> ISkyrimModGetter.Npcs => _Npcs_Object;
+        ISkyrimGroupGetter<INpcGetter> ISkyrimModGetter.Npcs => _Npcs_Object;
         #endregion
         #region LeveledNpcs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LeveledNpc> _LeveledNpcs_Object;
-        public Group<LeveledNpc> LeveledNpcs => _LeveledNpcs_Object;
+        private SkyrimGroup<LeveledNpc> _LeveledNpcs_Object;
+        public SkyrimGroup<LeveledNpc> LeveledNpcs => _LeveledNpcs_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILeveledNpcGetter> ISkyrimModGetter.LeveledNpcs => _LeveledNpcs_Object;
+        ISkyrimGroupGetter<ILeveledNpcGetter> ISkyrimModGetter.LeveledNpcs => _LeveledNpcs_Object;
         #endregion
         #region Keys
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Key> _Keys_Object;
-        public Group<Key> Keys => _Keys_Object;
+        private SkyrimGroup<Key> _Keys_Object;
+        public SkyrimGroup<Key> Keys => _Keys_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IKeyGetter> ISkyrimModGetter.Keys => _Keys_Object;
+        ISkyrimGroupGetter<IKeyGetter> ISkyrimModGetter.Keys => _Keys_Object;
         #endregion
         #region Ingestibles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Ingestible> _Ingestibles_Object;
-        public Group<Ingestible> Ingestibles => _Ingestibles_Object;
+        private SkyrimGroup<Ingestible> _Ingestibles_Object;
+        public SkyrimGroup<Ingestible> Ingestibles => _Ingestibles_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IIngestibleGetter> ISkyrimModGetter.Ingestibles => _Ingestibles_Object;
+        ISkyrimGroupGetter<IIngestibleGetter> ISkyrimModGetter.Ingestibles => _Ingestibles_Object;
         #endregion
         #region IdleMarkers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<IdleMarker> _IdleMarkers_Object;
-        public Group<IdleMarker> IdleMarkers => _IdleMarkers_Object;
+        private SkyrimGroup<IdleMarker> _IdleMarkers_Object;
+        public SkyrimGroup<IdleMarker> IdleMarkers => _IdleMarkers_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IIdleMarkerGetter> ISkyrimModGetter.IdleMarkers => _IdleMarkers_Object;
+        ISkyrimGroupGetter<IIdleMarkerGetter> ISkyrimModGetter.IdleMarkers => _IdleMarkers_Object;
         #endregion
         #region ConstructibleObjects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ConstructibleObject> _ConstructibleObjects_Object;
-        public Group<ConstructibleObject> ConstructibleObjects => _ConstructibleObjects_Object;
+        private SkyrimGroup<ConstructibleObject> _ConstructibleObjects_Object;
+        public SkyrimGroup<ConstructibleObject> ConstructibleObjects => _ConstructibleObjects_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IConstructibleObjectGetter> ISkyrimModGetter.ConstructibleObjects => _ConstructibleObjects_Object;
+        ISkyrimGroupGetter<IConstructibleObjectGetter> ISkyrimModGetter.ConstructibleObjects => _ConstructibleObjects_Object;
         #endregion
         #region Projectiles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Projectile> _Projectiles_Object;
-        public Group<Projectile> Projectiles => _Projectiles_Object;
+        private SkyrimGroup<Projectile> _Projectiles_Object;
+        public SkyrimGroup<Projectile> Projectiles => _Projectiles_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IProjectileGetter> ISkyrimModGetter.Projectiles => _Projectiles_Object;
+        ISkyrimGroupGetter<IProjectileGetter> ISkyrimModGetter.Projectiles => _Projectiles_Object;
         #endregion
         #region Hazards
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Hazard> _Hazards_Object;
-        public Group<Hazard> Hazards => _Hazards_Object;
+        private SkyrimGroup<Hazard> _Hazards_Object;
+        public SkyrimGroup<Hazard> Hazards => _Hazards_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IHazardGetter> ISkyrimModGetter.Hazards => _Hazards_Object;
+        ISkyrimGroupGetter<IHazardGetter> ISkyrimModGetter.Hazards => _Hazards_Object;
         #endregion
         #region SoulGems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<SoulGem> _SoulGems_Object;
-        public Group<SoulGem> SoulGems => _SoulGems_Object;
+        private SkyrimGroup<SoulGem> _SoulGems_Object;
+        public SkyrimGroup<SoulGem> SoulGems => _SoulGems_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISoulGemGetter> ISkyrimModGetter.SoulGems => _SoulGems_Object;
+        ISkyrimGroupGetter<ISoulGemGetter> ISkyrimModGetter.SoulGems => _SoulGems_Object;
         #endregion
         #region LeveledItems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LeveledItem> _LeveledItems_Object;
-        public Group<LeveledItem> LeveledItems => _LeveledItems_Object;
+        private SkyrimGroup<LeveledItem> _LeveledItems_Object;
+        public SkyrimGroup<LeveledItem> LeveledItems => _LeveledItems_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILeveledItemGetter> ISkyrimModGetter.LeveledItems => _LeveledItems_Object;
+        ISkyrimGroupGetter<ILeveledItemGetter> ISkyrimModGetter.LeveledItems => _LeveledItems_Object;
         #endregion
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Weather> _Weathers_Object;
-        public Group<Weather> Weathers => _Weathers_Object;
+        private SkyrimGroup<Weather> _Weathers_Object;
+        public SkyrimGroup<Weather> Weathers => _Weathers_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IWeatherGetter> ISkyrimModGetter.Weathers => _Weathers_Object;
+        ISkyrimGroupGetter<IWeatherGetter> ISkyrimModGetter.Weathers => _Weathers_Object;
         #endregion
         #region Climates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Climate> _Climates_Object;
-        public Group<Climate> Climates => _Climates_Object;
+        private SkyrimGroup<Climate> _Climates_Object;
+        public SkyrimGroup<Climate> Climates => _Climates_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IClimateGetter> ISkyrimModGetter.Climates => _Climates_Object;
+        ISkyrimGroupGetter<IClimateGetter> ISkyrimModGetter.Climates => _Climates_Object;
         #endregion
         #region ShaderParticleGeometries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ShaderParticleGeometry> _ShaderParticleGeometries_Object;
-        public Group<ShaderParticleGeometry> ShaderParticleGeometries => _ShaderParticleGeometries_Object;
+        private SkyrimGroup<ShaderParticleGeometry> _ShaderParticleGeometries_Object;
+        public SkyrimGroup<ShaderParticleGeometry> ShaderParticleGeometries => _ShaderParticleGeometries_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IShaderParticleGeometryGetter> ISkyrimModGetter.ShaderParticleGeometries => _ShaderParticleGeometries_Object;
+        ISkyrimGroupGetter<IShaderParticleGeometryGetter> ISkyrimModGetter.ShaderParticleGeometries => _ShaderParticleGeometries_Object;
         #endregion
         #region VisualEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<VisualEffect> _VisualEffects_Object;
-        public Group<VisualEffect> VisualEffects => _VisualEffects_Object;
+        private SkyrimGroup<VisualEffect> _VisualEffects_Object;
+        public SkyrimGroup<VisualEffect> VisualEffects => _VisualEffects_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IVisualEffectGetter> ISkyrimModGetter.VisualEffects => _VisualEffects_Object;
+        ISkyrimGroupGetter<IVisualEffectGetter> ISkyrimModGetter.VisualEffects => _VisualEffects_Object;
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Region> _Regions_Object;
-        public Group<Region> Regions => _Regions_Object;
+        private SkyrimGroup<Region> _Regions_Object;
+        public SkyrimGroup<Region> Regions => _Regions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IRegionGetter> ISkyrimModGetter.Regions => _Regions_Object;
+        ISkyrimGroupGetter<IRegionGetter> ISkyrimModGetter.Regions => _Regions_Object;
         #endregion
         #region NavigationMeshInfoMaps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<NavigationMeshInfoMap> _NavigationMeshInfoMaps_Object;
-        public Group<NavigationMeshInfoMap> NavigationMeshInfoMaps => _NavigationMeshInfoMaps_Object;
+        private SkyrimGroup<NavigationMeshInfoMap> _NavigationMeshInfoMaps_Object;
+        public SkyrimGroup<NavigationMeshInfoMap> NavigationMeshInfoMaps => _NavigationMeshInfoMaps_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<INavigationMeshInfoMapGetter> ISkyrimModGetter.NavigationMeshInfoMaps => _NavigationMeshInfoMaps_Object;
+        ISkyrimGroupGetter<INavigationMeshInfoMapGetter> ISkyrimModGetter.NavigationMeshInfoMaps => _NavigationMeshInfoMaps_Object;
         #endregion
         #region Cells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ListGroup<CellBlock> _Cells_Object = new ListGroup<CellBlock>();
-        public ListGroup<CellBlock> Cells => _Cells_Object;
+        private readonly SkyrimListGroup<CellBlock> _Cells_Object = new SkyrimListGroup<CellBlock>();
+        public SkyrimListGroup<CellBlock> Cells => _Cells_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IListGroupGetter<ICellBlockGetter> ISkyrimModGetter.Cells => _Cells_Object;
+        ISkyrimListGroupGetter<ICellBlockGetter> ISkyrimModGetter.Cells => _Cells_Object;
         #endregion
         #region Worldspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Worldspace> _Worldspaces_Object;
-        public Group<Worldspace> Worldspaces => _Worldspaces_Object;
+        private SkyrimGroup<Worldspace> _Worldspaces_Object;
+        public SkyrimGroup<Worldspace> Worldspaces => _Worldspaces_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IWorldspaceGetter> ISkyrimModGetter.Worldspaces => _Worldspaces_Object;
+        ISkyrimGroupGetter<IWorldspaceGetter> ISkyrimModGetter.Worldspaces => _Worldspaces_Object;
         #endregion
         #region DialogTopics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<DialogTopic> _DialogTopics_Object;
-        public Group<DialogTopic> DialogTopics => _DialogTopics_Object;
+        private SkyrimGroup<DialogTopic> _DialogTopics_Object;
+        public SkyrimGroup<DialogTopic> DialogTopics => _DialogTopics_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IDialogTopicGetter> ISkyrimModGetter.DialogTopics => _DialogTopics_Object;
+        ISkyrimGroupGetter<IDialogTopicGetter> ISkyrimModGetter.DialogTopics => _DialogTopics_Object;
         #endregion
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Quest> _Quests_Object;
-        public Group<Quest> Quests => _Quests_Object;
+        private SkyrimGroup<Quest> _Quests_Object;
+        public SkyrimGroup<Quest> Quests => _Quests_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IQuestGetter> ISkyrimModGetter.Quests => _Quests_Object;
+        ISkyrimGroupGetter<IQuestGetter> ISkyrimModGetter.Quests => _Quests_Object;
         #endregion
         #region IdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<IdleAnimation> _IdleAnimations_Object;
-        public Group<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
+        private SkyrimGroup<IdleAnimation> _IdleAnimations_Object;
+        public SkyrimGroup<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IIdleAnimationGetter> ISkyrimModGetter.IdleAnimations => _IdleAnimations_Object;
+        ISkyrimGroupGetter<IIdleAnimationGetter> ISkyrimModGetter.IdleAnimations => _IdleAnimations_Object;
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Package> _Packages_Object;
-        public Group<Package> Packages => _Packages_Object;
+        private SkyrimGroup<Package> _Packages_Object;
+        public SkyrimGroup<Package> Packages => _Packages_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IPackageGetter> ISkyrimModGetter.Packages => _Packages_Object;
+        ISkyrimGroupGetter<IPackageGetter> ISkyrimModGetter.Packages => _Packages_Object;
         #endregion
         #region CombatStyles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<CombatStyle> _CombatStyles_Object;
-        public Group<CombatStyle> CombatStyles => _CombatStyles_Object;
+        private SkyrimGroup<CombatStyle> _CombatStyles_Object;
+        public SkyrimGroup<CombatStyle> CombatStyles => _CombatStyles_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ICombatStyleGetter> ISkyrimModGetter.CombatStyles => _CombatStyles_Object;
+        ISkyrimGroupGetter<ICombatStyleGetter> ISkyrimModGetter.CombatStyles => _CombatStyles_Object;
         #endregion
         #region LoadScreens
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LoadScreen> _LoadScreens_Object;
-        public Group<LoadScreen> LoadScreens => _LoadScreens_Object;
+        private SkyrimGroup<LoadScreen> _LoadScreens_Object;
+        public SkyrimGroup<LoadScreen> LoadScreens => _LoadScreens_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILoadScreenGetter> ISkyrimModGetter.LoadScreens => _LoadScreens_Object;
+        ISkyrimGroupGetter<ILoadScreenGetter> ISkyrimModGetter.LoadScreens => _LoadScreens_Object;
         #endregion
         #region LeveledSpells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LeveledSpell> _LeveledSpells_Object;
-        public Group<LeveledSpell> LeveledSpells => _LeveledSpells_Object;
+        private SkyrimGroup<LeveledSpell> _LeveledSpells_Object;
+        public SkyrimGroup<LeveledSpell> LeveledSpells => _LeveledSpells_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILeveledSpellGetter> ISkyrimModGetter.LeveledSpells => _LeveledSpells_Object;
+        ISkyrimGroupGetter<ILeveledSpellGetter> ISkyrimModGetter.LeveledSpells => _LeveledSpells_Object;
         #endregion
         #region AnimatedObjects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<AnimatedObject> _AnimatedObjects_Object;
-        public Group<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
+        private SkyrimGroup<AnimatedObject> _AnimatedObjects_Object;
+        public SkyrimGroup<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IAnimatedObjectGetter> ISkyrimModGetter.AnimatedObjects => _AnimatedObjects_Object;
+        ISkyrimGroupGetter<IAnimatedObjectGetter> ISkyrimModGetter.AnimatedObjects => _AnimatedObjects_Object;
         #endregion
         #region Waters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Water> _Waters_Object;
-        public Group<Water> Waters => _Waters_Object;
+        private SkyrimGroup<Water> _Waters_Object;
+        public SkyrimGroup<Water> Waters => _Waters_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IWaterGetter> ISkyrimModGetter.Waters => _Waters_Object;
+        ISkyrimGroupGetter<IWaterGetter> ISkyrimModGetter.Waters => _Waters_Object;
         #endregion
         #region EffectShaders
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<EffectShader> _EffectShaders_Object;
-        public Group<EffectShader> EffectShaders => _EffectShaders_Object;
+        private SkyrimGroup<EffectShader> _EffectShaders_Object;
+        public SkyrimGroup<EffectShader> EffectShaders => _EffectShaders_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IEffectShaderGetter> ISkyrimModGetter.EffectShaders => _EffectShaders_Object;
+        ISkyrimGroupGetter<IEffectShaderGetter> ISkyrimModGetter.EffectShaders => _EffectShaders_Object;
         #endregion
         #region Explosions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Explosion> _Explosions_Object;
-        public Group<Explosion> Explosions => _Explosions_Object;
+        private SkyrimGroup<Explosion> _Explosions_Object;
+        public SkyrimGroup<Explosion> Explosions => _Explosions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IExplosionGetter> ISkyrimModGetter.Explosions => _Explosions_Object;
+        ISkyrimGroupGetter<IExplosionGetter> ISkyrimModGetter.Explosions => _Explosions_Object;
         #endregion
         #region Debris
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Debris> _Debris_Object;
-        public Group<Debris> Debris => _Debris_Object;
+        private SkyrimGroup<Debris> _Debris_Object;
+        public SkyrimGroup<Debris> Debris => _Debris_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IDebrisGetter> ISkyrimModGetter.Debris => _Debris_Object;
+        ISkyrimGroupGetter<IDebrisGetter> ISkyrimModGetter.Debris => _Debris_Object;
         #endregion
         #region ImageSpaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ImageSpace> _ImageSpaces_Object;
-        public Group<ImageSpace> ImageSpaces => _ImageSpaces_Object;
+        private SkyrimGroup<ImageSpace> _ImageSpaces_Object;
+        public SkyrimGroup<ImageSpace> ImageSpaces => _ImageSpaces_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IImageSpaceGetter> ISkyrimModGetter.ImageSpaces => _ImageSpaces_Object;
+        ISkyrimGroupGetter<IImageSpaceGetter> ISkyrimModGetter.ImageSpaces => _ImageSpaces_Object;
         #endregion
         #region ImageSpaceAdapters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ImageSpaceAdapter> _ImageSpaceAdapters_Object;
-        public Group<ImageSpaceAdapter> ImageSpaceAdapters => _ImageSpaceAdapters_Object;
+        private SkyrimGroup<ImageSpaceAdapter> _ImageSpaceAdapters_Object;
+        public SkyrimGroup<ImageSpaceAdapter> ImageSpaceAdapters => _ImageSpaceAdapters_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IImageSpaceAdapterGetter> ISkyrimModGetter.ImageSpaceAdapters => _ImageSpaceAdapters_Object;
+        ISkyrimGroupGetter<IImageSpaceAdapterGetter> ISkyrimModGetter.ImageSpaceAdapters => _ImageSpaceAdapters_Object;
         #endregion
         #region FormLists
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<FormList> _FormLists_Object;
-        public Group<FormList> FormLists => _FormLists_Object;
+        private SkyrimGroup<FormList> _FormLists_Object;
+        public SkyrimGroup<FormList> FormLists => _FormLists_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IFormListGetter> ISkyrimModGetter.FormLists => _FormLists_Object;
+        ISkyrimGroupGetter<IFormListGetter> ISkyrimModGetter.FormLists => _FormLists_Object;
         #endregion
         #region Perks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Perk> _Perks_Object;
-        public Group<Perk> Perks => _Perks_Object;
+        private SkyrimGroup<Perk> _Perks_Object;
+        public SkyrimGroup<Perk> Perks => _Perks_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IPerkGetter> ISkyrimModGetter.Perks => _Perks_Object;
+        ISkyrimGroupGetter<IPerkGetter> ISkyrimModGetter.Perks => _Perks_Object;
         #endregion
         #region BodyParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<BodyPartData> _BodyParts_Object;
-        public Group<BodyPartData> BodyParts => _BodyParts_Object;
+        private SkyrimGroup<BodyPartData> _BodyParts_Object;
+        public SkyrimGroup<BodyPartData> BodyParts => _BodyParts_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IBodyPartDataGetter> ISkyrimModGetter.BodyParts => _BodyParts_Object;
+        ISkyrimGroupGetter<IBodyPartDataGetter> ISkyrimModGetter.BodyParts => _BodyParts_Object;
         #endregion
         #region AddonNodes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<AddonNode> _AddonNodes_Object;
-        public Group<AddonNode> AddonNodes => _AddonNodes_Object;
+        private SkyrimGroup<AddonNode> _AddonNodes_Object;
+        public SkyrimGroup<AddonNode> AddonNodes => _AddonNodes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IAddonNodeGetter> ISkyrimModGetter.AddonNodes => _AddonNodes_Object;
+        ISkyrimGroupGetter<IAddonNodeGetter> ISkyrimModGetter.AddonNodes => _AddonNodes_Object;
         #endregion
         #region ActorValueInformation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ActorValueInformation> _ActorValueInformation_Object;
-        public Group<ActorValueInformation> ActorValueInformation => _ActorValueInformation_Object;
+        private SkyrimGroup<ActorValueInformation> _ActorValueInformation_Object;
+        public SkyrimGroup<ActorValueInformation> ActorValueInformation => _ActorValueInformation_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IActorValueInformationGetter> ISkyrimModGetter.ActorValueInformation => _ActorValueInformation_Object;
+        ISkyrimGroupGetter<IActorValueInformationGetter> ISkyrimModGetter.ActorValueInformation => _ActorValueInformation_Object;
         #endregion
         #region CameraShots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<CameraShot> _CameraShots_Object;
-        public Group<CameraShot> CameraShots => _CameraShots_Object;
+        private SkyrimGroup<CameraShot> _CameraShots_Object;
+        public SkyrimGroup<CameraShot> CameraShots => _CameraShots_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ICameraShotGetter> ISkyrimModGetter.CameraShots => _CameraShots_Object;
+        ISkyrimGroupGetter<ICameraShotGetter> ISkyrimModGetter.CameraShots => _CameraShots_Object;
         #endregion
         #region CameraPaths
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<CameraPath> _CameraPaths_Object;
-        public Group<CameraPath> CameraPaths => _CameraPaths_Object;
+        private SkyrimGroup<CameraPath> _CameraPaths_Object;
+        public SkyrimGroup<CameraPath> CameraPaths => _CameraPaths_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ICameraPathGetter> ISkyrimModGetter.CameraPaths => _CameraPaths_Object;
+        ISkyrimGroupGetter<ICameraPathGetter> ISkyrimModGetter.CameraPaths => _CameraPaths_Object;
         #endregion
         #region VoiceTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<VoiceType> _VoiceTypes_Object;
-        public Group<VoiceType> VoiceTypes => _VoiceTypes_Object;
+        private SkyrimGroup<VoiceType> _VoiceTypes_Object;
+        public SkyrimGroup<VoiceType> VoiceTypes => _VoiceTypes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IVoiceTypeGetter> ISkyrimModGetter.VoiceTypes => _VoiceTypes_Object;
+        ISkyrimGroupGetter<IVoiceTypeGetter> ISkyrimModGetter.VoiceTypes => _VoiceTypes_Object;
         #endregion
         #region MaterialTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<MaterialType> _MaterialTypes_Object;
-        public Group<MaterialType> MaterialTypes => _MaterialTypes_Object;
+        private SkyrimGroup<MaterialType> _MaterialTypes_Object;
+        public SkyrimGroup<MaterialType> MaterialTypes => _MaterialTypes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IMaterialTypeGetter> ISkyrimModGetter.MaterialTypes => _MaterialTypes_Object;
+        ISkyrimGroupGetter<IMaterialTypeGetter> ISkyrimModGetter.MaterialTypes => _MaterialTypes_Object;
         #endregion
         #region Impacts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Impact> _Impacts_Object;
-        public Group<Impact> Impacts => _Impacts_Object;
+        private SkyrimGroup<Impact> _Impacts_Object;
+        public SkyrimGroup<Impact> Impacts => _Impacts_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IImpactGetter> ISkyrimModGetter.Impacts => _Impacts_Object;
+        ISkyrimGroupGetter<IImpactGetter> ISkyrimModGetter.Impacts => _Impacts_Object;
         #endregion
         #region ImpactDataSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ImpactDataSet> _ImpactDataSets_Object;
-        public Group<ImpactDataSet> ImpactDataSets => _ImpactDataSets_Object;
+        private SkyrimGroup<ImpactDataSet> _ImpactDataSets_Object;
+        public SkyrimGroup<ImpactDataSet> ImpactDataSets => _ImpactDataSets_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IImpactDataSetGetter> ISkyrimModGetter.ImpactDataSets => _ImpactDataSets_Object;
+        ISkyrimGroupGetter<IImpactDataSetGetter> ISkyrimModGetter.ImpactDataSets => _ImpactDataSets_Object;
         #endregion
         #region ArmorAddons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ArmorAddon> _ArmorAddons_Object;
-        public Group<ArmorAddon> ArmorAddons => _ArmorAddons_Object;
+        private SkyrimGroup<ArmorAddon> _ArmorAddons_Object;
+        public SkyrimGroup<ArmorAddon> ArmorAddons => _ArmorAddons_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IArmorAddonGetter> ISkyrimModGetter.ArmorAddons => _ArmorAddons_Object;
+        ISkyrimGroupGetter<IArmorAddonGetter> ISkyrimModGetter.ArmorAddons => _ArmorAddons_Object;
         #endregion
         #region EncounterZones
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<EncounterZone> _EncounterZones_Object;
-        public Group<EncounterZone> EncounterZones => _EncounterZones_Object;
+        private SkyrimGroup<EncounterZone> _EncounterZones_Object;
+        public SkyrimGroup<EncounterZone> EncounterZones => _EncounterZones_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IEncounterZoneGetter> ISkyrimModGetter.EncounterZones => _EncounterZones_Object;
+        ISkyrimGroupGetter<IEncounterZoneGetter> ISkyrimModGetter.EncounterZones => _EncounterZones_Object;
         #endregion
         #region Locations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Location> _Locations_Object;
-        public Group<Location> Locations => _Locations_Object;
+        private SkyrimGroup<Location> _Locations_Object;
+        public SkyrimGroup<Location> Locations => _Locations_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILocationGetter> ISkyrimModGetter.Locations => _Locations_Object;
+        ISkyrimGroupGetter<ILocationGetter> ISkyrimModGetter.Locations => _Locations_Object;
         #endregion
         #region Messages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Message> _Messages_Object;
-        public Group<Message> Messages => _Messages_Object;
+        private SkyrimGroup<Message> _Messages_Object;
+        public SkyrimGroup<Message> Messages => _Messages_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IMessageGetter> ISkyrimModGetter.Messages => _Messages_Object;
+        ISkyrimGroupGetter<IMessageGetter> ISkyrimModGetter.Messages => _Messages_Object;
         #endregion
         #region DefaultObjectManagers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<DefaultObjectManager> _DefaultObjectManagers_Object;
-        public Group<DefaultObjectManager> DefaultObjectManagers => _DefaultObjectManagers_Object;
+        private SkyrimGroup<DefaultObjectManager> _DefaultObjectManagers_Object;
+        public SkyrimGroup<DefaultObjectManager> DefaultObjectManagers => _DefaultObjectManagers_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IDefaultObjectManagerGetter> ISkyrimModGetter.DefaultObjectManagers => _DefaultObjectManagers_Object;
+        ISkyrimGroupGetter<IDefaultObjectManagerGetter> ISkyrimModGetter.DefaultObjectManagers => _DefaultObjectManagers_Object;
         #endregion
         #region LightingTemplates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LightingTemplate> _LightingTemplates_Object;
-        public Group<LightingTemplate> LightingTemplates => _LightingTemplates_Object;
+        private SkyrimGroup<LightingTemplate> _LightingTemplates_Object;
+        public SkyrimGroup<LightingTemplate> LightingTemplates => _LightingTemplates_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILightingTemplateGetter> ISkyrimModGetter.LightingTemplates => _LightingTemplates_Object;
+        ISkyrimGroupGetter<ILightingTemplateGetter> ISkyrimModGetter.LightingTemplates => _LightingTemplates_Object;
         #endregion
         #region MusicTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<MusicType> _MusicTypes_Object;
-        public Group<MusicType> MusicTypes => _MusicTypes_Object;
+        private SkyrimGroup<MusicType> _MusicTypes_Object;
+        public SkyrimGroup<MusicType> MusicTypes => _MusicTypes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IMusicTypeGetter> ISkyrimModGetter.MusicTypes => _MusicTypes_Object;
+        ISkyrimGroupGetter<IMusicTypeGetter> ISkyrimModGetter.MusicTypes => _MusicTypes_Object;
         #endregion
         #region Footsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Footstep> _Footsteps_Object;
-        public Group<Footstep> Footsteps => _Footsteps_Object;
+        private SkyrimGroup<Footstep> _Footsteps_Object;
+        public SkyrimGroup<Footstep> Footsteps => _Footsteps_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IFootstepGetter> ISkyrimModGetter.Footsteps => _Footsteps_Object;
+        ISkyrimGroupGetter<IFootstepGetter> ISkyrimModGetter.Footsteps => _Footsteps_Object;
         #endregion
         #region FootstepSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<FootstepSet> _FootstepSets_Object;
-        public Group<FootstepSet> FootstepSets => _FootstepSets_Object;
+        private SkyrimGroup<FootstepSet> _FootstepSets_Object;
+        public SkyrimGroup<FootstepSet> FootstepSets => _FootstepSets_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IFootstepSetGetter> ISkyrimModGetter.FootstepSets => _FootstepSets_Object;
+        ISkyrimGroupGetter<IFootstepSetGetter> ISkyrimModGetter.FootstepSets => _FootstepSets_Object;
         #endregion
         #region StoryManagerBranchNodes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<StoryManagerBranchNode> _StoryManagerBranchNodes_Object;
-        public Group<StoryManagerBranchNode> StoryManagerBranchNodes => _StoryManagerBranchNodes_Object;
+        private SkyrimGroup<StoryManagerBranchNode> _StoryManagerBranchNodes_Object;
+        public SkyrimGroup<StoryManagerBranchNode> StoryManagerBranchNodes => _StoryManagerBranchNodes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IStoryManagerBranchNodeGetter> ISkyrimModGetter.StoryManagerBranchNodes => _StoryManagerBranchNodes_Object;
+        ISkyrimGroupGetter<IStoryManagerBranchNodeGetter> ISkyrimModGetter.StoryManagerBranchNodes => _StoryManagerBranchNodes_Object;
         #endregion
         #region StoryManagerQuestNodes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<StoryManagerQuestNode> _StoryManagerQuestNodes_Object;
-        public Group<StoryManagerQuestNode> StoryManagerQuestNodes => _StoryManagerQuestNodes_Object;
+        private SkyrimGroup<StoryManagerQuestNode> _StoryManagerQuestNodes_Object;
+        public SkyrimGroup<StoryManagerQuestNode> StoryManagerQuestNodes => _StoryManagerQuestNodes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IStoryManagerQuestNodeGetter> ISkyrimModGetter.StoryManagerQuestNodes => _StoryManagerQuestNodes_Object;
+        ISkyrimGroupGetter<IStoryManagerQuestNodeGetter> ISkyrimModGetter.StoryManagerQuestNodes => _StoryManagerQuestNodes_Object;
         #endregion
         #region StoryManagerEventNodes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<StoryManagerEventNode> _StoryManagerEventNodes_Object;
-        public Group<StoryManagerEventNode> StoryManagerEventNodes => _StoryManagerEventNodes_Object;
+        private SkyrimGroup<StoryManagerEventNode> _StoryManagerEventNodes_Object;
+        public SkyrimGroup<StoryManagerEventNode> StoryManagerEventNodes => _StoryManagerEventNodes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IStoryManagerEventNodeGetter> ISkyrimModGetter.StoryManagerEventNodes => _StoryManagerEventNodes_Object;
+        ISkyrimGroupGetter<IStoryManagerEventNodeGetter> ISkyrimModGetter.StoryManagerEventNodes => _StoryManagerEventNodes_Object;
         #endregion
         #region DialogBranches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<DialogBranch> _DialogBranches_Object;
-        public Group<DialogBranch> DialogBranches => _DialogBranches_Object;
+        private SkyrimGroup<DialogBranch> _DialogBranches_Object;
+        public SkyrimGroup<DialogBranch> DialogBranches => _DialogBranches_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IDialogBranchGetter> ISkyrimModGetter.DialogBranches => _DialogBranches_Object;
+        ISkyrimGroupGetter<IDialogBranchGetter> ISkyrimModGetter.DialogBranches => _DialogBranches_Object;
         #endregion
         #region MusicTracks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<MusicTrack> _MusicTracks_Object;
-        public Group<MusicTrack> MusicTracks => _MusicTracks_Object;
+        private SkyrimGroup<MusicTrack> _MusicTracks_Object;
+        public SkyrimGroup<MusicTrack> MusicTracks => _MusicTracks_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IMusicTrackGetter> ISkyrimModGetter.MusicTracks => _MusicTracks_Object;
+        ISkyrimGroupGetter<IMusicTrackGetter> ISkyrimModGetter.MusicTracks => _MusicTracks_Object;
         #endregion
         #region DialogViews
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<DialogView> _DialogViews_Object;
-        public Group<DialogView> DialogViews => _DialogViews_Object;
+        private SkyrimGroup<DialogView> _DialogViews_Object;
+        public SkyrimGroup<DialogView> DialogViews => _DialogViews_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IDialogViewGetter> ISkyrimModGetter.DialogViews => _DialogViews_Object;
+        ISkyrimGroupGetter<IDialogViewGetter> ISkyrimModGetter.DialogViews => _DialogViews_Object;
         #endregion
         #region WordsOfPower
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<WordOfPower> _WordsOfPower_Object;
-        public Group<WordOfPower> WordsOfPower => _WordsOfPower_Object;
+        private SkyrimGroup<WordOfPower> _WordsOfPower_Object;
+        public SkyrimGroup<WordOfPower> WordsOfPower => _WordsOfPower_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IWordOfPowerGetter> ISkyrimModGetter.WordsOfPower => _WordsOfPower_Object;
+        ISkyrimGroupGetter<IWordOfPowerGetter> ISkyrimModGetter.WordsOfPower => _WordsOfPower_Object;
         #endregion
         #region Shouts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Shout> _Shouts_Object;
-        public Group<Shout> Shouts => _Shouts_Object;
+        private SkyrimGroup<Shout> _Shouts_Object;
+        public SkyrimGroup<Shout> Shouts => _Shouts_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IShoutGetter> ISkyrimModGetter.Shouts => _Shouts_Object;
+        ISkyrimGroupGetter<IShoutGetter> ISkyrimModGetter.Shouts => _Shouts_Object;
         #endregion
         #region EquipTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<EquipType> _EquipTypes_Object;
-        public Group<EquipType> EquipTypes => _EquipTypes_Object;
+        private SkyrimGroup<EquipType> _EquipTypes_Object;
+        public SkyrimGroup<EquipType> EquipTypes => _EquipTypes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IEquipTypeGetter> ISkyrimModGetter.EquipTypes => _EquipTypes_Object;
+        ISkyrimGroupGetter<IEquipTypeGetter> ISkyrimModGetter.EquipTypes => _EquipTypes_Object;
         #endregion
         #region Relationships
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Relationship> _Relationships_Object;
-        public Group<Relationship> Relationships => _Relationships_Object;
+        private SkyrimGroup<Relationship> _Relationships_Object;
+        public SkyrimGroup<Relationship> Relationships => _Relationships_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IRelationshipGetter> ISkyrimModGetter.Relationships => _Relationships_Object;
+        ISkyrimGroupGetter<IRelationshipGetter> ISkyrimModGetter.Relationships => _Relationships_Object;
         #endregion
         #region Scenes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Scene> _Scenes_Object;
-        public Group<Scene> Scenes => _Scenes_Object;
+        private SkyrimGroup<Scene> _Scenes_Object;
+        public SkyrimGroup<Scene> Scenes => _Scenes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISceneGetter> ISkyrimModGetter.Scenes => _Scenes_Object;
+        ISkyrimGroupGetter<ISceneGetter> ISkyrimModGetter.Scenes => _Scenes_Object;
         #endregion
         #region AssociationTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<AssociationType> _AssociationTypes_Object;
-        public Group<AssociationType> AssociationTypes => _AssociationTypes_Object;
+        private SkyrimGroup<AssociationType> _AssociationTypes_Object;
+        public SkyrimGroup<AssociationType> AssociationTypes => _AssociationTypes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IAssociationTypeGetter> ISkyrimModGetter.AssociationTypes => _AssociationTypes_Object;
+        ISkyrimGroupGetter<IAssociationTypeGetter> ISkyrimModGetter.AssociationTypes => _AssociationTypes_Object;
         #endregion
         #region Outfits
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Outfit> _Outfits_Object;
-        public Group<Outfit> Outfits => _Outfits_Object;
+        private SkyrimGroup<Outfit> _Outfits_Object;
+        public SkyrimGroup<Outfit> Outfits => _Outfits_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IOutfitGetter> ISkyrimModGetter.Outfits => _Outfits_Object;
+        ISkyrimGroupGetter<IOutfitGetter> ISkyrimModGetter.Outfits => _Outfits_Object;
         #endregion
         #region ArtObjects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ArtObject> _ArtObjects_Object;
-        public Group<ArtObject> ArtObjects => _ArtObjects_Object;
+        private SkyrimGroup<ArtObject> _ArtObjects_Object;
+        public SkyrimGroup<ArtObject> ArtObjects => _ArtObjects_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IArtObjectGetter> ISkyrimModGetter.ArtObjects => _ArtObjects_Object;
+        ISkyrimGroupGetter<IArtObjectGetter> ISkyrimModGetter.ArtObjects => _ArtObjects_Object;
         #endregion
         #region MaterialObjects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<MaterialObject> _MaterialObjects_Object;
-        public Group<MaterialObject> MaterialObjects => _MaterialObjects_Object;
+        private SkyrimGroup<MaterialObject> _MaterialObjects_Object;
+        public SkyrimGroup<MaterialObject> MaterialObjects => _MaterialObjects_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IMaterialObjectGetter> ISkyrimModGetter.MaterialObjects => _MaterialObjects_Object;
+        ISkyrimGroupGetter<IMaterialObjectGetter> ISkyrimModGetter.MaterialObjects => _MaterialObjects_Object;
         #endregion
         #region MovementTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<MovementType> _MovementTypes_Object;
-        public Group<MovementType> MovementTypes => _MovementTypes_Object;
+        private SkyrimGroup<MovementType> _MovementTypes_Object;
+        public SkyrimGroup<MovementType> MovementTypes => _MovementTypes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IMovementTypeGetter> ISkyrimModGetter.MovementTypes => _MovementTypes_Object;
+        ISkyrimGroupGetter<IMovementTypeGetter> ISkyrimModGetter.MovementTypes => _MovementTypes_Object;
         #endregion
         #region SoundDescriptors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<SoundDescriptor> _SoundDescriptors_Object;
-        public Group<SoundDescriptor> SoundDescriptors => _SoundDescriptors_Object;
+        private SkyrimGroup<SoundDescriptor> _SoundDescriptors_Object;
+        public SkyrimGroup<SoundDescriptor> SoundDescriptors => _SoundDescriptors_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISoundDescriptorGetter> ISkyrimModGetter.SoundDescriptors => _SoundDescriptors_Object;
+        ISkyrimGroupGetter<ISoundDescriptorGetter> ISkyrimModGetter.SoundDescriptors => _SoundDescriptors_Object;
         #endregion
         #region DualCastData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<DualCastData> _DualCastData_Object;
-        public Group<DualCastData> DualCastData => _DualCastData_Object;
+        private SkyrimGroup<DualCastData> _DualCastData_Object;
+        public SkyrimGroup<DualCastData> DualCastData => _DualCastData_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IDualCastDataGetter> ISkyrimModGetter.DualCastData => _DualCastData_Object;
+        ISkyrimGroupGetter<IDualCastDataGetter> ISkyrimModGetter.DualCastData => _DualCastData_Object;
         #endregion
         #region SoundCategories
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<SoundCategory> _SoundCategories_Object;
-        public Group<SoundCategory> SoundCategories => _SoundCategories_Object;
+        private SkyrimGroup<SoundCategory> _SoundCategories_Object;
+        public SkyrimGroup<SoundCategory> SoundCategories => _SoundCategories_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISoundCategoryGetter> ISkyrimModGetter.SoundCategories => _SoundCategories_Object;
+        ISkyrimGroupGetter<ISoundCategoryGetter> ISkyrimModGetter.SoundCategories => _SoundCategories_Object;
         #endregion
         #region SoundOutputModels
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<SoundOutputModel> _SoundOutputModels_Object;
-        public Group<SoundOutputModel> SoundOutputModels => _SoundOutputModels_Object;
+        private SkyrimGroup<SoundOutputModel> _SoundOutputModels_Object;
+        public SkyrimGroup<SoundOutputModel> SoundOutputModels => _SoundOutputModels_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ISoundOutputModelGetter> ISkyrimModGetter.SoundOutputModels => _SoundOutputModels_Object;
+        ISkyrimGroupGetter<ISoundOutputModelGetter> ISkyrimModGetter.SoundOutputModels => _SoundOutputModels_Object;
         #endregion
         #region CollisionLayers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<CollisionLayer> _CollisionLayers_Object;
-        public Group<CollisionLayer> CollisionLayers => _CollisionLayers_Object;
+        private SkyrimGroup<CollisionLayer> _CollisionLayers_Object;
+        public SkyrimGroup<CollisionLayer> CollisionLayers => _CollisionLayers_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ICollisionLayerGetter> ISkyrimModGetter.CollisionLayers => _CollisionLayers_Object;
+        ISkyrimGroupGetter<ICollisionLayerGetter> ISkyrimModGetter.CollisionLayers => _CollisionLayers_Object;
         #endregion
         #region Colors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ColorRecord> _Colors_Object;
-        public Group<ColorRecord> Colors => _Colors_Object;
+        private SkyrimGroup<ColorRecord> _Colors_Object;
+        public SkyrimGroup<ColorRecord> Colors => _Colors_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IColorRecordGetter> ISkyrimModGetter.Colors => _Colors_Object;
+        ISkyrimGroupGetter<IColorRecordGetter> ISkyrimModGetter.Colors => _Colors_Object;
         #endregion
         #region ReverbParameters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ReverbParameters> _ReverbParameters_Object;
-        public Group<ReverbParameters> ReverbParameters => _ReverbParameters_Object;
+        private SkyrimGroup<ReverbParameters> _ReverbParameters_Object;
+        public SkyrimGroup<ReverbParameters> ReverbParameters => _ReverbParameters_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IReverbParametersGetter> ISkyrimModGetter.ReverbParameters => _ReverbParameters_Object;
+        ISkyrimGroupGetter<IReverbParametersGetter> ISkyrimModGetter.ReverbParameters => _ReverbParameters_Object;
         #endregion
         #region VolumetricLightings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<VolumetricLighting> _VolumetricLightings_Object;
-        public Group<VolumetricLighting> VolumetricLightings => _VolumetricLightings_Object;
+        private SkyrimGroup<VolumetricLighting> _VolumetricLightings_Object;
+        public SkyrimGroup<VolumetricLighting> VolumetricLightings => _VolumetricLightings_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IVolumetricLightingGetter> ISkyrimModGetter.VolumetricLightings => _VolumetricLightings_Object;
+        ISkyrimGroupGetter<IVolumetricLightingGetter> ISkyrimModGetter.VolumetricLightings => _VolumetricLightings_Object;
         #endregion
 
         #region To String
@@ -1011,119 +1011,119 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.ModHeader = new MaskItem<TItem, SkyrimModHeader.Mask<TItem>?>(initialValue, new SkyrimModHeader.Mask<TItem>(initialValue));
-                this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Actions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.TextureSets = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.HeadParts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.SoundMarkers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.AcousticSpaces = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.MagicEffects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LandscapeTextures = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.ObjectEffects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Spells = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Scrolls = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Activators = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.TalkingActivators = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Armors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Books = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Containers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Doors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Lights = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.MiscItems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.AlchemicalApparatuses = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Statics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.MoveableStatics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Grasses = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Trees = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Florae = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Furniture = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LeveledNpcs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Keys = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Ingestibles = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.IdleMarkers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.ConstructibleObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Projectiles = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Hazards = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.SoulGems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LeveledItems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Weathers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Climates = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.ShaderParticleGeometries = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.VisualEffects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Regions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.NavigationMeshInfoMaps = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Cells = new MaskItem<TItem, ListGroup.Mask<TItem>?>(initialValue, new ListGroup.Mask<TItem>(initialValue));
-                this.Worldspaces = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.DialogTopics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Quests = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.IdleAnimations = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Packages = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.CombatStyles = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LoadScreens = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LeveledSpells = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.AnimatedObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Waters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.EffectShaders = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Explosions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Debris = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.ImageSpaces = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.ImageSpaceAdapters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.FormLists = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Perks = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.BodyParts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.AddonNodes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.ActorValueInformation = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.CameraShots = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.CameraPaths = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.VoiceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.MaterialTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Impacts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.ImpactDataSets = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.ArmorAddons = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.EncounterZones = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Locations = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Messages = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.DefaultObjectManagers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LightingTemplates = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.MusicTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Footsteps = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.FootstepSets = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.StoryManagerBranchNodes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.StoryManagerQuestNodes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.StoryManagerEventNodes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.DialogBranches = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.MusicTracks = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.DialogViews = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.WordsOfPower = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Shouts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.EquipTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Relationships = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Scenes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.AssociationTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Outfits = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.ArtObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.MaterialObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.MovementTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.SoundDescriptors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.DualCastData = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.SoundCategories = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.SoundOutputModels = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.CollisionLayers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Colors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.ReverbParameters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.VolumetricLightings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.GameSettings = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.LocationReferenceTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Actions = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.TextureSets = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Globals = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Classes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Factions = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.HeadParts = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Hairs = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Eyes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Races = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.SoundMarkers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.AcousticSpaces = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.MagicEffects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.LandscapeTextures = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.ObjectEffects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Spells = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Scrolls = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Activators = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.TalkingActivators = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Armors = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Books = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Containers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Doors = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Ingredients = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Lights = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.MiscItems = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.AlchemicalApparatuses = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Statics = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.MoveableStatics = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Grasses = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Trees = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Florae = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Furniture = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Weapons = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Ammunitions = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Npcs = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.LeveledNpcs = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Keys = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Ingestibles = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.IdleMarkers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.ConstructibleObjects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Projectiles = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Hazards = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.SoulGems = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.LeveledItems = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Weathers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Climates = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.ShaderParticleGeometries = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.VisualEffects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Regions = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.NavigationMeshInfoMaps = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Cells = new MaskItem<TItem, SkyrimListGroup.Mask<TItem>?>(initialValue, new SkyrimListGroup.Mask<TItem>(initialValue));
+                this.Worldspaces = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.DialogTopics = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Quests = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.IdleAnimations = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Packages = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.CombatStyles = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.LoadScreens = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.LeveledSpells = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.AnimatedObjects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Waters = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.EffectShaders = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Explosions = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Debris = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.ImageSpaces = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.ImageSpaceAdapters = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.FormLists = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Perks = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.BodyParts = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.AddonNodes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.ActorValueInformation = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.CameraShots = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.CameraPaths = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.VoiceTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.MaterialTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Impacts = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.ImpactDataSets = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.ArmorAddons = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.EncounterZones = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Locations = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Messages = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.DefaultObjectManagers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.LightingTemplates = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.MusicTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Footsteps = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.FootstepSets = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.StoryManagerBranchNodes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.StoryManagerQuestNodes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.StoryManagerEventNodes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.DialogBranches = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.MusicTracks = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.DialogViews = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.WordsOfPower = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Shouts = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.EquipTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Relationships = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Scenes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.AssociationTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Outfits = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.ArtObjects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.MaterialObjects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.MovementTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.SoundDescriptors = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.DualCastData = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.SoundCategories = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.SoundOutputModels = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.CollisionLayers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.Colors = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.ReverbParameters = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.VolumetricLightings = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1243,119 +1243,119 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem VolumetricLightings)
             {
                 this.ModHeader = new MaskItem<TItem, SkyrimModHeader.Mask<TItem>?>(ModHeader, new SkyrimModHeader.Mask<TItem>(ModHeader));
-                this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
-                this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(Keywords, new Group.Mask<TItem>(Keywords));
-                this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(LocationReferenceTypes, new Group.Mask<TItem>(LocationReferenceTypes));
-                this.Actions = new MaskItem<TItem, Group.Mask<TItem>?>(Actions, new Group.Mask<TItem>(Actions));
-                this.TextureSets = new MaskItem<TItem, Group.Mask<TItem>?>(TextureSets, new Group.Mask<TItem>(TextureSets));
-                this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(Globals, new Group.Mask<TItem>(Globals));
-                this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(Classes, new Group.Mask<TItem>(Classes));
-                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(Factions, new Group.Mask<TItem>(Factions));
-                this.HeadParts = new MaskItem<TItem, Group.Mask<TItem>?>(HeadParts, new Group.Mask<TItem>(HeadParts));
-                this.Hairs = new MaskItem<TItem, Group.Mask<TItem>?>(Hairs, new Group.Mask<TItem>(Hairs));
-                this.Eyes = new MaskItem<TItem, Group.Mask<TItem>?>(Eyes, new Group.Mask<TItem>(Eyes));
-                this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(Races, new Group.Mask<TItem>(Races));
-                this.SoundMarkers = new MaskItem<TItem, Group.Mask<TItem>?>(SoundMarkers, new Group.Mask<TItem>(SoundMarkers));
-                this.AcousticSpaces = new MaskItem<TItem, Group.Mask<TItem>?>(AcousticSpaces, new Group.Mask<TItem>(AcousticSpaces));
-                this.MagicEffects = new MaskItem<TItem, Group.Mask<TItem>?>(MagicEffects, new Group.Mask<TItem>(MagicEffects));
-                this.LandscapeTextures = new MaskItem<TItem, Group.Mask<TItem>?>(LandscapeTextures, new Group.Mask<TItem>(LandscapeTextures));
-                this.ObjectEffects = new MaskItem<TItem, Group.Mask<TItem>?>(ObjectEffects, new Group.Mask<TItem>(ObjectEffects));
-                this.Spells = new MaskItem<TItem, Group.Mask<TItem>?>(Spells, new Group.Mask<TItem>(Spells));
-                this.Scrolls = new MaskItem<TItem, Group.Mask<TItem>?>(Scrolls, new Group.Mask<TItem>(Scrolls));
-                this.Activators = new MaskItem<TItem, Group.Mask<TItem>?>(Activators, new Group.Mask<TItem>(Activators));
-                this.TalkingActivators = new MaskItem<TItem, Group.Mask<TItem>?>(TalkingActivators, new Group.Mask<TItem>(TalkingActivators));
-                this.Armors = new MaskItem<TItem, Group.Mask<TItem>?>(Armors, new Group.Mask<TItem>(Armors));
-                this.Books = new MaskItem<TItem, Group.Mask<TItem>?>(Books, new Group.Mask<TItem>(Books));
-                this.Containers = new MaskItem<TItem, Group.Mask<TItem>?>(Containers, new Group.Mask<TItem>(Containers));
-                this.Doors = new MaskItem<TItem, Group.Mask<TItem>?>(Doors, new Group.Mask<TItem>(Doors));
-                this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(Ingredients, new Group.Mask<TItem>(Ingredients));
-                this.Lights = new MaskItem<TItem, Group.Mask<TItem>?>(Lights, new Group.Mask<TItem>(Lights));
-                this.MiscItems = new MaskItem<TItem, Group.Mask<TItem>?>(MiscItems, new Group.Mask<TItem>(MiscItems));
-                this.AlchemicalApparatuses = new MaskItem<TItem, Group.Mask<TItem>?>(AlchemicalApparatuses, new Group.Mask<TItem>(AlchemicalApparatuses));
-                this.Statics = new MaskItem<TItem, Group.Mask<TItem>?>(Statics, new Group.Mask<TItem>(Statics));
-                this.MoveableStatics = new MaskItem<TItem, Group.Mask<TItem>?>(MoveableStatics, new Group.Mask<TItem>(MoveableStatics));
-                this.Grasses = new MaskItem<TItem, Group.Mask<TItem>?>(Grasses, new Group.Mask<TItem>(Grasses));
-                this.Trees = new MaskItem<TItem, Group.Mask<TItem>?>(Trees, new Group.Mask<TItem>(Trees));
-                this.Florae = new MaskItem<TItem, Group.Mask<TItem>?>(Florae, new Group.Mask<TItem>(Florae));
-                this.Furniture = new MaskItem<TItem, Group.Mask<TItem>?>(Furniture, new Group.Mask<TItem>(Furniture));
-                this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(Weapons, new Group.Mask<TItem>(Weapons));
-                this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(Ammunitions, new Group.Mask<TItem>(Ammunitions));
-                this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(Npcs, new Group.Mask<TItem>(Npcs));
-                this.LeveledNpcs = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledNpcs, new Group.Mask<TItem>(LeveledNpcs));
-                this.Keys = new MaskItem<TItem, Group.Mask<TItem>?>(Keys, new Group.Mask<TItem>(Keys));
-                this.Ingestibles = new MaskItem<TItem, Group.Mask<TItem>?>(Ingestibles, new Group.Mask<TItem>(Ingestibles));
-                this.IdleMarkers = new MaskItem<TItem, Group.Mask<TItem>?>(IdleMarkers, new Group.Mask<TItem>(IdleMarkers));
-                this.ConstructibleObjects = new MaskItem<TItem, Group.Mask<TItem>?>(ConstructibleObjects, new Group.Mask<TItem>(ConstructibleObjects));
-                this.Projectiles = new MaskItem<TItem, Group.Mask<TItem>?>(Projectiles, new Group.Mask<TItem>(Projectiles));
-                this.Hazards = new MaskItem<TItem, Group.Mask<TItem>?>(Hazards, new Group.Mask<TItem>(Hazards));
-                this.SoulGems = new MaskItem<TItem, Group.Mask<TItem>?>(SoulGems, new Group.Mask<TItem>(SoulGems));
-                this.LeveledItems = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledItems, new Group.Mask<TItem>(LeveledItems));
-                this.Weathers = new MaskItem<TItem, Group.Mask<TItem>?>(Weathers, new Group.Mask<TItem>(Weathers));
-                this.Climates = new MaskItem<TItem, Group.Mask<TItem>?>(Climates, new Group.Mask<TItem>(Climates));
-                this.ShaderParticleGeometries = new MaskItem<TItem, Group.Mask<TItem>?>(ShaderParticleGeometries, new Group.Mask<TItem>(ShaderParticleGeometries));
-                this.VisualEffects = new MaskItem<TItem, Group.Mask<TItem>?>(VisualEffects, new Group.Mask<TItem>(VisualEffects));
-                this.Regions = new MaskItem<TItem, Group.Mask<TItem>?>(Regions, new Group.Mask<TItem>(Regions));
-                this.NavigationMeshInfoMaps = new MaskItem<TItem, Group.Mask<TItem>?>(NavigationMeshInfoMaps, new Group.Mask<TItem>(NavigationMeshInfoMaps));
-                this.Cells = new MaskItem<TItem, ListGroup.Mask<TItem>?>(Cells, new ListGroup.Mask<TItem>(Cells));
-                this.Worldspaces = new MaskItem<TItem, Group.Mask<TItem>?>(Worldspaces, new Group.Mask<TItem>(Worldspaces));
-                this.DialogTopics = new MaskItem<TItem, Group.Mask<TItem>?>(DialogTopics, new Group.Mask<TItem>(DialogTopics));
-                this.Quests = new MaskItem<TItem, Group.Mask<TItem>?>(Quests, new Group.Mask<TItem>(Quests));
-                this.IdleAnimations = new MaskItem<TItem, Group.Mask<TItem>?>(IdleAnimations, new Group.Mask<TItem>(IdleAnimations));
-                this.Packages = new MaskItem<TItem, Group.Mask<TItem>?>(Packages, new Group.Mask<TItem>(Packages));
-                this.CombatStyles = new MaskItem<TItem, Group.Mask<TItem>?>(CombatStyles, new Group.Mask<TItem>(CombatStyles));
-                this.LoadScreens = new MaskItem<TItem, Group.Mask<TItem>?>(LoadScreens, new Group.Mask<TItem>(LoadScreens));
-                this.LeveledSpells = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledSpells, new Group.Mask<TItem>(LeveledSpells));
-                this.AnimatedObjects = new MaskItem<TItem, Group.Mask<TItem>?>(AnimatedObjects, new Group.Mask<TItem>(AnimatedObjects));
-                this.Waters = new MaskItem<TItem, Group.Mask<TItem>?>(Waters, new Group.Mask<TItem>(Waters));
-                this.EffectShaders = new MaskItem<TItem, Group.Mask<TItem>?>(EffectShaders, new Group.Mask<TItem>(EffectShaders));
-                this.Explosions = new MaskItem<TItem, Group.Mask<TItem>?>(Explosions, new Group.Mask<TItem>(Explosions));
-                this.Debris = new MaskItem<TItem, Group.Mask<TItem>?>(Debris, new Group.Mask<TItem>(Debris));
-                this.ImageSpaces = new MaskItem<TItem, Group.Mask<TItem>?>(ImageSpaces, new Group.Mask<TItem>(ImageSpaces));
-                this.ImageSpaceAdapters = new MaskItem<TItem, Group.Mask<TItem>?>(ImageSpaceAdapters, new Group.Mask<TItem>(ImageSpaceAdapters));
-                this.FormLists = new MaskItem<TItem, Group.Mask<TItem>?>(FormLists, new Group.Mask<TItem>(FormLists));
-                this.Perks = new MaskItem<TItem, Group.Mask<TItem>?>(Perks, new Group.Mask<TItem>(Perks));
-                this.BodyParts = new MaskItem<TItem, Group.Mask<TItem>?>(BodyParts, new Group.Mask<TItem>(BodyParts));
-                this.AddonNodes = new MaskItem<TItem, Group.Mask<TItem>?>(AddonNodes, new Group.Mask<TItem>(AddonNodes));
-                this.ActorValueInformation = new MaskItem<TItem, Group.Mask<TItem>?>(ActorValueInformation, new Group.Mask<TItem>(ActorValueInformation));
-                this.CameraShots = new MaskItem<TItem, Group.Mask<TItem>?>(CameraShots, new Group.Mask<TItem>(CameraShots));
-                this.CameraPaths = new MaskItem<TItem, Group.Mask<TItem>?>(CameraPaths, new Group.Mask<TItem>(CameraPaths));
-                this.VoiceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(VoiceTypes, new Group.Mask<TItem>(VoiceTypes));
-                this.MaterialTypes = new MaskItem<TItem, Group.Mask<TItem>?>(MaterialTypes, new Group.Mask<TItem>(MaterialTypes));
-                this.Impacts = new MaskItem<TItem, Group.Mask<TItem>?>(Impacts, new Group.Mask<TItem>(Impacts));
-                this.ImpactDataSets = new MaskItem<TItem, Group.Mask<TItem>?>(ImpactDataSets, new Group.Mask<TItem>(ImpactDataSets));
-                this.ArmorAddons = new MaskItem<TItem, Group.Mask<TItem>?>(ArmorAddons, new Group.Mask<TItem>(ArmorAddons));
-                this.EncounterZones = new MaskItem<TItem, Group.Mask<TItem>?>(EncounterZones, new Group.Mask<TItem>(EncounterZones));
-                this.Locations = new MaskItem<TItem, Group.Mask<TItem>?>(Locations, new Group.Mask<TItem>(Locations));
-                this.Messages = new MaskItem<TItem, Group.Mask<TItem>?>(Messages, new Group.Mask<TItem>(Messages));
-                this.DefaultObjectManagers = new MaskItem<TItem, Group.Mask<TItem>?>(DefaultObjectManagers, new Group.Mask<TItem>(DefaultObjectManagers));
-                this.LightingTemplates = new MaskItem<TItem, Group.Mask<TItem>?>(LightingTemplates, new Group.Mask<TItem>(LightingTemplates));
-                this.MusicTypes = new MaskItem<TItem, Group.Mask<TItem>?>(MusicTypes, new Group.Mask<TItem>(MusicTypes));
-                this.Footsteps = new MaskItem<TItem, Group.Mask<TItem>?>(Footsteps, new Group.Mask<TItem>(Footsteps));
-                this.FootstepSets = new MaskItem<TItem, Group.Mask<TItem>?>(FootstepSets, new Group.Mask<TItem>(FootstepSets));
-                this.StoryManagerBranchNodes = new MaskItem<TItem, Group.Mask<TItem>?>(StoryManagerBranchNodes, new Group.Mask<TItem>(StoryManagerBranchNodes));
-                this.StoryManagerQuestNodes = new MaskItem<TItem, Group.Mask<TItem>?>(StoryManagerQuestNodes, new Group.Mask<TItem>(StoryManagerQuestNodes));
-                this.StoryManagerEventNodes = new MaskItem<TItem, Group.Mask<TItem>?>(StoryManagerEventNodes, new Group.Mask<TItem>(StoryManagerEventNodes));
-                this.DialogBranches = new MaskItem<TItem, Group.Mask<TItem>?>(DialogBranches, new Group.Mask<TItem>(DialogBranches));
-                this.MusicTracks = new MaskItem<TItem, Group.Mask<TItem>?>(MusicTracks, new Group.Mask<TItem>(MusicTracks));
-                this.DialogViews = new MaskItem<TItem, Group.Mask<TItem>?>(DialogViews, new Group.Mask<TItem>(DialogViews));
-                this.WordsOfPower = new MaskItem<TItem, Group.Mask<TItem>?>(WordsOfPower, new Group.Mask<TItem>(WordsOfPower));
-                this.Shouts = new MaskItem<TItem, Group.Mask<TItem>?>(Shouts, new Group.Mask<TItem>(Shouts));
-                this.EquipTypes = new MaskItem<TItem, Group.Mask<TItem>?>(EquipTypes, new Group.Mask<TItem>(EquipTypes));
-                this.Relationships = new MaskItem<TItem, Group.Mask<TItem>?>(Relationships, new Group.Mask<TItem>(Relationships));
-                this.Scenes = new MaskItem<TItem, Group.Mask<TItem>?>(Scenes, new Group.Mask<TItem>(Scenes));
-                this.AssociationTypes = new MaskItem<TItem, Group.Mask<TItem>?>(AssociationTypes, new Group.Mask<TItem>(AssociationTypes));
-                this.Outfits = new MaskItem<TItem, Group.Mask<TItem>?>(Outfits, new Group.Mask<TItem>(Outfits));
-                this.ArtObjects = new MaskItem<TItem, Group.Mask<TItem>?>(ArtObjects, new Group.Mask<TItem>(ArtObjects));
-                this.MaterialObjects = new MaskItem<TItem, Group.Mask<TItem>?>(MaterialObjects, new Group.Mask<TItem>(MaterialObjects));
-                this.MovementTypes = new MaskItem<TItem, Group.Mask<TItem>?>(MovementTypes, new Group.Mask<TItem>(MovementTypes));
-                this.SoundDescriptors = new MaskItem<TItem, Group.Mask<TItem>?>(SoundDescriptors, new Group.Mask<TItem>(SoundDescriptors));
-                this.DualCastData = new MaskItem<TItem, Group.Mask<TItem>?>(DualCastData, new Group.Mask<TItem>(DualCastData));
-                this.SoundCategories = new MaskItem<TItem, Group.Mask<TItem>?>(SoundCategories, new Group.Mask<TItem>(SoundCategories));
-                this.SoundOutputModels = new MaskItem<TItem, Group.Mask<TItem>?>(SoundOutputModels, new Group.Mask<TItem>(SoundOutputModels));
-                this.CollisionLayers = new MaskItem<TItem, Group.Mask<TItem>?>(CollisionLayers, new Group.Mask<TItem>(CollisionLayers));
-                this.Colors = new MaskItem<TItem, Group.Mask<TItem>?>(Colors, new Group.Mask<TItem>(Colors));
-                this.ReverbParameters = new MaskItem<TItem, Group.Mask<TItem>?>(ReverbParameters, new Group.Mask<TItem>(ReverbParameters));
-                this.VolumetricLightings = new MaskItem<TItem, Group.Mask<TItem>?>(VolumetricLightings, new Group.Mask<TItem>(VolumetricLightings));
+                this.GameSettings = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(GameSettings, new SkyrimGroup.Mask<TItem>(GameSettings));
+                this.Keywords = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Keywords, new SkyrimGroup.Mask<TItem>(Keywords));
+                this.LocationReferenceTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(LocationReferenceTypes, new SkyrimGroup.Mask<TItem>(LocationReferenceTypes));
+                this.Actions = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Actions, new SkyrimGroup.Mask<TItem>(Actions));
+                this.TextureSets = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(TextureSets, new SkyrimGroup.Mask<TItem>(TextureSets));
+                this.Globals = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Globals, new SkyrimGroup.Mask<TItem>(Globals));
+                this.Classes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Classes, new SkyrimGroup.Mask<TItem>(Classes));
+                this.Factions = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Factions, new SkyrimGroup.Mask<TItem>(Factions));
+                this.HeadParts = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(HeadParts, new SkyrimGroup.Mask<TItem>(HeadParts));
+                this.Hairs = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Hairs, new SkyrimGroup.Mask<TItem>(Hairs));
+                this.Eyes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Eyes, new SkyrimGroup.Mask<TItem>(Eyes));
+                this.Races = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Races, new SkyrimGroup.Mask<TItem>(Races));
+                this.SoundMarkers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(SoundMarkers, new SkyrimGroup.Mask<TItem>(SoundMarkers));
+                this.AcousticSpaces = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(AcousticSpaces, new SkyrimGroup.Mask<TItem>(AcousticSpaces));
+                this.MagicEffects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(MagicEffects, new SkyrimGroup.Mask<TItem>(MagicEffects));
+                this.LandscapeTextures = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(LandscapeTextures, new SkyrimGroup.Mask<TItem>(LandscapeTextures));
+                this.ObjectEffects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(ObjectEffects, new SkyrimGroup.Mask<TItem>(ObjectEffects));
+                this.Spells = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Spells, new SkyrimGroup.Mask<TItem>(Spells));
+                this.Scrolls = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Scrolls, new SkyrimGroup.Mask<TItem>(Scrolls));
+                this.Activators = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Activators, new SkyrimGroup.Mask<TItem>(Activators));
+                this.TalkingActivators = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(TalkingActivators, new SkyrimGroup.Mask<TItem>(TalkingActivators));
+                this.Armors = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Armors, new SkyrimGroup.Mask<TItem>(Armors));
+                this.Books = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Books, new SkyrimGroup.Mask<TItem>(Books));
+                this.Containers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Containers, new SkyrimGroup.Mask<TItem>(Containers));
+                this.Doors = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Doors, new SkyrimGroup.Mask<TItem>(Doors));
+                this.Ingredients = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Ingredients, new SkyrimGroup.Mask<TItem>(Ingredients));
+                this.Lights = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Lights, new SkyrimGroup.Mask<TItem>(Lights));
+                this.MiscItems = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(MiscItems, new SkyrimGroup.Mask<TItem>(MiscItems));
+                this.AlchemicalApparatuses = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(AlchemicalApparatuses, new SkyrimGroup.Mask<TItem>(AlchemicalApparatuses));
+                this.Statics = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Statics, new SkyrimGroup.Mask<TItem>(Statics));
+                this.MoveableStatics = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(MoveableStatics, new SkyrimGroup.Mask<TItem>(MoveableStatics));
+                this.Grasses = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Grasses, new SkyrimGroup.Mask<TItem>(Grasses));
+                this.Trees = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Trees, new SkyrimGroup.Mask<TItem>(Trees));
+                this.Florae = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Florae, new SkyrimGroup.Mask<TItem>(Florae));
+                this.Furniture = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Furniture, new SkyrimGroup.Mask<TItem>(Furniture));
+                this.Weapons = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Weapons, new SkyrimGroup.Mask<TItem>(Weapons));
+                this.Ammunitions = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Ammunitions, new SkyrimGroup.Mask<TItem>(Ammunitions));
+                this.Npcs = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Npcs, new SkyrimGroup.Mask<TItem>(Npcs));
+                this.LeveledNpcs = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(LeveledNpcs, new SkyrimGroup.Mask<TItem>(LeveledNpcs));
+                this.Keys = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Keys, new SkyrimGroup.Mask<TItem>(Keys));
+                this.Ingestibles = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Ingestibles, new SkyrimGroup.Mask<TItem>(Ingestibles));
+                this.IdleMarkers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(IdleMarkers, new SkyrimGroup.Mask<TItem>(IdleMarkers));
+                this.ConstructibleObjects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(ConstructibleObjects, new SkyrimGroup.Mask<TItem>(ConstructibleObjects));
+                this.Projectiles = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Projectiles, new SkyrimGroup.Mask<TItem>(Projectiles));
+                this.Hazards = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Hazards, new SkyrimGroup.Mask<TItem>(Hazards));
+                this.SoulGems = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(SoulGems, new SkyrimGroup.Mask<TItem>(SoulGems));
+                this.LeveledItems = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(LeveledItems, new SkyrimGroup.Mask<TItem>(LeveledItems));
+                this.Weathers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Weathers, new SkyrimGroup.Mask<TItem>(Weathers));
+                this.Climates = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Climates, new SkyrimGroup.Mask<TItem>(Climates));
+                this.ShaderParticleGeometries = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(ShaderParticleGeometries, new SkyrimGroup.Mask<TItem>(ShaderParticleGeometries));
+                this.VisualEffects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(VisualEffects, new SkyrimGroup.Mask<TItem>(VisualEffects));
+                this.Regions = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Regions, new SkyrimGroup.Mask<TItem>(Regions));
+                this.NavigationMeshInfoMaps = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(NavigationMeshInfoMaps, new SkyrimGroup.Mask<TItem>(NavigationMeshInfoMaps));
+                this.Cells = new MaskItem<TItem, SkyrimListGroup.Mask<TItem>?>(Cells, new SkyrimListGroup.Mask<TItem>(Cells));
+                this.Worldspaces = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Worldspaces, new SkyrimGroup.Mask<TItem>(Worldspaces));
+                this.DialogTopics = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(DialogTopics, new SkyrimGroup.Mask<TItem>(DialogTopics));
+                this.Quests = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Quests, new SkyrimGroup.Mask<TItem>(Quests));
+                this.IdleAnimations = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(IdleAnimations, new SkyrimGroup.Mask<TItem>(IdleAnimations));
+                this.Packages = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Packages, new SkyrimGroup.Mask<TItem>(Packages));
+                this.CombatStyles = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(CombatStyles, new SkyrimGroup.Mask<TItem>(CombatStyles));
+                this.LoadScreens = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(LoadScreens, new SkyrimGroup.Mask<TItem>(LoadScreens));
+                this.LeveledSpells = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(LeveledSpells, new SkyrimGroup.Mask<TItem>(LeveledSpells));
+                this.AnimatedObjects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(AnimatedObjects, new SkyrimGroup.Mask<TItem>(AnimatedObjects));
+                this.Waters = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Waters, new SkyrimGroup.Mask<TItem>(Waters));
+                this.EffectShaders = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(EffectShaders, new SkyrimGroup.Mask<TItem>(EffectShaders));
+                this.Explosions = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Explosions, new SkyrimGroup.Mask<TItem>(Explosions));
+                this.Debris = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Debris, new SkyrimGroup.Mask<TItem>(Debris));
+                this.ImageSpaces = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(ImageSpaces, new SkyrimGroup.Mask<TItem>(ImageSpaces));
+                this.ImageSpaceAdapters = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(ImageSpaceAdapters, new SkyrimGroup.Mask<TItem>(ImageSpaceAdapters));
+                this.FormLists = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(FormLists, new SkyrimGroup.Mask<TItem>(FormLists));
+                this.Perks = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Perks, new SkyrimGroup.Mask<TItem>(Perks));
+                this.BodyParts = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(BodyParts, new SkyrimGroup.Mask<TItem>(BodyParts));
+                this.AddonNodes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(AddonNodes, new SkyrimGroup.Mask<TItem>(AddonNodes));
+                this.ActorValueInformation = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(ActorValueInformation, new SkyrimGroup.Mask<TItem>(ActorValueInformation));
+                this.CameraShots = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(CameraShots, new SkyrimGroup.Mask<TItem>(CameraShots));
+                this.CameraPaths = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(CameraPaths, new SkyrimGroup.Mask<TItem>(CameraPaths));
+                this.VoiceTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(VoiceTypes, new SkyrimGroup.Mask<TItem>(VoiceTypes));
+                this.MaterialTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(MaterialTypes, new SkyrimGroup.Mask<TItem>(MaterialTypes));
+                this.Impacts = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Impacts, new SkyrimGroup.Mask<TItem>(Impacts));
+                this.ImpactDataSets = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(ImpactDataSets, new SkyrimGroup.Mask<TItem>(ImpactDataSets));
+                this.ArmorAddons = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(ArmorAddons, new SkyrimGroup.Mask<TItem>(ArmorAddons));
+                this.EncounterZones = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(EncounterZones, new SkyrimGroup.Mask<TItem>(EncounterZones));
+                this.Locations = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Locations, new SkyrimGroup.Mask<TItem>(Locations));
+                this.Messages = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Messages, new SkyrimGroup.Mask<TItem>(Messages));
+                this.DefaultObjectManagers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(DefaultObjectManagers, new SkyrimGroup.Mask<TItem>(DefaultObjectManagers));
+                this.LightingTemplates = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(LightingTemplates, new SkyrimGroup.Mask<TItem>(LightingTemplates));
+                this.MusicTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(MusicTypes, new SkyrimGroup.Mask<TItem>(MusicTypes));
+                this.Footsteps = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Footsteps, new SkyrimGroup.Mask<TItem>(Footsteps));
+                this.FootstepSets = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(FootstepSets, new SkyrimGroup.Mask<TItem>(FootstepSets));
+                this.StoryManagerBranchNodes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(StoryManagerBranchNodes, new SkyrimGroup.Mask<TItem>(StoryManagerBranchNodes));
+                this.StoryManagerQuestNodes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(StoryManagerQuestNodes, new SkyrimGroup.Mask<TItem>(StoryManagerQuestNodes));
+                this.StoryManagerEventNodes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(StoryManagerEventNodes, new SkyrimGroup.Mask<TItem>(StoryManagerEventNodes));
+                this.DialogBranches = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(DialogBranches, new SkyrimGroup.Mask<TItem>(DialogBranches));
+                this.MusicTracks = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(MusicTracks, new SkyrimGroup.Mask<TItem>(MusicTracks));
+                this.DialogViews = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(DialogViews, new SkyrimGroup.Mask<TItem>(DialogViews));
+                this.WordsOfPower = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(WordsOfPower, new SkyrimGroup.Mask<TItem>(WordsOfPower));
+                this.Shouts = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Shouts, new SkyrimGroup.Mask<TItem>(Shouts));
+                this.EquipTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(EquipTypes, new SkyrimGroup.Mask<TItem>(EquipTypes));
+                this.Relationships = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Relationships, new SkyrimGroup.Mask<TItem>(Relationships));
+                this.Scenes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Scenes, new SkyrimGroup.Mask<TItem>(Scenes));
+                this.AssociationTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(AssociationTypes, new SkyrimGroup.Mask<TItem>(AssociationTypes));
+                this.Outfits = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Outfits, new SkyrimGroup.Mask<TItem>(Outfits));
+                this.ArtObjects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(ArtObjects, new SkyrimGroup.Mask<TItem>(ArtObjects));
+                this.MaterialObjects = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(MaterialObjects, new SkyrimGroup.Mask<TItem>(MaterialObjects));
+                this.MovementTypes = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(MovementTypes, new SkyrimGroup.Mask<TItem>(MovementTypes));
+                this.SoundDescriptors = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(SoundDescriptors, new SkyrimGroup.Mask<TItem>(SoundDescriptors));
+                this.DualCastData = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(DualCastData, new SkyrimGroup.Mask<TItem>(DualCastData));
+                this.SoundCategories = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(SoundCategories, new SkyrimGroup.Mask<TItem>(SoundCategories));
+                this.SoundOutputModels = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(SoundOutputModels, new SkyrimGroup.Mask<TItem>(SoundOutputModels));
+                this.CollisionLayers = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(CollisionLayers, new SkyrimGroup.Mask<TItem>(CollisionLayers));
+                this.Colors = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Colors, new SkyrimGroup.Mask<TItem>(Colors));
+                this.ReverbParameters = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(ReverbParameters, new SkyrimGroup.Mask<TItem>(ReverbParameters));
+                this.VolumetricLightings = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(VolumetricLightings, new SkyrimGroup.Mask<TItem>(VolumetricLightings));
             }
 
             #pragma warning disable CS8618
@@ -1368,119 +1368,119 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public MaskItem<TItem, SkyrimModHeader.Mask<TItem>?>? ModHeader { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? GameSettings { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Keywords { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LocationReferenceTypes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Actions { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? TextureSets { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Globals { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Classes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Factions { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? HeadParts { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Hairs { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Eyes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Races { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? SoundMarkers { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? AcousticSpaces { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? MagicEffects { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LandscapeTextures { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? ObjectEffects { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Spells { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Scrolls { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Activators { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? TalkingActivators { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Armors { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Books { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Containers { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Doors { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Ingredients { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Lights { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? MiscItems { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? AlchemicalApparatuses { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Statics { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? MoveableStatics { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Grasses { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Trees { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Florae { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Furniture { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Weapons { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Ammunitions { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Npcs { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LeveledNpcs { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Keys { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Ingestibles { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? IdleMarkers { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? ConstructibleObjects { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Projectiles { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Hazards { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? SoulGems { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LeveledItems { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Weathers { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Climates { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? ShaderParticleGeometries { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? VisualEffects { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Regions { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? NavigationMeshInfoMaps { get; set; }
-            public MaskItem<TItem, ListGroup.Mask<TItem>?>? Cells { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Worldspaces { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? DialogTopics { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Quests { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? IdleAnimations { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Packages { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? CombatStyles { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LoadScreens { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LeveledSpells { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? AnimatedObjects { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Waters { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? EffectShaders { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Explosions { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Debris { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? ImageSpaces { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? ImageSpaceAdapters { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? FormLists { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Perks { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? BodyParts { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? AddonNodes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? ActorValueInformation { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? CameraShots { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? CameraPaths { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? VoiceTypes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? MaterialTypes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Impacts { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? ImpactDataSets { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? ArmorAddons { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? EncounterZones { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Locations { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Messages { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? DefaultObjectManagers { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LightingTemplates { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? MusicTypes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Footsteps { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? FootstepSets { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? StoryManagerBranchNodes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? StoryManagerQuestNodes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? StoryManagerEventNodes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? DialogBranches { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? MusicTracks { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? DialogViews { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? WordsOfPower { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Shouts { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? EquipTypes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Relationships { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Scenes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? AssociationTypes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Outfits { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? ArtObjects { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? MaterialObjects { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? MovementTypes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? SoundDescriptors { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? DualCastData { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? SoundCategories { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? SoundOutputModels { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? CollisionLayers { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Colors { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? ReverbParameters { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? VolumetricLightings { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? GameSettings { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Keywords { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? LocationReferenceTypes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Actions { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? TextureSets { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Globals { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Classes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Factions { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? HeadParts { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Hairs { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Eyes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Races { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? SoundMarkers { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? AcousticSpaces { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? MagicEffects { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? LandscapeTextures { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? ObjectEffects { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Spells { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Scrolls { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Activators { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? TalkingActivators { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Armors { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Books { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Containers { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Doors { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Ingredients { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Lights { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? MiscItems { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? AlchemicalApparatuses { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Statics { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? MoveableStatics { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Grasses { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Trees { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Florae { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Furniture { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Weapons { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Ammunitions { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Npcs { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? LeveledNpcs { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Keys { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Ingestibles { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? IdleMarkers { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? ConstructibleObjects { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Projectiles { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Hazards { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? SoulGems { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? LeveledItems { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Weathers { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Climates { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? ShaderParticleGeometries { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? VisualEffects { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Regions { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? NavigationMeshInfoMaps { get; set; }
+            public MaskItem<TItem, SkyrimListGroup.Mask<TItem>?>? Cells { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Worldspaces { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? DialogTopics { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Quests { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? IdleAnimations { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Packages { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? CombatStyles { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? LoadScreens { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? LeveledSpells { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? AnimatedObjects { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Waters { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? EffectShaders { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Explosions { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Debris { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? ImageSpaces { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? ImageSpaceAdapters { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? FormLists { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Perks { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? BodyParts { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? AddonNodes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? ActorValueInformation { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? CameraShots { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? CameraPaths { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? VoiceTypes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? MaterialTypes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Impacts { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? ImpactDataSets { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? ArmorAddons { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? EncounterZones { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Locations { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Messages { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? DefaultObjectManagers { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? LightingTemplates { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? MusicTypes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Footsteps { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? FootstepSets { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? StoryManagerBranchNodes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? StoryManagerQuestNodes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? StoryManagerEventNodes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? DialogBranches { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? MusicTracks { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? DialogViews { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? WordsOfPower { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Shouts { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? EquipTypes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Relationships { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Scenes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? AssociationTypes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Outfits { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? ArtObjects { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? MaterialObjects { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? MovementTypes { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? SoundDescriptors { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? DualCastData { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? SoundCategories { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? SoundOutputModels { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? CollisionLayers { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Colors { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? ReverbParameters { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? VolumetricLightings { get; set; }
             #endregion
 
             #region Equals
@@ -2896,119 +2896,119 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, SkyrimModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
-                obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
-                obj.Keywords = this.Keywords == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
-                obj.LocationReferenceTypes = this.LocationReferenceTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
-                obj.Actions = this.Actions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Actions.Overall), this.Actions.Specific?.Translate(eval));
-                obj.TextureSets = this.TextureSets == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.TextureSets.Overall), this.TextureSets.Specific?.Translate(eval));
-                obj.Globals = this.Globals == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
-                obj.Classes = this.Classes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
-                obj.Factions = this.Factions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
-                obj.HeadParts = this.HeadParts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.HeadParts.Overall), this.HeadParts.Specific?.Translate(eval));
-                obj.Hairs = this.Hairs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Hairs.Overall), this.Hairs.Specific?.Translate(eval));
-                obj.Eyes = this.Eyes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Eyes.Overall), this.Eyes.Specific?.Translate(eval));
-                obj.Races = this.Races == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
-                obj.SoundMarkers = this.SoundMarkers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoundMarkers.Overall), this.SoundMarkers.Specific?.Translate(eval));
-                obj.AcousticSpaces = this.AcousticSpaces == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AcousticSpaces.Overall), this.AcousticSpaces.Specific?.Translate(eval));
-                obj.MagicEffects = this.MagicEffects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MagicEffects.Overall), this.MagicEffects.Specific?.Translate(eval));
-                obj.LandscapeTextures = this.LandscapeTextures == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LandscapeTextures.Overall), this.LandscapeTextures.Specific?.Translate(eval));
-                obj.ObjectEffects = this.ObjectEffects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ObjectEffects.Overall), this.ObjectEffects.Specific?.Translate(eval));
-                obj.Spells = this.Spells == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Spells.Overall), this.Spells.Specific?.Translate(eval));
-                obj.Scrolls = this.Scrolls == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Scrolls.Overall), this.Scrolls.Specific?.Translate(eval));
-                obj.Activators = this.Activators == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
-                obj.TalkingActivators = this.TalkingActivators == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.TalkingActivators.Overall), this.TalkingActivators.Specific?.Translate(eval));
-                obj.Armors = this.Armors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
-                obj.Books = this.Books == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
-                obj.Containers = this.Containers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
-                obj.Doors = this.Doors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
-                obj.Ingredients = this.Ingredients == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ingredients.Overall), this.Ingredients.Specific?.Translate(eval));
-                obj.Lights = this.Lights == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Lights.Overall), this.Lights.Specific?.Translate(eval));
-                obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
-                obj.AlchemicalApparatuses = this.AlchemicalApparatuses == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AlchemicalApparatuses.Overall), this.AlchemicalApparatuses.Specific?.Translate(eval));
-                obj.Statics = this.Statics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
-                obj.MoveableStatics = this.MoveableStatics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MoveableStatics.Overall), this.MoveableStatics.Specific?.Translate(eval));
-                obj.Grasses = this.Grasses == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
-                obj.Trees = this.Trees == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Trees.Overall), this.Trees.Specific?.Translate(eval));
-                obj.Florae = this.Florae == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Florae.Overall), this.Florae.Specific?.Translate(eval));
-                obj.Furniture = this.Furniture == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Furniture.Overall), this.Furniture.Specific?.Translate(eval));
-                obj.Weapons = this.Weapons == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
-                obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
-                obj.Npcs = this.Npcs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
-                obj.LeveledNpcs = this.LeveledNpcs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledNpcs.Overall), this.LeveledNpcs.Specific?.Translate(eval));
-                obj.Keys = this.Keys == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Keys.Overall), this.Keys.Specific?.Translate(eval));
-                obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
-                obj.IdleMarkers = this.IdleMarkers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.IdleMarkers.Overall), this.IdleMarkers.Specific?.Translate(eval));
-                obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
-                obj.Projectiles = this.Projectiles == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Projectiles.Overall), this.Projectiles.Specific?.Translate(eval));
-                obj.Hazards = this.Hazards == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Hazards.Overall), this.Hazards.Specific?.Translate(eval));
-                obj.SoulGems = this.SoulGems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoulGems.Overall), this.SoulGems.Specific?.Translate(eval));
-                obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
-                obj.Weathers = this.Weathers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
-                obj.Climates = this.Climates == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Climates.Overall), this.Climates.Specific?.Translate(eval));
-                obj.ShaderParticleGeometries = this.ShaderParticleGeometries == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ShaderParticleGeometries.Overall), this.ShaderParticleGeometries.Specific?.Translate(eval));
-                obj.VisualEffects = this.VisualEffects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.VisualEffects.Overall), this.VisualEffects.Specific?.Translate(eval));
-                obj.Regions = this.Regions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
-                obj.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.NavigationMeshInfoMaps.Overall), this.NavigationMeshInfoMaps.Specific?.Translate(eval));
-                obj.Cells = this.Cells == null ? null : new MaskItem<R, ListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
-                obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
-                obj.DialogTopics = this.DialogTopics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DialogTopics.Overall), this.DialogTopics.Specific?.Translate(eval));
-                obj.Quests = this.Quests == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
-                obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
-                obj.Packages = this.Packages == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Packages.Overall), this.Packages.Specific?.Translate(eval));
-                obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
-                obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
-                obj.LeveledSpells = this.LeveledSpells == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledSpells.Overall), this.LeveledSpells.Specific?.Translate(eval));
-                obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
-                obj.Waters = this.Waters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
-                obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
-                obj.Explosions = this.Explosions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Explosions.Overall), this.Explosions.Specific?.Translate(eval));
-                obj.Debris = this.Debris == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
-                obj.ImageSpaces = this.ImageSpaces == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ImageSpaces.Overall), this.ImageSpaces.Specific?.Translate(eval));
-                obj.ImageSpaceAdapters = this.ImageSpaceAdapters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ImageSpaceAdapters.Overall), this.ImageSpaceAdapters.Specific?.Translate(eval));
-                obj.FormLists = this.FormLists == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
-                obj.Perks = this.Perks == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
-                obj.BodyParts = this.BodyParts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.BodyParts.Overall), this.BodyParts.Specific?.Translate(eval));
-                obj.AddonNodes = this.AddonNodes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AddonNodes.Overall), this.AddonNodes.Specific?.Translate(eval));
-                obj.ActorValueInformation = this.ActorValueInformation == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ActorValueInformation.Overall), this.ActorValueInformation.Specific?.Translate(eval));
-                obj.CameraShots = this.CameraShots == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CameraShots.Overall), this.CameraShots.Specific?.Translate(eval));
-                obj.CameraPaths = this.CameraPaths == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CameraPaths.Overall), this.CameraPaths.Specific?.Translate(eval));
-                obj.VoiceTypes = this.VoiceTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.VoiceTypes.Overall), this.VoiceTypes.Specific?.Translate(eval));
-                obj.MaterialTypes = this.MaterialTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MaterialTypes.Overall), this.MaterialTypes.Specific?.Translate(eval));
-                obj.Impacts = this.Impacts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Impacts.Overall), this.Impacts.Specific?.Translate(eval));
-                obj.ImpactDataSets = this.ImpactDataSets == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ImpactDataSets.Overall), this.ImpactDataSets.Specific?.Translate(eval));
-                obj.ArmorAddons = this.ArmorAddons == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ArmorAddons.Overall), this.ArmorAddons.Specific?.Translate(eval));
-                obj.EncounterZones = this.EncounterZones == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EncounterZones.Overall), this.EncounterZones.Specific?.Translate(eval));
-                obj.Locations = this.Locations == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Locations.Overall), this.Locations.Specific?.Translate(eval));
-                obj.Messages = this.Messages == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Messages.Overall), this.Messages.Specific?.Translate(eval));
-                obj.DefaultObjectManagers = this.DefaultObjectManagers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DefaultObjectManagers.Overall), this.DefaultObjectManagers.Specific?.Translate(eval));
-                obj.LightingTemplates = this.LightingTemplates == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LightingTemplates.Overall), this.LightingTemplates.Specific?.Translate(eval));
-                obj.MusicTypes = this.MusicTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MusicTypes.Overall), this.MusicTypes.Specific?.Translate(eval));
-                obj.Footsteps = this.Footsteps == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Footsteps.Overall), this.Footsteps.Specific?.Translate(eval));
-                obj.FootstepSets = this.FootstepSets == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.FootstepSets.Overall), this.FootstepSets.Specific?.Translate(eval));
-                obj.StoryManagerBranchNodes = this.StoryManagerBranchNodes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.StoryManagerBranchNodes.Overall), this.StoryManagerBranchNodes.Specific?.Translate(eval));
-                obj.StoryManagerQuestNodes = this.StoryManagerQuestNodes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.StoryManagerQuestNodes.Overall), this.StoryManagerQuestNodes.Specific?.Translate(eval));
-                obj.StoryManagerEventNodes = this.StoryManagerEventNodes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.StoryManagerEventNodes.Overall), this.StoryManagerEventNodes.Specific?.Translate(eval));
-                obj.DialogBranches = this.DialogBranches == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DialogBranches.Overall), this.DialogBranches.Specific?.Translate(eval));
-                obj.MusicTracks = this.MusicTracks == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MusicTracks.Overall), this.MusicTracks.Specific?.Translate(eval));
-                obj.DialogViews = this.DialogViews == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DialogViews.Overall), this.DialogViews.Specific?.Translate(eval));
-                obj.WordsOfPower = this.WordsOfPower == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.WordsOfPower.Overall), this.WordsOfPower.Specific?.Translate(eval));
-                obj.Shouts = this.Shouts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Shouts.Overall), this.Shouts.Specific?.Translate(eval));
-                obj.EquipTypes = this.EquipTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EquipTypes.Overall), this.EquipTypes.Specific?.Translate(eval));
-                obj.Relationships = this.Relationships == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Relationships.Overall), this.Relationships.Specific?.Translate(eval));
-                obj.Scenes = this.Scenes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Scenes.Overall), this.Scenes.Specific?.Translate(eval));
-                obj.AssociationTypes = this.AssociationTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AssociationTypes.Overall), this.AssociationTypes.Specific?.Translate(eval));
-                obj.Outfits = this.Outfits == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Outfits.Overall), this.Outfits.Specific?.Translate(eval));
-                obj.ArtObjects = this.ArtObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ArtObjects.Overall), this.ArtObjects.Specific?.Translate(eval));
-                obj.MaterialObjects = this.MaterialObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MaterialObjects.Overall), this.MaterialObjects.Specific?.Translate(eval));
-                obj.MovementTypes = this.MovementTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MovementTypes.Overall), this.MovementTypes.Specific?.Translate(eval));
-                obj.SoundDescriptors = this.SoundDescriptors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoundDescriptors.Overall), this.SoundDescriptors.Specific?.Translate(eval));
-                obj.DualCastData = this.DualCastData == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DualCastData.Overall), this.DualCastData.Specific?.Translate(eval));
-                obj.SoundCategories = this.SoundCategories == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoundCategories.Overall), this.SoundCategories.Specific?.Translate(eval));
-                obj.SoundOutputModels = this.SoundOutputModels == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoundOutputModels.Overall), this.SoundOutputModels.Specific?.Translate(eval));
-                obj.CollisionLayers = this.CollisionLayers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CollisionLayers.Overall), this.CollisionLayers.Specific?.Translate(eval));
-                obj.Colors = this.Colors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Colors.Overall), this.Colors.Specific?.Translate(eval));
-                obj.ReverbParameters = this.ReverbParameters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ReverbParameters.Overall), this.ReverbParameters.Specific?.Translate(eval));
-                obj.VolumetricLightings = this.VolumetricLightings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.VolumetricLightings.Overall), this.VolumetricLightings.Specific?.Translate(eval));
+                obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
+                obj.Keywords = this.Keywords == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
+                obj.LocationReferenceTypes = this.LocationReferenceTypes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
+                obj.Actions = this.Actions == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Actions.Overall), this.Actions.Specific?.Translate(eval));
+                obj.TextureSets = this.TextureSets == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.TextureSets.Overall), this.TextureSets.Specific?.Translate(eval));
+                obj.Globals = this.Globals == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
+                obj.Classes = this.Classes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
+                obj.Factions = this.Factions == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
+                obj.HeadParts = this.HeadParts == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.HeadParts.Overall), this.HeadParts.Specific?.Translate(eval));
+                obj.Hairs = this.Hairs == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Hairs.Overall), this.Hairs.Specific?.Translate(eval));
+                obj.Eyes = this.Eyes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Eyes.Overall), this.Eyes.Specific?.Translate(eval));
+                obj.Races = this.Races == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
+                obj.SoundMarkers = this.SoundMarkers == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.SoundMarkers.Overall), this.SoundMarkers.Specific?.Translate(eval));
+                obj.AcousticSpaces = this.AcousticSpaces == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.AcousticSpaces.Overall), this.AcousticSpaces.Specific?.Translate(eval));
+                obj.MagicEffects = this.MagicEffects == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.MagicEffects.Overall), this.MagicEffects.Specific?.Translate(eval));
+                obj.LandscapeTextures = this.LandscapeTextures == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.LandscapeTextures.Overall), this.LandscapeTextures.Specific?.Translate(eval));
+                obj.ObjectEffects = this.ObjectEffects == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.ObjectEffects.Overall), this.ObjectEffects.Specific?.Translate(eval));
+                obj.Spells = this.Spells == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Spells.Overall), this.Spells.Specific?.Translate(eval));
+                obj.Scrolls = this.Scrolls == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Scrolls.Overall), this.Scrolls.Specific?.Translate(eval));
+                obj.Activators = this.Activators == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
+                obj.TalkingActivators = this.TalkingActivators == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.TalkingActivators.Overall), this.TalkingActivators.Specific?.Translate(eval));
+                obj.Armors = this.Armors == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
+                obj.Books = this.Books == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
+                obj.Containers = this.Containers == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
+                obj.Doors = this.Doors == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
+                obj.Ingredients = this.Ingredients == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Ingredients.Overall), this.Ingredients.Specific?.Translate(eval));
+                obj.Lights = this.Lights == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Lights.Overall), this.Lights.Specific?.Translate(eval));
+                obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
+                obj.AlchemicalApparatuses = this.AlchemicalApparatuses == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.AlchemicalApparatuses.Overall), this.AlchemicalApparatuses.Specific?.Translate(eval));
+                obj.Statics = this.Statics == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
+                obj.MoveableStatics = this.MoveableStatics == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.MoveableStatics.Overall), this.MoveableStatics.Specific?.Translate(eval));
+                obj.Grasses = this.Grasses == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
+                obj.Trees = this.Trees == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Trees.Overall), this.Trees.Specific?.Translate(eval));
+                obj.Florae = this.Florae == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Florae.Overall), this.Florae.Specific?.Translate(eval));
+                obj.Furniture = this.Furniture == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Furniture.Overall), this.Furniture.Specific?.Translate(eval));
+                obj.Weapons = this.Weapons == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
+                obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
+                obj.Npcs = this.Npcs == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
+                obj.LeveledNpcs = this.LeveledNpcs == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.LeveledNpcs.Overall), this.LeveledNpcs.Specific?.Translate(eval));
+                obj.Keys = this.Keys == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Keys.Overall), this.Keys.Specific?.Translate(eval));
+                obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
+                obj.IdleMarkers = this.IdleMarkers == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.IdleMarkers.Overall), this.IdleMarkers.Specific?.Translate(eval));
+                obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
+                obj.Projectiles = this.Projectiles == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Projectiles.Overall), this.Projectiles.Specific?.Translate(eval));
+                obj.Hazards = this.Hazards == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Hazards.Overall), this.Hazards.Specific?.Translate(eval));
+                obj.SoulGems = this.SoulGems == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.SoulGems.Overall), this.SoulGems.Specific?.Translate(eval));
+                obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
+                obj.Weathers = this.Weathers == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
+                obj.Climates = this.Climates == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Climates.Overall), this.Climates.Specific?.Translate(eval));
+                obj.ShaderParticleGeometries = this.ShaderParticleGeometries == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.ShaderParticleGeometries.Overall), this.ShaderParticleGeometries.Specific?.Translate(eval));
+                obj.VisualEffects = this.VisualEffects == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.VisualEffects.Overall), this.VisualEffects.Specific?.Translate(eval));
+                obj.Regions = this.Regions == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
+                obj.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.NavigationMeshInfoMaps.Overall), this.NavigationMeshInfoMaps.Specific?.Translate(eval));
+                obj.Cells = this.Cells == null ? null : new MaskItem<R, SkyrimListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
+                obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
+                obj.DialogTopics = this.DialogTopics == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.DialogTopics.Overall), this.DialogTopics.Specific?.Translate(eval));
+                obj.Quests = this.Quests == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
+                obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
+                obj.Packages = this.Packages == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Packages.Overall), this.Packages.Specific?.Translate(eval));
+                obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
+                obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
+                obj.LeveledSpells = this.LeveledSpells == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.LeveledSpells.Overall), this.LeveledSpells.Specific?.Translate(eval));
+                obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
+                obj.Waters = this.Waters == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
+                obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
+                obj.Explosions = this.Explosions == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Explosions.Overall), this.Explosions.Specific?.Translate(eval));
+                obj.Debris = this.Debris == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
+                obj.ImageSpaces = this.ImageSpaces == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.ImageSpaces.Overall), this.ImageSpaces.Specific?.Translate(eval));
+                obj.ImageSpaceAdapters = this.ImageSpaceAdapters == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.ImageSpaceAdapters.Overall), this.ImageSpaceAdapters.Specific?.Translate(eval));
+                obj.FormLists = this.FormLists == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
+                obj.Perks = this.Perks == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
+                obj.BodyParts = this.BodyParts == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.BodyParts.Overall), this.BodyParts.Specific?.Translate(eval));
+                obj.AddonNodes = this.AddonNodes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.AddonNodes.Overall), this.AddonNodes.Specific?.Translate(eval));
+                obj.ActorValueInformation = this.ActorValueInformation == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.ActorValueInformation.Overall), this.ActorValueInformation.Specific?.Translate(eval));
+                obj.CameraShots = this.CameraShots == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.CameraShots.Overall), this.CameraShots.Specific?.Translate(eval));
+                obj.CameraPaths = this.CameraPaths == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.CameraPaths.Overall), this.CameraPaths.Specific?.Translate(eval));
+                obj.VoiceTypes = this.VoiceTypes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.VoiceTypes.Overall), this.VoiceTypes.Specific?.Translate(eval));
+                obj.MaterialTypes = this.MaterialTypes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.MaterialTypes.Overall), this.MaterialTypes.Specific?.Translate(eval));
+                obj.Impacts = this.Impacts == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Impacts.Overall), this.Impacts.Specific?.Translate(eval));
+                obj.ImpactDataSets = this.ImpactDataSets == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.ImpactDataSets.Overall), this.ImpactDataSets.Specific?.Translate(eval));
+                obj.ArmorAddons = this.ArmorAddons == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.ArmorAddons.Overall), this.ArmorAddons.Specific?.Translate(eval));
+                obj.EncounterZones = this.EncounterZones == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.EncounterZones.Overall), this.EncounterZones.Specific?.Translate(eval));
+                obj.Locations = this.Locations == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Locations.Overall), this.Locations.Specific?.Translate(eval));
+                obj.Messages = this.Messages == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Messages.Overall), this.Messages.Specific?.Translate(eval));
+                obj.DefaultObjectManagers = this.DefaultObjectManagers == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.DefaultObjectManagers.Overall), this.DefaultObjectManagers.Specific?.Translate(eval));
+                obj.LightingTemplates = this.LightingTemplates == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.LightingTemplates.Overall), this.LightingTemplates.Specific?.Translate(eval));
+                obj.MusicTypes = this.MusicTypes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.MusicTypes.Overall), this.MusicTypes.Specific?.Translate(eval));
+                obj.Footsteps = this.Footsteps == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Footsteps.Overall), this.Footsteps.Specific?.Translate(eval));
+                obj.FootstepSets = this.FootstepSets == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.FootstepSets.Overall), this.FootstepSets.Specific?.Translate(eval));
+                obj.StoryManagerBranchNodes = this.StoryManagerBranchNodes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.StoryManagerBranchNodes.Overall), this.StoryManagerBranchNodes.Specific?.Translate(eval));
+                obj.StoryManagerQuestNodes = this.StoryManagerQuestNodes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.StoryManagerQuestNodes.Overall), this.StoryManagerQuestNodes.Specific?.Translate(eval));
+                obj.StoryManagerEventNodes = this.StoryManagerEventNodes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.StoryManagerEventNodes.Overall), this.StoryManagerEventNodes.Specific?.Translate(eval));
+                obj.DialogBranches = this.DialogBranches == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.DialogBranches.Overall), this.DialogBranches.Specific?.Translate(eval));
+                obj.MusicTracks = this.MusicTracks == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.MusicTracks.Overall), this.MusicTracks.Specific?.Translate(eval));
+                obj.DialogViews = this.DialogViews == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.DialogViews.Overall), this.DialogViews.Specific?.Translate(eval));
+                obj.WordsOfPower = this.WordsOfPower == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.WordsOfPower.Overall), this.WordsOfPower.Specific?.Translate(eval));
+                obj.Shouts = this.Shouts == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Shouts.Overall), this.Shouts.Specific?.Translate(eval));
+                obj.EquipTypes = this.EquipTypes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.EquipTypes.Overall), this.EquipTypes.Specific?.Translate(eval));
+                obj.Relationships = this.Relationships == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Relationships.Overall), this.Relationships.Specific?.Translate(eval));
+                obj.Scenes = this.Scenes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Scenes.Overall), this.Scenes.Specific?.Translate(eval));
+                obj.AssociationTypes = this.AssociationTypes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.AssociationTypes.Overall), this.AssociationTypes.Specific?.Translate(eval));
+                obj.Outfits = this.Outfits == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Outfits.Overall), this.Outfits.Specific?.Translate(eval));
+                obj.ArtObjects = this.ArtObjects == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.ArtObjects.Overall), this.ArtObjects.Specific?.Translate(eval));
+                obj.MaterialObjects = this.MaterialObjects == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.MaterialObjects.Overall), this.MaterialObjects.Specific?.Translate(eval));
+                obj.MovementTypes = this.MovementTypes == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.MovementTypes.Overall), this.MovementTypes.Specific?.Translate(eval));
+                obj.SoundDescriptors = this.SoundDescriptors == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.SoundDescriptors.Overall), this.SoundDescriptors.Specific?.Translate(eval));
+                obj.DualCastData = this.DualCastData == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.DualCastData.Overall), this.DualCastData.Specific?.Translate(eval));
+                obj.SoundCategories = this.SoundCategories == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.SoundCategories.Overall), this.SoundCategories.Specific?.Translate(eval));
+                obj.SoundOutputModels = this.SoundOutputModels == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.SoundOutputModels.Overall), this.SoundOutputModels.Specific?.Translate(eval));
+                obj.CollisionLayers = this.CollisionLayers == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.CollisionLayers.Overall), this.CollisionLayers.Specific?.Translate(eval));
+                obj.Colors = this.Colors == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Colors.Overall), this.Colors.Specific?.Translate(eval));
+                obj.ReverbParameters = this.ReverbParameters == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.ReverbParameters.Overall), this.ReverbParameters.Specific?.Translate(eval));
+                obj.VolumetricLightings = this.VolumetricLightings == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.VolumetricLightings.Overall), this.VolumetricLightings.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3513,119 +3513,119 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public MaskItem<Exception?, SkyrimModHeader.ErrorMask?>? ModHeader;
-            public MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
-            public MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>? Keywords;
-            public MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>? LocationReferenceTypes;
-            public MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>? Actions;
-            public MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>? TextureSets;
-            public MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>? Globals;
-            public MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>? Classes;
-            public MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>? Factions;
-            public MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
-            public MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>? Hairs;
-            public MaskItem<Exception?, Group.ErrorMask<Eyes.ErrorMask>?>? Eyes;
-            public MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>? Races;
-            public MaskItem<Exception?, Group.ErrorMask<SoundMarker.ErrorMask>?>? SoundMarkers;
-            public MaskItem<Exception?, Group.ErrorMask<AcousticSpace.ErrorMask>?>? AcousticSpaces;
-            public MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>? MagicEffects;
-            public MaskItem<Exception?, Group.ErrorMask<LandscapeTexture.ErrorMask>?>? LandscapeTextures;
-            public MaskItem<Exception?, Group.ErrorMask<ObjectEffect.ErrorMask>?>? ObjectEffects;
-            public MaskItem<Exception?, Group.ErrorMask<Spell.ErrorMask>?>? Spells;
-            public MaskItem<Exception?, Group.ErrorMask<Scroll.ErrorMask>?>? Scrolls;
-            public MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>? Activators;
-            public MaskItem<Exception?, Group.ErrorMask<TalkingActivator.ErrorMask>?>? TalkingActivators;
-            public MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>? Armors;
-            public MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>? Books;
-            public MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>? Containers;
-            public MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>? Doors;
-            public MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>? Ingredients;
-            public MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>? Lights;
-            public MaskItem<Exception?, Group.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
-            public MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>? AlchemicalApparatuses;
-            public MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>? Statics;
-            public MaskItem<Exception?, Group.ErrorMask<MoveableStatic.ErrorMask>?>? MoveableStatics;
-            public MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>? Grasses;
-            public MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>? Trees;
-            public MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>? Florae;
-            public MaskItem<Exception?, Group.ErrorMask<Furniture.ErrorMask>?>? Furniture;
-            public MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>? Weapons;
-            public MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
-            public MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>? Npcs;
-            public MaskItem<Exception?, Group.ErrorMask<LeveledNpc.ErrorMask>?>? LeveledNpcs;
-            public MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>? Keys;
-            public MaskItem<Exception?, Group.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
-            public MaskItem<Exception?, Group.ErrorMask<IdleMarker.ErrorMask>?>? IdleMarkers;
-            public MaskItem<Exception?, Group.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
-            public MaskItem<Exception?, Group.ErrorMask<Projectile.ErrorMask>?>? Projectiles;
-            public MaskItem<Exception?, Group.ErrorMask<Hazard.ErrorMask>?>? Hazards;
-            public MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>? SoulGems;
-            public MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
-            public MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>? Weathers;
-            public MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>? Climates;
-            public MaskItem<Exception?, Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>? ShaderParticleGeometries;
-            public MaskItem<Exception?, Group.ErrorMask<VisualEffect.ErrorMask>?>? VisualEffects;
-            public MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>? Regions;
-            public MaskItem<Exception?, Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>? NavigationMeshInfoMaps;
-            public MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
-            public MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
-            public MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>? DialogTopics;
-            public MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>? Quests;
-            public MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
-            public MaskItem<Exception?, Group.ErrorMask<Package.ErrorMask>?>? Packages;
-            public MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>? CombatStyles;
-            public MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
-            public MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>? LeveledSpells;
-            public MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
-            public MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>? Waters;
-            public MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
-            public MaskItem<Exception?, Group.ErrorMask<Explosion.ErrorMask>?>? Explosions;
-            public MaskItem<Exception?, Group.ErrorMask<Debris.ErrorMask>?>? Debris;
-            public MaskItem<Exception?, Group.ErrorMask<ImageSpace.ErrorMask>?>? ImageSpaces;
-            public MaskItem<Exception?, Group.ErrorMask<ImageSpaceAdapter.ErrorMask>?>? ImageSpaceAdapters;
-            public MaskItem<Exception?, Group.ErrorMask<FormList.ErrorMask>?>? FormLists;
-            public MaskItem<Exception?, Group.ErrorMask<Perk.ErrorMask>?>? Perks;
-            public MaskItem<Exception?, Group.ErrorMask<BodyPartData.ErrorMask>?>? BodyParts;
-            public MaskItem<Exception?, Group.ErrorMask<AddonNode.ErrorMask>?>? AddonNodes;
-            public MaskItem<Exception?, Group.ErrorMask<ActorValueInformation.ErrorMask>?>? ActorValueInformation;
-            public MaskItem<Exception?, Group.ErrorMask<CameraShot.ErrorMask>?>? CameraShots;
-            public MaskItem<Exception?, Group.ErrorMask<CameraPath.ErrorMask>?>? CameraPaths;
-            public MaskItem<Exception?, Group.ErrorMask<VoiceType.ErrorMask>?>? VoiceTypes;
-            public MaskItem<Exception?, Group.ErrorMask<MaterialType.ErrorMask>?>? MaterialTypes;
-            public MaskItem<Exception?, Group.ErrorMask<Impact.ErrorMask>?>? Impacts;
-            public MaskItem<Exception?, Group.ErrorMask<ImpactDataSet.ErrorMask>?>? ImpactDataSets;
-            public MaskItem<Exception?, Group.ErrorMask<ArmorAddon.ErrorMask>?>? ArmorAddons;
-            public MaskItem<Exception?, Group.ErrorMask<EncounterZone.ErrorMask>?>? EncounterZones;
-            public MaskItem<Exception?, Group.ErrorMask<Location.ErrorMask>?>? Locations;
-            public MaskItem<Exception?, Group.ErrorMask<Message.ErrorMask>?>? Messages;
-            public MaskItem<Exception?, Group.ErrorMask<DefaultObjectManager.ErrorMask>?>? DefaultObjectManagers;
-            public MaskItem<Exception?, Group.ErrorMask<LightingTemplate.ErrorMask>?>? LightingTemplates;
-            public MaskItem<Exception?, Group.ErrorMask<MusicType.ErrorMask>?>? MusicTypes;
-            public MaskItem<Exception?, Group.ErrorMask<Footstep.ErrorMask>?>? Footsteps;
-            public MaskItem<Exception?, Group.ErrorMask<FootstepSet.ErrorMask>?>? FootstepSets;
-            public MaskItem<Exception?, Group.ErrorMask<StoryManagerBranchNode.ErrorMask>?>? StoryManagerBranchNodes;
-            public MaskItem<Exception?, Group.ErrorMask<StoryManagerQuestNode.ErrorMask>?>? StoryManagerQuestNodes;
-            public MaskItem<Exception?, Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>? StoryManagerEventNodes;
-            public MaskItem<Exception?, Group.ErrorMask<DialogBranch.ErrorMask>?>? DialogBranches;
-            public MaskItem<Exception?, Group.ErrorMask<MusicTrack.ErrorMask>?>? MusicTracks;
-            public MaskItem<Exception?, Group.ErrorMask<DialogView.ErrorMask>?>? DialogViews;
-            public MaskItem<Exception?, Group.ErrorMask<WordOfPower.ErrorMask>?>? WordsOfPower;
-            public MaskItem<Exception?, Group.ErrorMask<Shout.ErrorMask>?>? Shouts;
-            public MaskItem<Exception?, Group.ErrorMask<EquipType.ErrorMask>?>? EquipTypes;
-            public MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>? Relationships;
-            public MaskItem<Exception?, Group.ErrorMask<Scene.ErrorMask>?>? Scenes;
-            public MaskItem<Exception?, Group.ErrorMask<AssociationType.ErrorMask>?>? AssociationTypes;
-            public MaskItem<Exception?, Group.ErrorMask<Outfit.ErrorMask>?>? Outfits;
-            public MaskItem<Exception?, Group.ErrorMask<ArtObject.ErrorMask>?>? ArtObjects;
-            public MaskItem<Exception?, Group.ErrorMask<MaterialObject.ErrorMask>?>? MaterialObjects;
-            public MaskItem<Exception?, Group.ErrorMask<MovementType.ErrorMask>?>? MovementTypes;
-            public MaskItem<Exception?, Group.ErrorMask<SoundDescriptor.ErrorMask>?>? SoundDescriptors;
-            public MaskItem<Exception?, Group.ErrorMask<DualCastData.ErrorMask>?>? DualCastData;
-            public MaskItem<Exception?, Group.ErrorMask<SoundCategory.ErrorMask>?>? SoundCategories;
-            public MaskItem<Exception?, Group.ErrorMask<SoundOutputModel.ErrorMask>?>? SoundOutputModels;
-            public MaskItem<Exception?, Group.ErrorMask<CollisionLayer.ErrorMask>?>? CollisionLayers;
-            public MaskItem<Exception?, Group.ErrorMask<ColorRecord.ErrorMask>?>? Colors;
-            public MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>? ReverbParameters;
-            public MaskItem<Exception?, Group.ErrorMask<VolumetricLighting.ErrorMask>?>? VolumetricLightings;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Keyword.ErrorMask>?>? Keywords;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<LocationReferenceType.ErrorMask>?>? LocationReferenceTypes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ActionRecord.ErrorMask>?>? Actions;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<TextureSet.ErrorMask>?>? TextureSets;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Global.ErrorMask>?>? Globals;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Class.ErrorMask>?>? Classes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Faction.ErrorMask>?>? Factions;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Hair.ErrorMask>?>? Hairs;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Eyes.ErrorMask>?>? Eyes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Race.ErrorMask>?>? Races;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundMarker.ErrorMask>?>? SoundMarkers;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<AcousticSpace.ErrorMask>?>? AcousticSpaces;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<MagicEffect.ErrorMask>?>? MagicEffects;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<LandscapeTexture.ErrorMask>?>? LandscapeTextures;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ObjectEffect.ErrorMask>?>? ObjectEffects;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Spell.ErrorMask>?>? Spells;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Scroll.ErrorMask>?>? Scrolls;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Activator.ErrorMask>?>? Activators;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<TalkingActivator.ErrorMask>?>? TalkingActivators;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Armor.ErrorMask>?>? Armors;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Book.ErrorMask>?>? Books;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Container.ErrorMask>?>? Containers;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Door.ErrorMask>?>? Doors;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Ingredient.ErrorMask>?>? Ingredients;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Light.ErrorMask>?>? Lights;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<AlchemicalApparatus.ErrorMask>?>? AlchemicalApparatuses;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Static.ErrorMask>?>? Statics;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<MoveableStatic.ErrorMask>?>? MoveableStatics;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Grass.ErrorMask>?>? Grasses;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Tree.ErrorMask>?>? Trees;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Flora.ErrorMask>?>? Florae;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Furniture.ErrorMask>?>? Furniture;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Weapon.ErrorMask>?>? Weapons;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Npc.ErrorMask>?>? Npcs;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<LeveledNpc.ErrorMask>?>? LeveledNpcs;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Key.ErrorMask>?>? Keys;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<IdleMarker.ErrorMask>?>? IdleMarkers;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Projectile.ErrorMask>?>? Projectiles;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Hazard.ErrorMask>?>? Hazards;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<SoulGem.ErrorMask>?>? SoulGems;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Weather.ErrorMask>?>? Weathers;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Climate.ErrorMask>?>? Climates;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ShaderParticleGeometry.ErrorMask>?>? ShaderParticleGeometries;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<VisualEffect.ErrorMask>?>? VisualEffects;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Region.ErrorMask>?>? Regions;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>? NavigationMeshInfoMaps;
+            public MaskItem<Exception?, SkyrimListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<DialogTopic.ErrorMask>?>? DialogTopics;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Quest.ErrorMask>?>? Quests;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Package.ErrorMask>?>? Packages;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<CombatStyle.ErrorMask>?>? CombatStyles;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<LeveledSpell.ErrorMask>?>? LeveledSpells;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Water.ErrorMask>?>? Waters;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Explosion.ErrorMask>?>? Explosions;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Debris.ErrorMask>?>? Debris;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ImageSpace.ErrorMask>?>? ImageSpaces;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ImageSpaceAdapter.ErrorMask>?>? ImageSpaceAdapters;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<FormList.ErrorMask>?>? FormLists;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Perk.ErrorMask>?>? Perks;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<BodyPartData.ErrorMask>?>? BodyParts;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<AddonNode.ErrorMask>?>? AddonNodes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ActorValueInformation.ErrorMask>?>? ActorValueInformation;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<CameraShot.ErrorMask>?>? CameraShots;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<CameraPath.ErrorMask>?>? CameraPaths;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<VoiceType.ErrorMask>?>? VoiceTypes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<MaterialType.ErrorMask>?>? MaterialTypes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Impact.ErrorMask>?>? Impacts;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ImpactDataSet.ErrorMask>?>? ImpactDataSets;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ArmorAddon.ErrorMask>?>? ArmorAddons;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<EncounterZone.ErrorMask>?>? EncounterZones;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Location.ErrorMask>?>? Locations;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Message.ErrorMask>?>? Messages;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<DefaultObjectManager.ErrorMask>?>? DefaultObjectManagers;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<LightingTemplate.ErrorMask>?>? LightingTemplates;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<MusicType.ErrorMask>?>? MusicTypes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Footstep.ErrorMask>?>? Footsteps;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<FootstepSet.ErrorMask>?>? FootstepSets;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<StoryManagerBranchNode.ErrorMask>?>? StoryManagerBranchNodes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<StoryManagerQuestNode.ErrorMask>?>? StoryManagerQuestNodes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<StoryManagerEventNode.ErrorMask>?>? StoryManagerEventNodes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<DialogBranch.ErrorMask>?>? DialogBranches;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<MusicTrack.ErrorMask>?>? MusicTracks;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<DialogView.ErrorMask>?>? DialogViews;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<WordOfPower.ErrorMask>?>? WordsOfPower;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Shout.ErrorMask>?>? Shouts;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<EquipType.ErrorMask>?>? EquipTypes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Relationship.ErrorMask>?>? Relationships;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Scene.ErrorMask>?>? Scenes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<AssociationType.ErrorMask>?>? AssociationTypes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<Outfit.ErrorMask>?>? Outfits;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ArtObject.ErrorMask>?>? ArtObjects;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<MaterialObject.ErrorMask>?>? MaterialObjects;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<MovementType.ErrorMask>?>? MovementTypes;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundDescriptor.ErrorMask>?>? SoundDescriptors;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<DualCastData.ErrorMask>?>? DualCastData;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundCategory.ErrorMask>?>? SoundCategories;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundOutputModel.ErrorMask>?>? SoundOutputModels;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<CollisionLayer.ErrorMask>?>? CollisionLayers;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ColorRecord.ErrorMask>?>? Colors;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<ReverbParameters.ErrorMask>?>? ReverbParameters;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<VolumetricLighting.ErrorMask>?>? VolumetricLightings;
             #endregion
 
             #region IErrorMask
@@ -3876,343 +3876,343 @@ namespace Mutagen.Bethesda.Skyrim
                         this.ModHeader = new MaskItem<Exception?, SkyrimModHeader.ErrorMask?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.GameSettings:
-                        this.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
+                        this.GameSettings = new MaskItem<Exception?, SkyrimGroup.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Keywords:
-                        this.Keywords = new MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>(ex, null);
+                        this.Keywords = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Keyword.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.LocationReferenceTypes:
-                        this.LocationReferenceTypes = new MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>(ex, null);
+                        this.LocationReferenceTypes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<LocationReferenceType.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Actions:
-                        this.Actions = new MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>(ex, null);
+                        this.Actions = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ActionRecord.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.TextureSets:
-                        this.TextureSets = new MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>(ex, null);
+                        this.TextureSets = new MaskItem<Exception?, SkyrimGroup.ErrorMask<TextureSet.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Globals:
-                        this.Globals = new MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>(ex, null);
+                        this.Globals = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Global.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Classes:
-                        this.Classes = new MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>(ex, null);
+                        this.Classes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Class.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Factions:
-                        this.Factions = new MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>(ex, null);
+                        this.Factions = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Faction.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.HeadParts:
-                        this.HeadParts = new MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>(ex, null);
+                        this.HeadParts = new MaskItem<Exception?, SkyrimGroup.ErrorMask<HeadPart.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Hairs:
-                        this.Hairs = new MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>(ex, null);
+                        this.Hairs = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Hair.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Eyes:
-                        this.Eyes = new MaskItem<Exception?, Group.ErrorMask<Eyes.ErrorMask>?>(ex, null);
+                        this.Eyes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Eyes.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Races:
-                        this.Races = new MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>(ex, null);
+                        this.Races = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Race.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.SoundMarkers:
-                        this.SoundMarkers = new MaskItem<Exception?, Group.ErrorMask<SoundMarker.ErrorMask>?>(ex, null);
+                        this.SoundMarkers = new MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundMarker.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.AcousticSpaces:
-                        this.AcousticSpaces = new MaskItem<Exception?, Group.ErrorMask<AcousticSpace.ErrorMask>?>(ex, null);
+                        this.AcousticSpaces = new MaskItem<Exception?, SkyrimGroup.ErrorMask<AcousticSpace.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.MagicEffects:
-                        this.MagicEffects = new MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>(ex, null);
+                        this.MagicEffects = new MaskItem<Exception?, SkyrimGroup.ErrorMask<MagicEffect.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.LandscapeTextures:
-                        this.LandscapeTextures = new MaskItem<Exception?, Group.ErrorMask<LandscapeTexture.ErrorMask>?>(ex, null);
+                        this.LandscapeTextures = new MaskItem<Exception?, SkyrimGroup.ErrorMask<LandscapeTexture.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.ObjectEffects:
-                        this.ObjectEffects = new MaskItem<Exception?, Group.ErrorMask<ObjectEffect.ErrorMask>?>(ex, null);
+                        this.ObjectEffects = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ObjectEffect.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Spells:
-                        this.Spells = new MaskItem<Exception?, Group.ErrorMask<Spell.ErrorMask>?>(ex, null);
+                        this.Spells = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Spell.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Scrolls:
-                        this.Scrolls = new MaskItem<Exception?, Group.ErrorMask<Scroll.ErrorMask>?>(ex, null);
+                        this.Scrolls = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Scroll.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Activators:
-                        this.Activators = new MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>(ex, null);
+                        this.Activators = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Activator.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.TalkingActivators:
-                        this.TalkingActivators = new MaskItem<Exception?, Group.ErrorMask<TalkingActivator.ErrorMask>?>(ex, null);
+                        this.TalkingActivators = new MaskItem<Exception?, SkyrimGroup.ErrorMask<TalkingActivator.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Armors:
-                        this.Armors = new MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>(ex, null);
+                        this.Armors = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Armor.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Books:
-                        this.Books = new MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>(ex, null);
+                        this.Books = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Book.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Containers:
-                        this.Containers = new MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>(ex, null);
+                        this.Containers = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Container.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Doors:
-                        this.Doors = new MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>(ex, null);
+                        this.Doors = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Door.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Ingredients:
-                        this.Ingredients = new MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>(ex, null);
+                        this.Ingredients = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Ingredient.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Lights:
-                        this.Lights = new MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>(ex, null);
+                        this.Lights = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Light.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.MiscItems:
-                        this.MiscItems = new MaskItem<Exception?, Group.ErrorMask<MiscItem.ErrorMask>?>(ex, null);
+                        this.MiscItems = new MaskItem<Exception?, SkyrimGroup.ErrorMask<MiscItem.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.AlchemicalApparatuses:
-                        this.AlchemicalApparatuses = new MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>(ex, null);
+                        this.AlchemicalApparatuses = new MaskItem<Exception?, SkyrimGroup.ErrorMask<AlchemicalApparatus.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Statics:
-                        this.Statics = new MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>(ex, null);
+                        this.Statics = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Static.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.MoveableStatics:
-                        this.MoveableStatics = new MaskItem<Exception?, Group.ErrorMask<MoveableStatic.ErrorMask>?>(ex, null);
+                        this.MoveableStatics = new MaskItem<Exception?, SkyrimGroup.ErrorMask<MoveableStatic.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Grasses:
-                        this.Grasses = new MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>(ex, null);
+                        this.Grasses = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Grass.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Trees:
-                        this.Trees = new MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>(ex, null);
+                        this.Trees = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Tree.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Florae:
-                        this.Florae = new MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>(ex, null);
+                        this.Florae = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Flora.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Furniture:
-                        this.Furniture = new MaskItem<Exception?, Group.ErrorMask<Furniture.ErrorMask>?>(ex, null);
+                        this.Furniture = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Furniture.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Weapons:
-                        this.Weapons = new MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>(ex, null);
+                        this.Weapons = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Weapon.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Ammunitions:
-                        this.Ammunitions = new MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>(ex, null);
+                        this.Ammunitions = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Ammunition.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Npcs:
-                        this.Npcs = new MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>(ex, null);
+                        this.Npcs = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Npc.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.LeveledNpcs:
-                        this.LeveledNpcs = new MaskItem<Exception?, Group.ErrorMask<LeveledNpc.ErrorMask>?>(ex, null);
+                        this.LeveledNpcs = new MaskItem<Exception?, SkyrimGroup.ErrorMask<LeveledNpc.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Keys:
-                        this.Keys = new MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>(ex, null);
+                        this.Keys = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Key.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Ingestibles:
-                        this.Ingestibles = new MaskItem<Exception?, Group.ErrorMask<Ingestible.ErrorMask>?>(ex, null);
+                        this.Ingestibles = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Ingestible.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.IdleMarkers:
-                        this.IdleMarkers = new MaskItem<Exception?, Group.ErrorMask<IdleMarker.ErrorMask>?>(ex, null);
+                        this.IdleMarkers = new MaskItem<Exception?, SkyrimGroup.ErrorMask<IdleMarker.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.ConstructibleObjects:
-                        this.ConstructibleObjects = new MaskItem<Exception?, Group.ErrorMask<ConstructibleObject.ErrorMask>?>(ex, null);
+                        this.ConstructibleObjects = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ConstructibleObject.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Projectiles:
-                        this.Projectiles = new MaskItem<Exception?, Group.ErrorMask<Projectile.ErrorMask>?>(ex, null);
+                        this.Projectiles = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Projectile.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Hazards:
-                        this.Hazards = new MaskItem<Exception?, Group.ErrorMask<Hazard.ErrorMask>?>(ex, null);
+                        this.Hazards = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Hazard.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.SoulGems:
-                        this.SoulGems = new MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>(ex, null);
+                        this.SoulGems = new MaskItem<Exception?, SkyrimGroup.ErrorMask<SoulGem.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.LeveledItems:
-                        this.LeveledItems = new MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>(ex, null);
+                        this.LeveledItems = new MaskItem<Exception?, SkyrimGroup.ErrorMask<LeveledItem.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Weathers:
-                        this.Weathers = new MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>(ex, null);
+                        this.Weathers = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Weather.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Climates:
-                        this.Climates = new MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>(ex, null);
+                        this.Climates = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Climate.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.ShaderParticleGeometries:
-                        this.ShaderParticleGeometries = new MaskItem<Exception?, Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>(ex, null);
+                        this.ShaderParticleGeometries = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ShaderParticleGeometry.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.VisualEffects:
-                        this.VisualEffects = new MaskItem<Exception?, Group.ErrorMask<VisualEffect.ErrorMask>?>(ex, null);
+                        this.VisualEffects = new MaskItem<Exception?, SkyrimGroup.ErrorMask<VisualEffect.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Regions:
-                        this.Regions = new MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>(ex, null);
+                        this.Regions = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Region.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
-                        this.NavigationMeshInfoMaps = new MaskItem<Exception?, Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>(ex, null);
+                        this.NavigationMeshInfoMaps = new MaskItem<Exception?, SkyrimGroup.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Cells:
-                        this.Cells = new MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>(ex, null);
+                        this.Cells = new MaskItem<Exception?, SkyrimListGroup.ErrorMask<CellBlock.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Worldspaces:
-                        this.Worldspaces = new MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>(ex, null);
+                        this.Worldspaces = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Worldspace.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.DialogTopics:
-                        this.DialogTopics = new MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>(ex, null);
+                        this.DialogTopics = new MaskItem<Exception?, SkyrimGroup.ErrorMask<DialogTopic.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Quests:
-                        this.Quests = new MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>(ex, null);
+                        this.Quests = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Quest.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.IdleAnimations:
-                        this.IdleAnimations = new MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>(ex, null);
+                        this.IdleAnimations = new MaskItem<Exception?, SkyrimGroup.ErrorMask<IdleAnimation.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Packages:
-                        this.Packages = new MaskItem<Exception?, Group.ErrorMask<Package.ErrorMask>?>(ex, null);
+                        this.Packages = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Package.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.CombatStyles:
-                        this.CombatStyles = new MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>(ex, null);
+                        this.CombatStyles = new MaskItem<Exception?, SkyrimGroup.ErrorMask<CombatStyle.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.LoadScreens:
-                        this.LoadScreens = new MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>(ex, null);
+                        this.LoadScreens = new MaskItem<Exception?, SkyrimGroup.ErrorMask<LoadScreen.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.LeveledSpells:
-                        this.LeveledSpells = new MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>(ex, null);
+                        this.LeveledSpells = new MaskItem<Exception?, SkyrimGroup.ErrorMask<LeveledSpell.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.AnimatedObjects:
-                        this.AnimatedObjects = new MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
+                        this.AnimatedObjects = new MaskItem<Exception?, SkyrimGroup.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Waters:
-                        this.Waters = new MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>(ex, null);
+                        this.Waters = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Water.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.EffectShaders:
-                        this.EffectShaders = new MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>(ex, null);
+                        this.EffectShaders = new MaskItem<Exception?, SkyrimGroup.ErrorMask<EffectShader.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Explosions:
-                        this.Explosions = new MaskItem<Exception?, Group.ErrorMask<Explosion.ErrorMask>?>(ex, null);
+                        this.Explosions = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Explosion.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Debris:
-                        this.Debris = new MaskItem<Exception?, Group.ErrorMask<Debris.ErrorMask>?>(ex, null);
+                        this.Debris = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Debris.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.ImageSpaces:
-                        this.ImageSpaces = new MaskItem<Exception?, Group.ErrorMask<ImageSpace.ErrorMask>?>(ex, null);
+                        this.ImageSpaces = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ImageSpace.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.ImageSpaceAdapters:
-                        this.ImageSpaceAdapters = new MaskItem<Exception?, Group.ErrorMask<ImageSpaceAdapter.ErrorMask>?>(ex, null);
+                        this.ImageSpaceAdapters = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ImageSpaceAdapter.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.FormLists:
-                        this.FormLists = new MaskItem<Exception?, Group.ErrorMask<FormList.ErrorMask>?>(ex, null);
+                        this.FormLists = new MaskItem<Exception?, SkyrimGroup.ErrorMask<FormList.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Perks:
-                        this.Perks = new MaskItem<Exception?, Group.ErrorMask<Perk.ErrorMask>?>(ex, null);
+                        this.Perks = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Perk.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.BodyParts:
-                        this.BodyParts = new MaskItem<Exception?, Group.ErrorMask<BodyPartData.ErrorMask>?>(ex, null);
+                        this.BodyParts = new MaskItem<Exception?, SkyrimGroup.ErrorMask<BodyPartData.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.AddonNodes:
-                        this.AddonNodes = new MaskItem<Exception?, Group.ErrorMask<AddonNode.ErrorMask>?>(ex, null);
+                        this.AddonNodes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<AddonNode.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.ActorValueInformation:
-                        this.ActorValueInformation = new MaskItem<Exception?, Group.ErrorMask<ActorValueInformation.ErrorMask>?>(ex, null);
+                        this.ActorValueInformation = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ActorValueInformation.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.CameraShots:
-                        this.CameraShots = new MaskItem<Exception?, Group.ErrorMask<CameraShot.ErrorMask>?>(ex, null);
+                        this.CameraShots = new MaskItem<Exception?, SkyrimGroup.ErrorMask<CameraShot.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.CameraPaths:
-                        this.CameraPaths = new MaskItem<Exception?, Group.ErrorMask<CameraPath.ErrorMask>?>(ex, null);
+                        this.CameraPaths = new MaskItem<Exception?, SkyrimGroup.ErrorMask<CameraPath.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.VoiceTypes:
-                        this.VoiceTypes = new MaskItem<Exception?, Group.ErrorMask<VoiceType.ErrorMask>?>(ex, null);
+                        this.VoiceTypes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<VoiceType.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.MaterialTypes:
-                        this.MaterialTypes = new MaskItem<Exception?, Group.ErrorMask<MaterialType.ErrorMask>?>(ex, null);
+                        this.MaterialTypes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<MaterialType.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Impacts:
-                        this.Impacts = new MaskItem<Exception?, Group.ErrorMask<Impact.ErrorMask>?>(ex, null);
+                        this.Impacts = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Impact.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.ImpactDataSets:
-                        this.ImpactDataSets = new MaskItem<Exception?, Group.ErrorMask<ImpactDataSet.ErrorMask>?>(ex, null);
+                        this.ImpactDataSets = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ImpactDataSet.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.ArmorAddons:
-                        this.ArmorAddons = new MaskItem<Exception?, Group.ErrorMask<ArmorAddon.ErrorMask>?>(ex, null);
+                        this.ArmorAddons = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ArmorAddon.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.EncounterZones:
-                        this.EncounterZones = new MaskItem<Exception?, Group.ErrorMask<EncounterZone.ErrorMask>?>(ex, null);
+                        this.EncounterZones = new MaskItem<Exception?, SkyrimGroup.ErrorMask<EncounterZone.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Locations:
-                        this.Locations = new MaskItem<Exception?, Group.ErrorMask<Location.ErrorMask>?>(ex, null);
+                        this.Locations = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Location.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Messages:
-                        this.Messages = new MaskItem<Exception?, Group.ErrorMask<Message.ErrorMask>?>(ex, null);
+                        this.Messages = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Message.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.DefaultObjectManagers:
-                        this.DefaultObjectManagers = new MaskItem<Exception?, Group.ErrorMask<DefaultObjectManager.ErrorMask>?>(ex, null);
+                        this.DefaultObjectManagers = new MaskItem<Exception?, SkyrimGroup.ErrorMask<DefaultObjectManager.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.LightingTemplates:
-                        this.LightingTemplates = new MaskItem<Exception?, Group.ErrorMask<LightingTemplate.ErrorMask>?>(ex, null);
+                        this.LightingTemplates = new MaskItem<Exception?, SkyrimGroup.ErrorMask<LightingTemplate.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.MusicTypes:
-                        this.MusicTypes = new MaskItem<Exception?, Group.ErrorMask<MusicType.ErrorMask>?>(ex, null);
+                        this.MusicTypes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<MusicType.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Footsteps:
-                        this.Footsteps = new MaskItem<Exception?, Group.ErrorMask<Footstep.ErrorMask>?>(ex, null);
+                        this.Footsteps = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Footstep.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.FootstepSets:
-                        this.FootstepSets = new MaskItem<Exception?, Group.ErrorMask<FootstepSet.ErrorMask>?>(ex, null);
+                        this.FootstepSets = new MaskItem<Exception?, SkyrimGroup.ErrorMask<FootstepSet.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
-                        this.StoryManagerBranchNodes = new MaskItem<Exception?, Group.ErrorMask<StoryManagerBranchNode.ErrorMask>?>(ex, null);
+                        this.StoryManagerBranchNodes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<StoryManagerBranchNode.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
-                        this.StoryManagerQuestNodes = new MaskItem<Exception?, Group.ErrorMask<StoryManagerQuestNode.ErrorMask>?>(ex, null);
+                        this.StoryManagerQuestNodes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<StoryManagerQuestNode.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.StoryManagerEventNodes:
-                        this.StoryManagerEventNodes = new MaskItem<Exception?, Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>(ex, null);
+                        this.StoryManagerEventNodes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<StoryManagerEventNode.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.DialogBranches:
-                        this.DialogBranches = new MaskItem<Exception?, Group.ErrorMask<DialogBranch.ErrorMask>?>(ex, null);
+                        this.DialogBranches = new MaskItem<Exception?, SkyrimGroup.ErrorMask<DialogBranch.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.MusicTracks:
-                        this.MusicTracks = new MaskItem<Exception?, Group.ErrorMask<MusicTrack.ErrorMask>?>(ex, null);
+                        this.MusicTracks = new MaskItem<Exception?, SkyrimGroup.ErrorMask<MusicTrack.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.DialogViews:
-                        this.DialogViews = new MaskItem<Exception?, Group.ErrorMask<DialogView.ErrorMask>?>(ex, null);
+                        this.DialogViews = new MaskItem<Exception?, SkyrimGroup.ErrorMask<DialogView.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.WordsOfPower:
-                        this.WordsOfPower = new MaskItem<Exception?, Group.ErrorMask<WordOfPower.ErrorMask>?>(ex, null);
+                        this.WordsOfPower = new MaskItem<Exception?, SkyrimGroup.ErrorMask<WordOfPower.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Shouts:
-                        this.Shouts = new MaskItem<Exception?, Group.ErrorMask<Shout.ErrorMask>?>(ex, null);
+                        this.Shouts = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Shout.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.EquipTypes:
-                        this.EquipTypes = new MaskItem<Exception?, Group.ErrorMask<EquipType.ErrorMask>?>(ex, null);
+                        this.EquipTypes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<EquipType.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Relationships:
-                        this.Relationships = new MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>(ex, null);
+                        this.Relationships = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Relationship.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Scenes:
-                        this.Scenes = new MaskItem<Exception?, Group.ErrorMask<Scene.ErrorMask>?>(ex, null);
+                        this.Scenes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Scene.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.AssociationTypes:
-                        this.AssociationTypes = new MaskItem<Exception?, Group.ErrorMask<AssociationType.ErrorMask>?>(ex, null);
+                        this.AssociationTypes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<AssociationType.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Outfits:
-                        this.Outfits = new MaskItem<Exception?, Group.ErrorMask<Outfit.ErrorMask>?>(ex, null);
+                        this.Outfits = new MaskItem<Exception?, SkyrimGroup.ErrorMask<Outfit.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.ArtObjects:
-                        this.ArtObjects = new MaskItem<Exception?, Group.ErrorMask<ArtObject.ErrorMask>?>(ex, null);
+                        this.ArtObjects = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ArtObject.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.MaterialObjects:
-                        this.MaterialObjects = new MaskItem<Exception?, Group.ErrorMask<MaterialObject.ErrorMask>?>(ex, null);
+                        this.MaterialObjects = new MaskItem<Exception?, SkyrimGroup.ErrorMask<MaterialObject.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.MovementTypes:
-                        this.MovementTypes = new MaskItem<Exception?, Group.ErrorMask<MovementType.ErrorMask>?>(ex, null);
+                        this.MovementTypes = new MaskItem<Exception?, SkyrimGroup.ErrorMask<MovementType.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.SoundDescriptors:
-                        this.SoundDescriptors = new MaskItem<Exception?, Group.ErrorMask<SoundDescriptor.ErrorMask>?>(ex, null);
+                        this.SoundDescriptors = new MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundDescriptor.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.DualCastData:
-                        this.DualCastData = new MaskItem<Exception?, Group.ErrorMask<DualCastData.ErrorMask>?>(ex, null);
+                        this.DualCastData = new MaskItem<Exception?, SkyrimGroup.ErrorMask<DualCastData.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.SoundCategories:
-                        this.SoundCategories = new MaskItem<Exception?, Group.ErrorMask<SoundCategory.ErrorMask>?>(ex, null);
+                        this.SoundCategories = new MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundCategory.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.SoundOutputModels:
-                        this.SoundOutputModels = new MaskItem<Exception?, Group.ErrorMask<SoundOutputModel.ErrorMask>?>(ex, null);
+                        this.SoundOutputModels = new MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundOutputModel.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.CollisionLayers:
-                        this.CollisionLayers = new MaskItem<Exception?, Group.ErrorMask<CollisionLayer.ErrorMask>?>(ex, null);
+                        this.CollisionLayers = new MaskItem<Exception?, SkyrimGroup.ErrorMask<CollisionLayer.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Colors:
-                        this.Colors = new MaskItem<Exception?, Group.ErrorMask<ColorRecord.ErrorMask>?>(ex, null);
+                        this.Colors = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ColorRecord.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.ReverbParameters:
-                        this.ReverbParameters = new MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>(ex, null);
+                        this.ReverbParameters = new MaskItem<Exception?, SkyrimGroup.ErrorMask<ReverbParameters.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.VolumetricLightings:
-                        this.VolumetricLightings = new MaskItem<Exception?, Group.ErrorMask<VolumetricLighting.ErrorMask>?>(ex, null);
+                        this.VolumetricLightings = new MaskItem<Exception?, SkyrimGroup.ErrorMask<VolumetricLighting.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4228,343 +4228,343 @@ namespace Mutagen.Bethesda.Skyrim
                         this.ModHeader = (MaskItem<Exception?, SkyrimModHeader.ErrorMask?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.GameSettings:
-                        this.GameSettings = (MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>?)obj;
+                        this.GameSettings = (MaskItem<Exception?, SkyrimGroup.ErrorMask<GameSetting.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Keywords:
-                        this.Keywords = (MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>?)obj;
+                        this.Keywords = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Keyword.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.LocationReferenceTypes:
-                        this.LocationReferenceTypes = (MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>?)obj;
+                        this.LocationReferenceTypes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<LocationReferenceType.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Actions:
-                        this.Actions = (MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>?)obj;
+                        this.Actions = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ActionRecord.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.TextureSets:
-                        this.TextureSets = (MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>?)obj;
+                        this.TextureSets = (MaskItem<Exception?, SkyrimGroup.ErrorMask<TextureSet.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Globals:
-                        this.Globals = (MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>?)obj;
+                        this.Globals = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Global.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Classes:
-                        this.Classes = (MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>?)obj;
+                        this.Classes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Class.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Factions:
-                        this.Factions = (MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>?)obj;
+                        this.Factions = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Faction.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.HeadParts:
-                        this.HeadParts = (MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>?)obj;
+                        this.HeadParts = (MaskItem<Exception?, SkyrimGroup.ErrorMask<HeadPart.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Hairs:
-                        this.Hairs = (MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>?)obj;
+                        this.Hairs = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Hair.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Eyes:
-                        this.Eyes = (MaskItem<Exception?, Group.ErrorMask<Eyes.ErrorMask>?>?)obj;
+                        this.Eyes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Eyes.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Races:
-                        this.Races = (MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>?)obj;
+                        this.Races = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Race.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.SoundMarkers:
-                        this.SoundMarkers = (MaskItem<Exception?, Group.ErrorMask<SoundMarker.ErrorMask>?>?)obj;
+                        this.SoundMarkers = (MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundMarker.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.AcousticSpaces:
-                        this.AcousticSpaces = (MaskItem<Exception?, Group.ErrorMask<AcousticSpace.ErrorMask>?>?)obj;
+                        this.AcousticSpaces = (MaskItem<Exception?, SkyrimGroup.ErrorMask<AcousticSpace.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.MagicEffects:
-                        this.MagicEffects = (MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>?)obj;
+                        this.MagicEffects = (MaskItem<Exception?, SkyrimGroup.ErrorMask<MagicEffect.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.LandscapeTextures:
-                        this.LandscapeTextures = (MaskItem<Exception?, Group.ErrorMask<LandscapeTexture.ErrorMask>?>?)obj;
+                        this.LandscapeTextures = (MaskItem<Exception?, SkyrimGroup.ErrorMask<LandscapeTexture.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.ObjectEffects:
-                        this.ObjectEffects = (MaskItem<Exception?, Group.ErrorMask<ObjectEffect.ErrorMask>?>?)obj;
+                        this.ObjectEffects = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ObjectEffect.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Spells:
-                        this.Spells = (MaskItem<Exception?, Group.ErrorMask<Spell.ErrorMask>?>?)obj;
+                        this.Spells = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Spell.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Scrolls:
-                        this.Scrolls = (MaskItem<Exception?, Group.ErrorMask<Scroll.ErrorMask>?>?)obj;
+                        this.Scrolls = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Scroll.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Activators:
-                        this.Activators = (MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>?)obj;
+                        this.Activators = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Activator.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.TalkingActivators:
-                        this.TalkingActivators = (MaskItem<Exception?, Group.ErrorMask<TalkingActivator.ErrorMask>?>?)obj;
+                        this.TalkingActivators = (MaskItem<Exception?, SkyrimGroup.ErrorMask<TalkingActivator.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Armors:
-                        this.Armors = (MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>?)obj;
+                        this.Armors = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Armor.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Books:
-                        this.Books = (MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>?)obj;
+                        this.Books = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Book.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Containers:
-                        this.Containers = (MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>?)obj;
+                        this.Containers = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Container.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Doors:
-                        this.Doors = (MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>?)obj;
+                        this.Doors = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Door.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Ingredients:
-                        this.Ingredients = (MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>?)obj;
+                        this.Ingredients = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Ingredient.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Lights:
-                        this.Lights = (MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>?)obj;
+                        this.Lights = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Light.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.MiscItems:
-                        this.MiscItems = (MaskItem<Exception?, Group.ErrorMask<MiscItem.ErrorMask>?>?)obj;
+                        this.MiscItems = (MaskItem<Exception?, SkyrimGroup.ErrorMask<MiscItem.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.AlchemicalApparatuses:
-                        this.AlchemicalApparatuses = (MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>?)obj;
+                        this.AlchemicalApparatuses = (MaskItem<Exception?, SkyrimGroup.ErrorMask<AlchemicalApparatus.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Statics:
-                        this.Statics = (MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>?)obj;
+                        this.Statics = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Static.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.MoveableStatics:
-                        this.MoveableStatics = (MaskItem<Exception?, Group.ErrorMask<MoveableStatic.ErrorMask>?>?)obj;
+                        this.MoveableStatics = (MaskItem<Exception?, SkyrimGroup.ErrorMask<MoveableStatic.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Grasses:
-                        this.Grasses = (MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>?)obj;
+                        this.Grasses = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Grass.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Trees:
-                        this.Trees = (MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>?)obj;
+                        this.Trees = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Tree.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Florae:
-                        this.Florae = (MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>?)obj;
+                        this.Florae = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Flora.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Furniture:
-                        this.Furniture = (MaskItem<Exception?, Group.ErrorMask<Furniture.ErrorMask>?>?)obj;
+                        this.Furniture = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Furniture.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Weapons:
-                        this.Weapons = (MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>?)obj;
+                        this.Weapons = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Weapon.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Ammunitions:
-                        this.Ammunitions = (MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>?)obj;
+                        this.Ammunitions = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Ammunition.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Npcs:
-                        this.Npcs = (MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>?)obj;
+                        this.Npcs = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Npc.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.LeveledNpcs:
-                        this.LeveledNpcs = (MaskItem<Exception?, Group.ErrorMask<LeveledNpc.ErrorMask>?>?)obj;
+                        this.LeveledNpcs = (MaskItem<Exception?, SkyrimGroup.ErrorMask<LeveledNpc.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Keys:
-                        this.Keys = (MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>?)obj;
+                        this.Keys = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Key.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Ingestibles:
-                        this.Ingestibles = (MaskItem<Exception?, Group.ErrorMask<Ingestible.ErrorMask>?>?)obj;
+                        this.Ingestibles = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Ingestible.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.IdleMarkers:
-                        this.IdleMarkers = (MaskItem<Exception?, Group.ErrorMask<IdleMarker.ErrorMask>?>?)obj;
+                        this.IdleMarkers = (MaskItem<Exception?, SkyrimGroup.ErrorMask<IdleMarker.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.ConstructibleObjects:
-                        this.ConstructibleObjects = (MaskItem<Exception?, Group.ErrorMask<ConstructibleObject.ErrorMask>?>?)obj;
+                        this.ConstructibleObjects = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ConstructibleObject.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Projectiles:
-                        this.Projectiles = (MaskItem<Exception?, Group.ErrorMask<Projectile.ErrorMask>?>?)obj;
+                        this.Projectiles = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Projectile.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Hazards:
-                        this.Hazards = (MaskItem<Exception?, Group.ErrorMask<Hazard.ErrorMask>?>?)obj;
+                        this.Hazards = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Hazard.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.SoulGems:
-                        this.SoulGems = (MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>?)obj;
+                        this.SoulGems = (MaskItem<Exception?, SkyrimGroup.ErrorMask<SoulGem.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.LeveledItems:
-                        this.LeveledItems = (MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>?)obj;
+                        this.LeveledItems = (MaskItem<Exception?, SkyrimGroup.ErrorMask<LeveledItem.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Weathers:
-                        this.Weathers = (MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>?)obj;
+                        this.Weathers = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Weather.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Climates:
-                        this.Climates = (MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>?)obj;
+                        this.Climates = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Climate.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.ShaderParticleGeometries:
-                        this.ShaderParticleGeometries = (MaskItem<Exception?, Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>?)obj;
+                        this.ShaderParticleGeometries = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ShaderParticleGeometry.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.VisualEffects:
-                        this.VisualEffects = (MaskItem<Exception?, Group.ErrorMask<VisualEffect.ErrorMask>?>?)obj;
+                        this.VisualEffects = (MaskItem<Exception?, SkyrimGroup.ErrorMask<VisualEffect.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Regions:
-                        this.Regions = (MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>?)obj;
+                        this.Regions = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Region.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
-                        this.NavigationMeshInfoMaps = (MaskItem<Exception?, Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>?)obj;
+                        this.NavigationMeshInfoMaps = (MaskItem<Exception?, SkyrimGroup.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Cells:
-                        this.Cells = (MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>?)obj;
+                        this.Cells = (MaskItem<Exception?, SkyrimListGroup.ErrorMask<CellBlock.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Worldspaces:
-                        this.Worldspaces = (MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>?)obj;
+                        this.Worldspaces = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Worldspace.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.DialogTopics:
-                        this.DialogTopics = (MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>?)obj;
+                        this.DialogTopics = (MaskItem<Exception?, SkyrimGroup.ErrorMask<DialogTopic.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Quests:
-                        this.Quests = (MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>?)obj;
+                        this.Quests = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Quest.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.IdleAnimations:
-                        this.IdleAnimations = (MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>?)obj;
+                        this.IdleAnimations = (MaskItem<Exception?, SkyrimGroup.ErrorMask<IdleAnimation.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Packages:
-                        this.Packages = (MaskItem<Exception?, Group.ErrorMask<Package.ErrorMask>?>?)obj;
+                        this.Packages = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Package.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.CombatStyles:
-                        this.CombatStyles = (MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>?)obj;
+                        this.CombatStyles = (MaskItem<Exception?, SkyrimGroup.ErrorMask<CombatStyle.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.LoadScreens:
-                        this.LoadScreens = (MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>?)obj;
+                        this.LoadScreens = (MaskItem<Exception?, SkyrimGroup.ErrorMask<LoadScreen.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.LeveledSpells:
-                        this.LeveledSpells = (MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>?)obj;
+                        this.LeveledSpells = (MaskItem<Exception?, SkyrimGroup.ErrorMask<LeveledSpell.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.AnimatedObjects:
-                        this.AnimatedObjects = (MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
+                        this.AnimatedObjects = (MaskItem<Exception?, SkyrimGroup.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Waters:
-                        this.Waters = (MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>?)obj;
+                        this.Waters = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Water.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.EffectShaders:
-                        this.EffectShaders = (MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>?)obj;
+                        this.EffectShaders = (MaskItem<Exception?, SkyrimGroup.ErrorMask<EffectShader.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Explosions:
-                        this.Explosions = (MaskItem<Exception?, Group.ErrorMask<Explosion.ErrorMask>?>?)obj;
+                        this.Explosions = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Explosion.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Debris:
-                        this.Debris = (MaskItem<Exception?, Group.ErrorMask<Debris.ErrorMask>?>?)obj;
+                        this.Debris = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Debris.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.ImageSpaces:
-                        this.ImageSpaces = (MaskItem<Exception?, Group.ErrorMask<ImageSpace.ErrorMask>?>?)obj;
+                        this.ImageSpaces = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ImageSpace.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.ImageSpaceAdapters:
-                        this.ImageSpaceAdapters = (MaskItem<Exception?, Group.ErrorMask<ImageSpaceAdapter.ErrorMask>?>?)obj;
+                        this.ImageSpaceAdapters = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ImageSpaceAdapter.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.FormLists:
-                        this.FormLists = (MaskItem<Exception?, Group.ErrorMask<FormList.ErrorMask>?>?)obj;
+                        this.FormLists = (MaskItem<Exception?, SkyrimGroup.ErrorMask<FormList.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Perks:
-                        this.Perks = (MaskItem<Exception?, Group.ErrorMask<Perk.ErrorMask>?>?)obj;
+                        this.Perks = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Perk.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.BodyParts:
-                        this.BodyParts = (MaskItem<Exception?, Group.ErrorMask<BodyPartData.ErrorMask>?>?)obj;
+                        this.BodyParts = (MaskItem<Exception?, SkyrimGroup.ErrorMask<BodyPartData.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.AddonNodes:
-                        this.AddonNodes = (MaskItem<Exception?, Group.ErrorMask<AddonNode.ErrorMask>?>?)obj;
+                        this.AddonNodes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<AddonNode.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.ActorValueInformation:
-                        this.ActorValueInformation = (MaskItem<Exception?, Group.ErrorMask<ActorValueInformation.ErrorMask>?>?)obj;
+                        this.ActorValueInformation = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ActorValueInformation.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.CameraShots:
-                        this.CameraShots = (MaskItem<Exception?, Group.ErrorMask<CameraShot.ErrorMask>?>?)obj;
+                        this.CameraShots = (MaskItem<Exception?, SkyrimGroup.ErrorMask<CameraShot.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.CameraPaths:
-                        this.CameraPaths = (MaskItem<Exception?, Group.ErrorMask<CameraPath.ErrorMask>?>?)obj;
+                        this.CameraPaths = (MaskItem<Exception?, SkyrimGroup.ErrorMask<CameraPath.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.VoiceTypes:
-                        this.VoiceTypes = (MaskItem<Exception?, Group.ErrorMask<VoiceType.ErrorMask>?>?)obj;
+                        this.VoiceTypes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<VoiceType.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.MaterialTypes:
-                        this.MaterialTypes = (MaskItem<Exception?, Group.ErrorMask<MaterialType.ErrorMask>?>?)obj;
+                        this.MaterialTypes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<MaterialType.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Impacts:
-                        this.Impacts = (MaskItem<Exception?, Group.ErrorMask<Impact.ErrorMask>?>?)obj;
+                        this.Impacts = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Impact.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.ImpactDataSets:
-                        this.ImpactDataSets = (MaskItem<Exception?, Group.ErrorMask<ImpactDataSet.ErrorMask>?>?)obj;
+                        this.ImpactDataSets = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ImpactDataSet.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.ArmorAddons:
-                        this.ArmorAddons = (MaskItem<Exception?, Group.ErrorMask<ArmorAddon.ErrorMask>?>?)obj;
+                        this.ArmorAddons = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ArmorAddon.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.EncounterZones:
-                        this.EncounterZones = (MaskItem<Exception?, Group.ErrorMask<EncounterZone.ErrorMask>?>?)obj;
+                        this.EncounterZones = (MaskItem<Exception?, SkyrimGroup.ErrorMask<EncounterZone.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Locations:
-                        this.Locations = (MaskItem<Exception?, Group.ErrorMask<Location.ErrorMask>?>?)obj;
+                        this.Locations = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Location.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Messages:
-                        this.Messages = (MaskItem<Exception?, Group.ErrorMask<Message.ErrorMask>?>?)obj;
+                        this.Messages = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Message.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.DefaultObjectManagers:
-                        this.DefaultObjectManagers = (MaskItem<Exception?, Group.ErrorMask<DefaultObjectManager.ErrorMask>?>?)obj;
+                        this.DefaultObjectManagers = (MaskItem<Exception?, SkyrimGroup.ErrorMask<DefaultObjectManager.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.LightingTemplates:
-                        this.LightingTemplates = (MaskItem<Exception?, Group.ErrorMask<LightingTemplate.ErrorMask>?>?)obj;
+                        this.LightingTemplates = (MaskItem<Exception?, SkyrimGroup.ErrorMask<LightingTemplate.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.MusicTypes:
-                        this.MusicTypes = (MaskItem<Exception?, Group.ErrorMask<MusicType.ErrorMask>?>?)obj;
+                        this.MusicTypes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<MusicType.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Footsteps:
-                        this.Footsteps = (MaskItem<Exception?, Group.ErrorMask<Footstep.ErrorMask>?>?)obj;
+                        this.Footsteps = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Footstep.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.FootstepSets:
-                        this.FootstepSets = (MaskItem<Exception?, Group.ErrorMask<FootstepSet.ErrorMask>?>?)obj;
+                        this.FootstepSets = (MaskItem<Exception?, SkyrimGroup.ErrorMask<FootstepSet.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
-                        this.StoryManagerBranchNodes = (MaskItem<Exception?, Group.ErrorMask<StoryManagerBranchNode.ErrorMask>?>?)obj;
+                        this.StoryManagerBranchNodes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<StoryManagerBranchNode.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
-                        this.StoryManagerQuestNodes = (MaskItem<Exception?, Group.ErrorMask<StoryManagerQuestNode.ErrorMask>?>?)obj;
+                        this.StoryManagerQuestNodes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<StoryManagerQuestNode.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.StoryManagerEventNodes:
-                        this.StoryManagerEventNodes = (MaskItem<Exception?, Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>?)obj;
+                        this.StoryManagerEventNodes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<StoryManagerEventNode.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.DialogBranches:
-                        this.DialogBranches = (MaskItem<Exception?, Group.ErrorMask<DialogBranch.ErrorMask>?>?)obj;
+                        this.DialogBranches = (MaskItem<Exception?, SkyrimGroup.ErrorMask<DialogBranch.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.MusicTracks:
-                        this.MusicTracks = (MaskItem<Exception?, Group.ErrorMask<MusicTrack.ErrorMask>?>?)obj;
+                        this.MusicTracks = (MaskItem<Exception?, SkyrimGroup.ErrorMask<MusicTrack.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.DialogViews:
-                        this.DialogViews = (MaskItem<Exception?, Group.ErrorMask<DialogView.ErrorMask>?>?)obj;
+                        this.DialogViews = (MaskItem<Exception?, SkyrimGroup.ErrorMask<DialogView.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.WordsOfPower:
-                        this.WordsOfPower = (MaskItem<Exception?, Group.ErrorMask<WordOfPower.ErrorMask>?>?)obj;
+                        this.WordsOfPower = (MaskItem<Exception?, SkyrimGroup.ErrorMask<WordOfPower.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Shouts:
-                        this.Shouts = (MaskItem<Exception?, Group.ErrorMask<Shout.ErrorMask>?>?)obj;
+                        this.Shouts = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Shout.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.EquipTypes:
-                        this.EquipTypes = (MaskItem<Exception?, Group.ErrorMask<EquipType.ErrorMask>?>?)obj;
+                        this.EquipTypes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<EquipType.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Relationships:
-                        this.Relationships = (MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>?)obj;
+                        this.Relationships = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Relationship.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Scenes:
-                        this.Scenes = (MaskItem<Exception?, Group.ErrorMask<Scene.ErrorMask>?>?)obj;
+                        this.Scenes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Scene.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.AssociationTypes:
-                        this.AssociationTypes = (MaskItem<Exception?, Group.ErrorMask<AssociationType.ErrorMask>?>?)obj;
+                        this.AssociationTypes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<AssociationType.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Outfits:
-                        this.Outfits = (MaskItem<Exception?, Group.ErrorMask<Outfit.ErrorMask>?>?)obj;
+                        this.Outfits = (MaskItem<Exception?, SkyrimGroup.ErrorMask<Outfit.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.ArtObjects:
-                        this.ArtObjects = (MaskItem<Exception?, Group.ErrorMask<ArtObject.ErrorMask>?>?)obj;
+                        this.ArtObjects = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ArtObject.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.MaterialObjects:
-                        this.MaterialObjects = (MaskItem<Exception?, Group.ErrorMask<MaterialObject.ErrorMask>?>?)obj;
+                        this.MaterialObjects = (MaskItem<Exception?, SkyrimGroup.ErrorMask<MaterialObject.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.MovementTypes:
-                        this.MovementTypes = (MaskItem<Exception?, Group.ErrorMask<MovementType.ErrorMask>?>?)obj;
+                        this.MovementTypes = (MaskItem<Exception?, SkyrimGroup.ErrorMask<MovementType.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.SoundDescriptors:
-                        this.SoundDescriptors = (MaskItem<Exception?, Group.ErrorMask<SoundDescriptor.ErrorMask>?>?)obj;
+                        this.SoundDescriptors = (MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundDescriptor.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.DualCastData:
-                        this.DualCastData = (MaskItem<Exception?, Group.ErrorMask<DualCastData.ErrorMask>?>?)obj;
+                        this.DualCastData = (MaskItem<Exception?, SkyrimGroup.ErrorMask<DualCastData.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.SoundCategories:
-                        this.SoundCategories = (MaskItem<Exception?, Group.ErrorMask<SoundCategory.ErrorMask>?>?)obj;
+                        this.SoundCategories = (MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundCategory.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.SoundOutputModels:
-                        this.SoundOutputModels = (MaskItem<Exception?, Group.ErrorMask<SoundOutputModel.ErrorMask>?>?)obj;
+                        this.SoundOutputModels = (MaskItem<Exception?, SkyrimGroup.ErrorMask<SoundOutputModel.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.CollisionLayers:
-                        this.CollisionLayers = (MaskItem<Exception?, Group.ErrorMask<CollisionLayer.ErrorMask>?>?)obj;
+                        this.CollisionLayers = (MaskItem<Exception?, SkyrimGroup.ErrorMask<CollisionLayer.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Colors:
-                        this.Colors = (MaskItem<Exception?, Group.ErrorMask<ColorRecord.ErrorMask>?>?)obj;
+                        this.Colors = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ColorRecord.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.ReverbParameters:
-                        this.ReverbParameters = (MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>?)obj;
+                        this.ReverbParameters = (MaskItem<Exception?, SkyrimGroup.ErrorMask<ReverbParameters.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.VolumetricLightings:
-                        this.VolumetricLightings = (MaskItem<Exception?, Group.ErrorMask<VolumetricLighting.ErrorMask>?>?)obj;
+                        this.VolumetricLightings = (MaskItem<Exception?, SkyrimGroup.ErrorMask<VolumetricLighting.ErrorMask>?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4982,119 +4982,119 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool OnOverall;
             public SkyrimModHeader.TranslationMask? ModHeader;
-            public Group.TranslationMask<GameSetting.TranslationMask>? GameSettings;
-            public Group.TranslationMask<Keyword.TranslationMask>? Keywords;
-            public Group.TranslationMask<LocationReferenceType.TranslationMask>? LocationReferenceTypes;
-            public Group.TranslationMask<ActionRecord.TranslationMask>? Actions;
-            public Group.TranslationMask<TextureSet.TranslationMask>? TextureSets;
-            public Group.TranslationMask<Global.TranslationMask>? Globals;
-            public Group.TranslationMask<Class.TranslationMask>? Classes;
-            public Group.TranslationMask<Faction.TranslationMask>? Factions;
-            public Group.TranslationMask<HeadPart.TranslationMask>? HeadParts;
-            public Group.TranslationMask<Hair.TranslationMask>? Hairs;
-            public Group.TranslationMask<Eyes.TranslationMask>? Eyes;
-            public Group.TranslationMask<Race.TranslationMask>? Races;
-            public Group.TranslationMask<SoundMarker.TranslationMask>? SoundMarkers;
-            public Group.TranslationMask<AcousticSpace.TranslationMask>? AcousticSpaces;
-            public Group.TranslationMask<MagicEffect.TranslationMask>? MagicEffects;
-            public Group.TranslationMask<LandscapeTexture.TranslationMask>? LandscapeTextures;
-            public Group.TranslationMask<ObjectEffect.TranslationMask>? ObjectEffects;
-            public Group.TranslationMask<Spell.TranslationMask>? Spells;
-            public Group.TranslationMask<Scroll.TranslationMask>? Scrolls;
-            public Group.TranslationMask<Activator.TranslationMask>? Activators;
-            public Group.TranslationMask<TalkingActivator.TranslationMask>? TalkingActivators;
-            public Group.TranslationMask<Armor.TranslationMask>? Armors;
-            public Group.TranslationMask<Book.TranslationMask>? Books;
-            public Group.TranslationMask<Container.TranslationMask>? Containers;
-            public Group.TranslationMask<Door.TranslationMask>? Doors;
-            public Group.TranslationMask<Ingredient.TranslationMask>? Ingredients;
-            public Group.TranslationMask<Light.TranslationMask>? Lights;
-            public Group.TranslationMask<MiscItem.TranslationMask>? MiscItems;
-            public Group.TranslationMask<AlchemicalApparatus.TranslationMask>? AlchemicalApparatuses;
-            public Group.TranslationMask<Static.TranslationMask>? Statics;
-            public Group.TranslationMask<MoveableStatic.TranslationMask>? MoveableStatics;
-            public Group.TranslationMask<Grass.TranslationMask>? Grasses;
-            public Group.TranslationMask<Tree.TranslationMask>? Trees;
-            public Group.TranslationMask<Flora.TranslationMask>? Florae;
-            public Group.TranslationMask<Furniture.TranslationMask>? Furniture;
-            public Group.TranslationMask<Weapon.TranslationMask>? Weapons;
-            public Group.TranslationMask<Ammunition.TranslationMask>? Ammunitions;
-            public Group.TranslationMask<Npc.TranslationMask>? Npcs;
-            public Group.TranslationMask<LeveledNpc.TranslationMask>? LeveledNpcs;
-            public Group.TranslationMask<Key.TranslationMask>? Keys;
-            public Group.TranslationMask<Ingestible.TranslationMask>? Ingestibles;
-            public Group.TranslationMask<IdleMarker.TranslationMask>? IdleMarkers;
-            public Group.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
-            public Group.TranslationMask<Projectile.TranslationMask>? Projectiles;
-            public Group.TranslationMask<Hazard.TranslationMask>? Hazards;
-            public Group.TranslationMask<SoulGem.TranslationMask>? SoulGems;
-            public Group.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
-            public Group.TranslationMask<Weather.TranslationMask>? Weathers;
-            public Group.TranslationMask<Climate.TranslationMask>? Climates;
-            public Group.TranslationMask<ShaderParticleGeometry.TranslationMask>? ShaderParticleGeometries;
-            public Group.TranslationMask<VisualEffect.TranslationMask>? VisualEffects;
-            public Group.TranslationMask<Region.TranslationMask>? Regions;
-            public Group.TranslationMask<NavigationMeshInfoMap.TranslationMask>? NavigationMeshInfoMaps;
-            public ListGroup.TranslationMask<CellBlock.TranslationMask>? Cells;
-            public Group.TranslationMask<Worldspace.TranslationMask>? Worldspaces;
-            public Group.TranslationMask<DialogTopic.TranslationMask>? DialogTopics;
-            public Group.TranslationMask<Quest.TranslationMask>? Quests;
-            public Group.TranslationMask<IdleAnimation.TranslationMask>? IdleAnimations;
-            public Group.TranslationMask<Package.TranslationMask>? Packages;
-            public Group.TranslationMask<CombatStyle.TranslationMask>? CombatStyles;
-            public Group.TranslationMask<LoadScreen.TranslationMask>? LoadScreens;
-            public Group.TranslationMask<LeveledSpell.TranslationMask>? LeveledSpells;
-            public Group.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
-            public Group.TranslationMask<Water.TranslationMask>? Waters;
-            public Group.TranslationMask<EffectShader.TranslationMask>? EffectShaders;
-            public Group.TranslationMask<Explosion.TranslationMask>? Explosions;
-            public Group.TranslationMask<Debris.TranslationMask>? Debris;
-            public Group.TranslationMask<ImageSpace.TranslationMask>? ImageSpaces;
-            public Group.TranslationMask<ImageSpaceAdapter.TranslationMask>? ImageSpaceAdapters;
-            public Group.TranslationMask<FormList.TranslationMask>? FormLists;
-            public Group.TranslationMask<Perk.TranslationMask>? Perks;
-            public Group.TranslationMask<BodyPartData.TranslationMask>? BodyParts;
-            public Group.TranslationMask<AddonNode.TranslationMask>? AddonNodes;
-            public Group.TranslationMask<ActorValueInformation.TranslationMask>? ActorValueInformation;
-            public Group.TranslationMask<CameraShot.TranslationMask>? CameraShots;
-            public Group.TranslationMask<CameraPath.TranslationMask>? CameraPaths;
-            public Group.TranslationMask<VoiceType.TranslationMask>? VoiceTypes;
-            public Group.TranslationMask<MaterialType.TranslationMask>? MaterialTypes;
-            public Group.TranslationMask<Impact.TranslationMask>? Impacts;
-            public Group.TranslationMask<ImpactDataSet.TranslationMask>? ImpactDataSets;
-            public Group.TranslationMask<ArmorAddon.TranslationMask>? ArmorAddons;
-            public Group.TranslationMask<EncounterZone.TranslationMask>? EncounterZones;
-            public Group.TranslationMask<Location.TranslationMask>? Locations;
-            public Group.TranslationMask<Message.TranslationMask>? Messages;
-            public Group.TranslationMask<DefaultObjectManager.TranslationMask>? DefaultObjectManagers;
-            public Group.TranslationMask<LightingTemplate.TranslationMask>? LightingTemplates;
-            public Group.TranslationMask<MusicType.TranslationMask>? MusicTypes;
-            public Group.TranslationMask<Footstep.TranslationMask>? Footsteps;
-            public Group.TranslationMask<FootstepSet.TranslationMask>? FootstepSets;
-            public Group.TranslationMask<StoryManagerBranchNode.TranslationMask>? StoryManagerBranchNodes;
-            public Group.TranslationMask<StoryManagerQuestNode.TranslationMask>? StoryManagerQuestNodes;
-            public Group.TranslationMask<StoryManagerEventNode.TranslationMask>? StoryManagerEventNodes;
-            public Group.TranslationMask<DialogBranch.TranslationMask>? DialogBranches;
-            public Group.TranslationMask<MusicTrack.TranslationMask>? MusicTracks;
-            public Group.TranslationMask<DialogView.TranslationMask>? DialogViews;
-            public Group.TranslationMask<WordOfPower.TranslationMask>? WordsOfPower;
-            public Group.TranslationMask<Shout.TranslationMask>? Shouts;
-            public Group.TranslationMask<EquipType.TranslationMask>? EquipTypes;
-            public Group.TranslationMask<Relationship.TranslationMask>? Relationships;
-            public Group.TranslationMask<Scene.TranslationMask>? Scenes;
-            public Group.TranslationMask<AssociationType.TranslationMask>? AssociationTypes;
-            public Group.TranslationMask<Outfit.TranslationMask>? Outfits;
-            public Group.TranslationMask<ArtObject.TranslationMask>? ArtObjects;
-            public Group.TranslationMask<MaterialObject.TranslationMask>? MaterialObjects;
-            public Group.TranslationMask<MovementType.TranslationMask>? MovementTypes;
-            public Group.TranslationMask<SoundDescriptor.TranslationMask>? SoundDescriptors;
-            public Group.TranslationMask<DualCastData.TranslationMask>? DualCastData;
-            public Group.TranslationMask<SoundCategory.TranslationMask>? SoundCategories;
-            public Group.TranslationMask<SoundOutputModel.TranslationMask>? SoundOutputModels;
-            public Group.TranslationMask<CollisionLayer.TranslationMask>? CollisionLayers;
-            public Group.TranslationMask<ColorRecord.TranslationMask>? Colors;
-            public Group.TranslationMask<ReverbParameters.TranslationMask>? ReverbParameters;
-            public Group.TranslationMask<VolumetricLighting.TranslationMask>? VolumetricLightings;
+            public SkyrimGroup.TranslationMask<GameSetting.TranslationMask>? GameSettings;
+            public SkyrimGroup.TranslationMask<Keyword.TranslationMask>? Keywords;
+            public SkyrimGroup.TranslationMask<LocationReferenceType.TranslationMask>? LocationReferenceTypes;
+            public SkyrimGroup.TranslationMask<ActionRecord.TranslationMask>? Actions;
+            public SkyrimGroup.TranslationMask<TextureSet.TranslationMask>? TextureSets;
+            public SkyrimGroup.TranslationMask<Global.TranslationMask>? Globals;
+            public SkyrimGroup.TranslationMask<Class.TranslationMask>? Classes;
+            public SkyrimGroup.TranslationMask<Faction.TranslationMask>? Factions;
+            public SkyrimGroup.TranslationMask<HeadPart.TranslationMask>? HeadParts;
+            public SkyrimGroup.TranslationMask<Hair.TranslationMask>? Hairs;
+            public SkyrimGroup.TranslationMask<Eyes.TranslationMask>? Eyes;
+            public SkyrimGroup.TranslationMask<Race.TranslationMask>? Races;
+            public SkyrimGroup.TranslationMask<SoundMarker.TranslationMask>? SoundMarkers;
+            public SkyrimGroup.TranslationMask<AcousticSpace.TranslationMask>? AcousticSpaces;
+            public SkyrimGroup.TranslationMask<MagicEffect.TranslationMask>? MagicEffects;
+            public SkyrimGroup.TranslationMask<LandscapeTexture.TranslationMask>? LandscapeTextures;
+            public SkyrimGroup.TranslationMask<ObjectEffect.TranslationMask>? ObjectEffects;
+            public SkyrimGroup.TranslationMask<Spell.TranslationMask>? Spells;
+            public SkyrimGroup.TranslationMask<Scroll.TranslationMask>? Scrolls;
+            public SkyrimGroup.TranslationMask<Activator.TranslationMask>? Activators;
+            public SkyrimGroup.TranslationMask<TalkingActivator.TranslationMask>? TalkingActivators;
+            public SkyrimGroup.TranslationMask<Armor.TranslationMask>? Armors;
+            public SkyrimGroup.TranslationMask<Book.TranslationMask>? Books;
+            public SkyrimGroup.TranslationMask<Container.TranslationMask>? Containers;
+            public SkyrimGroup.TranslationMask<Door.TranslationMask>? Doors;
+            public SkyrimGroup.TranslationMask<Ingredient.TranslationMask>? Ingredients;
+            public SkyrimGroup.TranslationMask<Light.TranslationMask>? Lights;
+            public SkyrimGroup.TranslationMask<MiscItem.TranslationMask>? MiscItems;
+            public SkyrimGroup.TranslationMask<AlchemicalApparatus.TranslationMask>? AlchemicalApparatuses;
+            public SkyrimGroup.TranslationMask<Static.TranslationMask>? Statics;
+            public SkyrimGroup.TranslationMask<MoveableStatic.TranslationMask>? MoveableStatics;
+            public SkyrimGroup.TranslationMask<Grass.TranslationMask>? Grasses;
+            public SkyrimGroup.TranslationMask<Tree.TranslationMask>? Trees;
+            public SkyrimGroup.TranslationMask<Flora.TranslationMask>? Florae;
+            public SkyrimGroup.TranslationMask<Furniture.TranslationMask>? Furniture;
+            public SkyrimGroup.TranslationMask<Weapon.TranslationMask>? Weapons;
+            public SkyrimGroup.TranslationMask<Ammunition.TranslationMask>? Ammunitions;
+            public SkyrimGroup.TranslationMask<Npc.TranslationMask>? Npcs;
+            public SkyrimGroup.TranslationMask<LeveledNpc.TranslationMask>? LeveledNpcs;
+            public SkyrimGroup.TranslationMask<Key.TranslationMask>? Keys;
+            public SkyrimGroup.TranslationMask<Ingestible.TranslationMask>? Ingestibles;
+            public SkyrimGroup.TranslationMask<IdleMarker.TranslationMask>? IdleMarkers;
+            public SkyrimGroup.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
+            public SkyrimGroup.TranslationMask<Projectile.TranslationMask>? Projectiles;
+            public SkyrimGroup.TranslationMask<Hazard.TranslationMask>? Hazards;
+            public SkyrimGroup.TranslationMask<SoulGem.TranslationMask>? SoulGems;
+            public SkyrimGroup.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
+            public SkyrimGroup.TranslationMask<Weather.TranslationMask>? Weathers;
+            public SkyrimGroup.TranslationMask<Climate.TranslationMask>? Climates;
+            public SkyrimGroup.TranslationMask<ShaderParticleGeometry.TranslationMask>? ShaderParticleGeometries;
+            public SkyrimGroup.TranslationMask<VisualEffect.TranslationMask>? VisualEffects;
+            public SkyrimGroup.TranslationMask<Region.TranslationMask>? Regions;
+            public SkyrimGroup.TranslationMask<NavigationMeshInfoMap.TranslationMask>? NavigationMeshInfoMaps;
+            public SkyrimListGroup.TranslationMask<CellBlock.TranslationMask>? Cells;
+            public SkyrimGroup.TranslationMask<Worldspace.TranslationMask>? Worldspaces;
+            public SkyrimGroup.TranslationMask<DialogTopic.TranslationMask>? DialogTopics;
+            public SkyrimGroup.TranslationMask<Quest.TranslationMask>? Quests;
+            public SkyrimGroup.TranslationMask<IdleAnimation.TranslationMask>? IdleAnimations;
+            public SkyrimGroup.TranslationMask<Package.TranslationMask>? Packages;
+            public SkyrimGroup.TranslationMask<CombatStyle.TranslationMask>? CombatStyles;
+            public SkyrimGroup.TranslationMask<LoadScreen.TranslationMask>? LoadScreens;
+            public SkyrimGroup.TranslationMask<LeveledSpell.TranslationMask>? LeveledSpells;
+            public SkyrimGroup.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
+            public SkyrimGroup.TranslationMask<Water.TranslationMask>? Waters;
+            public SkyrimGroup.TranslationMask<EffectShader.TranslationMask>? EffectShaders;
+            public SkyrimGroup.TranslationMask<Explosion.TranslationMask>? Explosions;
+            public SkyrimGroup.TranslationMask<Debris.TranslationMask>? Debris;
+            public SkyrimGroup.TranslationMask<ImageSpace.TranslationMask>? ImageSpaces;
+            public SkyrimGroup.TranslationMask<ImageSpaceAdapter.TranslationMask>? ImageSpaceAdapters;
+            public SkyrimGroup.TranslationMask<FormList.TranslationMask>? FormLists;
+            public SkyrimGroup.TranslationMask<Perk.TranslationMask>? Perks;
+            public SkyrimGroup.TranslationMask<BodyPartData.TranslationMask>? BodyParts;
+            public SkyrimGroup.TranslationMask<AddonNode.TranslationMask>? AddonNodes;
+            public SkyrimGroup.TranslationMask<ActorValueInformation.TranslationMask>? ActorValueInformation;
+            public SkyrimGroup.TranslationMask<CameraShot.TranslationMask>? CameraShots;
+            public SkyrimGroup.TranslationMask<CameraPath.TranslationMask>? CameraPaths;
+            public SkyrimGroup.TranslationMask<VoiceType.TranslationMask>? VoiceTypes;
+            public SkyrimGroup.TranslationMask<MaterialType.TranslationMask>? MaterialTypes;
+            public SkyrimGroup.TranslationMask<Impact.TranslationMask>? Impacts;
+            public SkyrimGroup.TranslationMask<ImpactDataSet.TranslationMask>? ImpactDataSets;
+            public SkyrimGroup.TranslationMask<ArmorAddon.TranslationMask>? ArmorAddons;
+            public SkyrimGroup.TranslationMask<EncounterZone.TranslationMask>? EncounterZones;
+            public SkyrimGroup.TranslationMask<Location.TranslationMask>? Locations;
+            public SkyrimGroup.TranslationMask<Message.TranslationMask>? Messages;
+            public SkyrimGroup.TranslationMask<DefaultObjectManager.TranslationMask>? DefaultObjectManagers;
+            public SkyrimGroup.TranslationMask<LightingTemplate.TranslationMask>? LightingTemplates;
+            public SkyrimGroup.TranslationMask<MusicType.TranslationMask>? MusicTypes;
+            public SkyrimGroup.TranslationMask<Footstep.TranslationMask>? Footsteps;
+            public SkyrimGroup.TranslationMask<FootstepSet.TranslationMask>? FootstepSets;
+            public SkyrimGroup.TranslationMask<StoryManagerBranchNode.TranslationMask>? StoryManagerBranchNodes;
+            public SkyrimGroup.TranslationMask<StoryManagerQuestNode.TranslationMask>? StoryManagerQuestNodes;
+            public SkyrimGroup.TranslationMask<StoryManagerEventNode.TranslationMask>? StoryManagerEventNodes;
+            public SkyrimGroup.TranslationMask<DialogBranch.TranslationMask>? DialogBranches;
+            public SkyrimGroup.TranslationMask<MusicTrack.TranslationMask>? MusicTracks;
+            public SkyrimGroup.TranslationMask<DialogView.TranslationMask>? DialogViews;
+            public SkyrimGroup.TranslationMask<WordOfPower.TranslationMask>? WordsOfPower;
+            public SkyrimGroup.TranslationMask<Shout.TranslationMask>? Shouts;
+            public SkyrimGroup.TranslationMask<EquipType.TranslationMask>? EquipTypes;
+            public SkyrimGroup.TranslationMask<Relationship.TranslationMask>? Relationships;
+            public SkyrimGroup.TranslationMask<Scene.TranslationMask>? Scenes;
+            public SkyrimGroup.TranslationMask<AssociationType.TranslationMask>? AssociationTypes;
+            public SkyrimGroup.TranslationMask<Outfit.TranslationMask>? Outfits;
+            public SkyrimGroup.TranslationMask<ArtObject.TranslationMask>? ArtObjects;
+            public SkyrimGroup.TranslationMask<MaterialObject.TranslationMask>? MaterialObjects;
+            public SkyrimGroup.TranslationMask<MovementType.TranslationMask>? MovementTypes;
+            public SkyrimGroup.TranslationMask<SoundDescriptor.TranslationMask>? SoundDescriptors;
+            public SkyrimGroup.TranslationMask<DualCastData.TranslationMask>? DualCastData;
+            public SkyrimGroup.TranslationMask<SoundCategory.TranslationMask>? SoundCategories;
+            public SkyrimGroup.TranslationMask<SoundOutputModel.TranslationMask>? SoundOutputModels;
+            public SkyrimGroup.TranslationMask<CollisionLayer.TranslationMask>? CollisionLayers;
+            public SkyrimGroup.TranslationMask<ColorRecord.TranslationMask>? Colors;
+            public SkyrimGroup.TranslationMask<ReverbParameters.TranslationMask>? ReverbParameters;
+            public SkyrimGroup.TranslationMask<VolumetricLighting.TranslationMask>? VolumetricLightings;
             #endregion
 
             #region Ctors
@@ -5247,9 +5247,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SkyrimMod_Registration.TriggeringRecordType;
         public SkyrimRelease SkyrimRelease { get; }
         public override GameRelease GameRelease => SkyrimRelease.ToGameRelease();
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
-        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroup IMod.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => SkyrimModMixIn.GetEqualsMask(this, (ISkyrimModGetter)rhs, include);
@@ -5278,118 +5279,118 @@ namespace Mutagen.Bethesda.Skyrim
         {
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
             this.SkyrimRelease = release;
-            _GameSettings_Object = new Group<GameSetting>(this);
-            _Keywords_Object = new Group<Keyword>(this);
-            _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
-            _Actions_Object = new Group<ActionRecord>(this);
-            _TextureSets_Object = new Group<TextureSet>(this);
-            _Globals_Object = new Group<Global>(this);
-            _Classes_Object = new Group<Class>(this);
-            _Factions_Object = new Group<Faction>(this);
-            _HeadParts_Object = new Group<HeadPart>(this);
-            _Hairs_Object = new Group<Hair>(this);
-            _Eyes_Object = new Group<Eyes>(this);
-            _Races_Object = new Group<Race>(this);
-            _SoundMarkers_Object = new Group<SoundMarker>(this);
-            _AcousticSpaces_Object = new Group<AcousticSpace>(this);
-            _MagicEffects_Object = new Group<MagicEffect>(this);
-            _LandscapeTextures_Object = new Group<LandscapeTexture>(this);
-            _ObjectEffects_Object = new Group<ObjectEffect>(this);
-            _Spells_Object = new Group<Spell>(this);
-            _Scrolls_Object = new Group<Scroll>(this);
-            _Activators_Object = new Group<Activator>(this);
-            _TalkingActivators_Object = new Group<TalkingActivator>(this);
-            _Armors_Object = new Group<Armor>(this);
-            _Books_Object = new Group<Book>(this);
-            _Containers_Object = new Group<Container>(this);
-            _Doors_Object = new Group<Door>(this);
-            _Ingredients_Object = new Group<Ingredient>(this);
-            _Lights_Object = new Group<Light>(this);
-            _MiscItems_Object = new Group<MiscItem>(this);
-            _AlchemicalApparatuses_Object = new Group<AlchemicalApparatus>(this);
-            _Statics_Object = new Group<Static>(this);
-            _MoveableStatics_Object = new Group<MoveableStatic>(this);
-            _Grasses_Object = new Group<Grass>(this);
-            _Trees_Object = new Group<Tree>(this);
-            _Florae_Object = new Group<Flora>(this);
-            _Furniture_Object = new Group<Furniture>(this);
-            _Weapons_Object = new Group<Weapon>(this);
-            _Ammunitions_Object = new Group<Ammunition>(this);
-            _Npcs_Object = new Group<Npc>(this);
-            _LeveledNpcs_Object = new Group<LeveledNpc>(this);
-            _Keys_Object = new Group<Key>(this);
-            _Ingestibles_Object = new Group<Ingestible>(this);
-            _IdleMarkers_Object = new Group<IdleMarker>(this);
-            _ConstructibleObjects_Object = new Group<ConstructibleObject>(this);
-            _Projectiles_Object = new Group<Projectile>(this);
-            _Hazards_Object = new Group<Hazard>(this);
-            _SoulGems_Object = new Group<SoulGem>(this);
-            _LeveledItems_Object = new Group<LeveledItem>(this);
-            _Weathers_Object = new Group<Weather>(this);
-            _Climates_Object = new Group<Climate>(this);
-            _ShaderParticleGeometries_Object = new Group<ShaderParticleGeometry>(this);
-            _VisualEffects_Object = new Group<VisualEffect>(this);
-            _Regions_Object = new Group<Region>(this);
-            _NavigationMeshInfoMaps_Object = new Group<NavigationMeshInfoMap>(this);
-            _Worldspaces_Object = new Group<Worldspace>(this);
-            _DialogTopics_Object = new Group<DialogTopic>(this);
-            _Quests_Object = new Group<Quest>(this);
-            _IdleAnimations_Object = new Group<IdleAnimation>(this);
-            _Packages_Object = new Group<Package>(this);
-            _CombatStyles_Object = new Group<CombatStyle>(this);
-            _LoadScreens_Object = new Group<LoadScreen>(this);
-            _LeveledSpells_Object = new Group<LeveledSpell>(this);
-            _AnimatedObjects_Object = new Group<AnimatedObject>(this);
-            _Waters_Object = new Group<Water>(this);
-            _EffectShaders_Object = new Group<EffectShader>(this);
-            _Explosions_Object = new Group<Explosion>(this);
-            _Debris_Object = new Group<Debris>(this);
-            _ImageSpaces_Object = new Group<ImageSpace>(this);
-            _ImageSpaceAdapters_Object = new Group<ImageSpaceAdapter>(this);
-            _FormLists_Object = new Group<FormList>(this);
-            _Perks_Object = new Group<Perk>(this);
-            _BodyParts_Object = new Group<BodyPartData>(this);
-            _AddonNodes_Object = new Group<AddonNode>(this);
-            _ActorValueInformation_Object = new Group<ActorValueInformation>(this);
-            _CameraShots_Object = new Group<CameraShot>(this);
-            _CameraPaths_Object = new Group<CameraPath>(this);
-            _VoiceTypes_Object = new Group<VoiceType>(this);
-            _MaterialTypes_Object = new Group<MaterialType>(this);
-            _Impacts_Object = new Group<Impact>(this);
-            _ImpactDataSets_Object = new Group<ImpactDataSet>(this);
-            _ArmorAddons_Object = new Group<ArmorAddon>(this);
-            _EncounterZones_Object = new Group<EncounterZone>(this);
-            _Locations_Object = new Group<Location>(this);
-            _Messages_Object = new Group<Message>(this);
-            _DefaultObjectManagers_Object = new Group<DefaultObjectManager>(this);
-            _LightingTemplates_Object = new Group<LightingTemplate>(this);
-            _MusicTypes_Object = new Group<MusicType>(this);
-            _Footsteps_Object = new Group<Footstep>(this);
-            _FootstepSets_Object = new Group<FootstepSet>(this);
-            _StoryManagerBranchNodes_Object = new Group<StoryManagerBranchNode>(this);
-            _StoryManagerQuestNodes_Object = new Group<StoryManagerQuestNode>(this);
-            _StoryManagerEventNodes_Object = new Group<StoryManagerEventNode>(this);
-            _DialogBranches_Object = new Group<DialogBranch>(this);
-            _MusicTracks_Object = new Group<MusicTrack>(this);
-            _DialogViews_Object = new Group<DialogView>(this);
-            _WordsOfPower_Object = new Group<WordOfPower>(this);
-            _Shouts_Object = new Group<Shout>(this);
-            _EquipTypes_Object = new Group<EquipType>(this);
-            _Relationships_Object = new Group<Relationship>(this);
-            _Scenes_Object = new Group<Scene>(this);
-            _AssociationTypes_Object = new Group<AssociationType>(this);
-            _Outfits_Object = new Group<Outfit>(this);
-            _ArtObjects_Object = new Group<ArtObject>(this);
-            _MaterialObjects_Object = new Group<MaterialObject>(this);
-            _MovementTypes_Object = new Group<MovementType>(this);
-            _SoundDescriptors_Object = new Group<SoundDescriptor>(this);
-            _DualCastData_Object = new Group<DualCastData>(this);
-            _SoundCategories_Object = new Group<SoundCategory>(this);
-            _SoundOutputModels_Object = new Group<SoundOutputModel>(this);
-            _CollisionLayers_Object = new Group<CollisionLayer>(this);
-            _Colors_Object = new Group<ColorRecord>(this);
-            _ReverbParameters_Object = new Group<ReverbParameters>(this);
-            _VolumetricLightings_Object = new Group<VolumetricLighting>(this);
+            _GameSettings_Object = new SkyrimGroup<GameSetting>(this);
+            _Keywords_Object = new SkyrimGroup<Keyword>(this);
+            _LocationReferenceTypes_Object = new SkyrimGroup<LocationReferenceType>(this);
+            _Actions_Object = new SkyrimGroup<ActionRecord>(this);
+            _TextureSets_Object = new SkyrimGroup<TextureSet>(this);
+            _Globals_Object = new SkyrimGroup<Global>(this);
+            _Classes_Object = new SkyrimGroup<Class>(this);
+            _Factions_Object = new SkyrimGroup<Faction>(this);
+            _HeadParts_Object = new SkyrimGroup<HeadPart>(this);
+            _Hairs_Object = new SkyrimGroup<Hair>(this);
+            _Eyes_Object = new SkyrimGroup<Eyes>(this);
+            _Races_Object = new SkyrimGroup<Race>(this);
+            _SoundMarkers_Object = new SkyrimGroup<SoundMarker>(this);
+            _AcousticSpaces_Object = new SkyrimGroup<AcousticSpace>(this);
+            _MagicEffects_Object = new SkyrimGroup<MagicEffect>(this);
+            _LandscapeTextures_Object = new SkyrimGroup<LandscapeTexture>(this);
+            _ObjectEffects_Object = new SkyrimGroup<ObjectEffect>(this);
+            _Spells_Object = new SkyrimGroup<Spell>(this);
+            _Scrolls_Object = new SkyrimGroup<Scroll>(this);
+            _Activators_Object = new SkyrimGroup<Activator>(this);
+            _TalkingActivators_Object = new SkyrimGroup<TalkingActivator>(this);
+            _Armors_Object = new SkyrimGroup<Armor>(this);
+            _Books_Object = new SkyrimGroup<Book>(this);
+            _Containers_Object = new SkyrimGroup<Container>(this);
+            _Doors_Object = new SkyrimGroup<Door>(this);
+            _Ingredients_Object = new SkyrimGroup<Ingredient>(this);
+            _Lights_Object = new SkyrimGroup<Light>(this);
+            _MiscItems_Object = new SkyrimGroup<MiscItem>(this);
+            _AlchemicalApparatuses_Object = new SkyrimGroup<AlchemicalApparatus>(this);
+            _Statics_Object = new SkyrimGroup<Static>(this);
+            _MoveableStatics_Object = new SkyrimGroup<MoveableStatic>(this);
+            _Grasses_Object = new SkyrimGroup<Grass>(this);
+            _Trees_Object = new SkyrimGroup<Tree>(this);
+            _Florae_Object = new SkyrimGroup<Flora>(this);
+            _Furniture_Object = new SkyrimGroup<Furniture>(this);
+            _Weapons_Object = new SkyrimGroup<Weapon>(this);
+            _Ammunitions_Object = new SkyrimGroup<Ammunition>(this);
+            _Npcs_Object = new SkyrimGroup<Npc>(this);
+            _LeveledNpcs_Object = new SkyrimGroup<LeveledNpc>(this);
+            _Keys_Object = new SkyrimGroup<Key>(this);
+            _Ingestibles_Object = new SkyrimGroup<Ingestible>(this);
+            _IdleMarkers_Object = new SkyrimGroup<IdleMarker>(this);
+            _ConstructibleObjects_Object = new SkyrimGroup<ConstructibleObject>(this);
+            _Projectiles_Object = new SkyrimGroup<Projectile>(this);
+            _Hazards_Object = new SkyrimGroup<Hazard>(this);
+            _SoulGems_Object = new SkyrimGroup<SoulGem>(this);
+            _LeveledItems_Object = new SkyrimGroup<LeveledItem>(this);
+            _Weathers_Object = new SkyrimGroup<Weather>(this);
+            _Climates_Object = new SkyrimGroup<Climate>(this);
+            _ShaderParticleGeometries_Object = new SkyrimGroup<ShaderParticleGeometry>(this);
+            _VisualEffects_Object = new SkyrimGroup<VisualEffect>(this);
+            _Regions_Object = new SkyrimGroup<Region>(this);
+            _NavigationMeshInfoMaps_Object = new SkyrimGroup<NavigationMeshInfoMap>(this);
+            _Worldspaces_Object = new SkyrimGroup<Worldspace>(this);
+            _DialogTopics_Object = new SkyrimGroup<DialogTopic>(this);
+            _Quests_Object = new SkyrimGroup<Quest>(this);
+            _IdleAnimations_Object = new SkyrimGroup<IdleAnimation>(this);
+            _Packages_Object = new SkyrimGroup<Package>(this);
+            _CombatStyles_Object = new SkyrimGroup<CombatStyle>(this);
+            _LoadScreens_Object = new SkyrimGroup<LoadScreen>(this);
+            _LeveledSpells_Object = new SkyrimGroup<LeveledSpell>(this);
+            _AnimatedObjects_Object = new SkyrimGroup<AnimatedObject>(this);
+            _Waters_Object = new SkyrimGroup<Water>(this);
+            _EffectShaders_Object = new SkyrimGroup<EffectShader>(this);
+            _Explosions_Object = new SkyrimGroup<Explosion>(this);
+            _Debris_Object = new SkyrimGroup<Debris>(this);
+            _ImageSpaces_Object = new SkyrimGroup<ImageSpace>(this);
+            _ImageSpaceAdapters_Object = new SkyrimGroup<ImageSpaceAdapter>(this);
+            _FormLists_Object = new SkyrimGroup<FormList>(this);
+            _Perks_Object = new SkyrimGroup<Perk>(this);
+            _BodyParts_Object = new SkyrimGroup<BodyPartData>(this);
+            _AddonNodes_Object = new SkyrimGroup<AddonNode>(this);
+            _ActorValueInformation_Object = new SkyrimGroup<ActorValueInformation>(this);
+            _CameraShots_Object = new SkyrimGroup<CameraShot>(this);
+            _CameraPaths_Object = new SkyrimGroup<CameraPath>(this);
+            _VoiceTypes_Object = new SkyrimGroup<VoiceType>(this);
+            _MaterialTypes_Object = new SkyrimGroup<MaterialType>(this);
+            _Impacts_Object = new SkyrimGroup<Impact>(this);
+            _ImpactDataSets_Object = new SkyrimGroup<ImpactDataSet>(this);
+            _ArmorAddons_Object = new SkyrimGroup<ArmorAddon>(this);
+            _EncounterZones_Object = new SkyrimGroup<EncounterZone>(this);
+            _Locations_Object = new SkyrimGroup<Location>(this);
+            _Messages_Object = new SkyrimGroup<Message>(this);
+            _DefaultObjectManagers_Object = new SkyrimGroup<DefaultObjectManager>(this);
+            _LightingTemplates_Object = new SkyrimGroup<LightingTemplate>(this);
+            _MusicTypes_Object = new SkyrimGroup<MusicType>(this);
+            _Footsteps_Object = new SkyrimGroup<Footstep>(this);
+            _FootstepSets_Object = new SkyrimGroup<FootstepSet>(this);
+            _StoryManagerBranchNodes_Object = new SkyrimGroup<StoryManagerBranchNode>(this);
+            _StoryManagerQuestNodes_Object = new SkyrimGroup<StoryManagerQuestNode>(this);
+            _StoryManagerEventNodes_Object = new SkyrimGroup<StoryManagerEventNode>(this);
+            _DialogBranches_Object = new SkyrimGroup<DialogBranch>(this);
+            _MusicTracks_Object = new SkyrimGroup<MusicTrack>(this);
+            _DialogViews_Object = new SkyrimGroup<DialogView>(this);
+            _WordsOfPower_Object = new SkyrimGroup<WordOfPower>(this);
+            _Shouts_Object = new SkyrimGroup<Shout>(this);
+            _EquipTypes_Object = new SkyrimGroup<EquipType>(this);
+            _Relationships_Object = new SkyrimGroup<Relationship>(this);
+            _Scenes_Object = new SkyrimGroup<Scene>(this);
+            _AssociationTypes_Object = new SkyrimGroup<AssociationType>(this);
+            _Outfits_Object = new SkyrimGroup<Outfit>(this);
+            _ArtObjects_Object = new SkyrimGroup<ArtObject>(this);
+            _MaterialObjects_Object = new SkyrimGroup<MaterialObject>(this);
+            _MovementTypes_Object = new SkyrimGroup<MovementType>(this);
+            _SoundDescriptors_Object = new SkyrimGroup<SoundDescriptor>(this);
+            _DualCastData_Object = new SkyrimGroup<DualCastData>(this);
+            _SoundCategories_Object = new SkyrimGroup<SoundCategory>(this);
+            _SoundOutputModels_Object = new SkyrimGroup<SoundOutputModel>(this);
+            _CollisionLayers_Object = new SkyrimGroup<CollisionLayer>(this);
+            _Colors_Object = new SkyrimGroup<ColorRecord>(this);
+            _ReverbParameters_Object = new SkyrimGroup<ReverbParameters>(this);
+            _VolumetricLightings_Object = new SkyrimGroup<VolumetricLighting>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5983,17 +5984,17 @@ namespace Mutagen.Bethesda.Skyrim
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimModCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -6019,11 +6020,11 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordCommonGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IMajorRecordCommonGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -6239,119 +6240,119 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimModGetter
     {
         new SkyrimModHeader ModHeader { get; }
-        new Group<GameSetting> GameSettings { get; }
-        new Group<Keyword> Keywords { get; }
-        new Group<LocationReferenceType> LocationReferenceTypes { get; }
-        new Group<ActionRecord> Actions { get; }
-        new Group<TextureSet> TextureSets { get; }
-        new Group<Global> Globals { get; }
-        new Group<Class> Classes { get; }
-        new Group<Faction> Factions { get; }
-        new Group<HeadPart> HeadParts { get; }
-        new Group<Hair> Hairs { get; }
-        new Group<Eyes> Eyes { get; }
-        new Group<Race> Races { get; }
-        new Group<SoundMarker> SoundMarkers { get; }
-        new Group<AcousticSpace> AcousticSpaces { get; }
-        new Group<MagicEffect> MagicEffects { get; }
-        new Group<LandscapeTexture> LandscapeTextures { get; }
-        new Group<ObjectEffect> ObjectEffects { get; }
-        new Group<Spell> Spells { get; }
-        new Group<Scroll> Scrolls { get; }
-        new Group<Activator> Activators { get; }
-        new Group<TalkingActivator> TalkingActivators { get; }
-        new Group<Armor> Armors { get; }
-        new Group<Book> Books { get; }
-        new Group<Container> Containers { get; }
-        new Group<Door> Doors { get; }
-        new Group<Ingredient> Ingredients { get; }
-        new Group<Light> Lights { get; }
-        new Group<MiscItem> MiscItems { get; }
-        new Group<AlchemicalApparatus> AlchemicalApparatuses { get; }
-        new Group<Static> Statics { get; }
-        new Group<MoveableStatic> MoveableStatics { get; }
-        new Group<Grass> Grasses { get; }
-        new Group<Tree> Trees { get; }
-        new Group<Flora> Florae { get; }
-        new Group<Furniture> Furniture { get; }
-        new Group<Weapon> Weapons { get; }
-        new Group<Ammunition> Ammunitions { get; }
-        new Group<Npc> Npcs { get; }
-        new Group<LeveledNpc> LeveledNpcs { get; }
-        new Group<Key> Keys { get; }
-        new Group<Ingestible> Ingestibles { get; }
-        new Group<IdleMarker> IdleMarkers { get; }
-        new Group<ConstructibleObject> ConstructibleObjects { get; }
-        new Group<Projectile> Projectiles { get; }
-        new Group<Hazard> Hazards { get; }
-        new Group<SoulGem> SoulGems { get; }
-        new Group<LeveledItem> LeveledItems { get; }
-        new Group<Weather> Weathers { get; }
-        new Group<Climate> Climates { get; }
-        new Group<ShaderParticleGeometry> ShaderParticleGeometries { get; }
-        new Group<VisualEffect> VisualEffects { get; }
-        new Group<Region> Regions { get; }
-        new Group<NavigationMeshInfoMap> NavigationMeshInfoMaps { get; }
-        new ListGroup<CellBlock> Cells { get; }
-        new Group<Worldspace> Worldspaces { get; }
-        new Group<DialogTopic> DialogTopics { get; }
-        new Group<Quest> Quests { get; }
-        new Group<IdleAnimation> IdleAnimations { get; }
-        new Group<Package> Packages { get; }
-        new Group<CombatStyle> CombatStyles { get; }
-        new Group<LoadScreen> LoadScreens { get; }
-        new Group<LeveledSpell> LeveledSpells { get; }
-        new Group<AnimatedObject> AnimatedObjects { get; }
-        new Group<Water> Waters { get; }
-        new Group<EffectShader> EffectShaders { get; }
-        new Group<Explosion> Explosions { get; }
-        new Group<Debris> Debris { get; }
-        new Group<ImageSpace> ImageSpaces { get; }
-        new Group<ImageSpaceAdapter> ImageSpaceAdapters { get; }
-        new Group<FormList> FormLists { get; }
-        new Group<Perk> Perks { get; }
-        new Group<BodyPartData> BodyParts { get; }
-        new Group<AddonNode> AddonNodes { get; }
-        new Group<ActorValueInformation> ActorValueInformation { get; }
-        new Group<CameraShot> CameraShots { get; }
-        new Group<CameraPath> CameraPaths { get; }
-        new Group<VoiceType> VoiceTypes { get; }
-        new Group<MaterialType> MaterialTypes { get; }
-        new Group<Impact> Impacts { get; }
-        new Group<ImpactDataSet> ImpactDataSets { get; }
-        new Group<ArmorAddon> ArmorAddons { get; }
-        new Group<EncounterZone> EncounterZones { get; }
-        new Group<Location> Locations { get; }
-        new Group<Message> Messages { get; }
-        new Group<DefaultObjectManager> DefaultObjectManagers { get; }
-        new Group<LightingTemplate> LightingTemplates { get; }
-        new Group<MusicType> MusicTypes { get; }
-        new Group<Footstep> Footsteps { get; }
-        new Group<FootstepSet> FootstepSets { get; }
-        new Group<StoryManagerBranchNode> StoryManagerBranchNodes { get; }
-        new Group<StoryManagerQuestNode> StoryManagerQuestNodes { get; }
-        new Group<StoryManagerEventNode> StoryManagerEventNodes { get; }
-        new Group<DialogBranch> DialogBranches { get; }
-        new Group<MusicTrack> MusicTracks { get; }
-        new Group<DialogView> DialogViews { get; }
-        new Group<WordOfPower> WordsOfPower { get; }
-        new Group<Shout> Shouts { get; }
-        new Group<EquipType> EquipTypes { get; }
-        new Group<Relationship> Relationships { get; }
-        new Group<Scene> Scenes { get; }
-        new Group<AssociationType> AssociationTypes { get; }
-        new Group<Outfit> Outfits { get; }
-        new Group<ArtObject> ArtObjects { get; }
-        new Group<MaterialObject> MaterialObjects { get; }
-        new Group<MovementType> MovementTypes { get; }
-        new Group<SoundDescriptor> SoundDescriptors { get; }
-        new Group<DualCastData> DualCastData { get; }
-        new Group<SoundCategory> SoundCategories { get; }
-        new Group<SoundOutputModel> SoundOutputModels { get; }
-        new Group<CollisionLayer> CollisionLayers { get; }
-        new Group<ColorRecord> Colors { get; }
-        new Group<ReverbParameters> ReverbParameters { get; }
-        new Group<VolumetricLighting> VolumetricLightings { get; }
+        new SkyrimGroup<GameSetting> GameSettings { get; }
+        new SkyrimGroup<Keyword> Keywords { get; }
+        new SkyrimGroup<LocationReferenceType> LocationReferenceTypes { get; }
+        new SkyrimGroup<ActionRecord> Actions { get; }
+        new SkyrimGroup<TextureSet> TextureSets { get; }
+        new SkyrimGroup<Global> Globals { get; }
+        new SkyrimGroup<Class> Classes { get; }
+        new SkyrimGroup<Faction> Factions { get; }
+        new SkyrimGroup<HeadPart> HeadParts { get; }
+        new SkyrimGroup<Hair> Hairs { get; }
+        new SkyrimGroup<Eyes> Eyes { get; }
+        new SkyrimGroup<Race> Races { get; }
+        new SkyrimGroup<SoundMarker> SoundMarkers { get; }
+        new SkyrimGroup<AcousticSpace> AcousticSpaces { get; }
+        new SkyrimGroup<MagicEffect> MagicEffects { get; }
+        new SkyrimGroup<LandscapeTexture> LandscapeTextures { get; }
+        new SkyrimGroup<ObjectEffect> ObjectEffects { get; }
+        new SkyrimGroup<Spell> Spells { get; }
+        new SkyrimGroup<Scroll> Scrolls { get; }
+        new SkyrimGroup<Activator> Activators { get; }
+        new SkyrimGroup<TalkingActivator> TalkingActivators { get; }
+        new SkyrimGroup<Armor> Armors { get; }
+        new SkyrimGroup<Book> Books { get; }
+        new SkyrimGroup<Container> Containers { get; }
+        new SkyrimGroup<Door> Doors { get; }
+        new SkyrimGroup<Ingredient> Ingredients { get; }
+        new SkyrimGroup<Light> Lights { get; }
+        new SkyrimGroup<MiscItem> MiscItems { get; }
+        new SkyrimGroup<AlchemicalApparatus> AlchemicalApparatuses { get; }
+        new SkyrimGroup<Static> Statics { get; }
+        new SkyrimGroup<MoveableStatic> MoveableStatics { get; }
+        new SkyrimGroup<Grass> Grasses { get; }
+        new SkyrimGroup<Tree> Trees { get; }
+        new SkyrimGroup<Flora> Florae { get; }
+        new SkyrimGroup<Furniture> Furniture { get; }
+        new SkyrimGroup<Weapon> Weapons { get; }
+        new SkyrimGroup<Ammunition> Ammunitions { get; }
+        new SkyrimGroup<Npc> Npcs { get; }
+        new SkyrimGroup<LeveledNpc> LeveledNpcs { get; }
+        new SkyrimGroup<Key> Keys { get; }
+        new SkyrimGroup<Ingestible> Ingestibles { get; }
+        new SkyrimGroup<IdleMarker> IdleMarkers { get; }
+        new SkyrimGroup<ConstructibleObject> ConstructibleObjects { get; }
+        new SkyrimGroup<Projectile> Projectiles { get; }
+        new SkyrimGroup<Hazard> Hazards { get; }
+        new SkyrimGroup<SoulGem> SoulGems { get; }
+        new SkyrimGroup<LeveledItem> LeveledItems { get; }
+        new SkyrimGroup<Weather> Weathers { get; }
+        new SkyrimGroup<Climate> Climates { get; }
+        new SkyrimGroup<ShaderParticleGeometry> ShaderParticleGeometries { get; }
+        new SkyrimGroup<VisualEffect> VisualEffects { get; }
+        new SkyrimGroup<Region> Regions { get; }
+        new SkyrimGroup<NavigationMeshInfoMap> NavigationMeshInfoMaps { get; }
+        new SkyrimListGroup<CellBlock> Cells { get; }
+        new SkyrimGroup<Worldspace> Worldspaces { get; }
+        new SkyrimGroup<DialogTopic> DialogTopics { get; }
+        new SkyrimGroup<Quest> Quests { get; }
+        new SkyrimGroup<IdleAnimation> IdleAnimations { get; }
+        new SkyrimGroup<Package> Packages { get; }
+        new SkyrimGroup<CombatStyle> CombatStyles { get; }
+        new SkyrimGroup<LoadScreen> LoadScreens { get; }
+        new SkyrimGroup<LeveledSpell> LeveledSpells { get; }
+        new SkyrimGroup<AnimatedObject> AnimatedObjects { get; }
+        new SkyrimGroup<Water> Waters { get; }
+        new SkyrimGroup<EffectShader> EffectShaders { get; }
+        new SkyrimGroup<Explosion> Explosions { get; }
+        new SkyrimGroup<Debris> Debris { get; }
+        new SkyrimGroup<ImageSpace> ImageSpaces { get; }
+        new SkyrimGroup<ImageSpaceAdapter> ImageSpaceAdapters { get; }
+        new SkyrimGroup<FormList> FormLists { get; }
+        new SkyrimGroup<Perk> Perks { get; }
+        new SkyrimGroup<BodyPartData> BodyParts { get; }
+        new SkyrimGroup<AddonNode> AddonNodes { get; }
+        new SkyrimGroup<ActorValueInformation> ActorValueInformation { get; }
+        new SkyrimGroup<CameraShot> CameraShots { get; }
+        new SkyrimGroup<CameraPath> CameraPaths { get; }
+        new SkyrimGroup<VoiceType> VoiceTypes { get; }
+        new SkyrimGroup<MaterialType> MaterialTypes { get; }
+        new SkyrimGroup<Impact> Impacts { get; }
+        new SkyrimGroup<ImpactDataSet> ImpactDataSets { get; }
+        new SkyrimGroup<ArmorAddon> ArmorAddons { get; }
+        new SkyrimGroup<EncounterZone> EncounterZones { get; }
+        new SkyrimGroup<Location> Locations { get; }
+        new SkyrimGroup<Message> Messages { get; }
+        new SkyrimGroup<DefaultObjectManager> DefaultObjectManagers { get; }
+        new SkyrimGroup<LightingTemplate> LightingTemplates { get; }
+        new SkyrimGroup<MusicType> MusicTypes { get; }
+        new SkyrimGroup<Footstep> Footsteps { get; }
+        new SkyrimGroup<FootstepSet> FootstepSets { get; }
+        new SkyrimGroup<StoryManagerBranchNode> StoryManagerBranchNodes { get; }
+        new SkyrimGroup<StoryManagerQuestNode> StoryManagerQuestNodes { get; }
+        new SkyrimGroup<StoryManagerEventNode> StoryManagerEventNodes { get; }
+        new SkyrimGroup<DialogBranch> DialogBranches { get; }
+        new SkyrimGroup<MusicTrack> MusicTracks { get; }
+        new SkyrimGroup<DialogView> DialogViews { get; }
+        new SkyrimGroup<WordOfPower> WordsOfPower { get; }
+        new SkyrimGroup<Shout> Shouts { get; }
+        new SkyrimGroup<EquipType> EquipTypes { get; }
+        new SkyrimGroup<Relationship> Relationships { get; }
+        new SkyrimGroup<Scene> Scenes { get; }
+        new SkyrimGroup<AssociationType> AssociationTypes { get; }
+        new SkyrimGroup<Outfit> Outfits { get; }
+        new SkyrimGroup<ArtObject> ArtObjects { get; }
+        new SkyrimGroup<MaterialObject> MaterialObjects { get; }
+        new SkyrimGroup<MovementType> MovementTypes { get; }
+        new SkyrimGroup<SoundDescriptor> SoundDescriptors { get; }
+        new SkyrimGroup<DualCastData> DualCastData { get; }
+        new SkyrimGroup<SoundCategory> SoundCategories { get; }
+        new SkyrimGroup<SoundOutputModel> SoundOutputModels { get; }
+        new SkyrimGroup<CollisionLayer> CollisionLayers { get; }
+        new SkyrimGroup<ColorRecord> Colors { get; }
+        new SkyrimGroup<ReverbParameters> ReverbParameters { get; }
+        new SkyrimGroup<VolumetricLighting> VolumetricLightings { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -6369,121 +6370,121 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SkyrimMod_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SkyrimMod_Registration.Instance;
         ISkyrimModHeaderGetter ModHeader { get; }
-        IGroupGetter<IGameSettingGetter> GameSettings { get; }
-        IGroupGetter<IKeywordGetter> Keywords { get; }
-        IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes { get; }
-        IGroupGetter<IActionRecordGetter> Actions { get; }
-        IGroupGetter<ITextureSetGetter> TextureSets { get; }
-        IGroupGetter<IGlobalGetter> Globals { get; }
-        IGroupGetter<IClassGetter> Classes { get; }
-        IGroupGetter<IFactionGetter> Factions { get; }
-        IGroupGetter<IHeadPartGetter> HeadParts { get; }
-        IGroupGetter<IHairGetter> Hairs { get; }
-        IGroupGetter<IEyesGetter> Eyes { get; }
-        IGroupGetter<IRaceGetter> Races { get; }
-        IGroupGetter<ISoundMarkerGetter> SoundMarkers { get; }
-        IGroupGetter<IAcousticSpaceGetter> AcousticSpaces { get; }
-        IGroupGetter<IMagicEffectGetter> MagicEffects { get; }
-        IGroupGetter<ILandscapeTextureGetter> LandscapeTextures { get; }
-        IGroupGetter<IObjectEffectGetter> ObjectEffects { get; }
-        IGroupGetter<ISpellGetter> Spells { get; }
-        IGroupGetter<IScrollGetter> Scrolls { get; }
-        IGroupGetter<IActivatorGetter> Activators { get; }
-        IGroupGetter<ITalkingActivatorGetter> TalkingActivators { get; }
-        IGroupGetter<IArmorGetter> Armors { get; }
-        IGroupGetter<IBookGetter> Books { get; }
-        IGroupGetter<IContainerGetter> Containers { get; }
-        IGroupGetter<IDoorGetter> Doors { get; }
-        IGroupGetter<IIngredientGetter> Ingredients { get; }
-        IGroupGetter<ILightGetter> Lights { get; }
-        IGroupGetter<IMiscItemGetter> MiscItems { get; }
-        IGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatuses { get; }
-        IGroupGetter<IStaticGetter> Statics { get; }
-        IGroupGetter<IMoveableStaticGetter> MoveableStatics { get; }
-        IGroupGetter<IGrassGetter> Grasses { get; }
-        IGroupGetter<ITreeGetter> Trees { get; }
-        IGroupGetter<IFloraGetter> Florae { get; }
-        IGroupGetter<IFurnitureGetter> Furniture { get; }
-        IGroupGetter<IWeaponGetter> Weapons { get; }
-        IGroupGetter<IAmmunitionGetter> Ammunitions { get; }
-        IGroupGetter<INpcGetter> Npcs { get; }
-        IGroupGetter<ILeveledNpcGetter> LeveledNpcs { get; }
-        IGroupGetter<IKeyGetter> Keys { get; }
-        IGroupGetter<IIngestibleGetter> Ingestibles { get; }
-        IGroupGetter<IIdleMarkerGetter> IdleMarkers { get; }
-        IGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
-        IGroupGetter<IProjectileGetter> Projectiles { get; }
-        IGroupGetter<IHazardGetter> Hazards { get; }
-        IGroupGetter<ISoulGemGetter> SoulGems { get; }
-        IGroupGetter<ILeveledItemGetter> LeveledItems { get; }
-        IGroupGetter<IWeatherGetter> Weathers { get; }
-        IGroupGetter<IClimateGetter> Climates { get; }
-        IGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries { get; }
-        IGroupGetter<IVisualEffectGetter> VisualEffects { get; }
-        IGroupGetter<IRegionGetter> Regions { get; }
-        IGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps { get; }
-        IListGroupGetter<ICellBlockGetter> Cells { get; }
-        IGroupGetter<IWorldspaceGetter> Worldspaces { get; }
-        IGroupGetter<IDialogTopicGetter> DialogTopics { get; }
-        IGroupGetter<IQuestGetter> Quests { get; }
-        IGroupGetter<IIdleAnimationGetter> IdleAnimations { get; }
-        IGroupGetter<IPackageGetter> Packages { get; }
-        IGroupGetter<ICombatStyleGetter> CombatStyles { get; }
-        IGroupGetter<ILoadScreenGetter> LoadScreens { get; }
-        IGroupGetter<ILeveledSpellGetter> LeveledSpells { get; }
-        IGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
-        IGroupGetter<IWaterGetter> Waters { get; }
-        IGroupGetter<IEffectShaderGetter> EffectShaders { get; }
-        IGroupGetter<IExplosionGetter> Explosions { get; }
-        IGroupGetter<IDebrisGetter> Debris { get; }
-        IGroupGetter<IImageSpaceGetter> ImageSpaces { get; }
-        IGroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters { get; }
-        IGroupGetter<IFormListGetter> FormLists { get; }
-        IGroupGetter<IPerkGetter> Perks { get; }
-        IGroupGetter<IBodyPartDataGetter> BodyParts { get; }
-        IGroupGetter<IAddonNodeGetter> AddonNodes { get; }
-        IGroupGetter<IActorValueInformationGetter> ActorValueInformation { get; }
-        IGroupGetter<ICameraShotGetter> CameraShots { get; }
-        IGroupGetter<ICameraPathGetter> CameraPaths { get; }
-        IGroupGetter<IVoiceTypeGetter> VoiceTypes { get; }
-        IGroupGetter<IMaterialTypeGetter> MaterialTypes { get; }
-        IGroupGetter<IImpactGetter> Impacts { get; }
-        IGroupGetter<IImpactDataSetGetter> ImpactDataSets { get; }
-        IGroupGetter<IArmorAddonGetter> ArmorAddons { get; }
-        IGroupGetter<IEncounterZoneGetter> EncounterZones { get; }
-        IGroupGetter<ILocationGetter> Locations { get; }
-        IGroupGetter<IMessageGetter> Messages { get; }
-        IGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers { get; }
-        IGroupGetter<ILightingTemplateGetter> LightingTemplates { get; }
-        IGroupGetter<IMusicTypeGetter> MusicTypes { get; }
-        IGroupGetter<IFootstepGetter> Footsteps { get; }
-        IGroupGetter<IFootstepSetGetter> FootstepSets { get; }
-        IGroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes { get; }
-        IGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes { get; }
-        IGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes { get; }
-        IGroupGetter<IDialogBranchGetter> DialogBranches { get; }
-        IGroupGetter<IMusicTrackGetter> MusicTracks { get; }
-        IGroupGetter<IDialogViewGetter> DialogViews { get; }
-        IGroupGetter<IWordOfPowerGetter> WordsOfPower { get; }
-        IGroupGetter<IShoutGetter> Shouts { get; }
-        IGroupGetter<IEquipTypeGetter> EquipTypes { get; }
-        IGroupGetter<IRelationshipGetter> Relationships { get; }
-        IGroupGetter<ISceneGetter> Scenes { get; }
-        IGroupGetter<IAssociationTypeGetter> AssociationTypes { get; }
-        IGroupGetter<IOutfitGetter> Outfits { get; }
-        IGroupGetter<IArtObjectGetter> ArtObjects { get; }
-        IGroupGetter<IMaterialObjectGetter> MaterialObjects { get; }
-        IGroupGetter<IMovementTypeGetter> MovementTypes { get; }
-        IGroupGetter<ISoundDescriptorGetter> SoundDescriptors { get; }
-        IGroupGetter<IDualCastDataGetter> DualCastData { get; }
-        IGroupGetter<ISoundCategoryGetter> SoundCategories { get; }
-        IGroupGetter<ISoundOutputModelGetter> SoundOutputModels { get; }
-        IGroupGetter<ICollisionLayerGetter> CollisionLayers { get; }
-        IGroupGetter<IColorRecordGetter> Colors { get; }
-        IGroupGetter<IReverbParametersGetter> ReverbParameters { get; }
-        IGroupGetter<IVolumetricLightingGetter> VolumetricLightings { get; }
+        ISkyrimGroupGetter<IGameSettingGetter> GameSettings { get; }
+        ISkyrimGroupGetter<IKeywordGetter> Keywords { get; }
+        ISkyrimGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes { get; }
+        ISkyrimGroupGetter<IActionRecordGetter> Actions { get; }
+        ISkyrimGroupGetter<ITextureSetGetter> TextureSets { get; }
+        ISkyrimGroupGetter<IGlobalGetter> Globals { get; }
+        ISkyrimGroupGetter<IClassGetter> Classes { get; }
+        ISkyrimGroupGetter<IFactionGetter> Factions { get; }
+        ISkyrimGroupGetter<IHeadPartGetter> HeadParts { get; }
+        ISkyrimGroupGetter<IHairGetter> Hairs { get; }
+        ISkyrimGroupGetter<IEyesGetter> Eyes { get; }
+        ISkyrimGroupGetter<IRaceGetter> Races { get; }
+        ISkyrimGroupGetter<ISoundMarkerGetter> SoundMarkers { get; }
+        ISkyrimGroupGetter<IAcousticSpaceGetter> AcousticSpaces { get; }
+        ISkyrimGroupGetter<IMagicEffectGetter> MagicEffects { get; }
+        ISkyrimGroupGetter<ILandscapeTextureGetter> LandscapeTextures { get; }
+        ISkyrimGroupGetter<IObjectEffectGetter> ObjectEffects { get; }
+        ISkyrimGroupGetter<ISpellGetter> Spells { get; }
+        ISkyrimGroupGetter<IScrollGetter> Scrolls { get; }
+        ISkyrimGroupGetter<IActivatorGetter> Activators { get; }
+        ISkyrimGroupGetter<ITalkingActivatorGetter> TalkingActivators { get; }
+        ISkyrimGroupGetter<IArmorGetter> Armors { get; }
+        ISkyrimGroupGetter<IBookGetter> Books { get; }
+        ISkyrimGroupGetter<IContainerGetter> Containers { get; }
+        ISkyrimGroupGetter<IDoorGetter> Doors { get; }
+        ISkyrimGroupGetter<IIngredientGetter> Ingredients { get; }
+        ISkyrimGroupGetter<ILightGetter> Lights { get; }
+        ISkyrimGroupGetter<IMiscItemGetter> MiscItems { get; }
+        ISkyrimGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatuses { get; }
+        ISkyrimGroupGetter<IStaticGetter> Statics { get; }
+        ISkyrimGroupGetter<IMoveableStaticGetter> MoveableStatics { get; }
+        ISkyrimGroupGetter<IGrassGetter> Grasses { get; }
+        ISkyrimGroupGetter<ITreeGetter> Trees { get; }
+        ISkyrimGroupGetter<IFloraGetter> Florae { get; }
+        ISkyrimGroupGetter<IFurnitureGetter> Furniture { get; }
+        ISkyrimGroupGetter<IWeaponGetter> Weapons { get; }
+        ISkyrimGroupGetter<IAmmunitionGetter> Ammunitions { get; }
+        ISkyrimGroupGetter<INpcGetter> Npcs { get; }
+        ISkyrimGroupGetter<ILeveledNpcGetter> LeveledNpcs { get; }
+        ISkyrimGroupGetter<IKeyGetter> Keys { get; }
+        ISkyrimGroupGetter<IIngestibleGetter> Ingestibles { get; }
+        ISkyrimGroupGetter<IIdleMarkerGetter> IdleMarkers { get; }
+        ISkyrimGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
+        ISkyrimGroupGetter<IProjectileGetter> Projectiles { get; }
+        ISkyrimGroupGetter<IHazardGetter> Hazards { get; }
+        ISkyrimGroupGetter<ISoulGemGetter> SoulGems { get; }
+        ISkyrimGroupGetter<ILeveledItemGetter> LeveledItems { get; }
+        ISkyrimGroupGetter<IWeatherGetter> Weathers { get; }
+        ISkyrimGroupGetter<IClimateGetter> Climates { get; }
+        ISkyrimGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries { get; }
+        ISkyrimGroupGetter<IVisualEffectGetter> VisualEffects { get; }
+        ISkyrimGroupGetter<IRegionGetter> Regions { get; }
+        ISkyrimGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps { get; }
+        ISkyrimListGroupGetter<ICellBlockGetter> Cells { get; }
+        ISkyrimGroupGetter<IWorldspaceGetter> Worldspaces { get; }
+        ISkyrimGroupGetter<IDialogTopicGetter> DialogTopics { get; }
+        ISkyrimGroupGetter<IQuestGetter> Quests { get; }
+        ISkyrimGroupGetter<IIdleAnimationGetter> IdleAnimations { get; }
+        ISkyrimGroupGetter<IPackageGetter> Packages { get; }
+        ISkyrimGroupGetter<ICombatStyleGetter> CombatStyles { get; }
+        ISkyrimGroupGetter<ILoadScreenGetter> LoadScreens { get; }
+        ISkyrimGroupGetter<ILeveledSpellGetter> LeveledSpells { get; }
+        ISkyrimGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
+        ISkyrimGroupGetter<IWaterGetter> Waters { get; }
+        ISkyrimGroupGetter<IEffectShaderGetter> EffectShaders { get; }
+        ISkyrimGroupGetter<IExplosionGetter> Explosions { get; }
+        ISkyrimGroupGetter<IDebrisGetter> Debris { get; }
+        ISkyrimGroupGetter<IImageSpaceGetter> ImageSpaces { get; }
+        ISkyrimGroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters { get; }
+        ISkyrimGroupGetter<IFormListGetter> FormLists { get; }
+        ISkyrimGroupGetter<IPerkGetter> Perks { get; }
+        ISkyrimGroupGetter<IBodyPartDataGetter> BodyParts { get; }
+        ISkyrimGroupGetter<IAddonNodeGetter> AddonNodes { get; }
+        ISkyrimGroupGetter<IActorValueInformationGetter> ActorValueInformation { get; }
+        ISkyrimGroupGetter<ICameraShotGetter> CameraShots { get; }
+        ISkyrimGroupGetter<ICameraPathGetter> CameraPaths { get; }
+        ISkyrimGroupGetter<IVoiceTypeGetter> VoiceTypes { get; }
+        ISkyrimGroupGetter<IMaterialTypeGetter> MaterialTypes { get; }
+        ISkyrimGroupGetter<IImpactGetter> Impacts { get; }
+        ISkyrimGroupGetter<IImpactDataSetGetter> ImpactDataSets { get; }
+        ISkyrimGroupGetter<IArmorAddonGetter> ArmorAddons { get; }
+        ISkyrimGroupGetter<IEncounterZoneGetter> EncounterZones { get; }
+        ISkyrimGroupGetter<ILocationGetter> Locations { get; }
+        ISkyrimGroupGetter<IMessageGetter> Messages { get; }
+        ISkyrimGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers { get; }
+        ISkyrimGroupGetter<ILightingTemplateGetter> LightingTemplates { get; }
+        ISkyrimGroupGetter<IMusicTypeGetter> MusicTypes { get; }
+        ISkyrimGroupGetter<IFootstepGetter> Footsteps { get; }
+        ISkyrimGroupGetter<IFootstepSetGetter> FootstepSets { get; }
+        ISkyrimGroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes { get; }
+        ISkyrimGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes { get; }
+        ISkyrimGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes { get; }
+        ISkyrimGroupGetter<IDialogBranchGetter> DialogBranches { get; }
+        ISkyrimGroupGetter<IMusicTrackGetter> MusicTracks { get; }
+        ISkyrimGroupGetter<IDialogViewGetter> DialogViews { get; }
+        ISkyrimGroupGetter<IWordOfPowerGetter> WordsOfPower { get; }
+        ISkyrimGroupGetter<IShoutGetter> Shouts { get; }
+        ISkyrimGroupGetter<IEquipTypeGetter> EquipTypes { get; }
+        ISkyrimGroupGetter<IRelationshipGetter> Relationships { get; }
+        ISkyrimGroupGetter<ISceneGetter> Scenes { get; }
+        ISkyrimGroupGetter<IAssociationTypeGetter> AssociationTypes { get; }
+        ISkyrimGroupGetter<IOutfitGetter> Outfits { get; }
+        ISkyrimGroupGetter<IArtObjectGetter> ArtObjects { get; }
+        ISkyrimGroupGetter<IMaterialObjectGetter> MaterialObjects { get; }
+        ISkyrimGroupGetter<IMovementTypeGetter> MovementTypes { get; }
+        ISkyrimGroupGetter<ISoundDescriptorGetter> SoundDescriptors { get; }
+        ISkyrimGroupGetter<IDualCastDataGetter> DualCastData { get; }
+        ISkyrimGroupGetter<ISoundCategoryGetter> SoundCategories { get; }
+        ISkyrimGroupGetter<ISoundOutputModelGetter> SoundOutputModels { get; }
+        ISkyrimGroupGetter<ICollisionLayerGetter> CollisionLayers { get; }
+        ISkyrimGroupGetter<IColorRecordGetter> Colors { get; }
+        ISkyrimGroupGetter<IReverbParametersGetter> ReverbParameters { get; }
+        ISkyrimGroupGetter<IVolumetricLightingGetter> VolumetricLightings { get; }
 
         #region Mutagen
         SkyrimRelease SkyrimRelease { get; }
@@ -6634,29 +6635,38 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Mutagen
-        public static IGroupCommonGetter<T> GetTopLevelGroup<T>(this ISkyrimModGetter obj)
-            where T : IMajorRecordCommonGetter
+        public static IGroupGetter<T> GetTopLevelGroup<T>(this ISkyrimModGetter obj)
+            where T : IMajorRecordGetter
         {
-            return (IGroupCommonGetter<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroupCommonGetter<IMajorRecordCommonGetter> GetTopLevelGroup(
+        public static IGroupGetter GetTopLevelGroup(
             this ISkyrimModGetter obj,
             Type type)
         {
-            return (IGroupCommonGetter<IMajorRecordCommonGetter>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
 
-        public static IGroupCommon<T> GetTopLevelGroup<T>(this ISkyrimMod obj)
-            where T : IMajorRecordCommon
+        public static IGroup<T> GetTopLevelGroup<T>(this ISkyrimMod obj)
+            where T : IMajorRecord
         {
-            return (IGroupCommon<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
+        }
+
+        public static IGroup GetTopLevelGroup(
+            this ISkyrimMod obj,
+            Type type)
+        {
+            return (IGroup)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: type);
         }
 
         public static void WriteToBinaryParallel(
@@ -6698,7 +6708,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this ISkyrimModGetter obj)
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this ISkyrimModGetter obj)
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
@@ -6707,7 +6717,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this ISkyrimModGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -6718,7 +6728,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             this ISkyrimModGetter obj,
             Type type,
             bool throwIfUnknown = true)
@@ -6727,19 +6737,19 @@ namespace Mutagen.Bethesda.Skyrim
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommonGetter)m)
+                .Select(m => (IMajorRecordGetter)m)
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ISkyrimMod obj)
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this ISkyrimMod obj)
         {
             return ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ISkyrimMod obj)
-            where TMajor : class, IMajorRecordCommon
+            where TMajor : class, IMajorRecord
         {
             return ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -6750,7 +6760,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
             this ISkyrimMod obj,
             Type? type,
             bool throwIfUnknown = true)
@@ -6759,7 +6769,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommon)m)
+                .Select(m => (IMajorRecord)m)
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
@@ -6844,7 +6854,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod obj,
             TMajor record,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(record.FormKey);
@@ -6860,7 +6870,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod obj,
             IEnumerable<TMajor> records,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -6874,7 +6884,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod obj,
             FormKey key,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
@@ -6890,7 +6900,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod obj,
             IEnumerable<FormKey> keys,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -6904,7 +6914,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod obj,
             HashSet<FormKey> keys,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -6918,20 +6928,20 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
-            where TSetter : class, IMajorRecordCommon, TGetter
-            where TGetter : class, IMajorRecordCommonGetter
+            where TSetter : class, IMajorRecord, TGetter
+            where TGetter : class, IMajorRecordGetter
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).EnumerateMajorRecordContexts(
                 obj: obj,
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
+                .Select(m => m.AsType<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             this ISkyrimModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -7477,15 +7487,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.VolumetricLightings.RemapLinks(mapping);
         }
         
-        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ISkyrimMod obj)
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(ISkyrimMod obj)
         {
             foreach (var item in SkyrimModCommon.Instance.EnumerateMajorRecords(obj))
             {
-                yield return (item as IMajorRecordCommon)!;
+                yield return (item as IMajorRecord)!;
             }
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
             ISkyrimMod obj,
             Type? type,
             bool throwIfUnknown)
@@ -7494,7 +7504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             ISkyrimMod obj,
             Type type,
             bool throwIfUnknown)
@@ -7632,13 +7642,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
                 case "SkyrimMajorRecord":
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "ISkyrimMajorRecordGetter":
                     if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
@@ -11268,7 +11276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public static void WriteGroupParallel<T>(
-            IGroupGetter<T> group,
+            ISkyrimGroupGetter<T> group,
             IMasterReferenceReader masters,
             int targetIndex,
             GameConstants gameConstants,
@@ -11285,7 +11293,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (var stream = new MutagenWriter(groupByteStream, gameConstants, dispose: false))
             {
                 stream.Position += 8;
-                GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
+                SkyrimGroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
             }
             subStreams[0] = groupByteStream;
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
@@ -12106,7 +12114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ISkyrimModGetter obj)
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ISkyrimModGetter obj)
         {
             foreach (var item in obj.GameSettings.EnumerateMajorRecords())
             {
@@ -12562,7 +12570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
             ISkyrimModGetter obj,
             Type? type,
             bool throwIfUnknown)
@@ -12571,14 +12579,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             ISkyrimModGetter obj,
             Type type,
             bool throwIfUnknown)
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
@@ -12590,7 +12597,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "ISkyrimMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
@@ -14787,7 +14793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             ISkyrimModGetter obj,
             ILinkCache linkCache)
         {
@@ -15722,7 +15728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             ISkyrimModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -15730,7 +15736,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
@@ -15744,7 +15749,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "ISkyrimMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecordContexts(
                         obj,
@@ -20804,7 +20808,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
-        public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
+        public static SkyrimMod_Registration StaticRegistration => SkyrimMod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModCommon.Instance;
         [DebuggerStepThrough]
@@ -21139,7 +21143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var GameSettingsItem = item.GameSettings;
                 if (GameSettingsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
                         item: GameSettingsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21150,7 +21154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var KeywordsItem = item.Keywords;
                 if (KeywordsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
                         item: KeywordsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21161,7 +21165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var LocationReferenceTypesItem = item.LocationReferenceTypes;
                 if (LocationReferenceTypesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LocationReferenceTypesItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)LocationReferenceTypesItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
                         item: LocationReferenceTypesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21172,7 +21176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ActionsItem = item.Actions;
                 if (ActionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
                         item: ActionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21183,7 +21187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var TextureSetsItem = item.TextureSets;
                 if (TextureSetsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
                         item: TextureSetsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21194,7 +21198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var GlobalsItem = item.Globals;
                 if (GlobalsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21205,7 +21209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ClassesItem = item.Classes;
                 if (ClassesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21216,7 +21220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var FactionsItem = item.Factions;
                 if (FactionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: FactionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21227,7 +21231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var HeadPartsItem = item.HeadParts;
                 if (HeadPartsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
                         item: HeadPartsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21238,7 +21242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var HairsItem = item.Hairs;
                 if (HairsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
                         item: HairsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21249,7 +21253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var EyesItem = item.Eyes;
                 if (EyesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyesGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyesGetter>(
                         item: EyesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21260,7 +21264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var RacesItem = item.Races;
                 if (RacesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
                         item: RacesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21271,7 +21275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var SoundMarkersItem = item.SoundMarkers;
                 if (SoundMarkersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoundMarkersItem).BinaryWriteTranslator).Write<ISoundMarkerGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)SoundMarkersItem).BinaryWriteTranslator).Write<ISoundMarkerGetter>(
                         item: SoundMarkersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21282,7 +21286,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var AcousticSpacesItem = item.AcousticSpaces;
                 if (AcousticSpacesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)AcousticSpacesItem).BinaryWriteTranslator).Write<IAcousticSpaceGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)AcousticSpacesItem).BinaryWriteTranslator).Write<IAcousticSpaceGetter>(
                         item: AcousticSpacesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21293,7 +21297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var MagicEffectsItem = item.MagicEffects;
                 if (MagicEffectsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)MagicEffectsItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)MagicEffectsItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
                         item: MagicEffectsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21304,7 +21308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var LandscapeTexturesItem = item.LandscapeTextures;
                 if (LandscapeTexturesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LandscapeTexturesItem).BinaryWriteTranslator).Write<ILandscapeTextureGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)LandscapeTexturesItem).BinaryWriteTranslator).Write<ILandscapeTextureGetter>(
                         item: LandscapeTexturesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21315,7 +21319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ObjectEffectsItem = item.ObjectEffects;
                 if (ObjectEffectsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ObjectEffectsItem).BinaryWriteTranslator).Write<IObjectEffectGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ObjectEffectsItem).BinaryWriteTranslator).Write<IObjectEffectGetter>(
                         item: ObjectEffectsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21326,7 +21330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var SpellsItem = item.Spells;
                 if (SpellsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SpellsItem).BinaryWriteTranslator).Write<ISpellGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)SpellsItem).BinaryWriteTranslator).Write<ISpellGetter>(
                         item: SpellsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21337,7 +21341,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ScrollsItem = item.Scrolls;
                 if (ScrollsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ScrollsItem).BinaryWriteTranslator).Write<IScrollGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ScrollsItem).BinaryWriteTranslator).Write<IScrollGetter>(
                         item: ScrollsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21348,7 +21352,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ActivatorsItem = item.Activators;
                 if (ActivatorsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ActivatorsItem).BinaryWriteTranslator).Write<IActivatorGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ActivatorsItem).BinaryWriteTranslator).Write<IActivatorGetter>(
                         item: ActivatorsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21359,7 +21363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var TalkingActivatorsItem = item.TalkingActivators;
                 if (TalkingActivatorsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)TalkingActivatorsItem).BinaryWriteTranslator).Write<ITalkingActivatorGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)TalkingActivatorsItem).BinaryWriteTranslator).Write<ITalkingActivatorGetter>(
                         item: TalkingActivatorsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21370,7 +21374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ArmorsItem = item.Armors;
                 if (ArmorsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
                         item: ArmorsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21381,7 +21385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var BooksItem = item.Books;
                 if (BooksItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)BooksItem).BinaryWriteTranslator).Write<IBookGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)BooksItem).BinaryWriteTranslator).Write<IBookGetter>(
                         item: BooksItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21392,7 +21396,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ContainersItem = item.Containers;
                 if (ContainersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ContainersItem).BinaryWriteTranslator).Write<IContainerGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ContainersItem).BinaryWriteTranslator).Write<IContainerGetter>(
                         item: ContainersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21403,7 +21407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var DoorsItem = item.Doors;
                 if (DoorsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)DoorsItem).BinaryWriteTranslator).Write<IDoorGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)DoorsItem).BinaryWriteTranslator).Write<IDoorGetter>(
                         item: DoorsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21414,7 +21418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var IngredientsItem = item.Ingredients;
                 if (IngredientsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)IngredientsItem).BinaryWriteTranslator).Write<IIngredientGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)IngredientsItem).BinaryWriteTranslator).Write<IIngredientGetter>(
                         item: IngredientsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21425,7 +21429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var LightsItem = item.Lights;
                 if (LightsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LightsItem).BinaryWriteTranslator).Write<ILightGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)LightsItem).BinaryWriteTranslator).Write<ILightGetter>(
                         item: LightsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21436,7 +21440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var MiscItemsItem = item.MiscItems;
                 if (MiscItemsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)MiscItemsItem).BinaryWriteTranslator).Write<IMiscItemGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)MiscItemsItem).BinaryWriteTranslator).Write<IMiscItemGetter>(
                         item: MiscItemsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21447,7 +21451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var AlchemicalApparatusesItem = item.AlchemicalApparatuses;
                 if (AlchemicalApparatusesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)AlchemicalApparatusesItem).BinaryWriteTranslator).Write<IAlchemicalApparatusGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)AlchemicalApparatusesItem).BinaryWriteTranslator).Write<IAlchemicalApparatusGetter>(
                         item: AlchemicalApparatusesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21458,7 +21462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var StaticsItem = item.Statics;
                 if (StaticsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)StaticsItem).BinaryWriteTranslator).Write<IStaticGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)StaticsItem).BinaryWriteTranslator).Write<IStaticGetter>(
                         item: StaticsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21469,7 +21473,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var MoveableStaticsItem = item.MoveableStatics;
                 if (MoveableStaticsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)MoveableStaticsItem).BinaryWriteTranslator).Write<IMoveableStaticGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)MoveableStaticsItem).BinaryWriteTranslator).Write<IMoveableStaticGetter>(
                         item: MoveableStaticsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21480,7 +21484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var GrassesItem = item.Grasses;
                 if (GrassesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)GrassesItem).BinaryWriteTranslator).Write<IGrassGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)GrassesItem).BinaryWriteTranslator).Write<IGrassGetter>(
                         item: GrassesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21491,7 +21495,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var TreesItem = item.Trees;
                 if (TreesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)TreesItem).BinaryWriteTranslator).Write<ITreeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)TreesItem).BinaryWriteTranslator).Write<ITreeGetter>(
                         item: TreesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21502,7 +21506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var FloraeItem = item.Florae;
                 if (FloraeItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)FloraeItem).BinaryWriteTranslator).Write<IFloraGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)FloraeItem).BinaryWriteTranslator).Write<IFloraGetter>(
                         item: FloraeItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21513,7 +21517,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var FurnitureItem = item.Furniture;
                 if (FurnitureItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)FurnitureItem).BinaryWriteTranslator).Write<IFurnitureGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)FurnitureItem).BinaryWriteTranslator).Write<IFurnitureGetter>(
                         item: FurnitureItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21524,7 +21528,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var WeaponsItem = item.Weapons;
                 if (WeaponsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)WeaponsItem).BinaryWriteTranslator).Write<IWeaponGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)WeaponsItem).BinaryWriteTranslator).Write<IWeaponGetter>(
                         item: WeaponsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21535,7 +21539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var AmmunitionsItem = item.Ammunitions;
                 if (AmmunitionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)AmmunitionsItem).BinaryWriteTranslator).Write<IAmmunitionGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)AmmunitionsItem).BinaryWriteTranslator).Write<IAmmunitionGetter>(
                         item: AmmunitionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21546,7 +21550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var NpcsItem = item.Npcs;
                 if (NpcsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)NpcsItem).BinaryWriteTranslator).Write<INpcGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)NpcsItem).BinaryWriteTranslator).Write<INpcGetter>(
                         item: NpcsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21557,7 +21561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var LeveledNpcsItem = item.LeveledNpcs;
                 if (LeveledNpcsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledNpcsItem).BinaryWriteTranslator).Write<ILeveledNpcGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)LeveledNpcsItem).BinaryWriteTranslator).Write<ILeveledNpcGetter>(
                         item: LeveledNpcsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21568,7 +21572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var KeysItem = item.Keys;
                 if (KeysItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)KeysItem).BinaryWriteTranslator).Write<IKeyGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)KeysItem).BinaryWriteTranslator).Write<IKeyGetter>(
                         item: KeysItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21579,7 +21583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var IngestiblesItem = item.Ingestibles;
                 if (IngestiblesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)IngestiblesItem).BinaryWriteTranslator).Write<IIngestibleGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)IngestiblesItem).BinaryWriteTranslator).Write<IIngestibleGetter>(
                         item: IngestiblesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21590,7 +21594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var IdleMarkersItem = item.IdleMarkers;
                 if (IdleMarkersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)IdleMarkersItem).BinaryWriteTranslator).Write<IIdleMarkerGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)IdleMarkersItem).BinaryWriteTranslator).Write<IIdleMarkerGetter>(
                         item: IdleMarkersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21601,7 +21605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ConstructibleObjectsItem = item.ConstructibleObjects;
                 if (ConstructibleObjectsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ConstructibleObjectsItem).BinaryWriteTranslator).Write<IConstructibleObjectGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ConstructibleObjectsItem).BinaryWriteTranslator).Write<IConstructibleObjectGetter>(
                         item: ConstructibleObjectsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21612,7 +21616,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ProjectilesItem = item.Projectiles;
                 if (ProjectilesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ProjectilesItem).BinaryWriteTranslator).Write<IProjectileGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ProjectilesItem).BinaryWriteTranslator).Write<IProjectileGetter>(
                         item: ProjectilesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21623,7 +21627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var HazardsItem = item.Hazards;
                 if (HazardsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)HazardsItem).BinaryWriteTranslator).Write<IHazardGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)HazardsItem).BinaryWriteTranslator).Write<IHazardGetter>(
                         item: HazardsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21634,7 +21638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var SoulGemsItem = item.SoulGems;
                 if (SoulGemsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoulGemsItem).BinaryWriteTranslator).Write<ISoulGemGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)SoulGemsItem).BinaryWriteTranslator).Write<ISoulGemGetter>(
                         item: SoulGemsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21645,7 +21649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var LeveledItemsItem = item.LeveledItems;
                 if (LeveledItemsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledItemsItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)LeveledItemsItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
                         item: LeveledItemsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21656,7 +21660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var WeathersItem = item.Weathers;
                 if (WeathersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
                         item: WeathersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21667,7 +21671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ClimatesItem = item.Climates;
                 if (ClimatesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ClimatesItem).BinaryWriteTranslator).Write<IClimateGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ClimatesItem).BinaryWriteTranslator).Write<IClimateGetter>(
                         item: ClimatesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21678,7 +21682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ShaderParticleGeometriesItem = item.ShaderParticleGeometries;
                 if (ShaderParticleGeometriesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ShaderParticleGeometriesItem).BinaryWriteTranslator).Write<IShaderParticleGeometryGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ShaderParticleGeometriesItem).BinaryWriteTranslator).Write<IShaderParticleGeometryGetter>(
                         item: ShaderParticleGeometriesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21689,7 +21693,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var VisualEffectsItem = item.VisualEffects;
                 if (VisualEffectsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)VisualEffectsItem).BinaryWriteTranslator).Write<IVisualEffectGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)VisualEffectsItem).BinaryWriteTranslator).Write<IVisualEffectGetter>(
                         item: VisualEffectsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21700,7 +21704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var RegionsItem = item.Regions;
                 if (RegionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)RegionsItem).BinaryWriteTranslator).Write<IRegionGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)RegionsItem).BinaryWriteTranslator).Write<IRegionGetter>(
                         item: RegionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21711,7 +21715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var NavigationMeshInfoMapsItem = item.NavigationMeshInfoMaps;
                 if (NavigationMeshInfoMapsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)NavigationMeshInfoMapsItem).BinaryWriteTranslator).Write<INavigationMeshInfoMapGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)NavigationMeshInfoMapsItem).BinaryWriteTranslator).Write<INavigationMeshInfoMapGetter>(
                         item: NavigationMeshInfoMapsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21722,7 +21726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var CellsItem = item.Cells;
                 if (CellsItem.Records.Count > 0)
                 {
-                    ((ListGroupBinaryWriteTranslation)((IBinaryItem)CellsItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
+                    ((SkyrimListGroupBinaryWriteTranslation)((IBinaryItem)CellsItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
                         item: CellsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21733,7 +21737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var WorldspacesItem = item.Worldspaces;
                 if (WorldspacesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)WorldspacesItem).BinaryWriteTranslator).Write<IWorldspaceGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)WorldspacesItem).BinaryWriteTranslator).Write<IWorldspaceGetter>(
                         item: WorldspacesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21744,7 +21748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var DialogTopicsItem = item.DialogTopics;
                 if (DialogTopicsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)DialogTopicsItem).BinaryWriteTranslator).Write<IDialogTopicGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)DialogTopicsItem).BinaryWriteTranslator).Write<IDialogTopicGetter>(
                         item: DialogTopicsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21755,7 +21759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var QuestsItem = item.Quests;
                 if (QuestsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
                         item: QuestsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21766,7 +21770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var IdleAnimationsItem = item.IdleAnimations;
                 if (IdleAnimationsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
                         item: IdleAnimationsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21777,7 +21781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var PackagesItem = item.Packages;
                 if (PackagesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)PackagesItem).BinaryWriteTranslator).Write<IPackageGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)PackagesItem).BinaryWriteTranslator).Write<IPackageGetter>(
                         item: PackagesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21788,7 +21792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var CombatStylesItem = item.CombatStyles;
                 if (CombatStylesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)CombatStylesItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)CombatStylesItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
                         item: CombatStylesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21799,7 +21803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var LoadScreensItem = item.LoadScreens;
                 if (LoadScreensItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LoadScreensItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)LoadScreensItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
                         item: LoadScreensItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21810,7 +21814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var LeveledSpellsItem = item.LeveledSpells;
                 if (LeveledSpellsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledSpellsItem).BinaryWriteTranslator).Write<ILeveledSpellGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)LeveledSpellsItem).BinaryWriteTranslator).Write<ILeveledSpellGetter>(
                         item: LeveledSpellsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21821,7 +21825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var AnimatedObjectsItem = item.AnimatedObjects;
                 if (AnimatedObjectsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
                         item: AnimatedObjectsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21832,7 +21836,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var WatersItem = item.Waters;
                 if (WatersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)WatersItem).BinaryWriteTranslator).Write<IWaterGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)WatersItem).BinaryWriteTranslator).Write<IWaterGetter>(
                         item: WatersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21843,7 +21847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var EffectShadersItem = item.EffectShaders;
                 if (EffectShadersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
                         item: EffectShadersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21854,7 +21858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ExplosionsItem = item.Explosions;
                 if (ExplosionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ExplosionsItem).BinaryWriteTranslator).Write<IExplosionGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ExplosionsItem).BinaryWriteTranslator).Write<IExplosionGetter>(
                         item: ExplosionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21865,7 +21869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var DebrisItem = item.Debris;
                 if (DebrisItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)DebrisItem).BinaryWriteTranslator).Write<IDebrisGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)DebrisItem).BinaryWriteTranslator).Write<IDebrisGetter>(
                         item: DebrisItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21876,7 +21880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ImageSpacesItem = item.ImageSpaces;
                 if (ImageSpacesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ImageSpacesItem).BinaryWriteTranslator).Write<IImageSpaceGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ImageSpacesItem).BinaryWriteTranslator).Write<IImageSpaceGetter>(
                         item: ImageSpacesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21887,7 +21891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ImageSpaceAdaptersItem = item.ImageSpaceAdapters;
                 if (ImageSpaceAdaptersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ImageSpaceAdaptersItem).BinaryWriteTranslator).Write<IImageSpaceAdapterGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ImageSpaceAdaptersItem).BinaryWriteTranslator).Write<IImageSpaceAdapterGetter>(
                         item: ImageSpaceAdaptersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21898,7 +21902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var FormListsItem = item.FormLists;
                 if (FormListsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)FormListsItem).BinaryWriteTranslator).Write<IFormListGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)FormListsItem).BinaryWriteTranslator).Write<IFormListGetter>(
                         item: FormListsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21909,7 +21913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var PerksItem = item.Perks;
                 if (PerksItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)PerksItem).BinaryWriteTranslator).Write<IPerkGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)PerksItem).BinaryWriteTranslator).Write<IPerkGetter>(
                         item: PerksItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21920,7 +21924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var BodyPartsItem = item.BodyParts;
                 if (BodyPartsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)BodyPartsItem).BinaryWriteTranslator).Write<IBodyPartDataGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)BodyPartsItem).BinaryWriteTranslator).Write<IBodyPartDataGetter>(
                         item: BodyPartsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21931,7 +21935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var AddonNodesItem = item.AddonNodes;
                 if (AddonNodesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)AddonNodesItem).BinaryWriteTranslator).Write<IAddonNodeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)AddonNodesItem).BinaryWriteTranslator).Write<IAddonNodeGetter>(
                         item: AddonNodesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21942,7 +21946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ActorValueInformationItem = item.ActorValueInformation;
                 if (ActorValueInformationItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ActorValueInformationItem).BinaryWriteTranslator).Write<IActorValueInformationGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ActorValueInformationItem).BinaryWriteTranslator).Write<IActorValueInformationGetter>(
                         item: ActorValueInformationItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21953,7 +21957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var CameraShotsItem = item.CameraShots;
                 if (CameraShotsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)CameraShotsItem).BinaryWriteTranslator).Write<ICameraShotGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)CameraShotsItem).BinaryWriteTranslator).Write<ICameraShotGetter>(
                         item: CameraShotsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21964,7 +21968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var CameraPathsItem = item.CameraPaths;
                 if (CameraPathsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)CameraPathsItem).BinaryWriteTranslator).Write<ICameraPathGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)CameraPathsItem).BinaryWriteTranslator).Write<ICameraPathGetter>(
                         item: CameraPathsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21975,7 +21979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var VoiceTypesItem = item.VoiceTypes;
                 if (VoiceTypesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)VoiceTypesItem).BinaryWriteTranslator).Write<IVoiceTypeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)VoiceTypesItem).BinaryWriteTranslator).Write<IVoiceTypeGetter>(
                         item: VoiceTypesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21986,7 +21990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var MaterialTypesItem = item.MaterialTypes;
                 if (MaterialTypesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)MaterialTypesItem).BinaryWriteTranslator).Write<IMaterialTypeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)MaterialTypesItem).BinaryWriteTranslator).Write<IMaterialTypeGetter>(
                         item: MaterialTypesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -21997,7 +22001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ImpactsItem = item.Impacts;
                 if (ImpactsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ImpactsItem).BinaryWriteTranslator).Write<IImpactGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ImpactsItem).BinaryWriteTranslator).Write<IImpactGetter>(
                         item: ImpactsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22008,7 +22012,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ImpactDataSetsItem = item.ImpactDataSets;
                 if (ImpactDataSetsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ImpactDataSetsItem).BinaryWriteTranslator).Write<IImpactDataSetGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ImpactDataSetsItem).BinaryWriteTranslator).Write<IImpactDataSetGetter>(
                         item: ImpactDataSetsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22019,7 +22023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ArmorAddonsItem = item.ArmorAddons;
                 if (ArmorAddonsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ArmorAddonsItem).BinaryWriteTranslator).Write<IArmorAddonGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ArmorAddonsItem).BinaryWriteTranslator).Write<IArmorAddonGetter>(
                         item: ArmorAddonsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22030,7 +22034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var EncounterZonesItem = item.EncounterZones;
                 if (EncounterZonesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)EncounterZonesItem).BinaryWriteTranslator).Write<IEncounterZoneGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)EncounterZonesItem).BinaryWriteTranslator).Write<IEncounterZoneGetter>(
                         item: EncounterZonesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22041,7 +22045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var LocationsItem = item.Locations;
                 if (LocationsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LocationsItem).BinaryWriteTranslator).Write<ILocationGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)LocationsItem).BinaryWriteTranslator).Write<ILocationGetter>(
                         item: LocationsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22052,7 +22056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var MessagesItem = item.Messages;
                 if (MessagesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)MessagesItem).BinaryWriteTranslator).Write<IMessageGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)MessagesItem).BinaryWriteTranslator).Write<IMessageGetter>(
                         item: MessagesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22063,7 +22067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var DefaultObjectManagersItem = item.DefaultObjectManagers;
                 if (DefaultObjectManagersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)DefaultObjectManagersItem).BinaryWriteTranslator).Write<IDefaultObjectManagerGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)DefaultObjectManagersItem).BinaryWriteTranslator).Write<IDefaultObjectManagerGetter>(
                         item: DefaultObjectManagersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22074,7 +22078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var LightingTemplatesItem = item.LightingTemplates;
                 if (LightingTemplatesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LightingTemplatesItem).BinaryWriteTranslator).Write<ILightingTemplateGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)LightingTemplatesItem).BinaryWriteTranslator).Write<ILightingTemplateGetter>(
                         item: LightingTemplatesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22085,7 +22089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var MusicTypesItem = item.MusicTypes;
                 if (MusicTypesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)MusicTypesItem).BinaryWriteTranslator).Write<IMusicTypeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)MusicTypesItem).BinaryWriteTranslator).Write<IMusicTypeGetter>(
                         item: MusicTypesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22096,7 +22100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var FootstepsItem = item.Footsteps;
                 if (FootstepsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)FootstepsItem).BinaryWriteTranslator).Write<IFootstepGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)FootstepsItem).BinaryWriteTranslator).Write<IFootstepGetter>(
                         item: FootstepsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22107,7 +22111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var FootstepSetsItem = item.FootstepSets;
                 if (FootstepSetsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)FootstepSetsItem).BinaryWriteTranslator).Write<IFootstepSetGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)FootstepSetsItem).BinaryWriteTranslator).Write<IFootstepSetGetter>(
                         item: FootstepSetsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22118,7 +22122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var StoryManagerBranchNodesItem = item.StoryManagerBranchNodes;
                 if (StoryManagerBranchNodesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)StoryManagerBranchNodesItem).BinaryWriteTranslator).Write<IStoryManagerBranchNodeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)StoryManagerBranchNodesItem).BinaryWriteTranslator).Write<IStoryManagerBranchNodeGetter>(
                         item: StoryManagerBranchNodesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22129,7 +22133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var StoryManagerQuestNodesItem = item.StoryManagerQuestNodes;
                 if (StoryManagerQuestNodesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)StoryManagerQuestNodesItem).BinaryWriteTranslator).Write<IStoryManagerQuestNodeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)StoryManagerQuestNodesItem).BinaryWriteTranslator).Write<IStoryManagerQuestNodeGetter>(
                         item: StoryManagerQuestNodesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22140,7 +22144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var StoryManagerEventNodesItem = item.StoryManagerEventNodes;
                 if (StoryManagerEventNodesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)StoryManagerEventNodesItem).BinaryWriteTranslator).Write<IStoryManagerEventNodeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)StoryManagerEventNodesItem).BinaryWriteTranslator).Write<IStoryManagerEventNodeGetter>(
                         item: StoryManagerEventNodesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22151,7 +22155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var DialogBranchesItem = item.DialogBranches;
                 if (DialogBranchesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)DialogBranchesItem).BinaryWriteTranslator).Write<IDialogBranchGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)DialogBranchesItem).BinaryWriteTranslator).Write<IDialogBranchGetter>(
                         item: DialogBranchesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22162,7 +22166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var MusicTracksItem = item.MusicTracks;
                 if (MusicTracksItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)MusicTracksItem).BinaryWriteTranslator).Write<IMusicTrackGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)MusicTracksItem).BinaryWriteTranslator).Write<IMusicTrackGetter>(
                         item: MusicTracksItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22173,7 +22177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var DialogViewsItem = item.DialogViews;
                 if (DialogViewsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)DialogViewsItem).BinaryWriteTranslator).Write<IDialogViewGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)DialogViewsItem).BinaryWriteTranslator).Write<IDialogViewGetter>(
                         item: DialogViewsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22184,7 +22188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var WordsOfPowerItem = item.WordsOfPower;
                 if (WordsOfPowerItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)WordsOfPowerItem).BinaryWriteTranslator).Write<IWordOfPowerGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)WordsOfPowerItem).BinaryWriteTranslator).Write<IWordOfPowerGetter>(
                         item: WordsOfPowerItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22195,7 +22199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ShoutsItem = item.Shouts;
                 if (ShoutsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ShoutsItem).BinaryWriteTranslator).Write<IShoutGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ShoutsItem).BinaryWriteTranslator).Write<IShoutGetter>(
                         item: ShoutsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22206,7 +22210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var EquipTypesItem = item.EquipTypes;
                 if (EquipTypesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)EquipTypesItem).BinaryWriteTranslator).Write<IEquipTypeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)EquipTypesItem).BinaryWriteTranslator).Write<IEquipTypeGetter>(
                         item: EquipTypesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22217,7 +22221,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var RelationshipsItem = item.Relationships;
                 if (RelationshipsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)RelationshipsItem).BinaryWriteTranslator).Write<IRelationshipGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)RelationshipsItem).BinaryWriteTranslator).Write<IRelationshipGetter>(
                         item: RelationshipsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22228,7 +22232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ScenesItem = item.Scenes;
                 if (ScenesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ScenesItem).BinaryWriteTranslator).Write<ISceneGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ScenesItem).BinaryWriteTranslator).Write<ISceneGetter>(
                         item: ScenesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22239,7 +22243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var AssociationTypesItem = item.AssociationTypes;
                 if (AssociationTypesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)AssociationTypesItem).BinaryWriteTranslator).Write<IAssociationTypeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)AssociationTypesItem).BinaryWriteTranslator).Write<IAssociationTypeGetter>(
                         item: AssociationTypesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22250,7 +22254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var OutfitsItem = item.Outfits;
                 if (OutfitsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)OutfitsItem).BinaryWriteTranslator).Write<IOutfitGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)OutfitsItem).BinaryWriteTranslator).Write<IOutfitGetter>(
                         item: OutfitsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22261,7 +22265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ArtObjectsItem = item.ArtObjects;
                 if (ArtObjectsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ArtObjectsItem).BinaryWriteTranslator).Write<IArtObjectGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ArtObjectsItem).BinaryWriteTranslator).Write<IArtObjectGetter>(
                         item: ArtObjectsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22272,7 +22276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var MaterialObjectsItem = item.MaterialObjects;
                 if (MaterialObjectsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)MaterialObjectsItem).BinaryWriteTranslator).Write<IMaterialObjectGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)MaterialObjectsItem).BinaryWriteTranslator).Write<IMaterialObjectGetter>(
                         item: MaterialObjectsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22283,7 +22287,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var MovementTypesItem = item.MovementTypes;
                 if (MovementTypesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)MovementTypesItem).BinaryWriteTranslator).Write<IMovementTypeGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)MovementTypesItem).BinaryWriteTranslator).Write<IMovementTypeGetter>(
                         item: MovementTypesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22294,7 +22298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var SoundDescriptorsItem = item.SoundDescriptors;
                 if (SoundDescriptorsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoundDescriptorsItem).BinaryWriteTranslator).Write<ISoundDescriptorGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)SoundDescriptorsItem).BinaryWriteTranslator).Write<ISoundDescriptorGetter>(
                         item: SoundDescriptorsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22305,7 +22309,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var DualCastDataItem = item.DualCastData;
                 if (DualCastDataItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)DualCastDataItem).BinaryWriteTranslator).Write<IDualCastDataGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)DualCastDataItem).BinaryWriteTranslator).Write<IDualCastDataGetter>(
                         item: DualCastDataItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22316,7 +22320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var SoundCategoriesItem = item.SoundCategories;
                 if (SoundCategoriesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoundCategoriesItem).BinaryWriteTranslator).Write<ISoundCategoryGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)SoundCategoriesItem).BinaryWriteTranslator).Write<ISoundCategoryGetter>(
                         item: SoundCategoriesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22327,7 +22331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var SoundOutputModelsItem = item.SoundOutputModels;
                 if (SoundOutputModelsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoundOutputModelsItem).BinaryWriteTranslator).Write<ISoundOutputModelGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)SoundOutputModelsItem).BinaryWriteTranslator).Write<ISoundOutputModelGetter>(
                         item: SoundOutputModelsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22338,7 +22342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var CollisionLayersItem = item.CollisionLayers;
                 if (CollisionLayersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)CollisionLayersItem).BinaryWriteTranslator).Write<ICollisionLayerGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)CollisionLayersItem).BinaryWriteTranslator).Write<ICollisionLayerGetter>(
                         item: CollisionLayersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22349,7 +22353,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ColorsItem = item.Colors;
                 if (ColorsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ColorsItem).BinaryWriteTranslator).Write<IColorRecordGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ColorsItem).BinaryWriteTranslator).Write<IColorRecordGetter>(
                         item: ColorsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22360,7 +22364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var ReverbParametersItem = item.ReverbParameters;
                 if (ReverbParametersItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ReverbParametersItem).BinaryWriteTranslator).Write<IReverbParametersGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)ReverbParametersItem).BinaryWriteTranslator).Write<IReverbParametersGetter>(
                         item: ReverbParametersItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -22371,7 +22375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var VolumetricLightingsItem = item.VolumetricLightings;
                 if (VolumetricLightingsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)VolumetricLightingsItem).BinaryWriteTranslator).Write<IVolumetricLightingGetter>(
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)VolumetricLightingsItem).BinaryWriteTranslator).Write<IVolumetricLightingGetter>(
                         item: VolumetricLightingsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -24130,7 +24134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
-        public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
+        public static SkyrimMod_Registration StaticRegistration => SkyrimMod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModCommon.Instance;
         [DebuggerStepThrough]
@@ -24148,8 +24152,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public SkyrimRelease SkyrimRelease { get; }
         public GameRelease GameRelease => SkyrimRelease.ToGameRelease();
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
@@ -24159,17 +24163,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordCommonGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IMajorRecordCommonGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         uint IModGetter.NextFormID => ModHeader.Stats.NextFormID;
         public ModKey ModKey { get; }
         private readonly BinaryOverlayFactoryPackage _package;
@@ -24187,569 +24191,569 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ISkyrimModHeaderGetter ModHeader => _ModHeader ?? new SkyrimModHeader();
         #endregion
         #region GameSettings
-        private RangeInt64? _GameSettingsLocation;
-        private IGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocation.HasValue ? GroupBinaryOverlay<IGameSettingGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GameSettingsLocation!.Value.Min, _GameSettingsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
+        private List<RangeInt64>? _GameSettingsLocations;
+        private ISkyrimGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? SkyrimGroupBinaryOverlay<IGameSettingGetter>.SkyrimGroupFactory(_data, _GameSettingsLocations, _package) : default;
+        public ISkyrimGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new SkyrimGroup<GameSetting>(this);
         #endregion
         #region Keywords
-        private RangeInt64? _KeywordsLocation;
-        private IGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocation.HasValue ? GroupBinaryOverlay<IKeywordGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _KeywordsLocation!.Value.Min, _KeywordsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new Group<Keyword>(this);
+        private List<RangeInt64>? _KeywordsLocations;
+        private ISkyrimGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocations != null ? SkyrimGroupBinaryOverlay<IKeywordGetter>.SkyrimGroupFactory(_data, _KeywordsLocations, _package) : default;
+        public ISkyrimGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new SkyrimGroup<Keyword>(this);
         #endregion
         #region LocationReferenceTypes
-        private RangeInt64? _LocationReferenceTypesLocation;
-        private IGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocation.HasValue ? GroupBinaryOverlay<ILocationReferenceTypeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LocationReferenceTypesLocation!.Value.Min, _LocationReferenceTypesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Group<LocationReferenceType>(this);
+        private List<RangeInt64>? _LocationReferenceTypesLocations;
+        private ISkyrimGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocations != null ? SkyrimGroupBinaryOverlay<ILocationReferenceTypeGetter>.SkyrimGroupFactory(_data, _LocationReferenceTypesLocations, _package) : default;
+        public ISkyrimGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new SkyrimGroup<LocationReferenceType>(this);
         #endregion
         #region Actions
-        private RangeInt64? _ActionsLocation;
-        private IGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocation.HasValue ? GroupBinaryOverlay<IActionRecordGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ActionsLocation!.Value.Min, _ActionsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IActionRecordGetter> Actions => _Actions ?? new Group<ActionRecord>(this);
+        private List<RangeInt64>? _ActionsLocations;
+        private ISkyrimGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocations != null ? SkyrimGroupBinaryOverlay<IActionRecordGetter>.SkyrimGroupFactory(_data, _ActionsLocations, _package) : default;
+        public ISkyrimGroupGetter<IActionRecordGetter> Actions => _Actions ?? new SkyrimGroup<ActionRecord>(this);
         #endregion
         #region TextureSets
-        private RangeInt64? _TextureSetsLocation;
-        private IGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocation.HasValue ? GroupBinaryOverlay<ITextureSetGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TextureSetsLocation!.Value.Min, _TextureSetsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Group<TextureSet>(this);
+        private List<RangeInt64>? _TextureSetsLocations;
+        private ISkyrimGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? SkyrimGroupBinaryOverlay<ITextureSetGetter>.SkyrimGroupFactory(_data, _TextureSetsLocations, _package) : default;
+        public ISkyrimGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new SkyrimGroup<TextureSet>(this);
         #endregion
         #region Globals
-        private RangeInt64? _GlobalsLocation;
-        private IGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocation.HasValue ? GroupBinaryOverlay<IGlobalGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GlobalsLocation!.Value.Min, _GlobalsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IGlobalGetter> Globals => _Globals ?? new Group<Global>(this);
+        private List<RangeInt64>? _GlobalsLocations;
+        private ISkyrimGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? SkyrimGroupBinaryOverlay<IGlobalGetter>.SkyrimGroupFactory(_data, _GlobalsLocations, _package) : default;
+        public ISkyrimGroupGetter<IGlobalGetter> Globals => _Globals ?? new SkyrimGroup<Global>(this);
         #endregion
         #region Classes
-        private RangeInt64? _ClassesLocation;
-        private IGroupGetter<IClassGetter>? _Classes => _ClassesLocation.HasValue ? GroupBinaryOverlay<IClassGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClassesLocation!.Value.Min, _ClassesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IClassGetter> Classes => _Classes ?? new Group<Class>(this);
+        private List<RangeInt64>? _ClassesLocations;
+        private ISkyrimGroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? SkyrimGroupBinaryOverlay<IClassGetter>.SkyrimGroupFactory(_data, _ClassesLocations, _package) : default;
+        public ISkyrimGroupGetter<IClassGetter> Classes => _Classes ?? new SkyrimGroup<Class>(this);
         #endregion
         #region Factions
-        private RangeInt64? _FactionsLocation;
-        private IGroupGetter<IFactionGetter>? _Factions => _FactionsLocation.HasValue ? GroupBinaryOverlay<IFactionGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FactionsLocation!.Value.Min, _FactionsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IFactionGetter> Factions => _Factions ?? new Group<Faction>(this);
+        private List<RangeInt64>? _FactionsLocations;
+        private ISkyrimGroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? SkyrimGroupBinaryOverlay<IFactionGetter>.SkyrimGroupFactory(_data, _FactionsLocations, _package) : default;
+        public ISkyrimGroupGetter<IFactionGetter> Factions => _Factions ?? new SkyrimGroup<Faction>(this);
         #endregion
         #region HeadParts
-        private RangeInt64? _HeadPartsLocation;
-        private IGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocation.HasValue ? GroupBinaryOverlay<IHeadPartGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _HeadPartsLocation!.Value.Min, _HeadPartsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new Group<HeadPart>(this);
+        private List<RangeInt64>? _HeadPartsLocations;
+        private ISkyrimGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? SkyrimGroupBinaryOverlay<IHeadPartGetter>.SkyrimGroupFactory(_data, _HeadPartsLocations, _package) : default;
+        public ISkyrimGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new SkyrimGroup<HeadPart>(this);
         #endregion
         #region Hairs
-        private RangeInt64? _HairsLocation;
-        private IGroupGetter<IHairGetter>? _Hairs => _HairsLocation.HasValue ? GroupBinaryOverlay<IHairGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _HairsLocation!.Value.Min, _HairsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IHairGetter> Hairs => _Hairs ?? new Group<Hair>(this);
+        private List<RangeInt64>? _HairsLocations;
+        private ISkyrimGroupGetter<IHairGetter>? _Hairs => _HairsLocations != null ? SkyrimGroupBinaryOverlay<IHairGetter>.SkyrimGroupFactory(_data, _HairsLocations, _package) : default;
+        public ISkyrimGroupGetter<IHairGetter> Hairs => _Hairs ?? new SkyrimGroup<Hair>(this);
         #endregion
         #region Eyes
-        private RangeInt64? _EyesLocation;
-        private IGroupGetter<IEyesGetter>? _Eyes => _EyesLocation.HasValue ? GroupBinaryOverlay<IEyesGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EyesLocation!.Value.Min, _EyesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IEyesGetter> Eyes => _Eyes ?? new Group<Eyes>(this);
+        private List<RangeInt64>? _EyesLocations;
+        private ISkyrimGroupGetter<IEyesGetter>? _Eyes => _EyesLocations != null ? SkyrimGroupBinaryOverlay<IEyesGetter>.SkyrimGroupFactory(_data, _EyesLocations, _package) : default;
+        public ISkyrimGroupGetter<IEyesGetter> Eyes => _Eyes ?? new SkyrimGroup<Eyes>(this);
         #endregion
         #region Races
-        private RangeInt64? _RacesLocation;
-        private IGroupGetter<IRaceGetter>? _Races => _RacesLocation.HasValue ? GroupBinaryOverlay<IRaceGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _RacesLocation!.Value.Min, _RacesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IRaceGetter> Races => _Races ?? new Group<Race>(this);
+        private List<RangeInt64>? _RacesLocations;
+        private ISkyrimGroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? SkyrimGroupBinaryOverlay<IRaceGetter>.SkyrimGroupFactory(_data, _RacesLocations, _package) : default;
+        public ISkyrimGroupGetter<IRaceGetter> Races => _Races ?? new SkyrimGroup<Race>(this);
         #endregion
         #region SoundMarkers
-        private RangeInt64? _SoundMarkersLocation;
-        private IGroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocation.HasValue ? GroupBinaryOverlay<ISoundMarkerGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoundMarkersLocation!.Value.Min, _SoundMarkersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISoundMarkerGetter> SoundMarkers => _SoundMarkers ?? new Group<SoundMarker>(this);
+        private List<RangeInt64>? _SoundMarkersLocations;
+        private ISkyrimGroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocations != null ? SkyrimGroupBinaryOverlay<ISoundMarkerGetter>.SkyrimGroupFactory(_data, _SoundMarkersLocations, _package) : default;
+        public ISkyrimGroupGetter<ISoundMarkerGetter> SoundMarkers => _SoundMarkers ?? new SkyrimGroup<SoundMarker>(this);
         #endregion
         #region AcousticSpaces
-        private RangeInt64? _AcousticSpacesLocation;
-        private IGroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocation.HasValue ? GroupBinaryOverlay<IAcousticSpaceGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AcousticSpacesLocation!.Value.Min, _AcousticSpacesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IAcousticSpaceGetter> AcousticSpaces => _AcousticSpaces ?? new Group<AcousticSpace>(this);
+        private List<RangeInt64>? _AcousticSpacesLocations;
+        private ISkyrimGroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? SkyrimGroupBinaryOverlay<IAcousticSpaceGetter>.SkyrimGroupFactory(_data, _AcousticSpacesLocations, _package) : default;
+        public ISkyrimGroupGetter<IAcousticSpaceGetter> AcousticSpaces => _AcousticSpaces ?? new SkyrimGroup<AcousticSpace>(this);
         #endregion
         #region MagicEffects
-        private RangeInt64? _MagicEffectsLocation;
-        private IGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocation.HasValue ? GroupBinaryOverlay<IMagicEffectGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MagicEffectsLocation!.Value.Min, _MagicEffectsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new Group<MagicEffect>(this);
+        private List<RangeInt64>? _MagicEffectsLocations;
+        private ISkyrimGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? SkyrimGroupBinaryOverlay<IMagicEffectGetter>.SkyrimGroupFactory(_data, _MagicEffectsLocations, _package) : default;
+        public ISkyrimGroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new SkyrimGroup<MagicEffect>(this);
         #endregion
         #region LandscapeTextures
-        private RangeInt64? _LandscapeTexturesLocation;
-        private IGroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocation.HasValue ? GroupBinaryOverlay<ILandscapeTextureGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LandscapeTexturesLocation!.Value.Min, _LandscapeTexturesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILandscapeTextureGetter> LandscapeTextures => _LandscapeTextures ?? new Group<LandscapeTexture>(this);
+        private List<RangeInt64>? _LandscapeTexturesLocations;
+        private ISkyrimGroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? SkyrimGroupBinaryOverlay<ILandscapeTextureGetter>.SkyrimGroupFactory(_data, _LandscapeTexturesLocations, _package) : default;
+        public ISkyrimGroupGetter<ILandscapeTextureGetter> LandscapeTextures => _LandscapeTextures ?? new SkyrimGroup<LandscapeTexture>(this);
         #endregion
         #region ObjectEffects
-        private RangeInt64? _ObjectEffectsLocation;
-        private IGroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocation.HasValue ? GroupBinaryOverlay<IObjectEffectGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ObjectEffectsLocation!.Value.Min, _ObjectEffectsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IObjectEffectGetter> ObjectEffects => _ObjectEffects ?? new Group<ObjectEffect>(this);
+        private List<RangeInt64>? _ObjectEffectsLocations;
+        private ISkyrimGroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocations != null ? SkyrimGroupBinaryOverlay<IObjectEffectGetter>.SkyrimGroupFactory(_data, _ObjectEffectsLocations, _package) : default;
+        public ISkyrimGroupGetter<IObjectEffectGetter> ObjectEffects => _ObjectEffects ?? new SkyrimGroup<ObjectEffect>(this);
         #endregion
         #region Spells
-        private RangeInt64? _SpellsLocation;
-        private IGroupGetter<ISpellGetter>? _Spells => _SpellsLocation.HasValue ? GroupBinaryOverlay<ISpellGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SpellsLocation!.Value.Min, _SpellsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISpellGetter> Spells => _Spells ?? new Group<Spell>(this);
+        private List<RangeInt64>? _SpellsLocations;
+        private ISkyrimGroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? SkyrimGroupBinaryOverlay<ISpellGetter>.SkyrimGroupFactory(_data, _SpellsLocations, _package) : default;
+        public ISkyrimGroupGetter<ISpellGetter> Spells => _Spells ?? new SkyrimGroup<Spell>(this);
         #endregion
         #region Scrolls
-        private RangeInt64? _ScrollsLocation;
-        private IGroupGetter<IScrollGetter>? _Scrolls => _ScrollsLocation.HasValue ? GroupBinaryOverlay<IScrollGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ScrollsLocation!.Value.Min, _ScrollsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IScrollGetter> Scrolls => _Scrolls ?? new Group<Scroll>(this);
+        private List<RangeInt64>? _ScrollsLocations;
+        private ISkyrimGroupGetter<IScrollGetter>? _Scrolls => _ScrollsLocations != null ? SkyrimGroupBinaryOverlay<IScrollGetter>.SkyrimGroupFactory(_data, _ScrollsLocations, _package) : default;
+        public ISkyrimGroupGetter<IScrollGetter> Scrolls => _Scrolls ?? new SkyrimGroup<Scroll>(this);
         #endregion
         #region Activators
-        private RangeInt64? _ActivatorsLocation;
-        private IGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocation.HasValue ? GroupBinaryOverlay<IActivatorGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ActivatorsLocation!.Value.Min, _ActivatorsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IActivatorGetter> Activators => _Activators ?? new Group<Activator>(this);
+        private List<RangeInt64>? _ActivatorsLocations;
+        private ISkyrimGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? SkyrimGroupBinaryOverlay<IActivatorGetter>.SkyrimGroupFactory(_data, _ActivatorsLocations, _package) : default;
+        public ISkyrimGroupGetter<IActivatorGetter> Activators => _Activators ?? new SkyrimGroup<Activator>(this);
         #endregion
         #region TalkingActivators
-        private RangeInt64? _TalkingActivatorsLocation;
-        private IGroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocation.HasValue ? GroupBinaryOverlay<ITalkingActivatorGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TalkingActivatorsLocation!.Value.Min, _TalkingActivatorsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ITalkingActivatorGetter> TalkingActivators => _TalkingActivators ?? new Group<TalkingActivator>(this);
+        private List<RangeInt64>? _TalkingActivatorsLocations;
+        private ISkyrimGroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocations != null ? SkyrimGroupBinaryOverlay<ITalkingActivatorGetter>.SkyrimGroupFactory(_data, _TalkingActivatorsLocations, _package) : default;
+        public ISkyrimGroupGetter<ITalkingActivatorGetter> TalkingActivators => _TalkingActivators ?? new SkyrimGroup<TalkingActivator>(this);
         #endregion
         #region Armors
-        private RangeInt64? _ArmorsLocation;
-        private IGroupGetter<IArmorGetter>? _Armors => _ArmorsLocation.HasValue ? GroupBinaryOverlay<IArmorGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ArmorsLocation!.Value.Min, _ArmorsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IArmorGetter> Armors => _Armors ?? new Group<Armor>(this);
+        private List<RangeInt64>? _ArmorsLocations;
+        private ISkyrimGroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? SkyrimGroupBinaryOverlay<IArmorGetter>.SkyrimGroupFactory(_data, _ArmorsLocations, _package) : default;
+        public ISkyrimGroupGetter<IArmorGetter> Armors => _Armors ?? new SkyrimGroup<Armor>(this);
         #endregion
         #region Books
-        private RangeInt64? _BooksLocation;
-        private IGroupGetter<IBookGetter>? _Books => _BooksLocation.HasValue ? GroupBinaryOverlay<IBookGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _BooksLocation!.Value.Min, _BooksLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IBookGetter> Books => _Books ?? new Group<Book>(this);
+        private List<RangeInt64>? _BooksLocations;
+        private ISkyrimGroupGetter<IBookGetter>? _Books => _BooksLocations != null ? SkyrimGroupBinaryOverlay<IBookGetter>.SkyrimGroupFactory(_data, _BooksLocations, _package) : default;
+        public ISkyrimGroupGetter<IBookGetter> Books => _Books ?? new SkyrimGroup<Book>(this);
         #endregion
         #region Containers
-        private RangeInt64? _ContainersLocation;
-        private IGroupGetter<IContainerGetter>? _Containers => _ContainersLocation.HasValue ? GroupBinaryOverlay<IContainerGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ContainersLocation!.Value.Min, _ContainersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IContainerGetter> Containers => _Containers ?? new Group<Container>(this);
+        private List<RangeInt64>? _ContainersLocations;
+        private ISkyrimGroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? SkyrimGroupBinaryOverlay<IContainerGetter>.SkyrimGroupFactory(_data, _ContainersLocations, _package) : default;
+        public ISkyrimGroupGetter<IContainerGetter> Containers => _Containers ?? new SkyrimGroup<Container>(this);
         #endregion
         #region Doors
-        private RangeInt64? _DoorsLocation;
-        private IGroupGetter<IDoorGetter>? _Doors => _DoorsLocation.HasValue ? GroupBinaryOverlay<IDoorGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DoorsLocation!.Value.Min, _DoorsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IDoorGetter> Doors => _Doors ?? new Group<Door>(this);
+        private List<RangeInt64>? _DoorsLocations;
+        private ISkyrimGroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? SkyrimGroupBinaryOverlay<IDoorGetter>.SkyrimGroupFactory(_data, _DoorsLocations, _package) : default;
+        public ISkyrimGroupGetter<IDoorGetter> Doors => _Doors ?? new SkyrimGroup<Door>(this);
         #endregion
         #region Ingredients
-        private RangeInt64? _IngredientsLocation;
-        private IGroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocation.HasValue ? GroupBinaryOverlay<IIngredientGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IngredientsLocation!.Value.Min, _IngredientsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new Group<Ingredient>(this);
+        private List<RangeInt64>? _IngredientsLocations;
+        private ISkyrimGroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocations != null ? SkyrimGroupBinaryOverlay<IIngredientGetter>.SkyrimGroupFactory(_data, _IngredientsLocations, _package) : default;
+        public ISkyrimGroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new SkyrimGroup<Ingredient>(this);
         #endregion
         #region Lights
-        private RangeInt64? _LightsLocation;
-        private IGroupGetter<ILightGetter>? _Lights => _LightsLocation.HasValue ? GroupBinaryOverlay<ILightGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LightsLocation!.Value.Min, _LightsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILightGetter> Lights => _Lights ?? new Group<Light>(this);
+        private List<RangeInt64>? _LightsLocations;
+        private ISkyrimGroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? SkyrimGroupBinaryOverlay<ILightGetter>.SkyrimGroupFactory(_data, _LightsLocations, _package) : default;
+        public ISkyrimGroupGetter<ILightGetter> Lights => _Lights ?? new SkyrimGroup<Light>(this);
         #endregion
         #region MiscItems
-        private RangeInt64? _MiscItemsLocation;
-        private IGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocation.HasValue ? GroupBinaryOverlay<IMiscItemGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MiscItemsLocation!.Value.Min, _MiscItemsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new Group<MiscItem>(this);
+        private List<RangeInt64>? _MiscItemsLocations;
+        private ISkyrimGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? SkyrimGroupBinaryOverlay<IMiscItemGetter>.SkyrimGroupFactory(_data, _MiscItemsLocations, _package) : default;
+        public ISkyrimGroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new SkyrimGroup<MiscItem>(this);
         #endregion
         #region AlchemicalApparatuses
-        private RangeInt64? _AlchemicalApparatusesLocation;
-        private IGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatuses => _AlchemicalApparatusesLocation.HasValue ? GroupBinaryOverlay<IAlchemicalApparatusGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AlchemicalApparatusesLocation!.Value.Min, _AlchemicalApparatusesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatuses => _AlchemicalApparatuses ?? new Group<AlchemicalApparatus>(this);
+        private List<RangeInt64>? _AlchemicalApparatusesLocations;
+        private ISkyrimGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatuses => _AlchemicalApparatusesLocations != null ? SkyrimGroupBinaryOverlay<IAlchemicalApparatusGetter>.SkyrimGroupFactory(_data, _AlchemicalApparatusesLocations, _package) : default;
+        public ISkyrimGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatuses => _AlchemicalApparatuses ?? new SkyrimGroup<AlchemicalApparatus>(this);
         #endregion
         #region Statics
-        private RangeInt64? _StaticsLocation;
-        private IGroupGetter<IStaticGetter>? _Statics => _StaticsLocation.HasValue ? GroupBinaryOverlay<IStaticGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _StaticsLocation!.Value.Min, _StaticsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IStaticGetter> Statics => _Statics ?? new Group<Static>(this);
+        private List<RangeInt64>? _StaticsLocations;
+        private ISkyrimGroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? SkyrimGroupBinaryOverlay<IStaticGetter>.SkyrimGroupFactory(_data, _StaticsLocations, _package) : default;
+        public ISkyrimGroupGetter<IStaticGetter> Statics => _Statics ?? new SkyrimGroup<Static>(this);
         #endregion
         #region MoveableStatics
-        private RangeInt64? _MoveableStaticsLocation;
-        private IGroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocation.HasValue ? GroupBinaryOverlay<IMoveableStaticGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MoveableStaticsLocation!.Value.Min, _MoveableStaticsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IMoveableStaticGetter> MoveableStatics => _MoveableStatics ?? new Group<MoveableStatic>(this);
+        private List<RangeInt64>? _MoveableStaticsLocations;
+        private ISkyrimGroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocations != null ? SkyrimGroupBinaryOverlay<IMoveableStaticGetter>.SkyrimGroupFactory(_data, _MoveableStaticsLocations, _package) : default;
+        public ISkyrimGroupGetter<IMoveableStaticGetter> MoveableStatics => _MoveableStatics ?? new SkyrimGroup<MoveableStatic>(this);
         #endregion
         #region Grasses
-        private RangeInt64? _GrassesLocation;
-        private IGroupGetter<IGrassGetter>? _Grasses => _GrassesLocation.HasValue ? GroupBinaryOverlay<IGrassGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GrassesLocation!.Value.Min, _GrassesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IGrassGetter> Grasses => _Grasses ?? new Group<Grass>(this);
+        private List<RangeInt64>? _GrassesLocations;
+        private ISkyrimGroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? SkyrimGroupBinaryOverlay<IGrassGetter>.SkyrimGroupFactory(_data, _GrassesLocations, _package) : default;
+        public ISkyrimGroupGetter<IGrassGetter> Grasses => _Grasses ?? new SkyrimGroup<Grass>(this);
         #endregion
         #region Trees
-        private RangeInt64? _TreesLocation;
-        private IGroupGetter<ITreeGetter>? _Trees => _TreesLocation.HasValue ? GroupBinaryOverlay<ITreeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TreesLocation!.Value.Min, _TreesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ITreeGetter> Trees => _Trees ?? new Group<Tree>(this);
+        private List<RangeInt64>? _TreesLocations;
+        private ISkyrimGroupGetter<ITreeGetter>? _Trees => _TreesLocations != null ? SkyrimGroupBinaryOverlay<ITreeGetter>.SkyrimGroupFactory(_data, _TreesLocations, _package) : default;
+        public ISkyrimGroupGetter<ITreeGetter> Trees => _Trees ?? new SkyrimGroup<Tree>(this);
         #endregion
         #region Florae
-        private RangeInt64? _FloraeLocation;
-        private IGroupGetter<IFloraGetter>? _Florae => _FloraeLocation.HasValue ? GroupBinaryOverlay<IFloraGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FloraeLocation!.Value.Min, _FloraeLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IFloraGetter> Florae => _Florae ?? new Group<Flora>(this);
+        private List<RangeInt64>? _FloraeLocations;
+        private ISkyrimGroupGetter<IFloraGetter>? _Florae => _FloraeLocations != null ? SkyrimGroupBinaryOverlay<IFloraGetter>.SkyrimGroupFactory(_data, _FloraeLocations, _package) : default;
+        public ISkyrimGroupGetter<IFloraGetter> Florae => _Florae ?? new SkyrimGroup<Flora>(this);
         #endregion
         #region Furniture
-        private RangeInt64? _FurnitureLocation;
-        private IGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocation.HasValue ? GroupBinaryOverlay<IFurnitureGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FurnitureLocation!.Value.Min, _FurnitureLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new Group<Furniture>(this);
+        private List<RangeInt64>? _FurnitureLocations;
+        private ISkyrimGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? SkyrimGroupBinaryOverlay<IFurnitureGetter>.SkyrimGroupFactory(_data, _FurnitureLocations, _package) : default;
+        public ISkyrimGroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new SkyrimGroup<Furniture>(this);
         #endregion
         #region Weapons
-        private RangeInt64? _WeaponsLocation;
-        private IGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocation.HasValue ? GroupBinaryOverlay<IWeaponGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WeaponsLocation!.Value.Min, _WeaponsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new Group<Weapon>(this);
+        private List<RangeInt64>? _WeaponsLocations;
+        private ISkyrimGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? SkyrimGroupBinaryOverlay<IWeaponGetter>.SkyrimGroupFactory(_data, _WeaponsLocations, _package) : default;
+        public ISkyrimGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new SkyrimGroup<Weapon>(this);
         #endregion
         #region Ammunitions
-        private RangeInt64? _AmmunitionsLocation;
-        private IGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocation.HasValue ? GroupBinaryOverlay<IAmmunitionGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AmmunitionsLocation!.Value.Min, _AmmunitionsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new Group<Ammunition>(this);
+        private List<RangeInt64>? _AmmunitionsLocations;
+        private ISkyrimGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? SkyrimGroupBinaryOverlay<IAmmunitionGetter>.SkyrimGroupFactory(_data, _AmmunitionsLocations, _package) : default;
+        public ISkyrimGroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new SkyrimGroup<Ammunition>(this);
         #endregion
         #region Npcs
-        private RangeInt64? _NpcsLocation;
-        private IGroupGetter<INpcGetter>? _Npcs => _NpcsLocation.HasValue ? GroupBinaryOverlay<INpcGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _NpcsLocation!.Value.Min, _NpcsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<INpcGetter> Npcs => _Npcs ?? new Group<Npc>(this);
+        private List<RangeInt64>? _NpcsLocations;
+        private ISkyrimGroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? SkyrimGroupBinaryOverlay<INpcGetter>.SkyrimGroupFactory(_data, _NpcsLocations, _package) : default;
+        public ISkyrimGroupGetter<INpcGetter> Npcs => _Npcs ?? new SkyrimGroup<Npc>(this);
         #endregion
         #region LeveledNpcs
-        private RangeInt64? _LeveledNpcsLocation;
-        private IGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocation.HasValue ? GroupBinaryOverlay<ILeveledNpcGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledNpcsLocation!.Value.Min, _LeveledNpcsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILeveledNpcGetter> LeveledNpcs => _LeveledNpcs ?? new Group<LeveledNpc>(this);
+        private List<RangeInt64>? _LeveledNpcsLocations;
+        private ISkyrimGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocations != null ? SkyrimGroupBinaryOverlay<ILeveledNpcGetter>.SkyrimGroupFactory(_data, _LeveledNpcsLocations, _package) : default;
+        public ISkyrimGroupGetter<ILeveledNpcGetter> LeveledNpcs => _LeveledNpcs ?? new SkyrimGroup<LeveledNpc>(this);
         #endregion
         #region Keys
-        private RangeInt64? _KeysLocation;
-        private IGroupGetter<IKeyGetter>? _Keys => _KeysLocation.HasValue ? GroupBinaryOverlay<IKeyGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _KeysLocation!.Value.Min, _KeysLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IKeyGetter> Keys => _Keys ?? new Group<Key>(this);
+        private List<RangeInt64>? _KeysLocations;
+        private ISkyrimGroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? SkyrimGroupBinaryOverlay<IKeyGetter>.SkyrimGroupFactory(_data, _KeysLocations, _package) : default;
+        public ISkyrimGroupGetter<IKeyGetter> Keys => _Keys ?? new SkyrimGroup<Key>(this);
         #endregion
         #region Ingestibles
-        private RangeInt64? _IngestiblesLocation;
-        private IGroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocation.HasValue ? GroupBinaryOverlay<IIngestibleGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IngestiblesLocation!.Value.Min, _IngestiblesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new Group<Ingestible>(this);
+        private List<RangeInt64>? _IngestiblesLocations;
+        private ISkyrimGroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? SkyrimGroupBinaryOverlay<IIngestibleGetter>.SkyrimGroupFactory(_data, _IngestiblesLocations, _package) : default;
+        public ISkyrimGroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new SkyrimGroup<Ingestible>(this);
         #endregion
         #region IdleMarkers
-        private RangeInt64? _IdleMarkersLocation;
-        private IGroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocation.HasValue ? GroupBinaryOverlay<IIdleMarkerGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IdleMarkersLocation!.Value.Min, _IdleMarkersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IIdleMarkerGetter> IdleMarkers => _IdleMarkers ?? new Group<IdleMarker>(this);
+        private List<RangeInt64>? _IdleMarkersLocations;
+        private ISkyrimGroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? SkyrimGroupBinaryOverlay<IIdleMarkerGetter>.SkyrimGroupFactory(_data, _IdleMarkersLocations, _package) : default;
+        public ISkyrimGroupGetter<IIdleMarkerGetter> IdleMarkers => _IdleMarkers ?? new SkyrimGroup<IdleMarker>(this);
         #endregion
         #region ConstructibleObjects
-        private RangeInt64? _ConstructibleObjectsLocation;
-        private IGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocation.HasValue ? GroupBinaryOverlay<IConstructibleObjectGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ConstructibleObjectsLocation!.Value.Min, _ConstructibleObjectsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new Group<ConstructibleObject>(this);
+        private List<RangeInt64>? _ConstructibleObjectsLocations;
+        private ISkyrimGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? SkyrimGroupBinaryOverlay<IConstructibleObjectGetter>.SkyrimGroupFactory(_data, _ConstructibleObjectsLocations, _package) : default;
+        public ISkyrimGroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new SkyrimGroup<ConstructibleObject>(this);
         #endregion
         #region Projectiles
-        private RangeInt64? _ProjectilesLocation;
-        private IGroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocation.HasValue ? GroupBinaryOverlay<IProjectileGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ProjectilesLocation!.Value.Min, _ProjectilesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new Group<Projectile>(this);
+        private List<RangeInt64>? _ProjectilesLocations;
+        private ISkyrimGroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? SkyrimGroupBinaryOverlay<IProjectileGetter>.SkyrimGroupFactory(_data, _ProjectilesLocations, _package) : default;
+        public ISkyrimGroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new SkyrimGroup<Projectile>(this);
         #endregion
         #region Hazards
-        private RangeInt64? _HazardsLocation;
-        private IGroupGetter<IHazardGetter>? _Hazards => _HazardsLocation.HasValue ? GroupBinaryOverlay<IHazardGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _HazardsLocation!.Value.Min, _HazardsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IHazardGetter> Hazards => _Hazards ?? new Group<Hazard>(this);
+        private List<RangeInt64>? _HazardsLocations;
+        private ISkyrimGroupGetter<IHazardGetter>? _Hazards => _HazardsLocations != null ? SkyrimGroupBinaryOverlay<IHazardGetter>.SkyrimGroupFactory(_data, _HazardsLocations, _package) : default;
+        public ISkyrimGroupGetter<IHazardGetter> Hazards => _Hazards ?? new SkyrimGroup<Hazard>(this);
         #endregion
         #region SoulGems
-        private RangeInt64? _SoulGemsLocation;
-        private IGroupGetter<ISoulGemGetter>? _SoulGems => _SoulGemsLocation.HasValue ? GroupBinaryOverlay<ISoulGemGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoulGemsLocation!.Value.Min, _SoulGemsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISoulGemGetter> SoulGems => _SoulGems ?? new Group<SoulGem>(this);
+        private List<RangeInt64>? _SoulGemsLocations;
+        private ISkyrimGroupGetter<ISoulGemGetter>? _SoulGems => _SoulGemsLocations != null ? SkyrimGroupBinaryOverlay<ISoulGemGetter>.SkyrimGroupFactory(_data, _SoulGemsLocations, _package) : default;
+        public ISkyrimGroupGetter<ISoulGemGetter> SoulGems => _SoulGems ?? new SkyrimGroup<SoulGem>(this);
         #endregion
         #region LeveledItems
-        private RangeInt64? _LeveledItemsLocation;
-        private IGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocation.HasValue ? GroupBinaryOverlay<ILeveledItemGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledItemsLocation!.Value.Min, _LeveledItemsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new Group<LeveledItem>(this);
+        private List<RangeInt64>? _LeveledItemsLocations;
+        private ISkyrimGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? SkyrimGroupBinaryOverlay<ILeveledItemGetter>.SkyrimGroupFactory(_data, _LeveledItemsLocations, _package) : default;
+        public ISkyrimGroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new SkyrimGroup<LeveledItem>(this);
         #endregion
         #region Weathers
-        private RangeInt64? _WeathersLocation;
-        private IGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocation.HasValue ? GroupBinaryOverlay<IWeatherGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WeathersLocation!.Value.Min, _WeathersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new Group<Weather>(this);
+        private List<RangeInt64>? _WeathersLocations;
+        private ISkyrimGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? SkyrimGroupBinaryOverlay<IWeatherGetter>.SkyrimGroupFactory(_data, _WeathersLocations, _package) : default;
+        public ISkyrimGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new SkyrimGroup<Weather>(this);
         #endregion
         #region Climates
-        private RangeInt64? _ClimatesLocation;
-        private IGroupGetter<IClimateGetter>? _Climates => _ClimatesLocation.HasValue ? GroupBinaryOverlay<IClimateGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClimatesLocation!.Value.Min, _ClimatesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IClimateGetter> Climates => _Climates ?? new Group<Climate>(this);
+        private List<RangeInt64>? _ClimatesLocations;
+        private ISkyrimGroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? SkyrimGroupBinaryOverlay<IClimateGetter>.SkyrimGroupFactory(_data, _ClimatesLocations, _package) : default;
+        public ISkyrimGroupGetter<IClimateGetter> Climates => _Climates ?? new SkyrimGroup<Climate>(this);
         #endregion
         #region ShaderParticleGeometries
-        private RangeInt64? _ShaderParticleGeometriesLocation;
-        private IGroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocation.HasValue ? GroupBinaryOverlay<IShaderParticleGeometryGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ShaderParticleGeometriesLocation!.Value.Min, _ShaderParticleGeometriesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries => _ShaderParticleGeometries ?? new Group<ShaderParticleGeometry>(this);
+        private List<RangeInt64>? _ShaderParticleGeometriesLocations;
+        private ISkyrimGroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocations != null ? SkyrimGroupBinaryOverlay<IShaderParticleGeometryGetter>.SkyrimGroupFactory(_data, _ShaderParticleGeometriesLocations, _package) : default;
+        public ISkyrimGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries => _ShaderParticleGeometries ?? new SkyrimGroup<ShaderParticleGeometry>(this);
         #endregion
         #region VisualEffects
-        private RangeInt64? _VisualEffectsLocation;
-        private IGroupGetter<IVisualEffectGetter>? _VisualEffects => _VisualEffectsLocation.HasValue ? GroupBinaryOverlay<IVisualEffectGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _VisualEffectsLocation!.Value.Min, _VisualEffectsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IVisualEffectGetter> VisualEffects => _VisualEffects ?? new Group<VisualEffect>(this);
+        private List<RangeInt64>? _VisualEffectsLocations;
+        private ISkyrimGroupGetter<IVisualEffectGetter>? _VisualEffects => _VisualEffectsLocations != null ? SkyrimGroupBinaryOverlay<IVisualEffectGetter>.SkyrimGroupFactory(_data, _VisualEffectsLocations, _package) : default;
+        public ISkyrimGroupGetter<IVisualEffectGetter> VisualEffects => _VisualEffects ?? new SkyrimGroup<VisualEffect>(this);
         #endregion
         #region Regions
-        private RangeInt64? _RegionsLocation;
-        private IGroupGetter<IRegionGetter>? _Regions => _RegionsLocation.HasValue ? GroupBinaryOverlay<IRegionGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _RegionsLocation!.Value.Min, _RegionsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IRegionGetter> Regions => _Regions ?? new Group<Region>(this);
+        private List<RangeInt64>? _RegionsLocations;
+        private ISkyrimGroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? SkyrimGroupBinaryOverlay<IRegionGetter>.SkyrimGroupFactory(_data, _RegionsLocations, _package) : default;
+        public ISkyrimGroupGetter<IRegionGetter> Regions => _Regions ?? new SkyrimGroup<Region>(this);
         #endregion
         #region NavigationMeshInfoMaps
-        private RangeInt64? _NavigationMeshInfoMapsLocation;
-        private IGroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocation.HasValue ? GroupBinaryOverlay<INavigationMeshInfoMapGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _NavigationMeshInfoMapsLocation!.Value.Min, _NavigationMeshInfoMapsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new Group<NavigationMeshInfoMap>(this);
+        private List<RangeInt64>? _NavigationMeshInfoMapsLocations;
+        private ISkyrimGroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? SkyrimGroupBinaryOverlay<INavigationMeshInfoMapGetter>.SkyrimGroupFactory(_data, _NavigationMeshInfoMapsLocations, _package) : default;
+        public ISkyrimGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new SkyrimGroup<NavigationMeshInfoMap>(this);
         #endregion
         #region Cells
         private RangeInt64? _CellsLocation;
-        private IListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? ListGroupBinaryOverlay<ICellBlockGetter>.ListGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package), _package) : default;
-        public IListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new ListGroup<CellBlock>();
+        private ISkyrimListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? SkyrimListGroupBinaryOverlay<ICellBlockGetter>.SkyrimListGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package), _package) : default;
+        public ISkyrimListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new SkyrimListGroup<CellBlock>();
         #endregion
         #region Worldspaces
-        private RangeInt64? _WorldspacesLocation;
-        private IGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocation.HasValue ? GroupBinaryOverlay<IWorldspaceGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WorldspacesLocation!.Value.Min, _WorldspacesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new Group<Worldspace>(this);
+        private List<RangeInt64>? _WorldspacesLocations;
+        private ISkyrimGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? SkyrimGroupBinaryOverlay<IWorldspaceGetter>.SkyrimGroupFactory(_data, _WorldspacesLocations, _package) : default;
+        public ISkyrimGroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new SkyrimGroup<Worldspace>(this);
         #endregion
         #region DialogTopics
-        private RangeInt64? _DialogTopicsLocation;
-        private IGroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocation.HasValue ? GroupBinaryOverlay<IDialogTopicGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DialogTopicsLocation!.Value.Min, _DialogTopicsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IDialogTopicGetter> DialogTopics => _DialogTopics ?? new Group<DialogTopic>(this);
+        private List<RangeInt64>? _DialogTopicsLocations;
+        private ISkyrimGroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocations != null ? SkyrimGroupBinaryOverlay<IDialogTopicGetter>.SkyrimGroupFactory(_data, _DialogTopicsLocations, _package) : default;
+        public ISkyrimGroupGetter<IDialogTopicGetter> DialogTopics => _DialogTopics ?? new SkyrimGroup<DialogTopic>(this);
         #endregion
         #region Quests
-        private RangeInt64? _QuestsLocation;
-        private IGroupGetter<IQuestGetter>? _Quests => _QuestsLocation.HasValue ? GroupBinaryOverlay<IQuestGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _QuestsLocation!.Value.Min, _QuestsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IQuestGetter> Quests => _Quests ?? new Group<Quest>(this);
+        private List<RangeInt64>? _QuestsLocations;
+        private ISkyrimGroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? SkyrimGroupBinaryOverlay<IQuestGetter>.SkyrimGroupFactory(_data, _QuestsLocations, _package) : default;
+        public ISkyrimGroupGetter<IQuestGetter> Quests => _Quests ?? new SkyrimGroup<Quest>(this);
         #endregion
         #region IdleAnimations
-        private RangeInt64? _IdleAnimationsLocation;
-        private IGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocation.HasValue ? GroupBinaryOverlay<IIdleAnimationGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IdleAnimationsLocation!.Value.Min, _IdleAnimationsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new Group<IdleAnimation>(this);
+        private List<RangeInt64>? _IdleAnimationsLocations;
+        private ISkyrimGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? SkyrimGroupBinaryOverlay<IIdleAnimationGetter>.SkyrimGroupFactory(_data, _IdleAnimationsLocations, _package) : default;
+        public ISkyrimGroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new SkyrimGroup<IdleAnimation>(this);
         #endregion
         #region Packages
-        private RangeInt64? _PackagesLocation;
-        private IGroupGetter<IPackageGetter>? _Packages => _PackagesLocation.HasValue ? GroupBinaryOverlay<IPackageGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _PackagesLocation!.Value.Min, _PackagesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IPackageGetter> Packages => _Packages ?? new Group<Package>(this);
+        private List<RangeInt64>? _PackagesLocations;
+        private ISkyrimGroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? SkyrimGroupBinaryOverlay<IPackageGetter>.SkyrimGroupFactory(_data, _PackagesLocations, _package) : default;
+        public ISkyrimGroupGetter<IPackageGetter> Packages => _Packages ?? new SkyrimGroup<Package>(this);
         #endregion
         #region CombatStyles
-        private RangeInt64? _CombatStylesLocation;
-        private IGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocation.HasValue ? GroupBinaryOverlay<ICombatStyleGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CombatStylesLocation!.Value.Min, _CombatStylesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new Group<CombatStyle>(this);
+        private List<RangeInt64>? _CombatStylesLocations;
+        private ISkyrimGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? SkyrimGroupBinaryOverlay<ICombatStyleGetter>.SkyrimGroupFactory(_data, _CombatStylesLocations, _package) : default;
+        public ISkyrimGroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new SkyrimGroup<CombatStyle>(this);
         #endregion
         #region LoadScreens
-        private RangeInt64? _LoadScreensLocation;
-        private IGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocation.HasValue ? GroupBinaryOverlay<ILoadScreenGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LoadScreensLocation!.Value.Min, _LoadScreensLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new Group<LoadScreen>(this);
+        private List<RangeInt64>? _LoadScreensLocations;
+        private ISkyrimGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? SkyrimGroupBinaryOverlay<ILoadScreenGetter>.SkyrimGroupFactory(_data, _LoadScreensLocations, _package) : default;
+        public ISkyrimGroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new SkyrimGroup<LoadScreen>(this);
         #endregion
         #region LeveledSpells
-        private RangeInt64? _LeveledSpellsLocation;
-        private IGroupGetter<ILeveledSpellGetter>? _LeveledSpells => _LeveledSpellsLocation.HasValue ? GroupBinaryOverlay<ILeveledSpellGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledSpellsLocation!.Value.Min, _LeveledSpellsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILeveledSpellGetter> LeveledSpells => _LeveledSpells ?? new Group<LeveledSpell>(this);
+        private List<RangeInt64>? _LeveledSpellsLocations;
+        private ISkyrimGroupGetter<ILeveledSpellGetter>? _LeveledSpells => _LeveledSpellsLocations != null ? SkyrimGroupBinaryOverlay<ILeveledSpellGetter>.SkyrimGroupFactory(_data, _LeveledSpellsLocations, _package) : default;
+        public ISkyrimGroupGetter<ILeveledSpellGetter> LeveledSpells => _LeveledSpells ?? new SkyrimGroup<LeveledSpell>(this);
         #endregion
         #region AnimatedObjects
-        private RangeInt64? _AnimatedObjectsLocation;
-        private IGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocation.HasValue ? GroupBinaryOverlay<IAnimatedObjectGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AnimatedObjectsLocation!.Value.Min, _AnimatedObjectsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new Group<AnimatedObject>(this);
+        private List<RangeInt64>? _AnimatedObjectsLocations;
+        private ISkyrimGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? SkyrimGroupBinaryOverlay<IAnimatedObjectGetter>.SkyrimGroupFactory(_data, _AnimatedObjectsLocations, _package) : default;
+        public ISkyrimGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new SkyrimGroup<AnimatedObject>(this);
         #endregion
         #region Waters
-        private RangeInt64? _WatersLocation;
-        private IGroupGetter<IWaterGetter>? _Waters => _WatersLocation.HasValue ? GroupBinaryOverlay<IWaterGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WatersLocation!.Value.Min, _WatersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IWaterGetter> Waters => _Waters ?? new Group<Water>(this);
+        private List<RangeInt64>? _WatersLocations;
+        private ISkyrimGroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? SkyrimGroupBinaryOverlay<IWaterGetter>.SkyrimGroupFactory(_data, _WatersLocations, _package) : default;
+        public ISkyrimGroupGetter<IWaterGetter> Waters => _Waters ?? new SkyrimGroup<Water>(this);
         #endregion
         #region EffectShaders
-        private RangeInt64? _EffectShadersLocation;
-        private IGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocation.HasValue ? GroupBinaryOverlay<IEffectShaderGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EffectShadersLocation!.Value.Min, _EffectShadersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new Group<EffectShader>(this);
+        private List<RangeInt64>? _EffectShadersLocations;
+        private ISkyrimGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? SkyrimGroupBinaryOverlay<IEffectShaderGetter>.SkyrimGroupFactory(_data, _EffectShadersLocations, _package) : default;
+        public ISkyrimGroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new SkyrimGroup<EffectShader>(this);
         #endregion
         #region Explosions
-        private RangeInt64? _ExplosionsLocation;
-        private IGroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocation.HasValue ? GroupBinaryOverlay<IExplosionGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ExplosionsLocation!.Value.Min, _ExplosionsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IExplosionGetter> Explosions => _Explosions ?? new Group<Explosion>(this);
+        private List<RangeInt64>? _ExplosionsLocations;
+        private ISkyrimGroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? SkyrimGroupBinaryOverlay<IExplosionGetter>.SkyrimGroupFactory(_data, _ExplosionsLocations, _package) : default;
+        public ISkyrimGroupGetter<IExplosionGetter> Explosions => _Explosions ?? new SkyrimGroup<Explosion>(this);
         #endregion
         #region Debris
-        private RangeInt64? _DebrisLocation;
-        private IGroupGetter<IDebrisGetter>? _Debris => _DebrisLocation.HasValue ? GroupBinaryOverlay<IDebrisGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DebrisLocation!.Value.Min, _DebrisLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IDebrisGetter> Debris => _Debris ?? new Group<Debris>(this);
+        private List<RangeInt64>? _DebrisLocations;
+        private ISkyrimGroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? SkyrimGroupBinaryOverlay<IDebrisGetter>.SkyrimGroupFactory(_data, _DebrisLocations, _package) : default;
+        public ISkyrimGroupGetter<IDebrisGetter> Debris => _Debris ?? new SkyrimGroup<Debris>(this);
         #endregion
         #region ImageSpaces
-        private RangeInt64? _ImageSpacesLocation;
-        private IGroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocation.HasValue ? GroupBinaryOverlay<IImageSpaceGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ImageSpacesLocation!.Value.Min, _ImageSpacesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IImageSpaceGetter> ImageSpaces => _ImageSpaces ?? new Group<ImageSpace>(this);
+        private List<RangeInt64>? _ImageSpacesLocations;
+        private ISkyrimGroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? SkyrimGroupBinaryOverlay<IImageSpaceGetter>.SkyrimGroupFactory(_data, _ImageSpacesLocations, _package) : default;
+        public ISkyrimGroupGetter<IImageSpaceGetter> ImageSpaces => _ImageSpaces ?? new SkyrimGroup<ImageSpace>(this);
         #endregion
         #region ImageSpaceAdapters
-        private RangeInt64? _ImageSpaceAdaptersLocation;
-        private IGroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocation.HasValue ? GroupBinaryOverlay<IImageSpaceAdapterGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ImageSpaceAdaptersLocation!.Value.Min, _ImageSpaceAdaptersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters => _ImageSpaceAdapters ?? new Group<ImageSpaceAdapter>(this);
+        private List<RangeInt64>? _ImageSpaceAdaptersLocations;
+        private ISkyrimGroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? SkyrimGroupBinaryOverlay<IImageSpaceAdapterGetter>.SkyrimGroupFactory(_data, _ImageSpaceAdaptersLocations, _package) : default;
+        public ISkyrimGroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters => _ImageSpaceAdapters ?? new SkyrimGroup<ImageSpaceAdapter>(this);
         #endregion
         #region FormLists
-        private RangeInt64? _FormListsLocation;
-        private IGroupGetter<IFormListGetter>? _FormLists => _FormListsLocation.HasValue ? GroupBinaryOverlay<IFormListGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FormListsLocation!.Value.Min, _FormListsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IFormListGetter> FormLists => _FormLists ?? new Group<FormList>(this);
+        private List<RangeInt64>? _FormListsLocations;
+        private ISkyrimGroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? SkyrimGroupBinaryOverlay<IFormListGetter>.SkyrimGroupFactory(_data, _FormListsLocations, _package) : default;
+        public ISkyrimGroupGetter<IFormListGetter> FormLists => _FormLists ?? new SkyrimGroup<FormList>(this);
         #endregion
         #region Perks
-        private RangeInt64? _PerksLocation;
-        private IGroupGetter<IPerkGetter>? _Perks => _PerksLocation.HasValue ? GroupBinaryOverlay<IPerkGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _PerksLocation!.Value.Min, _PerksLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IPerkGetter> Perks => _Perks ?? new Group<Perk>(this);
+        private List<RangeInt64>? _PerksLocations;
+        private ISkyrimGroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? SkyrimGroupBinaryOverlay<IPerkGetter>.SkyrimGroupFactory(_data, _PerksLocations, _package) : default;
+        public ISkyrimGroupGetter<IPerkGetter> Perks => _Perks ?? new SkyrimGroup<Perk>(this);
         #endregion
         #region BodyParts
-        private RangeInt64? _BodyPartsLocation;
-        private IGroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocation.HasValue ? GroupBinaryOverlay<IBodyPartDataGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _BodyPartsLocation!.Value.Min, _BodyPartsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IBodyPartDataGetter> BodyParts => _BodyParts ?? new Group<BodyPartData>(this);
+        private List<RangeInt64>? _BodyPartsLocations;
+        private ISkyrimGroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? SkyrimGroupBinaryOverlay<IBodyPartDataGetter>.SkyrimGroupFactory(_data, _BodyPartsLocations, _package) : default;
+        public ISkyrimGroupGetter<IBodyPartDataGetter> BodyParts => _BodyParts ?? new SkyrimGroup<BodyPartData>(this);
         #endregion
         #region AddonNodes
-        private RangeInt64? _AddonNodesLocation;
-        private IGroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocation.HasValue ? GroupBinaryOverlay<IAddonNodeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AddonNodesLocation!.Value.Min, _AddonNodesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IAddonNodeGetter> AddonNodes => _AddonNodes ?? new Group<AddonNode>(this);
+        private List<RangeInt64>? _AddonNodesLocations;
+        private ISkyrimGroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? SkyrimGroupBinaryOverlay<IAddonNodeGetter>.SkyrimGroupFactory(_data, _AddonNodesLocations, _package) : default;
+        public ISkyrimGroupGetter<IAddonNodeGetter> AddonNodes => _AddonNodes ?? new SkyrimGroup<AddonNode>(this);
         #endregion
         #region ActorValueInformation
-        private RangeInt64? _ActorValueInformationLocation;
-        private IGroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocation.HasValue ? GroupBinaryOverlay<IActorValueInformationGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ActorValueInformationLocation!.Value.Min, _ActorValueInformationLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IActorValueInformationGetter> ActorValueInformation => _ActorValueInformation ?? new Group<ActorValueInformation>(this);
+        private List<RangeInt64>? _ActorValueInformationLocations;
+        private ISkyrimGroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocations != null ? SkyrimGroupBinaryOverlay<IActorValueInformationGetter>.SkyrimGroupFactory(_data, _ActorValueInformationLocations, _package) : default;
+        public ISkyrimGroupGetter<IActorValueInformationGetter> ActorValueInformation => _ActorValueInformation ?? new SkyrimGroup<ActorValueInformation>(this);
         #endregion
         #region CameraShots
-        private RangeInt64? _CameraShotsLocation;
-        private IGroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocation.HasValue ? GroupBinaryOverlay<ICameraShotGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CameraShotsLocation!.Value.Min, _CameraShotsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ICameraShotGetter> CameraShots => _CameraShots ?? new Group<CameraShot>(this);
+        private List<RangeInt64>? _CameraShotsLocations;
+        private ISkyrimGroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? SkyrimGroupBinaryOverlay<ICameraShotGetter>.SkyrimGroupFactory(_data, _CameraShotsLocations, _package) : default;
+        public ISkyrimGroupGetter<ICameraShotGetter> CameraShots => _CameraShots ?? new SkyrimGroup<CameraShot>(this);
         #endregion
         #region CameraPaths
-        private RangeInt64? _CameraPathsLocation;
-        private IGroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocation.HasValue ? GroupBinaryOverlay<ICameraPathGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CameraPathsLocation!.Value.Min, _CameraPathsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new Group<CameraPath>(this);
+        private List<RangeInt64>? _CameraPathsLocations;
+        private ISkyrimGroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? SkyrimGroupBinaryOverlay<ICameraPathGetter>.SkyrimGroupFactory(_data, _CameraPathsLocations, _package) : default;
+        public ISkyrimGroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new SkyrimGroup<CameraPath>(this);
         #endregion
         #region VoiceTypes
-        private RangeInt64? _VoiceTypesLocation;
-        private IGroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocation.HasValue ? GroupBinaryOverlay<IVoiceTypeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _VoiceTypesLocation!.Value.Min, _VoiceTypesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IVoiceTypeGetter> VoiceTypes => _VoiceTypes ?? new Group<VoiceType>(this);
+        private List<RangeInt64>? _VoiceTypesLocations;
+        private ISkyrimGroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? SkyrimGroupBinaryOverlay<IVoiceTypeGetter>.SkyrimGroupFactory(_data, _VoiceTypesLocations, _package) : default;
+        public ISkyrimGroupGetter<IVoiceTypeGetter> VoiceTypes => _VoiceTypes ?? new SkyrimGroup<VoiceType>(this);
         #endregion
         #region MaterialTypes
-        private RangeInt64? _MaterialTypesLocation;
-        private IGroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocation.HasValue ? GroupBinaryOverlay<IMaterialTypeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MaterialTypesLocation!.Value.Min, _MaterialTypesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IMaterialTypeGetter> MaterialTypes => _MaterialTypes ?? new Group<MaterialType>(this);
+        private List<RangeInt64>? _MaterialTypesLocations;
+        private ISkyrimGroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? SkyrimGroupBinaryOverlay<IMaterialTypeGetter>.SkyrimGroupFactory(_data, _MaterialTypesLocations, _package) : default;
+        public ISkyrimGroupGetter<IMaterialTypeGetter> MaterialTypes => _MaterialTypes ?? new SkyrimGroup<MaterialType>(this);
         #endregion
         #region Impacts
-        private RangeInt64? _ImpactsLocation;
-        private IGroupGetter<IImpactGetter>? _Impacts => _ImpactsLocation.HasValue ? GroupBinaryOverlay<IImpactGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ImpactsLocation!.Value.Min, _ImpactsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IImpactGetter> Impacts => _Impacts ?? new Group<Impact>(this);
+        private List<RangeInt64>? _ImpactsLocations;
+        private ISkyrimGroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? SkyrimGroupBinaryOverlay<IImpactGetter>.SkyrimGroupFactory(_data, _ImpactsLocations, _package) : default;
+        public ISkyrimGroupGetter<IImpactGetter> Impacts => _Impacts ?? new SkyrimGroup<Impact>(this);
         #endregion
         #region ImpactDataSets
-        private RangeInt64? _ImpactDataSetsLocation;
-        private IGroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocation.HasValue ? GroupBinaryOverlay<IImpactDataSetGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ImpactDataSetsLocation!.Value.Min, _ImpactDataSetsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new Group<ImpactDataSet>(this);
+        private List<RangeInt64>? _ImpactDataSetsLocations;
+        private ISkyrimGroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? SkyrimGroupBinaryOverlay<IImpactDataSetGetter>.SkyrimGroupFactory(_data, _ImpactDataSetsLocations, _package) : default;
+        public ISkyrimGroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new SkyrimGroup<ImpactDataSet>(this);
         #endregion
         #region ArmorAddons
-        private RangeInt64? _ArmorAddonsLocation;
-        private IGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocation.HasValue ? GroupBinaryOverlay<IArmorAddonGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ArmorAddonsLocation!.Value.Min, _ArmorAddonsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IArmorAddonGetter> ArmorAddons => _ArmorAddons ?? new Group<ArmorAddon>(this);
+        private List<RangeInt64>? _ArmorAddonsLocations;
+        private ISkyrimGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? SkyrimGroupBinaryOverlay<IArmorAddonGetter>.SkyrimGroupFactory(_data, _ArmorAddonsLocations, _package) : default;
+        public ISkyrimGroupGetter<IArmorAddonGetter> ArmorAddons => _ArmorAddons ?? new SkyrimGroup<ArmorAddon>(this);
         #endregion
         #region EncounterZones
-        private RangeInt64? _EncounterZonesLocation;
-        private IGroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocation.HasValue ? GroupBinaryOverlay<IEncounterZoneGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EncounterZonesLocation!.Value.Min, _EncounterZonesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IEncounterZoneGetter> EncounterZones => _EncounterZones ?? new Group<EncounterZone>(this);
+        private List<RangeInt64>? _EncounterZonesLocations;
+        private ISkyrimGroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocations != null ? SkyrimGroupBinaryOverlay<IEncounterZoneGetter>.SkyrimGroupFactory(_data, _EncounterZonesLocations, _package) : default;
+        public ISkyrimGroupGetter<IEncounterZoneGetter> EncounterZones => _EncounterZones ?? new SkyrimGroup<EncounterZone>(this);
         #endregion
         #region Locations
-        private RangeInt64? _LocationsLocation;
-        private IGroupGetter<ILocationGetter>? _Locations => _LocationsLocation.HasValue ? GroupBinaryOverlay<ILocationGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LocationsLocation!.Value.Min, _LocationsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILocationGetter> Locations => _Locations ?? new Group<Location>(this);
+        private List<RangeInt64>? _LocationsLocations;
+        private ISkyrimGroupGetter<ILocationGetter>? _Locations => _LocationsLocations != null ? SkyrimGroupBinaryOverlay<ILocationGetter>.SkyrimGroupFactory(_data, _LocationsLocations, _package) : default;
+        public ISkyrimGroupGetter<ILocationGetter> Locations => _Locations ?? new SkyrimGroup<Location>(this);
         #endregion
         #region Messages
-        private RangeInt64? _MessagesLocation;
-        private IGroupGetter<IMessageGetter>? _Messages => _MessagesLocation.HasValue ? GroupBinaryOverlay<IMessageGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MessagesLocation!.Value.Min, _MessagesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IMessageGetter> Messages => _Messages ?? new Group<Message>(this);
+        private List<RangeInt64>? _MessagesLocations;
+        private ISkyrimGroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? SkyrimGroupBinaryOverlay<IMessageGetter>.SkyrimGroupFactory(_data, _MessagesLocations, _package) : default;
+        public ISkyrimGroupGetter<IMessageGetter> Messages => _Messages ?? new SkyrimGroup<Message>(this);
         #endregion
         #region DefaultObjectManagers
-        private RangeInt64? _DefaultObjectManagersLocation;
-        private IGroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocation.HasValue ? GroupBinaryOverlay<IDefaultObjectManagerGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DefaultObjectManagersLocation!.Value.Min, _DefaultObjectManagersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers => _DefaultObjectManagers ?? new Group<DefaultObjectManager>(this);
+        private List<RangeInt64>? _DefaultObjectManagersLocations;
+        private ISkyrimGroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? SkyrimGroupBinaryOverlay<IDefaultObjectManagerGetter>.SkyrimGroupFactory(_data, _DefaultObjectManagersLocations, _package) : default;
+        public ISkyrimGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers => _DefaultObjectManagers ?? new SkyrimGroup<DefaultObjectManager>(this);
         #endregion
         #region LightingTemplates
-        private RangeInt64? _LightingTemplatesLocation;
-        private IGroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocation.HasValue ? GroupBinaryOverlay<ILightingTemplateGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LightingTemplatesLocation!.Value.Min, _LightingTemplatesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new Group<LightingTemplate>(this);
+        private List<RangeInt64>? _LightingTemplatesLocations;
+        private ISkyrimGroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? SkyrimGroupBinaryOverlay<ILightingTemplateGetter>.SkyrimGroupFactory(_data, _LightingTemplatesLocations, _package) : default;
+        public ISkyrimGroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new SkyrimGroup<LightingTemplate>(this);
         #endregion
         #region MusicTypes
-        private RangeInt64? _MusicTypesLocation;
-        private IGroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocation.HasValue ? GroupBinaryOverlay<IMusicTypeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MusicTypesLocation!.Value.Min, _MusicTypesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IMusicTypeGetter> MusicTypes => _MusicTypes ?? new Group<MusicType>(this);
+        private List<RangeInt64>? _MusicTypesLocations;
+        private ISkyrimGroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? SkyrimGroupBinaryOverlay<IMusicTypeGetter>.SkyrimGroupFactory(_data, _MusicTypesLocations, _package) : default;
+        public ISkyrimGroupGetter<IMusicTypeGetter> MusicTypes => _MusicTypes ?? new SkyrimGroup<MusicType>(this);
         #endregion
         #region Footsteps
-        private RangeInt64? _FootstepsLocation;
-        private IGroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocation.HasValue ? GroupBinaryOverlay<IFootstepGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FootstepsLocation!.Value.Min, _FootstepsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IFootstepGetter> Footsteps => _Footsteps ?? new Group<Footstep>(this);
+        private List<RangeInt64>? _FootstepsLocations;
+        private ISkyrimGroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocations != null ? SkyrimGroupBinaryOverlay<IFootstepGetter>.SkyrimGroupFactory(_data, _FootstepsLocations, _package) : default;
+        public ISkyrimGroupGetter<IFootstepGetter> Footsteps => _Footsteps ?? new SkyrimGroup<Footstep>(this);
         #endregion
         #region FootstepSets
-        private RangeInt64? _FootstepSetsLocation;
-        private IGroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocation.HasValue ? GroupBinaryOverlay<IFootstepSetGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FootstepSetsLocation!.Value.Min, _FootstepSetsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IFootstepSetGetter> FootstepSets => _FootstepSets ?? new Group<FootstepSet>(this);
+        private List<RangeInt64>? _FootstepSetsLocations;
+        private ISkyrimGroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocations != null ? SkyrimGroupBinaryOverlay<IFootstepSetGetter>.SkyrimGroupFactory(_data, _FootstepSetsLocations, _package) : default;
+        public ISkyrimGroupGetter<IFootstepSetGetter> FootstepSets => _FootstepSets ?? new SkyrimGroup<FootstepSet>(this);
         #endregion
         #region StoryManagerBranchNodes
-        private RangeInt64? _StoryManagerBranchNodesLocation;
-        private IGroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocation.HasValue ? GroupBinaryOverlay<IStoryManagerBranchNodeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _StoryManagerBranchNodesLocation!.Value.Min, _StoryManagerBranchNodesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes => _StoryManagerBranchNodes ?? new Group<StoryManagerBranchNode>(this);
+        private List<RangeInt64>? _StoryManagerBranchNodesLocations;
+        private ISkyrimGroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocations != null ? SkyrimGroupBinaryOverlay<IStoryManagerBranchNodeGetter>.SkyrimGroupFactory(_data, _StoryManagerBranchNodesLocations, _package) : default;
+        public ISkyrimGroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes => _StoryManagerBranchNodes ?? new SkyrimGroup<StoryManagerBranchNode>(this);
         #endregion
         #region StoryManagerQuestNodes
-        private RangeInt64? _StoryManagerQuestNodesLocation;
-        private IGroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocation.HasValue ? GroupBinaryOverlay<IStoryManagerQuestNodeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _StoryManagerQuestNodesLocation!.Value.Min, _StoryManagerQuestNodesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes => _StoryManagerQuestNodes ?? new Group<StoryManagerQuestNode>(this);
+        private List<RangeInt64>? _StoryManagerQuestNodesLocations;
+        private ISkyrimGroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocations != null ? SkyrimGroupBinaryOverlay<IStoryManagerQuestNodeGetter>.SkyrimGroupFactory(_data, _StoryManagerQuestNodesLocations, _package) : default;
+        public ISkyrimGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes => _StoryManagerQuestNodes ?? new SkyrimGroup<StoryManagerQuestNode>(this);
         #endregion
         #region StoryManagerEventNodes
-        private RangeInt64? _StoryManagerEventNodesLocation;
-        private IGroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocation.HasValue ? GroupBinaryOverlay<IStoryManagerEventNodeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _StoryManagerEventNodesLocation!.Value.Min, _StoryManagerEventNodesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes => _StoryManagerEventNodes ?? new Group<StoryManagerEventNode>(this);
+        private List<RangeInt64>? _StoryManagerEventNodesLocations;
+        private ISkyrimGroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocations != null ? SkyrimGroupBinaryOverlay<IStoryManagerEventNodeGetter>.SkyrimGroupFactory(_data, _StoryManagerEventNodesLocations, _package) : default;
+        public ISkyrimGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes => _StoryManagerEventNodes ?? new SkyrimGroup<StoryManagerEventNode>(this);
         #endregion
         #region DialogBranches
-        private RangeInt64? _DialogBranchesLocation;
-        private IGroupGetter<IDialogBranchGetter>? _DialogBranches => _DialogBranchesLocation.HasValue ? GroupBinaryOverlay<IDialogBranchGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DialogBranchesLocation!.Value.Min, _DialogBranchesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IDialogBranchGetter> DialogBranches => _DialogBranches ?? new Group<DialogBranch>(this);
+        private List<RangeInt64>? _DialogBranchesLocations;
+        private ISkyrimGroupGetter<IDialogBranchGetter>? _DialogBranches => _DialogBranchesLocations != null ? SkyrimGroupBinaryOverlay<IDialogBranchGetter>.SkyrimGroupFactory(_data, _DialogBranchesLocations, _package) : default;
+        public ISkyrimGroupGetter<IDialogBranchGetter> DialogBranches => _DialogBranches ?? new SkyrimGroup<DialogBranch>(this);
         #endregion
         #region MusicTracks
-        private RangeInt64? _MusicTracksLocation;
-        private IGroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocation.HasValue ? GroupBinaryOverlay<IMusicTrackGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MusicTracksLocation!.Value.Min, _MusicTracksLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IMusicTrackGetter> MusicTracks => _MusicTracks ?? new Group<MusicTrack>(this);
+        private List<RangeInt64>? _MusicTracksLocations;
+        private ISkyrimGroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocations != null ? SkyrimGroupBinaryOverlay<IMusicTrackGetter>.SkyrimGroupFactory(_data, _MusicTracksLocations, _package) : default;
+        public ISkyrimGroupGetter<IMusicTrackGetter> MusicTracks => _MusicTracks ?? new SkyrimGroup<MusicTrack>(this);
         #endregion
         #region DialogViews
-        private RangeInt64? _DialogViewsLocation;
-        private IGroupGetter<IDialogViewGetter>? _DialogViews => _DialogViewsLocation.HasValue ? GroupBinaryOverlay<IDialogViewGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DialogViewsLocation!.Value.Min, _DialogViewsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IDialogViewGetter> DialogViews => _DialogViews ?? new Group<DialogView>(this);
+        private List<RangeInt64>? _DialogViewsLocations;
+        private ISkyrimGroupGetter<IDialogViewGetter>? _DialogViews => _DialogViewsLocations != null ? SkyrimGroupBinaryOverlay<IDialogViewGetter>.SkyrimGroupFactory(_data, _DialogViewsLocations, _package) : default;
+        public ISkyrimGroupGetter<IDialogViewGetter> DialogViews => _DialogViews ?? new SkyrimGroup<DialogView>(this);
         #endregion
         #region WordsOfPower
-        private RangeInt64? _WordsOfPowerLocation;
-        private IGroupGetter<IWordOfPowerGetter>? _WordsOfPower => _WordsOfPowerLocation.HasValue ? GroupBinaryOverlay<IWordOfPowerGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WordsOfPowerLocation!.Value.Min, _WordsOfPowerLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IWordOfPowerGetter> WordsOfPower => _WordsOfPower ?? new Group<WordOfPower>(this);
+        private List<RangeInt64>? _WordsOfPowerLocations;
+        private ISkyrimGroupGetter<IWordOfPowerGetter>? _WordsOfPower => _WordsOfPowerLocations != null ? SkyrimGroupBinaryOverlay<IWordOfPowerGetter>.SkyrimGroupFactory(_data, _WordsOfPowerLocations, _package) : default;
+        public ISkyrimGroupGetter<IWordOfPowerGetter> WordsOfPower => _WordsOfPower ?? new SkyrimGroup<WordOfPower>(this);
         #endregion
         #region Shouts
-        private RangeInt64? _ShoutsLocation;
-        private IGroupGetter<IShoutGetter>? _Shouts => _ShoutsLocation.HasValue ? GroupBinaryOverlay<IShoutGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ShoutsLocation!.Value.Min, _ShoutsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IShoutGetter> Shouts => _Shouts ?? new Group<Shout>(this);
+        private List<RangeInt64>? _ShoutsLocations;
+        private ISkyrimGroupGetter<IShoutGetter>? _Shouts => _ShoutsLocations != null ? SkyrimGroupBinaryOverlay<IShoutGetter>.SkyrimGroupFactory(_data, _ShoutsLocations, _package) : default;
+        public ISkyrimGroupGetter<IShoutGetter> Shouts => _Shouts ?? new SkyrimGroup<Shout>(this);
         #endregion
         #region EquipTypes
-        private RangeInt64? _EquipTypesLocation;
-        private IGroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocation.HasValue ? GroupBinaryOverlay<IEquipTypeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EquipTypesLocation!.Value.Min, _EquipTypesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IEquipTypeGetter> EquipTypes => _EquipTypes ?? new Group<EquipType>(this);
+        private List<RangeInt64>? _EquipTypesLocations;
+        private ISkyrimGroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocations != null ? SkyrimGroupBinaryOverlay<IEquipTypeGetter>.SkyrimGroupFactory(_data, _EquipTypesLocations, _package) : default;
+        public ISkyrimGroupGetter<IEquipTypeGetter> EquipTypes => _EquipTypes ?? new SkyrimGroup<EquipType>(this);
         #endregion
         #region Relationships
-        private RangeInt64? _RelationshipsLocation;
-        private IGroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocation.HasValue ? GroupBinaryOverlay<IRelationshipGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _RelationshipsLocation!.Value.Min, _RelationshipsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IRelationshipGetter> Relationships => _Relationships ?? new Group<Relationship>(this);
+        private List<RangeInt64>? _RelationshipsLocations;
+        private ISkyrimGroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocations != null ? SkyrimGroupBinaryOverlay<IRelationshipGetter>.SkyrimGroupFactory(_data, _RelationshipsLocations, _package) : default;
+        public ISkyrimGroupGetter<IRelationshipGetter> Relationships => _Relationships ?? new SkyrimGroup<Relationship>(this);
         #endregion
         #region Scenes
-        private RangeInt64? _ScenesLocation;
-        private IGroupGetter<ISceneGetter>? _Scenes => _ScenesLocation.HasValue ? GroupBinaryOverlay<ISceneGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ScenesLocation!.Value.Min, _ScenesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISceneGetter> Scenes => _Scenes ?? new Group<Scene>(this);
+        private List<RangeInt64>? _ScenesLocations;
+        private ISkyrimGroupGetter<ISceneGetter>? _Scenes => _ScenesLocations != null ? SkyrimGroupBinaryOverlay<ISceneGetter>.SkyrimGroupFactory(_data, _ScenesLocations, _package) : default;
+        public ISkyrimGroupGetter<ISceneGetter> Scenes => _Scenes ?? new SkyrimGroup<Scene>(this);
         #endregion
         #region AssociationTypes
-        private RangeInt64? _AssociationTypesLocation;
-        private IGroupGetter<IAssociationTypeGetter>? _AssociationTypes => _AssociationTypesLocation.HasValue ? GroupBinaryOverlay<IAssociationTypeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AssociationTypesLocation!.Value.Min, _AssociationTypesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IAssociationTypeGetter> AssociationTypes => _AssociationTypes ?? new Group<AssociationType>(this);
+        private List<RangeInt64>? _AssociationTypesLocations;
+        private ISkyrimGroupGetter<IAssociationTypeGetter>? _AssociationTypes => _AssociationTypesLocations != null ? SkyrimGroupBinaryOverlay<IAssociationTypeGetter>.SkyrimGroupFactory(_data, _AssociationTypesLocations, _package) : default;
+        public ISkyrimGroupGetter<IAssociationTypeGetter> AssociationTypes => _AssociationTypes ?? new SkyrimGroup<AssociationType>(this);
         #endregion
         #region Outfits
-        private RangeInt64? _OutfitsLocation;
-        private IGroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocation.HasValue ? GroupBinaryOverlay<IOutfitGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _OutfitsLocation!.Value.Min, _OutfitsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IOutfitGetter> Outfits => _Outfits ?? new Group<Outfit>(this);
+        private List<RangeInt64>? _OutfitsLocations;
+        private ISkyrimGroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocations != null ? SkyrimGroupBinaryOverlay<IOutfitGetter>.SkyrimGroupFactory(_data, _OutfitsLocations, _package) : default;
+        public ISkyrimGroupGetter<IOutfitGetter> Outfits => _Outfits ?? new SkyrimGroup<Outfit>(this);
         #endregion
         #region ArtObjects
-        private RangeInt64? _ArtObjectsLocation;
-        private IGroupGetter<IArtObjectGetter>? _ArtObjects => _ArtObjectsLocation.HasValue ? GroupBinaryOverlay<IArtObjectGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ArtObjectsLocation!.Value.Min, _ArtObjectsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IArtObjectGetter> ArtObjects => _ArtObjects ?? new Group<ArtObject>(this);
+        private List<RangeInt64>? _ArtObjectsLocations;
+        private ISkyrimGroupGetter<IArtObjectGetter>? _ArtObjects => _ArtObjectsLocations != null ? SkyrimGroupBinaryOverlay<IArtObjectGetter>.SkyrimGroupFactory(_data, _ArtObjectsLocations, _package) : default;
+        public ISkyrimGroupGetter<IArtObjectGetter> ArtObjects => _ArtObjects ?? new SkyrimGroup<ArtObject>(this);
         #endregion
         #region MaterialObjects
-        private RangeInt64? _MaterialObjectsLocation;
-        private IGroupGetter<IMaterialObjectGetter>? _MaterialObjects => _MaterialObjectsLocation.HasValue ? GroupBinaryOverlay<IMaterialObjectGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MaterialObjectsLocation!.Value.Min, _MaterialObjectsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IMaterialObjectGetter> MaterialObjects => _MaterialObjects ?? new Group<MaterialObject>(this);
+        private List<RangeInt64>? _MaterialObjectsLocations;
+        private ISkyrimGroupGetter<IMaterialObjectGetter>? _MaterialObjects => _MaterialObjectsLocations != null ? SkyrimGroupBinaryOverlay<IMaterialObjectGetter>.SkyrimGroupFactory(_data, _MaterialObjectsLocations, _package) : default;
+        public ISkyrimGroupGetter<IMaterialObjectGetter> MaterialObjects => _MaterialObjects ?? new SkyrimGroup<MaterialObject>(this);
         #endregion
         #region MovementTypes
-        private RangeInt64? _MovementTypesLocation;
-        private IGroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocation.HasValue ? GroupBinaryOverlay<IMovementTypeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MovementTypesLocation!.Value.Min, _MovementTypesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IMovementTypeGetter> MovementTypes => _MovementTypes ?? new Group<MovementType>(this);
+        private List<RangeInt64>? _MovementTypesLocations;
+        private ISkyrimGroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocations != null ? SkyrimGroupBinaryOverlay<IMovementTypeGetter>.SkyrimGroupFactory(_data, _MovementTypesLocations, _package) : default;
+        public ISkyrimGroupGetter<IMovementTypeGetter> MovementTypes => _MovementTypes ?? new SkyrimGroup<MovementType>(this);
         #endregion
         #region SoundDescriptors
-        private RangeInt64? _SoundDescriptorsLocation;
-        private IGroupGetter<ISoundDescriptorGetter>? _SoundDescriptors => _SoundDescriptorsLocation.HasValue ? GroupBinaryOverlay<ISoundDescriptorGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoundDescriptorsLocation!.Value.Min, _SoundDescriptorsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISoundDescriptorGetter> SoundDescriptors => _SoundDescriptors ?? new Group<SoundDescriptor>(this);
+        private List<RangeInt64>? _SoundDescriptorsLocations;
+        private ISkyrimGroupGetter<ISoundDescriptorGetter>? _SoundDescriptors => _SoundDescriptorsLocations != null ? SkyrimGroupBinaryOverlay<ISoundDescriptorGetter>.SkyrimGroupFactory(_data, _SoundDescriptorsLocations, _package) : default;
+        public ISkyrimGroupGetter<ISoundDescriptorGetter> SoundDescriptors => _SoundDescriptors ?? new SkyrimGroup<SoundDescriptor>(this);
         #endregion
         #region DualCastData
-        private RangeInt64? _DualCastDataLocation;
-        private IGroupGetter<IDualCastDataGetter>? _DualCastData => _DualCastDataLocation.HasValue ? GroupBinaryOverlay<IDualCastDataGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DualCastDataLocation!.Value.Min, _DualCastDataLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IDualCastDataGetter> DualCastData => _DualCastData ?? new Group<DualCastData>(this);
+        private List<RangeInt64>? _DualCastDataLocations;
+        private ISkyrimGroupGetter<IDualCastDataGetter>? _DualCastData => _DualCastDataLocations != null ? SkyrimGroupBinaryOverlay<IDualCastDataGetter>.SkyrimGroupFactory(_data, _DualCastDataLocations, _package) : default;
+        public ISkyrimGroupGetter<IDualCastDataGetter> DualCastData => _DualCastData ?? new SkyrimGroup<DualCastData>(this);
         #endregion
         #region SoundCategories
-        private RangeInt64? _SoundCategoriesLocation;
-        private IGroupGetter<ISoundCategoryGetter>? _SoundCategories => _SoundCategoriesLocation.HasValue ? GroupBinaryOverlay<ISoundCategoryGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoundCategoriesLocation!.Value.Min, _SoundCategoriesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISoundCategoryGetter> SoundCategories => _SoundCategories ?? new Group<SoundCategory>(this);
+        private List<RangeInt64>? _SoundCategoriesLocations;
+        private ISkyrimGroupGetter<ISoundCategoryGetter>? _SoundCategories => _SoundCategoriesLocations != null ? SkyrimGroupBinaryOverlay<ISoundCategoryGetter>.SkyrimGroupFactory(_data, _SoundCategoriesLocations, _package) : default;
+        public ISkyrimGroupGetter<ISoundCategoryGetter> SoundCategories => _SoundCategories ?? new SkyrimGroup<SoundCategory>(this);
         #endregion
         #region SoundOutputModels
-        private RangeInt64? _SoundOutputModelsLocation;
-        private IGroupGetter<ISoundOutputModelGetter>? _SoundOutputModels => _SoundOutputModelsLocation.HasValue ? GroupBinaryOverlay<ISoundOutputModelGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoundOutputModelsLocation!.Value.Min, _SoundOutputModelsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ISoundOutputModelGetter> SoundOutputModels => _SoundOutputModels ?? new Group<SoundOutputModel>(this);
+        private List<RangeInt64>? _SoundOutputModelsLocations;
+        private ISkyrimGroupGetter<ISoundOutputModelGetter>? _SoundOutputModels => _SoundOutputModelsLocations != null ? SkyrimGroupBinaryOverlay<ISoundOutputModelGetter>.SkyrimGroupFactory(_data, _SoundOutputModelsLocations, _package) : default;
+        public ISkyrimGroupGetter<ISoundOutputModelGetter> SoundOutputModels => _SoundOutputModels ?? new SkyrimGroup<SoundOutputModel>(this);
         #endregion
         #region CollisionLayers
-        private RangeInt64? _CollisionLayersLocation;
-        private IGroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocation.HasValue ? GroupBinaryOverlay<ICollisionLayerGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CollisionLayersLocation!.Value.Min, _CollisionLayersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ICollisionLayerGetter> CollisionLayers => _CollisionLayers ?? new Group<CollisionLayer>(this);
+        private List<RangeInt64>? _CollisionLayersLocations;
+        private ISkyrimGroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocations != null ? SkyrimGroupBinaryOverlay<ICollisionLayerGetter>.SkyrimGroupFactory(_data, _CollisionLayersLocations, _package) : default;
+        public ISkyrimGroupGetter<ICollisionLayerGetter> CollisionLayers => _CollisionLayers ?? new SkyrimGroup<CollisionLayer>(this);
         #endregion
         #region Colors
-        private RangeInt64? _ColorsLocation;
-        private IGroupGetter<IColorRecordGetter>? _Colors => _ColorsLocation.HasValue ? GroupBinaryOverlay<IColorRecordGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ColorsLocation!.Value.Min, _ColorsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IColorRecordGetter> Colors => _Colors ?? new Group<ColorRecord>(this);
+        private List<RangeInt64>? _ColorsLocations;
+        private ISkyrimGroupGetter<IColorRecordGetter>? _Colors => _ColorsLocations != null ? SkyrimGroupBinaryOverlay<IColorRecordGetter>.SkyrimGroupFactory(_data, _ColorsLocations, _package) : default;
+        public ISkyrimGroupGetter<IColorRecordGetter> Colors => _Colors ?? new SkyrimGroup<ColorRecord>(this);
         #endregion
         #region ReverbParameters
-        private RangeInt64? _ReverbParametersLocation;
-        private IGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocation.HasValue ? GroupBinaryOverlay<IReverbParametersGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ReverbParametersLocation!.Value.Min, _ReverbParametersLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IReverbParametersGetter> ReverbParameters => _ReverbParameters ?? new Group<ReverbParameters>(this);
+        private List<RangeInt64>? _ReverbParametersLocations;
+        private ISkyrimGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocations != null ? SkyrimGroupBinaryOverlay<IReverbParametersGetter>.SkyrimGroupFactory(_data, _ReverbParametersLocations, _package) : default;
+        public ISkyrimGroupGetter<IReverbParametersGetter> ReverbParameters => _ReverbParameters ?? new SkyrimGroup<ReverbParameters>(this);
         #endregion
         #region VolumetricLightings
-        private RangeInt64? _VolumetricLightingsLocation;
-        private IGroupGetter<IVolumetricLightingGetter>? _VolumetricLightings => _VolumetricLightingsLocation.HasValue ? GroupBinaryOverlay<IVolumetricLightingGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _VolumetricLightingsLocation!.Value.Min, _VolumetricLightingsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IVolumetricLightingGetter> VolumetricLightings => _VolumetricLightings ?? new Group<VolumetricLighting>(this);
+        private List<RangeInt64>? _VolumetricLightingsLocations;
+        private ISkyrimGroupGetter<IVolumetricLightingGetter>? _VolumetricLightings => _VolumetricLightingsLocations != null ? SkyrimGroupBinaryOverlay<IVolumetricLightingGetter>.SkyrimGroupFactory(_data, _VolumetricLightingsLocations, _package) : default;
+        public ISkyrimGroupGetter<IVolumetricLightingGetter> VolumetricLightings => _VolumetricLightings ?? new SkyrimGroup<VolumetricLighting>(this);
         #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
@@ -24846,267 +24850,320 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.GMST:
                 {
-                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GameSettingsLocations ??= new();
+                    _GameSettingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.KYWD:
                 {
-                    _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _KeywordsLocations ??= new();
+                    _KeywordsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.LCRT:
                 {
-                    _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LocationReferenceTypesLocations ??= new();
+                    _LocationReferenceTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LocationReferenceTypes;
                 }
                 case RecordTypeInts.AACT:
                 {
-                    _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ActionsLocations ??= new();
+                    _ActionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Actions;
                 }
                 case RecordTypeInts.TXST:
                 {
-                    _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _TextureSetsLocations ??= new();
+                    _TextureSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.TextureSets;
                 }
                 case RecordTypeInts.GLOB:
                 {
-                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GlobalsLocations ??= new();
+                    _GlobalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
-                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ClassesLocations ??= new();
+                    _ClassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
-                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FactionsLocations ??= new();
+                    _FactionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HDPT:
                 {
-                    _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _HeadPartsLocations ??= new();
+                    _HeadPartsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HAIR:
                 {
-                    _HairsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _HairsLocations ??= new();
+                    _HairsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
-                    _EyesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EyesLocations ??= new();
+                    _EyesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
-                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _RacesLocations ??= new();
+                    _RacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
-                    _SoundMarkersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoundMarkersLocations ??= new();
+                    _SoundMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.SoundMarkers;
                 }
                 case RecordTypeInts.ASPC:
                 {
-                    _AcousticSpacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AcousticSpacesLocations ??= new();
+                    _AcousticSpacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.AcousticSpaces;
                 }
                 case RecordTypeInts.MGEF:
                 {
-                    _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MagicEffectsLocations ??= new();
+                    _MagicEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.LTEX:
                 {
-                    _LandscapeTexturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LandscapeTexturesLocations ??= new();
+                    _LandscapeTexturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LandscapeTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
-                    _ObjectEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ObjectEffectsLocations ??= new();
+                    _ObjectEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ObjectEffects;
                 }
                 case RecordTypeInts.SPEL:
                 {
-                    _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SpellsLocations ??= new();
+                    _SpellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.SCRL:
                 {
-                    _ScrollsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ScrollsLocations ??= new();
+                    _ScrollsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Scrolls;
                 }
                 case RecordTypeInts.ACTI:
                 {
-                    _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ActivatorsLocations ??= new();
+                    _ActivatorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.TACT:
                 {
-                    _TalkingActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _TalkingActivatorsLocations ??= new();
+                    _TalkingActivatorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.TalkingActivators;
                 }
                 case RecordTypeInts.ARMO:
                 {
-                    _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ArmorsLocations ??= new();
+                    _ArmorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
-                    _BooksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _BooksLocations ??= new();
+                    _BooksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CONT:
                 {
-                    _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ContainersLocations ??= new();
+                    _ContainersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
-                    _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DoorsLocations ??= new();
+                    _DoorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
-                    _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IngredientsLocations ??= new();
+                    _IngredientsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
-                    _LightsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LightsLocations ??= new();
+                    _LightsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
-                    _MiscItemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MiscItemsLocations ??= new();
+                    _MiscItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MiscItems;
                 }
                 case RecordTypeInts.APPA:
                 {
-                    _AlchemicalApparatusesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AlchemicalApparatusesLocations ??= new();
+                    _AlchemicalApparatusesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.AlchemicalApparatuses;
                 }
                 case RecordTypeInts.STAT:
                 {
-                    _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _StaticsLocations ??= new();
+                    _StaticsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.MSTT:
                 {
-                    _MoveableStaticsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MoveableStaticsLocations ??= new();
+                    _MoveableStaticsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MoveableStatics;
                 }
                 case RecordTypeInts.GRAS:
                 {
-                    _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GrassesLocations ??= new();
+                    _GrassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
-                    _TreesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _TreesLocations ??= new();
+                    _TreesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
-                    _FloraeLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FloraeLocations ??= new();
+                    _FloraeLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Florae;
                 }
                 case RecordTypeInts.FURN:
                 {
-                    _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FurnitureLocations ??= new();
+                    _FurnitureLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
-                    _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WeaponsLocations ??= new();
+                    _WeaponsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
-                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AmmunitionsLocations ??= new();
+                    _AmmunitionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
-                    _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _NpcsLocations ??= new();
+                    _NpcsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.LVLN:
                 {
-                    _LeveledNpcsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledNpcsLocations ??= new();
+                    _LeveledNpcsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LeveledNpcs;
                 }
                 case RecordTypeInts.KEYM:
                 {
-                    _KeysLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _KeysLocations ??= new();
+                    _KeysLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
-                    _IngestiblesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IngestiblesLocations ??= new();
+                    _IngestiblesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Ingestibles;
                 }
                 case RecordTypeInts.IDLM:
                 {
-                    _IdleMarkersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IdleMarkersLocations ??= new();
+                    _IdleMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.IdleMarkers;
                 }
                 case RecordTypeInts.COBJ:
                 {
-                    _ConstructibleObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ConstructibleObjectsLocations ??= new();
+                    _ConstructibleObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ConstructibleObjects;
                 }
                 case RecordTypeInts.PROJ:
                 {
-                    _ProjectilesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ProjectilesLocations ??= new();
+                    _ProjectilesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Projectiles;
                 }
                 case RecordTypeInts.HAZD:
                 {
-                    _HazardsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _HazardsLocations ??= new();
+                    _HazardsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Hazards;
                 }
                 case RecordTypeInts.SLGM:
                 {
-                    _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoulGemsLocations ??= new();
+                    _SoulGemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.LVLI:
                 {
-                    _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledItemsLocations ??= new();
+                    _LeveledItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
-                    _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WeathersLocations ??= new();
+                    _WeathersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
-                    _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ClimatesLocations ??= new();
+                    _ClimatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.SPGD:
                 {
-                    _ShaderParticleGeometriesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ShaderParticleGeometriesLocations ??= new();
+                    _ShaderParticleGeometriesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ShaderParticleGeometries;
                 }
                 case RecordTypeInts.RFCT:
                 {
-                    _VisualEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _VisualEffectsLocations ??= new();
+                    _VisualEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.VisualEffects;
                 }
                 case RecordTypeInts.REGN:
                 {
-                    _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _RegionsLocations ??= new();
+                    _RegionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.NAVI:
                 {
-                    _NavigationMeshInfoMapsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _NavigationMeshInfoMapsLocations ??= new();
+                    _NavigationMeshInfoMapsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps;
                 }
                 case RecordTypeInts.CELL:
@@ -25116,297 +25173,356 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.WRLD:
                 {
-                    _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WorldspacesLocations ??= new();
+                    _WorldspacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
-                    _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DialogTopicsLocations ??= new();
+                    _DialogTopicsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
-                    _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _QuestsLocations ??= new();
+                    _QuestsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
-                    _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IdleAnimationsLocations ??= new();
+                    _IdleAnimationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
-                    _PackagesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _PackagesLocations ??= new();
+                    _PackagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Packages;
                 }
                 case RecordTypeInts.CSTY:
                 {
-                    _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CombatStylesLocations ??= new();
+                    _CombatStylesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
-                    _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LoadScreensLocations ??= new();
+                    _LoadScreensLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
-                    _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledSpellsLocations ??= new();
+                    _LeveledSpellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
-                    _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AnimatedObjectsLocations ??= new();
+                    _AnimatedObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
-                    _WatersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WatersLocations ??= new();
+                    _WatersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
-                    _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EffectShadersLocations ??= new();
+                    _EffectShadersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.EffectShaders;
                 }
                 case RecordTypeInts.EXPL:
                 {
-                    _ExplosionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ExplosionsLocations ??= new();
+                    _ExplosionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Explosions;
                 }
                 case RecordTypeInts.DEBR:
                 {
-                    _DebrisLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DebrisLocations ??= new();
+                    _DebrisLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Debris;
                 }
                 case RecordTypeInts.IMGS:
                 {
-                    _ImageSpacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ImageSpacesLocations ??= new();
+                    _ImageSpacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ImageSpaces;
                 }
                 case RecordTypeInts.IMAD:
                 {
-                    _ImageSpaceAdaptersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ImageSpaceAdaptersLocations ??= new();
+                    _ImageSpaceAdaptersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ImageSpaceAdapters;
                 }
                 case RecordTypeInts.FLST:
                 {
-                    _FormListsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FormListsLocations ??= new();
+                    _FormListsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.FormLists;
                 }
                 case RecordTypeInts.PERK:
                 {
-                    _PerksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _PerksLocations ??= new();
+                    _PerksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Perks;
                 }
                 case RecordTypeInts.BPTD:
                 {
-                    _BodyPartsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _BodyPartsLocations ??= new();
+                    _BodyPartsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.BodyParts;
                 }
                 case RecordTypeInts.ADDN:
                 {
-                    _AddonNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AddonNodesLocations ??= new();
+                    _AddonNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.AddonNodes;
                 }
                 case RecordTypeInts.AVIF:
                 {
-                    _ActorValueInformationLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ActorValueInformationLocations ??= new();
+                    _ActorValueInformationLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ActorValueInformation;
                 }
                 case RecordTypeInts.CAMS:
                 {
-                    _CameraShotsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CameraShotsLocations ??= new();
+                    _CameraShotsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.CameraShots;
                 }
                 case RecordTypeInts.CPTH:
                 {
-                    _CameraPathsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CameraPathsLocations ??= new();
+                    _CameraPathsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.CameraPaths;
                 }
                 case RecordTypeInts.VTYP:
                 {
-                    _VoiceTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _VoiceTypesLocations ??= new();
+                    _VoiceTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.MATT:
                 {
-                    _MaterialTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MaterialTypesLocations ??= new();
+                    _MaterialTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MaterialTypes;
                 }
                 case RecordTypeInts.IPCT:
                 {
-                    _ImpactsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ImpactsLocations ??= new();
+                    _ImpactsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Impacts;
                 }
                 case RecordTypeInts.IPDS:
                 {
-                    _ImpactDataSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ImpactDataSetsLocations ??= new();
+                    _ImpactDataSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ImpactDataSets;
                 }
                 case RecordTypeInts.ARMA:
                 {
-                    _ArmorAddonsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ArmorAddonsLocations ??= new();
+                    _ArmorAddonsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ArmorAddons;
                 }
                 case RecordTypeInts.ECZN:
                 {
-                    _EncounterZonesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EncounterZonesLocations ??= new();
+                    _EncounterZonesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.EncounterZones;
                 }
                 case RecordTypeInts.LCTN:
                 {
-                    _LocationsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LocationsLocations ??= new();
+                    _LocationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Locations;
                 }
                 case RecordTypeInts.MESG:
                 {
-                    _MessagesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MessagesLocations ??= new();
+                    _MessagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Messages;
                 }
                 case RecordTypeInts.DOBJ:
                 {
-                    _DefaultObjectManagersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DefaultObjectManagersLocations ??= new();
+                    _DefaultObjectManagersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.DefaultObjectManagers;
                 }
                 case RecordTypeInts.LGTM:
                 {
-                    _LightingTemplatesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LightingTemplatesLocations ??= new();
+                    _LightingTemplatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.LightingTemplates;
                 }
                 case RecordTypeInts.MUSC:
                 {
-                    _MusicTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MusicTypesLocations ??= new();
+                    _MusicTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MusicTypes;
                 }
                 case RecordTypeInts.FSTP:
                 {
-                    _FootstepsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FootstepsLocations ??= new();
+                    _FootstepsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Footsteps;
                 }
                 case RecordTypeInts.FSTS:
                 {
-                    _FootstepSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FootstepSetsLocations ??= new();
+                    _FootstepSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.FootstepSets;
                 }
                 case RecordTypeInts.SMBN:
                 {
-                    _StoryManagerBranchNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _StoryManagerBranchNodesLocations ??= new();
+                    _StoryManagerBranchNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.StoryManagerBranchNodes;
                 }
                 case RecordTypeInts.SMQN:
                 {
-                    _StoryManagerQuestNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _StoryManagerQuestNodesLocations ??= new();
+                    _StoryManagerQuestNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.StoryManagerQuestNodes;
                 }
                 case RecordTypeInts.SMEN:
                 {
-                    _StoryManagerEventNodesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _StoryManagerEventNodesLocations ??= new();
+                    _StoryManagerEventNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.StoryManagerEventNodes;
                 }
                 case RecordTypeInts.DLBR:
                 {
-                    _DialogBranchesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DialogBranchesLocations ??= new();
+                    _DialogBranchesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.DialogBranches;
                 }
                 case RecordTypeInts.MUST:
                 {
-                    _MusicTracksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MusicTracksLocations ??= new();
+                    _MusicTracksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MusicTracks;
                 }
                 case RecordTypeInts.DLVW:
                 {
-                    _DialogViewsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DialogViewsLocations ??= new();
+                    _DialogViewsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.DialogViews;
                 }
                 case RecordTypeInts.WOOP:
                 {
-                    _WordsOfPowerLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WordsOfPowerLocations ??= new();
+                    _WordsOfPowerLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.WordsOfPower;
                 }
                 case RecordTypeInts.SHOU:
                 {
-                    _ShoutsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ShoutsLocations ??= new();
+                    _ShoutsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Shouts;
                 }
                 case RecordTypeInts.EQUP:
                 {
-                    _EquipTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EquipTypesLocations ??= new();
+                    _EquipTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.EquipTypes;
                 }
                 case RecordTypeInts.RELA:
                 {
-                    _RelationshipsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _RelationshipsLocations ??= new();
+                    _RelationshipsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Relationships;
                 }
                 case RecordTypeInts.SCEN:
                 {
-                    _ScenesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ScenesLocations ??= new();
+                    _ScenesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Scenes;
                 }
                 case RecordTypeInts.ASTP:
                 {
-                    _AssociationTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AssociationTypesLocations ??= new();
+                    _AssociationTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.AssociationTypes;
                 }
                 case RecordTypeInts.OTFT:
                 {
-                    _OutfitsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _OutfitsLocations ??= new();
+                    _OutfitsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Outfits;
                 }
                 case RecordTypeInts.ARTO:
                 {
-                    _ArtObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ArtObjectsLocations ??= new();
+                    _ArtObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ArtObjects;
                 }
                 case RecordTypeInts.MATO:
                 {
-                    _MaterialObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MaterialObjectsLocations ??= new();
+                    _MaterialObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MaterialObjects;
                 }
                 case RecordTypeInts.MOVT:
                 {
-                    _MovementTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MovementTypesLocations ??= new();
+                    _MovementTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.MovementTypes;
                 }
                 case RecordTypeInts.SNDR:
                 {
-                    _SoundDescriptorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoundDescriptorsLocations ??= new();
+                    _SoundDescriptorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.SoundDescriptors;
                 }
                 case RecordTypeInts.DUAL:
                 {
-                    _DualCastDataLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DualCastDataLocations ??= new();
+                    _DualCastDataLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.DualCastData;
                 }
                 case RecordTypeInts.SNCT:
                 {
-                    _SoundCategoriesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoundCategoriesLocations ??= new();
+                    _SoundCategoriesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.SoundCategories;
                 }
                 case RecordTypeInts.SOPM:
                 {
-                    _SoundOutputModelsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoundOutputModelsLocations ??= new();
+                    _SoundOutputModelsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.SoundOutputModels;
                 }
                 case RecordTypeInts.COLL:
                 {
-                    _CollisionLayersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CollisionLayersLocations ??= new();
+                    _CollisionLayersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.CollisionLayers;
                 }
                 case RecordTypeInts.CLFM:
                 {
-                    _ColorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ColorsLocations ??= new();
+                    _ColorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Colors;
                 }
                 case RecordTypeInts.REVB:
                 {
-                    _ReverbParametersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ReverbParametersLocations ??= new();
+                    _ReverbParametersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.ReverbParameters;
                 }
                 case RecordTypeInts.VOLI:
                 {
-                    _VolumetricLightingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _VolumetricLightingsLocations ??= new();
+                    _VolumetricLightingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.VolumetricLightings;
                 }
                 default:

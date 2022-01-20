@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Pex
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PexObjectState_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PexObjectState_Registration.Instance;
         String? Name { get; }
         IReadOnlyList<IPexObjectNamedFunctionGetter> Functions { get; }
 
@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PexObjectState_Registration.Instance;
-        public static PexObjectState_Registration Registration => PexObjectState_Registration.Instance;
+        public static PexObjectState_Registration StaticRegistration => PexObjectState_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PexObjectStateCommon.Instance;
         [DebuggerStepThrough]

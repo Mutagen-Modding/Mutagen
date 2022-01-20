@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<ILocationObjectTypeGetter>
     {
-        static new ILoquiRegistration Registration => LocationObjectType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LocationObjectType_Registration.Instance;
         TargetObjectType Type { get; }
 
     }
@@ -941,7 +941,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationObjectType_Registration.Instance;
-        public new static LocationObjectType_Registration Registration => LocationObjectType_Registration.Instance;
+        public new static LocationObjectType_Registration StaticRegistration => LocationObjectType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationObjectTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationObjectType_Registration.Instance;
-        public new static LocationObjectType_Registration Registration => LocationObjectType_Registration.Instance;
+        public new static LocationObjectType_Registration StaticRegistration => LocationObjectType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationObjectTypeCommon.Instance;
         [DebuggerStepThrough]

@@ -715,6 +715,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<DialogView>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDialogView);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -821,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IDialogViewGetter>,
         IMapsToGetter<IDialogViewGetter>
     {
-        static new ILoquiRegistration Registration => DialogView_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DialogView_Registration.Instance;
         IFormLinkGetter<IQuestGetter> Quest { get; }
         IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; }
         IReadOnlyList<ReadOnlyMemorySlice<Byte>> TNAMs { get; }
@@ -1689,7 +1691,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogView_Registration.Instance;
-        public new static DialogView_Registration Registration => DialogView_Registration.Instance;
+        public new static DialogView_Registration StaticRegistration => DialogView_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogViewCommon.Instance;
         [DebuggerStepThrough]
@@ -1911,7 +1913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogView_Registration.Instance;
-        public new static DialogView_Registration Registration => DialogView_Registration.Instance;
+        public new static DialogView_Registration StaticRegistration => DialogView_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogViewCommon.Instance;
         [DebuggerStepThrough]
@@ -1933,6 +1935,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDialogView);
+
 
         #region Quest
         private int? _QuestLocation;

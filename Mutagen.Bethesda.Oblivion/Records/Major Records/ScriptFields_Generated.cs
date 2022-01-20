@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ScriptFields_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ScriptFields_Registration.Instance;
         IScriptMetaSummaryGetter MetadataSummary { get; }
         ReadOnlyMemorySlice<Byte>? CompiledScript { get; }
         String? SourceCode { get; }
@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFields_Registration.Instance;
-        public static ScriptFields_Registration Registration => ScriptFields_Registration.Instance;
+        public static ScriptFields_Registration StaticRegistration => ScriptFields_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptFieldsCommon.Instance;
         [DebuggerStepThrough]
@@ -1678,7 +1678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFields_Registration.Instance;
-        public static ScriptFields_Registration Registration => ScriptFields_Registration.Instance;
+        public static ScriptFields_Registration StaticRegistration => ScriptFields_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptFieldsCommon.Instance;
         [DebuggerStepThrough]

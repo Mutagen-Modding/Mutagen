@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region BodyData
-        public IGenderedItem<BodyData?> BodyData { get; set; } = new GenderedItem<BodyData?>(default(BodyData?), default(BodyData?));
+        public IGenderedItem<BodyData?> BodyData { get; set; } = new GenderedItem<BodyData?>(default, default);
         IGenderedItemGetter<IBodyDataGetter?> IRaceGetter.BodyData => this.BodyData;
         #endregion
         #region Hairs
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IBodyPartDataGetter> IRaceGetter.BodyPartData => this.BodyPartData;
         #endregion
         #region BehaviorGraph
-        public IGenderedItem<Model?> BehaviorGraph { get; set; } = new GenderedItem<Model?>(default(Model?), default(Model?));
+        public IGenderedItem<Model?> BehaviorGraph { get; set; } = new GenderedItem<Model?>(default, default);
         IGenderedItemGetter<IModelGetter?> IRaceGetter.BehaviorGraph => this.BehaviorGraph;
         #endregion
         #region MaterialType
@@ -3929,6 +3929,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Race>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IRace);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -4146,7 +4148,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Race_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -6956,7 +6958,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration Registration => Race_Registration.Instance;
+        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
@@ -8048,7 +8050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration Registration => Race_Registration.Instance;
+        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
@@ -8070,6 +8072,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRace);
+
         public Race.MajorFlag MajorFlags => (Race.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name
@@ -8161,7 +8165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             get
             {
                 if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Span.Slice(_HeightLocation);
+                var data = _data.Slice(_HeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
@@ -8176,7 +8180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             get
             {
                 if (!_Weight_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Span.Slice(_WeightLocation);
+                var data = _data.Slice(_WeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());

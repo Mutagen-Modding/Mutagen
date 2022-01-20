@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DestructionStageData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DestructionStageData_Registration.Instance;
         Byte HealthPercent { get; }
         Byte Index { get; }
         Byte ModelDamageStage { get; }
@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructionStageData_Registration.Instance;
-        public static DestructionStageData_Registration Registration => DestructionStageData_Registration.Instance;
+        public static DestructionStageData_Registration StaticRegistration => DestructionStageData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructionStageDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1424,7 +1424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructionStageData_Registration.Instance;
-        public static DestructionStageData_Registration Registration => DestructionStageData_Registration.Instance;
+        public static DestructionStageData_Registration StaticRegistration => DestructionStageData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructionStageDataCommon.Instance;
         [DebuggerStepThrough]

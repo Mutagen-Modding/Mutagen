@@ -567,6 +567,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<AlchemicalApparatus>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAlchemicalApparatus);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -687,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => AlchemicalApparatus_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1550,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
-        public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
+        public new static AlchemicalApparatus_Registration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlchemicalApparatusCommon.Instance;
         [DebuggerStepThrough]
@@ -1771,7 +1773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
-        public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
+        public new static AlchemicalApparatus_Registration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlchemicalApparatusCommon.Instance;
         [DebuggerStepThrough]
@@ -1793,6 +1795,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAlchemicalApparatus);
+
 
         #region Name
         private int? _NameLocation;

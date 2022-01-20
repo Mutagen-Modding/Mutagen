@@ -380,6 +380,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<GlobalShort>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGlobalShort);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -480,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IGlobalShortGetter>,
         IMapsToGetter<IGlobalShortGetter>
     {
-        static new ILoquiRegistration Registration => GlobalShort_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GlobalShort_Registration.Instance;
         Int16? Data { get; }
 
     }
@@ -1280,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
-        public new static GlobalShort_Registration Registration => GlobalShort_Registration.Instance;
+        public new static GlobalShort_Registration StaticRegistration => GlobalShort_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalShortCommon.Instance;
         [DebuggerStepThrough]
@@ -1477,7 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
-        public new static GlobalShort_Registration Registration => GlobalShort_Registration.Instance;
+        public new static GlobalShort_Registration StaticRegistration => GlobalShort_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalShortCommon.Instance;
         [DebuggerStepThrough]
@@ -1498,6 +1500,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGlobalShort);
+
 
         #region Data
         partial void DataCustomParse(

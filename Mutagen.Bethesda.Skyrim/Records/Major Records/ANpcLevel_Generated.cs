@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ANpcLevel_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ANpcLevel_Registration.Instance;
 
     }
 
@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcLevel_Registration.Instance;
-        public static ANpcLevel_Registration Registration => ANpcLevel_Registration.Instance;
+        public static ANpcLevel_Registration StaticRegistration => ANpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcLevelCommon.Instance;
         [DebuggerStepThrough]
@@ -917,14 +917,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ANpcLevelBinaryOverlay :
+    public abstract partial class ANpcLevelBinaryOverlay :
         PluginBinaryOverlay,
         IANpcLevelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcLevel_Registration.Instance;
-        public static ANpcLevel_Registration Registration => ANpcLevel_Registration.Instance;
+        public static ANpcLevel_Registration StaticRegistration => ANpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcLevelCommon.Instance;
         [DebuggerStepThrough]

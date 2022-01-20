@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DistantLODData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DistantLODData_Registration.Instance;
         Single Unknown0 { get; }
         Single Unknown1 { get; }
         Single Unknown2 { get; }
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
-        public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
+        public static DistantLODData_Registration StaticRegistration => DistantLODData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DistantLODDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
-        public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
+        public static DistantLODData_Registration StaticRegistration => DistantLODData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DistantLODDataCommon.Instance;
         [DebuggerStepThrough]

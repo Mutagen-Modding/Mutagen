@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LinkedDoor_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LinkedDoor_Registration.Instance;
         Int32 Unknown { get; }
         IFormLinkGetter<IPlacedObjectGetter> Door { get; }
 
@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedDoor_Registration.Instance;
-        public static LinkedDoor_Registration Registration => LinkedDoor_Registration.Instance;
+        public static LinkedDoor_Registration StaticRegistration => LinkedDoor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedDoorCommon.Instance;
         [DebuggerStepThrough]
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedDoor_Registration.Instance;
-        public static LinkedDoor_Registration Registration => LinkedDoor_Registration.Instance;
+        public static LinkedDoor_Registration StaticRegistration => LinkedDoor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedDoorCommon.Instance;
         [DebuggerStepThrough]

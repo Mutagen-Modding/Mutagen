@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => TransientType_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => TransientType_Registration.Instance;
         UInt32 FormType { get; }
         IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links { get; }
 
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TransientType_Registration.Instance;
-        public static TransientType_Registration Registration => TransientType_Registration.Instance;
+        public static TransientType_Registration StaticRegistration => TransientType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TransientTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TransientType_Registration.Instance;
-        public static TransientType_Registration Registration => TransientType_Registration.Instance;
+        public static TransientType_Registration StaticRegistration => TransientType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TransientTypeCommon.Instance;
         [DebuggerStepThrough]

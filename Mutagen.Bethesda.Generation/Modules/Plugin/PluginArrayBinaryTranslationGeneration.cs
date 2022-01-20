@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Noggog;
+using EnumType = Mutagen.Bethesda.Generation.Fields.EnumType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {

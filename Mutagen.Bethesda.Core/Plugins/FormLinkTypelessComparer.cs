@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Plugins.Records;
 namespace Mutagen.Bethesda.Plugins
 {
     class FormLinkTypelessComparer<TMajorGetter> : IEqualityComparer<IFormLinkGetter<TMajorGetter>>
-        where TMajorGetter : class, IMajorRecordCommonGetter
+        where TMajorGetter : class, IMajorRecordGetter
     {
         public static readonly FormLinkTypelessComparer<TMajorGetter> Instance = new FormLinkTypelessComparer<TMajorGetter>();
 

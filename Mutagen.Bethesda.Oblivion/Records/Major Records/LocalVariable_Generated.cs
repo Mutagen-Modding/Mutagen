@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LocalVariable_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LocalVariable_Registration.Instance;
         ILocalVariableDataGetter? Data { get; }
         #region Name
         /// <summary>
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
-        public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
+        public static LocalVariable_Registration StaticRegistration => LocalVariable_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocalVariableCommon.Instance;
         [DebuggerStepThrough]
@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
-        public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
+        public static LocalVariable_Registration StaticRegistration => LocalVariable_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocalVariableCommon.Instance;
         [DebuggerStepThrough]

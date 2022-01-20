@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LeveledSpell, LocationReferenceType, MaterialSwap, MiscItem, Outfit, PlacedObject, Race, SoundDescriptor, TextureSet, Transform]
+    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, Grass, HeadPart, ImpactDataSet, Keyword, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
     /// </summary>
     public abstract partial class Fallout4MajorRecord :
         MajorRecord,
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LeveledSpell, LocationReferenceType, MaterialSwap, MiscItem, Outfit, PlacedObject, Race, SoundDescriptor, TextureSet, Transform]
+    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, Grass, HeadPart, ImpactDataSet, Keyword, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecord :
         IFallout4MajorRecordGetter,
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LeveledSpell, LocationReferenceType, MaterialSwap, MiscItem, Outfit, PlacedObject, Race, SoundDescriptor, TextureSet, Transform]
+    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, Grass, HeadPart, ImpactDataSet, Keyword, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecordGetter :
         IMajorRecordGetter,
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<IFallout4MajorRecordGetter>
     {
-        static new ILoquiRegistration Registration => Fallout4MajorRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         UInt16 FormVersion { get; }
         UInt16 Version2 { get; }
 
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4MajorRecord_Registration.Instance;
-        public new static Fallout4MajorRecord_Registration Registration => Fallout4MajorRecord_Registration.Instance;
+        public new static Fallout4MajorRecord_Registration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => Fallout4MajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1234,14 +1234,14 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class Fallout4MajorRecordBinaryOverlay :
+    public abstract partial class Fallout4MajorRecordBinaryOverlay :
         MajorRecordBinaryOverlay,
         IFallout4MajorRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4MajorRecord_Registration.Instance;
-        public new static Fallout4MajorRecord_Registration Registration => Fallout4MajorRecord_Registration.Instance;
+        public new static Fallout4MajorRecord_Registration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => Fallout4MajorRecordCommon.Instance;
         [DebuggerStepThrough]

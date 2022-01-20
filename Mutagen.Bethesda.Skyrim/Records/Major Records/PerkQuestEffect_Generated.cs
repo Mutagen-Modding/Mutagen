@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IPerkQuestEffectGetter>
     {
-        static new ILoquiRegistration Registration => PerkQuestEffect_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkQuestEffect_Registration.Instance;
         IFormLinkGetter<IQuestGetter> Quest { get; }
         Byte Stage { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkQuestEffect_Registration.Instance;
-        public new static PerkQuestEffect_Registration Registration => PerkQuestEffect_Registration.Instance;
+        public new static PerkQuestEffect_Registration StaticRegistration => PerkQuestEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkQuestEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkQuestEffect_Registration.Instance;
-        public new static PerkQuestEffect_Registration Registration => PerkQuestEffect_Registration.Instance;
+        public new static PerkQuestEffect_Registration StaticRegistration => PerkQuestEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkQuestEffectCommon.Instance;
         [DebuggerStepThrough]

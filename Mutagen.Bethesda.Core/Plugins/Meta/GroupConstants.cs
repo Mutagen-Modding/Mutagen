@@ -19,8 +19,8 @@ namespace Mutagen.Bethesda.Plugins.Meta
 
         public GroupConstants(
             ObjectType type, 
-            sbyte headerLength,
-            sbyte lengthLength,
+            byte headerLength,
+            byte lengthLength,
             GroupCellConstants cell,
             GroupWorldConstants world,
             GroupTopicConstants? topic,

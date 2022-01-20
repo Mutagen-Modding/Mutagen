@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorldspaceParent_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorldspaceParent_Registration.Instance;
         IFormLinkGetter<IWorldspaceGetter> Worldspace { get; }
         WorldspaceParent.Flag Flags { get; }
 
@@ -984,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceParent_Registration.Instance;
-        public static WorldspaceParent_Registration Registration => WorldspaceParent_Registration.Instance;
+        public static WorldspaceParent_Registration StaticRegistration => WorldspaceParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceParentCommon.Instance;
         [DebuggerStepThrough]
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceParent_Registration.Instance;
-        public static WorldspaceParent_Registration Registration => WorldspaceParent_Registration.Instance;
+        public static WorldspaceParent_Registration StaticRegistration => WorldspaceParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceParentCommon.Instance;
         [DebuggerStepThrough]

@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IMagicEffectWerewolfArchetypeGetter>
     {
-        static new ILoquiRegistration Registration => MagicEffectWerewolfArchetype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffectWerewolfArchetype_Registration.Instance;
 
     }
 
@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectWerewolfArchetype_Registration.Instance;
-        public new static MagicEffectWerewolfArchetype_Registration Registration => MagicEffectWerewolfArchetype_Registration.Instance;
+        public new static MagicEffectWerewolfArchetype_Registration StaticRegistration => MagicEffectWerewolfArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectWerewolfArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectWerewolfArchetype_Registration.Instance;
-        public new static MagicEffectWerewolfArchetype_Registration Registration => MagicEffectWerewolfArchetype_Registration.Instance;
+        public new static MagicEffectWerewolfArchetype_Registration StaticRegistration => MagicEffectWerewolfArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectWerewolfArchetypeCommon.Instance;
         [DebuggerStepThrough]

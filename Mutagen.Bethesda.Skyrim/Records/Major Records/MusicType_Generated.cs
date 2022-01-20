@@ -594,6 +594,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MusicType>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMusicType);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -699,7 +701,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IMusicTypeGetter>,
         IMapsToGetter<IMusicTypeGetter>
     {
-        static new ILoquiRegistration Registration => MusicType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MusicType_Registration.Instance;
         MusicType.Flag Flags { get; }
         IMusicTypeDataGetter? Data { get; }
         Single? FadeDuration { get; }
@@ -1544,7 +1546,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicType_Registration.Instance;
-        public new static MusicType_Registration Registration => MusicType_Registration.Instance;
+        public new static MusicType_Registration StaticRegistration => MusicType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MusicTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1758,7 +1760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicType_Registration.Instance;
-        public new static MusicType_Registration Registration => MusicType_Registration.Instance;
+        public new static MusicType_Registration StaticRegistration => MusicType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MusicTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1780,6 +1782,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMusicType);
+
 
         #region Flags
         private int? _FlagsLocation;

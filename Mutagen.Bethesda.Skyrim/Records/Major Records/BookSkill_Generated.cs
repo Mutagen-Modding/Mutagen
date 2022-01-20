@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IBookSkillGetter>
     {
-        static new ILoquiRegistration Registration => BookSkill_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => BookSkill_Registration.Instance;
         Skill? Skill { get; }
 
     }
@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookSkill_Registration.Instance;
-        public new static BookSkill_Registration Registration => BookSkill_Registration.Instance;
+        public new static BookSkill_Registration StaticRegistration => BookSkill_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookSkillCommon.Instance;
         [DebuggerStepThrough]
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookSkill_Registration.Instance;
-        public new static BookSkill_Registration Registration => BookSkill_Registration.Instance;
+        public new static BookSkill_Registration StaticRegistration => BookSkill_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookSkillCommon.Instance;
         [DebuggerStepThrough]

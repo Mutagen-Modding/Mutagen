@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PackageIdles_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PackageIdles_Registration.Instance;
         PackageIdles.Types Type { get; }
         Single TimerSetting { get; }
         IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; }
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageIdles_Registration.Instance;
-        public static PackageIdles_Registration Registration => PackageIdles_Registration.Instance;
+        public static PackageIdles_Registration StaticRegistration => PackageIdles_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageIdlesCommon.Instance;
         [DebuggerStepThrough]
@@ -1335,7 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageIdles_Registration.Instance;
-        public static PackageIdles_Registration Registration => PackageIdles_Registration.Instance;
+        public static PackageIdles_Registration StaticRegistration => PackageIdles_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageIdlesCommon.Instance;
         [DebuggerStepThrough]

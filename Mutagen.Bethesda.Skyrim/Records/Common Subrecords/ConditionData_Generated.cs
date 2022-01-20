@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ConditionData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ConditionData_Registration.Instance;
         Condition.RunOnType RunOnType { get; }
         IFormLinkGetter<ISkyrimMajorRecordGetter> Reference { get; }
         Int32 Unknown3 { get; }
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionData_Registration.Instance;
-        public static ConditionData_Registration Registration => ConditionData_Registration.Instance;
+        public static ConditionData_Registration StaticRegistration => ConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ConditionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1104,14 +1104,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ConditionDataBinaryOverlay :
+    public abstract partial class ConditionDataBinaryOverlay :
         PluginBinaryOverlay,
         IConditionDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionData_Registration.Instance;
-        public static ConditionData_Registration Registration => ConditionData_Registration.Instance;
+        public static ConditionData_Registration StaticRegistration => ConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ConditionDataCommon.Instance;
         [DebuggerStepThrough]

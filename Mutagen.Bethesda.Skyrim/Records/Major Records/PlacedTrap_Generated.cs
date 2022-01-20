@@ -442,6 +442,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<PlacedTrap>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedTrap);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -546,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedTrapGetter>,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedTrap_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedTrap_Registration.Instance;
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }
@@ -1400,7 +1402,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedTrap_Registration.Instance;
-        public new static PlacedTrap_Registration Registration => PlacedTrap_Registration.Instance;
+        public new static PlacedTrap_Registration StaticRegistration => PlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedTrapCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedTrap_Registration.Instance;
-        public new static PlacedTrap_Registration Registration => PlacedTrap_Registration.Instance;
+        public new static PlacedTrap_Registration StaticRegistration => PlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedTrapCommon.Instance;
         [DebuggerStepThrough]
@@ -1565,6 +1567,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedTrap);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

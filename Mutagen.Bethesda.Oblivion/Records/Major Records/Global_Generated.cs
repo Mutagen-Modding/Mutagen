@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         ILoquiObject<IGlobalGetter>
     {
-        static new ILoquiRegistration Registration => Global_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Global_Registration.Instance;
 
     }
 
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
-        public new static Global_Registration Registration => Global_Registration.Instance;
+        public new static Global_Registration StaticRegistration => Global_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalCommon.Instance;
         [DebuggerStepThrough]
@@ -1261,14 +1261,14 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class GlobalBinaryOverlay :
+    public abstract partial class GlobalBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IGlobalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
-        public new static Global_Registration Registration => Global_Registration.Instance;
+        public new static Global_Registration StaticRegistration => Global_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalCommon.Instance;
         [DebuggerStepThrough]

@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CreatureSound_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CreatureSound_Registration.Instance;
         CreatureSound.CreatureSoundType? SoundType { get; }
         IReadOnlyList<ISoundItemGetter> Sounds { get; }
 
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
-        public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
+        public static CreatureSound_Registration StaticRegistration => CreatureSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
-        public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
+        public static CreatureSound_Registration StaticRegistration => CreatureSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureSoundCommon.Instance;
         [DebuggerStepThrough]

@@ -456,6 +456,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<AnimatedObject>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAnimatedObject);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -564,7 +566,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IAnimatedObjectGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AnimatedObject_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1339,7 +1341,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
-        public new static AnimatedObject_Registration Registration => AnimatedObject_Registration.Instance;
+        public new static AnimatedObject_Registration StaticRegistration => AnimatedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimatedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1525,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
-        public new static AnimatedObject_Registration Registration => AnimatedObject_Registration.Instance;
+        public new static AnimatedObject_Registration StaticRegistration => AnimatedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimatedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1547,6 +1549,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAnimatedObject);
+
 
         public IModelGetter? Model { get; private set; }
         #region UnloadEvent

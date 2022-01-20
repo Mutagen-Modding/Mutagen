@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => TintPreset_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => TintPreset_Registration.Instance;
         IFormLinkNullableGetter<IColorRecordGetter> Color { get; }
         Single? DefaultValue { get; }
         UInt16? Index { get; }
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintPreset_Registration.Instance;
-        public static TintPreset_Registration Registration => TintPreset_Registration.Instance;
+        public static TintPreset_Registration StaticRegistration => TintPreset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintPresetCommon.Instance;
         [DebuggerStepThrough]
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintPreset_Registration.Instance;
-        public static TintPreset_Registration Registration => TintPreset_Registration.Instance;
+        public static TintPreset_Registration StaticRegistration => TintPreset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintPresetCommon.Instance;
         [DebuggerStepThrough]

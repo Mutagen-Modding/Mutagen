@@ -2234,6 +2234,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Race>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IRace);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -2411,7 +2413,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequiredGetter,
         IRelatableGetter
     {
-        static new ILoquiRegistration Registration => Race_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound { get; }
         #region Name
         /// <summary>
@@ -4167,7 +4169,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration Registration => Race_Registration.Instance;
+        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
@@ -4648,7 +4650,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration Registration => Race_Registration.Instance;
+        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
@@ -4670,6 +4672,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRace);
+
         public Race.MajorFlag MajorFlags => (Race.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region AnimationSound
@@ -4716,7 +4720,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             get
             {
                 if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Span.Slice(_HeightLocation);
+                var data = _data.Slice(_HeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
@@ -4731,7 +4735,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             get
             {
                 if (!_DefaultWeight_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Span.Slice(_DefaultWeightLocation);
+                var data = _data.Slice(_DefaultWeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());

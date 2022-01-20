@@ -2964,6 +2964,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Weather>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IWeather);
+
         [Flags]
         public enum NAM0DataType
         {
@@ -3142,7 +3144,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IWeatherGetter>,
         IMapsToGetter<IWeatherGetter>
     {
-        static new ILoquiRegistration Registration => Weather_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         ReadOnlyMemorySlice<String?> CloudTextures { get; }
         ReadOnlyMemorySlice<Byte>? DNAM { get; }
         ReadOnlyMemorySlice<Byte>? CNAM { get; }
@@ -5657,7 +5659,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration Registration => Weather_Registration.Instance;
+        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]
@@ -6492,7 +6494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration Registration => Weather_Registration.Instance;
+        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]
@@ -6514,6 +6516,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IWeather);
+
 
         #region CloudTexturesParse
          partial void CloudTexturesParseCustomParse(

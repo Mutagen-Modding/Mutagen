@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => APackageData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => APackageData_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APackageData_Registration.Instance;
-        public static APackageData_Registration Registration => APackageData_Registration.Instance;
+        public static APackageData_Registration StaticRegistration => APackageData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APackageDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APackageData_Registration.Instance;
-        public static APackageData_Registration Registration => APackageData_Registration.Instance;
+        public static APackageData_Registration StaticRegistration => APackageData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APackageDataCommon.Instance;
         [DebuggerStepThrough]

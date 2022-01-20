@@ -624,6 +624,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<SkillRecord>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISkillRecord);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -731,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ISkillRecordGetter>,
         IMapsToGetter<ISkillRecordGetter>
     {
-        static new ILoquiRegistration Registration => SkillRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SkillRecord_Registration.Instance;
         ActorValue? Skill { get; }
         String? Description { get; }
         String? Icon { get; }
@@ -1616,7 +1618,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
-        public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
+        public new static SkillRecord_Registration StaticRegistration => SkillRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SkillRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1878,7 +1880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
-        public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
+        public new static SkillRecord_Registration StaticRegistration => SkillRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SkillRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1899,6 +1901,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISkillRecord);
+
 
         #region Skill
         private int? _SkillLocation;

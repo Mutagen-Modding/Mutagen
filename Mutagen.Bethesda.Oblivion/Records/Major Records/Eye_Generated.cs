@@ -460,6 +460,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Eye>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IEye);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -569,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Eye_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Eye_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1324,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Eye_Registration.Instance;
-        public new static Eye_Registration Registration => Eye_Registration.Instance;
+        public new static Eye_Registration StaticRegistration => Eye_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EyeCommon.Instance;
         [DebuggerStepThrough]
@@ -1522,7 +1524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Eye_Registration.Instance;
-        public new static Eye_Registration Registration => Eye_Registration.Instance;
+        public new static Eye_Registration StaticRegistration => Eye_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EyeCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,6 +1545,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IEye);
+
 
         #region Name
         private int? _NameLocation;

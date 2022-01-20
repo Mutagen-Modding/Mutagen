@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Plugins
         IEquatable<FormLinkNullable<TMajorGetter>>,
         IEquatable<IFormLinkGetter<TMajorGetter>>,
         IEquatable<IFormLinkNullableGetter<TMajorGetter>>
-        where TMajorGetter : class, IMajorRecordCommonGetter
+        where TMajorGetter : class, IMajorRecordGetter
     {
         protected FormKey? _formKey;
 
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Plugins
         /// <returns>Returns FormKey string</returns>
         public override string ToString() => this._formKey?.ToString() ?? "Null";
 
-        bool ILink.TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordCommonGetter formKey)
+        bool ILink.TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordGetter formKey)
         {
             if (this.TryResolve(cache, out var rec))
             {
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Plugins
     }
 
     public class FormLinkNullable<TMajorGetter> : FormLinkNullableGetter<TMajorGetter>, IFormLinkNullable<TMajorGetter>
-        where TMajorGetter : class, IMajorRecordCommonGetter
+        where TMajorGetter : class, IMajorRecordGetter
     {
         /// <summary>
         /// FormKey of the target record.

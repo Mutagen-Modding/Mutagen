@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => PackageDataLocation_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PackageDataLocation_Registration.Instance;
         ILocationTargetRadiusGetter Location { get; }
 
     }
@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataLocation_Registration.Instance;
-        public new static PackageDataLocation_Registration Registration => PackageDataLocation_Registration.Instance;
+        public new static PackageDataLocation_Registration StaticRegistration => PackageDataLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataLocationCommon.Instance;
         [DebuggerStepThrough]
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataLocation_Registration.Instance;
-        public new static PackageDataLocation_Registration Registration => PackageDataLocation_Registration.Instance;
+        public new static PackageDataLocation_Registration StaticRegistration => PackageDataLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataLocationCommon.Instance;
         [DebuggerStepThrough]

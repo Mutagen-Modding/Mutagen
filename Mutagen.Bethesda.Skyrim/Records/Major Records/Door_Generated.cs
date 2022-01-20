@@ -787,6 +787,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Door>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDoor);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -938,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Door_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Door_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -1972,7 +1974,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
-        public new static Door_Registration Registration => Door_Registration.Instance;
+        public new static Door_Registration StaticRegistration => Door_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]
@@ -2241,7 +2243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
-        public new static Door_Registration Registration => Door_Registration.Instance;
+        public new static Door_Registration StaticRegistration => Door_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]
@@ -2263,6 +2265,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDoor);
+
         public Door.MajorFlag MajorFlags => (Door.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

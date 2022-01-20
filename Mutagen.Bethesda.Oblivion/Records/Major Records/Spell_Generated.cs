@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequiredGetter,
         ISpellRecordGetter
     {
-        static new ILoquiRegistration Registration => Spell_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static Spell_Registration Registration => Spell_Registration.Instance;
+        public new static Spell_Registration StaticRegistration => Spell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1356,14 +1356,14 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class SpellBinaryOverlay :
+    public abstract partial class SpellBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         ISpellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static Spell_Registration Registration => Spell_Registration.Instance;
+        public new static Spell_Registration StaticRegistration => Spell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellCommon.Instance;
         [DebuggerStepThrough]

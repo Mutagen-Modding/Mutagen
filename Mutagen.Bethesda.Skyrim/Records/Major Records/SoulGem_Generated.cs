@@ -1031,6 +1031,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<SoulGem>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISoulGem);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1196,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter
     {
-        static new ILoquiRegistration Registration => SoulGem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoulGem_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedOptionalGetter
@@ -2373,7 +2375,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
-        public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
+        public new static SoulGem_Registration StaticRegistration => SoulGem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoulGemCommon.Instance;
         [DebuggerStepThrough]
@@ -2708,7 +2710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
-        public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
+        public new static SoulGem_Registration StaticRegistration => SoulGem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoulGemCommon.Instance;
         [DebuggerStepThrough]
@@ -2730,6 +2732,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISoulGem);
+
         public SoulGem.MajorFlag MajorFlags => (SoulGem.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds

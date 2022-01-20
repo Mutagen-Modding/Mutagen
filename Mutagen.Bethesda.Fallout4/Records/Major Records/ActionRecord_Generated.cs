@@ -547,6 +547,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<ActionRecord>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IActionRecord);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -662,7 +664,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ActionRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ActionRecord_Registration.Instance;
         Color? Color { get; }
         String? Notes { get; }
         ActionRecord.TypeEnum? Type { get; }
@@ -1463,7 +1465,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActionRecord_Registration.Instance;
-        public new static ActionRecord_Registration Registration => ActionRecord_Registration.Instance;
+        public new static ActionRecord_Registration StaticRegistration => ActionRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActionRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1681,7 +1683,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActionRecord_Registration.Instance;
-        public new static ActionRecord_Registration Registration => ActionRecord_Registration.Instance;
+        public new static ActionRecord_Registration StaticRegistration => ActionRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActionRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1703,6 +1705,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IActionRecord);
+
 
         #region Color
         private int? _ColorLocation;

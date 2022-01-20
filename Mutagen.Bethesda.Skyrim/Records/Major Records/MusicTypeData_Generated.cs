@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MusicTypeData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MusicTypeData_Registration.Instance;
         UInt16 Priority { get; }
         Single DuckingDecibel { get; }
 
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTypeData_Registration.Instance;
-        public static MusicTypeData_Registration Registration => MusicTypeData_Registration.Instance;
+        public static MusicTypeData_Registration StaticRegistration => MusicTypeData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MusicTypeDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTypeData_Registration.Instance;
-        public static MusicTypeData_Registration Registration => MusicTypeData_Registration.Instance;
+        public static MusicTypeData_Registration StaticRegistration => MusicTypeData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MusicTypeDataCommon.Instance;
         [DebuggerStepThrough]

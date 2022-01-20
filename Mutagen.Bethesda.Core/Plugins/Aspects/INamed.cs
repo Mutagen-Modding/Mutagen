@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda
         /// <param name="str">String to check that either EditorID or Name contains</param>
         /// <returns>True if EITHER EditorID or Name contained string</returns>
         public static bool NamedFieldsContain<TMajor>(this TMajor named, string str)
-            where TMajor : INamedGetter, IMajorRecordCommonGetter
+            where TMajor : INamedGetter, IMajorRecordGetter
         {
             if (named.EditorID?.Contains(str) ?? false) return true;
             if (named.Name?.Contains(str) ?? false) return true;
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda
         /// <param name="stringComparison">String comparison style to use</param>
         /// <returns>True if EITHER EditorID or Name contained string</returns>
         public static bool NamedFieldsContain<TMajor>(this TMajor named, string str, StringComparison stringComparison)
-            where TMajor : INamedGetter, IMajorRecordCommonGetter
+            where TMajor : INamedGetter, IMajorRecordGetter
         {
             if (named.EditorID?.Contains(str, stringComparison) ?? false) return true;
             if (named.Name?.Contains(str, stringComparison) ?? false) return true;

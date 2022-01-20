@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Condition_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Condition_Registration.Instance;
         CompareOperator CompareOperator { get; }
         Condition.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown1 { get; }
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
-        public static Condition_Registration Registration => Condition_Registration.Instance;
+        public static Condition_Registration StaticRegistration => Condition_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ConditionCommon.Instance;
         [DebuggerStepThrough]
@@ -1138,14 +1138,14 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class ConditionBinaryOverlay :
+    public abstract partial class ConditionBinaryOverlay :
         PluginBinaryOverlay,
         IConditionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
-        public static Condition_Registration Registration => Condition_Registration.Instance;
+        public static Condition_Registration StaticRegistration => Condition_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ConditionCommon.Instance;
         [DebuggerStepThrough]

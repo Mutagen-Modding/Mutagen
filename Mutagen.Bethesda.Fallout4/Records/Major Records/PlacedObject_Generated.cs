@@ -344,6 +344,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<PlacedObject>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedObject);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -443,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IPlacedObjectGetter>,
         IMapsToGetter<IPlacedObjectGetter>
     {
-        static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
 
     }
 
@@ -1133,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
-        public new static PlacedObject_Registration Registration => PlacedObject_Registration.Instance;
+        public new static PlacedObject_Registration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
-        public new static PlacedObject_Registration Registration => PlacedObject_Registration.Instance;
+        public new static PlacedObject_Registration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1277,6 +1279,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedObject);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -540,6 +540,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<BodyPartData>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IBodyPartData);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -648,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IBodyPartDataGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => BodyPartData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => BodyPartData_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1461,7 +1463,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPartData_Registration.Instance;
-        public new static BodyPartData_Registration Registration => BodyPartData_Registration.Instance;
+        public new static BodyPartData_Registration StaticRegistration => BodyPartData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BodyPartDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1655,7 +1657,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPartData_Registration.Instance;
-        public new static BodyPartData_Registration Registration => BodyPartData_Registration.Instance;
+        public new static BodyPartData_Registration StaticRegistration => BodyPartData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BodyPartDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1677,6 +1679,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IBodyPartData);
+
 
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IBodyPartGetter> Parts { get; private set; } = ListExt.Empty<BodyPartBinaryOverlay>();

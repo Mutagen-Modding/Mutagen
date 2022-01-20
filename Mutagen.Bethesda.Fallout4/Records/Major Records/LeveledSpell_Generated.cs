@@ -344,6 +344,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<LeveledSpell>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILeveledSpell);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -445,7 +447,7 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<ILeveledSpellGetter>,
         ISpellRecordGetter
     {
-        static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
 
     }
 
@@ -1135,7 +1137,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static LeveledSpell_Registration Registration => LeveledSpell_Registration.Instance;
+        public new static LeveledSpell_Registration StaticRegistration => LeveledSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1258,7 +1260,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static LeveledSpell_Registration Registration => LeveledSpell_Registration.Instance;
+        public new static LeveledSpell_Registration StaticRegistration => LeveledSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1279,6 +1281,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILeveledSpell);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

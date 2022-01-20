@@ -1700,6 +1700,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Package>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPackage);
+
         [Flags]
         public enum PKDTDataType
         {
@@ -1840,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IPackageGetter>,
         IMapsToGetter<IPackageGetter>
     {
-        static new ILoquiRegistration Registration => Package_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Package_Registration.Instance;
         IPackageAdapterGetter? VirtualMachineAdapter { get; }
         Package.Flag Flags { get; }
         Package.Types Type { get; }
@@ -3379,7 +3381,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Package_Registration.Instance;
-        public new static Package_Registration Registration => Package_Registration.Instance;
+        public new static Package_Registration StaticRegistration => Package_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageCommon.Instance;
         [DebuggerStepThrough]
@@ -3804,7 +3806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Package_Registration.Instance;
-        public new static Package_Registration Registration => Package_Registration.Instance;
+        public new static Package_Registration StaticRegistration => Package_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageCommon.Instance;
         [DebuggerStepThrough]
@@ -3826,6 +3828,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPackage);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

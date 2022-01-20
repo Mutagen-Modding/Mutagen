@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Bounding_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Bounding_Registration.Instance;
         Single Width { get; }
         Single Height { get; }
         P3Float Position { get; }
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Bounding_Registration.Instance;
-        public static Bounding_Registration Registration => Bounding_Registration.Instance;
+        public static Bounding_Registration StaticRegistration => Bounding_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BoundingCommon.Instance;
         [DebuggerStepThrough]
@@ -1338,7 +1338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Bounding_Registration.Instance;
-        public static Bounding_Registration Registration => Bounding_Registration.Instance;
+        public static Bounding_Registration StaticRegistration => Bounding_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BoundingCommon.Instance;
         [DebuggerStepThrough]

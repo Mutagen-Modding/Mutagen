@@ -344,6 +344,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<ColorRecord>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IColorRecord);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -443,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IColorRecordGetter>,
         IMapsToGetter<IColorRecordGetter>
     {
-        static new ILoquiRegistration Registration => ColorRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ColorRecord_Registration.Instance;
 
     }
 
@@ -1133,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ColorRecord_Registration.Instance;
-        public new static ColorRecord_Registration Registration => ColorRecord_Registration.Instance;
+        public new static ColorRecord_Registration StaticRegistration => ColorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ColorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ColorRecord_Registration.Instance;
-        public new static ColorRecord_Registration Registration => ColorRecord_Registration.Instance;
+        public new static ColorRecord_Registration StaticRegistration => ColorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ColorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1277,6 +1279,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IColorRecord);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

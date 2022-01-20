@@ -659,6 +659,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<IdleMarker>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IIdleMarker);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -788,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptionalGetter,
         IObjectIdGetter
     {
-        static new ILoquiRegistration Registration => IdleMarker_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => IdleMarker_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -1698,7 +1700,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleMarker_Registration.Instance;
-        public new static IdleMarker_Registration Registration => IdleMarker_Registration.Instance;
+        public new static IdleMarker_Registration StaticRegistration => IdleMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1957,7 +1959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleMarker_Registration.Instance;
-        public new static IdleMarker_Registration Registration => IdleMarker_Registration.Instance;
+        public new static IdleMarker_Registration StaticRegistration => IdleMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1979,6 +1981,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IIdleMarker);
+
         public IdleMarker.MajorFlag MajorFlags => (IdleMarker.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds

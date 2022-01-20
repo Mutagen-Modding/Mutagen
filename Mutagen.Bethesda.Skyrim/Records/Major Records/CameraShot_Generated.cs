@@ -843,6 +843,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<CameraShot>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ICameraShot);
+
         [Flags]
         public enum DATADataType
         {
@@ -968,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ICameraShotGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => CameraShot_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CameraShot_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1948,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CameraShot_Registration.Instance;
-        public new static CameraShot_Registration Registration => CameraShot_Registration.Instance;
+        public new static CameraShot_Registration StaticRegistration => CameraShot_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CameraShotCommon.Instance;
         [DebuggerStepThrough]
@@ -2213,7 +2215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CameraShot_Registration.Instance;
-        public new static CameraShot_Registration Registration => CameraShot_Registration.Instance;
+        public new static CameraShot_Registration StaticRegistration => CameraShot_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CameraShotCommon.Instance;
         [DebuggerStepThrough]
@@ -2235,6 +2237,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ICameraShot);
+
 
         public IModelGetter? Model { get; private set; }
         private int? _DATALocation;

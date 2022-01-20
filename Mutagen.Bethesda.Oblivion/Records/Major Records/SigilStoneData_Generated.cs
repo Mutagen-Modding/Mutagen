@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SigilStoneData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SigilStoneData_Registration.Instance;
         Byte Uses { get; }
         UInt32 Value { get; }
         Single Weight { get; }
@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStoneData_Registration.Instance;
-        public static SigilStoneData_Registration Registration => SigilStoneData_Registration.Instance;
+        public static SigilStoneData_Registration StaticRegistration => SigilStoneData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SigilStoneDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStoneData_Registration.Instance;
-        public static SigilStoneData_Registration Registration => SigilStoneData_Registration.Instance;
+        public static SigilStoneData_Registration StaticRegistration => SigilStoneData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SigilStoneDataCommon.Instance;
         [DebuggerStepThrough]

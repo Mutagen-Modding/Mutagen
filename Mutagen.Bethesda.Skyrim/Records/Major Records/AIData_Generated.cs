@@ -759,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => AIData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => AIData_Registration.Instance;
         Aggression Aggression { get; }
         Confidence Confidence { get; }
         Byte EnergyLevel { get; }
@@ -1413,7 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIData_Registration.Instance;
-        public static AIData_Registration Registration => AIData_Registration.Instance;
+        public static AIData_Registration StaticRegistration => AIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIData_Registration.Instance;
-        public static AIData_Registration Registration => AIData_Registration.Instance;
+        public static AIData_Registration StaticRegistration => AIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIDataCommon.Instance;
         [DebuggerStepThrough]

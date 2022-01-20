@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPerkEntryPointSetTextGetter>
     {
-        static new ILoquiRegistration Registration => PerkEntryPointSetText_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkEntryPointSetText_Registration.Instance;
         ITranslatedStringGetter Text { get; }
 
     }
@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointSetText_Registration.Instance;
-        public new static PerkEntryPointSetText_Registration Registration => PerkEntryPointSetText_Registration.Instance;
+        public new static PerkEntryPointSetText_Registration StaticRegistration => PerkEntryPointSetText_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointSetTextCommon.Instance;
         [DebuggerStepThrough]
@@ -1180,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointSetText_Registration.Instance;
-        public new static PerkEntryPointSetText_Registration Registration => PerkEntryPointSetText_Registration.Instance;
+        public new static PerkEntryPointSetText_Registration StaticRegistration => PerkEntryPointSetText_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointSetTextCommon.Instance;
         [DebuggerStepThrough]

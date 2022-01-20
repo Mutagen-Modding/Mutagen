@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => FaceFxPhonemes_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FaceFxPhonemes_Registration.Instance;
         Boolean ForceNames { get; }
         IPhonemeGetter? Aah_LipBigAah { get; }
         IPhonemeGetter? BigAah_LipDST { get; }
@@ -2483,7 +2483,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceFxPhonemes_Registration.Instance;
-        public static FaceFxPhonemes_Registration Registration => FaceFxPhonemes_Registration.Instance;
+        public static FaceFxPhonemes_Registration StaticRegistration => FaceFxPhonemes_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceFxPhonemesCommon.Instance;
         [DebuggerStepThrough]
@@ -2585,7 +2585,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceFxPhonemes_Registration.Instance;
-        public static FaceFxPhonemes_Registration Registration => FaceFxPhonemes_Registration.Instance;
+        public static FaceFxPhonemes_Registration StaticRegistration => FaceFxPhonemes_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceFxPhonemesCommon.Instance;
         [DebuggerStepThrough]

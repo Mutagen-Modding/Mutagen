@@ -1,37 +1,34 @@
-﻿using Loqui.Generation;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
+using Loqui.Generation;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Fields;
+
+public class MarkerType : TypicalTypeGeneration
 {
-    public class MarkerType : TypicalTypeGeneration
+    public bool EndMarker => IsEndMarker();
+
+    public override bool IsEnumerable => false;
+
+    public override bool IsClass => false;
+
+    public MarkerType()
     {
-        public bool EndMarker => IsEndMarker();
+        IntegrateField = false;
+    }
 
-        public override bool IsEnumerable => false;
+    public override string GetDuplicate(Accessor accessor)
+    {
+        throw new NotImplementedException();
+    }
 
-        public override bool IsClass => false;
+    public override Type Type(bool getter)
+    {
+        throw new NotImplementedException();
+    }
 
-        public MarkerType()
-        {
-            IntegrateField = false;
-        }
-
-        public override string GetDuplicate(Accessor accessor)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Type Type(bool getter)
-        {
-            throw new NotImplementedException();
-        }
-
-        private bool IsEndMarker()
-        {
-            return this.ObjectGen.Fields.Last() == this;
-        }
+    private bool IsEndMarker()
+    {
+        return this.ObjectGen.Fields.Last() == this;
     }
 }

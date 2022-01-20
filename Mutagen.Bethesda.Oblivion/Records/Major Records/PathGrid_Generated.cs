@@ -740,6 +740,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<PathGrid>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPathGrid);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -845,7 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IPathGridGetter>,
         IMapsToGetter<IPathGridGetter>
     {
-        static new ILoquiRegistration Registration => PathGrid_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PathGrid_Registration.Instance;
         IReadOnlyList<IPathGridPointGetter>? PointToPointConnections { get; }
         ReadOnlyMemorySlice<Byte>? PGAG { get; }
         IReadOnlyList<IInterCellPointGetter>? InterCellConnections { get; }
@@ -1745,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
-        public new static PathGrid_Registration Registration => PathGrid_Registration.Instance;
+        public new static PathGrid_Registration StaticRegistration => PathGrid_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PathGridCommon.Instance;
         [DebuggerStepThrough]
@@ -1974,7 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
-        public new static PathGrid_Registration Registration => PathGrid_Registration.Instance;
+        public new static PathGrid_Registration StaticRegistration => PathGrid_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PathGridCommon.Instance;
         [DebuggerStepThrough]
@@ -1996,6 +1998,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPathGrid);
+
 
         #region PointToPointConnections
         partial void PointToPointConnectionsCustomParse(

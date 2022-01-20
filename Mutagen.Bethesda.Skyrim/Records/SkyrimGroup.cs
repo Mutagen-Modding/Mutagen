@@ -1,45 +1,45 @@
-using Noggog;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Translations.Binary;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Translations.Binary;
+using Noggog;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class Group<T> : AGroup<T>
+    public partial class SkyrimGroup<T> : AGroup<T>
     {
-        public Group(IModGetter getter) : base(getter)
+        public SkyrimGroup(IModGetter getter) : base(getter)
         {
         }
 
-        public Group(IMod mod) : base(mod)
+        public SkyrimGroup(IMod mod) : base(mod)
         {
         }
 
         protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
     }
 
-    public partial interface IGroup<T> : IGroupCommon<T>
-        where T : class, IOblivionMajorRecordInternal, IBinaryItem
+    public partial interface ISkyrimGroup<T> : IGroup<T>
+        where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
     }
 
-    public partial interface IGroupGetter<out T> : IGroupCommonGetter<T>
-        where T : class, IOblivionMajorRecordGetter, IBinaryItem
+    public partial interface ISkyrimGroupGetter<out T> : IGroupGetter<T>
+        where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
     }
 
     namespace Internals
     {
-        public partial class GroupBinaryWriteTranslation
+        public partial class SkyrimGroupBinaryWriteTranslation
         {
             public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
-                IGroupGetter<T> item)
-                where T : class, IOblivionMajorRecordGetter, IBinaryItem
+                ISkyrimGroupGetter<T> item)
+                where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             {
                 Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
@@ -47,21 +47,24 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class GroupBinaryCreateTranslation<T>
+        public partial class SkyrimGroupBinaryCreateTranslation<T>
         {
             public static partial void FillBinaryContainedRecordTypeParseCustom(
                 MutagenFrame frame,
-                IGroup<T> item)
+                ISkyrimGroup<T> item)
             {
                 frame.Reader.Position += 4;
             }
         }
 
-        public partial class GroupBinaryOverlay<T> : AGroupBinaryOverlay<T>
+        public partial class SkyrimGroupBinaryOverlay<T> : AGroupBinaryOverlay<T>
         {
-            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(
+                OverlayStream stream,
+                int finalPos,
+                int offset)
             {
-                _RecordCache = GroupMajorRecordCacheWrapper<T>.Factory(
+                _recordCache = GroupMajorRecordCacheWrapper<T>.Factory(
                     stream,
                     _data,
                     _package,

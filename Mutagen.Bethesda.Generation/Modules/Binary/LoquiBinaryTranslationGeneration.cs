@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Fields;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
@@ -87,12 +88,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             {
                 if (isGroup)
                 {
-                    var dictGroup = loquiGen.TargetObjectGeneration.Name == "Group";
+                    var dictGroup = loquiGen.TargetObjectGeneration.Name == $"{objGen.ProtoGen.Protocol.Namespace}Group";
                     fg.AppendLine($"if ({itemAccessor}.{(dictGroup ? "RecordCache" : "Records")}.Count > 0)");
                 }
                 using (new BraceWrapper(fg, doIt: isGroup))
                 {
                     var data = loquiGen.GetFieldData();
+                    
                     if (data.MarkerType.HasValue)
                     {
                         fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {objGen.RecordTypeHeaderName(data.MarkerType.Value)})) {{ }}");
@@ -335,7 +337,42 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             {
                 if (loqui.GetFieldData()?.HasTrigger ?? false)
                 {
-                    if (loqui.TargetObjectGeneration.IsTypelessStruct())
+                    if (loqui is GroupType)
+                    {
+                        fg.AppendLine($"private List<{GetLocationObjectString(objGen)}>? _{typeGen.Name}Locations;");
+                        using (new LineWrapper(fg))
+                        {
+                            if (loqui.IsNullable)
+                            {
+                                fg.Append($"public ");
+                            }
+                            else
+                            {
+                                fg.Append($"private ");
+                            }
+
+                            fg.Append(
+                                $"{loqui.Interface(getter: true, internalInterface: true)}{(typeGen.CanBeNullable(getter: true) ? "?" : null)} ");
+                            if (!loqui.IsNullable
+                                || isRequiredRecord)
+                            {
+                                fg.Append("_");
+                            }
+
+                            fg.Append($"{typeGen.Name}");
+                            fg.Append($" => _{typeGen.Name}Locations != null ? ");
+                            fg.Append(
+                                $"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(_data, _{typeGen.Name}Locations, _package");
+                            if (!recConverter.StartsWith("default("))
+                            {
+                                fg.Append($", {recConverter}");
+                            }
+
+                            fg.Append($") ");
+                            fg.Append($": default;");
+                        }
+                    }
+                    else if (loqui.TargetObjectGeneration.IsTypelessStruct())
                     {
                         if (loqui.Singleton
                             || isRequiredRecord)
@@ -556,7 +593,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 fg.AppendLine($"stream.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
             }
 
-            if (!loqui.TargetObjectGeneration.IsTypelessStruct() && (loqui.GetFieldData()?.HasTrigger ?? false))
+            if (loqui.TargetObjectGeneration.IsTopLevelGroup())
+            {
+                fg.AppendLine($"_{typeGen.Name}Locations ??= new();");
+                fg.AppendLine($"_{typeGen.Name}Locations.Add(new {GetLocationObjectString(objGen)}({locationAccessor}, finalPos - offset));");
+            }
+            else if (!loqui.TargetObjectGeneration.IsTypelessStruct() && (loqui.GetFieldData()?.HasTrigger ?? false))
             {
                 fg.AppendLine($"_{typeGen.Name}Location = new {GetLocationObjectString(objGen)}({locationAccessor}, finalPos - offset);");
                 var severalSubTypes = data.GenerationTypes

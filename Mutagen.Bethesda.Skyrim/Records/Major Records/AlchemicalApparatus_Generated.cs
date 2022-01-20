@@ -930,6 +930,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<AlchemicalApparatus>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAlchemicalApparatus);
+
         [Flags]
         public enum DATADataType
         {
@@ -1087,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter
     {
-        static new ILoquiRegistration Registration => AlchemicalApparatus_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -2227,7 +2229,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
-        public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
+        public new static AlchemicalApparatus_Registration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlchemicalApparatusCommon.Instance;
         [DebuggerStepThrough]
@@ -2539,7 +2541,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
-        public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
+        public new static AlchemicalApparatus_Registration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlchemicalApparatusCommon.Instance;
         [DebuggerStepThrough]
@@ -2561,6 +2563,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAlchemicalApparatus);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

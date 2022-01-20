@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => FaceGenData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FaceGenData_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? SymmetricGeometry { get; }
         ReadOnlyMemorySlice<Byte>? AsymmetricGeometry { get; }
         ReadOnlyMemorySlice<Byte>? SymmetricTexture { get; }
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
-        public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
+        public static FaceGenData_Registration StaticRegistration => FaceGenData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceGenDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
-        public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
+        public static FaceGenData_Registration StaticRegistration => FaceGenData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceGenDataCommon.Instance;
         [DebuggerStepThrough]

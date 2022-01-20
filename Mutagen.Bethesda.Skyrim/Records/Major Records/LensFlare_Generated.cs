@@ -351,6 +351,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<LensFlare>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILensFlare);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -450,7 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ILensFlareGetter>,
         IMapsToGetter<ILensFlareGetter>
     {
-        static new ILoquiRegistration Registration => LensFlare_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
 
     }
 
@@ -1140,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LensFlare_Registration.Instance;
-        public new static LensFlare_Registration Registration => LensFlare_Registration.Instance;
+        public new static LensFlare_Registration StaticRegistration => LensFlare_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LensFlareCommon.Instance;
         [DebuggerStepThrough]
@@ -1263,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LensFlare_Registration.Instance;
-        public new static LensFlare_Registration Registration => LensFlare_Registration.Instance;
+        public new static LensFlare_Registration StaticRegistration => LensFlare_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LensFlareCommon.Instance;
         [DebuggerStepThrough]
@@ -1284,6 +1286,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILensFlare);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

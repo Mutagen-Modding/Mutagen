@@ -439,6 +439,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<CombatStyle>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ICombatStyle);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ICombatStyleGetter>,
         IMapsToGetter<ICombatStyleGetter>
     {
-        static new ILoquiRegistration Registration => CombatStyle_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CombatStyle_Registration.Instance;
         ICombatStyleDataGetter? Data { get; }
         ICombatStyleAdvancedGetter? Advanced { get; }
 
@@ -1329,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
-        public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
+        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]
@@ -1512,7 +1514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
-        public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
+        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]
@@ -1533,6 +1535,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ICombatStyle);
+
 
         #region Data
         private RangeInt32? _DataLocation;

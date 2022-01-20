@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPerkEntryPointSelectTextGetter>
     {
-        static new ILoquiRegistration Registration => PerkEntryPointSelectText_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkEntryPointSelectText_Registration.Instance;
         String Text { get; }
 
     }
@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointSelectText_Registration.Instance;
-        public new static PerkEntryPointSelectText_Registration Registration => PerkEntryPointSelectText_Registration.Instance;
+        public new static PerkEntryPointSelectText_Registration StaticRegistration => PerkEntryPointSelectText_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointSelectTextCommon.Instance;
         [DebuggerStepThrough]
@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointSelectText_Registration.Instance;
-        public new static PerkEntryPointSelectText_Registration Registration => PerkEntryPointSelectText_Registration.Instance;
+        public new static PerkEntryPointSelectText_Registration StaticRegistration => PerkEntryPointSelectText_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointSelectTextCommon.Instance;
         [DebuggerStepThrough]

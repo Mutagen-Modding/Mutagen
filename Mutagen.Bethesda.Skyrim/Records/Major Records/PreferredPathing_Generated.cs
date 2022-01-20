@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PreferredPathing_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PreferredPathing_Registration.Instance;
         IReadOnlyList<INavmeshSetGetter> NavmeshSets { get; }
         IReadOnlyList<INavmeshNodeGetter> NavmeshTree { get; }
 
@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PreferredPathing_Registration.Instance;
-        public static PreferredPathing_Registration Registration => PreferredPathing_Registration.Instance;
+        public static PreferredPathing_Registration StaticRegistration => PreferredPathing_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PreferredPathingCommon.Instance;
         [DebuggerStepThrough]
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PreferredPathing_Registration.Instance;
-        public static PreferredPathing_Registration Registration => PreferredPathing_Registration.Instance;
+        public static PreferredPathing_Registration StaticRegistration => PreferredPathing_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PreferredPathingCommon.Instance;
         [DebuggerStepThrough]

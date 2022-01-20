@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ScenePhase_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ScenePhase_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1566,7 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScenePhase_Registration.Instance;
-        public static ScenePhase_Registration Registration => ScenePhase_Registration.Instance;
+        public static ScenePhase_Registration StaticRegistration => ScenePhase_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScenePhaseCommon.Instance;
         [DebuggerStepThrough]
@@ -1818,7 +1818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScenePhase_Registration.Instance;
-        public static ScenePhase_Registration Registration => ScenePhase_Registration.Instance;
+        public static ScenePhase_Registration StaticRegistration => ScenePhase_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScenePhaseCommon.Instance;
         [DebuggerStepThrough]

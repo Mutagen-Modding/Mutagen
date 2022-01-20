@@ -484,6 +484,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Outfit>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IOutfit);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -586,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IOutfitGetter>,
         IMapsToGetter<IOutfitGetter>
     {
-        static new ILoquiRegistration Registration => Outfit_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Outfit_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<IOutfitTargetGetter>>? Items { get; }
 
     }
@@ -1342,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Outfit_Registration.Instance;
-        public new static Outfit_Registration Registration => Outfit_Registration.Instance;
+        public new static Outfit_Registration StaticRegistration => Outfit_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => OutfitCommon.Instance;
         [DebuggerStepThrough]
@@ -1521,7 +1523,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Outfit_Registration.Instance;
-        public new static Outfit_Registration Registration => Outfit_Registration.Instance;
+        public new static Outfit_Registration StaticRegistration => Outfit_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => OutfitCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,6 +1545,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IOutfit);
+
 
         public IReadOnlyList<IFormLinkGetter<IOutfitTargetGetter>>? Items { get; private set; }
         partial void CustomFactoryEnd(

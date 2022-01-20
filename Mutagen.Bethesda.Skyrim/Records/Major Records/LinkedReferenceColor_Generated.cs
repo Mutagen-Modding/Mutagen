@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LinkedReferenceColor_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LinkedReferenceColor_Registration.Instance;
         Color Start { get; }
         Color End { get; }
 
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedReferenceColor_Registration.Instance;
-        public static LinkedReferenceColor_Registration Registration => LinkedReferenceColor_Registration.Instance;
+        public static LinkedReferenceColor_Registration StaticRegistration => LinkedReferenceColor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedReferenceColorCommon.Instance;
         [DebuggerStepThrough]
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedReferenceColor_Registration.Instance;
-        public static LinkedReferenceColor_Registration Registration => LinkedReferenceColor_Registration.Instance;
+        public static LinkedReferenceColor_Registration StaticRegistration => LinkedReferenceColor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedReferenceColorCommon.Instance;
         [DebuggerStepThrough]

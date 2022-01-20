@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DialogResponsesUnknownData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DialogResponsesUnknownData_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
         IFormLinkNullableGetter<ISkyrimMajorRecordGetter> QNAM { get; }
         Boolean NEXT { get; }
@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponsesUnknownData_Registration.Instance;
-        public static DialogResponsesUnknownData_Registration Registration => DialogResponsesUnknownData_Registration.Instance;
+        public static DialogResponsesUnknownData_Registration StaticRegistration => DialogResponsesUnknownData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponsesUnknownDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponsesUnknownData_Registration.Instance;
-        public static DialogResponsesUnknownData_Registration Registration => DialogResponsesUnknownData_Registration.Instance;
+        public static DialogResponsesUnknownData_Registration StaticRegistration => DialogResponsesUnknownData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponsesUnknownDataCommon.Instance;
         [DebuggerStepThrough]

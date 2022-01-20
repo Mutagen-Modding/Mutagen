@@ -423,6 +423,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<GlobalFloat>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGlobalFloat);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -524,7 +526,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IGlobalFloatGetter>,
         IMapsToGetter<IGlobalFloatGetter>
     {
-        static new ILoquiRegistration Registration => GlobalFloat_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GlobalFloat_Registration.Instance;
         Single? Data { get; }
         Boolean NoTypeDeclaration { get; }
 
@@ -1346,7 +1348,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalFloat_Registration.Instance;
-        public new static GlobalFloat_Registration Registration => GlobalFloat_Registration.Instance;
+        public new static GlobalFloat_Registration StaticRegistration => GlobalFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1535,7 +1537,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalFloat_Registration.Instance;
-        public new static GlobalFloat_Registration Registration => GlobalFloat_Registration.Instance;
+        public new static GlobalFloat_Registration StaticRegistration => GlobalFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1556,6 +1558,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGlobalFloat);
+
 
         #region Data
         private int? _DataLocation;

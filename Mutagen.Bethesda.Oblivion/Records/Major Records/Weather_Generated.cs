@@ -842,6 +842,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Weather>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IWeather);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -956,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IWeatherGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Weather_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         String? TextureLowerLayer { get; }
         String? TextureUpperLayer { get; }
         #region Model
@@ -2016,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration Registration => Weather_Registration.Instance;
+        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]
@@ -2294,7 +2296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration Registration => Weather_Registration.Instance;
+        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]
@@ -2316,6 +2318,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IWeather);
+
 
         #region TextureLowerLayer
         private int? _TextureLowerLayerLocation;

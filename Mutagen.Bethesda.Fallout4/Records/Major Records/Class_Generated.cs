@@ -609,6 +609,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Class>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IClass);
+
         [Flags]
         public enum DATADataType
         {
@@ -726,7 +728,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Class_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Class_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1582,7 +1584,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Class_Registration.Instance;
-        public new static Class_Registration Registration => Class_Registration.Instance;
+        public new static Class_Registration StaticRegistration => Class_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClassCommon.Instance;
         [DebuggerStepThrough]
@@ -1816,7 +1818,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Class_Registration.Instance;
-        public new static Class_Registration Registration => Class_Registration.Instance;
+        public new static Class_Registration StaticRegistration => Class_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClassCommon.Instance;
         [DebuggerStepThrough]
@@ -1837,6 +1839,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IClass);
+
 
         #region Name
         private int? _NameLocation;

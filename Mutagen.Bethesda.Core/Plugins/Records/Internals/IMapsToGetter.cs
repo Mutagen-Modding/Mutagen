@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
     /// <summary>
     /// Helper interface that helps map an interface to the getter version of a major record interface
     /// </summary>
-    public interface IMapsToGetter<IGetter> : IMajorRecordCommonGetter
+    public interface IMapsToGetter<IGetter> : IMajorRecordGetter
     {
     }
 }

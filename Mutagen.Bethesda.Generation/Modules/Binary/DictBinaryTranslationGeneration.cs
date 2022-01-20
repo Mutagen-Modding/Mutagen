@@ -5,8 +5,11 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
+using EnumType = Mutagen.Bethesda.Generation.Fields.EnumType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {

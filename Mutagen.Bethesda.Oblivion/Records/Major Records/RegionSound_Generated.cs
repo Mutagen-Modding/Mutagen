@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => RegionSound_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => RegionSound_Registration.Instance;
         IFormLinkGetter<ISoundGetter> Sound { get; }
         RegionSound.Flag Flags { get; }
         Single Chance { get; }
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSound_Registration.Instance;
-        public static RegionSound_Registration Registration => RegionSound_Registration.Instance;
+        public static RegionSound_Registration StaticRegistration => RegionSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSound_Registration.Instance;
-        public static RegionSound_Registration Registration => RegionSound_Registration.Instance;
+        public static RegionSound_Registration StaticRegistration => RegionSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionSoundCommon.Instance;
         [DebuggerStepThrough]

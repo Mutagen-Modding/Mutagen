@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => QuestFragmentAlias_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => QuestFragmentAlias_Registration.Instance;
         IScriptObjectPropertyGetter Property { get; }
         Int16 Version { get; }
         UInt16 ObjectFormat { get; }
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestFragmentAlias_Registration.Instance;
-        public static QuestFragmentAlias_Registration Registration => QuestFragmentAlias_Registration.Instance;
+        public static QuestFragmentAlias_Registration StaticRegistration => QuestFragmentAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestFragmentAliasCommon.Instance;
         [DebuggerStepThrough]
@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestFragmentAlias_Registration.Instance;
-        public static QuestFragmentAlias_Registration Registration => QuestFragmentAlias_Registration.Instance;
+        public static QuestFragmentAlias_Registration StaticRegistration => QuestFragmentAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestFragmentAliasCommon.Instance;
         [DebuggerStepThrough]

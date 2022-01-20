@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Mutagen.Bethesda.Plugins.Binary.Headers
 {
     /// <summary>
-    /// A struct that overlays on top of bytes that is able to retrive Major Record header data on demand.
+    /// A struct that overlays on top of bytes that is able to retrieve Major Record header data on demand.
     /// </summary>
     public struct MajorRecordHeader
     {
@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <param name="span">Span to overlay on, aligned to the start of the Major Record's header</param>
         public MajorRecordHeader(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
-            this.Meta = meta;
-            this.HeaderData = span.Slice(0, meta.MajorConstants.HeaderLength);
+            Meta = meta;
+            HeaderData = span.Slice(0, meta.MajorConstants.HeaderLength);
         }
 
         /// <summary>
@@ -43,44 +43,44 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <summary>
         /// The length that the header itself takes
         /// </summary>
-        public sbyte HeaderLength => Meta.MajorConstants.HeaderLength;
+        public byte HeaderLength => Meta.MajorConstants.HeaderLength;
         
         /// <summary>
         /// RecordType of the header
         /// </summary>
-        public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4)));
+        public RecordType RecordType => new(BinaryPrimitives.ReadInt32LittleEndian(HeaderData.Slice(0, 4)));
         
         /// <summary>
         /// The length of the content of the MajorRecord, excluding the header bytes.
         /// </summary>
-        public uint ContentLength => BinaryPrimitives.ReadUInt32LittleEndian(this.HeaderData.Slice(4, this.Meta.MajorConstants.LengthLength));
+        public uint ContentLength => BinaryPrimitives.ReadUInt32LittleEndian(HeaderData.Slice(4, Meta.MajorConstants.LengthLength));
 
         /// <summary>
         /// The integer representing a Major Record's flags enum.
         /// Since each game has its own flag Enum, this field is offered as an int that should
         /// be casted to the appropriate enum for use.
         /// </summary>
-        public int MajorRecordFlags => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(8, 4));
+        public int MajorRecordFlags => BinaryPrimitives.ReadInt32LittleEndian(HeaderData.Slice(8, 4));
 
         /// <summary>
         /// FormID of the Major Record
         /// </summary>
-        public FormID FormID => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(this.HeaderData.Slice(12, 4)));
+        public FormID FormID => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(HeaderData.Slice(12, 4)));
 
         /// <summary>
         /// Version control of the Major Record
         /// </summary>
-        public int VersionControl => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(16, 4));
+        public int VersionControl => BinaryPrimitives.ReadInt32LittleEndian(HeaderData.Slice(16, 4));
 
         /// <summary>
         /// Total length of the Major Record, including the header and its content.
         /// </summary>
-        public long TotalLength => this.HeaderLength + this.ContentLength;
+        public long TotalLength => HeaderLength + ContentLength;
         
         /// <summary>
         /// Whether the compression flag is on
         /// </summary>
-        public bool IsCompressed => (this.MajorRecordFlags & Constants.CompressedFlag) > 0;
+        public bool IsCompressed => (MajorRecordFlags & Constants.CompressedFlag) > 0;
 
         /// <summary>
         /// Returns the Form Version of the Major Record
@@ -89,9 +89,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         {
             get
             {
-                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
+                if (!Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
                 return BinaryPrimitives.ReadInt16LittleEndian(
-                    this.HeaderData.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value));
+                    HeaderData.Slice(Meta.MajorConstants.FormVersionLocationOffset.Value));
             }
         }
 
@@ -102,9 +102,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         {
             get
             {
-                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
+                if (!Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
                 return BinaryPrimitives.ReadInt16LittleEndian(
-                    this.HeaderData.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value + 2));
+                    HeaderData.Slice(Meta.MajorConstants.FormVersionLocationOffset.Value + 2));
             }
         }
 
@@ -135,8 +135,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <param name="span">Span to overlay on, aligned to the start of the Major Record's header</param>
         public MajorRecordHeaderWritable(GameConstants meta, Span<byte> span)
         {
-            this.Meta = meta;
-            this.HeaderData = span.Slice(0, meta.MajorConstants.HeaderLength);
+            Meta = meta;
+            HeaderData = span.Slice(0, meta.MajorConstants.HeaderLength);
         }
 
         /// <summary>
@@ -147,15 +147,15 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <summary>
         /// The length that the header itself takes
         /// </summary>
-        public sbyte HeaderLength => Meta.MajorConstants.HeaderLength;
+        public byte HeaderLength => Meta.MajorConstants.HeaderLength;
         
         /// <summary>
         /// RecordType of the header
         /// </summary>
         public RecordType RecordType
         {
-            get => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4)));
-            set => BinaryPrimitives.WriteInt32LittleEndian(this.HeaderData.Slice(0, 4), value.TypeInt);
+            get => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderData.Slice(0, 4)));
+            set => BinaryPrimitives.WriteInt32LittleEndian(HeaderData.Slice(0, 4), value.TypeInt);
         }
         
         /// <summary>
@@ -163,8 +163,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// </summary>
         public uint ContentLength
         {
-            get => BinaryPrimitives.ReadUInt32LittleEndian(this.HeaderData.Slice(4, 4));
-            set => BinaryPrimitives.WriteUInt32LittleEndian(this.HeaderData.Slice(4, 4), value);
+            get => BinaryPrimitives.ReadUInt32LittleEndian(HeaderData.Slice(4, 4));
+            set => BinaryPrimitives.WriteUInt32LittleEndian(HeaderData.Slice(4, 4), value);
         }
         
         /// <summary>
@@ -174,8 +174,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// </summary>
         public int MajorRecordFlags
         {
-            get => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(8, 4));
-            set => BinaryPrimitives.WriteInt32LittleEndian(this.HeaderData.Slice(8, 4), value);
+            get => BinaryPrimitives.ReadInt32LittleEndian(HeaderData.Slice(8, 4));
+            set => BinaryPrimitives.WriteInt32LittleEndian(HeaderData.Slice(8, 4), value);
         }
         
         /// <summary>
@@ -183,8 +183,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// </summary>
         public FormID FormID
         {
-            get => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(this.HeaderData.Slice(12, 4)));
-            set => BinaryPrimitives.WriteUInt32LittleEndian(this.HeaderData.Slice(12, 4), value.Raw);
+            get => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(HeaderData.Slice(12, 4)));
+            set => BinaryPrimitives.WriteUInt32LittleEndian(HeaderData.Slice(12, 4), value.Raw);
         }
 
         /// <summary>
@@ -192,14 +192,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// </summary>
         public int VersionControl
         {
-            get => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(16, 4));
-            set => BinaryPrimitives.WriteInt32LittleEndian(this.HeaderData.Slice(16, 4), value);
+            get => BinaryPrimitives.ReadInt32LittleEndian(HeaderData.Slice(16, 4));
+            set => BinaryPrimitives.WriteInt32LittleEndian(HeaderData.Slice(16, 4), value);
         }
 
         /// <summary>
         /// Total length of the Major Record, including the header and its content.
         /// </summary>
-        public long TotalLength => this.HeaderLength + this.ContentLength;
+        public long TotalLength => HeaderLength + ContentLength;
 
         /// <summary>
         /// Form Version of the Major Record
@@ -209,18 +209,18 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         {
             get
             {
-                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
+                if (!Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
                 return BinaryPrimitives.ReadInt16LittleEndian(
-                    this.HeaderData.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value));
+                    HeaderData.Slice(Meta.MajorConstants.FormVersionLocationOffset.Value));
             }
             set
             {
-                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue)
+                if (!Meta.MajorConstants.FormVersionLocationOffset.HasValue)
                 {
                     throw new ArgumentException("Attempted to set Form Version on a non-applicable game.");
                 }
                 BinaryPrimitives.WriteInt16LittleEndian(
-                    this.HeaderData.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value, 2),
+                    HeaderData.Slice(Meta.MajorConstants.FormVersionLocationOffset.Value, 2),
                     value.Value);
             }
         }
@@ -233,18 +233,18 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         {
             get
             {
-                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
+                if (!Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
                 return BinaryPrimitives.ReadInt16LittleEndian(
-                    this.HeaderData.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value + 2));
+                    HeaderData.Slice(Meta.MajorConstants.FormVersionLocationOffset.Value + 2));
             }
             set
             {
-                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue)
+                if (!Meta.MajorConstants.FormVersionLocationOffset.HasValue)
                 {
                     throw new ArgumentException("Attempted to set Form Version on a non-applicable game.");
                 }
                 BinaryPrimitives.WriteInt16LittleEndian(
-                    this.HeaderData.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value + 2, 2),
+                    HeaderData.Slice(Meta.MajorConstants.FormVersionLocationOffset.Value + 2, 2),
                     value.Value);
             }
         }
@@ -254,16 +254,16 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// </summary>
         public bool IsCompressed
         {
-            get => (this.MajorRecordFlags & Constants.CompressedFlag) > 0;
+            get => (MajorRecordFlags & Constants.CompressedFlag) > 0;
             set
             {
                 if (value)
                 {
-                    this.MajorRecordFlags |= Constants.CompressedFlag;
+                    MajorRecordFlags |= Constants.CompressedFlag;
                 }
                 else
                 {
-                    this.MajorRecordFlags &= ~Constants.CompressedFlag;
+                    MajorRecordFlags &= ~Constants.CompressedFlag;
                 }
             }
         }
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>
-        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
+        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(Header.HeaderLength, checked((int)this.Header.ContentLength));
 
         /// <summary>
         /// Total length of the Major Record, including the header and its content.
@@ -301,8 +301,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public MajorRecordFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = meta.MajorRecord(span);
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            Header = meta.MajorRecord(span);
+            HeaderAndContentData = span.Slice(0, checked((int)Header.TotalLength));
         }
 
         /// <summary>
@@ -312,17 +312,17 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public MajorRecordFrame(MajorRecordHeader header, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = header;
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            Header = header;
+            HeaderAndContentData = span.Slice(0, checked((int)Header.TotalLength));
         }
 
         /// <inheritdoc/>
-        public override string ToString() => this.Header.ToString();
+        public override string ToString() => Header.ToString();
 
         /// <inheritdoc/>
         public IEnumerator<SubrecordPinFrame> GetEnumerator() => HeaderExt.EnumerateSubrecords(this).GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         #region Header Forwarding
         /// <summary>
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <summary>
         /// The length that the header itself takes
         /// </summary>
-        public sbyte HeaderLength => Header.HeaderLength;
+        public byte HeaderLength => Header.HeaderLength;
 
         /// <summary>
         /// RecordType of the header
@@ -414,8 +414,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
         public MajorRecordPinFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span, int pinLocation)
         {
-            this.Frame = new MajorRecordFrame(meta, span);
-            this.Location = pinLocation;
+            Frame = new MajorRecordFrame(meta, span);
+            Location = pinLocation;
         }
 
         /// <summary>
@@ -426,12 +426,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
         public MajorRecordPinFrame(MajorRecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
         {
-            this.Frame = new MajorRecordFrame(header, span);
-            this.Location = pinLocation;
+            Frame = new MajorRecordFrame(header, span);
+            Location = pinLocation;
         }
 
         /// <inheritdoc/>
-        public override string ToString() => $"{this.Frame.ToString()} @ {Location.ToString()}";
+        public override string ToString() => $"{Frame.ToString()} @ {Location.ToString()}";
 
         #region Header Forwarding
         /// <summary>
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <summary>
         /// The length that the header itself takes
         /// </summary>
-        public sbyte HeaderLength => Header.HeaderLength;
+        public byte HeaderLength => Header.HeaderLength;
 
         /// <summary>
         /// RecordType of the header

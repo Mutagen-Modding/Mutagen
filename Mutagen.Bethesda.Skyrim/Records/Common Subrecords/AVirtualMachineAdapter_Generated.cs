@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => AVirtualMachineAdapter_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => AVirtualMachineAdapter_Registration.Instance;
         Int16 Version { get; }
         UInt16 ObjectFormat { get; }
         IReadOnlyList<IScriptEntryGetter> Scripts { get; }
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AVirtualMachineAdapter_Registration.Instance;
-        public static AVirtualMachineAdapter_Registration Registration => AVirtualMachineAdapter_Registration.Instance;
+        public static AVirtualMachineAdapter_Registration StaticRegistration => AVirtualMachineAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => AVirtualMachineAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1262,14 +1262,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class AVirtualMachineAdapterBinaryOverlay :
+    public abstract partial class AVirtualMachineAdapterBinaryOverlay :
         PluginBinaryOverlay,
         IAVirtualMachineAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AVirtualMachineAdapter_Registration.Instance;
-        public static AVirtualMachineAdapter_Registration Registration => AVirtualMachineAdapter_Registration.Instance;
+        public static AVirtualMachineAdapter_Registration StaticRegistration => AVirtualMachineAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => AVirtualMachineAdapterCommon.Instance;
         [DebuggerStepThrough]

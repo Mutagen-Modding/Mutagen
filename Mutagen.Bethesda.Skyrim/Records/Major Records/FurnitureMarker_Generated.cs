@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => FurnitureMarker_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FurnitureMarker_Registration.Instance;
         Boolean Enabled { get; }
         IEntryPointsGetter? DisabledEntryPoints { get; }
         IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword { get; }
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FurnitureMarker_Registration.Instance;
-        public static FurnitureMarker_Registration Registration => FurnitureMarker_Registration.Instance;
+        public static FurnitureMarker_Registration StaticRegistration => FurnitureMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FurnitureMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FurnitureMarker_Registration.Instance;
-        public static FurnitureMarker_Registration Registration => FurnitureMarker_Registration.Instance;
+        public static FurnitureMarker_Registration StaticRegistration => FurnitureMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FurnitureMarkerCommon.Instance;
         [DebuggerStepThrough]

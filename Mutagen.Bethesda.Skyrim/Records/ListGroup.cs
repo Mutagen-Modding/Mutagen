@@ -8,21 +8,21 @@ namespace Mutagen.Bethesda.Skyrim
 {
     namespace Internals
     {
-        public partial class ListGroupBinaryCreateTranslation<T>
+        public partial class SkyrimListGroupBinaryCreateTranslation<T>
         {
             public static partial void FillBinaryContainedRecordTypeCustom(
                 MutagenFrame frame,
-                IListGroup<T> item)
+                ISkyrimListGroup<T> item)
             {
                 frame.Reader.Position += 4;
             }
         }
 
-        public partial class ListGroupBinaryWriteTranslation
+        public partial class SkyrimListGroupBinaryWriteTranslation
         {
             public static partial void WriteBinaryContainedRecordTypeCustom<T>(
                 MutagenWriter writer,
-                IListGroupGetter<T> item)
+                ISkyrimListGroupGetter<T> item)
                 where T : class, ICellBlockGetter, IBinaryItem
             {
                 Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class ListGroupBinaryOverlay<T> : AListGroupBinaryOverlay<T>
+        public partial class SkyrimListGroupBinaryOverlay<T> : AListGroupBinaryOverlay<T>
         {
             partial void CustomFactoryEnd(
                 OverlayStream stream,

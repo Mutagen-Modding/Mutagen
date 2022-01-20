@@ -57,18 +57,23 @@ namespace Mutagen.Bethesda.Fallout4
         #region Ctor
         protected Fallout4Mod()
         {
-            _GameSettings_Object = new Group<GameSetting>(this);
-            _Keywords_Object = new Group<Keyword>(this);
-            _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
-            _Actions_Object = new Group<ActionRecord>(this);
-            _Transforms_Object = new Group<Transform>(this);
-            _Components_Object = new Group<Component>(this);
-            _TextureSets_Object = new Group<TextureSet>(this);
-            _Globals_Object = new Group<Global>(this);
-            _DamageTypes_Object = new Group<ADamageType>(this);
-            _Classes_Object = new Group<Class>(this);
-            _Factions_Object = new Group<Faction>(this);
-            _HeadParts_Object = new Group<HeadPart>(this);
+            _GameSettings_Object = new Fallout4Group<GameSetting>(this);
+            _Keywords_Object = new Fallout4Group<Keyword>(this);
+            _LocationReferenceTypes_Object = new Fallout4Group<LocationReferenceType>(this);
+            _Actions_Object = new Fallout4Group<ActionRecord>(this);
+            _Transforms_Object = new Fallout4Group<Transform>(this);
+            _Components_Object = new Fallout4Group<Component>(this);
+            _TextureSets_Object = new Fallout4Group<TextureSet>(this);
+            _Globals_Object = new Fallout4Group<Global>(this);
+            _DamageTypes_Object = new Fallout4Group<ADamageType>(this);
+            _Classes_Object = new Fallout4Group<Class>(this);
+            _Factions_Object = new Fallout4Group<Faction>(this);
+            _HeadParts_Object = new Fallout4Group<HeadPart>(this);
+            _SoundMarkers_Object = new Fallout4Group<SoundMarker>(this);
+            _AcousticSpaces_Object = new Fallout4Group<AcousticSpace>(this);
+            _LandscapeTextures_Object = new Fallout4Group<LandscapeTexture>(this);
+            _Grasses_Object = new Fallout4Group<Grass>(this);
+            _MaterialTypes_Object = new Fallout4Group<MaterialType>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -83,87 +88,122 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<GameSetting> _GameSettings_Object;
-        public Group<GameSetting> GameSettings => _GameSettings_Object;
+        private Fallout4Group<GameSetting> _GameSettings_Object;
+        public Fallout4Group<GameSetting> GameSettings => _GameSettings_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IGameSettingGetter> IFallout4ModGetter.GameSettings => _GameSettings_Object;
+        IFallout4GroupGetter<IGameSettingGetter> IFallout4ModGetter.GameSettings => _GameSettings_Object;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Keyword> _Keywords_Object;
-        public Group<Keyword> Keywords => _Keywords_Object;
+        private Fallout4Group<Keyword> _Keywords_Object;
+        public Fallout4Group<Keyword> Keywords => _Keywords_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IKeywordGetter> IFallout4ModGetter.Keywords => _Keywords_Object;
+        IFallout4GroupGetter<IKeywordGetter> IFallout4ModGetter.Keywords => _Keywords_Object;
         #endregion
         #region LocationReferenceTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<LocationReferenceType> _LocationReferenceTypes_Object;
-        public Group<LocationReferenceType> LocationReferenceTypes => _LocationReferenceTypes_Object;
+        private Fallout4Group<LocationReferenceType> _LocationReferenceTypes_Object;
+        public Fallout4Group<LocationReferenceType> LocationReferenceTypes => _LocationReferenceTypes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ILocationReferenceTypeGetter> IFallout4ModGetter.LocationReferenceTypes => _LocationReferenceTypes_Object;
+        IFallout4GroupGetter<ILocationReferenceTypeGetter> IFallout4ModGetter.LocationReferenceTypes => _LocationReferenceTypes_Object;
         #endregion
         #region Actions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ActionRecord> _Actions_Object;
-        public Group<ActionRecord> Actions => _Actions_Object;
+        private Fallout4Group<ActionRecord> _Actions_Object;
+        public Fallout4Group<ActionRecord> Actions => _Actions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IActionRecordGetter> IFallout4ModGetter.Actions => _Actions_Object;
+        IFallout4GroupGetter<IActionRecordGetter> IFallout4ModGetter.Actions => _Actions_Object;
         #endregion
         #region Transforms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Transform> _Transforms_Object;
-        public Group<Transform> Transforms => _Transforms_Object;
+        private Fallout4Group<Transform> _Transforms_Object;
+        public Fallout4Group<Transform> Transforms => _Transforms_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ITransformGetter> IFallout4ModGetter.Transforms => _Transforms_Object;
+        IFallout4GroupGetter<ITransformGetter> IFallout4ModGetter.Transforms => _Transforms_Object;
         #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Component> _Components_Object;
-        public Group<Component> Components => _Components_Object;
+        private Fallout4Group<Component> _Components_Object;
+        public Fallout4Group<Component> Components => _Components_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IComponentGetter> IFallout4ModGetter.Components => _Components_Object;
+        IFallout4GroupGetter<IComponentGetter> IFallout4ModGetter.Components => _Components_Object;
         #endregion
         #region TextureSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<TextureSet> _TextureSets_Object;
-        public Group<TextureSet> TextureSets => _TextureSets_Object;
+        private Fallout4Group<TextureSet> _TextureSets_Object;
+        public Fallout4Group<TextureSet> TextureSets => _TextureSets_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<ITextureSetGetter> IFallout4ModGetter.TextureSets => _TextureSets_Object;
+        IFallout4GroupGetter<ITextureSetGetter> IFallout4ModGetter.TextureSets => _TextureSets_Object;
         #endregion
         #region Globals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Global> _Globals_Object;
-        public Group<Global> Globals => _Globals_Object;
+        private Fallout4Group<Global> _Globals_Object;
+        public Fallout4Group<Global> Globals => _Globals_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IGlobalGetter> IFallout4ModGetter.Globals => _Globals_Object;
+        IFallout4GroupGetter<IGlobalGetter> IFallout4ModGetter.Globals => _Globals_Object;
         #endregion
         #region DamageTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<ADamageType> _DamageTypes_Object;
-        public Group<ADamageType> DamageTypes => _DamageTypes_Object;
+        private Fallout4Group<ADamageType> _DamageTypes_Object;
+        public Fallout4Group<ADamageType> DamageTypes => _DamageTypes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IADamageTypeGetter> IFallout4ModGetter.DamageTypes => _DamageTypes_Object;
+        IFallout4GroupGetter<IADamageTypeGetter> IFallout4ModGetter.DamageTypes => _DamageTypes_Object;
         #endregion
         #region Classes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Class> _Classes_Object;
-        public Group<Class> Classes => _Classes_Object;
+        private Fallout4Group<Class> _Classes_Object;
+        public Fallout4Group<Class> Classes => _Classes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IClassGetter> IFallout4ModGetter.Classes => _Classes_Object;
+        IFallout4GroupGetter<IClassGetter> IFallout4ModGetter.Classes => _Classes_Object;
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Faction> _Factions_Object;
-        public Group<Faction> Factions => _Factions_Object;
+        private Fallout4Group<Faction> _Factions_Object;
+        public Fallout4Group<Faction> Factions => _Factions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IFactionGetter> IFallout4ModGetter.Factions => _Factions_Object;
+        IFallout4GroupGetter<IFactionGetter> IFallout4ModGetter.Factions => _Factions_Object;
         #endregion
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<HeadPart> _HeadParts_Object;
-        public Group<HeadPart> HeadParts => _HeadParts_Object;
+        private Fallout4Group<HeadPart> _HeadParts_Object;
+        public Fallout4Group<HeadPart> HeadParts => _HeadParts_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IHeadPartGetter> IFallout4ModGetter.HeadParts => _HeadParts_Object;
+        IFallout4GroupGetter<IHeadPartGetter> IFallout4ModGetter.HeadParts => _HeadParts_Object;
+        #endregion
+        #region SoundMarkers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<SoundMarker> _SoundMarkers_Object;
+        public Fallout4Group<SoundMarker> SoundMarkers => _SoundMarkers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ISoundMarkerGetter> IFallout4ModGetter.SoundMarkers => _SoundMarkers_Object;
+        #endregion
+        #region AcousticSpaces
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<AcousticSpace> _AcousticSpaces_Object;
+        public Fallout4Group<AcousticSpace> AcousticSpaces => _AcousticSpaces_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IAcousticSpaceGetter> IFallout4ModGetter.AcousticSpaces => _AcousticSpaces_Object;
+        #endregion
+        #region LandscapeTextures
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<LandscapeTexture> _LandscapeTextures_Object;
+        public Fallout4Group<LandscapeTexture> LandscapeTextures => _LandscapeTextures_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ILandscapeTextureGetter> IFallout4ModGetter.LandscapeTextures => _LandscapeTextures_Object;
+        #endregion
+        #region Grasses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Grass> _Grasses_Object;
+        public Fallout4Group<Grass> Grasses => _Grasses_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IGrassGetter> IFallout4ModGetter.Grasses => _Grasses_Object;
+        #endregion
+        #region MaterialTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<MaterialType> _MaterialTypes_Object;
+        public Fallout4Group<MaterialType> MaterialTypes => _MaterialTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IMaterialTypeGetter> IFallout4ModGetter.MaterialTypes => _MaterialTypes_Object;
         #endregion
 
         #region To String
@@ -204,18 +244,23 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(initialValue, new Fallout4ModHeader.Mask<TItem>(initialValue));
-                this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Actions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Transforms = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Components = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.TextureSets = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.DamageTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.HeadParts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.LocationReferenceTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Actions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Transforms = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Components = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.TextureSets = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Globals = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.DamageTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Classes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Factions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.HeadParts = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.SoundMarkers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.AcousticSpaces = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.LandscapeTextures = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Grasses = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.MaterialTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -231,21 +276,31 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem DamageTypes,
                 TItem Classes,
                 TItem Factions,
-                TItem HeadParts)
+                TItem HeadParts,
+                TItem SoundMarkers,
+                TItem AcousticSpaces,
+                TItem LandscapeTextures,
+                TItem Grasses,
+                TItem MaterialTypes)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
-                this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
-                this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(Keywords, new Group.Mask<TItem>(Keywords));
-                this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(LocationReferenceTypes, new Group.Mask<TItem>(LocationReferenceTypes));
-                this.Actions = new MaskItem<TItem, Group.Mask<TItem>?>(Actions, new Group.Mask<TItem>(Actions));
-                this.Transforms = new MaskItem<TItem, Group.Mask<TItem>?>(Transforms, new Group.Mask<TItem>(Transforms));
-                this.Components = new MaskItem<TItem, Group.Mask<TItem>?>(Components, new Group.Mask<TItem>(Components));
-                this.TextureSets = new MaskItem<TItem, Group.Mask<TItem>?>(TextureSets, new Group.Mask<TItem>(TextureSets));
-                this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(Globals, new Group.Mask<TItem>(Globals));
-                this.DamageTypes = new MaskItem<TItem, Group.Mask<TItem>?>(DamageTypes, new Group.Mask<TItem>(DamageTypes));
-                this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(Classes, new Group.Mask<TItem>(Classes));
-                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(Factions, new Group.Mask<TItem>(Factions));
-                this.HeadParts = new MaskItem<TItem, Group.Mask<TItem>?>(HeadParts, new Group.Mask<TItem>(HeadParts));
+                this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
+                this.Keywords = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Keywords, new Fallout4Group.Mask<TItem>(Keywords));
+                this.LocationReferenceTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LocationReferenceTypes, new Fallout4Group.Mask<TItem>(LocationReferenceTypes));
+                this.Actions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Actions, new Fallout4Group.Mask<TItem>(Actions));
+                this.Transforms = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Transforms, new Fallout4Group.Mask<TItem>(Transforms));
+                this.Components = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Components, new Fallout4Group.Mask<TItem>(Components));
+                this.TextureSets = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(TextureSets, new Fallout4Group.Mask<TItem>(TextureSets));
+                this.Globals = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Globals, new Fallout4Group.Mask<TItem>(Globals));
+                this.DamageTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(DamageTypes, new Fallout4Group.Mask<TItem>(DamageTypes));
+                this.Classes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Classes, new Fallout4Group.Mask<TItem>(Classes));
+                this.Factions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Factions, new Fallout4Group.Mask<TItem>(Factions));
+                this.HeadParts = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(HeadParts, new Fallout4Group.Mask<TItem>(HeadParts));
+                this.SoundMarkers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(SoundMarkers, new Fallout4Group.Mask<TItem>(SoundMarkers));
+                this.AcousticSpaces = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AcousticSpaces, new Fallout4Group.Mask<TItem>(AcousticSpaces));
+                this.LandscapeTextures = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LandscapeTextures, new Fallout4Group.Mask<TItem>(LandscapeTextures));
+                this.Grasses = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Grasses, new Fallout4Group.Mask<TItem>(Grasses));
+                this.MaterialTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MaterialTypes, new Fallout4Group.Mask<TItem>(MaterialTypes));
             }
 
             #pragma warning disable CS8618
@@ -258,18 +313,23 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>? ModHeader { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? GameSettings { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Keywords { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? LocationReferenceTypes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Actions { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Transforms { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Components { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? TextureSets { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Globals { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? DamageTypes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Classes { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Factions { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? HeadParts { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? GameSettings { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Keywords { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LocationReferenceTypes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Actions { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Transforms { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Components { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? TextureSets { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Globals { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? DamageTypes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Classes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Factions { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? HeadParts { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? SoundMarkers { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AcousticSpaces { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LandscapeTextures { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Grasses { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MaterialTypes { get; set; }
             #endregion
 
             #region Equals
@@ -295,6 +355,11 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Classes, rhs.Classes)) return false;
                 if (!object.Equals(this.Factions, rhs.Factions)) return false;
                 if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
+                if (!object.Equals(this.SoundMarkers, rhs.SoundMarkers)) return false;
+                if (!object.Equals(this.AcousticSpaces, rhs.AcousticSpaces)) return false;
+                if (!object.Equals(this.LandscapeTextures, rhs.LandscapeTextures)) return false;
+                if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
+                if (!object.Equals(this.MaterialTypes, rhs.MaterialTypes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -313,6 +378,11 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Classes);
                 hash.Add(this.Factions);
                 hash.Add(this.HeadParts);
+                hash.Add(this.SoundMarkers);
+                hash.Add(this.AcousticSpaces);
+                hash.Add(this.LandscapeTextures);
+                hash.Add(this.Grasses);
+                hash.Add(this.MaterialTypes);
                 return hash.ToHashCode();
             }
 
@@ -386,6 +456,31 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.HeadParts.Overall)) return false;
                     if (this.HeadParts.Specific != null && !this.HeadParts.Specific.All(eval)) return false;
                 }
+                if (SoundMarkers != null)
+                {
+                    if (!eval(this.SoundMarkers.Overall)) return false;
+                    if (this.SoundMarkers.Specific != null && !this.SoundMarkers.Specific.All(eval)) return false;
+                }
+                if (AcousticSpaces != null)
+                {
+                    if (!eval(this.AcousticSpaces.Overall)) return false;
+                    if (this.AcousticSpaces.Specific != null && !this.AcousticSpaces.Specific.All(eval)) return false;
+                }
+                if (LandscapeTextures != null)
+                {
+                    if (!eval(this.LandscapeTextures.Overall)) return false;
+                    if (this.LandscapeTextures.Specific != null && !this.LandscapeTextures.Specific.All(eval)) return false;
+                }
+                if (Grasses != null)
+                {
+                    if (!eval(this.Grasses.Overall)) return false;
+                    if (this.Grasses.Specific != null && !this.Grasses.Specific.All(eval)) return false;
+                }
+                if (MaterialTypes != null)
+                {
+                    if (!eval(this.MaterialTypes.Overall)) return false;
+                    if (this.MaterialTypes.Specific != null && !this.MaterialTypes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -458,6 +553,31 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.HeadParts.Overall)) return true;
                     if (this.HeadParts.Specific != null && this.HeadParts.Specific.Any(eval)) return true;
                 }
+                if (SoundMarkers != null)
+                {
+                    if (eval(this.SoundMarkers.Overall)) return true;
+                    if (this.SoundMarkers.Specific != null && this.SoundMarkers.Specific.Any(eval)) return true;
+                }
+                if (AcousticSpaces != null)
+                {
+                    if (eval(this.AcousticSpaces.Overall)) return true;
+                    if (this.AcousticSpaces.Specific != null && this.AcousticSpaces.Specific.Any(eval)) return true;
+                }
+                if (LandscapeTextures != null)
+                {
+                    if (eval(this.LandscapeTextures.Overall)) return true;
+                    if (this.LandscapeTextures.Specific != null && this.LandscapeTextures.Specific.Any(eval)) return true;
+                }
+                if (Grasses != null)
+                {
+                    if (eval(this.Grasses.Overall)) return true;
+                    if (this.Grasses.Specific != null && this.Grasses.Specific.Any(eval)) return true;
+                }
+                if (MaterialTypes != null)
+                {
+                    if (eval(this.MaterialTypes.Overall)) return true;
+                    if (this.MaterialTypes.Specific != null && this.MaterialTypes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -473,18 +593,23 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, Fallout4ModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
-                obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
-                obj.Keywords = this.Keywords == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
-                obj.LocationReferenceTypes = this.LocationReferenceTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
-                obj.Actions = this.Actions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Actions.Overall), this.Actions.Specific?.Translate(eval));
-                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
-                obj.Components = this.Components == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Components.Overall), this.Components.Specific?.Translate(eval));
-                obj.TextureSets = this.TextureSets == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.TextureSets.Overall), this.TextureSets.Specific?.Translate(eval));
-                obj.Globals = this.Globals == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
-                obj.DamageTypes = this.DamageTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DamageTypes.Overall), this.DamageTypes.Specific?.Translate(eval));
-                obj.Classes = this.Classes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
-                obj.Factions = this.Factions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
-                obj.HeadParts = this.HeadParts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.HeadParts.Overall), this.HeadParts.Specific?.Translate(eval));
+                obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
+                obj.Keywords = this.Keywords == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
+                obj.LocationReferenceTypes = this.LocationReferenceTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
+                obj.Actions = this.Actions == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Actions.Overall), this.Actions.Specific?.Translate(eval));
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                obj.Components = this.Components == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Components.Overall), this.Components.Specific?.Translate(eval));
+                obj.TextureSets = this.TextureSets == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.TextureSets.Overall), this.TextureSets.Specific?.Translate(eval));
+                obj.Globals = this.Globals == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
+                obj.DamageTypes = this.DamageTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.DamageTypes.Overall), this.DamageTypes.Specific?.Translate(eval));
+                obj.Classes = this.Classes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
+                obj.Factions = this.Factions == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
+                obj.HeadParts = this.HeadParts == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.HeadParts.Overall), this.HeadParts.Specific?.Translate(eval));
+                obj.SoundMarkers = this.SoundMarkers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.SoundMarkers.Overall), this.SoundMarkers.Specific?.Translate(eval));
+                obj.AcousticSpaces = this.AcousticSpaces == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AcousticSpaces.Overall), this.AcousticSpaces.Specific?.Translate(eval));
+                obj.LandscapeTextures = this.LandscapeTextures == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LandscapeTextures.Overall), this.LandscapeTextures.Specific?.Translate(eval));
+                obj.Grasses = this.Grasses == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
+                obj.MaterialTypes = this.MaterialTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MaterialTypes.Overall), this.MaterialTypes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -559,6 +684,26 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         HeadParts?.ToString(fg);
                     }
+                    if (printMask?.SoundMarkers?.Overall ?? true)
+                    {
+                        SoundMarkers?.ToString(fg);
+                    }
+                    if (printMask?.AcousticSpaces?.Overall ?? true)
+                    {
+                        AcousticSpaces?.ToString(fg);
+                    }
+                    if (printMask?.LandscapeTextures?.Overall ?? true)
+                    {
+                        LandscapeTextures?.ToString(fg);
+                    }
+                    if (printMask?.Grasses?.Overall ?? true)
+                    {
+                        Grasses?.ToString(fg);
+                    }
+                    if (printMask?.MaterialTypes?.Overall ?? true)
+                    {
+                        MaterialTypes?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -585,18 +730,23 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             public MaskItem<Exception?, Fallout4ModHeader.ErrorMask?>? ModHeader;
-            public MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
-            public MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>? Keywords;
-            public MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>? LocationReferenceTypes;
-            public MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>? Actions;
-            public MaskItem<Exception?, Group.ErrorMask<Transform.ErrorMask>?>? Transforms;
-            public MaskItem<Exception?, Group.ErrorMask<Component.ErrorMask>?>? Components;
-            public MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>? TextureSets;
-            public MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>? Globals;
-            public MaskItem<Exception?, Group.ErrorMask<ADamageType.ErrorMask>?>? DamageTypes;
-            public MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>? Classes;
-            public MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>? Factions;
-            public MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Keyword.ErrorMask>?>? Keywords;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<LocationReferenceType.ErrorMask>?>? LocationReferenceTypes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<ActionRecord.ErrorMask>?>? Actions;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Transform.ErrorMask>?>? Transforms;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Component.ErrorMask>?>? Components;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<TextureSet.ErrorMask>?>? TextureSets;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Global.ErrorMask>?>? Globals;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<ADamageType.ErrorMask>?>? DamageTypes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Class.ErrorMask>?>? Classes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Faction.ErrorMask>?>? Factions;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<SoundMarker.ErrorMask>?>? SoundMarkers;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<AcousticSpace.ErrorMask>?>? AcousticSpaces;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<LandscapeTexture.ErrorMask>?>? LandscapeTextures;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Grass.ErrorMask>?>? Grasses;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialType.ErrorMask>?>? MaterialTypes;
             #endregion
 
             #region IErrorMask
@@ -631,6 +781,16 @@ namespace Mutagen.Bethesda.Fallout4
                         return Factions;
                     case Fallout4Mod_FieldIndex.HeadParts:
                         return HeadParts;
+                    case Fallout4Mod_FieldIndex.SoundMarkers:
+                        return SoundMarkers;
+                    case Fallout4Mod_FieldIndex.AcousticSpaces:
+                        return AcousticSpaces;
+                    case Fallout4Mod_FieldIndex.LandscapeTextures:
+                        return LandscapeTextures;
+                    case Fallout4Mod_FieldIndex.Grasses:
+                        return Grasses;
+                    case Fallout4Mod_FieldIndex.MaterialTypes:
+                        return MaterialTypes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -645,40 +805,55 @@ namespace Mutagen.Bethesda.Fallout4
                         this.ModHeader = new MaskItem<Exception?, Fallout4ModHeader.ErrorMask?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.GameSettings:
-                        this.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
+                        this.GameSettings = new MaskItem<Exception?, Fallout4Group.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.Keywords:
-                        this.Keywords = new MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>(ex, null);
+                        this.Keywords = new MaskItem<Exception?, Fallout4Group.ErrorMask<Keyword.ErrorMask>?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.LocationReferenceTypes:
-                        this.LocationReferenceTypes = new MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>(ex, null);
+                        this.LocationReferenceTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<LocationReferenceType.ErrorMask>?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.Actions:
-                        this.Actions = new MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>(ex, null);
+                        this.Actions = new MaskItem<Exception?, Fallout4Group.ErrorMask<ActionRecord.ErrorMask>?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.Transforms:
-                        this.Transforms = new MaskItem<Exception?, Group.ErrorMask<Transform.ErrorMask>?>(ex, null);
+                        this.Transforms = new MaskItem<Exception?, Fallout4Group.ErrorMask<Transform.ErrorMask>?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.Components:
-                        this.Components = new MaskItem<Exception?, Group.ErrorMask<Component.ErrorMask>?>(ex, null);
+                        this.Components = new MaskItem<Exception?, Fallout4Group.ErrorMask<Component.ErrorMask>?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.TextureSets:
-                        this.TextureSets = new MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>(ex, null);
+                        this.TextureSets = new MaskItem<Exception?, Fallout4Group.ErrorMask<TextureSet.ErrorMask>?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.Globals:
-                        this.Globals = new MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>(ex, null);
+                        this.Globals = new MaskItem<Exception?, Fallout4Group.ErrorMask<Global.ErrorMask>?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.DamageTypes:
-                        this.DamageTypes = new MaskItem<Exception?, Group.ErrorMask<ADamageType.ErrorMask>?>(ex, null);
+                        this.DamageTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<ADamageType.ErrorMask>?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.Classes:
-                        this.Classes = new MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>(ex, null);
+                        this.Classes = new MaskItem<Exception?, Fallout4Group.ErrorMask<Class.ErrorMask>?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.Factions:
-                        this.Factions = new MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>(ex, null);
+                        this.Factions = new MaskItem<Exception?, Fallout4Group.ErrorMask<Faction.ErrorMask>?>(ex, null);
                         break;
                     case Fallout4Mod_FieldIndex.HeadParts:
-                        this.HeadParts = new MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>(ex, null);
+                        this.HeadParts = new MaskItem<Exception?, Fallout4Group.ErrorMask<HeadPart.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.SoundMarkers:
+                        this.SoundMarkers = new MaskItem<Exception?, Fallout4Group.ErrorMask<SoundMarker.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.AcousticSpaces:
+                        this.AcousticSpaces = new MaskItem<Exception?, Fallout4Group.ErrorMask<AcousticSpace.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.LandscapeTextures:
+                        this.LandscapeTextures = new MaskItem<Exception?, Fallout4Group.ErrorMask<LandscapeTexture.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Grasses:
+                        this.Grasses = new MaskItem<Exception?, Fallout4Group.ErrorMask<Grass.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.MaterialTypes:
+                        this.MaterialTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialType.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -694,40 +869,55 @@ namespace Mutagen.Bethesda.Fallout4
                         this.ModHeader = (MaskItem<Exception?, Fallout4ModHeader.ErrorMask?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.GameSettings:
-                        this.GameSettings = (MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>?)obj;
+                        this.GameSettings = (MaskItem<Exception?, Fallout4Group.ErrorMask<GameSetting.ErrorMask>?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.Keywords:
-                        this.Keywords = (MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>?)obj;
+                        this.Keywords = (MaskItem<Exception?, Fallout4Group.ErrorMask<Keyword.ErrorMask>?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.LocationReferenceTypes:
-                        this.LocationReferenceTypes = (MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>?)obj;
+                        this.LocationReferenceTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<LocationReferenceType.ErrorMask>?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.Actions:
-                        this.Actions = (MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>?)obj;
+                        this.Actions = (MaskItem<Exception?, Fallout4Group.ErrorMask<ActionRecord.ErrorMask>?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.Transforms:
-                        this.Transforms = (MaskItem<Exception?, Group.ErrorMask<Transform.ErrorMask>?>?)obj;
+                        this.Transforms = (MaskItem<Exception?, Fallout4Group.ErrorMask<Transform.ErrorMask>?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.Components:
-                        this.Components = (MaskItem<Exception?, Group.ErrorMask<Component.ErrorMask>?>?)obj;
+                        this.Components = (MaskItem<Exception?, Fallout4Group.ErrorMask<Component.ErrorMask>?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.TextureSets:
-                        this.TextureSets = (MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>?)obj;
+                        this.TextureSets = (MaskItem<Exception?, Fallout4Group.ErrorMask<TextureSet.ErrorMask>?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.Globals:
-                        this.Globals = (MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>?)obj;
+                        this.Globals = (MaskItem<Exception?, Fallout4Group.ErrorMask<Global.ErrorMask>?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.DamageTypes:
-                        this.DamageTypes = (MaskItem<Exception?, Group.ErrorMask<ADamageType.ErrorMask>?>?)obj;
+                        this.DamageTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<ADamageType.ErrorMask>?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.Classes:
-                        this.Classes = (MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>?)obj;
+                        this.Classes = (MaskItem<Exception?, Fallout4Group.ErrorMask<Class.ErrorMask>?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.Factions:
-                        this.Factions = (MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>?)obj;
+                        this.Factions = (MaskItem<Exception?, Fallout4Group.ErrorMask<Faction.ErrorMask>?>?)obj;
                         break;
                     case Fallout4Mod_FieldIndex.HeadParts:
-                        this.HeadParts = (MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>?)obj;
+                        this.HeadParts = (MaskItem<Exception?, Fallout4Group.ErrorMask<HeadPart.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.SoundMarkers:
+                        this.SoundMarkers = (MaskItem<Exception?, Fallout4Group.ErrorMask<SoundMarker.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.AcousticSpaces:
+                        this.AcousticSpaces = (MaskItem<Exception?, Fallout4Group.ErrorMask<AcousticSpace.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.LandscapeTextures:
+                        this.LandscapeTextures = (MaskItem<Exception?, Fallout4Group.ErrorMask<LandscapeTexture.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.Grasses:
+                        this.Grasses = (MaskItem<Exception?, Fallout4Group.ErrorMask<Grass.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.MaterialTypes:
+                        this.MaterialTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialType.ErrorMask>?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -750,6 +940,11 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Classes != null) return true;
                 if (Factions != null) return true;
                 if (HeadParts != null) return true;
+                if (SoundMarkers != null) return true;
+                if (AcousticSpaces != null) return true;
+                if (LandscapeTextures != null) return true;
+                if (Grasses != null) return true;
+                if (MaterialTypes != null) return true;
                 return false;
             }
             #endregion
@@ -797,6 +992,11 @@ namespace Mutagen.Bethesda.Fallout4
                 Classes?.ToString(fg);
                 Factions?.ToString(fg);
                 HeadParts?.ToString(fg);
+                SoundMarkers?.ToString(fg);
+                AcousticSpaces?.ToString(fg);
+                LandscapeTextures?.ToString(fg);
+                Grasses?.ToString(fg);
+                MaterialTypes?.ToString(fg);
             }
             #endregion
 
@@ -818,6 +1018,11 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Classes = this.Classes.Combine(rhs.Classes, (l, r) => l.Combine(r));
                 ret.Factions = this.Factions.Combine(rhs.Factions, (l, r) => l.Combine(r));
                 ret.HeadParts = this.HeadParts.Combine(rhs.HeadParts, (l, r) => l.Combine(r));
+                ret.SoundMarkers = this.SoundMarkers.Combine(rhs.SoundMarkers, (l, r) => l.Combine(r));
+                ret.AcousticSpaces = this.AcousticSpaces.Combine(rhs.AcousticSpaces, (l, r) => l.Combine(r));
+                ret.LandscapeTextures = this.LandscapeTextures.Combine(rhs.LandscapeTextures, (l, r) => l.Combine(r));
+                ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
+                ret.MaterialTypes = this.MaterialTypes.Combine(rhs.MaterialTypes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -842,18 +1047,23 @@ namespace Mutagen.Bethesda.Fallout4
             public readonly bool DefaultOn;
             public bool OnOverall;
             public Fallout4ModHeader.TranslationMask? ModHeader;
-            public Group.TranslationMask<GameSetting.TranslationMask>? GameSettings;
-            public Group.TranslationMask<Keyword.TranslationMask>? Keywords;
-            public Group.TranslationMask<LocationReferenceType.TranslationMask>? LocationReferenceTypes;
-            public Group.TranslationMask<ActionRecord.TranslationMask>? Actions;
-            public Group.TranslationMask<Transform.TranslationMask>? Transforms;
-            public Group.TranslationMask<Component.TranslationMask>? Components;
-            public Group.TranslationMask<TextureSet.TranslationMask>? TextureSets;
-            public Group.TranslationMask<Global.TranslationMask>? Globals;
-            public Group.TranslationMask<ADamageType.TranslationMask>? DamageTypes;
-            public Group.TranslationMask<Class.TranslationMask>? Classes;
-            public Group.TranslationMask<Faction.TranslationMask>? Factions;
-            public Group.TranslationMask<HeadPart.TranslationMask>? HeadParts;
+            public Fallout4Group.TranslationMask<GameSetting.TranslationMask>? GameSettings;
+            public Fallout4Group.TranslationMask<Keyword.TranslationMask>? Keywords;
+            public Fallout4Group.TranslationMask<LocationReferenceType.TranslationMask>? LocationReferenceTypes;
+            public Fallout4Group.TranslationMask<ActionRecord.TranslationMask>? Actions;
+            public Fallout4Group.TranslationMask<Transform.TranslationMask>? Transforms;
+            public Fallout4Group.TranslationMask<Component.TranslationMask>? Components;
+            public Fallout4Group.TranslationMask<TextureSet.TranslationMask>? TextureSets;
+            public Fallout4Group.TranslationMask<Global.TranslationMask>? Globals;
+            public Fallout4Group.TranslationMask<ADamageType.TranslationMask>? DamageTypes;
+            public Fallout4Group.TranslationMask<Class.TranslationMask>? Classes;
+            public Fallout4Group.TranslationMask<Faction.TranslationMask>? Factions;
+            public Fallout4Group.TranslationMask<HeadPart.TranslationMask>? HeadParts;
+            public Fallout4Group.TranslationMask<SoundMarker.TranslationMask>? SoundMarkers;
+            public Fallout4Group.TranslationMask<AcousticSpace.TranslationMask>? AcousticSpaces;
+            public Fallout4Group.TranslationMask<LandscapeTexture.TranslationMask>? LandscapeTextures;
+            public Fallout4Group.TranslationMask<Grass.TranslationMask>? Grasses;
+            public Fallout4Group.TranslationMask<MaterialType.TranslationMask>? MaterialTypes;
             #endregion
 
             #region Ctors
@@ -891,6 +1101,11 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Classes != null ? Classes.OnOverall : DefaultOn, Classes?.GetCrystal()));
                 ret.Add((Factions != null ? Factions.OnOverall : DefaultOn, Factions?.GetCrystal()));
                 ret.Add((HeadParts != null ? HeadParts.OnOverall : DefaultOn, HeadParts?.GetCrystal()));
+                ret.Add((SoundMarkers != null ? SoundMarkers.OnOverall : DefaultOn, SoundMarkers?.GetCrystal()));
+                ret.Add((AcousticSpaces != null ? AcousticSpaces.OnOverall : DefaultOn, AcousticSpaces?.GetCrystal()));
+                ret.Add((LandscapeTextures != null ? LandscapeTextures.OnOverall : DefaultOn, LandscapeTextures?.GetCrystal()));
+                ret.Add((Grasses != null ? Grasses.OnOverall : DefaultOn, Grasses?.GetCrystal()));
+                ret.Add((MaterialTypes != null ? MaterialTypes.OnOverall : DefaultOn, MaterialTypes?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -904,9 +1119,10 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public static readonly RecordType GrupRecordType = Fallout4Mod_Registration.TriggeringRecordType;
         public override GameRelease GameRelease => GameRelease.Fallout4;
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
-        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroup IMod.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => Fallout4ModMixIn.GetEqualsMask(this, (IFallout4ModGetter)rhs, include);
@@ -932,18 +1148,23 @@ namespace Mutagen.Bethesda.Fallout4
             : base(modKey)
         {
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
-            _GameSettings_Object = new Group<GameSetting>(this);
-            _Keywords_Object = new Group<Keyword>(this);
-            _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
-            _Actions_Object = new Group<ActionRecord>(this);
-            _Transforms_Object = new Group<Transform>(this);
-            _Components_Object = new Group<Component>(this);
-            _TextureSets_Object = new Group<TextureSet>(this);
-            _Globals_Object = new Group<Global>(this);
-            _DamageTypes_Object = new Group<ADamageType>(this);
-            _Classes_Object = new Group<Class>(this);
-            _Factions_Object = new Group<Faction>(this);
-            _HeadParts_Object = new Group<HeadPart>(this);
+            _GameSettings_Object = new Fallout4Group<GameSetting>(this);
+            _Keywords_Object = new Fallout4Group<Keyword>(this);
+            _LocationReferenceTypes_Object = new Fallout4Group<LocationReferenceType>(this);
+            _Actions_Object = new Fallout4Group<ActionRecord>(this);
+            _Transforms_Object = new Fallout4Group<Transform>(this);
+            _Components_Object = new Fallout4Group<Component>(this);
+            _TextureSets_Object = new Fallout4Group<TextureSet>(this);
+            _Globals_Object = new Fallout4Group<Global>(this);
+            _DamageTypes_Object = new Fallout4Group<ADamageType>(this);
+            _Classes_Object = new Fallout4Group<Class>(this);
+            _Factions_Object = new Fallout4Group<Faction>(this);
+            _HeadParts_Object = new Fallout4Group<HeadPart>(this);
+            _SoundMarkers_Object = new Fallout4Group<SoundMarker>(this);
+            _AcousticSpaces_Object = new Fallout4Group<AcousticSpace>(this);
+            _LandscapeTextures_Object = new Fallout4Group<LandscapeTexture>(this);
+            _Grasses_Object = new Fallout4Group<Grass>(this);
+            _MaterialTypes_Object = new Fallout4Group<MaterialType>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -998,6 +1219,26 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.HeadParts.RecordCache.Set(rhsMod.HeadParts.RecordCache.Items);
             }
+            if (mask?.SoundMarkers ?? true)
+            {
+                this.SoundMarkers.RecordCache.Set(rhsMod.SoundMarkers.RecordCache.Items);
+            }
+            if (mask?.AcousticSpaces ?? true)
+            {
+                this.AcousticSpaces.RecordCache.Set(rhsMod.AcousticSpaces.RecordCache.Items);
+            }
+            if (mask?.LandscapeTextures ?? true)
+            {
+                this.LandscapeTextures.RecordCache.Set(rhsMod.LandscapeTextures.RecordCache.Items);
+            }
+            if (mask?.Grasses ?? true)
+            {
+                this.Grasses.RecordCache.Set(rhsMod.Grasses.RecordCache.Items);
+            }
+            if (mask?.MaterialTypes ?? true)
+            {
+                this.MaterialTypes.RecordCache.Set(rhsMod.MaterialTypes.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -1020,6 +1261,11 @@ namespace Mutagen.Bethesda.Fallout4
             count += Classes.RecordCache.Count > 0 ? 1 : default(uint);
             count += Factions.RecordCache.Count > 0 ? 1 : default(uint);
             count += HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SoundMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AcousticSpaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Grasses.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1029,17 +1275,17 @@ namespace Mutagen.Bethesda.Fallout4
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4ModCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4ModSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -1065,11 +1311,11 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerStepThrough]
         IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordCommonGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IMajorRecordCommonGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -1267,18 +1513,23 @@ namespace Mutagen.Bethesda.Fallout4
         IMod
     {
         new Fallout4ModHeader ModHeader { get; }
-        new Group<GameSetting> GameSettings { get; }
-        new Group<Keyword> Keywords { get; }
-        new Group<LocationReferenceType> LocationReferenceTypes { get; }
-        new Group<ActionRecord> Actions { get; }
-        new Group<Transform> Transforms { get; }
-        new Group<Component> Components { get; }
-        new Group<TextureSet> TextureSets { get; }
-        new Group<Global> Globals { get; }
-        new Group<ADamageType> DamageTypes { get; }
-        new Group<Class> Classes { get; }
-        new Group<Faction> Factions { get; }
-        new Group<HeadPart> HeadParts { get; }
+        new Fallout4Group<GameSetting> GameSettings { get; }
+        new Fallout4Group<Keyword> Keywords { get; }
+        new Fallout4Group<LocationReferenceType> LocationReferenceTypes { get; }
+        new Fallout4Group<ActionRecord> Actions { get; }
+        new Fallout4Group<Transform> Transforms { get; }
+        new Fallout4Group<Component> Components { get; }
+        new Fallout4Group<TextureSet> TextureSets { get; }
+        new Fallout4Group<Global> Globals { get; }
+        new Fallout4Group<ADamageType> DamageTypes { get; }
+        new Fallout4Group<Class> Classes { get; }
+        new Fallout4Group<Faction> Factions { get; }
+        new Fallout4Group<HeadPart> HeadParts { get; }
+        new Fallout4Group<SoundMarker> SoundMarkers { get; }
+        new Fallout4Group<AcousticSpace> AcousticSpaces { get; }
+        new Fallout4Group<LandscapeTexture> LandscapeTextures { get; }
+        new Fallout4Group<Grass> Grasses { get; }
+        new Fallout4Group<MaterialType> MaterialTypes { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -1296,20 +1547,25 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Fallout4Mod_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Fallout4Mod_Registration.Instance;
         IFallout4ModHeaderGetter ModHeader { get; }
-        IGroupGetter<IGameSettingGetter> GameSettings { get; }
-        IGroupGetter<IKeywordGetter> Keywords { get; }
-        IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes { get; }
-        IGroupGetter<IActionRecordGetter> Actions { get; }
-        IGroupGetter<ITransformGetter> Transforms { get; }
-        IGroupGetter<IComponentGetter> Components { get; }
-        IGroupGetter<ITextureSetGetter> TextureSets { get; }
-        IGroupGetter<IGlobalGetter> Globals { get; }
-        IGroupGetter<IADamageTypeGetter> DamageTypes { get; }
-        IGroupGetter<IClassGetter> Classes { get; }
-        IGroupGetter<IFactionGetter> Factions { get; }
-        IGroupGetter<IHeadPartGetter> HeadParts { get; }
+        IFallout4GroupGetter<IGameSettingGetter> GameSettings { get; }
+        IFallout4GroupGetter<IKeywordGetter> Keywords { get; }
+        IFallout4GroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes { get; }
+        IFallout4GroupGetter<IActionRecordGetter> Actions { get; }
+        IFallout4GroupGetter<ITransformGetter> Transforms { get; }
+        IFallout4GroupGetter<IComponentGetter> Components { get; }
+        IFallout4GroupGetter<ITextureSetGetter> TextureSets { get; }
+        IFallout4GroupGetter<IGlobalGetter> Globals { get; }
+        IFallout4GroupGetter<IADamageTypeGetter> DamageTypes { get; }
+        IFallout4GroupGetter<IClassGetter> Classes { get; }
+        IFallout4GroupGetter<IFactionGetter> Factions { get; }
+        IFallout4GroupGetter<IHeadPartGetter> HeadParts { get; }
+        IFallout4GroupGetter<ISoundMarkerGetter> SoundMarkers { get; }
+        IFallout4GroupGetter<IAcousticSpaceGetter> AcousticSpaces { get; }
+        IFallout4GroupGetter<ILandscapeTextureGetter> LandscapeTextures { get; }
+        IFallout4GroupGetter<IGrassGetter> Grasses { get; }
+        IFallout4GroupGetter<IMaterialTypeGetter> MaterialTypes { get; }
 
     }
 
@@ -1456,29 +1712,38 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Mutagen
-        public static IGroupCommonGetter<T> GetTopLevelGroup<T>(this IFallout4ModGetter obj)
-            where T : IMajorRecordCommonGetter
+        public static IGroupGetter<T> GetTopLevelGroup<T>(this IFallout4ModGetter obj)
+            where T : IMajorRecordGetter
         {
-            return (IGroupCommonGetter<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroupCommonGetter<IMajorRecordCommonGetter> GetTopLevelGroup(
+        public static IGroupGetter GetTopLevelGroup(
             this IFallout4ModGetter obj,
             Type type)
         {
-            return (IGroupCommonGetter<IMajorRecordCommonGetter>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
 
-        public static IGroupCommon<T> GetTopLevelGroup<T>(this IFallout4Mod obj)
-            where T : IMajorRecordCommon
+        public static IGroup<T> GetTopLevelGroup<T>(this IFallout4Mod obj)
+            where T : IMajorRecord
         {
-            return (IGroupCommon<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
+        }
+
+        public static IGroup GetTopLevelGroup(
+            this IFallout4Mod obj,
+            Type type)
+        {
+            return (IGroup)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: type);
         }
 
         public static void WriteToBinaryParallel(
@@ -1520,7 +1785,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IFallout4ModGetter obj)
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IFallout4ModGetter obj)
         {
             return ((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
@@ -1529,7 +1794,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IFallout4ModGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordCommonGetter
+            where TMajor : class, IMajorRecordGetter
         {
             return ((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1540,7 +1805,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             this IFallout4ModGetter obj,
             Type type,
             bool throwIfUnknown = true)
@@ -1549,19 +1814,19 @@ namespace Mutagen.Bethesda.Fallout4
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommonGetter)m)
+                .Select(m => (IMajorRecordGetter)m)
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IFallout4Mod obj)
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IFallout4Mod obj)
         {
             return ((Fallout4ModSetterCommon)((IFallout4ModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IFallout4Mod obj)
-            where TMajor : class, IMajorRecordCommon
+            where TMajor : class, IMajorRecord
         {
             return ((Fallout4ModSetterCommon)((IFallout4ModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1572,7 +1837,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
             this IFallout4Mod obj,
             Type? type,
             bool throwIfUnknown = true)
@@ -1581,7 +1846,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommon)m)
+                .Select(m => (IMajorRecord)m)
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
@@ -1666,7 +1931,7 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4Mod obj,
             TMajor record,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(record.FormKey);
@@ -1682,7 +1947,7 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4Mod obj,
             IEnumerable<TMajor> records,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((Fallout4ModSetterCommon)((IFallout4ModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -1696,7 +1961,7 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4Mod obj,
             FormKey key,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
@@ -1712,7 +1977,7 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4Mod obj,
             IEnumerable<FormKey> keys,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((Fallout4ModSetterCommon)((IFallout4ModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -1726,7 +1991,7 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4Mod obj,
             HashSet<FormKey> keys,
             bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             ((Fallout4ModSetterCommon)((IFallout4ModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
@@ -1740,20 +2005,20 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4ModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
-            where TSetter : class, IMajorRecordCommon, TGetter
-            where TGetter : class, IMajorRecordCommonGetter
+            where TSetter : class, IMajorRecord, TGetter
+            where TGetter : class, IMajorRecordGetter
         {
             return ((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).EnumerateMajorRecordContexts(
                 obj: obj,
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
+                .Select(m => m.AsType<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public static IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             this IFallout4ModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -1870,6 +2135,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Classes = 10,
         Factions = 11,
         HeadParts = 12,
+        SoundMarkers = 13,
+        AcousticSpaces = 14,
+        LandscapeTextures = 15,
+        Grasses = 16,
+        MaterialTypes = 17,
     }
     #endregion
 
@@ -1887,9 +2157,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -1970,6 +2240,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Classes.Clear();
             item.Factions.Clear();
             item.HeadParts.Clear();
+            item.SoundMarkers.Clear();
+            item.AcousticSpaces.Clear();
+            item.LandscapeTextures.Clear();
+            item.Grasses.Clear();
+            item.MaterialTypes.Clear();
         }
         
         #region Mutagen
@@ -1988,17 +2263,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Classes.RemapLinks(mapping);
             obj.Factions.RemapLinks(mapping);
             obj.HeadParts.RemapLinks(mapping);
+            obj.SoundMarkers.RemapLinks(mapping);
+            obj.AcousticSpaces.RemapLinks(mapping);
+            obj.LandscapeTextures.RemapLinks(mapping);
+            obj.Grasses.RemapLinks(mapping);
+            obj.MaterialTypes.RemapLinks(mapping);
         }
         
-        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IFallout4Mod obj)
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
         {
             foreach (var item in Fallout4ModCommon.Instance.EnumerateMajorRecords(obj))
             {
-                yield return (item as IMajorRecordCommon)!;
+                yield return (item as IMajorRecord)!;
             }
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
             IFallout4Mod obj,
             Type? type,
             bool throwIfUnknown)
@@ -2007,7 +2287,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             IFallout4Mod obj,
             Type type,
             bool throwIfUnknown)
@@ -2034,6 +2314,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Classes.Remove(keys);
             obj.Factions.Remove(keys);
             obj.HeadParts.Remove(keys);
+            obj.SoundMarkers.Remove(keys);
+            obj.AcousticSpaces.Remove(keys);
+            obj.LandscapeTextures.Remove(keys);
+            obj.Grasses.Remove(keys);
+            obj.MaterialTypes.Remove(keys);
         }
         
         public void Remove(
@@ -2044,13 +2329,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "IFallout4MajorRecord":
                 case "Fallout4MajorRecord":
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "IFallout4MajorRecordGetter":
                     if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
@@ -2151,6 +2434,46 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "SoundMarker":
+                case "ISoundMarkerGetter":
+                case "ISoundMarker":
+                case "ISoundMarkerInternal":
+                    obj.SoundMarkers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AcousticSpace":
+                case "IAcousticSpaceGetter":
+                case "IAcousticSpace":
+                case "IAcousticSpaceInternal":
+                    obj.AcousticSpaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LandscapeTexture":
+                case "ILandscapeTextureGetter":
+                case "ILandscapeTexture":
+                case "ILandscapeTextureInternal":
+                    obj.LandscapeTextures.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    obj.Grasses.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    obj.MaterialTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -2171,6 +2494,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
                     Remove(obj, keys, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IRegionTarget":
+                case "IRegionTargetGetter":
+                    Remove(obj, keys, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "ILocationRecord":
                 case "ILocationRecordGetter":
@@ -2245,6 +2572,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Classes = MaskItemExt.Factory(item.Classes.GetEqualsMask(rhs.Classes, include), include);
             ret.Factions = MaskItemExt.Factory(item.Factions.GetEqualsMask(rhs.Factions, include), include);
             ret.HeadParts = MaskItemExt.Factory(item.HeadParts.GetEqualsMask(rhs.HeadParts, include), include);
+            ret.SoundMarkers = MaskItemExt.Factory(item.SoundMarkers.GetEqualsMask(rhs.SoundMarkers, include), include);
+            ret.AcousticSpaces = MaskItemExt.Factory(item.AcousticSpaces.GetEqualsMask(rhs.AcousticSpaces, include), include);
+            ret.LandscapeTextures = MaskItemExt.Factory(item.LandscapeTextures.GetEqualsMask(rhs.LandscapeTextures, include), include);
+            ret.Grasses = MaskItemExt.Factory(item.Grasses.GetEqualsMask(rhs.Grasses, include), include);
+            ret.MaterialTypes = MaskItemExt.Factory(item.MaterialTypes.GetEqualsMask(rhs.MaterialTypes, include), include);
         }
         
         public string ToString(
@@ -2342,6 +2674,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.HeadParts?.Overall ?? true)
             {
                 item.HeadParts?.ToString(fg, "HeadParts");
+            }
+            if (printMask?.SoundMarkers?.Overall ?? true)
+            {
+                item.SoundMarkers?.ToString(fg, "SoundMarkers");
+            }
+            if (printMask?.AcousticSpaces?.Overall ?? true)
+            {
+                item.AcousticSpaces?.ToString(fg, "AcousticSpaces");
+            }
+            if (printMask?.LandscapeTextures?.Overall ?? true)
+            {
+                item.LandscapeTextures?.ToString(fg, "LandscapeTextures");
+            }
+            if (printMask?.Grasses?.Overall ?? true)
+            {
+                item.Grasses?.ToString(fg, "Grasses");
+            }
+            if (printMask?.MaterialTypes?.Overall ?? true)
+            {
+                item.MaterialTypes?.ToString(fg, "MaterialTypes");
             }
         }
         
@@ -2456,6 +2808,46 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 else if (!isHeadPartsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundMarkers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SoundMarkers, rhs.SoundMarkers, out var lhsSoundMarkers, out var rhsSoundMarkers, out var isSoundMarkersEqual))
+                {
+                    if (!object.Equals(lhsSoundMarkers, rhsSoundMarkers)) return false;
+                }
+                else if (!isSoundMarkersEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AcousticSpaces) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AcousticSpaces, rhs.AcousticSpaces, out var lhsAcousticSpaces, out var rhsAcousticSpaces, out var isAcousticSpacesEqual))
+                {
+                    if (!object.Equals(lhsAcousticSpaces, rhsAcousticSpaces)) return false;
+                }
+                else if (!isAcousticSpacesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LandscapeTextures) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LandscapeTextures, rhs.LandscapeTextures, out var lhsLandscapeTextures, out var rhsLandscapeTextures, out var isLandscapeTexturesEqual))
+                {
+                    if (!object.Equals(lhsLandscapeTextures, rhsLandscapeTextures)) return false;
+                }
+                else if (!isLandscapeTexturesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Grasses) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Grasses, rhs.Grasses, out var lhsGrasses, out var rhsGrasses, out var isGrassesEqual))
+                {
+                    if (!object.Equals(lhsGrasses, rhsGrasses)) return false;
+                }
+                else if (!isGrassesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialTypes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MaterialTypes, rhs.MaterialTypes, out var lhsMaterialTypes, out var rhsMaterialTypes, out var isMaterialTypesEqual))
+                {
+                    if (!object.Equals(lhsMaterialTypes, rhsMaterialTypes)) return false;
+                }
+                else if (!isMaterialTypesEqual) return false;
+            }
             return true;
         }
         
@@ -2475,6 +2867,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Classes);
             hash.Add(item.Factions);
             hash.Add(item.HeadParts);
+            hash.Add(item.SoundMarkers);
+            hash.Add(item.AcousticSpaces);
+            hash.Add(item.LandscapeTextures);
+            hash.Add(item.Grasses);
+            hash.Add(item.MaterialTypes);
             return hash.ToHashCode();
         }
         
@@ -2553,6 +2950,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IHeadPart":
                 case "IHeadPartInternal":
                     return obj.HeadParts;
+                case "SoundMarker":
+                case "ISoundMarkerGetter":
+                case "ISoundMarker":
+                case "ISoundMarkerInternal":
+                    return obj.SoundMarkers;
+                case "AcousticSpace":
+                case "IAcousticSpaceGetter":
+                case "IAcousticSpace":
+                case "IAcousticSpaceInternal":
+                    return obj.AcousticSpaces;
+                case "LandscapeTexture":
+                case "ILandscapeTextureGetter":
+                case "ILandscapeTexture":
+                case "ILandscapeTextureInternal":
+                    return obj.LandscapeTextures;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    return obj.Grasses;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    return obj.MaterialTypes;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -2573,7 +2995,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[12];
+            Stream[] outputStreams = new Stream[17];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, outputStreams, param.StringsWriter));
@@ -2587,6 +3009,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Classes, writer.MetaData.MasterReferences!, 9, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Factions, writer.MetaData.MasterReferences!, 10, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.HeadParts, writer.MetaData.MasterReferences!, 11, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, writer.MetaData.MasterReferences!, 12, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, writer.MetaData.MasterReferences!, 13, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, writer.MetaData.MasterReferences!, 14, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, writer.MetaData.MasterReferences!, 15, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, writer.MetaData.MasterReferences!, 16, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2594,7 +3021,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public static void WriteGroupParallel<T>(
-            IGroupGetter<T> group,
+            IFallout4GroupGetter<T> group,
             IMasterReferenceReader masters,
             int targetIndex,
             Stream[] streamDepositArray,
@@ -2610,7 +3037,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             using (var stream = new MutagenWriter(groupByteStream, GameConstants.Fallout4, dispose: false))
             {
                 stream.Position += 8;
-                GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
+                Fallout4GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
             }
             subStreams[0] = groupByteStream;
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
@@ -2724,10 +3151,45 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
+            if (obj.SoundMarkers is IFormLinkContainerGetter SoundMarkerslinkCont)
+            {
+                foreach (var item in SoundMarkerslinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.AcousticSpaces is IFormLinkContainerGetter AcousticSpaceslinkCont)
+            {
+                foreach (var item in AcousticSpaceslinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LandscapeTextures is IFormLinkContainerGetter LandscapeTextureslinkCont)
+            {
+                foreach (var item in LandscapeTextureslinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Grasses is IFormLinkContainerGetter GrasseslinkCont)
+            {
+                foreach (var item in GrasseslinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.MaterialTypes is IFormLinkContainerGetter MaterialTypeslinkCont)
+            {
+                foreach (var item in MaterialTypeslinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IFallout4ModGetter obj)
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IFallout4ModGetter obj)
         {
             foreach (var item in obj.GameSettings.EnumerateMajorRecords())
             {
@@ -2777,9 +3239,29 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.SoundMarkers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Grasses.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
             IFallout4ModGetter obj,
             Type? type,
             bool throwIfUnknown)
@@ -2788,14 +3270,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
-        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
             IFallout4ModGetter obj,
             Type type,
             bool throwIfUnknown)
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "IFallout4MajorRecord":
@@ -2807,7 +3288,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     yield break;
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "IFallout4MajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
@@ -2922,6 +3402,51 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
+                case "SoundMarker":
+                case "ISoundMarkerGetter":
+                case "ISoundMarker":
+                case "ISoundMarkerInternal":
+                    foreach (var item in obj.SoundMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AcousticSpace":
+                case "IAcousticSpaceGetter":
+                case "IAcousticSpace":
+                case "IAcousticSpaceInternal":
+                    foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LandscapeTexture":
+                case "ILandscapeTextureGetter":
+                case "ILandscapeTexture":
+                case "ILandscapeTextureInternal":
+                    foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    foreach (var item in obj.Grasses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    foreach (var item in obj.MaterialTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "IIdleRelation":
                 {
                     if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
@@ -3015,6 +3540,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     yield break;
                 }
+                case "IRegionTarget":
+                {
+                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IRegionTargetGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "ILocationRecord":
                 {
                     if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
@@ -3044,7 +3586,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
         
-        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             IFallout4ModGetter obj,
             ILinkCache linkCache)
         {
@@ -3144,9 +3686,49 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     group: (m) => m.HeadParts,
                     groupGetter: (m) => m.HeadParts);
             }
+            foreach (var item in obj.SoundMarkers)
+            {
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, SoundMarker, ISoundMarkerGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    group: (m) => m.SoundMarkers,
+                    groupGetter: (m) => m.SoundMarkers);
+            }
+            foreach (var item in obj.AcousticSpaces)
+            {
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, AcousticSpace, IAcousticSpaceGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    group: (m) => m.AcousticSpaces,
+                    groupGetter: (m) => m.AcousticSpaces);
+            }
+            foreach (var item in obj.LandscapeTextures)
+            {
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, LandscapeTexture, ILandscapeTextureGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    group: (m) => m.LandscapeTextures,
+                    groupGetter: (m) => m.LandscapeTextures);
+            }
+            foreach (var item in obj.Grasses)
+            {
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Grass, IGrassGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    group: (m) => m.Grasses,
+                    groupGetter: (m) => m.Grasses);
+            }
+            foreach (var item in obj.MaterialTypes)
+            {
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, MaterialType, IMaterialTypeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    group: (m) => m.MaterialTypes,
+                    groupGetter: (m) => m.MaterialTypes);
+            }
         }
         
-        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             IFallout4ModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -3154,7 +3736,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             switch (type.Name)
             {
-                case "IMajorRecordCommon":
                 case "IMajorRecord":
                 case "MajorRecord":
                 case "IFallout4MajorRecord":
@@ -3168,7 +3749,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     yield break;
                 case "IMajorRecordGetter":
-                case "IMajorRecordCommonGetter":
                 case "IFallout4MajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecordContexts(
                         obj,
@@ -3333,6 +3913,71 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             groupGetter: (m) => m.HeadParts);
                     }
                     yield break;
+                case "SoundMarker":
+                case "ISoundMarkerGetter":
+                case "ISoundMarker":
+                case "ISoundMarkerInternal":
+                    foreach (var item in obj.SoundMarkers)
+                    {
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, SoundMarker, ISoundMarkerGetter>(
+                            modKey: obj.ModKey,
+                            record: item,
+                            group: (m) => m.SoundMarkers,
+                            groupGetter: (m) => m.SoundMarkers);
+                    }
+                    yield break;
+                case "AcousticSpace":
+                case "IAcousticSpaceGetter":
+                case "IAcousticSpace":
+                case "IAcousticSpaceInternal":
+                    foreach (var item in obj.AcousticSpaces)
+                    {
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, AcousticSpace, IAcousticSpaceGetter>(
+                            modKey: obj.ModKey,
+                            record: item,
+                            group: (m) => m.AcousticSpaces,
+                            groupGetter: (m) => m.AcousticSpaces);
+                    }
+                    yield break;
+                case "LandscapeTexture":
+                case "ILandscapeTextureGetter":
+                case "ILandscapeTexture":
+                case "ILandscapeTextureInternal":
+                    foreach (var item in obj.LandscapeTextures)
+                    {
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, LandscapeTexture, ILandscapeTextureGetter>(
+                            modKey: obj.ModKey,
+                            record: item,
+                            group: (m) => m.LandscapeTextures,
+                            groupGetter: (m) => m.LandscapeTextures);
+                    }
+                    yield break;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    foreach (var item in obj.Grasses)
+                    {
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Grass, IGrassGetter>(
+                            modKey: obj.ModKey,
+                            record: item,
+                            group: (m) => m.Grasses,
+                            groupGetter: (m) => m.Grasses);
+                    }
+                    yield break;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    foreach (var item in obj.MaterialTypes)
+                    {
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, MaterialType, IMaterialTypeGetter>(
+                            modKey: obj.ModKey,
+                            record: item,
+                            group: (m) => m.MaterialTypes,
+                            groupGetter: (m) => m.MaterialTypes);
+                    }
+                    yield break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                 {
@@ -3400,6 +4045,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         obj,
                         linkCache: linkCache,
                         type: typeof(IKeywordGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IRegionTarget":
+                case "IRegionTargetGetter":
+                {
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILandscapeTextureGetter),
                         throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -3706,6 +4364,106 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundMarkers) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.SoundMarkers);
+                try
+                {
+                    item.SoundMarkers.DeepCopyIn(
+                        rhs: rhs.SoundMarkers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.SoundMarkers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AcousticSpaces) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.AcousticSpaces);
+                try
+                {
+                    item.AcousticSpaces.DeepCopyIn(
+                        rhs: rhs.AcousticSpaces,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.AcousticSpaces));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LandscapeTextures) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.LandscapeTextures);
+                try
+                {
+                    item.LandscapeTextures.DeepCopyIn(
+                        rhs: rhs.LandscapeTextures,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.LandscapeTextures));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Grasses) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Grasses);
+                try
+                {
+                    item.Grasses.DeepCopyIn(
+                        rhs: rhs.Grasses,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Grasses));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.MaterialTypes);
+                try
+                {
+                    item.MaterialTypes.DeepCopyIn(
+                        rhs: rhs.MaterialTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.MaterialTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -3768,7 +4526,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4Mod_Registration.Instance;
-        public static Fallout4Mod_Registration Registration => Fallout4Mod_Registration.Instance;
+        public static Fallout4Mod_Registration StaticRegistration => Fallout4Mod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModCommon.Instance;
         [DebuggerStepThrough]
@@ -3808,6 +4566,11 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Classes;
         public bool Factions;
         public bool HeadParts;
+        public bool SoundMarkers;
+        public bool AcousticSpaces;
+        public bool LandscapeTextures;
+        public bool Grasses;
+        public bool MaterialTypes;
         public GroupMask()
         {
         }
@@ -3825,6 +4588,11 @@ namespace Mutagen.Bethesda.Fallout4
             Classes = defaultValue;
             Factions = defaultValue;
             HeadParts = defaultValue;
+            SoundMarkers = defaultValue;
+            AcousticSpaces = defaultValue;
+            LandscapeTextures = defaultValue;
+            Grasses = defaultValue;
+            MaterialTypes = defaultValue;
         }
     }
 
@@ -3861,7 +4629,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var GameSettingsItem = item.GameSettings;
                 if (GameSettingsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
                         item: GameSettingsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -3872,7 +4640,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var KeywordsItem = item.Keywords;
                 if (KeywordsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
                         item: KeywordsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -3883,7 +4651,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var LocationReferenceTypesItem = item.LocationReferenceTypes;
                 if (LocationReferenceTypesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)LocationReferenceTypesItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)LocationReferenceTypesItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
                         item: LocationReferenceTypesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -3894,7 +4662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var ActionsItem = item.Actions;
                 if (ActionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
                         item: ActionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -3905,7 +4673,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var TransformsItem = item.Transforms;
                 if (TransformsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write<ITransformGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write<ITransformGetter>(
                         item: TransformsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -3916,7 +4684,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var ComponentsItem = item.Components;
                 if (ComponentsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ComponentsItem).BinaryWriteTranslator).Write<IComponentGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ComponentsItem).BinaryWriteTranslator).Write<IComponentGetter>(
                         item: ComponentsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -3927,7 +4695,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var TextureSetsItem = item.TextureSets;
                 if (TextureSetsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
                         item: TextureSetsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -3938,7 +4706,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var GlobalsItem = item.Globals;
                 if (GlobalsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -3949,7 +4717,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var DamageTypesItem = item.DamageTypes;
                 if (DamageTypesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)DamageTypesItem).BinaryWriteTranslator).Write<IADamageTypeGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)DamageTypesItem).BinaryWriteTranslator).Write<IADamageTypeGetter>(
                         item: DamageTypesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -3960,7 +4728,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var ClassesItem = item.Classes;
                 if (ClassesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -3971,7 +4739,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var FactionsItem = item.Factions;
                 if (FactionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: FactionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -3982,8 +4750,63 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var HeadPartsItem = item.HeadParts;
                 if (HeadPartsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
                         item: HeadPartsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.SoundMarkers ?? true)
+            {
+                var SoundMarkersItem = item.SoundMarkers;
+                if (SoundMarkersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)SoundMarkersItem).BinaryWriteTranslator).Write<ISoundMarkerGetter>(
+                        item: SoundMarkersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AcousticSpaces ?? true)
+            {
+                var AcousticSpacesItem = item.AcousticSpaces;
+                if (AcousticSpacesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)AcousticSpacesItem).BinaryWriteTranslator).Write<IAcousticSpaceGetter>(
+                        item: AcousticSpacesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.LandscapeTextures ?? true)
+            {
+                var LandscapeTexturesItem = item.LandscapeTextures;
+                if (LandscapeTexturesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)LandscapeTexturesItem).BinaryWriteTranslator).Write<ILandscapeTextureGetter>(
+                        item: LandscapeTexturesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Grasses ?? true)
+            {
+                var GrassesItem = item.Grasses;
+                if (GrassesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)GrassesItem).BinaryWriteTranslator).Write<IGrassGetter>(
+                        item: GrassesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MaterialTypes ?? true)
+            {
+                var MaterialTypesItem = item.MaterialTypes;
+                if (MaterialTypesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)MaterialTypesItem).BinaryWriteTranslator).Write<IMaterialTypeGetter>(
+                        item: MaterialTypesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -4222,6 +5045,76 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     return (int)Fallout4Mod_FieldIndex.HeadParts;
                 }
+                case RecordTypeInts.SOUN:
+                {
+                    if (importMask?.SoundMarkers ?? true)
+                    {
+                        item.SoundMarkers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.SoundMarkers;
+                }
+                case RecordTypeInts.ASPC:
+                {
+                    if (importMask?.AcousticSpaces ?? true)
+                    {
+                        item.AcousticSpaces.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.AcousticSpaces;
+                }
+                case RecordTypeInts.LTEX:
+                {
+                    if (importMask?.LandscapeTextures ?? true)
+                    {
+                        item.LandscapeTextures.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.LandscapeTextures;
+                }
+                case RecordTypeInts.GRAS:
+                {
+                    if (importMask?.Grasses ?? true)
+                    {
+                        item.Grasses.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Grasses;
+                }
+                case RecordTypeInts.MATT:
+                {
+                    if (importMask?.MaterialTypes ?? true)
+                    {
+                        item.MaterialTypes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.MaterialTypes;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -4327,7 +5220,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4Mod_Registration.Instance;
-        public static Fallout4Mod_Registration Registration => Fallout4Mod_Registration.Instance;
+        public static Fallout4Mod_Registration StaticRegistration => Fallout4Mod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModCommon.Instance;
         [DebuggerStepThrough]
@@ -4344,8 +5237,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public GameRelease GameRelease => GameRelease.Fallout4;
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
@@ -4355,17 +5248,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         [DebuggerStepThrough]
         IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordCommonGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IMajorRecordCommonGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         uint IModGetter.NextFormID => ModHeader.Stats.NextFormID;
         public ModKey ModKey { get; }
         private readonly BinaryOverlayFactoryPackage _package;
@@ -4383,64 +5276,89 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public IFallout4ModHeaderGetter ModHeader => _ModHeader ?? new Fallout4ModHeader();
         #endregion
         #region GameSettings
-        private RangeInt64? _GameSettingsLocation;
-        private IGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocation.HasValue ? GroupBinaryOverlay<IGameSettingGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GameSettingsLocation!.Value.Min, _GameSettingsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
+        private List<RangeInt64>? _GameSettingsLocations;
+        private IFallout4GroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? Fallout4GroupBinaryOverlay<IGameSettingGetter>.Fallout4GroupFactory(_data, _GameSettingsLocations, _package) : default;
+        public IFallout4GroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Fallout4Group<GameSetting>(this);
         #endregion
         #region Keywords
-        private RangeInt64? _KeywordsLocation;
-        private IGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocation.HasValue ? GroupBinaryOverlay<IKeywordGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _KeywordsLocation!.Value.Min, _KeywordsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new Group<Keyword>(this);
+        private List<RangeInt64>? _KeywordsLocations;
+        private IFallout4GroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocations != null ? Fallout4GroupBinaryOverlay<IKeywordGetter>.Fallout4GroupFactory(_data, _KeywordsLocations, _package) : default;
+        public IFallout4GroupGetter<IKeywordGetter> Keywords => _Keywords ?? new Fallout4Group<Keyword>(this);
         #endregion
         #region LocationReferenceTypes
-        private RangeInt64? _LocationReferenceTypesLocation;
-        private IGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocation.HasValue ? GroupBinaryOverlay<ILocationReferenceTypeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LocationReferenceTypesLocation!.Value.Min, _LocationReferenceTypesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Group<LocationReferenceType>(this);
+        private List<RangeInt64>? _LocationReferenceTypesLocations;
+        private IFallout4GroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocations != null ? Fallout4GroupBinaryOverlay<ILocationReferenceTypeGetter>.Fallout4GroupFactory(_data, _LocationReferenceTypesLocations, _package) : default;
+        public IFallout4GroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Fallout4Group<LocationReferenceType>(this);
         #endregion
         #region Actions
-        private RangeInt64? _ActionsLocation;
-        private IGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocation.HasValue ? GroupBinaryOverlay<IActionRecordGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ActionsLocation!.Value.Min, _ActionsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IActionRecordGetter> Actions => _Actions ?? new Group<ActionRecord>(this);
+        private List<RangeInt64>? _ActionsLocations;
+        private IFallout4GroupGetter<IActionRecordGetter>? _Actions => _ActionsLocations != null ? Fallout4GroupBinaryOverlay<IActionRecordGetter>.Fallout4GroupFactory(_data, _ActionsLocations, _package) : default;
+        public IFallout4GroupGetter<IActionRecordGetter> Actions => _Actions ?? new Fallout4Group<ActionRecord>(this);
         #endregion
         #region Transforms
-        private RangeInt64? _TransformsLocation;
-        private IGroupGetter<ITransformGetter>? _Transforms => _TransformsLocation.HasValue ? GroupBinaryOverlay<ITransformGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TransformsLocation!.Value.Min, _TransformsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ITransformGetter> Transforms => _Transforms ?? new Group<Transform>(this);
+        private List<RangeInt64>? _TransformsLocations;
+        private IFallout4GroupGetter<ITransformGetter>? _Transforms => _TransformsLocations != null ? Fallout4GroupBinaryOverlay<ITransformGetter>.Fallout4GroupFactory(_data, _TransformsLocations, _package) : default;
+        public IFallout4GroupGetter<ITransformGetter> Transforms => _Transforms ?? new Fallout4Group<Transform>(this);
         #endregion
         #region Components
-        private RangeInt64? _ComponentsLocation;
-        private IGroupGetter<IComponentGetter>? _Components => _ComponentsLocation.HasValue ? GroupBinaryOverlay<IComponentGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ComponentsLocation!.Value.Min, _ComponentsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IComponentGetter> Components => _Components ?? new Group<Component>(this);
+        private List<RangeInt64>? _ComponentsLocations;
+        private IFallout4GroupGetter<IComponentGetter>? _Components => _ComponentsLocations != null ? Fallout4GroupBinaryOverlay<IComponentGetter>.Fallout4GroupFactory(_data, _ComponentsLocations, _package) : default;
+        public IFallout4GroupGetter<IComponentGetter> Components => _Components ?? new Fallout4Group<Component>(this);
         #endregion
         #region TextureSets
-        private RangeInt64? _TextureSetsLocation;
-        private IGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocation.HasValue ? GroupBinaryOverlay<ITextureSetGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TextureSetsLocation!.Value.Min, _TextureSetsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Group<TextureSet>(this);
+        private List<RangeInt64>? _TextureSetsLocations;
+        private IFallout4GroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? Fallout4GroupBinaryOverlay<ITextureSetGetter>.Fallout4GroupFactory(_data, _TextureSetsLocations, _package) : default;
+        public IFallout4GroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Fallout4Group<TextureSet>(this);
         #endregion
         #region Globals
-        private RangeInt64? _GlobalsLocation;
-        private IGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocation.HasValue ? GroupBinaryOverlay<IGlobalGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GlobalsLocation!.Value.Min, _GlobalsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IGlobalGetter> Globals => _Globals ?? new Group<Global>(this);
+        private List<RangeInt64>? _GlobalsLocations;
+        private IFallout4GroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? Fallout4GroupBinaryOverlay<IGlobalGetter>.Fallout4GroupFactory(_data, _GlobalsLocations, _package) : default;
+        public IFallout4GroupGetter<IGlobalGetter> Globals => _Globals ?? new Fallout4Group<Global>(this);
         #endregion
         #region DamageTypes
-        private RangeInt64? _DamageTypesLocation;
-        private IGroupGetter<IADamageTypeGetter>? _DamageTypes => _DamageTypesLocation.HasValue ? GroupBinaryOverlay<IADamageTypeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DamageTypesLocation!.Value.Min, _DamageTypesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IADamageTypeGetter> DamageTypes => _DamageTypes ?? new Group<ADamageType>(this);
+        private List<RangeInt64>? _DamageTypesLocations;
+        private IFallout4GroupGetter<IADamageTypeGetter>? _DamageTypes => _DamageTypesLocations != null ? Fallout4GroupBinaryOverlay<IADamageTypeGetter>.Fallout4GroupFactory(_data, _DamageTypesLocations, _package) : default;
+        public IFallout4GroupGetter<IADamageTypeGetter> DamageTypes => _DamageTypes ?? new Fallout4Group<ADamageType>(this);
         #endregion
         #region Classes
-        private RangeInt64? _ClassesLocation;
-        private IGroupGetter<IClassGetter>? _Classes => _ClassesLocation.HasValue ? GroupBinaryOverlay<IClassGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClassesLocation!.Value.Min, _ClassesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IClassGetter> Classes => _Classes ?? new Group<Class>(this);
+        private List<RangeInt64>? _ClassesLocations;
+        private IFallout4GroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? Fallout4GroupBinaryOverlay<IClassGetter>.Fallout4GroupFactory(_data, _ClassesLocations, _package) : default;
+        public IFallout4GroupGetter<IClassGetter> Classes => _Classes ?? new Fallout4Group<Class>(this);
         #endregion
         #region Factions
-        private RangeInt64? _FactionsLocation;
-        private IGroupGetter<IFactionGetter>? _Factions => _FactionsLocation.HasValue ? GroupBinaryOverlay<IFactionGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FactionsLocation!.Value.Min, _FactionsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IFactionGetter> Factions => _Factions ?? new Group<Faction>(this);
+        private List<RangeInt64>? _FactionsLocations;
+        private IFallout4GroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? Fallout4GroupBinaryOverlay<IFactionGetter>.Fallout4GroupFactory(_data, _FactionsLocations, _package) : default;
+        public IFallout4GroupGetter<IFactionGetter> Factions => _Factions ?? new Fallout4Group<Faction>(this);
         #endregion
         #region HeadParts
-        private RangeInt64? _HeadPartsLocation;
-        private IGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocation.HasValue ? GroupBinaryOverlay<IHeadPartGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _HeadPartsLocation!.Value.Min, _HeadPartsLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new Group<HeadPart>(this);
+        private List<RangeInt64>? _HeadPartsLocations;
+        private IFallout4GroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? Fallout4GroupBinaryOverlay<IHeadPartGetter>.Fallout4GroupFactory(_data, _HeadPartsLocations, _package) : default;
+        public IFallout4GroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new Fallout4Group<HeadPart>(this);
+        #endregion
+        #region SoundMarkers
+        private List<RangeInt64>? _SoundMarkersLocations;
+        private IFallout4GroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocations != null ? Fallout4GroupBinaryOverlay<ISoundMarkerGetter>.Fallout4GroupFactory(_data, _SoundMarkersLocations, _package) : default;
+        public IFallout4GroupGetter<ISoundMarkerGetter> SoundMarkers => _SoundMarkers ?? new Fallout4Group<SoundMarker>(this);
+        #endregion
+        #region AcousticSpaces
+        private List<RangeInt64>? _AcousticSpacesLocations;
+        private IFallout4GroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? Fallout4GroupBinaryOverlay<IAcousticSpaceGetter>.Fallout4GroupFactory(_data, _AcousticSpacesLocations, _package) : default;
+        public IFallout4GroupGetter<IAcousticSpaceGetter> AcousticSpaces => _AcousticSpaces ?? new Fallout4Group<AcousticSpace>(this);
+        #endregion
+        #region LandscapeTextures
+        private List<RangeInt64>? _LandscapeTexturesLocations;
+        private IFallout4GroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? Fallout4GroupBinaryOverlay<ILandscapeTextureGetter>.Fallout4GroupFactory(_data, _LandscapeTexturesLocations, _package) : default;
+        public IFallout4GroupGetter<ILandscapeTextureGetter> LandscapeTextures => _LandscapeTextures ?? new Fallout4Group<LandscapeTexture>(this);
+        #endregion
+        #region Grasses
+        private List<RangeInt64>? _GrassesLocations;
+        private IFallout4GroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? Fallout4GroupBinaryOverlay<IGrassGetter>.Fallout4GroupFactory(_data, _GrassesLocations, _package) : default;
+        public IFallout4GroupGetter<IGrassGetter> Grasses => _Grasses ?? new Fallout4Group<Grass>(this);
+        #endregion
+        #region MaterialTypes
+        private List<RangeInt64>? _MaterialTypesLocations;
+        private IFallout4GroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? Fallout4GroupBinaryOverlay<IMaterialTypeGetter>.Fallout4GroupFactory(_data, _MaterialTypesLocations, _package) : default;
+        public IFallout4GroupGetter<IMaterialTypeGetter> MaterialTypes => _MaterialTypes ?? new Fallout4Group<MaterialType>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -4531,63 +5449,105 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.GMST:
                 {
-                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GameSettingsLocations ??= new();
+                    _GameSettingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.KYWD:
                 {
-                    _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _KeywordsLocations ??= new();
+                    _KeywordsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.LCRT:
                 {
-                    _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LocationReferenceTypesLocations ??= new();
+                    _LocationReferenceTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.LocationReferenceTypes;
                 }
                 case RecordTypeInts.AACT:
                 {
-                    _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ActionsLocations ??= new();
+                    _ActionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Actions;
                 }
                 case RecordTypeInts.TRNS:
                 {
-                    _TransformsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _TransformsLocations ??= new();
+                    _TransformsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Transforms;
                 }
                 case RecordTypeInts.CMPO:
                 {
-                    _ComponentsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ComponentsLocations ??= new();
+                    _ComponentsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Components;
                 }
                 case RecordTypeInts.TXST:
                 {
-                    _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _TextureSetsLocations ??= new();
+                    _TextureSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.TextureSets;
                 }
                 case RecordTypeInts.GLOB:
                 {
-                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GlobalsLocations ??= new();
+                    _GlobalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.DMGT:
                 {
-                    _DamageTypesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DamageTypesLocations ??= new();
+                    _DamageTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.DamageTypes;
                 }
                 case RecordTypeInts.CLAS:
                 {
-                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ClassesLocations ??= new();
+                    _ClassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
-                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FactionsLocations ??= new();
+                    _FactionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HDPT:
                 {
-                    _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _HeadPartsLocations ??= new();
+                    _HeadPartsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.HeadParts;
+                }
+                case RecordTypeInts.SOUN:
+                {
+                    _SoundMarkersLocations ??= new();
+                    _SoundMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.SoundMarkers;
+                }
+                case RecordTypeInts.ASPC:
+                {
+                    _AcousticSpacesLocations ??= new();
+                    _AcousticSpacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.AcousticSpaces;
+                }
+                case RecordTypeInts.LTEX:
+                {
+                    _LandscapeTexturesLocations ??= new();
+                    _LandscapeTexturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.LandscapeTextures;
+                }
+                case RecordTypeInts.GRAS:
+                {
+                    _GrassesLocations ??= new();
+                    _GrassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Grasses;
+                }
+                case RecordTypeInts.MATT:
+                {
+                    _MaterialTypesLocations ??= new();
+                    _MaterialTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.MaterialTypes;
                 }
                 default:
                     return default(int?);

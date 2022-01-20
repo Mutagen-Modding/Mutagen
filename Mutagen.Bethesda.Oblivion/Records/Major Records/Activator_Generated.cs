@@ -526,6 +526,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Activator>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IActivator);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -643,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Activator_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Activator_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1456,7 +1458,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Activator_Registration.Instance;
-        public new static Activator_Registration Registration => Activator_Registration.Instance;
+        public new static Activator_Registration StaticRegistration => Activator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActivatorCommon.Instance;
         [DebuggerStepThrough]
@@ -1662,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Activator_Registration.Instance;
-        public new static Activator_Registration Registration => Activator_Registration.Instance;
+        public new static Activator_Registration StaticRegistration => Activator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActivatorCommon.Instance;
         [DebuggerStepThrough]
@@ -1684,6 +1686,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IActivator);
+
 
         #region Name
         private int? _NameLocation;

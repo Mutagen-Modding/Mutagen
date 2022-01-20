@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NpcFaceMorph_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NpcFaceMorph_Registration.Instance;
         Single NoseLongVsShort { get; }
         Single NoseUpVsDown { get; }
         Single JawUpVsDown { get; }
@@ -1805,7 +1805,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceMorph_Registration.Instance;
-        public static NpcFaceMorph_Registration Registration => NpcFaceMorph_Registration.Instance;
+        public static NpcFaceMorph_Registration StaticRegistration => NpcFaceMorph_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFaceMorphCommon.Instance;
         [DebuggerStepThrough]
@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceMorph_Registration.Instance;
-        public static NpcFaceMorph_Registration Registration => NpcFaceMorph_Registration.Instance;
+        public static NpcFaceMorph_Registration StaticRegistration => NpcFaceMorph_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFaceMorphCommon.Instance;
         [DebuggerStepThrough]

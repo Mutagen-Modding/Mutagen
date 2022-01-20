@@ -1,16 +1,15 @@
+using System;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
-using System;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Fields;
+
+public class FormKeyType : PrimitiveType
 {
-    public class FormKeyType : PrimitiveType
-    {
-        public override Type Type(bool getter) => typeof(FormKey);
+    public override Type Type(bool getter) => typeof(FormKey);
 
-        public override string GetDefault(bool getter)
-        {
-            return "FormKey.Null";
-        }
+    public override string GetDefault(bool getter)
+    {
+        return "FormKey.Null";
     }
 }

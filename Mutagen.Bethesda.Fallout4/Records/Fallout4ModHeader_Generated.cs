@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Fallout4ModHeader_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Fallout4ModHeader_Registration.Instance;
         Fallout4ModHeader.HeaderFlag Flags { get; }
         UInt32 FormID { get; }
         Int32 Version { get; }
@@ -2174,7 +2174,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4ModHeader_Registration.Instance;
-        public static Fallout4ModHeader_Registration Registration => Fallout4ModHeader_Registration.Instance;
+        public static Fallout4ModHeader_Registration StaticRegistration => Fallout4ModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -2485,7 +2485,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4ModHeader_Registration.Instance;
-        public static Fallout4ModHeader_Registration Registration => Fallout4ModHeader_Registration.Instance;
+        public static Fallout4ModHeader_Registration StaticRegistration => Fallout4ModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModHeaderCommon.Instance;
         [DebuggerStepThrough]

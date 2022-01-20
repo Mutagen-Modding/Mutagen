@@ -944,6 +944,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<FootstepSet>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IFootstepSet);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1050,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IFootstepSetGetter>,
         IMapsToGetter<IFootstepSetGetter>
     {
-        static new ILoquiRegistration Registration => FootstepSet_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => FootstepSet_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps { get; }
         IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps { get; }
         IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps { get; }
@@ -2010,7 +2012,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FootstepSet_Registration.Instance;
-        public new static FootstepSet_Registration Registration => FootstepSet_Registration.Instance;
+        public new static FootstepSet_Registration StaticRegistration => FootstepSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FootstepSetCommon.Instance;
         [DebuggerStepThrough]
@@ -2204,7 +2206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FootstepSet_Registration.Instance;
-        public new static FootstepSet_Registration Registration => FootstepSet_Registration.Instance;
+        public new static FootstepSet_Registration StaticRegistration => FootstepSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FootstepSetCommon.Instance;
         [DebuggerStepThrough]
@@ -2226,6 +2228,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IFootstepSet);
+
 
         #region Count
         public partial ParseResult CountCustomParse(

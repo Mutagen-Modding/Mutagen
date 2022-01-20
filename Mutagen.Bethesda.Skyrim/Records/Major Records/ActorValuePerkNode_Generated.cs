@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ActorValuePerkNode_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ActorValuePerkNode_Registration.Instance;
         IFormLinkGetter<IPerkGetter> Perk { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         UInt32? PerkGridX { get; }
@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValuePerkNode_Registration.Instance;
-        public static ActorValuePerkNode_Registration Registration => ActorValuePerkNode_Registration.Instance;
+        public static ActorValuePerkNode_Registration StaticRegistration => ActorValuePerkNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValuePerkNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1718,7 +1718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValuePerkNode_Registration.Instance;
-        public static ActorValuePerkNode_Registration Registration => ActorValuePerkNode_Registration.Instance;
+        public static ActorValuePerkNode_Registration StaticRegistration => ActorValuePerkNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValuePerkNodeCommon.Instance;
         [DebuggerStepThrough]

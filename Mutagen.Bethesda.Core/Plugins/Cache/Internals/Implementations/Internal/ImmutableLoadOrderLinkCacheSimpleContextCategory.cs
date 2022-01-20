@@ -16,9 +16,9 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             TKey key,
             ModKey? modKey,
             Type type,
-            [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec);
+            [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec);
 
-        IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(
+        IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(
             TKey key,
             ModKey? modKey,
             Type type);
@@ -32,10 +32,10 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         private readonly ILinkCache _linkCache;
         private readonly IReadOnlyList<IModGetter> _listedOrder;
         private readonly IReadOnlyDictionary<Type, Type[]> _linkInterfaces;
-        private readonly Func<IMajorRecordCommonGetter, TryGet<TKey>> _keyGetter;
+        private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
-        private readonly Dictionary<Type, DepthCache<TKey, IModContext<IMajorRecordCommonGetter>>> _winningContexts = new();
-        private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<IModContext<IMajorRecordCommonGetter>>>> _allContexts = new();
+        private readonly Dictionary<Type, DepthCache<TKey, IModContext<IMajorRecordGetter>>> _winningContexts = new();
+        private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<IModContext<IMajorRecordGetter>>>> _allContexts = new();
 
         public ImmutableLoadOrderLinkCacheSimpleContextCategory(
             GameCategory category,
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             bool hasAny,
             ILinkCache linkCache,
             IReadOnlyList<IModGetter> listedOrder,
-            Func<IMajorRecordCommonGetter, TryGet<TKey>> keyGetter,
+            Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
         {
             _simple = simple;
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             _shortCircuit = shortCircuit;
         }
 
-        public bool TryResolveSimpleContext(TKey key, ModKey? modKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveSimpleContext(TKey key, ModKey? modKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec)
         {
             if (_simple)
             {
@@ -68,18 +68,18 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                 return false;
             }
 
-            DepthCache<TKey, IModContext<IMajorRecordCommonGetter>>? cache;
+            DepthCache<TKey, IModContext<IMajorRecordGetter>>? cache;
             lock (_winningContexts)
             {
                 // Get cache object by type
                 if (!_winningContexts.TryGetValue(type, out cache))
                 {
-                    cache = new DepthCache<TKey, IModContext<IMajorRecordCommonGetter>>();
-                    if (type == typeof(IMajorRecordCommon)
-                        || type == typeof(IMajorRecordCommonGetter))
+                    cache = new DepthCache<TKey, IModContext<IMajorRecordGetter>>();
+                    if (type == typeof(IMajorRecord)
+                        || type == typeof(IMajorRecordGetter))
                     {
-                        _winningContexts[typeof(IMajorRecordCommon)] = cache;
-                        _winningContexts[typeof(IMajorRecordCommonGetter)] = cache;
+                        _winningContexts[typeof(IMajorRecord)] = cache;
+                        _winningContexts[typeof(IMajorRecordGetter)] = cache;
                     }
                     else if (LoquiRegistration.TryGetRegister(type, out var registration))
                     {
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             }
         }
 
-        public IEnumerable<IModContext<IMajorRecordCommonGetter>> ResolveAllSimpleContexts(TKey key, ModKey? modKey, Type type)
+        public IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(TKey key, ModKey? modKey, Type type)
         {
             if (!_hasAny || _shortCircuit(key))
             {
@@ -176,20 +176,20 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             }
 
             // Grab the type cache
-            DepthCache<TKey, ImmutableList<IModContext<IMajorRecordCommonGetter>>> cache;
+            DepthCache<TKey, ImmutableList<IModContext<IMajorRecordGetter>>> cache;
             lock (_allContexts)
             {
                 cache = _allContexts.GetOrAdd(type);
             }
 
             // Grab the formkey's list
-            ImmutableList<IModContext<IMajorRecordCommonGetter>>? list;
+            ImmutableList<IModContext<IMajorRecordGetter>>? list;
             int consideredDepth;
             lock (cache)
             {
                 if (!cache.TryGetValue(key, out list))
                 {
-                    list = ImmutableList<IModContext<IMajorRecordCommonGetter>>.Empty;
+                    list = ImmutableList<IModContext<IMajorRecordGetter>>.Empty;
                     cache.Add(key, list);
                 }
                 consideredDepth = cache.Depth;
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                                 if (iterKey.Failed) continue;
                                 if (!cache.TryGetValue(iterKey.Value, out var targetList))
                                 {
-                                    targetList = ImmutableList<IModContext<IMajorRecordCommonGetter>>.Empty;
+                                    targetList = ImmutableList<IModContext<IMajorRecordGetter>>.Empty;
                                 }
                                 cache.Set(iterKey.Value, targetList.Add(item));
                             }

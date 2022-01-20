@@ -938,6 +938,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Impact>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IImpact);
+
         [Flags]
         public enum DATADataType
         {
@@ -1064,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IImpactGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Impact_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Impact_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -2132,7 +2134,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Impact_Registration.Instance;
-        public new static Impact_Registration Registration => Impact_Registration.Instance;
+        public new static Impact_Registration StaticRegistration => Impact_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactCommon.Instance;
         [DebuggerStepThrough]
@@ -2427,7 +2429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Impact_Registration.Instance;
-        public new static Impact_Registration Registration => Impact_Registration.Instance;
+        public new static Impact_Registration StaticRegistration => Impact_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactCommon.Instance;
         [DebuggerStepThrough]
@@ -2449,6 +2451,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IImpact);
+
 
         public IModelGetter? Model { get; private set; }
         private int? _DATALocation;

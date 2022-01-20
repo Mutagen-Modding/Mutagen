@@ -7,6 +7,13 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Fields;
+using BoolType = Mutagen.Bethesda.Generation.Fields.BoolType;
+using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
+using EnumType = Mutagen.Bethesda.Generation.Fields.EnumType;
+using FloatType = Mutagen.Bethesda.Generation.Fields.FloatType;
+using PercentType = Mutagen.Bethesda.Generation.Fields.PercentType;
+using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -16,7 +23,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "ublic WaterReflection.Flag Type => (WaterReflection.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));";
+            string testString = "GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -70,13 +77,13 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<GenderedType>("Gendered");
             gen.AddTypeAssociation<BreakType>("Break");
             gen.AddTypeAssociation<MarkerType>("Marker");
-            gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();
-            gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Bethesda.Generation.StringType>();
-            gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, Mutagen.Bethesda.Generation.MutagenLoquiType>();
-            gen.ReplaceTypeAssociation<Loqui.Generation.FloatType, Mutagen.Bethesda.Generation.FloatType>();
-            gen.ReplaceTypeAssociation<Loqui.Generation.PercentType, Mutagen.Bethesda.Generation.PercentType>();
-            gen.ReplaceTypeAssociation<Loqui.Generation.DictType, Mutagen.Bethesda.Generation.DictType>();
-            gen.ReplaceTypeAssociation<Loqui.Generation.BoolType, Mutagen.Bethesda.Generation.BoolType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, EnumType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.StringType, StringType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, MutagenLoquiType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.FloatType, FloatType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.PercentType, PercentType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.DictType, DictType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.BoolType, BoolType>();
 
             // Always run core
             var bethesdaProto = gen.AddProtocol(

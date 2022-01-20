@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IAPerkEntryPointEffectGetter>
     {
-        static new ILoquiRegistration Registration => APerkEntryPointEffect_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => APerkEntryPointEffect_Registration.Instance;
         APerkEntryPointEffect.EntryType EntryPoint { get; }
         Byte PerkConditionTabCount { get; }
 
@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEntryPointEffect_Registration.Instance;
-        public new static APerkEntryPointEffect_Registration Registration => APerkEntryPointEffect_Registration.Instance;
+        public new static APerkEntryPointEffect_Registration StaticRegistration => APerkEntryPointEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APerkEntryPointEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1178,14 +1178,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class APerkEntryPointEffectBinaryOverlay :
+    public abstract partial class APerkEntryPointEffectBinaryOverlay :
         APerkEffectBinaryOverlay,
         IAPerkEntryPointEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEntryPointEffect_Registration.Instance;
-        public new static APerkEntryPointEffect_Registration Registration => APerkEntryPointEffect_Registration.Instance;
+        public new static APerkEntryPointEffect_Registration StaticRegistration => APerkEntryPointEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APerkEntryPointEffectCommon.Instance;
         [DebuggerStepThrough]

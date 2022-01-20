@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Generation.Modules.Binary;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Mutagen.Bethesda.Generation.Fields;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {

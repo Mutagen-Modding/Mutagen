@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LocationTargetRadius_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LocationTargetRadius_Registration.Instance;
         IALocationTargetGetter Target { get; }
         UInt32 Radius { get; }
 
@@ -1007,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationTargetRadius_Registration.Instance;
-        public static LocationTargetRadius_Registration Registration => LocationTargetRadius_Registration.Instance;
+        public static LocationTargetRadius_Registration StaticRegistration => LocationTargetRadius_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationTargetRadiusCommon.Instance;
         [DebuggerStepThrough]
@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationTargetRadius_Registration.Instance;
-        public static LocationTargetRadius_Registration Registration => LocationTargetRadius_Registration.Instance;
+        public static LocationTargetRadius_Registration StaticRegistration => LocationTargetRadius_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationTargetRadiusCommon.Instance;
         [DebuggerStepThrough]

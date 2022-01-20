@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MagicEffectSound_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => MagicEffectSound_Registration.Instance;
         MagicEffect.SoundType Type { get; }
         IFormLinkGetter<ISoundDescriptorGetter> Sound { get; }
 
@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSound_Registration.Instance;
-        public static MagicEffectSound_Registration Registration => MagicEffectSound_Registration.Instance;
+        public static MagicEffectSound_Registration StaticRegistration => MagicEffectSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSound_Registration.Instance;
-        public static MagicEffectSound_Registration Registration => MagicEffectSound_Registration.Instance;
+        public static MagicEffectSound_Registration StaticRegistration => MagicEffectSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectSoundCommon.Instance;
         [DebuggerStepThrough]

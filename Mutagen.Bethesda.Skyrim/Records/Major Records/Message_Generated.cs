@@ -725,6 +725,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Message>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMessage);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -844,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Message_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Message_Registration.Instance;
         ITranslatedStringGetter Description { get; }
         #region Name
         /// <summary>
@@ -1714,7 +1716,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Message_Registration.Instance;
-        public new static Message_Registration Registration => Message_Registration.Instance;
+        public new static Message_Registration StaticRegistration => Message_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MessageCommon.Instance;
         [DebuggerStepThrough]
@@ -1968,7 +1970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Message_Registration.Instance;
-        public new static Message_Registration Registration => Message_Registration.Instance;
+        public new static Message_Registration StaticRegistration => Message_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MessageCommon.Instance;
         [DebuggerStepThrough]
@@ -1990,6 +1992,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMessage);
+
 
         #region Description
         private int? _DescriptionLocation;

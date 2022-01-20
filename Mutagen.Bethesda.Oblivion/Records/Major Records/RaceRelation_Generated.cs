@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => RaceRelation_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => RaceRelation_Registration.Instance;
         IFormLinkGetter<IRaceGetter> Race { get; }
         Int32 Modifier { get; }
 
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceRelation_Registration.Instance;
-        public static RaceRelation_Registration Registration => RaceRelation_Registration.Instance;
+        public static RaceRelation_Registration StaticRegistration => RaceRelation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceRelationCommon.Instance;
         [DebuggerStepThrough]
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceRelation_Registration.Instance;
-        public static RaceRelation_Registration Registration => RaceRelation_Registration.Instance;
+        public static RaceRelation_Registration StaticRegistration => RaceRelation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceRelationCommon.Instance;
         [DebuggerStepThrough]

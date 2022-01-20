@@ -344,6 +344,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<AnimationSoundTagSet>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAnimationSoundTagSet);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -443,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IAnimationSoundTagSetGetter>,
         IMapsToGetter<IAnimationSoundTagSetGetter>
     {
-        static new ILoquiRegistration Registration => AnimationSoundTagSet_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
 
     }
 
@@ -1133,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimationSoundTagSet_Registration.Instance;
-        public new static AnimationSoundTagSet_Registration Registration => AnimationSoundTagSet_Registration.Instance;
+        public new static AnimationSoundTagSet_Registration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimationSoundTagSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimationSoundTagSet_Registration.Instance;
-        public new static AnimationSoundTagSet_Registration Registration => AnimationSoundTagSet_Registration.Instance;
+        public new static AnimationSoundTagSet_Registration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimationSoundTagSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1277,6 +1279,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAnimationSoundTagSet);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

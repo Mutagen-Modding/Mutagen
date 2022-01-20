@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IScriptObjectListPropertyGetter>,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ScriptObjectListProperty_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ScriptObjectListProperty_Registration.Instance;
         IReadOnlyList<IScriptObjectPropertyGetter> Objects { get; }
 
     }
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptObjectListProperty_Registration.Instance;
-        public new static ScriptObjectListProperty_Registration Registration => ScriptObjectListProperty_Registration.Instance;
+        public new static ScriptObjectListProperty_Registration StaticRegistration => ScriptObjectListProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptObjectListPropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptObjectListProperty_Registration.Instance;
-        public new static ScriptObjectListProperty_Registration Registration => ScriptObjectListProperty_Registration.Instance;
+        public new static ScriptObjectListProperty_Registration StaticRegistration => ScriptObjectListProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptObjectListPropertyCommon.Instance;
         [DebuggerStepThrough]

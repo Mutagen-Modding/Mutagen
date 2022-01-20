@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ClothingData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ClothingData_Registration.Instance;
         UInt32 Value { get; }
         Single Weight { get; }
 
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClothingData_Registration.Instance;
-        public static ClothingData_Registration Registration => ClothingData_Registration.Instance;
+        public static ClothingData_Registration StaticRegistration => ClothingData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClothingDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClothingData_Registration.Instance;
-        public static ClothingData_Registration Registration => ClothingData_Registration.Instance;
+        public static ClothingData_Registration StaticRegistration => ClothingData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClothingDataCommon.Instance;
         [DebuggerStepThrough]

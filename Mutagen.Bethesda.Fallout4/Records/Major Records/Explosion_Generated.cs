@@ -344,6 +344,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Explosion>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IExplosion);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -443,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IExplosionGetter>,
         IMapsToGetter<IExplosionGetter>
     {
-        static new ILoquiRegistration Registration => Explosion_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Explosion_Registration.Instance;
 
     }
 
@@ -1133,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Explosion_Registration.Instance;
-        public new static Explosion_Registration Registration => Explosion_Registration.Instance;
+        public new static Explosion_Registration StaticRegistration => Explosion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ExplosionCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Explosion_Registration.Instance;
-        public new static Explosion_Registration Registration => Explosion_Registration.Instance;
+        public new static Explosion_Registration StaticRegistration => Explosion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ExplosionCommon.Instance;
         [DebuggerStepThrough]
@@ -1277,6 +1279,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IExplosion);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

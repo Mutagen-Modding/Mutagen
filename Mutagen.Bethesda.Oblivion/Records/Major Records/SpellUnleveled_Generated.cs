@@ -516,6 +516,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<SpellUnleveled>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISpellUnleveled);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -623,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => SpellUnleveled_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SpellUnleveled_Registration.Instance;
         ISpellDataGetter? Data { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
 
@@ -1515,7 +1517,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellUnleveled_Registration.Instance;
-        public new static SpellUnleveled_Registration Registration => SpellUnleveled_Registration.Instance;
+        public new static SpellUnleveled_Registration StaticRegistration => SpellUnleveled_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellUnleveledCommon.Instance;
         [DebuggerStepThrough]
@@ -1719,7 +1721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellUnleveled_Registration.Instance;
-        public new static SpellUnleveled_Registration Registration => SpellUnleveled_Registration.Instance;
+        public new static SpellUnleveled_Registration StaticRegistration => SpellUnleveled_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellUnleveledCommon.Instance;
         [DebuggerStepThrough]
@@ -1741,6 +1743,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISpellUnleveled);
+
 
         #region Data
         private RangeInt32? _DataLocation;

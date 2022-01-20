@@ -592,6 +592,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MaterialType>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMaterialType);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -706,7 +708,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => MaterialType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MaterialType_Registration.Instance;
         IFormLinkNullableGetter<IMaterialTypeGetter> Parent { get; }
         #region Name
         /// <summary>
@@ -1529,7 +1531,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialType_Registration.Instance;
-        public new static MaterialType_Registration Registration => MaterialType_Registration.Instance;
+        public new static MaterialType_Registration StaticRegistration => MaterialType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1755,7 +1757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialType_Registration.Instance;
-        public new static MaterialType_Registration Registration => MaterialType_Registration.Instance;
+        public new static MaterialType_Registration StaticRegistration => MaterialType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1777,6 +1779,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMaterialType);
+
 
         #region Parent
         private int? _ParentLocation;

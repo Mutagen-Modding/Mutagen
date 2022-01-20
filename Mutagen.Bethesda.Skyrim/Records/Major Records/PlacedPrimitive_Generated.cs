@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PlacedPrimitive_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PlacedPrimitive_Registration.Instance;
         P3Float Bounds { get; }
         Color Color { get; }
         Single Unknown { get; }
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedPrimitive_Registration.Instance;
-        public static PlacedPrimitive_Registration Registration => PlacedPrimitive_Registration.Instance;
+        public static PlacedPrimitive_Registration StaticRegistration => PlacedPrimitive_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlacedPrimitiveCommon.Instance;
         [DebuggerStepThrough]
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedPrimitive_Registration.Instance;
-        public static PlacedPrimitive_Registration Registration => PlacedPrimitive_Registration.Instance;
+        public static PlacedPrimitive_Registration StaticRegistration => PlacedPrimitive_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlacedPrimitiveCommon.Instance;
         [DebuggerStepThrough]

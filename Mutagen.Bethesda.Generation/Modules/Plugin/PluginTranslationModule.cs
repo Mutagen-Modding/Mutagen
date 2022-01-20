@@ -17,9 +17,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Strings.DI;
+using BoolType = Mutagen.Bethesda.Generation.Fields.BoolType;
+using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
+using EnumType = Mutagen.Bethesda.Generation.Fields.EnumType;
+using FloatType = Mutagen.Bethesda.Generation.Fields.FloatType;
+using PercentType = Mutagen.Bethesda.Generation.Fields.PercentType;
+using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -619,6 +626,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             yield return "Mutagen.Bethesda.Plugins.Binary.Translations";
             yield return "Mutagen.Bethesda.Plugins.Binary.Streams";
             yield return "Mutagen.Bethesda.Plugins.Exceptions";
+            
+            if (obj.GetObjectType() == ObjectType.Group && !obj.IsListGroup())
+            {
+                yield return $"Mutagen.Bethesda.{obj.ProtoGen.Protocol.Namespace}.Records";
+            }
 
             if (await LinkModule.HasLinks(obj, includeBaseClass: false) != LinkModule.LinkCase.No
                 || obj.IterateFields().Any(f => f is FormKeyType))
@@ -1788,6 +1800,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             using (var args = new ClassWrapper(fg, $"{BinaryOverlayClass(obj)}"))
             {
+                args.Abstract = obj.Abstract;
                 args.Partial = true;
                 var block = obj.GetObjectType() == ObjectType.Mod
                     || (obj.GetObjectType() == ObjectType.Group && obj.Generics.Count > 0);
@@ -1817,8 +1830,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     {
                         fg.AppendLine($"public {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{obj.GetObjectData().GameCategory};");
                     }
-                    fg.AppendLine($"IGroupCommonGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
-                    fg.AppendLine($"IGroupCommonGetter<IMajorRecordCommonGetter> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
+                    fg.AppendLine($"IGroupGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
+                    fg.AppendLine($"IGroupGetter {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
                     fg.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
                     fg.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
@@ -1874,6 +1887,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         fg.AppendLine("if (!_shouldDispose) return;");
                         fg.AppendLine("_data.Dispose();");
                     }
+                }
+
+                if (await obj.IsMajorRecord() && !obj.Abstract)
+                {
+                    fg.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: false)});");
+                    fg.AppendLine();
                 }
 
                 if (obj.GetObjectData().MajorRecordFlags)
@@ -2128,6 +2147,33 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         fg.AppendLine();
                     }
 
+                    if (obj.IsTopLevelGroup())
+                    {
+                        using (var args = new FunctionWrapper(fg,
+                                   $"public static {obj.Interface(getter: true)} {obj.Name}Factory"))
+                        {
+                            args.Add($"{nameof(IBinaryReadStream)} stream");
+                            args.Add("IReadOnlyList<RangeInt64> locs");
+                            args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                       $"var subGroups = locs.Select(x => {obj.ProtoGen.Protocol.Namespace}GroupFactory",
+                                       suffixLine: ").ToArray()"))
+                            {
+                                args.Add("new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package)");
+                                args.Add("package");
+                            }
+                            using (var args = new ArgsWrapper(fg,
+                                       $"return new {obj.ProtoGen.Protocol.Namespace}GroupWrapper<T>"))
+                            {
+                                args.Add($"new GroupMergeGetter<I{obj.ProtoGen.Protocol.Namespace}GroupGetter<T>, T>(subGroups)");
+                            }
+                        }
+                        fg.AppendLine();
+                    }
+
                     using (var args = new FunctionWrapper(fg,
                         $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                     {
@@ -2277,7 +2323,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
 
                         // Parse struct section ending positions 
-                        string structPassedAccessor = null;
+                        string? structPassedAccessor = null;
                         int? structPassedLen = 0;
                         await foreach (var lengths in IteratePassedLengths(
                             obj,

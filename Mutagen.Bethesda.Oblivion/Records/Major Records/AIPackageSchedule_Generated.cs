@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => AIPackageSchedule_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => AIPackageSchedule_Registration.Instance;
         Month Month { get; }
         Weekday DayOfWeek { get; }
         Byte Day { get; }
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
-        public static AIPackageSchedule_Registration Registration => AIPackageSchedule_Registration.Instance;
+        public static AIPackageSchedule_Registration StaticRegistration => AIPackageSchedule_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageScheduleCommon.Instance;
         [DebuggerStepThrough]
@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
-        public static AIPackageSchedule_Registration Registration => AIPackageSchedule_Registration.Instance;
+        public static AIPackageSchedule_Registration StaticRegistration => AIPackageSchedule_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageScheduleCommon.Instance;
         [DebuggerStepThrough]

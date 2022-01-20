@@ -7,8 +7,10 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
+using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -125,6 +127,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 fg.AppendLine($"return MajorRecordPrinter<{obj.Name}>.ToString(this);");
             }
             fg.AppendLine();
+
+            if (!obj.Abstract)
+            {
+                fg.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: false)});");
+                fg.AppendLine();
+            }
         }
 
         public static async Task<Case> HasMajorRecordsInTree(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
@@ -167,7 +175,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
         public static async Task<Case> HasMajorRecords(ObjectGeneration obj, bool includeBaseClass, bool includeSelf, GenericSpecification specifications = null)
         {
-            if (obj.Name == "ListGroup") return Case.Yes;
+            if (obj.Name.EndsWith("ListGroup")) return Case.Yes;
             foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
             {
                 if (field is LoquiType loqui)

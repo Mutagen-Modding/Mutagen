@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         ILoquiObject<IRegionWeatherGetter>
     {
-        static new ILoquiRegistration Registration => RegionWeather_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => RegionWeather_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
 
     }
@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionWeather_Registration.Instance;
-        public new static RegionWeather_Registration Registration => RegionWeather_Registration.Instance;
+        public new static RegionWeather_Registration StaticRegistration => RegionWeather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionWeatherCommon.Instance;
         [DebuggerStepThrough]
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionWeather_Registration.Instance;
-        public new static RegionWeather_Registration Registration => RegionWeather_Registration.Instance;
+        public new static RegionWeather_Registration StaticRegistration => RegionWeather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionWeatherCommon.Instance;
         [DebuggerStepThrough]

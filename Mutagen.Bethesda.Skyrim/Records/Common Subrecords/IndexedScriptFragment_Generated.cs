@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => IndexedScriptFragment_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => IndexedScriptFragment_Registration.Instance;
         UInt16 FragmentIndex { get; }
         Int16 Unknown { get; }
         SByte Unknown2 { get; }
@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IndexedScriptFragment_Registration.Instance;
-        public static IndexedScriptFragment_Registration Registration => IndexedScriptFragment_Registration.Instance;
+        public static IndexedScriptFragment_Registration StaticRegistration => IndexedScriptFragment_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IndexedScriptFragmentCommon.Instance;
         [DebuggerStepThrough]
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IndexedScriptFragment_Registration.Instance;
-        public static IndexedScriptFragment_Registration Registration => IndexedScriptFragment_Registration.Instance;
+        public static IndexedScriptFragment_Registration StaticRegistration => IndexedScriptFragment_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IndexedScriptFragmentCommon.Instance;
         [DebuggerStepThrough]

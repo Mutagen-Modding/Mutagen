@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Properties_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Properties_Registration.Instance;
         IReadOnlyList<Single> PropertyList { get; }
 
     }
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Properties_Registration.Instance;
-        public static Properties_Registration Registration => Properties_Registration.Instance;
+        public static Properties_Registration StaticRegistration => Properties_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PropertiesCommon.Instance;
         [DebuggerStepThrough]
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Properties_Registration.Instance;
-        public static Properties_Registration Registration => Properties_Registration.Instance;
+        public static Properties_Registration StaticRegistration => Properties_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PropertiesCommon.Instance;
         [DebuggerStepThrough]

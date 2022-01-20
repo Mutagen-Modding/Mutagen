@@ -1399,6 +1399,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Race>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IRace);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1528,7 +1530,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Race_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -2895,7 +2897,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration Registration => Race_Registration.Instance;
+        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
@@ -3004,13 +3006,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.RaceStats,
                 recordType: RecordTypes.ATTR,
-                transl: (MutagenWriter subWriter, IRaceStatsGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IRaceStatsGetter subItem) =>
                 {
                     var Item = subItem;
                     ((RaceStatsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
+                        writer: subWriter);
                 });
             using (HeaderExport.Subrecord(writer, RecordTypes.NAM0)) { }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFacePartGetter>.Instance.Write(
@@ -3334,7 +3335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration Registration => Race_Registration.Instance;
+        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
@@ -3356,6 +3357,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRace);
+
 
         #region Name
         private int? _NameLocation;

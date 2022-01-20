@@ -1056,7 +1056,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType triggeringRecord,
             BinarySubParseDelegate<MutagenFrame, T> transl)
         {
-            item.SetTo(
+            // Should normally be SetTo, but since we want duplicate groups to merge, we're doing an Add.
+            // A clear is assumed to be run by the caller ahead of time before starting to fill.
+            item.Set(
                 Parse(
                     reader,
                     triggeringRecord,

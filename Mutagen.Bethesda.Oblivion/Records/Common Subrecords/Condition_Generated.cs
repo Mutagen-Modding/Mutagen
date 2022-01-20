@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Condition_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Condition_Registration.Instance;
         CompareOperator CompareOperator { get; }
         Condition.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Fluff { get; }
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
-        public static Condition_Registration Registration => Condition_Registration.Instance;
+        public static Condition_Registration StaticRegistration => Condition_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ConditionCommon.Instance;
         [DebuggerStepThrough]
@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
-        public static Condition_Registration Registration => Condition_Registration.Instance;
+        public static Condition_Registration StaticRegistration => Condition_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ConditionCommon.Instance;
         [DebuggerStepThrough]

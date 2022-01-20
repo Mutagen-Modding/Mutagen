@@ -848,6 +848,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Clothing>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IClothing);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -970,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Clothing_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Clothing_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -2126,7 +2128,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Clothing_Registration.Instance;
-        public new static Clothing_Registration Registration => Clothing_Registration.Instance;
+        public new static Clothing_Registration StaticRegistration => Clothing_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClothingCommon.Instance;
         [DebuggerStepThrough]
@@ -2434,7 +2436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Clothing_Registration.Instance;
-        public new static Clothing_Registration Registration => Clothing_Registration.Instance;
+        public new static Clothing_Registration StaticRegistration => Clothing_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClothingCommon.Instance;
         [DebuggerStepThrough]
@@ -2456,6 +2458,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IClothing);
+
 
         #region Name
         private int? _NameLocation;

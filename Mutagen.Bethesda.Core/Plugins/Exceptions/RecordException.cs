@@ -47,12 +47,12 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
         }
 
         #region Enrich
-        public static RecordException Enrich(Exception ex, IMajorRecordCommonGetter majorRec)
+        public static RecordException Enrich(Exception ex, IMajorRecordGetter majorRec)
         {
             return Enrich(ex, majorRec.FormKey, majorRec.Registration.ClassType, majorRec.EditorID);
         }
 
-        public static RecordException Enrich(Exception ex, ModKey? modKey, IMajorRecordCommonGetter majorRec)
+        public static RecordException Enrich(Exception ex, ModKey? modKey, IMajorRecordGetter majorRec)
         {
             return Enrich(ex, majorRec.FormKey, majorRec.Registration.ClassType, majorRec.EditorID, modKey);
         }
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
         }
 
         public static RecordException Enrich<TMajor>(Exception ex, FormKey? formKey, string? edid, ModKey? modKey = null)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             return Enrich(
                 ex,
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
         #endregion
 
         #region Create
-        public static RecordException Create(string message, IMajorRecordCommonGetter majorRec, Exception? innerException = null)
+        public static RecordException Create(string message, IMajorRecordGetter majorRec, Exception? innerException = null)
         {
             return new RecordException(
                 formKey: majorRec.FormKey,
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
                 innerException: innerException);
         }
 
-        public static RecordException Create(string message, ModKey? modKey, IMajorRecordCommonGetter majorRec, Exception? innerException = null)
+        public static RecordException Create(string message, ModKey? modKey, IMajorRecordGetter majorRec, Exception? innerException = null)
         {
             return new RecordException(
                 formKey: majorRec.FormKey,
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
         }
 
         public static RecordException Create<TMajor>(string message, FormKey? formKey, string? edid, ModKey? modKey = null, Exception? innerException = null)
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             return Create(
                 message: message,
@@ -188,13 +188,13 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
 
         #region Deprectiated
         [Obsolete("Use Enrich instead")]
-        public static RecordException Factory(Exception ex, IMajorRecordCommonGetter majorRec)
+        public static RecordException Factory(Exception ex, IMajorRecordGetter majorRec)
         {
             return Enrich(ex, majorRec.FormKey, majorRec.Registration.ClassType, majorRec.EditorID);
         }
 
         [Obsolete("Use Enrich instead")]
-        public static RecordException Factory(Exception ex, ModKey? modKey, IMajorRecordCommonGetter majorRec)
+        public static RecordException Factory(Exception ex, ModKey? modKey, IMajorRecordGetter majorRec)
         {
             return Enrich(ex, majorRec.FormKey, majorRec.Registration.ClassType, majorRec.EditorID, modKey);
         }
@@ -212,13 +212,13 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
         }
 
         [Obsolete("Use Create instead")]
-        public static RecordException Factory(string message, IMajorRecordCommonGetter majorRec, Exception? innerException = null)
+        public static RecordException Factory(string message, IMajorRecordGetter majorRec, Exception? innerException = null)
         {
             return Create(message, majorRec, innerException);
         }
 
         [Obsolete("Use Create instead")]
-        public static RecordException Factory(string message, ModKey? modKey, IMajorRecordCommonGetter majorRec, Exception? innerException = null)
+        public static RecordException Factory(string message, ModKey? modKey, IMajorRecordGetter majorRec, Exception? innerException = null)
         {
             return Create(message, modKey, majorRec, innerException);
         }

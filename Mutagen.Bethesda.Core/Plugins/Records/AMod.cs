@@ -50,18 +50,19 @@ namespace Mutagen.Bethesda.Plugins.Records
         public abstract bool CanUseLocalization { get; }
         public abstract bool UsingLocalization { get; set; }
         bool IModGetter.UsingLocalization => throw new NotImplementedException();
-        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => throw new NotImplementedException();
+        IGroup<T> IMod.GetTopLevelGroup<T>() => throw new NotImplementedException();
+        IGroup IMod.GetTopLevelGroup(Type t) => throw new NotImplementedException();
         public abstract void SyncRecordCount();
-        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => throw new NotImplementedException();
-        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => throw new NotImplementedException();
+        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => throw new NotImplementedException();
+        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => throw new NotImplementedException();
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => throw new NotImplementedException();
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => throw new NotImplementedException();
         IEnumerable<T> IMajorRecordEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown) => throw new NotImplementedException();
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => throw new NotImplementedException();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => throw new NotImplementedException();
         IEnumerable<T> IMajorRecordGetterEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown) => throw new NotImplementedException();
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => throw new NotImplementedException();
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => throw new NotImplementedException();
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? t, bool throwIfUnknown) => throw new NotImplementedException();
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => throw new NotImplementedException();
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => throw new NotImplementedException();
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? t, bool throwIfUnknown) => throw new NotImplementedException();
         void IMajorRecordEnumerable.Remove(FormKey formKey) => throw new NotImplementedException();
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => throw new NotImplementedException();
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => throw new NotImplementedException();
@@ -78,7 +79,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         {
             throw new NotImplementedException();
         }
-        IEnumerable<IModContext<IMajorRecordCommonGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type t, bool throwIfUnknown = true) => throw new NotImplementedException();
+        IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type t, bool throwIfUnknown = true) => throw new NotImplementedException();
         #endregion
 
         /// <inheritdoc />

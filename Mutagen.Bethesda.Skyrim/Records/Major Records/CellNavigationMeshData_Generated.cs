@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<ICellNavigationMeshDataGetter>
     {
-        static new ILoquiRegistration Registration => CellNavigationMeshData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CellNavigationMeshData_Registration.Instance;
         IFormLinkGetter<IWorldspaceGetter> UnusedWorldspaceParent { get; }
         IFormLinkGetter<ICellGetter> Parent { get; }
 
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellNavigationMeshData_Registration.Instance;
-        public new static CellNavigationMeshData_Registration Registration => CellNavigationMeshData_Registration.Instance;
+        public new static CellNavigationMeshData_Registration StaticRegistration => CellNavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellNavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellNavigationMeshData_Registration.Instance;
-        public new static CellNavigationMeshData_Registration Registration => CellNavigationMeshData_Registration.Instance;
+        public new static CellNavigationMeshData_Registration StaticRegistration => CellNavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellNavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]

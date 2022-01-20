@@ -638,6 +638,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Light>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILight);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -760,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Light_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Light_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1666,7 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
-        public new static Light_Registration Registration => Light_Registration.Instance;
+        public new static Light_Registration StaticRegistration => Light_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LightCommon.Instance;
         [DebuggerStepThrough]
@@ -1907,7 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
-        public new static Light_Registration Registration => Light_Registration.Instance;
+        public new static Light_Registration StaticRegistration => Light_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LightCommon.Instance;
         [DebuggerStepThrough]
@@ -1929,6 +1931,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILight);
+
 
         public IModelGetter? Model { get; private set; }
         #region Script

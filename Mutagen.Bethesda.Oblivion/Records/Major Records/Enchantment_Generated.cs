@@ -560,6 +560,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Enchantment>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IEnchantment);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -671,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Enchantment_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Enchantment_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1494,7 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
-        public new static Enchantment_Registration Registration => Enchantment_Registration.Instance;
+        public new static Enchantment_Registration StaticRegistration => Enchantment_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EnchantmentCommon.Instance;
         [DebuggerStepThrough]
@@ -1700,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
-        public new static Enchantment_Registration Registration => Enchantment_Registration.Instance;
+        public new static Enchantment_Registration StaticRegistration => Enchantment_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EnchantmentCommon.Instance;
         [DebuggerStepThrough]
@@ -1722,6 +1724,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IEnchantment);
+
 
         #region Name
         private int? _NameLocation;

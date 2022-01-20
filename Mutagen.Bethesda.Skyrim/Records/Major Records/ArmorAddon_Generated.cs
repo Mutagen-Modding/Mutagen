@@ -1027,6 +1027,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ArmorAddon>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IArmorAddon);
+
         [Flags]
         public enum DNAMDataType
         {
@@ -1154,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IArmorAddonGetter>,
         IMapsToGetter<IArmorAddonGetter>
     {
-        static new ILoquiRegistration Registration => ArmorAddon_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ArmorAddon_Registration.Instance;
         IBodyTemplateGetter? BodyTemplate { get; }
         IFormLinkNullableGetter<IRaceGetter> Race { get; }
         IGenderedItemGetter<Byte> Priority { get; }
@@ -2342,7 +2344,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorAddon_Registration.Instance;
-        public new static ArmorAddon_Registration Registration => ArmorAddon_Registration.Instance;
+        public new static ArmorAddon_Registration StaticRegistration => ArmorAddon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorAddonCommon.Instance;
         [DebuggerStepThrough]
@@ -2732,7 +2734,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorAddon_Registration.Instance;
-        public new static ArmorAddon_Registration Registration => ArmorAddon_Registration.Instance;
+        public new static ArmorAddon_Registration StaticRegistration => ArmorAddon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorAddonCommon.Instance;
         [DebuggerStepThrough]
@@ -2754,6 +2756,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IArmorAddon);
+
 
         #region BodyTemplate
         partial void BodyTemplateCustomParse(
@@ -2776,7 +2780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             get
             {
                 if (!_Priority_IsSet) return new GenderedItem<Byte>(default, default);
-                var data = _data.Span.Slice(_PriorityLocation);
+                var data = _data.Slice(_PriorityLocation);
                 return new GenderedItem<Byte>(
                     data[0],
                     data.Slice(1)[0]);

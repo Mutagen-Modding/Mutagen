@@ -444,6 +444,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<StoryManagerBranchNode>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IStoryManagerBranchNode);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -545,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IStoryManagerBranchNodeGetter>,
         IMapsToGetter<IStoryManagerBranchNodeGetter>
     {
-        static new ILoquiRegistration Registration => StoryManagerBranchNode_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => StoryManagerBranchNode_Registration.Instance;
         AStoryManagerNode.Flag? Flags { get; }
         ReadOnlyMemorySlice<Byte>? XNAM { get; }
 
@@ -1387,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerBranchNode_Registration.Instance;
-        public new static StoryManagerBranchNode_Registration Registration => StoryManagerBranchNode_Registration.Instance;
+        public new static StoryManagerBranchNode_Registration StaticRegistration => StoryManagerBranchNode_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StoryManagerBranchNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1580,7 +1582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerBranchNode_Registration.Instance;
-        public new static StoryManagerBranchNode_Registration Registration => StoryManagerBranchNode_Registration.Instance;
+        public new static StoryManagerBranchNode_Registration StaticRegistration => StoryManagerBranchNode_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StoryManagerBranchNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1601,6 +1603,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IStoryManagerBranchNode);
+
 
         #region Flags
         private int? _FlagsLocation;

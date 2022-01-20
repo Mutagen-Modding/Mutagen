@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeatherType_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeatherType_Registration.Instance;
         IFormLinkGetter<IWeatherGetter> Weather { get; }
         Int32 Chance { get; }
         IFormLinkGetter<IGlobalGetter> Global { get; }
@@ -1039,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherType_Registration.Instance;
-        public static WeatherType_Registration Registration => WeatherType_Registration.Instance;
+        public static WeatherType_Registration StaticRegistration => WeatherType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherType_Registration.Instance;
-        public static WeatherType_Registration Registration => WeatherType_Registration.Instance;
+        public static WeatherType_Registration StaticRegistration => WeatherType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherTypeCommon.Instance;
         [DebuggerStepThrough]

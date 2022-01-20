@@ -651,6 +651,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<AIPackage>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IAIPackage);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -757,7 +759,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IAIPackageGetter>,
         IMapsToGetter<IAIPackageGetter>
     {
-        static new ILoquiRegistration Registration => AIPackage_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AIPackage_Registration.Instance;
         IAIPackageDataGetter? Data { get; }
         IAIPackageLocationGetter? Location { get; }
         IAIPackageScheduleGetter? Schedule { get; }
@@ -1710,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
-        public new static AIPackage_Registration Registration => AIPackage_Registration.Instance;
+        public new static AIPackage_Registration StaticRegistration => AIPackage_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AIPackageCommon.Instance;
         [DebuggerStepThrough]
@@ -1939,7 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
-        public new static AIPackage_Registration Registration => AIPackage_Registration.Instance;
+        public new static AIPackage_Registration StaticRegistration => AIPackage_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AIPackageCommon.Instance;
         [DebuggerStepThrough]
@@ -1961,6 +1963,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IAIPackage);
+
 
         #region Data
         private RangeInt32? _DataLocation;

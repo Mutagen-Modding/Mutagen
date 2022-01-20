@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SkillBoost_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SkillBoost_Registration.Instance;
         ActorValue Skill { get; }
         SByte Boost { get; }
 
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
-        public static SkillBoost_Registration Registration => SkillBoost_Registration.Instance;
+        public static SkillBoost_Registration StaticRegistration => SkillBoost_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkillBoostCommon.Instance;
         [DebuggerStepThrough]
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
-        public static SkillBoost_Registration Registration => SkillBoost_Registration.Instance;
+        public static SkillBoost_Registration StaticRegistration => SkillBoost_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkillBoostCommon.Instance;
         [DebuggerStepThrough]

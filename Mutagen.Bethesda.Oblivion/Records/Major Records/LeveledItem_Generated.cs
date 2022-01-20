@@ -533,6 +533,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<LeveledItem>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILeveledItem);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -639,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ILeveledItemGetter>,
         IMapsToGetter<ILeveledItemGetter>
     {
-        static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
         IReadOnlyList<ILeveledItemEntryGetter> Entries { get; }
@@ -1427,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
-        public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
+        public new static LeveledItem_Registration StaticRegistration => LeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1656,7 +1658,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
-        public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
+        public new static LeveledItem_Registration StaticRegistration => LeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1678,6 +1680,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILeveledItem);
+
 
         #region ChanceNone
         private int? _ChanceNoneLocation;
