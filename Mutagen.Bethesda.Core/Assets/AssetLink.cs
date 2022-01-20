@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SqlTypes;
 using System.IO;
 
 namespace Mutagen.Bethesda.Assets;
@@ -7,7 +6,7 @@ namespace Mutagen.Bethesda.Assets;
 /// <summary>
 /// Asset referenced by a record
 /// </summary>
-public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetType>>, INullable, IAssetLinkGetter
+public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetType>>, IAssetLinkGetter
     where TAssetType : IAssetType
 {
     public AssetLinkGetter(string RawPath, IAssetType AssetType)
