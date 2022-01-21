@@ -75,14 +75,6 @@ public class AssetLink<TAssetType> : AssetLinkGetter<TAssetType>, IComparable<As
     {
     }
 
-    public new string RawPath => _rawPath;
-
-    public new string DataRelativePath => RawPath.StartsWith(AssetType.BaseFolder)
-        ? RawPath
-        : Path.Combine(AssetType.BaseFolder, RawPath);
-
-    public new string Extension => Path.GetExtension(RawPath).TrimStart('.');
-
     public  bool TrySetPath(string? path)
     {
         if (path == null)
