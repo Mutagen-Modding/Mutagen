@@ -79,6 +79,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             {
                 PreferDirectTranslation = false
             };
+            this._typeGenerations[typeof(AssetLinkType)] = new AssetLinkBinaryTranslationGeneration()
+            {
+                PreferDirectTranslation = false
+            };
             this._typeGenerations[typeof(FilePathType)] = new FilePathBinaryTranslationGeneration();
             this._typeGenerations[typeof(UInt8Type)] = new ByteBinaryTranslationGeneration();
             this._typeGenerations[typeof(UInt16Type)] = new PrimitiveBinaryTranslationGeneration<ushort>(expectedLen: 2);

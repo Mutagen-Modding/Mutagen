@@ -76,6 +76,7 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<GroupType>("Group");
             gen.AddTypeAssociation<GenderedType>("Gendered");
             gen.AddTypeAssociation<BreakType>("Break");
+            gen.AddTypeAssociation<AssetLinkType>("AssetLink");
             gen.AddTypeAssociation<MarkerType>("Marker");
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, EnumType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.StringType, StringType>();

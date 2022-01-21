@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         {
         }
 
+        public virtual Accessor AccessorTransform(Accessor a) => a;
+
         public override async Task GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen,
@@ -58,7 +60,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 $"{this.NamespacePrefix}StringBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"item: {itemAccessor}");
+                args.Add($"item: {AccessorTransform(itemAccessor)}");
                 if (this.DoErrorMasks)
                 {
                     if (typeGen.HasIndex)
@@ -125,7 +127,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     TypeGen = typeGen,
                     TranslatorLine = $"{this.NamespacePrefix}StringBinaryTranslation.Instance",
                     MaskAccessor = errorMaskAccessor,
-                    ItemAccessor = itemAccessor,
+                    ItemAccessor = AccessorTransform(itemAccessor),
                     TranslationMaskAccessor = null,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                     ExtraArgs = extraArgs.ToArray(),

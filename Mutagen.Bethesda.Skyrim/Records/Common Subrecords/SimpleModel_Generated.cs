@@ -6,6 +6,7 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -17,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -53,7 +55,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region File
-        public String File { get; set; } = string.Empty;
+        public IAssetLink<SkyrimModelAssetType> File { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        IAssetLinkGetter<SkyrimModelAssetType> ISimpleModelGetter.File => this.File;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -475,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ISimpleModel>,
         ISimpleModelGetter
     {
-        new String File { get; set; }
+        new IAssetLink<SkyrimModelAssetType> File { get; set; }
         new MemorySlice<Byte>? Data { get; set; }
     }
 
@@ -495,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
-        String File { get; }
+        IAssetLinkGetter<SkyrimModelAssetType> File { get; }
         ReadOnlyMemorySlice<Byte>? Data { get; }
 
     }
@@ -756,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Clear(ISimpleModel item)
         {
             ClearPartial();
-            item.File = string.Empty;
+            item.File = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
             item.Data = default;
         }
         
@@ -926,10 +929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.File) ?? true))
-            {
-                item.File = rhs.File;
-            }
+            item.File.RawPath = rhs.File.RawPath;
             if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
                 if(rhs.Data is {} Datarhs)
@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.File,
+                item: item.File.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MODL),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SimpleModel_FieldIndex.File) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.File = StringBinaryTranslation.Instance.Parse(
+                    item.File.RawPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)SimpleModel_FieldIndex.File;
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region File
         private int? _FileLocation;
-        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileLocation.Value, _package.MetaData.Constants)) : string.Empty;
+        public IAssetLinkGetter<SkyrimModelAssetType> File => _FileLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileLocation.Value, _package.MetaData.Constants))) : new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
         #endregion
         #region Data
         private int? _DataLocation;

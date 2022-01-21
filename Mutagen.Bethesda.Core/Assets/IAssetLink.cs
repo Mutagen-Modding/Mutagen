@@ -18,7 +18,8 @@ public interface IAssetPath
     string Extension { get; }
 }
 
-public interface IAssetLinkGetter<out TAssetType> where TAssetType : IAssetType
+public interface IAssetLinkGetter<out TAssetType> : IAssetPath
+    where TAssetType : IAssetType
 {
     /// <summary>
     /// Type of asset`

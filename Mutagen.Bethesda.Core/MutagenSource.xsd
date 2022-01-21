@@ -405,7 +405,8 @@
         <xs:element name="FormLink" type="NFormLink"/>
         <xs:element name="FormID" type="NFormID"/>
         <xs:element name="FormKey" type="NFormKey"/>
-        <xs:element name="ModKey" type="NModKey"/>
+		<xs:element name="ModKey" type="NModKey"/>
+		<xs:element name="AssetLink" type="NAssetLink"/>
         <xs:element name="RecordType" type="NRecordType"/>
         <xs:element name="Buffer" type="NBuffer"/>
         <xs:element name="Data" type="DataType" />
@@ -424,7 +425,8 @@
         <xs:element name="FormLink" type="FormLink"/>
         <xs:element name="FormID" type="FormID"/>
         <xs:element name="FormKey" type="FormKey"/>
-        <xs:element name="ModKey" type="ModKey"/>
+		<xs:element name="ModKey" type="ModKey"/>
+		<xs:element name="AssetLink" type="AssetLink"/>
         <xs:element name="RecordType" type="RecordType"/>
         <xs:element name="Buffer" type="Buffer"/>
         <xs:element name="Zero" type="ZeroType"/>
@@ -606,11 +608,11 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="FormKey" >
-    <xs:complexContent>
-      <xs:extension base="Field" />
-    </xs:complexContent>
-  </xs:complexType>
+	<xs:complexType name="FormKey" >
+		<xs:complexContent>
+			<xs:extension base="Field" />
+		</xs:complexContent>
+	</xs:complexType>
 
   <xs:complexType name="NFormKey" >
     <xs:complexContent>
@@ -734,5 +736,21 @@
     <xs:attribute name="refName" use="required" />
     <xs:attribute name="edidLinked" />
   </xs:complexType>
+
+	<xs:complexType name="AssetLink" >
+		<xs:complexContent>
+			<xs:extension base="String" >
+				<xs:attribute name="assetType" type="xs:string" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NAssetLink" >
+		<xs:complexContent>
+			<xs:extension base="AssetLink">
+				<xs:attribute name="name" type="xs:string" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
   
 </xs:schema>
