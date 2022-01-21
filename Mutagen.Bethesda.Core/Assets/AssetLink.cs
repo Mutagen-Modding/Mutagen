@@ -19,7 +19,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
     
     public AssetLinkGetter(TAssetType assetType)
     {
-        _rawPath = string.Empty;
+        _rawPath = IAssetPath.NullPath;
         AssetType = assetType;
     }
 
@@ -55,7 +55,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
         return ReferenceEquals(null, other) ? 1 : string.Compare(RawPath, other.RawPath, StringComparison.Ordinal);
     }
     
-    public bool IsNull => RawPath == string.Empty;
+    public bool IsNull => RawPath == IAssetPath.NullPath;
 }
 
 /// <summary>
@@ -101,7 +101,7 @@ public class AssetLink<TAssetType> : AssetLinkGetter<TAssetType>, IComparable<As
 
     public void SetToNull()
     {
-        RawPath = string.Empty;
+        _rawPath = IAssetPath.NullPath;
     }
 
     public override string ToString()
