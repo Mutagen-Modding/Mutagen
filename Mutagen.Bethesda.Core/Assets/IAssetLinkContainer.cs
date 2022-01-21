@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Mutagen.Bethesda.Plugins.Cache;
 
 namespace Mutagen.Bethesda.Assets;
 
@@ -15,7 +16,7 @@ public interface IAssetLinkContainer : IAssetLinkContainerGetter
     /// <summary>
     /// Enumerable of all contained assets
     /// </summary>
-    new IEnumerable<IAssetLink> ContainedAssetLinks { get; }
+    IEnumerable<IAssetLink> EnumerateAssetLinks();
 }
 
 /// <summary>
@@ -26,5 +27,5 @@ public interface IAssetLinkContainerGetter
     /// <summary>
     /// Enumerable of all contained assets
     /// </summary>
-    IEnumerable<IAssetLinkGetter> ContainedAssetLinks { get; }
+    IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache = null, bool includeImplicit = true);
 }
