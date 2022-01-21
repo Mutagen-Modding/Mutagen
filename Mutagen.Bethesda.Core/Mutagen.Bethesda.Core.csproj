@@ -552,7 +552,7 @@
     <Compile Include="Plugins\FormLink.cs" />
     <Compile Include="Plugins\IEDIDLink.cs" />
     <Compile Include="Plugins\ILink.cs" />
-    <Compile Include="Plugins\Records\IFormLinkContainerGetter.cs" />
+    <Compile Include="Plugins\Records\IFormLinkContainer.cs" />
     <Compile Include="Plugins\Binary\Processing\ModDecompressor.cs" />
     <Compile Include="Plugins\Order\ModListing.cs" />
     <Compile Include="Plugins\Binary\Processing\ModRecordSorter.cs" />

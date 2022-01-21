@@ -26,7 +26,7 @@ public class PluginModule : GenerationModule
         SubModules.Add(new CorrectnessModule());
         SubModules.Add(new ModModule());
         SubModules.Add(new ColorTypeModule());
-        SubModules.Add(new LinkModule());
+        SubModules.Add(new ContainedFormLinksModule());
         SubModules.Add(new MajorRecordModule());
         SubModules.Add(new MajorRecordEnumerationModule());
         SubModules.Add(new ContainerParentModule());

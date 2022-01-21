@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 yield return $"Mutagen.Bethesda.{obj.ProtoGen.Protocol.Namespace}.Records";
             }
 
-            if (await LinkModule.HasLinks(obj, includeBaseClass: false) != Case.No
+            if (await ContainedFormLinksModule.HasLinks(obj, includeBaseClass: false) != Case.No
                 || obj.IterateFields().Any(f => f is FormKeyType))
             {
                 yield return "Mutagen.Bethesda.Plugins.Cache";
@@ -1853,9 +1853,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
 
                 if (obj.GetObjectType() == ObjectType.Mod
-                    || (await LinkModule.HasLinks(obj, includeBaseClass: false) != Case.No))
+                    || (await ContainedFormLinksModule.HasLinks(obj, includeBaseClass: false) != Case.No))
                 {
-                    await LinkModule.GenerateInterfaceImplementation(obj, fg, getter: true);
+                    await ContainedFormLinksModule.GenerateInterfaceImplementation(obj, fg, getter: true);
                 }
 
                 if (obj.GetObjectType() == ObjectType.Mod)
