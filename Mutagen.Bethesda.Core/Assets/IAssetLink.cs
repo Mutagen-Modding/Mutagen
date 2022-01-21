@@ -5,6 +5,7 @@ public interface IAssetPath
 {
     protected static readonly StringComparison PathComparison = StringComparison.OrdinalIgnoreCase;
     protected static readonly StringComparer PathComparer = StringComparer.FromComparison(PathComparison);
+    protected static readonly string NullPath = string.Empty;
     
     /// <summary>
     /// Raw path relative to the game's data directory

@@ -20,7 +20,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
     
     public AssetLinkGetter(TAssetType assetType)
     {
-        _rawPath = _path = string.Empty;
+        _rawPath = _path = IAssetPath.NullPath;
         AssetType = assetType;
     }
 
@@ -56,7 +56,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
         return IAssetPath.PathComparer.Compare(Path, other.Path);
     }
     
-    public bool IsNull => Path == string.Empty;
+    public bool IsNull => Path == IAssetPath.NullPath;
     
     protected string GetDataRelativePath(string path)
     {
@@ -106,7 +106,7 @@ public class AssetLink<TAssetType> : AssetLinkGetter<TAssetType>, IComparable<As
 
     public void SetToNull()
     {
-        _rawPath = Path = string.Empty;
+        _rawPath = Path = IAssetPath.NullPath;
     }
 
     public override string ToString()
