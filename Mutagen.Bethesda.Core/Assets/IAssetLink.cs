@@ -3,14 +3,9 @@
 public interface IAssetPath
 {
     /// <summary>
-    /// Raw path pointing to the asset
-    /// </summary>
-    string RawPath { get; }
-
-    /// <summary>
     /// Raw path relative to the game's data directory
     /// </summary>
-    string DataRelativePath { get; }
+    string Path { get; }
 
     /// <summary>
     /// Extension of the asset
@@ -35,9 +30,9 @@ public interface IAssetLink<out TAssetType> : IAssetLinkGetter<TAssetType>
     where TAssetType : IAssetType
 {
     /// <summary>
-    /// Raw path pointing to the asset
+    /// Raw path relative to the game's data directory
     /// </summary>
-    new string RawPath { get; set; }
+    string Path { get; set; }
 }
 
 public interface IAssetLink : IAssetLink<IAssetType>
