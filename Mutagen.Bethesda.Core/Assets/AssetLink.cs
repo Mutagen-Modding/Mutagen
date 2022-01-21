@@ -45,14 +45,15 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     public override int GetHashCode()
     {
-        return RawPath.GetHashCode();
+        return IAssetPath.PathComparer.GetHashCode(RawPath);
     }
 
     public int CompareTo(AssetLinkGetter<TAssetType>? other)
     {
         if (ReferenceEquals(this, other)) return 0;
+        if (ReferenceEquals(null, other)) return 1;
 
-        return ReferenceEquals(null, other) ? 1 : string.Compare(RawPath, other.RawPath, StringComparison.Ordinal);
+        return IAssetPath.PathComparer.Compare(RawPath, other.RawPath);
     }
     
     public bool IsNull => RawPath == IAssetPath.NullPath;
@@ -114,13 +115,14 @@ public class AssetLink<TAssetType> : AssetLinkGetter<TAssetType>, IComparable<As
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
 
-        return DataRelativePath == other.DataRelativePath;
+        return IAssetPath.PathComparer.Equals(RawPath, other.RawPath);
     }
 
     public int CompareTo(AssetLink<TAssetType>? other)
     {
         if (ReferenceEquals(this, other)) return 0;
+        if (ReferenceEquals(null, other)) return 1;
 
-        return ReferenceEquals(null, other) ? 1 : string.Compare(RawPath, other.RawPath, StringComparison.Ordinal);
+        return IAssetPath.PathComparer.Compare(RawPath, other.RawPath);
     }
 }
