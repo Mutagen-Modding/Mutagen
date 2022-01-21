@@ -6,17 +6,25 @@ namespace Mutagen.Bethesda.Assets;
 /// <summary>
 /// Asset referenced by a record
 /// </summary>
-public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetType>>, IAssetLinkGetter
+public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetType>>, IAssetLinkGetter<TAssetType>
     where TAssetType : IAssetType
 {
-    public AssetLinkGetter(string RawPath, IAssetType AssetType)
+    protected string _rawPath;
+    
+    public AssetLinkGetter(TAssetType assetType, string rawPath)
     {
-        this.RawPath = RawPath;
-        this.AssetType = AssetType;
+        _rawPath = rawPath;
+        AssetType = assetType;
+    }
+    
+    public AssetLinkGetter(TAssetType assetType)
+    {
+        _rawPath = string.Empty;
+        AssetType = assetType;
     }
 
-    public string RawPath { get; }
-    public IAssetType AssetType { get; }
+    public string RawPath => _rawPath;
+    public TAssetType AssetType { get; }
 
     public string DataRelativePath => Path.Combine(AssetType.BaseFolder, RawPath);
 
@@ -53,18 +61,24 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 /// <summary>
 /// Asset referenced by a record
 /// </summary>
-public class AssetLink<TAssetType> : AssetLinkGetter<TAssetType>, IComparable<AssetLink<TAssetType>>, IAssetLink
+public class AssetLink<TAssetType> : AssetLinkGetter<TAssetType>, IComparable<AssetLink<TAssetType>>, IAssetLink<TAssetType>
     where TAssetType : IAssetType
 {
-    public AssetLink(string RawPath, IAssetType AssetType) : base(RawPath, AssetType)
+    public AssetLink(TAssetType assetType, string rawPath)
+        : base(assetType, rawPath)
     {
-        this.RawPath = RawPath;
-        this.AssetType = AssetType;
+    }
+    
+    public AssetLink(TAssetType assetType) 
+        : base(assetType)
+    {
     }
 
-    public new string RawPath { get; set; }
-
-    public new IAssetType AssetType { get; set; }
+    public new string RawPath
+    {
+        get => _rawPath;
+        set => _rawPath = value;
+    }
 
     public new string DataRelativePath => RawPath.StartsWith(AssetType.BaseFolder)
         ? RawPath
