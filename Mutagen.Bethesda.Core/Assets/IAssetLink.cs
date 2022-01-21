@@ -1,7 +1,11 @@
-﻿namespace Mutagen.Bethesda.Assets;
+﻿using System;
+namespace Mutagen.Bethesda.Assets;
 
 public interface IAssetPath
 {
+    protected static readonly StringComparison PathComparison = StringComparison.OrdinalIgnoreCase;
+    protected static readonly StringComparer PathComparer = StringComparer.FromComparison(PathComparison);
+    
     /// <summary>
     /// Raw path relative to the game's data directory
     /// </summary>
