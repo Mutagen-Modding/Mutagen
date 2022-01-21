@@ -74,11 +74,7 @@ public class AssetLink<TAssetType> : AssetLinkGetter<TAssetType>, IComparable<As
     {
     }
 
-    public new string RawPath
-    {
-        get => _rawPath;
-        set => _rawPath = value;
-    }
+    public new string RawPath => _rawPath;
 
     public new string DataRelativePath => RawPath.StartsWith(AssetType.BaseFolder)
         ? RawPath
@@ -86,9 +82,21 @@ public class AssetLink<TAssetType> : AssetLinkGetter<TAssetType>, IComparable<As
 
     public new string Extension => Path.GetExtension(RawPath).TrimStart('.');
 
-    public void SetTo(string? path)
+    public  bool TrySetPath(string? path)
     {
-        RawPath = path ?? string.Empty;
+        if (path == null)
+        {
+            SetToNull();
+            return true;
+        }
+        
+        if (path.StartsWith(AssetType.BaseFolder, IAssetPath.PathComparison))
+        {
+            _rawPath = path[AssetType.BaseFolder.Length..];
+            return true;
+        }
+        
+        return false;
     }
 
     public void SetToNull()

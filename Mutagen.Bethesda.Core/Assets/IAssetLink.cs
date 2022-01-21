@@ -27,7 +27,7 @@ public interface IAssetLinkGetter<out TAssetType> : IAssetPath
     where TAssetType : IAssetType
 {
     /// <summary>
-    /// Type of asset`
+    /// Type of asset
     /// </summary>
     TAssetType AssetType { get; }
 }
@@ -37,12 +37,12 @@ public interface IAssetLinkGetter : IAssetLinkGetter<IAssetType>
 }
 
 public interface IAssetLink<out TAssetType> : IAssetLinkGetter<TAssetType>
-    where TAssetType : IAssetType
-{
+    where TAssetType : IAssetType {
     /// <summary>
-    /// Raw path pointing to the asset
+    /// Set the path to a path that is relative to the game's Data directory
+    /// i.e.: @"Skyrim Special Edition\Data\Meshes\Clutter\Spoon.nif" needs to be @"Meshes\Clutter\Spoon.nif"
     /// </summary>
-    new string RawPath { get; set; }
+    bool TrySetPath(string? path);
 }
 
 public interface IAssetLink : IAssetLink<IAssetType>
