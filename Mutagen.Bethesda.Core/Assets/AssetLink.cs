@@ -37,7 +37,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(RawPath, AssetType);
+        return RawPath.GetHashCode();
     }
 
     public int CompareTo(AssetLinkGetter<TAssetType>? other)
