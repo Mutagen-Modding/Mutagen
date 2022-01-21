@@ -8,9 +8,14 @@ public interface IAssetPath
     protected static readonly string NullPath = string.Empty;
     
     /// <summary>
+    /// Raw path pointing to the asset
+    /// </summary>
+    string RawPath { get; }
+
+    /// <summary>
     /// Raw path relative to the game's data directory
     /// </summary>
-    string Path { get; }
+    string DataRelativePath { get; }
 
     /// <summary>
     /// Extension of the asset
@@ -35,9 +40,9 @@ public interface IAssetLink<out TAssetType> : IAssetLinkGetter<TAssetType>
     where TAssetType : IAssetType
 {
     /// <summary>
-    /// Raw path relative to the game's data directory
+    /// Raw path pointing to the asset
     /// </summary>
-    string Path { get; set; }
+    new string RawPath { get; set; }
 }
 
 public interface IAssetLink : IAssetLink<IAssetType>
