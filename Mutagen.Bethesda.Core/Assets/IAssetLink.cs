@@ -34,16 +34,9 @@ public interface IAssetLink<out TAssetType> : IAssetLinkGetter<TAssetType>
     where TAssetType : IAssetType
 {
     /// <summary>
-    /// Raw path relative to the game's data directory
+    /// Raw path pointing to the asset
     /// </summary>
     new string RawPath { get; set; }
-
-    /// <summary>
-    /// Extension of the asset
-    /// </summary>
-    void SetTo(string? path);
-
-    void SetToNull();
 }
 
 public interface IAssetLink : IAssetLink<IAssetType>
