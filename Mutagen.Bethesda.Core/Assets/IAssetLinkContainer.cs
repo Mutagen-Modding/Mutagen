@@ -4,28 +4,30 @@ using Mutagen.Bethesda.Plugins.Cache;
 namespace Mutagen.Bethesda.Assets;
 
 /// <summary>
-/// An interface for classes that contain assets and can enumerate them.
+/// An interface for classes that contain AssetLinks and can enumerate them.
 /// </summary>
 public interface IAssetLinkContainer : IAssetLinkContainerGetter
 {
     /// <summary>
     /// Swaps out all links to point to new assets
     /// </summary>
-    void RemapLinks(IReadOnlyDictionary<string, string> mapping);
-    
+    void RemapListedLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping);
+
     /// <summary>
-    /// Enumerable of all contained assets
+    /// Enumerates only AssetLinks that are explicitly listed in the record and can be modified directly.
     /// </summary>
-    IEnumerable<IAssetLink> EnumerateAssetLinks();
+    IEnumerable<IAssetLink> EnumerateListedAssetLinks();
 }
 
 /// <summary>
-/// An interface for classes that contain assets and can enumerate them.
+/// An interface for classes that contain AssetLinks and can enumerate them.
 /// </summary>
 public interface IAssetLinkContainerGetter
 {
     /// <summary>
-    /// Enumerable of all contained assets
+    /// Enumerates AssetLinks that are explicitly or implicitly defined
     /// </summary>
+    /// <param name="linkCache">Link cache to provide meta assets related to the interaction of multiple major records</param>
+    /// <param name="includeImplicit">Whether to include assets with paths that are derivative from other fields on a record</param>
     IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache = null, bool includeImplicit = true);
 }
