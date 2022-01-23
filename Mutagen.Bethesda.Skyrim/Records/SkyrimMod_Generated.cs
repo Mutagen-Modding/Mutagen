@@ -11214,9 +11214,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.VisualEffects, writer.MetaData.MasterReferences!, 50, gameConstants, outputStreams, param.StringsWriter, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Regions, writer.MetaData.MasterReferences!, 51, gameConstants, outputStreams, param.StringsWriter, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, writer.MetaData.MasterReferences!, 52, gameConstants, outputStreams, param.StringsWriter, parallelParam));
-            toDo.Add(() => WriteCellsParallel(item.Cells, writer.MetaData.MasterReferences!, 53, gameConstants, outputStreams, parallelParam));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, writer.MetaData.MasterReferences!, 54, gameConstants, outputStreams, parallelParam));
-            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, writer.MetaData.MasterReferences!, 55, gameConstants, outputStreams, parallelParam));
+            toDo.Add(() => WriteCellsParallel(item.Cells, writer.MetaData.MasterReferences!, 53, gameConstants, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, writer.MetaData.MasterReferences!, 54, gameConstants, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, writer.MetaData.MasterReferences!, 55, gameConstants, outputStreams, param.StringsWriter, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Quests, writer.MetaData.MasterReferences!, 56, gameConstants, outputStreams, param.StringsWriter, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.IdleAnimations, writer.MetaData.MasterReferences!, 57, gameConstants, outputStreams, param.StringsWriter, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Packages, writer.MetaData.MasterReferences!, 58, gameConstants, outputStreams, param.StringsWriter, parallelParam));

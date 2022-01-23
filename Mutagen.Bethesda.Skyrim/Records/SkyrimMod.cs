@@ -12,6 +12,7 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Strings;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -36,6 +37,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray,
+                StringsWriter? stringsWriter,
                 ParallelWriteParameters parallelWriteParameters)
             {
                 if (group.Records.Count == 0) return;
@@ -57,6 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
                         (int)counter + 1,
                         gameConstants,
                         streams,
+                        stringsWriter,
                         parallelWriteParameters);
                 });
                 PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
@@ -69,6 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray,
+                StringsWriter? stringsWriter,
                 ParallelWriteParameters parallelWriteParameters)
             {
                 var subBlocks = block.SubBlocks;
@@ -92,6 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
                             (int)counter + 1,
                             gameConstants,
                             streams,
+                            stringsWriter,
                             parallelWriteParameters);
                     });
                 }
@@ -105,6 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray,
+                StringsWriter? stringsWriter,
                 ParallelWriteParameters parallelWriteParameters)
             {
                 var cells = subBlock.Cells;
@@ -116,7 +122,8 @@ namespace Mutagen.Bethesda.Skyrim
                     groupByteStream,
                     meta: new WritingBundle(gameConstants)
                     {
-                        MasterReferences = masters
+                        MasterReferences = masters,
+                        StringsWriter = stringsWriter,
                     }, 
                     dispose: false))
                 {
@@ -133,7 +140,8 @@ namespace Mutagen.Bethesda.Skyrim
                             trib,
                             new WritingBundle(gameConstants)
                             {
-                                MasterReferences = masters
+                                MasterReferences = masters,
+                                StringsWriter = stringsWriter,
                             },
                             dispose: false));
                         streams[(int)counter + 1] = trib;
@@ -149,6 +157,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray,
+                StringsWriter? stringsWriter,
                 ParallelWriteParameters parallelWriteParameters)
             {
                 var cache = group.RecordCache;
@@ -168,7 +177,8 @@ namespace Mutagen.Bethesda.Skyrim
                     var worldTrib = new MemoryTributary();
                     var bundle = new WritingBundle(gameConstants)
                     {
-                        MasterReferences = masters
+                        MasterReferences = masters,
+                        StringsWriter = stringsWriter,
                     };
                     using (var writer = new MutagenWriter(worldTrib, bundle, dispose: false))
                     {
@@ -220,6 +230,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 (int)blockCounter + 1,
                                 gameConstants,
                                 subStreams,
+                                stringsWriter,
                                 parallelWriteParameters);
                         });
                     }
@@ -238,6 +249,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray,
+                StringsWriter? stringsWriter,
                 ParallelWriteParameters parallelWriteParameters)
             {
                 var items = block.Items;
@@ -261,6 +273,7 @@ namespace Mutagen.Bethesda.Skyrim
                             (int)counter + 1,
                             gameConstants,
                             streams,
+                            stringsWriter,
                             parallelWriteParameters);
                     });
                 }
@@ -274,6 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray,
+                StringsWriter? stringsWriter,
                 ParallelWriteParameters parallelWriteParameters)
             {
                 var items = subBlock.Items;
@@ -285,7 +299,8 @@ namespace Mutagen.Bethesda.Skyrim
                     groupByteStream,
                     new WritingBundle(gameConstants)
                     {
-                        MasterReferences = masters
+                        MasterReferences = masters,
+                        StringsWriter = stringsWriter,
                     },
                     dispose: false))
                 {
@@ -302,7 +317,8 @@ namespace Mutagen.Bethesda.Skyrim
                             trib,
                             new WritingBundle(gameConstants)
                             {
-                                MasterReferences = masters
+                                MasterReferences = masters,
+                                StringsWriter = stringsWriter,
                             },
                             dispose: false));
                         streams[(int)counter + 1] = trib;
@@ -312,56 +328,16 @@ namespace Mutagen.Bethesda.Skyrim
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
-            public static void WriteGroupParallel<T>(
-                ISkyrimGroupGetter<T> group,
-                IMasterReferenceReader masters,
-                int targetIndex,
-                GameConstants gameConstants,
-                Stream[] streamDepositArray,
-                ParallelWriteParameters parallelWriteParameters)
-                where T : class, ISkyrimMajorRecordGetter, IBinaryItem
-            {
-                if (group.RecordCache.Count == 0) return;
-                var cuts = group.Cut(parallelWriteParameters.CutCount).ToArray();
-                Stream[] subStreams = new Stream[cuts.Length + 1];
-                byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
-                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
-                var groupByteStream = new MemoryStream(groupBytes);
-                using (var stream = new MutagenWriter(groupByteStream, gameConstants, dispose: false))
-                {
-                    stream.Position += 8;
-                    SkyrimGroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
-                }
-                subStreams[0] = groupByteStream;
-                Parallel.ForEach(cuts, parallelWriteParameters.ParallelOptions, (cutItems, state, counter) =>
-                {
-                    MemoryTributary trib = new MemoryTributary();
-                    var bundle = new WritingBundle(gameConstants)
-                    {
-                        MasterReferences = masters
-                    };
-                    using (var stream = new MutagenWriter(trib, bundle, dispose: false))
-                    {
-                        foreach (var item in cutItems)
-                        {
-                            item.WriteToBinary(stream);
-                        }
-                    }
-                    subStreams[(int)counter + 1] = trib;
-                });
-                PluginUtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
-                streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
-            }
-
             public static void WriteDialogTopicsParallel(
                 ISkyrimGroupGetter<IDialogTopicGetter> group,
                 IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray,
+                StringsWriter? stringsWriter,
                 ParallelWriteParameters parallelWriteParameters)
             {
-                WriteGroupParallel(group, masters, targetIndex, gameConstants, streamDepositArray, parallelWriteParameters);
+                WriteGroupParallel(group, masters, targetIndex, gameConstants, streamDepositArray, stringsWriter, parallelWriteParameters);
             }
         }
     }
