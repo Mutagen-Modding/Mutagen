@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInVoid(obj, fg);
-            using (new NamespaceWrapper(fg, obj.InternalNamespace))
+            using (new NamespaceWrapper(fg, obj.InternalNamespace, fileScoped: false))
             {
                 await GenerateImportWrapper(obj, fg);
             }

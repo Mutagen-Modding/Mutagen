@@ -68,12 +68,16 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (item.Teaches)
                 {
                     case BookSpell _:
-                        flags = (byte)EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, false);
-                        flags = (byte)EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, true);
+                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, false);
+                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, true);
                         break;
                     case BookSkill _:
-                        flags = (byte)EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, true);
-                        flags = (byte)EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, false);
+                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, true);
+                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, false);
+                        break;
+                    case BookTeachesNothing _:
+                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, false);
+                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, false);
                         break;
                     default:
                         break;

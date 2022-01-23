@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine("using Mutagen.Bethesda.Plugins.Records.Internals;");
             fg.AppendLine();
 
-            using (new NamespaceWrapper(fg, proto.DefaultNamespace))
+            using (new NamespaceWrapper(fg, proto.DefaultNamespace, fileScoped: false))
             {
                 using (var comment = new CommentWrapper(fg))
                 {

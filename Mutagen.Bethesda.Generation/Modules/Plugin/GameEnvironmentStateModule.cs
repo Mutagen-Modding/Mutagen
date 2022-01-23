@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine($"using Mutagen.Bethesda.Plugins.Cache;");
             fg.AppendLine();
 
-            using (new NamespaceWrapper(fg, "Mutagen.Bethesda"))
+            using (new NamespaceWrapper(fg, "Mutagen.Bethesda", fileScoped: false))
             {
                 using (var c = new ClassWrapper(fg, "GameEnvironmentMixIn"))
                 {

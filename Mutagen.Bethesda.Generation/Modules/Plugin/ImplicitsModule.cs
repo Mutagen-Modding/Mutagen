@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine($"using Mutagen.Bethesda.Plugins.Implicit;");
             fg.AppendLine($"using Mutagen.Bethesda.{proto.Protocol.Namespace};");
             fg.AppendLine();
-            using (var n = new NamespaceWrapper(fg, "Mutagen.Bethesda"))
+            using (var n = new NamespaceWrapper(fg, "Mutagen.Bethesda", fileScoped: false))
             {
                 using (var c = new ClassWrapper(fg, "ImplicitsMixIn"))
                 {
