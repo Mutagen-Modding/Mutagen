@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public override GameRelease GameRelease => GameRelease.Oblivion;
 
-        protected override Processor ProcessorFactory() => new OblivionProcessor(Settings.Parallel);
+        protected override Processor ProcessorFactory() => new OblivionProcessor(Settings.ParallelProccessingSteps);
 
         public OblivionPassthroughTest(PassthroughTestParams param)
             : base(param)
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Tests
         {
             return OblivionMod.CreateFromBinary(
                 new ModPath(ModKey, path.Path),
-                parallel: this.Settings.Parallel);
+                parallel: this.Settings.ParallelProccessingSteps);
         }
 
         protected override async Task<IMod> ImportCopyIn(FilePath file)

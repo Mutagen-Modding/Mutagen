@@ -31,6 +31,8 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                     .DisposeWith(disposable);
                 this.Bind(this.ViewModel, x => x.TestEquals, x => x.TestEquals.IsChecked)
                     .DisposeWith(disposable);
+                this.Bind(this.ViewModel, x => x.TestParallel, x => x.TestParallel.IsChecked)
+                    .DisposeWith(disposable);
                 this.Bind(ViewModel, vm => vm.TrimmingEnabled, x=> x.TrimmedGroupsEnable.IsChecked)
                     .DisposeWith(disposable);
                 

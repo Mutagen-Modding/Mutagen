@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Tests
             return SkyrimMod.CreateFromBinary(
                 new ModPath(this.ModKey, path.Path),
                 GameRelease.ToSkyrimRelease(),
-                parallel: this.Settings.Parallel);
+                parallel: this.Settings.ParallelProccessingSteps);
         }
 
         protected override async Task<IMod> ImportCopyIn(FilePath file)
@@ -244,6 +244,6 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        protected override Processor ProcessorFactory() => new SkyrimProcessor(GameRelease, Settings.Parallel);
+        protected override Processor ProcessorFactory() => new SkyrimProcessor(GameRelease, Settings.ParallelProccessingSteps);
     }
 }

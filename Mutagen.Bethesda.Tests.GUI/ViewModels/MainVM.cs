@@ -46,6 +46,9 @@ public class MainVM : ViewModel
     public bool TestEquals { get; set; }
 
     [Reactive]
+    public bool TestParallel { get; set; }
+
+    [Reactive]
     public bool TestPex { get; set; }
 
     [Reactive]
@@ -202,6 +205,7 @@ public class MainVM : ViewModel
         this.TestCopyIn = settings.PassthroughSettings.TestCopyIn;
         this.TestImport = settings.PassthroughSettings.TestImport;
         this.TestOverlay = settings.PassthroughSettings.TestBinaryOverlay;
+        this.TestParallel = settings.PassthroughSettings.ParallelWriting;
         this.TestEquals = settings.TestEquality;
         this.TestPex = settings.TestPex;
 
@@ -252,6 +256,7 @@ public class MainVM : ViewModel
         settings.PassthroughSettings.TestImport = this.TestImport;
         settings.PassthroughSettings.TestBinaryOverlay = this.TestOverlay;
         settings.PassthroughSettings.TestCopyIn = this.TestCopyIn;
+        settings.PassthroughSettings.ParallelWriting = this.TestParallel;
         settings.TestEquality = this.TestEquals;
         settings.TestPex = this.TestPex;
 
@@ -294,7 +299,7 @@ public class MainVM : ViewModel
         return new PassthroughSettings()
         {
             DeleteCachesAfter = false,
-            Parallel = true,
+            ParallelProccessingSteps = true,
             CacheReuse = new CacheReuse()
             {
                 ReuseAlignment = CacheAlignment,
@@ -308,6 +313,7 @@ public class MainVM : ViewModel
             TestFolder = false,
             TestImport = TestImport,
             TestNormal = TestNormal,
+            ParallelWriting = TestParallel,
             Trimming = new TrimmingSettings()
             {
                 TypesToTrim = SkippedRecordTypes.Select(x => x.RecordType.Type).ToList(),

@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Tests
         {
             return Fallout4Mod.CreateFromBinary(
                 new ModPath(this.ModKey, path.Path),
-                parallel: this.Settings.Parallel);
+                parallel: this.Settings.ParallelProccessingSteps);
         }
 
         protected override async Task<IMod> ImportCopyIn(FilePath file)
@@ -45,6 +45,6 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        protected override Processor ProcessorFactory() => new Fallout4Processor(Settings.Parallel);
+        protected override Processor ProcessorFactory() => new Fallout4Processor(Settings.ParallelProccessingSteps);
     }
 }

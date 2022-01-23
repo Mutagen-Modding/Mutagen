@@ -67,7 +67,7 @@ public abstract class PassthroughTest
 
         var test = new Test(
             $"Setup Processed Files",
-            parallel: Settings.Parallel,
+            parallel: Settings.ParallelProccessingSteps,
             toDo: async (o) =>
             {
                 o.OnNext(Nickname);
@@ -226,7 +226,6 @@ public abstract class PassthroughTest
     {
         (TempFolder tmp, Test processedTest) = SetupProcessedFiles();
 
-        var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
         var processedPath = ProcessedPath(tmp.Dir);
         var binaryOverlayPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryOverlay");
         var copyInPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_CopyIn");
@@ -237,13 +236,14 @@ public abstract class PassthroughTest
         // Do normal
         if (Settings.TestNormal)
         {
-            var strsWriteDir = Path.Combine(tmp.Dir.Path, "Strings", $"{this.Nickname}_Normal");
+            var strsWriteDir = Path.Combine(tmp.Dir.Path, "Strings", $"{this.Nickname}_NormalImport_NormalExport");
+            var strsParallelWriteDir = Path.Combine(tmp.Dir.Path, "Strings", $"{this.Nickname}_NormalImport_ParallelExport");
             bool doStrings = false;
             var passthrough = TestBattery.RunTest(
                 "Binary Normal Passthrough",
                 this.GameRelease,
                 this.Target,
-                parallel: Settings.Parallel,
+                parallel: Settings.ParallelProccessingSteps,
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
@@ -256,6 +256,7 @@ public abstract class PassthroughTest
                     }
 
                     var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(this.GameRelease, mod.ModKey, strsWriteDir, MutagenEncodingProvider.Instance) : null);
+                    var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalImport_NormalExport");
                     mod.WriteToBinary(outputPath, writeParam);
                     GC.Collect();
 
@@ -268,14 +269,59 @@ public abstract class PassthroughTest
                         amountToReport: 15);
                 });
             processedTest.AddAsChild(passthrough);
+            Test passthroughParallel = null;
+            if (Settings.ParallelWriting)
+            {
+                passthroughParallel = TestBattery.RunTest(
+                    "Binary Normal Passthrough Parallel",
+                    this.GameRelease,
+                    this.Target,
+                    parallel: Settings.ParallelProccessingSteps,
+                    toDo: async (o) =>
+                    {
+                        o.OnNext(FilePath.ToString());
+                        var mod = await ImportBinary(this.FilePath.Path);
+                        doStrings = mod.UsingLocalization;
+
+                        foreach (var record in mod.EnumerateMajorRecords())
+                        {
+                            record.IsCompressed = false;
+                        }
+
+                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(this.GameRelease, mod.ModKey, strsParallelWriteDir, MutagenEncodingProvider.Instance) : null);
+                        var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalImport_ParallelExport");
+                        mod.WriteToBinaryParallel(outputPath, writeParam, parallelWriteParameters: new ParallelWriteParameters() { MaxDegreeOfParallelism = 1 });
+                        GC.Collect();
+
+                        using var stream = new MutagenBinaryReadStream(processedPath, this.GameRelease);
+                        writeParam.StringsWriter?.Dispose();
+
+                        AssertFilesEqual(
+                            stream,
+                            outputPath,
+                            amountToReport: 15);
+                    });
+                processedTest.AddAsChild(passthroughParallel);
+            }
             if (doStrings)
             {
                 foreach (var item in AssertStringsEqual(
-                             "Binary Normal",
+                             "Binary Normal Import Normal Export",
                              strsProcessedPath,
                              strsWriteDir))
                 {
                     passthrough.AddAsChild(item);
+                }
+
+                if (Settings.ParallelWriting)
+                {
+                    foreach (var item in AssertStringsEqual(
+                                 "Binary Normal Import Parallel Export",
+                                 strsProcessedPath,
+                                 strsParallelWriteDir))
+                    {
+                        passthroughParallel.AddAsChild(item);
+                    }
                 }
             }
         }
@@ -288,7 +334,7 @@ public abstract class PassthroughTest
                 "Binary Overlay Passthrough",
                 this.GameRelease,
                 this.Target,
-                parallel: Settings.Parallel,
+                parallel: Settings.ParallelProccessingSteps,
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
@@ -328,7 +374,7 @@ public abstract class PassthroughTest
                 "Copy In Passthrough",
                 this.GameRelease,
                 this.Target,
-                parallel: Settings.Parallel,
+                parallel: Settings.ParallelProccessingSteps,
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
@@ -517,7 +563,7 @@ public abstract class PassthroughTest
                         new FileStream(sourcePath, FileMode.Open),
                         pathToTest);
                 },
-                parallel: Settings.Parallel);
+                parallel: Settings.ParallelProccessingSteps);
         }
     }
 
