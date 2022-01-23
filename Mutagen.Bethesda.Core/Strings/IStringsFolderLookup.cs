@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Strings
     public interface IStringsFolderLookup
     {
         /// <summary>
-        /// Retrieves the availables languages present in a source
+        /// Retrieves the available languages present in a source
         /// </summary>
         /// <param name="source">Source to query</param>
         /// <returns>Enumerable of languages present for given source</returns>
