@@ -1124,7 +1124,7 @@ namespace Mutagen.Bethesda.Fallout4
         IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         IGroup IMod.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => Fallout4ModMixIn.GetEqualsMask(this, (IFallout4ModGetter)rhs, include);
         public override bool CanUseLocalization => true;
         public override bool UsingLocalization
@@ -1749,11 +1749,13 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinaryParallel(
             this IFallout4ModGetter item,
             Stream stream,
-            BinaryWriteParameters? param = null)
+            BinaryWriteParameters? param = null,
+            ParallelWriteParameters? parallelParam = null)
         {
             Fallout4ModCommon.WriteParallel(
                 item: item,
                 stream: stream,
+                parallelParam: parallelParam ?? ParallelWriteParameters.Default,
                 param: param ?? BinaryWriteParameters.Default,
                 modKey: item.ModKey);
         }
@@ -1762,9 +1764,11 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4ModGetter item,
             string path,
             BinaryWriteParameters? param = null,
+            ParallelWriteParameters? parallelParam = null,
             IFileSystem? fileSystem = null)
         {
             param ??= BinaryWriteParameters.Default;
+            parallelParam ??= ParallelWriteParameters.Default;
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
@@ -1775,6 +1779,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Fallout4ModCommon.WriteParallel(
                     item: item,
                     stream: stream,
+                    parallelParam: parallelParam,
                     param: param,
                     modKey: modKey);
             }
@@ -2980,11 +2985,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
         
-        const int CutCount = 100;
         public static void WriteParallel(
             IFallout4ModGetter item,
             Stream stream,
             BinaryWriteParameters param,
+            ParallelWriteParameters parallelParam,
             ModKey modKey)
         {
             var bundle = new WritingBundle(GameConstants.Fallout4);
@@ -2997,24 +3002,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 modKey: modKey);
             Stream[] outputStreams = new Stream[17];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, writer.MetaData.MasterReferences!, 2, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Actions, writer.MetaData.MasterReferences!, 3, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Transforms, writer.MetaData.MasterReferences!, 4, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Components, writer.MetaData.MasterReferences!, 5, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.TextureSets, writer.MetaData.MasterReferences!, 6, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Globals, writer.MetaData.MasterReferences!, 7, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DamageTypes, writer.MetaData.MasterReferences!, 8, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Classes, writer.MetaData.MasterReferences!, 9, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Factions, writer.MetaData.MasterReferences!, 10, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.HeadParts, writer.MetaData.MasterReferences!, 11, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, writer.MetaData.MasterReferences!, 12, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, writer.MetaData.MasterReferences!, 13, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, writer.MetaData.MasterReferences!, 14, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Grasses, writer.MetaData.MasterReferences!, 15, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, writer.MetaData.MasterReferences!, 16, outputStreams, param.StringsWriter));
-            Parallel.Invoke(toDo.ToArray());
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, writer.MetaData.MasterReferences!, 2, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Actions, writer.MetaData.MasterReferences!, 3, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Transforms, writer.MetaData.MasterReferences!, 4, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Components, writer.MetaData.MasterReferences!, 5, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TextureSets, writer.MetaData.MasterReferences!, 6, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Globals, writer.MetaData.MasterReferences!, 7, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DamageTypes, writer.MetaData.MasterReferences!, 8, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Classes, writer.MetaData.MasterReferences!, 9, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Factions, writer.MetaData.MasterReferences!, 10, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.HeadParts, writer.MetaData.MasterReferences!, 11, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, writer.MetaData.MasterReferences!, 12, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, writer.MetaData.MasterReferences!, 13, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, writer.MetaData.MasterReferences!, 14, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, writer.MetaData.MasterReferences!, 15, outputStreams, param.StringsWriter, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, writer.MetaData.MasterReferences!, 16, outputStreams, param.StringsWriter, parallelParam));
+            Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
                 stream);
@@ -3025,11 +3030,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IMasterReferenceReader masters,
             int targetIndex,
             Stream[] streamDepositArray,
-            StringsWriter? stringsWriter)
+            StringsWriter? stringsWriter,
+            ParallelWriteParameters parallelParam)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
             if (group.RecordCache.Count == 0) return;
-            var cuts = group.Cut(CutCount).ToArray();
+            var cuts = group.Cut(parallelParam.CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
             byte[] groupBytes = new byte[GameConstants.Fallout4.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
@@ -3040,7 +3046,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Fallout4GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
             }
             subStreams[0] = groupByteStream;
-            Parallel.ForEach(cuts, (cutItems, state, counter) =>
+            Parallel.ForEach(cuts, parallelParam.ParallelOptions, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
                 var bundle = new WritingBundle(GameConstants.Fallout4)
@@ -5240,7 +5246,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Localized);

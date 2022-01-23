@@ -74,7 +74,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <param name="path">Path to export to</param>
         /// <param name="param">Optional customization parameters</param>
         /// <param name="fileSystem">Optional filesystem substitution</param>
-        void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null);
+        /// <param name="parallelWriteParameters">Optional customization parameters related to parallelization</param>
+        void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null, ParallelWriteParameters? parallelWriteParameters = null);
 
         /// <summary>
         /// Whether a mod supports localization features
