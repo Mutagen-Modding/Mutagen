@@ -43,6 +43,11 @@ public interface IAssetLink<out TAssetType> : IAssetLinkGetter<TAssetType>
     /// i.e.: @"Skyrim Special Edition\Data\Meshes\Clutter\Spoon.nif" needs to be @"Meshes\Clutter\Spoon.nif"
     /// </summary>
     bool TrySetPath(string? path);
+    
+    /// <summary>
+    /// Raw path pointing to the asset
+    /// </summary>
+    new string RawPath { get; set; }
 }
 
 public interface IAssetLink : IAssetLink<IAssetType>

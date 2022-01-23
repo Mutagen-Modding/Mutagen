@@ -92,6 +92,12 @@ public class AssetLink<TAssetType> : AssetLinkGetter<TAssetType>, IComparable<As
         return false;
     }
 
+    public new string RawPath
+    {
+        get => _rawPath;
+        set => _rawPath = value;
+    }
+
     public void SetToNull()
     {
         _rawPath = IAssetPath.NullPath;
