@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Noggog.WPF" Version="2.38.0" />
+    <PackageReference Include="Noggog.WPF" Version="2.38.1" />
   </ItemGroup>
 
   <ItemGroup>

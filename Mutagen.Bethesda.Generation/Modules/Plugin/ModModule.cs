@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
-            using (new NamespaceWrapper(fg, obj.Namespace))
+            using (new NamespaceWrapper(fg, obj.Namespace, fileScoped: false))
             {
                 var objData = obj.GetObjectData();
                 fg.AppendLine("public class GroupMask");
@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
         public void GenerateModGameCategoryRegistration(ObjectGeneration obj, FileGeneration fg)
         {
-            using (var ns = new NamespaceWrapper(fg, $"Mutagen.Bethesda.{obj.GetObjectData().GameCategory}.Internals"))
+            using (var ns = new NamespaceWrapper(fg, $"Mutagen.Bethesda.{obj.GetObjectData().GameCategory}.Internals", fileScoped: false))
             {
                 using (var c = new ClassWrapper(fg, $"{obj.Name}_Registration"))
                 {

@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine("using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;");
 
             fg.AppendLine();
-            using (var n = new NamespaceWrapper(fg, proto.DefaultNamespace))
+            using (var n = new NamespaceWrapper(fg, proto.DefaultNamespace, fileScoped: false))
             {
                 var setterName = $"I{proto.Protocol.Namespace}Mod";
                 var getterName = $"I{proto.Protocol.Namespace}ModGetter";

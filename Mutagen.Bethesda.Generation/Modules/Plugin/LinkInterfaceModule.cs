@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
                 AddObjs(interf.Key);
 
-                using (new NamespaceWrapper(fg, proto.DefaultNamespace))
+                using (new NamespaceWrapper(fg, proto.DefaultNamespace, fileScoped: false))
                 {
                     fg.AppendLine("/// <summary>");
                     fg.AppendLine($"/// Implemented by: [{string.Join(", ", implementedObjs.Select(o => o.ObjectName))}]");
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             mappingGen.AppendLine($"using System.Collections.Generic;");
             mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Internals;");
             mappingGen.AppendLine();
-            using (new NamespaceWrapper(mappingGen, $"{proto.DefaultNamespace}.Internals"))
+            using (new NamespaceWrapper(mappingGen, $"{proto.DefaultNamespace}.Internals", fileScoped: false))
             {
                 using (var c = new ClassWrapper(mappingGen, "LinkInterfaceMapping"))
                 {
