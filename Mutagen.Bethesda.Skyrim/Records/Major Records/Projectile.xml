@@ -36,7 +36,7 @@
           <FormLink name="CollisionLayer" refName="CollisionLayer" />
         </Fields>
       </Data>
-      <String name="MuzzleFlashModel" recordType="NAM1" nullable="False" />
+      <AssetLink name="MuzzleFlashModel" recordType="NAM1" nullable="False" assetType="SkyrimModel" />
       <ByteArray name="TextureFilesHashes" recordType="NAM2" />
       <UInt32 name="SoundLevel" nullable="False" recordType="VNAM" />
     </Fields>

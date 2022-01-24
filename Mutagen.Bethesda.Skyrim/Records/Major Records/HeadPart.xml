@@ -18,7 +18,7 @@
   <Object name="Part" objType="Subrecord" GUID="c4ffaf8a-c25b-42cd-aab4-35f7c641b1e8" ID="45">
     <Fields>
       <Enum name="PartType" enumName="Part.PartTypeEnum" byteLength="4" recordType="NAM0" />
-      <String name="FileName" recordType="NAM1" />
+      <AssetLink name="FileName" recordType="NAM1" assetType="SkyrimDeformedModel" />
     </Fields>
   </Object>
 </Loqui>

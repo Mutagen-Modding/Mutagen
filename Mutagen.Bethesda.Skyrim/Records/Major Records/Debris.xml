@@ -10,7 +10,7 @@
       <Data>
         <Fields>
           <UInt8 name="Percentage" />
-          <String name="ModelFilename" binaryType="NullTerminate" />
+          <AssetLink name="ModelFilename" binaryType="NullTerminate" assetType="SkyrimModel />
           <Break />
           <Enum name="Flags" enumName="DebrisModel.Flag" byteLength="1" />
         </Fields>

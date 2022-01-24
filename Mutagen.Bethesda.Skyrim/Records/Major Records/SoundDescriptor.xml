@@ -6,7 +6,7 @@
       <FormLink name="Category" refName="SoundCategory" recordType="GNAM" />
       <FormLink name="AlternateSoundFor" recordType="SNAM" refName="SoundDescriptor" />
       <List name="SoundFiles">
-        <String recordType="ANAM" />
+        <AssetLink recordType="ANAM" assetType="SkyrimSound" />
       </List>
       <FormLink name="OutputModel" recordType="ONAM" refName="SoundOutputModel" />
       <String name="String" recordType="FNAM" />

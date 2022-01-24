@@ -15,7 +15,7 @@
       <FormLink name="LodWater" refName="Water" recordType="NAM3" />
       <Float name="LodWaterHeight" recordType="NAM4" />
       <RefDirect name="LandDefaults" refName="WorldspaceLandDefaults" />
-      <String name="MapImage" recordType="ICON" />
+      <AssetLink name="MapImage" recordType="ICON" assetType="SkyrimTexture" />
       <RefDirect name="CloudModel" refName="Model" />
       <RefDirect name="MapData" refName="WorldspaceMap" />
       <RefDirect name="MapOffset" refName="WorldspaceMapOffset" nullable="False" />
@@ -23,11 +23,11 @@
       <Enum name="Flags" enumName="Worldspace.Flag" byteLength="1" recordType="DATA" nullable="False" />
       <RefDirect name="ObjectBounds" refName="WorldspaceObjectBounds" />
       <FormLink name="Music" refName="MusicType" recordType="ZNAM" />
-      <String name="CanopyShadow" recordType="NNAM" />
-      <String name="WaterNoiseTexture" recordType="XNAM" />
-      <String name="HdLodDiffuseTexture" recordType="TNAM" />
-      <String name="HdLodNormalTexture" recordType="UNAM" />
-      <String name="WaterEnvironmentMap" recordType="XWEM" />
+      <AssetLink name="CanopyShadow" recordType="NNAM" assetType="SkyrimTexture" />
+      <AssetLink name="WaterNoiseTexture" recordType="XNAM" assetType="SkyrimTexture" />
+      <AssetLink name="HdLodDiffuseTexture" recordType="TNAM" assetType="SkyrimTexture" />
+      <AssetLink name="HdLodNormalTexture" recordType="UNAM" assetType="SkyrimTexture" />
+      <AssetLink name="WaterEnvironmentMap" recordType="XWEM" assetType="SkyrimTexture" />
       <ByteArray name="OffsetData" recordType="OFST" overflowRecordType="XXXX" />
       <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
       <Int32 name="SubCellsTimestamp" binary="NoGeneration" />
