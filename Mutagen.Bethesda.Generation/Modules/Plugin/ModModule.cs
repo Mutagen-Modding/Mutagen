@@ -601,7 +601,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     fg.AppendLine($"var gameConstants = {nameof(GameConstants)}.Get(item.{ReleaseEnumName(obj)}.ToGameRelease());");
                     gameConstantsStr = $"gameConstants";
                 }
-                fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr});");
+                fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr})");
+                using (new BraceWrapper(fg) { AppendSemicolon = true })
+                {
+                    fg.AppendLine("StringsWriter = param.StringsWriter,");
+                }
+
                 fg.AppendLine($"var writer = new MutagenWriter(stream, bundle);");
                 using (var args = new ArgsWrapper(fg,
                     $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
@@ -637,11 +642,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     if (loqui.GetGroupTarget().GetObjectData().CustomBinaryEnd == CustomEnd.Off
                         && !loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
                     {
-                        fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, writer.MetaData.MasterReferences!, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams{(objData.UsesStringFiles ? ", param.StringsWriter" : null)}, parallelParam));");
+                        fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, {i}, outputStreams, bundle, parallelParam));");
                     }
                     else
                     {
-                        fg.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, writer.MetaData.MasterReferences!, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams{(objData.UsesStringFiles ? ", param.StringsWriter" : null)}, parallelParam));");
+                        fg.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, {i}, outputStreams, bundle, parallelParam));");
                     }
                     i++;
                 }
@@ -661,38 +666,21 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     $"public static void WriteGroupParallel<T>"))
                 {
                     args.Add($"I{obj.ProtoGen.Protocol.Namespace}GroupGetter<T> group");
-                    args.Add($"{nameof(IMasterReferenceReader)} masters");
                     args.Add("int targetIndex");
-                    if (objData.GameReleaseOptions != null)
-                    {
-                        args.Add($"{nameof(GameConstants)} gameConstants");
-                    }
                     args.Add("Stream[] streamDepositArray");
-                    if (objData.UsesStringFiles)
-                    {
-                        args.Add($"{nameof(StringsWriter)}? stringsWriter");
-                    }
+                    args.Add($"{nameof(WritingBundle)} bundle");
                     args.Add($"{nameof(ParallelWriteParameters)} parallelParam");
                     args.Wheres.AddRange(groupInstance.TargetObjectGeneration.GenerateWhereClauses(LoquiInterfaceType.IGetter, groupInstance.TargetObjectGeneration.Generics));
                 }
                 using (new BraceWrapper(fg))
                 {
-                    string gameConstantsStr;
-                    if (objData.GameReleaseOptions == null)
-                    {
-                        gameConstantsStr = $"{nameof(GameConstants)}.{obj.GetObjectData().GameCategory}";
-                    }
-                    else
-                    {
-                        gameConstantsStr = "gameConstants";
-                    }
                     fg.AppendLine("if (group.RecordCache.Count == 0) return;");
                     fg.AppendLine($"var cuts = group.Cut(parallelParam.CutCount).ToArray();");
                     fg.AppendLine($"Stream[] subStreams = new Stream[cuts.Length + 1];");
-                    fg.AppendLine($"byte[] groupBytes = new byte[{gameConstantsStr}.GroupConstants.HeaderLength];");
+                    fg.AppendLine($"byte[] groupBytes = new byte[bundle.Constants.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);");
                     fg.AppendLine($"var groupByteStream = new MemoryStream(groupBytes);");
-                    fg.AppendLine($"using (var stream = new MutagenWriter(groupByteStream, {gameConstantsStr}, dispose: false))");
+                    fg.AppendLine($"using (var stream = new MutagenWriter(groupByteStream, bundle.Constants, dispose: false))");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
@@ -703,16 +691,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
                     {
                         fg.AppendLine($"{nameof(MemoryTributary)} trib = new {nameof(MemoryTributary)}();");
-                        fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr})");
-                        using (var prop = new PropertyCtorWrapper(fg))
-                        {
-                            prop.Add($"{nameof(WritingBundle.MasterReferences)} = masters");
-                            if (objData.UsesStringFiles)
-                            {
-                                prop.Add($"{nameof(WritingBundle.StringsWriter)} = stringsWriter");
-                            }
-                        }
-                        fg.AppendLine($"using (var stream = new MutagenWriter(trib, bundle, dispose: false))");
+                        fg.AppendLine($"using (var stream = new MutagenWriter(trib, bundle with {{}}, dispose: false))");
                         using (new BraceWrapper(fg))
                         {
                             fg.AppendLine($"foreach (var item in cutItems)");
