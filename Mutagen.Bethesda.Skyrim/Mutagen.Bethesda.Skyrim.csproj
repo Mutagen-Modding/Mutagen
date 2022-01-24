@@ -28,7 +28,14 @@
     <None Remove="Pex\**" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\SkyrimBehaviorAssetType.cs" />
+    <Compile Include="Assets\SkyrimBodyTextureAssetType.cs" />
+    <Compile Include="Assets\SkyrimCameraModelType.cs" />
+    <Compile Include="Assets\SkyrimDeformedModelAssetType.cs" />
     <Compile Include="Assets\SkyrimModelAssetType.cs" />
+    <Compile Include="Assets\SkyrimMusicAssetType.cs" />
+    <Compile Include="Assets\SkyrimSoundAssetType.cs" />
+    <Compile Include="Assets\SkyrimTextureAssetType.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Agression.cs" />
