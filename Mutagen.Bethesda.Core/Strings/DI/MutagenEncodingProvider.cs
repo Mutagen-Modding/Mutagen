@@ -142,6 +142,7 @@ namespace Mutagen.Bethesda.Strings.DI
                 case Language.German:
                 case Language.Italian:
                 case Language.Spanish:
+                case Language.Spanish_Mexico:
                 case Language.Danish:
                 case Language.Finnish:
                 case Language.Norwegian:
