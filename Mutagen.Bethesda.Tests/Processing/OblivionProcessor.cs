@@ -171,8 +171,7 @@ public class OblivionProcessor : Processor
                            new RecordType("ICON"),
                            ObjectType.Subrecord))
                 {
-                    writer.Write(iconStr);
-                    writer.Write(default(byte));
+                    StringBinaryTranslation.Instance.Write(writer, iconStr, StringBinaryType.NullTerminate);
                 }
             }
 
