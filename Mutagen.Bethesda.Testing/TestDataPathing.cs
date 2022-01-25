@@ -33,7 +33,8 @@ namespace Mutagen.Bethesda.Testing
         public static string SkyrimBodtEmptyFlagsOutput = "Files/Skyrim/BodyTemplate/BodtEmptyFlagsOutput";
         public static string SkyrimBod2TypicalOutput = "Files/Skyrim/BodyTemplate/Bod2TypicalOutput";
         public static string SkyrimSoundRegionDataWithNoSecondSubrecord = "Files/Skyrim/Region/SoundRegionDataWithNoSecondSubrecord.esp";
-        public static string FrenchString = "Files/Core/Strings/FrenchString";
+        public static string FrenchSeString = "Files/Core/Strings/FrenchSeString";
+        public static string RussianLeString = "Files/Core/Strings/RussianLeString";
         public static string PrependedString = "Files/Core/Strings/PrependedString";
         public static string ZeroContentPrependedString = "Files/Core/Strings/ZeroContentPrependedString";
         public static string SkyrimPlacedObjectReflectedWaterMissingData = "Files/Skyrim/PlacedObjectReflectedWaterMissingData.esp";

@@ -12,11 +12,19 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
     public class BinaryStringUtilityTests
     {
         [Fact]
-        public void ToZStringFrenchExample()
+        public void ToZStringFrenchSeExample()
         {
             var ret = new MutagenEncodingProvider().GetEncoding(GameRelease.SkyrimSE, Language.French)
-                .GetString(File.ReadAllBytes(TestDataPathing.FrenchString));
+                .GetString(File.ReadAllBytes(TestDataPathing.FrenchSeString));
             ret.Should().Be("Livre de sort - Paralysie générale");
+        }
+
+        [Fact]
+        public void ToZStringRussianLeExample()
+        {
+            var ret = new MutagenEncodingProvider().GetEncoding(GameRelease.SkyrimLE, Language.Russian)
+                .GetString(File.ReadAllBytes(TestDataPathing.RussianLeString));
+            ret.Should().Be("Распорядок Гая Марона");
         }
 
         [Fact]
