@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4
                         FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterOneRecord.FormKey);
                         break;
                     case Condition.ParameterCategory.String:
-                        writer.Write(item.ParameterOneString);
+                        BinaryStringUtility.Write(writer, item.ParameterOneString);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Fallout4
                         FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterTwoRecord.FormKey);
                         break;
                     case Condition.ParameterCategory.String:
-                        writer.Write(item.ParameterTwoString);
+                        BinaryStringUtility.Write(writer, item.ParameterTwoString);
                         break;
                     default:
                         throw new NotImplementedException();
