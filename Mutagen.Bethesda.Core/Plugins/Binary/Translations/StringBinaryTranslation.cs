@@ -87,8 +87,8 @@ public class StringBinaryTranslation
                 throw new ArgumentException($"String in Strings File format had unexpected length: {reader.Remaining} != 4");
             }
             uint key = reader.ReadUInt32();
-            if (key == 0) return new TranslatedString(directString: null);
-            return reader.MetaData.StringsLookup.CreateString(source, key);
+            if (key == 0) return new TranslatedString(reader.MetaData.TargetLanguage, directString: null);
+            return reader.MetaData.StringsLookup.CreateString(source, key, reader.MetaData.TargetLanguage);
         }
         else
         {
@@ -110,22 +110,21 @@ public class StringBinaryTranslation
     public TranslatedString Parse(
         ReadOnlyMemorySlice<byte> data,
         StringsSource source,
-        IStringsFolderLookup? lookup,
-        IMutagenEncoding nonLocalizedEncoding)
+        ParsingBundle parsingBundle)
     {
-        if (lookup != null)
+        if (parsingBundle.StringsLookup != null)
         {
             if (data.Length != 4)
             {
                 throw new ArgumentException($"String in Strings File format had unexpected length: {data.Length} != 4");
             }
             uint key = BinaryPrimitives.ReadUInt32LittleEndian(data);
-            if (key == 0) return new TranslatedString(directString: null);
-            return lookup.CreateString(source, key);
+            if (key == 0) return new TranslatedString(parsingBundle.TargetLanguage, directString: null);
+            return parsingBundle.StringsLookup.CreateString(source, key, parsingBundle.TargetLanguage);
         }
         else
         {
-            return BinaryStringUtility.ProcessWholeToZString(data, nonLocalizedEncoding);
+            return BinaryStringUtility.ProcessWholeToZString(data, parsingBundle.Encodings.NonLocalized);
         }
     }
 

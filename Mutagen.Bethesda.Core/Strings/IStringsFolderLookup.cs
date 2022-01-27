@@ -48,7 +48,8 @@ namespace Mutagen.Bethesda.Strings
         /// </summary>
         /// <param name="source">Strings source to look to</param>
         /// <param name="key">Index key to look up</param>
+        /// <param name="targetLanguage">Language to target by default</param>
         /// <returns>TranslatedString with located strings</returns>
-        TranslatedString CreateString(StringsSource source, uint key);
+        TranslatedString CreateString(StringsSource source, uint key, Language targetLanguage);
     }
 }

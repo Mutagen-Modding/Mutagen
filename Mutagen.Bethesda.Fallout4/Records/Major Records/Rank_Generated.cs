@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (m, p) => StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup, nonLocalizedEncoding: p.MetaData.Encodings.NonTranslated));
+                        creator: (m, p) => StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), StringsSource.Normal, parsingBundle: p.MetaData));
                     return (int)Rank_FieldIndex.Title;
                 }
                 case RecordTypeInts.INAM:

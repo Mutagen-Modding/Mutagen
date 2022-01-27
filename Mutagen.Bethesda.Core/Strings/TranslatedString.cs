@@ -19,10 +19,20 @@ public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>,
     /// </summary>
     public static bool DefaultLanguageComparisonOnly = true;
 
+    private static Language _defaultLanguage;
+
     /// <summary>
     /// The default language to use as the main target language
     /// </summary>
-    public static Language DefaultLanguage { get; set; } = Language.English;
+    public static Language DefaultLanguage
+    {
+        get => _defaultLanguage;
+        set
+        {
+            _defaultLanguage = value;
+            _empty = new(value, string.Empty);
+        }
+    }
 
     /// <summary>
     /// Language the string is targeting, and will be set/return when accessed normally
@@ -61,27 +71,26 @@ public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>,
 
     public int NumLanguages => StringsLookup?.AvailableLanguages(StringsSource).Count ?? 1;
 
-    private static readonly TranslatedString _empty = new(string.Empty);
+    private static TranslatedString _empty = new(Language.English, string.Empty);
     public static ITranslatedStringGetter Empty => _empty;
 
     /// <summary>
     /// Creates a translated string with empty string set for the default language
     /// </summary>
     /// <param name="language">Optional target language override</param>
-    public TranslatedString(Language? language = null)
+    public TranslatedString(Language language)
     {
-        TargetLanguage = language ?? DefaultLanguage;
+        TargetLanguage = language;
     }
 
     /// <summary>
     /// Creates a translated string with a value for the default language
     /// </summary>
     /// <param name="directString">String to register for the default language</param>
-    /// <param name="language">Optional target language override</param>
-    public TranslatedString(string? directString, Language? language = null)
+    public TranslatedString(Language targetLanguage, string? directString)
     {
         _directString = directString;
-        TargetLanguage = language ?? DefaultLanguage;
+        TargetLanguage = targetLanguage;
     }
 
     /// <summary>
@@ -89,35 +98,24 @@ public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>,
     /// If no string is provided for the default language, string.Empty will be assigned.
     /// </summary>
     /// <param name="strs">Language string pairs to register</param>
-    /// <param name="language">Optional target language override</param>
-    public TranslatedString(IEnumerable<KeyValuePair<Language, string>> strs, Language? language = null)
+    public TranslatedString(Language targetLanguage, IEnumerable<KeyValuePair<Language, string>> strs)
     {
         _localization = new Dictionary<Language, string?>();
         foreach (var str in strs)
         {
             _localization[str.Key] = str.Value;
         }
-        TargetLanguage = language ?? DefaultLanguage;
+        TargetLanguage = targetLanguage;
     }
 
     /// <summary>
     /// Creates a translated string with a number of strings for languages.
     /// If no string is provided for the default language, string.Empty will be assigned.
     /// </summary>
-    /// <param name="language">Target language override</param>
+    /// <param name="targetLanguage">Target language override</param>
     /// <param name="strs">Language string pairs to register</param>
-    public TranslatedString(Language language, params KeyValuePair<Language, string>[] strs)
-        : this((IEnumerable<KeyValuePair<Language, string>>)strs, language)
-    {
-    }
-
-    /// <summary>
-    /// Creates a translated string with a number of strings for languages.
-    /// If no string is provided for the default language, string.Empty will be assigned.
-    /// </summary>
-    /// <param name="strs">Language string pairs to register</param>
-    public TranslatedString(params KeyValuePair<Language, string>[] strs)
-        : this((IEnumerable<KeyValuePair<Language, string>>)strs, language: null)
+    public TranslatedString(Language targetLanguage, params KeyValuePair<Language, string>[] strs)
+        : this(targetLanguage, (IEnumerable<KeyValuePair<Language, string>>)strs)
     {
     }
 
@@ -286,7 +284,7 @@ public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>,
 
     public static implicit operator TranslatedString(string? str)
     {
-        return new TranslatedString(str);
+        return new TranslatedString(DefaultLanguage, str);
     }
 
     public static implicit operator string?(TranslatedString? str)
@@ -304,13 +302,13 @@ public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>,
         if (_directString == null)
         {
             return new TranslatedString(
-                language: this.TargetLanguage,
+                targetLanguage: this.TargetLanguage,
                 strs: this.ToArray());
         }
         else
         {
             return new TranslatedString(
-                language: this.TargetLanguage,
+                targetLanguage: this.TargetLanguage,
                 directString: this._directString);
         }
     }

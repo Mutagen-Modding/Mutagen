@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             StringType str = typeGen as StringType; 
             if (str.Translated.HasValue) 
             { 
-                return $"StringBinaryTranslation.Instance.Parse({dataAccessor}, {nameof(StringsSource)}.{str.Translated.Value}, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)}, nonLocalizedEncoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})"; 
+                return $"StringBinaryTranslation.Instance.Parse({dataAccessor}, {nameof(StringsSource)}.{str.Translated.Value}, parsingBundle: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)})"; 
             } 
             else 
             { 

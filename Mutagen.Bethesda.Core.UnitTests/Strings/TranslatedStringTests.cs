@@ -326,12 +326,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
     {
         public override TranslatedString Create(string str)
         {
-            return new TranslatedString(str);
+            return new TranslatedString(TranslatedString.DefaultLanguage, str);
         }
 
         public override TranslatedString Create(params KeyValuePair<Language, string>[] strs)
         {
-            return new TranslatedString(strs);
+            return new TranslatedString(TranslatedString.DefaultLanguage, strs);
         }
     }
 
@@ -360,9 +360,9 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
                 return _dict.Keys;
             }
 
-            public TranslatedString CreateString(StringsSource source, uint key)
+            public TranslatedString CreateString(StringsSource source, uint key, Language targetLanguage)
             {
-                return new TranslatedString()
+                return new TranslatedString(targetLanguage)
                 {
                     StringsLookup = this,
                     StringsKey = key,
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
             var lookup = new ManualStringsLookup(
                 StringsSource.DL, 
                 (TranslatedString.DefaultLanguage, LookupKey, str));
-            return new TranslatedString()
+            return new TranslatedString(TranslatedString.DefaultLanguage)
             {
                 StringsSource = StringsSource.DL,
                 StringsKey = LookupKey,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
                 {
                     return (kv.Key, LookupKey, kv.Value);
                 }).ToArray());
-            return new TranslatedString()
+            return new TranslatedString(TranslatedString.DefaultLanguage)
             {
                 StringsSource = StringsSource.DL,
                 StringsKey = LookupKey,

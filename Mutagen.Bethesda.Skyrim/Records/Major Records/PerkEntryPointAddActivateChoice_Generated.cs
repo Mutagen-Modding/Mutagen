@@ -1412,7 +1412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<ISpellGetter> Spell => new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
         #region ButtonLabel
         private int? _ButtonLabelLocation;
-        public ITranslatedStringGetter? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup, nonLocalizedEncoding: _package.MetaData.Encodings.NonTranslated) : default(TranslatedString?);
+        public ITranslatedStringGetter? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         #region Flags
         private RangeInt32? _FlagsLocation;

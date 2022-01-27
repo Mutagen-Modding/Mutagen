@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         entryPointEffect = new PerkEntryPointAddActivateChoice()
                                         {
                                             Spell = new FormLinkNullable<ISpellGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : default(FormKey?)),
-                                            ButtonLabel = epf2.HasValue ? StringBinaryTranslation.Instance.Parse(epf2.Value, StringsSource.Normal, stream.MetaData.StringsLookup!, stream.MetaData.Encodings.NonLocalized) : null,
+                                            ButtonLabel = epf2.HasValue ? StringBinaryTranslation.Instance.Parse(epf2.Value, StringsSource.Normal, stream.MetaData) : null,
                                             Flags = new PerkScriptFlag()
                                             {
                                                 Flags = (PerkScriptFlag.Flag)BinaryPrimitives.ReadInt16LittleEndian(epf3.Value),
@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         }
                                         entryPointEffect = new PerkEntryPointSetText()
                                         {
-                                            Text = epfd.HasValue ? StringBinaryTranslation.Instance.Parse(epfd.Value, StringsSource.Normal, stream.MetaData.StringsLookup!, stream.MetaData.Encodings.NonLocalized) : (TranslatedString)string.Empty,
+                                            Text = epfd.HasValue ? StringBinaryTranslation.Instance.Parse(epfd.Value, StringsSource.Normal, stream.MetaData) : (TranslatedString)string.Empty,
                                         };
                                         break;
                                     default:

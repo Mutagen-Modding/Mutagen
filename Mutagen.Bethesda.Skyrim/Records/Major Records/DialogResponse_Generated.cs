@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Text
         private int? _TextLocation;
-        public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TextLocation.Value, _package.MetaData.Constants), StringsSource.IL, _package.MetaData.StringsLookup, nonLocalizedEncoding: _package.MetaData.Encodings.NonTranslated) : TranslatedString.Empty;
+        public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TextLocation.Value, _package.MetaData.Constants), StringsSource.IL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         #region ScriptNotes
         private int? _ScriptNotesLocation;

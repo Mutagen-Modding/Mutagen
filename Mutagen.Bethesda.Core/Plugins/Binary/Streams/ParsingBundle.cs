@@ -53,6 +53,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
 
         public EncodingBundle Encodings { get; set; } = new(MutagenEncodingProvider._1252, MutagenEncodingProvider._1252);
 
+        public Language TargetLanguage { get; set; } = Language.English;
+
         public ParsingBundle(GameConstants constants, IMasterReferenceCollection masterReferences)
         {
             this.Constants = constants;
