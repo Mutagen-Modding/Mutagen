@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
 
         #region Master
         private int? _MasterLocation;
-        public ModKey Master => _MasterLocation.HasValue ? ModKey.FromNameAndExtension(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MasterLocation.Value, _package.MetaData.Constants))) : ModKey.Null;
+        public ModKey Master => _MasterLocation.HasValue ? ModKey.FromNameAndExtension(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MasterLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonTranslated)) : ModKey.Null;
         #endregion
         #region FileSize
         private int? _FileSizeLocation;

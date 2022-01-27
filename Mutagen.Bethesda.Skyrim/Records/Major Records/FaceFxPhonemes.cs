@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Skyrim
                     int i = 0;
                     while (subFrame.RecordType == RecordTypes.PHTN)
                     {
-                        var str = BinaryStringUtility.ProcessWholeToZString(subFrame.Content);
+                        var str = BinaryStringUtility.ProcessWholeToZString(subFrame.Content, frame.MetaData.Encodings.NonTranslated);
                         Add(targetAccumulation, (Target)i++, str);
                         frame.Position += subFrame.TotalLength;
                         if (!frame.Reader.TryGetSubrecordFrame(out subFrame)) break;
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     phonemes[(int)target] = item.GetGetter(target);
                 }
-                if (!phonemes.Any(p => p != null)) return;
+                if (phonemes.All(p => p == null)) return;
                 var force = item.ForceNames;
                 var hasAll = phonemes.All(p => p != null);
                 if (!hasAll || force)
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Skyrim
                         var target = (Target)i;
                         using (HeaderExport.Subrecord(writer, RecordTypes.PHTN))
                         {
-                            writer.Write(phoneme.Name, StringBinaryType.NullTerminate);
+                            writer.Write(phoneme.Name, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
                         }
                     }
                 }

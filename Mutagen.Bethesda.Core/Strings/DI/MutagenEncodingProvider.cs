@@ -20,8 +20,6 @@ namespace Mutagen.Bethesda.Strings.DI
         public static readonly IMutagenEncoding _1256;
         public static readonly IMutagenEncoding _utf8;
 
-        public IMutagenEncoding Default => _1252;
-
         public static readonly IMutagenEncoding _utf8_932;
         public static readonly IMutagenEncoding _utf8_1250;
         public static readonly IMutagenEncoding _utf8_1251;

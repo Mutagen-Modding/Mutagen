@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);";
+            string testString = "StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

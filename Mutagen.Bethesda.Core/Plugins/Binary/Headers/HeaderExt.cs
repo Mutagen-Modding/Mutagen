@@ -8,6 +8,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
+using Mutagen.Bethesda.Strings;
 
 namespace Mutagen.Bethesda
 {
@@ -155,10 +156,11 @@ namespace Mutagen.Bethesda
         /// Interprets a subrecord's content as a string.
         /// </summary>
         /// <param name="frame">Frame to read from</param>
+        /// <param name="encoding">Encoding to use</param>
         /// <returns>Subrecord's content as a string, null trimmed if applicable</returns>
-        public static string AsString(this SubrecordFrame frame)
+        public static string AsString(this SubrecordFrame frame, IMutagenEncoding encoding)
         {
-            return BinaryStringUtility.ProcessWholeToZString(frame.Content);
+            return BinaryStringUtility.ProcessWholeToZString(frame.Content, encoding);
         }
 
         #region Pin Forwarding
@@ -246,8 +248,9 @@ namespace Mutagen.Bethesda
         /// Interprets a subrecord's content as a string.
         /// </summary>
         /// <param name="pin">Frame to read from</param>
+        /// <param name="encoding">Encoding to use</param>
         /// <returns>Subrecord's content as a string, null trimmed if applicable</returns>
-        public static string AsString(this SubrecordPinFrame pin) => pin.Frame.AsString();
+        public static string AsString(this SubrecordPinFrame pin, IMutagenEncoding encoding) => pin.Frame.AsString(encoding);
         #endregion
         #endregion
 

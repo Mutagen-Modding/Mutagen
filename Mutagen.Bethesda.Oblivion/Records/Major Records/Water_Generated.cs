@@ -1909,7 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Texture
         private int? _TextureLocation;
-        public String? Texture => _TextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Texture => _TextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Opacity
         private int? _OpacityLocation;
@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region MaterialID
         private int? _MaterialIDLocation;
-        public String? MaterialID => _MaterialIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialIDLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? MaterialID => _MaterialIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialIDLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Sound
         private int? _SoundLocation;

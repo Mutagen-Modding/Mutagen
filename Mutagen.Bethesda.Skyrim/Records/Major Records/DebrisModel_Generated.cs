@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 offset: offset,
                 parseParams: parseParams,
                 fill: ret.FillRecordType);
-            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(ret._DATALocation!.Value + 0x1));
+            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(ret._DATALocation!.Value + 0x1), package.MetaData.Encodings.NonTranslated);
             ret.ModelFilenameEndingPos = ret._DATALocation!.Value + 0x1 + ret.ModelFilename.Length + 1;
             return ret;
         }

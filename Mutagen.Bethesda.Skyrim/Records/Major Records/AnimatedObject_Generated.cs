@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         #region UnloadEvent
         private int? _UnloadEventLocation;
-        public String? UnloadEvent => _UnloadEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _UnloadEventLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? UnloadEvent => _UnloadEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _UnloadEventLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

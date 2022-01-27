@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public SByte Unknown => (sbyte)_data.Slice(0x0, 0x1)[0];
         #region FileName
-        public String FileName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x1), lengthLength: 2);
+        public String FileName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x1), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
         protected int FileNameEndingPos;
         #endregion
         #region Fragments

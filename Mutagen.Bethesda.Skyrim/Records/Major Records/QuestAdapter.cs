@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var frags = item.Fragments;
                 writer.Write(checked((ushort)frags.Count));
-                writer.Write(item.FileName, StringBinaryType.PrependLengthUShort);
+                writer.Write(item.FileName, StringBinaryType.PrependLengthUShort, writer.MetaData.Encodings.NonTranslated);
                 ListBinaryTranslation<IQuestScriptFragmentGetter>.Instance.Write(
                     writer,
                     frags,
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
                 // Skip unknown
                 frame.Position += 1;
                 var count = frame.ReadUInt16();
-                _filename = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
+                _filename = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort, encoding: _package.MetaData.Encodings.NonTranslated);
                 Fragments = 
                     ListBinaryTranslation<QuestScriptFragment>.Instance.Parse(
                         frame,

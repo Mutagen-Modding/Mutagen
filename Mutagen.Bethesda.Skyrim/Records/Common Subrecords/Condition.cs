@@ -889,10 +889,10 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (subMeta.RecordType.TypeInt)
                 {
                     case 0x31534943: // CIS1
-                        funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content);
+                        funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                         break;
                     case 0x32534943: // CIS2
-                        funcData.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content);
+                        funcData.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                         break;
                     default:
                         return;
@@ -1249,12 +1249,12 @@ namespace Mutagen.Bethesda.Skyrim
             public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
 
             private ReadOnlyMemorySlice<byte> _stringParamData1;
-            public bool ParameterOneString_IsSet { get; private set; }
-            public string? ParameterOneString => ParameterOneString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1) : null;
+            public bool ParameterOneStringIsSet { get; private set; }
+            public string? ParameterOneString => ParameterOneStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1, _package.MetaData.Encodings.NonTranslated) : null;
 
             private ReadOnlyMemorySlice<byte> _stringParamData2;
-            public bool ParameterTwoString_IsSet { get; private set; }
-            public string? ParameterTwoString => ParameterTwoString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2) : null;
+            public bool ParameterTwoStringIsSet { get; private set; }
+            public string? ParameterTwoString => ParameterTwoStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2, _package.MetaData.Encodings.NonTranslated) : null;
 
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
@@ -1266,11 +1266,11 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case 0x31534943: // CIS1
                         _stringParamData1 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
-                        ParameterOneString_IsSet = true;
+                        ParameterOneStringIsSet = true;
                         break;
                     case 0x32534943: // CIS2
                         _stringParamData2 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
-                        ParameterTwoString_IsSet = true;
+                        ParameterTwoStringIsSet = true;
                         break;
                     default:
                         break;

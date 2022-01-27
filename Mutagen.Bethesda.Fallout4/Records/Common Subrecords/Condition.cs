@@ -988,10 +988,10 @@ namespace Mutagen.Bethesda.Fallout4
                 switch (subMeta.RecordType.TypeInt)
                 {
                     case 0x31534943: // CIS1
-                        item.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content);
+                        item.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                         break;
                     case 0x32534943: // CIS2
-                        item.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content);
+                        item.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                         break;
                     default:
                         return;
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4
                         FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterOneRecord.FormKey);
                         break;
                     case Condition.ParameterCategory.String:
-                        BinaryStringUtility.Write(writer, item.ParameterOneString);
+                        BinaryStringUtility.Write(writer, item.ParameterOneString, writer.MetaData.Encodings.NonTranslated);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Fallout4
                         FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterTwoRecord.FormKey);
                         break;
                     case Condition.ParameterCategory.String:
-                        BinaryStringUtility.Write(writer, item.ParameterTwoString);
+                        BinaryStringUtility.Write(writer, item.ParameterTwoString, writer.MetaData.Encodings.NonTranslated);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -1225,11 +1225,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             private ReadOnlyMemorySlice<byte> _stringParamData1;
             public bool ParameterOneString_IsSet { get; private set; }
-            public string? ParameterOneString => ParameterOneString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1) : null;
+            public string? ParameterOneString => ParameterOneString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1, _package.MetaData.Encodings.NonTranslated) : null;
 
             private ReadOnlyMemorySlice<byte> _stringParamData2;
             public bool ParameterTwoString_IsSet { get; private set; }
-            public string? ParameterTwoString => ParameterTwoString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2) : null;
+            public string? ParameterTwoString => ParameterTwoString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2, _package.MetaData.Encodings.NonTranslated) : null;
 
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {

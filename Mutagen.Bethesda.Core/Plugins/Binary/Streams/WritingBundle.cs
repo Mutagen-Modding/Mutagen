@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 
@@ -39,4 +40,6 @@ public record WritingBundle(GameConstants Constants)
     /// If a FormID has all zeros for the ID, but a non-zero mod index, then set mod index to zero as well.
     /// </summary>
     public bool CleanNulls { get; set; } = true;
+
+    public EncodingBundle Encodings { get; set; } = new(MutagenEncodingProvider._1252, MutagenEncodingProvider._1252);
 }

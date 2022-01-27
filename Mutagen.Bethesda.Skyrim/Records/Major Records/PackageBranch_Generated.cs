@@ -2128,7 +2128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region BranchType
         private int? _BranchTypeLocation;
-        public String BranchType => _BranchTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BranchTypeLocation.Value, _package.MetaData.Constants)) : string.Empty;
+        public String BranchType => _BranchTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BranchTypeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(
@@ -2141,7 +2141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IPackageRootGetter? Root { get; private set; }
         #region ProcedureType
         private int? _ProcedureTypeLocation;
-        public String? ProcedureType => _ProcedureTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ProcedureTypeLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? ProcedureType => _ProcedureTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ProcedureTypeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Flags
         private int? _FlagsLocation;

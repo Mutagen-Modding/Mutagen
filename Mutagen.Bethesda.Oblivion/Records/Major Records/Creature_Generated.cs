@@ -4005,7 +4005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -4064,11 +4064,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region BloodSpray
         private int? _BloodSprayLocation;
-        public String? BloodSpray => _BloodSprayLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BloodSprayLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? BloodSpray => _BloodSprayLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BloodSprayLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region BloodDecal
         private int? _BloodDecalLocation;
-        public String? BloodDecal => _BloodDecalLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BloodDecalLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? BloodDecal => _BloodDecalLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BloodDecalLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region InheritsSoundFrom
         private int? _InheritsSoundFromLocation;
@@ -4189,7 +4189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Models = BinaryOverlayList.FactoryByLazyParse<String>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s));
+                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated));
                     stream.Position += subLen;
                     return (int)Creature_FieldIndex.Models;
                 }
@@ -4253,7 +4253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Animations = BinaryOverlayList.FactoryByLazyParse<String>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s));
+                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated));
                     stream.Position += subLen;
                     return (int)Creature_FieldIndex.Animations;
                 }

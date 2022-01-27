@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Insignia
         private int? _InsigniaLocation;
-        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (m, p) => StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup));
+                        creator: (m, p) => StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup, nonLocalizedEncoding: p.MetaData.Encodings.NonTranslated));
                     return (int)Rank_FieldIndex.Title;
                 }
                 case RecordTypeInts.INAM:

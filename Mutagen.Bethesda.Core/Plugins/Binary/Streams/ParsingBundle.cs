@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams
 {
@@ -49,6 +50,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         /// ModKey of the mod being parsed
         /// </summary>
         public ModKey ModKey { get; set; }
+
+        public EncodingBundle Encodings { get; set; } = new(MutagenEncodingProvider._1252, MutagenEncodingProvider._1252);
 
         public ParsingBundle(GameConstants constants, IMasterReferenceCollection masterReferences)
         {

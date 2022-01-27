@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Data
-        public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 2);
+        public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
         protected int DataEndingPos;
         #endregion
         partial void CustomFactoryEnd(

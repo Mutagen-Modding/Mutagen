@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 using Noggog;
 
 namespace Mutagen.Bethesda.Tests;
@@ -584,7 +585,7 @@ public class SkyrimProcessor : Processor
                 }
                 var finalRec = majorFrame.Meta.Subrecord(majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + finalLoc));
                 var dataSlice = majorFrame.Content.Slice(anamPos.Value, anamRecord.TotalLength + finalLoc + finalRec.TotalLength);
-                if (BinaryStringUtility.ProcessWholeToZString(anamRecord.Content) == "Bool"
+                if (BinaryStringUtility.ProcessWholeToZString(anamRecord.Content, MutagenEncodingProvider._1252) == "Bool"
                     && recs[1] != null)
                 {
                     // Ensure bool value is 1 or 0

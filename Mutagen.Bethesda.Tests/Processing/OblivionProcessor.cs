@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -160,7 +161,7 @@ public class OblivionProcessor : Processor
             // Get icon string
             var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
             stream.Position = iconLoc.Min + 20;
-            var iconStr = BinaryStringUtility.ToZString(stream.ReadMemory((int)(iconLoc.Max - stream.Position)));
+            var iconStr = BinaryStringUtility.ToZString(stream.ReadMemory((int)(iconLoc.Max - stream.Position)), MutagenEncodingProvider._1252);
 
             // Get icon bytes
             MemoryStream memStream = new MemoryStream();
