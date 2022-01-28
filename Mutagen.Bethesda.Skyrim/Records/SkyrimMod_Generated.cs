@@ -6033,6 +6033,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModPath path,
             SkyrimRelease release,
             GroupMask? importMask = null,
+            Language? targetLanguage = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true,
             IFileSystem? fileSystem = null)
@@ -6046,6 +6047,10 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
+                    if (targetLanguage != null)
+                    {
+                        frame.MetaData.TargetLanguage = targetLanguage.Value;
+                    }
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -6072,6 +6077,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease release,
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
+            Language? targetLanguage = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true,
             IFileSystem? fileSystem = null)
@@ -6085,6 +6091,10 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
+                    if (targetLanguage != null)
+                    {
+                        frame.MetaData.TargetLanguage = targetLanguage.Value;
+                    }
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -6168,11 +6178,13 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
             SkyrimRelease release,
+            Language? targetLanguage = null,
             StringsReadParameters? stringsParam = null,
             IFileSystem? fileSystem = null)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 path: path,
+                targetLanguage: targetLanguage,
                 stringsParam: stringsParam,
                 release: release,
                 fileSystem: fileSystem);
@@ -6980,6 +6992,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModPath path,
             SkyrimRelease release,
             GroupMask? importMask = null,
+            Language? targetLanguage = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true,
             IFileSystem? fileSystem = null)
@@ -6993,6 +7006,10 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
+                    if (targetLanguage != null)
+                    {
+                        frame.MetaData.TargetLanguage = targetLanguage.Value;
+                    }
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -24065,6 +24082,7 @@ namespace Mutagen.Bethesda.Skyrim
             FilePath path,
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null,
+            Language? targetLanguage = null,
             IFileSystem? fileSystem = null)
         {
             param ??= BinaryWriteParameters.Default;
@@ -24773,6 +24791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             ModPath path,
             SkyrimRelease release,
+            Language? targetLanguage = null,
             StringsReadParameters? stringsParam = null,
             IFileSystem? fileSystem = null)
         {
@@ -24786,6 +24805,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fileSystem: fileSystem);
             try
             {
+                if (targetLanguage != null)
+                {
+                    meta.TargetLanguage = targetLanguage.Value;
+                }
                 if (stream.Remaining < 12)
                 {
                     throw new ArgumentException("File stream was too short to parse flags");

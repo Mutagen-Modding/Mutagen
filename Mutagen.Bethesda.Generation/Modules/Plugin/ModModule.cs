@@ -6,7 +6,6 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
-using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
