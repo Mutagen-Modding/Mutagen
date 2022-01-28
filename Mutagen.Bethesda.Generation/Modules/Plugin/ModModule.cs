@@ -603,6 +603,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 using (new BraceWrapper(fg) { AppendSemicolon = true })
                 {
                     fg.AppendLine("StringsWriter = param.StringsWriter,");
+                    fg.AppendLine("TargetLanguageOverride = param.TargetLanguageOverride,");
                 }
 
                 fg.AppendLine($"var writer = new MutagenWriter(stream, bundle);");

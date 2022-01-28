@@ -6244,6 +6244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var bundle = new WritingBundle(GameConstants.Oblivion)
             {
                 StringsWriter = param.StringsWriter,
+                TargetLanguageOverride = param.TargetLanguageOverride,
             };
             var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
@@ -12436,7 +12437,8 @@ namespace Mutagen.Bethesda.Oblivion
                 path: path);
             var bundle = new WritingBundle(GameRelease.Oblivion)
             {
-                CleanNulls = param.CleanNulls
+                CleanNulls = param.CleanNulls,
+                TargetLanguageOverride = param.TargetLanguageOverride
             };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(

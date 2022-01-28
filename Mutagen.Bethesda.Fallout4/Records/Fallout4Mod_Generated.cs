@@ -3012,6 +3012,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             var bundle = new WritingBundle(GameConstants.Fallout4)
             {
                 StringsWriter = param.StringsWriter,
+                TargetLanguageOverride = param.TargetLanguageOverride,
             };
             var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
@@ -5181,7 +5182,8 @@ namespace Mutagen.Bethesda.Fallout4
             var bundle = new WritingBundle(GameRelease.Fallout4)
             {
                 StringsWriter = param.StringsWriter,
-                CleanNulls = param.CleanNulls
+                CleanNulls = param.CleanNulls,
+                TargetLanguageOverride = param.TargetLanguageOverride
             };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(

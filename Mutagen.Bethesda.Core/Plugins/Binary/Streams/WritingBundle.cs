@@ -40,6 +40,8 @@ public record WritingBundle(GameConstants Constants)
     /// If a FormID has all zeros for the ID, but a non-zero mod index, then set mod index to zero as well.
     /// </summary>
     public bool CleanNulls { get; set; } = true;
+    
+    public Language? TargetLanguageOverride { get; set; }
 
     public EncodingBundle Encodings { get; set; } = new(MutagenEncodingProvider._1252, MutagenEncodingProvider._1252);
 }

@@ -11171,6 +11171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var bundle = new WritingBundle(gameConstants)
             {
                 StringsWriter = param.StringsWriter,
+                TargetLanguageOverride = param.TargetLanguageOverride,
             };
             var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
@@ -24094,7 +24095,8 @@ namespace Mutagen.Bethesda.Skyrim
             var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
                 StringsWriter = param.StringsWriter,
-                CleanNulls = param.CleanNulls
+                CleanNulls = param.CleanNulls,
+                TargetLanguageOverride = param.TargetLanguageOverride
             };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(

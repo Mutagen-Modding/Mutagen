@@ -228,8 +228,20 @@ public class StringBinaryTranslation
     {
         if (writer.MetaData.StringsWriter == null)
         {
+            string? str;
+            if (writer.MetaData.TargetLanguageOverride == null)
+            {
+                str = item.String ?? string.Empty;
+            }
+            else
+            {
+                if (!item.TryLookup(writer.MetaData.TargetLanguageOverride.Value, out str))
+                {
+                    str = string.Empty;
+                }
+            }
             writer.Write(
-                item.String ?? string.Empty,
+                str,
                 encoding: writer.MetaData.Encodings.NonLocalized,
                 binaryType: binaryType);
         }
@@ -251,17 +263,7 @@ public class StringBinaryTranslation
         {
             using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
-                if (writer.MetaData.StringsWriter == null)
-                {
-                    writer.Write(
-                        item.String ?? string.Empty,
-                        encoding: writer.MetaData.Encodings.NonLocalized,
-                        binaryType: binaryType);
-                }
-                else
-                {
-                    writer.Write(writer.MetaData.StringsWriter.Register(item, source));
-                }
+                Write(writer, item, binaryType, source);
             }
         }
         catch (Exception ex)
@@ -277,17 +279,7 @@ public class StringBinaryTranslation
         StringsSource source)
     {
         if (item == null) return;
-        if (writer.MetaData.StringsWriter == null)
-        {
-            writer.Write(
-                item.String ?? string.Empty,
-                encoding: writer.MetaData.Encodings.NonLocalized,
-                binaryType: binaryType);
-        }
-        else
-        {
-            writer.Write(writer.MetaData.StringsWriter.Register(item, source));
-        }
+        Write(writer, item, binaryType, source);
     }
 
     public void WriteNullable(

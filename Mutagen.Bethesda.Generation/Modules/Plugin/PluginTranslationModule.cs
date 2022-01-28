@@ -391,6 +391,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     prop.Add($"{nameof(WritingBundle.StringsWriter)} = param.StringsWriter");
                 }
                 prop.Add($"{nameof(WritingBundle.CleanNulls)} = param.{nameof(BinaryWriteParameters.CleanNulls)}");
+                prop.Add($"{nameof(WritingBundle.TargetLanguageOverride)} = param.{nameof(BinaryWriteParameters.TargetLanguageOverride)}");
             }
             fg.AppendLine("using var memStream = new MemoryTributary();");
             using (var args = new ArgsWrapper(fg,
