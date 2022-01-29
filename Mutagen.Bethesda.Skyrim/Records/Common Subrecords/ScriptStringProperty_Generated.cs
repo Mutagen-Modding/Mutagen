@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IScriptStringPropertyGetter>,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ScriptStringProperty_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ScriptStringProperty_Registration.Instance;
         String Data { get; }
 
     }
@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptStringProperty_Registration.Instance;
-        public new static ScriptStringProperty_Registration Registration => ScriptStringProperty_Registration.Instance;
+        public new static ScriptStringProperty_Registration StaticRegistration => ScriptStringProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptStringPropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptStringProperty_Registration.Instance;
-        public new static ScriptStringProperty_Registration Registration => ScriptStringProperty_Registration.Instance;
+        public new static ScriptStringProperty_Registration StaticRegistration => ScriptStringProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptStringPropertyCommon.Instance;
         [DebuggerStepThrough]

@@ -853,6 +853,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<IdleAnimation>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IIdleAnimation);
+
         [Flags]
         public enum DATADataType
         {
@@ -970,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IIdleAnimationGetter>,
         IMapsToGetter<IIdleAnimationGetter>
     {
-        static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => IdleAnimation_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
         String? Filename { get; }
         String? AnimationEvent { get; }
@@ -1918,7 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleAnimation_Registration.Instance;
-        public new static IdleAnimation_Registration Registration => IdleAnimation_Registration.Instance;
+        public new static IdleAnimation_Registration StaticRegistration => IdleAnimation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleAnimationCommon.Instance;
         [DebuggerStepThrough]
@@ -2176,7 +2178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleAnimation_Registration.Instance;
-        public new static IdleAnimation_Registration Registration => IdleAnimation_Registration.Instance;
+        public new static IdleAnimation_Registration StaticRegistration => IdleAnimation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleAnimationCommon.Instance;
         [DebuggerStepThrough]
@@ -2198,6 +2200,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IIdleAnimation);
+
 
         #region Conditions
         partial void ConditionsCustomParse(

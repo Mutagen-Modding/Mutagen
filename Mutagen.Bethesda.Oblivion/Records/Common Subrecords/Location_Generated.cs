@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Location_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Location_Registration.Instance;
         P3Float Position { get; }
         P3Float Rotation { get; }
 
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
-        public static Location_Registration Registration => Location_Registration.Instance;
+        public static Location_Registration StaticRegistration => Location_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
-        public static Location_Registration Registration => Location_Registration.Instance;
+        public static Location_Registration StaticRegistration => Location_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]

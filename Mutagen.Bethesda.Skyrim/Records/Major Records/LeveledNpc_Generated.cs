@@ -695,6 +695,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<LeveledNpc>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILeveledNpc);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -816,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter
     {
-        static new ILoquiRegistration Registration => LeveledNpc_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LeveledNpc_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -1742,7 +1744,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledNpc_Registration.Instance;
-        public new static LeveledNpc_Registration Registration => LeveledNpc_Registration.Instance;
+        public new static LeveledNpc_Registration StaticRegistration => LeveledNpc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledNpcCommon.Instance;
         [DebuggerStepThrough]
@@ -1986,7 +1988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledNpc_Registration.Instance;
-        public new static LeveledNpc_Registration Registration => LeveledNpc_Registration.Instance;
+        public new static LeveledNpc_Registration StaticRegistration => LeveledNpc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledNpcCommon.Instance;
         [DebuggerStepThrough]
@@ -2008,6 +2010,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILeveledNpc);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

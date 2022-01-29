@@ -392,6 +392,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Script>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IScript);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -495,7 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IScriptGetter>,
         IMapsToGetter<IScriptGetter>
     {
-        static new ILoquiRegistration Registration => Script_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Script_Registration.Instance;
         IScriptFieldsGetter Fields { get; }
 
     }
@@ -1226,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Script_Registration.Instance;
-        public new static Script_Registration Registration => Script_Registration.Instance;
+        public new static Script_Registration StaticRegistration => Script_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptCommon.Instance;
         [DebuggerStepThrough]
@@ -1398,7 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Script_Registration.Instance;
-        public new static Script_Registration Registration => Script_Registration.Instance;
+        public new static Script_Registration StaticRegistration => Script_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptCommon.Instance;
         [DebuggerStepThrough]
@@ -1420,6 +1422,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IScript);
+
 
         #region Fields
         private IScriptFieldsGetter? _Fields;

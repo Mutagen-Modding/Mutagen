@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Generation
         public static bool IsTopLevelGroup(this ObjectGeneration objGen)
         {
             if (objGen.GetObjectType() != ObjectType.Group) return false;
-            if (objGen.Name == "Group") return true;
+            if (objGen.Name == $"{objGen.ProtoGen.Protocol.Namespace}Group") return true;
             return false;
         }
 
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Generation
         public static bool IsListGroup(this ObjectGeneration obj)
         {
             return obj.GetObjectType() == ObjectType.Group
-                && obj.Name != "Group";
+                && obj.Name != $"{obj.ProtoGen.Protocol.Namespace}Group";
         }
 
         public static string GetTriggeringSource(this ObjectGeneration objGen)

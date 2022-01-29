@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SceneActor_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SceneActor_Registration.Instance;
         UInt32 ID { get; }
         SceneActor.Flag? Flags { get; }
         SceneActor.BehaviorFlag? BehaviorFlags { get; }
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneActor_Registration.Instance;
-        public static SceneActor_Registration Registration => SceneActor_Registration.Instance;
+        public static SceneActor_Registration StaticRegistration => SceneActor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SceneActorCommon.Instance;
         [DebuggerStepThrough]
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneActor_Registration.Instance;
-        public static SceneActor_Registration Registration => SceneActor_Registration.Instance;
+        public static SceneActor_Registration StaticRegistration => SceneActor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SceneActorCommon.Instance;
         [DebuggerStepThrough]

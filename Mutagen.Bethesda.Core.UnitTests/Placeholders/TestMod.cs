@@ -34,9 +34,14 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
         public bool CanUseLocalization { get; }
         public bool UsingLocalization { get; set; }
 
+        IGroup IMod.GetTopLevelGroup(Type type)
+        {
+            throw new NotImplementedException();
+        }
+
         public uint NextFormID { get; set; }
 
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords()
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords()
         {
             return EnumerateMajorRecords();
         }
@@ -46,7 +51,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(Type? t, bool throwIfUnknown = true)
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(Type? t, bool throwIfUnknown = true)
         {
             throw new NotImplementedException();
         }
@@ -81,32 +86,32 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
             throw new NotImplementedException();
         }
 
-        public void Remove<TMajor>(FormKey formKey, bool throwIfUnknown = true) where TMajor : IMajorRecordCommonGetter
+        public void Remove<TMajor>(FormKey formKey, bool throwIfUnknown = true) where TMajor : IMajorRecordGetter
         {
             throw new NotImplementedException();
         }
 
-        public void Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown = true) where TMajor : IMajorRecordCommonGetter
+        public void Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown = true) where TMajor : IMajorRecordGetter
         {
             throw new NotImplementedException();
         }
 
-        public void Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown = true) where TMajor : IMajorRecordCommonGetter
+        public void Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown = true) where TMajor : IMajorRecordGetter
         {
             throw new NotImplementedException();
         }
 
-        public void Remove<TMajor>(TMajor record, bool throwIfUnknown = true) where TMajor : IMajorRecordCommonGetter
+        public void Remove<TMajor>(TMajor record, bool throwIfUnknown = true) where TMajor : IMajorRecordGetter
         {
             throw new NotImplementedException();
         }
 
-        public void Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown = true) where TMajor : IMajorRecordCommonGetter
+        public void Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown = true) where TMajor : IMajorRecordGetter
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords()
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords()
         {
             throw new NotImplementedException();
         }
@@ -116,17 +121,17 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
             throw new NotImplementedException();
         }
 
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown)
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown)
         {
             return EnumerateMajorRecords(type, throwIfUnknown);
         }
 
-        public IEnumerable<IModContext<TMajor>> EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown = true) where TMajor : class, IMajorRecordCommonGetter
+        public IEnumerable<IModContext<TMajor>> EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown = true) where TMajor : class, IMajorRecordGetter
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IModContext<IMajorRecordCommonGetter>> EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type t, bool throwIfUnknown = true)
+        public IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type t, bool throwIfUnknown = true)
         {
             throw new NotImplementedException();
         }
@@ -141,12 +146,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
             throw new NotImplementedException();
         }
 
-        IGroupCommonGetter<TMajor> IModGetter.GetTopLevelGroup<TMajor>()
+        IGroupGetter<TMajor> IModGetter.GetTopLevelGroup<TMajor>()
         {
             throw new NotImplementedException();
         }
 
-        public IGroupCommonGetter<IMajorRecordCommonGetter> GetTopLevelGroup(Type type)
+        public IGroupGetter GetTopLevelGroup(Type type)
         {
             throw new NotImplementedException();
         }
@@ -166,7 +171,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
             throw new NotImplementedException();
         }
 
-        public IGroupCommon<TMajor> GetTopLevelGroup<TMajor>() where TMajor : IMajorRecordCommon
+        public IGroup<TMajor> GetTopLevelGroup<TMajor>() where TMajor : IMajorRecord
         {
             throw new NotImplementedException();
         }

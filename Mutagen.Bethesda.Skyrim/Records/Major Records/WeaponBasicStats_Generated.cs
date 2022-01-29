@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeaponBasicStats_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeaponBasicStats_Registration.Instance;
         UInt32 Value { get; }
         Single Weight { get; }
         UInt16 Damage { get; }
@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponBasicStats_Registration.Instance;
-        public static WeaponBasicStats_Registration Registration => WeaponBasicStats_Registration.Instance;
+        public static WeaponBasicStats_Registration StaticRegistration => WeaponBasicStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponBasicStatsCommon.Instance;
         [DebuggerStepThrough]
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponBasicStats_Registration.Instance;
-        public static WeaponBasicStats_Registration Registration => WeaponBasicStats_Registration.Instance;
+        public static WeaponBasicStats_Registration StaticRegistration => WeaponBasicStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponBasicStatsCommon.Instance;
         [DebuggerStepThrough]

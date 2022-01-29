@@ -766,6 +766,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<VolumetricLighting>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IVolumetricLighting);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -877,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IVolumetricLightingGetter>,
         IMapsToGetter<IVolumetricLightingGetter>
     {
-        static new ILoquiRegistration Registration => VolumetricLighting_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => VolumetricLighting_Registration.Instance;
         Single? Intensity { get; }
         Single? CustomColorContribution { get; }
         Single? ColorR { get; }
@@ -1819,7 +1821,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VolumetricLighting_Registration.Instance;
-        public new static VolumetricLighting_Registration Registration => VolumetricLighting_Registration.Instance;
+        public new static VolumetricLighting_Registration StaticRegistration => VolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VolumetricLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -2098,7 +2100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VolumetricLighting_Registration.Instance;
-        public new static VolumetricLighting_Registration Registration => VolumetricLighting_Registration.Instance;
+        public new static VolumetricLighting_Registration StaticRegistration => VolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VolumetricLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -2119,6 +2121,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IVolumetricLighting);
+
 
         #region Intensity
         private int? _IntensityLocation;

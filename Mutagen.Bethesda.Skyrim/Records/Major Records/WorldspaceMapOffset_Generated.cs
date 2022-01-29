@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorldspaceMapOffset_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorldspaceMapOffset_Registration.Instance;
         Single Scale { get; }
         P3Float CellOffset { get; }
 
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMapOffset_Registration.Instance;
-        public static WorldspaceMapOffset_Registration Registration => WorldspaceMapOffset_Registration.Instance;
+        public static WorldspaceMapOffset_Registration StaticRegistration => WorldspaceMapOffset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMapOffsetCommon.Instance;
         [DebuggerStepThrough]
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMapOffset_Registration.Instance;
-        public static WorldspaceMapOffset_Registration Registration => WorldspaceMapOffset_Registration.Instance;
+        public static WorldspaceMapOffset_Registration StaticRegistration => WorldspaceMapOffset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMapOffsetCommon.Instance;
         [DebuggerStepThrough]

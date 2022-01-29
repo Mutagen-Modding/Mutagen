@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => EnchantmentData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => EnchantmentData_Registration.Instance;
         Enchantment.EnchantmentType Type { get; }
         UInt32 ChargeAmount { get; }
         UInt32 EnchantCost { get; }
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnchantmentData_Registration.Instance;
-        public static EnchantmentData_Registration Registration => EnchantmentData_Registration.Instance;
+        public static EnchantmentData_Registration StaticRegistration => EnchantmentData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EnchantmentDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnchantmentData_Registration.Instance;
-        public static EnchantmentData_Registration Registration => EnchantmentData_Registration.Instance;
+        public static EnchantmentData_Registration StaticRegistration => EnchantmentData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EnchantmentDataCommon.Instance;
         [DebuggerStepThrough]

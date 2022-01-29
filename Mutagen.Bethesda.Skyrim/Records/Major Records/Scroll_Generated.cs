@@ -1423,6 +1423,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Scroll>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IScroll);
+
         [Flags]
         public enum DATADataType
         {
@@ -1592,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter
     {
-        static new ILoquiRegistration Registration => Scroll_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Scroll_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -2937,7 +2939,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Scroll_Registration.Instance;
-        public new static Scroll_Registration Registration => Scroll_Registration.Instance;
+        public new static Scroll_Registration StaticRegistration => Scroll_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScrollCommon.Instance;
         [DebuggerStepThrough]
@@ -3333,7 +3335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Scroll_Registration.Instance;
-        public new static Scroll_Registration Registration => Scroll_Registration.Instance;
+        public new static Scroll_Registration StaticRegistration => Scroll_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScrollCommon.Instance;
         [DebuggerStepThrough]
@@ -3355,6 +3357,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IScroll);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

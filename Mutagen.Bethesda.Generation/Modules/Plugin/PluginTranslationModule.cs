@@ -1788,6 +1788,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             using (var args = new ClassWrapper(fg, $"{BinaryOverlayClass(obj)}"))
             {
+                args.Abstract = obj.Abstract;
                 args.Partial = true;
                 var block = obj.GetObjectType() == ObjectType.Mod
                     || (obj.GetObjectType() == ObjectType.Group && obj.Generics.Count > 0);
@@ -1817,8 +1818,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     {
                         fg.AppendLine($"public {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{obj.GetObjectData().GameCategory};");
                     }
-                    fg.AppendLine($"IGroupCommonGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
-                    fg.AppendLine($"IGroupCommonGetter<IMajorRecordCommonGetter> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
+                    fg.AppendLine($"IGroupGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
+                    fg.AppendLine($"IGroupGetter {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
                     fg.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
                     fg.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
@@ -1874,6 +1875,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         fg.AppendLine("if (!_shouldDispose) return;");
                         fg.AppendLine("_data.Dispose();");
                     }
+                }
+
+                if (await obj.IsMajorRecord() && !obj.Abstract)
+                {
+                    fg.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: false)});");
+                    fg.AppendLine();
                 }
 
                 if (obj.GetObjectData().MajorRecordFlags)

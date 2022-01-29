@@ -565,6 +565,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Transform>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ITransform);
+
         [Flags]
         public enum DATADataType
         {
@@ -675,7 +677,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<ITransformGetter>,
         IMapsToGetter<ITransformGetter>
     {
-        static new ILoquiRegistration Registration => Transform_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Transform_Registration.Instance;
         P3Float Position { get; }
         P3Float Rotation { get; }
         Single Scale { get; }
@@ -1467,7 +1469,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Transform_Registration.Instance;
-        public new static Transform_Registration Registration => Transform_Registration.Instance;
+        public new static Transform_Registration StaticRegistration => Transform_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TransformCommon.Instance;
         [DebuggerStepThrough]
@@ -1672,7 +1674,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Transform_Registration.Instance;
-        public new static Transform_Registration Registration => Transform_Registration.Instance;
+        public new static Transform_Registration StaticRegistration => Transform_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TransformCommon.Instance;
         [DebuggerStepThrough]
@@ -1693,6 +1695,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ITransform);
+
 
         private int? _DATALocation;
         public Transform.DATADataType DATADataTypeState { get; private set; }

@@ -641,6 +641,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Tree>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ITree);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -750,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<ITreeGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Tree_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Tree_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1673,7 +1675,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
-        public new static Tree_Registration Registration => Tree_Registration.Instance;
+        public new static Tree_Registration StaticRegistration => Tree_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
         [DebuggerStepThrough]
@@ -1898,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
-        public new static Tree_Registration Registration => Tree_Registration.Instance;
+        public new static Tree_Registration StaticRegistration => Tree_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
         [DebuggerStepThrough]
@@ -1919,6 +1921,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ITree);
+
 
         public IModelGetter? Model { get; private set; }
         #region Icon

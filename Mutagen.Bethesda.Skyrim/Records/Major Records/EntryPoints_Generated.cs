@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => EntryPoints_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => EntryPoints_Registration.Instance;
         Furniture.AnimationType Type { get; }
         Furniture.Entry Points { get; }
 
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EntryPoints_Registration.Instance;
-        public static EntryPoints_Registration Registration => EntryPoints_Registration.Instance;
+        public static EntryPoints_Registration StaticRegistration => EntryPoints_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EntryPointsCommon.Instance;
         [DebuggerStepThrough]
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EntryPoints_Registration.Instance;
-        public static EntryPoints_Registration Registration => EntryPoints_Registration.Instance;
+        public static EntryPoints_Registration StaticRegistration => EntryPoints_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EntryPointsCommon.Instance;
         [DebuggerStepThrough]

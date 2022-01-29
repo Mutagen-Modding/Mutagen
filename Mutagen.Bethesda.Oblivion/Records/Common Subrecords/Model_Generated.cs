@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Model_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Model_Registration.Instance;
         String File { get; }
         Single BoundRadius { get; }
         ReadOnlyMemorySlice<Byte>? Hashes { get; }
@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
-        public static Model_Registration Registration => Model_Registration.Instance;
+        public static Model_Registration StaticRegistration => Model_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
-        public static Model_Registration Registration => Model_Registration.Instance;
+        public static Model_Registration StaticRegistration => Model_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ModelCommon.Instance;
         [DebuggerStepThrough]

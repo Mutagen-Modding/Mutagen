@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ShoutWord_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ShoutWord_Registration.Instance;
         IFormLinkGetter<IWordOfPowerGetter> Word { get; }
         IFormLinkGetter<ISpellGetter> Spell { get; }
         Single RecoveryTime { get; }
@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ShoutWord_Registration.Instance;
-        public static ShoutWord_Registration Registration => ShoutWord_Registration.Instance;
+        public static ShoutWord_Registration StaticRegistration => ShoutWord_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ShoutWordCommon.Instance;
         [DebuggerStepThrough]
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ShoutWord_Registration.Instance;
-        public static ShoutWord_Registration Registration => ShoutWord_Registration.Instance;
+        public static ShoutWord_Registration StaticRegistration => ShoutWord_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ShoutWordCommon.Instance;
         [DebuggerStepThrough]

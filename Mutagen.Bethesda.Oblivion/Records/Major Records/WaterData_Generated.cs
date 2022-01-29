@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WaterData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WaterData_Registration.Instance;
         WaterData.VersioningBreaks Versioning { get; }
         Single WindVelocity { get; }
         Single WindDirection { get; }
@@ -2210,7 +2210,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterData_Registration.Instance;
-        public static WaterData_Registration Registration => WaterData_Registration.Instance;
+        public static WaterData_Registration StaticRegistration => WaterData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterDataCommon.Instance;
         [DebuggerStepThrough]

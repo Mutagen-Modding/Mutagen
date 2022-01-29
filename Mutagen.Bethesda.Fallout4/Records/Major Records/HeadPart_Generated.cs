@@ -989,6 +989,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<HeadPart>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IHeadPart);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1121,7 +1123,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => HeadPart_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => HeadPart_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -2177,7 +2179,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadPart_Registration.Instance;
-        public new static HeadPart_Registration Registration => HeadPart_Registration.Instance;
+        public new static HeadPart_Registration StaticRegistration => HeadPart_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HeadPartCommon.Instance;
         [DebuggerStepThrough]
@@ -2481,7 +2483,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadPart_Registration.Instance;
-        public new static HeadPart_Registration Registration => HeadPart_Registration.Instance;
+        public new static HeadPart_Registration StaticRegistration => HeadPart_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HeadPartCommon.Instance;
         [DebuggerStepThrough]
@@ -2503,6 +2505,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IHeadPart);
+
         public HeadPart.MajorFlag MajorFlags => (HeadPart.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name

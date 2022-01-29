@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LocationCellStaticReference_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LocationCellStaticReference_Registration.Instance;
         IFormLinkGetter<ILocationReferenceTypeGetter> LocationRefType { get; }
         IFormLinkGetter<ILinkedReferenceGetter> Marker { get; }
         IFormLinkGetter<IComplexLocationGetter> Location { get; }
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellStaticReference_Registration.Instance;
-        public static LocationCellStaticReference_Registration Registration => LocationCellStaticReference_Registration.Instance;
+        public static LocationCellStaticReference_Registration StaticRegistration => LocationCellStaticReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellStaticReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellStaticReference_Registration.Instance;
-        public static LocationCellStaticReference_Registration Registration => LocationCellStaticReference_Registration.Instance;
+        public static LocationCellStaticReference_Registration StaticRegistration => LocationCellStaticReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellStaticReferenceCommon.Instance;
         [DebuggerStepThrough]

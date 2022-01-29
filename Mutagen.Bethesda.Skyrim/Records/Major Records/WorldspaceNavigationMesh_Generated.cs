@@ -421,6 +421,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<WorldspaceNavigationMesh>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IWorldspaceNavigationMesh);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -523,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IWorldspaceNavigationMeshGetter>,
         IMapsToGetter<IWorldspaceNavigationMeshGetter>
     {
-        static new ILoquiRegistration Registration => WorldspaceNavigationMesh_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => WorldspaceNavigationMesh_Registration.Instance;
         IWorldspaceNavigationMeshDataGetter? Data { get; }
 
     }
@@ -1375,7 +1377,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMesh_Registration.Instance;
-        public new static WorldspaceNavigationMesh_Registration Registration => WorldspaceNavigationMesh_Registration.Instance;
+        public new static WorldspaceNavigationMesh_Registration StaticRegistration => WorldspaceNavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceNavigationMeshCommon.Instance;
         [DebuggerStepThrough]
@@ -1518,7 +1520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMesh_Registration.Instance;
-        public new static WorldspaceNavigationMesh_Registration Registration => WorldspaceNavigationMesh_Registration.Instance;
+        public new static WorldspaceNavigationMesh_Registration StaticRegistration => WorldspaceNavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceNavigationMeshCommon.Instance;
         [DebuggerStepThrough]
@@ -1540,6 +1542,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IWorldspaceNavigationMesh);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

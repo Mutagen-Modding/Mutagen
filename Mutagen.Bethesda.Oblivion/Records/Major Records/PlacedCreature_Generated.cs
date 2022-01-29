@@ -661,6 +661,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<PlacedCreature>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedCreature);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -772,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IPlacedCreatureGetter>,
         IPlacedGetter
     {
-        static new ILoquiRegistration Registration => PlacedCreature_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedCreature_Registration.Instance;
         IFormLinkNullableGetter<ICreatureGetter> Base { get; }
         IFormLinkNullableGetter<IFactionGetter> Owner { get; }
         Int32? FactionRank { get; }
@@ -1705,7 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCreature_Registration.Instance;
-        public new static PlacedCreature_Registration Registration => PlacedCreature_Registration.Instance;
+        public new static PlacedCreature_Registration StaticRegistration => PlacedCreature_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedCreatureCommon.Instance;
         [DebuggerStepThrough]
@@ -1952,7 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCreature_Registration.Instance;
-        public new static PlacedCreature_Registration Registration => PlacedCreature_Registration.Instance;
+        public new static PlacedCreature_Registration StaticRegistration => PlacedCreature_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedCreatureCommon.Instance;
         [DebuggerStepThrough]
@@ -1974,6 +1976,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedCreature);
+
 
         #region Base
         private int? _BaseLocation;

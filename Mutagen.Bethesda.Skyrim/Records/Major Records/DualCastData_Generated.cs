@@ -677,6 +677,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<DualCastData>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDualCastData);
+
         [Flags]
         public enum DATADataType
         {
@@ -797,7 +799,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter
     {
-        static new ILoquiRegistration Registration => DualCastData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DualCastData_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -1660,7 +1662,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DualCastData_Registration.Instance;
-        public new static DualCastData_Registration Registration => DualCastData_Registration.Instance;
+        public new static DualCastData_Registration StaticRegistration => DualCastData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DualCastDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1874,7 +1876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DualCastData_Registration.Instance;
-        public new static DualCastData_Registration Registration => DualCastData_Registration.Instance;
+        public new static DualCastData_Registration StaticRegistration => DualCastData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DualCastDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1896,6 +1898,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDualCastData);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

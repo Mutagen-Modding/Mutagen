@@ -642,6 +642,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<LeveledItem>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILeveledItem);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -761,7 +763,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptionalGetter,
         IOutfitTargetGetter
     {
-        static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -1623,7 +1625,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
-        public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
+        public new static LeveledItem_Registration StaticRegistration => LeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1853,7 +1855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
-        public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
+        public new static LeveledItem_Registration StaticRegistration => LeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1875,6 +1877,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILeveledItem);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

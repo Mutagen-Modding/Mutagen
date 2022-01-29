@@ -824,7 +824,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeatherData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeatherData_Registration.Instance;
         Byte WindSpeed { get; }
         Byte CloudSpeedLower { get; }
         Byte CloudSpeedUpper { get; }
@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherData_Registration.Instance;
-        public static WeatherData_Registration Registration => WeatherData_Registration.Instance;
+        public static WeatherData_Registration StaticRegistration => WeatherData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1655,7 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherData_Registration.Instance;
-        public static WeatherData_Registration Registration => WeatherData_Registration.Instance;
+        public static WeatherData_Registration StaticRegistration => WeatherData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherDataCommon.Instance;
         [DebuggerStepThrough]

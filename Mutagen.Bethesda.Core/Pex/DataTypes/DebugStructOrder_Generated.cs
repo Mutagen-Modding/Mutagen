@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Pex
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DebugStructOrder_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DebugStructOrder_Registration.Instance;
         String ObjectName { get; }
         String OrderName { get; }
         IReadOnlyList<String> Names { get; }
@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebugStructOrder_Registration.Instance;
-        public static DebugStructOrder_Registration Registration => DebugStructOrder_Registration.Instance;
+        public static DebugStructOrder_Registration StaticRegistration => DebugStructOrder_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebugStructOrderCommon.Instance;
         [DebuggerStepThrough]

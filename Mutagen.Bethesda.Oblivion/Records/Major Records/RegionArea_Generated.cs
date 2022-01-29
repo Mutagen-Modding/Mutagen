@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => RegionArea_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => RegionArea_Registration.Instance;
         UInt32? EdgeFallOff { get; }
         IReadOnlyList<P2Float>? RegionPoints { get; }
 
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
-        public static RegionArea_Registration Registration => RegionArea_Registration.Instance;
+        public static RegionArea_Registration StaticRegistration => RegionArea_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionAreaCommon.Instance;
         [DebuggerStepThrough]
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
-        public static RegionArea_Registration Registration => RegionArea_Registration.Instance;
+        public static RegionArea_Registration StaticRegistration => RegionArea_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionAreaCommon.Instance;
         [DebuggerStepThrough]

@@ -8,8 +8,8 @@ namespace Mutagen.Bethesda.Plugins.Order.Internals
     public struct TypedLoadOrderAccess<TMod, TModGetter, TMajor, TMajorGetter>
         where TModGetter : IModGetter
         where TMod : IMod, TModGetter
-        where TMajor : class, IMajorRecordCommon, TMajorGetter
-        where TMajorGetter : class, IMajorRecordCommonGetter
+        where TMajor : class, IMajorRecord, TMajorGetter
+        where TMajorGetter : class, IMajorRecordGetter
     {
         private Func<bool, IEnumerable<TMajorGetter>> _winningOverrides;
         private Func<ILinkCache, bool, IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>> _winningContextOverrides;
@@ -45,8 +45,8 @@ namespace Mutagen.Bethesda.Plugins.Order.Internals
     public struct TopLevelTypedLoadOrderAccess<TMod, TModGetter, TMajor, TMajorGetter>
         where TModGetter : IModGetter
         where TMod : IMod, TModGetter
-        where TMajor : class, IMajorRecordCommon, TMajorGetter
-        where TMajorGetter : class, IMajorRecordCommonGetter
+        where TMajor : class, IMajorRecord, TMajorGetter
+        where TMajorGetter : class, IMajorRecordGetter
     {
         private Func<bool, IEnumerable<TMajorGetter>> _winningOverrides;
         private Func<ILinkCache, bool, IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>> _winningContextOverrides;

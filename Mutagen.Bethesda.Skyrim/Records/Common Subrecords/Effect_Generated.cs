@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Effect_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Effect_Registration.Instance;
         IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect { get; }
         IEffectDataGetter? Data { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -1226,7 +1226,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
-        public static Effect_Registration Registration => Effect_Registration.Instance;
+        public static Effect_Registration StaticRegistration => Effect_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1393,7 +1393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
-        public static Effect_Registration Registration => Effect_Registration.Instance;
+        public static Effect_Registration StaticRegistration => Effect_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectCommon.Instance;
         [DebuggerStepThrough]

@@ -633,6 +633,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<SoulGem>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISoulGem);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -755,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => SoulGem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoulGem_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1660,7 +1662,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
-        public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
+        public new static SoulGem_Registration StaticRegistration => SoulGem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoulGemCommon.Instance;
         [DebuggerStepThrough]
@@ -1907,7 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
-        public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
+        public new static SoulGem_Registration StaticRegistration => SoulGem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoulGemCommon.Instance;
         [DebuggerStepThrough]
@@ -1929,6 +1931,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISoulGem);
+
 
         #region Name
         private int? _NameLocation;

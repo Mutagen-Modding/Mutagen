@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SoulGemData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SoulGemData_Registration.Instance;
         UInt32 Value { get; }
         Single Weight { get; }
 
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGemData_Registration.Instance;
-        public static SoulGemData_Registration Registration => SoulGemData_Registration.Instance;
+        public static SoulGemData_Registration StaticRegistration => SoulGemData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoulGemDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGemData_Registration.Instance;
-        public static SoulGemData_Registration Registration => SoulGemData_Registration.Instance;
+        public static SoulGemData_Registration StaticRegistration => SoulGemData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoulGemDataCommon.Instance;
         [DebuggerStepThrough]

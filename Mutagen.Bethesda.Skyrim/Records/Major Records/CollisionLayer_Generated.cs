@@ -646,6 +646,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<CollisionLayer>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ICollisionLayer);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -758,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ICollisionLayerGetter>,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => CollisionLayer_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CollisionLayer_Registration.Instance;
         ITranslatedStringGetter Description { get; }
         UInt32 Index { get; }
         Color DebugColor { get; }
@@ -1604,7 +1606,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CollisionLayer_Registration.Instance;
-        public new static CollisionLayer_Registration Registration => CollisionLayer_Registration.Instance;
+        public new static CollisionLayer_Registration StaticRegistration => CollisionLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CollisionLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1851,7 +1853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CollisionLayer_Registration.Instance;
-        public new static CollisionLayer_Registration Registration => CollisionLayer_Registration.Instance;
+        public new static CollisionLayer_Registration StaticRegistration => CollisionLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CollisionLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1873,6 +1875,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ICollisionLayer);
+
 
         #region Description
         private int? _DescriptionLocation;

@@ -695,7 +695,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Lod_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Lod_Registration.Instance;
         String Level0 { get; }
         ReadOnlyMemorySlice<Byte>? Level0Extra { get; }
         String Level1 { get; }
@@ -1342,7 +1342,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Lod_Registration.Instance;
-        public static Lod_Registration Registration => Lod_Registration.Instance;
+        public static Lod_Registration StaticRegistration => Lod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LodCommon.Instance;
         [DebuggerStepThrough]
@@ -1474,7 +1474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Lod_Registration.Instance;
-        public static Lod_Registration Registration => Lod_Registration.Instance;
+        public static Lod_Registration StaticRegistration => Lod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LodCommon.Instance;
         [DebuggerStepThrough]

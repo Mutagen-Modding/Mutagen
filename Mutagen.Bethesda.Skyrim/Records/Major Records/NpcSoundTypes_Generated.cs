@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<INpcSoundTypesGetter>
     {
-        static new ILoquiRegistration Registration => NpcSoundTypes_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => NpcSoundTypes_Registration.Instance;
         IReadOnlyList<INpcSoundTypeGetter> Types { get; }
 
     }
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcSoundTypes_Registration.Instance;
-        public new static NpcSoundTypes_Registration Registration => NpcSoundTypes_Registration.Instance;
+        public new static NpcSoundTypes_Registration StaticRegistration => NpcSoundTypes_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcSoundTypesCommon.Instance;
         [DebuggerStepThrough]
@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcSoundTypes_Registration.Instance;
-        public new static NpcSoundTypes_Registration Registration => NpcSoundTypes_Registration.Instance;
+        public new static NpcSoundTypes_Registration StaticRegistration => NpcSoundTypes_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcSoundTypesCommon.Instance;
         [DebuggerStepThrough]

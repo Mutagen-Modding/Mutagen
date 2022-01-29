@@ -87,12 +87,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             {
                 if (isGroup)
                 {
-                    var dictGroup = loquiGen.TargetObjectGeneration.Name == "Group";
+                    var dictGroup = loquiGen.TargetObjectGeneration.Name == $"{objGen.ProtoGen.Protocol.Namespace}Group";
                     fg.AppendLine($"if ({itemAccessor}.{(dictGroup ? "RecordCache" : "Records")}.Count > 0)");
                 }
                 using (new BraceWrapper(fg, doIt: isGroup))
                 {
                     var data = loquiGen.GetFieldData();
+                    
                     if (data.MarkerType.HasValue)
                     {
                         fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {objGen.RecordTypeHeaderName(data.MarkerType.Value)})) {{ }}");

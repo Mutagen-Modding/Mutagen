@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => HDRData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => HDRData_Registration.Instance;
         Single EyeAdaptSpeed { get; }
         Single BlurRadius { get; }
         Single BlurPasses { get; }
@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HDRData_Registration.Instance;
-        public static HDRData_Registration Registration => HDRData_Registration.Instance;
+        public static HDRData_Registration StaticRegistration => HDRData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HDRDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1725,7 +1725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HDRData_Registration.Instance;
-        public static HDRData_Registration Registration => HDRData_Registration.Instance;
+        public static HDRData_Registration StaticRegistration => HDRData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HDRDataCommon.Instance;
         [DebuggerStepThrough]

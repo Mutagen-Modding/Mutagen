@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => QuestTargetData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => QuestTargetData_Registration.Instance;
         IFormLinkGetter<IPlacedGetter> Target { get; }
         QuestTarget.Flag Flags { get; }
 
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTargetData_Registration.Instance;
-        public static QuestTargetData_Registration Registration => QuestTargetData_Registration.Instance;
+        public static QuestTargetData_Registration StaticRegistration => QuestTargetData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestTargetDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTargetData_Registration.Instance;
-        public static QuestTargetData_Registration Registration => QuestTargetData_Registration.Instance;
+        public static QuestTargetData_Registration StaticRegistration => QuestTargetData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestTargetDataCommon.Instance;
         [DebuggerStepThrough]

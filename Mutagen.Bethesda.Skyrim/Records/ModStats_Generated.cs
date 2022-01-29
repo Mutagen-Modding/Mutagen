@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ModStats_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ModStats_Registration.Instance;
         Single Version { get; }
         UInt32 NumRecords { get; }
         UInt32 NextFormID { get; }
@@ -1022,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
-        public static ModStats_Registration Registration => ModStats_Registration.Instance;
+        public static ModStats_Registration StaticRegistration => ModStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ModStatsCommon.Instance;
         [DebuggerStepThrough]
@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
-        public static ModStats_Registration Registration => ModStats_Registration.Instance;
+        public static ModStats_Registration StaticRegistration => ModStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ModStatsCommon.Instance;
         [DebuggerStepThrough]

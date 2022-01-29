@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => HeadData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => HeadData_Registration.Instance;
         IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; }
         IAvailableMorphsGetter? AvailableMorphs { get; }
         IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; }
@@ -2048,7 +2048,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadData_Registration.Instance;
-        public static HeadData_Registration Registration => HeadData_Registration.Instance;
+        public static HeadData_Registration StaticRegistration => HeadData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HeadDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2319,7 +2319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadData_Registration.Instance;
-        public static HeadData_Registration Registration => HeadData_Registration.Instance;
+        public static HeadData_Registration StaticRegistration => HeadData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HeadDataCommon.Instance;
         [DebuggerStepThrough]

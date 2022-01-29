@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         ILoquiObject<IGameSettingGetter>
     {
-        static new ILoquiRegistration Registration => GameSetting_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GameSetting_Registration.Instance;
 
     }
 
@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSetting_Registration.Instance;
-        public new static GameSetting_Registration Registration => GameSetting_Registration.Instance;
+        public new static GameSetting_Registration StaticRegistration => GameSetting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingCommon.Instance;
         [DebuggerStepThrough]
@@ -1198,14 +1198,14 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class GameSettingBinaryOverlay :
+    public abstract partial class GameSettingBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IGameSettingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSetting_Registration.Instance;
-        public new static GameSetting_Registration Registration => GameSetting_Registration.Instance;
+        public new static GameSetting_Registration StaticRegistration => GameSetting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingCommon.Instance;
         [DebuggerStepThrough]

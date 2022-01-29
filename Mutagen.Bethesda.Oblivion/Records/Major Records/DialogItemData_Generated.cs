@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DialogItemData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DialogItemData_Registration.Instance;
         DialogItemData.VersioningBreaks Versioning { get; }
         DialogType DialogType { get; }
         DialogItem.Flag Flags { get; }
@@ -1027,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogItemData_Registration.Instance;
-        public static DialogItemData_Registration Registration => DialogItemData_Registration.Instance;
+        public static DialogItemData_Registration StaticRegistration => DialogItemData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogItemDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogItemData_Registration.Instance;
-        public static DialogItemData_Registration Registration => DialogItemData_Registration.Instance;
+        public static DialogItemData_Registration StaticRegistration => DialogItemData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogItemDataCommon.Instance;
         [DebuggerStepThrough]

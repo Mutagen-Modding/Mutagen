@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<IConditionFloatGetter>
     {
-        static new ILoquiRegistration Registration => ConditionFloat_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ConditionFloat_Registration.Instance;
         Single ComparisonValue { get; }
         IConditionDataGetter Data { get; }
 
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionFloat_Registration.Instance;
-        public new static ConditionFloat_Registration Registration => ConditionFloat_Registration.Instance;
+        public new static ConditionFloat_Registration StaticRegistration => ConditionFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionFloat_Registration.Instance;
-        public new static ConditionFloat_Registration Registration => ConditionFloat_Registration.Instance;
+        public new static ConditionFloat_Registration StaticRegistration => ConditionFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionFloatCommon.Instance;
         [DebuggerStepThrough]

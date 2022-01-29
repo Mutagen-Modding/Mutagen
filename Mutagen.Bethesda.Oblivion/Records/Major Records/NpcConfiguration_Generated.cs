@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NpcConfiguration_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NpcConfiguration_Registration.Instance;
         Npc.NpcFlag Flags { get; }
         UInt16 BaseSpellPoints { get; }
         UInt16 Fatigue { get; }
@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcConfiguration_Registration.Instance;
-        public static NpcConfiguration_Registration Registration => NpcConfiguration_Registration.Instance;
+        public static NpcConfiguration_Registration StaticRegistration => NpcConfiguration_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcConfigurationCommon.Instance;
         [DebuggerStepThrough]
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcConfiguration_Registration.Instance;
-        public static NpcConfiguration_Registration Registration => NpcConfiguration_Registration.Instance;
+        public static NpcConfiguration_Registration StaticRegistration => NpcConfiguration_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcConfigurationCommon.Instance;
         [DebuggerStepThrough]

@@ -392,6 +392,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<GameSettingUInt>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGameSettingUInt);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -492,7 +494,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IGameSettingUIntGetter>,
         IMapsToGetter<IGameSettingUIntGetter>
     {
-        static new ILoquiRegistration Registration => GameSettingUInt_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GameSettingUInt_Registration.Instance;
         UInt32? Data { get; }
 
     }
@@ -1297,7 +1299,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingUInt_Registration.Instance;
-        public new static GameSettingUInt_Registration Registration => GameSettingUInt_Registration.Instance;
+        public new static GameSettingUInt_Registration StaticRegistration => GameSettingUInt_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingUIntCommon.Instance;
         [DebuggerStepThrough]
@@ -1477,7 +1479,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingUInt_Registration.Instance;
-        public new static GameSettingUInt_Registration Registration => GameSettingUInt_Registration.Instance;
+        public new static GameSettingUInt_Registration StaticRegistration => GameSettingUInt_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingUIntCommon.Instance;
         [DebuggerStepThrough]
@@ -1498,6 +1500,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGameSettingUInt);
+
 
         #region Data
         private int? _DataLocation;

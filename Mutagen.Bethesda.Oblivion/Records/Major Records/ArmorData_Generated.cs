@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ArmorData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ArmorData_Registration.Instance;
         Single ArmorValue { get; }
         UInt32 Value { get; }
         UInt32 Health { get; }
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorData_Registration.Instance;
-        public static ArmorData_Registration Registration => ArmorData_Registration.Instance;
+        public static ArmorData_Registration StaticRegistration => ArmorData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorData_Registration.Instance;
-        public static ArmorData_Registration Registration => ArmorData_Registration.Instance;
+        public static ArmorData_Registration StaticRegistration => ArmorData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorDataCommon.Instance;
         [DebuggerStepThrough]

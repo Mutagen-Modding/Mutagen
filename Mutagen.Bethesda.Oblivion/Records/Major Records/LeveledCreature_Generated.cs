@@ -609,6 +609,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<LeveledCreature>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILeveledCreature);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -717,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<ILeveledCreatureGetter>,
         INpcSpawnGetter
     {
-        static new ILoquiRegistration Registration => LeveledCreature_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LeveledCreature_Registration.Instance;
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
         IReadOnlyList<ILeveledCreatureEntryGetter> Entries { get; }
@@ -1549,7 +1551,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
-        public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
+        public new static LeveledCreature_Registration StaticRegistration => LeveledCreature_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledCreatureCommon.Instance;
         [DebuggerStepThrough]
@@ -1772,7 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
-        public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
+        public new static LeveledCreature_Registration StaticRegistration => LeveledCreature_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledCreatureCommon.Instance;
         [DebuggerStepThrough]
@@ -1794,6 +1796,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILeveledCreature);
+
 
         #region ChanceNone
         private int? _ChanceNoneLocation;

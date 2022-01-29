@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Pex
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PexFile_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PexFile_Registration.Instance;
         Byte MajorVersion { get; }
         Byte MinorVersion { get; }
         UInt16 GameId { get; }
@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PexFile_Registration.Instance;
-        public static PexFile_Registration Registration => PexFile_Registration.Instance;
+        public static PexFile_Registration StaticRegistration => PexFile_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PexFileCommon.Instance;
         [DebuggerStepThrough]

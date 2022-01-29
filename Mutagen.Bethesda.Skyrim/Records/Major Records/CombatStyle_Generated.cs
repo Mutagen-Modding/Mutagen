@@ -1032,6 +1032,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<CombatStyle>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ICombatStyle);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1163,7 +1165,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ICombatStyleGetter>,
         IMapsToGetter<ICombatStyleGetter>
     {
-        static new ILoquiRegistration Registration => CombatStyle_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CombatStyle_Registration.Instance;
         Single OffensiveMult { get; }
         Single DefensiveMult { get; }
         Single GroupOffensiveMult { get; }
@@ -2267,7 +2269,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
-        public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
+        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]
@@ -2569,7 +2571,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
-        public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
+        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]
@@ -2590,6 +2592,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ICombatStyle);
+
         public CombatStyle.MajorFlag MajorFlags => (CombatStyle.MajorFlag)this.MajorRecordFlagsRaw;
 
         private int? _CSGDLocation;

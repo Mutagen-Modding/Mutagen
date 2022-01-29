@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ConditionData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ConditionData_Registration.Instance;
         Condition.FunctionType Function { get; }
         UInt16 Unknown2 { get; }
         IFormLinkGetter<IFallout4MajorRecordGetter> ParameterOneRecord { get; }
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionData_Registration.Instance;
-        public static ConditionData_Registration Registration => ConditionData_Registration.Instance;
+        public static ConditionData_Registration StaticRegistration => ConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ConditionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1577,7 +1577,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionData_Registration.Instance;
-        public static ConditionData_Registration Registration => ConditionData_Registration.Instance;
+        public static ConditionData_Registration StaticRegistration => ConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ConditionDataCommon.Instance;
         [DebuggerStepThrough]

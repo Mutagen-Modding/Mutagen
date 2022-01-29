@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Plugins
     ///   - Remove the 255 limit while within code space.  On-disk formats still enforce 255 limit.<br/>
     /// </summary>
     [DebuggerDisplay("{ToString()}")]
-    public struct FormKey : IEquatable<FormKey>
+    public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     {
         /// <summary>
         /// A static readonly singleton string representing a null FormKey
@@ -253,25 +253,25 @@ namespace Mutagen.Bethesda.Plugins
         }
 
         public FormLink<TMajorGetter> AsLink<TMajorGetter>()
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             return new FormLink<TMajorGetter>(this);
         }
 
         public IFormLinkGetter<TMajorGetter> AsLinkGetter<TMajorGetter>()
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             return new FormLink<TMajorGetter>(this);
         }
 
         public FormLinkNullable<TMajorGetter> AsNullableLink<TMajorGetter>()
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             return new FormLinkNullable<TMajorGetter>(this);
         }
 
         public IFormLinkNullableGetter<TMajorGetter> AsNullableLinkGetter<TMajorGetter>()
-            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             return new FormLinkNullable<TMajorGetter>(this);
         }
@@ -453,5 +453,7 @@ namespace Mutagen.Bethesda.Plugins
             }
         }
         #endregion
+
+        FormKey IFormKeyGetter.FormKey => this;
     }
 }

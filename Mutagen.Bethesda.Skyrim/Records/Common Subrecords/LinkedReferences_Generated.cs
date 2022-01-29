@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LinkedReferences_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LinkedReferences_Registration.Instance;
         LinkedReferences.VersioningBreaks Versioning { get; }
         IFormLinkGetter<IKeywordLinkedReferenceGetter> KeywordOrReference { get; }
         IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedReferences_Registration.Instance;
-        public static LinkedReferences_Registration Registration => LinkedReferences_Registration.Instance;
+        public static LinkedReferences_Registration StaticRegistration => LinkedReferences_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedReferencesCommon.Instance;
         [DebuggerStepThrough]
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedReferences_Registration.Instance;
-        public static LinkedReferences_Registration Registration => LinkedReferences_Registration.Instance;
+        public static LinkedReferences_Registration StaticRegistration => LinkedReferences_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedReferencesCommon.Instance;
         [DebuggerStepThrough]

@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IMagicEffectLightArchetypeGetter>
     {
-        static new ILoquiRegistration Registration => MagicEffectLightArchetype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffectLightArchetype_Registration.Instance;
 
     }
 
@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectLightArchetype_Registration.Instance;
-        public new static MagicEffectLightArchetype_Registration Registration => MagicEffectLightArchetype_Registration.Instance;
+        public new static MagicEffectLightArchetype_Registration StaticRegistration => MagicEffectLightArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectLightArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectLightArchetype_Registration.Instance;
-        public new static MagicEffectLightArchetype_Registration Registration => MagicEffectLightArchetype_Registration.Instance;
+        public new static MagicEffectLightArchetype_Registration StaticRegistration => MagicEffectLightArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectLightArchetypeCommon.Instance;
         [DebuggerStepThrough]

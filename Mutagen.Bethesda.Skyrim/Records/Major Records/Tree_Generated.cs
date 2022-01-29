@@ -912,6 +912,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Tree>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ITree);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1071,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Tree_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Tree_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -2160,7 +2162,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
-        public new static Tree_Registration Registration => Tree_Registration.Instance;
+        public new static Tree_Registration StaticRegistration => Tree_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
         [DebuggerStepThrough]
@@ -2440,7 +2442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
-        public new static Tree_Registration Registration => Tree_Registration.Instance;
+        public new static Tree_Registration StaticRegistration => Tree_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
         [DebuggerStepThrough]
@@ -2462,6 +2464,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ITree);
+
         public Tree.MajorFlag MajorFlags => (Tree.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

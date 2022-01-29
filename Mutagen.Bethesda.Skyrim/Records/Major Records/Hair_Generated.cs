@@ -351,6 +351,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Hair>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IHair);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -450,7 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IHairGetter>,
         IMapsToGetter<IHairGetter>
     {
-        static new ILoquiRegistration Registration => Hair_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Hair_Registration.Instance;
 
     }
 
@@ -1140,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
-        public new static Hair_Registration Registration => Hair_Registration.Instance;
+        public new static Hair_Registration StaticRegistration => Hair_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HairCommon.Instance;
         [DebuggerStepThrough]
@@ -1263,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
-        public new static Hair_Registration Registration => Hair_Registration.Instance;
+        public new static Hair_Registration StaticRegistration => Hair_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HairCommon.Instance;
         [DebuggerStepThrough]
@@ -1284,6 +1286,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IHair);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

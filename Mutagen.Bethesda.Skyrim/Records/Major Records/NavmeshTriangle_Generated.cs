@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NavmeshTriangle_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NavmeshTriangle_Registration.Instance;
         P3Int16 Vertices { get; }
         Int16 EdgeLink_0_1 { get; }
         Int16 EdgeLink_1_2 { get; }
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshTriangle_Registration.Instance;
-        public static NavmeshTriangle_Registration Registration => NavmeshTriangle_Registration.Instance;
+        public static NavmeshTriangle_Registration StaticRegistration => NavmeshTriangle_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshTriangleCommon.Instance;
         [DebuggerStepThrough]
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshTriangle_Registration.Instance;
-        public static NavmeshTriangle_Registration Registration => NavmeshTriangle_Registration.Instance;
+        public static NavmeshTriangle_Registration StaticRegistration => NavmeshTriangle_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshTriangleCommon.Instance;
         [DebuggerStepThrough]

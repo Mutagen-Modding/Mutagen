@@ -20,25 +20,25 @@ namespace Mutagen.Bethesda.Plugins
     /// General practice is to use ModKey.TryFactory on a mod's file name when at all possible
     /// </summary>
     [DebuggerDisplay("ModKey {FileName}")]
-    public struct ModKey : IEquatable<ModKey>
+    public readonly struct ModKey : IEquatable<ModKey>
     {
         /// <summary>
         /// A static readonly singleton representing a null ModKey
         /// </summary>
         public static readonly ModKey Null = new ModKey(null!, type: ModType.Master);
 
-        private readonly string? name_;
+        private readonly string? _name;
         private readonly int _hash;
 
         /// <summary>
         /// Mod name
         /// </summary>
-        public string Name => name_ ?? string.Empty;
+        public string Name => _name ?? string.Empty;
         
         /// <summary>
         /// Mod type
         /// </summary>
-        public ModType Type { get; private set; }
+        public ModType Type { get; }
         
         /// <summary>
         /// Convenience accessor to get the appropriate file name
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Plugins
 
         private static readonly char[] InvalidChars = Path.GetInvalidFileNameChars();
 
-        public bool IsNull => string.IsNullOrWhiteSpace(name_);
+        public bool IsNull => string.IsNullOrWhiteSpace(_name);
 
         /// <summary>
         /// Constructor
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Plugins
         /// <param name="name">Name of mod</param>
         /// <param name="type">Type of mod</param>
         public ModKey(
-            string name,
+            string? name,
             ModType type)
         {
             if (name != null
@@ -63,11 +63,11 @@ namespace Mutagen.Bethesda.Plugins
             {
                 throw new ArgumentException($"ModKey name contained path characters: {name}");
             }
-            this.name_ = name == null ? null : string.Intern(name);
+            this._name = name == null ? null : string.Intern(name);
             this.Type = type;
 
             // Cache the hash on construction, as ModKeys are typically created rarely, but hashed often.
-            var nameHash = (name_?.Equals(string.Empty) ?? true) ? 0 : name_.GetHashCode(StringComparison.OrdinalIgnoreCase);
+            var nameHash = (_name?.Equals(string.Empty) ?? true) ? 0 : _name.GetHashCode(StringComparison.OrdinalIgnoreCase);
             if (nameHash != 0)
             {
                 HashCode hash = new HashCode();

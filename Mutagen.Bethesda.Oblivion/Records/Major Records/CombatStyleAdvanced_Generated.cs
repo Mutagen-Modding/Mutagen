@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CombatStyleAdvanced_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CombatStyleAdvanced_Registration.Instance;
         Single DodgeFatigueModMult { get; }
         Single DodgeFatigueModBase { get; }
         Single EncumbSpeedModBase { get; }
@@ -1903,7 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
-        public static CombatStyleAdvanced_Registration Registration => CombatStyleAdvanced_Registration.Instance;
+        public static CombatStyleAdvanced_Registration StaticRegistration => CombatStyleAdvanced_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleAdvancedCommon.Instance;
         [DebuggerStepThrough]
@@ -2096,7 +2096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
-        public static CombatStyleAdvanced_Registration Registration => CombatStyleAdvanced_Registration.Instance;
+        public static CombatStyleAdvanced_Registration StaticRegistration => CombatStyleAdvanced_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleAdvancedCommon.Instance;
         [DebuggerStepThrough]

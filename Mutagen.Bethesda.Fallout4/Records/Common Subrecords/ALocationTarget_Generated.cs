@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ALocationTarget_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ALocationTarget_Registration.Instance;
 
     }
 
@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ALocationTarget_Registration.Instance;
-        public static ALocationTarget_Registration Registration => ALocationTarget_Registration.Instance;
+        public static ALocationTarget_Registration StaticRegistration => ALocationTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ALocationTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -926,14 +926,14 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class ALocationTargetBinaryOverlay :
+    public abstract partial class ALocationTargetBinaryOverlay :
         PluginBinaryOverlay,
         IALocationTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ALocationTarget_Registration.Instance;
-        public static ALocationTarget_Registration Registration => ALocationTarget_Registration.Instance;
+        public static ALocationTarget_Registration StaticRegistration => ALocationTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ALocationTargetCommon.Instance;
         [DebuggerStepThrough]

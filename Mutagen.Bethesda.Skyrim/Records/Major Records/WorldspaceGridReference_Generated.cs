@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorldspaceGridReference_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorldspaceGridReference_Registration.Instance;
         P2Int16 GridPosition { get; }
         IReadOnlyList<IWorldspaceReferenceGetter> References { get; }
 
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceGridReference_Registration.Instance;
-        public static WorldspaceGridReference_Registration Registration => WorldspaceGridReference_Registration.Instance;
+        public static WorldspaceGridReference_Registration StaticRegistration => WorldspaceGridReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceGridReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceGridReference_Registration.Instance;
-        public static WorldspaceGridReference_Registration Registration => WorldspaceGridReference_Registration.Instance;
+        public static WorldspaceGridReference_Registration StaticRegistration => WorldspaceGridReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceGridReferenceCommon.Instance;
         [DebuggerStepThrough]

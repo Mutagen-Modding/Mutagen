@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<IFallout4MajorRecordGetter>
     {
-        static new ILoquiRegistration Registration => Fallout4MajorRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         UInt16 FormVersion { get; }
         UInt16 Version2 { get; }
 
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4MajorRecord_Registration.Instance;
-        public new static Fallout4MajorRecord_Registration Registration => Fallout4MajorRecord_Registration.Instance;
+        public new static Fallout4MajorRecord_Registration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => Fallout4MajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1234,14 +1234,14 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class Fallout4MajorRecordBinaryOverlay :
+    public abstract partial class Fallout4MajorRecordBinaryOverlay :
         MajorRecordBinaryOverlay,
         IFallout4MajorRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4MajorRecord_Registration.Instance;
-        public new static Fallout4MajorRecord_Registration Registration => Fallout4MajorRecord_Registration.Instance;
+        public new static Fallout4MajorRecord_Registration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => Fallout4MajorRecordCommon.Instance;
         [DebuggerStepThrough]

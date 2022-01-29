@@ -612,6 +612,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Water>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IWater);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -720,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IWaterGetter>,
         IMapsToGetter<IWaterGetter>
     {
-        static new ILoquiRegistration Registration => Water_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Water_Registration.Instance;
         String? Texture { get; }
         Byte? Opacity { get; }
         Water.Flag? Flags { get; }
@@ -1623,7 +1625,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
-        public new static Water_Registration Registration => Water_Registration.Instance;
+        public new static Water_Registration StaticRegistration => Water_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]
@@ -1880,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
-        public new static Water_Registration Registration => Water_Registration.Instance;
+        public new static Water_Registration StaticRegistration => Water_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]
@@ -1902,6 +1904,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IWater);
+
 
         #region Texture
         private int? _TextureLocation;

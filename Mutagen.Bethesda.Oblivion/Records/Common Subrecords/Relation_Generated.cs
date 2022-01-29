@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Relation_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Relation_Registration.Instance;
         IFormLinkGetter<IFactionGetter> Faction { get; }
         Int32 Modifier { get; }
 
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
-        public static Relation_Registration Registration => Relation_Registration.Instance;
+        public static Relation_Registration StaticRegistration => Relation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelationCommon.Instance;
         [DebuggerStepThrough]
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
-        public static Relation_Registration Registration => Relation_Registration.Instance;
+        public static Relation_Registration StaticRegistration => Relation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelationCommon.Instance;
         [DebuggerStepThrough]

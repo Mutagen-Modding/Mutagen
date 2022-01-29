@@ -442,6 +442,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<PlacedHazard>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedHazard);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -546,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedHazardGetter>,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedHazard_Registration.Instance;
         IFormLinkGetter<IHazardGetter> Hazard { get; }
 
     }
@@ -1400,7 +1402,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedHazard_Registration.Instance;
-        public new static PlacedHazard_Registration Registration => PlacedHazard_Registration.Instance;
+        public new static PlacedHazard_Registration StaticRegistration => PlacedHazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedHazardCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedHazard_Registration.Instance;
-        public new static PlacedHazard_Registration Registration => PlacedHazard_Registration.Instance;
+        public new static PlacedHazard_Registration StaticRegistration => PlacedHazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedHazardCommon.Instance;
         [DebuggerStepThrough]
@@ -1565,6 +1567,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedHazard);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

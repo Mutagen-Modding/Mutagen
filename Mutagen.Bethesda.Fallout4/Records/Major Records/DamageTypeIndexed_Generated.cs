@@ -474,6 +474,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<DamageTypeIndexed>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDamageTypeIndexed);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -574,7 +576,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IDamageTypeIndexedGetter>,
         IMapsToGetter<IDamageTypeIndexedGetter>
     {
-        static new ILoquiRegistration Registration => DamageTypeIndexed_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DamageTypeIndexed_Registration.Instance;
         IReadOnlyList<UInt32>? DamageTypes { get; }
 
     }
@@ -1415,7 +1417,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DamageTypeIndexed_Registration.Instance;
-        public new static DamageTypeIndexed_Registration Registration => DamageTypeIndexed_Registration.Instance;
+        public new static DamageTypeIndexed_Registration StaticRegistration => DamageTypeIndexed_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DamageTypeIndexedCommon.Instance;
         [DebuggerStepThrough]
@@ -1600,7 +1602,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DamageTypeIndexed_Registration.Instance;
-        public new static DamageTypeIndexed_Registration Registration => DamageTypeIndexed_Registration.Instance;
+        public new static DamageTypeIndexed_Registration StaticRegistration => DamageTypeIndexed_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DamageTypeIndexedCommon.Instance;
         [DebuggerStepThrough]
@@ -1621,6 +1623,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDamageTypeIndexed);
+
 
         public IReadOnlyList<UInt32>? DamageTypes { get; private set; }
         partial void CustomFactoryEnd(

@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => HeadPartReference_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => HeadPartReference_Registration.Instance;
         Int32? Number { get; }
         IFormLinkNullableGetter<IHeadPartGetter> Head { get; }
 
@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadPartReference_Registration.Instance;
-        public static HeadPartReference_Registration Registration => HeadPartReference_Registration.Instance;
+        public static HeadPartReference_Registration StaticRegistration => HeadPartReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HeadPartReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadPartReference_Registration.Instance;
-        public static HeadPartReference_Registration Registration => HeadPartReference_Registration.Instance;
+        public static HeadPartReference_Registration StaticRegistration => HeadPartReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HeadPartReferenceCommon.Instance;
         [DebuggerStepThrough]

@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         private readonly bool _simple;
         private readonly IReadOnlyList<IModGetter> _listedOrder;
         private readonly IReadOnlyDictionary<Type, Type[]> _linkInterfaces;
-        private readonly Func<IMajorRecordCommonGetter, TryGet<TKey>> _keyGetter;
+        private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
         private readonly Dictionary<Type, DepthCache<TKey, LinkCacheItem>> _winningRecords = new();
         private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<LinkCacheItem>>> _allRecords = new();
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             bool hasAny,
             bool simple,
             IReadOnlyList<IModGetter> listedOrder,
-            Func<IMajorRecordCommonGetter, TryGet<TKey>> keyGetter,
+            Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
         {
             _hasAny = hasAny;
@@ -47,11 +47,11 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                 if (!_winningRecords.TryGetValue(type, out var cache))
                 {
                     cache = new DepthCache<TKey, LinkCacheItem>();
-                    if (type == typeof(IMajorRecordCommon)
-                        || type == typeof(IMajorRecordCommonGetter))
+                    if (type == typeof(IMajorRecord)
+                        || type == typeof(IMajorRecordGetter))
                     {
-                        _winningRecords[typeof(IMajorRecordCommon)] = cache;
-                        _winningRecords[typeof(IMajorRecordCommonGetter)] = cache;
+                        _winningRecords[typeof(IMajorRecord)] = cache;
+                        _winningRecords[typeof(IMajorRecordGetter)] = cache;
                     }
                     else if (LoquiRegistration.TryGetRegister(type, out var registration))
                     {

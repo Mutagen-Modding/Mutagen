@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ObjectBounds_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ObjectBounds_Registration.Instance;
         P3Int16 First { get; }
         P3Int16 Second { get; }
 
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectBounds_Registration.Instance;
-        public static ObjectBounds_Registration Registration => ObjectBounds_Registration.Instance;
+        public static ObjectBounds_Registration StaticRegistration => ObjectBounds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ObjectBoundsCommon.Instance;
         [DebuggerStepThrough]
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectBounds_Registration.Instance;
-        public static ObjectBounds_Registration Registration => ObjectBounds_Registration.Instance;
+        public static ObjectBounds_Registration StaticRegistration => ObjectBounds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ObjectBoundsCommon.Instance;
         [DebuggerStepThrough]

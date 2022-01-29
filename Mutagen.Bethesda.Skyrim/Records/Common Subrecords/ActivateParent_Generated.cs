@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ActivateParent_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ActivateParent_Registration.Instance;
         IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
         Single Delay { get; }
 
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActivateParent_Registration.Instance;
-        public static ActivateParent_Registration Registration => ActivateParent_Registration.Instance;
+        public static ActivateParent_Registration StaticRegistration => ActivateParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActivateParentCommon.Instance;
         [DebuggerStepThrough]
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActivateParent_Registration.Instance;
-        public static ActivateParent_Registration Registration => ActivateParent_Registration.Instance;
+        public static ActivateParent_Registration StaticRegistration => ActivateParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActivateParentCommon.Instance;
         [DebuggerStepThrough]

@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         }
 
         public void FillSubrecordTypes(
-            IMajorRecordCommonGetter majorReference,
+            IMajorRecordGetter majorReference,
             OverlayStream stream,
             int finalPos,
             int offset,

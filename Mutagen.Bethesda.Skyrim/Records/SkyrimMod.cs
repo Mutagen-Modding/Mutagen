@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
         public partial class SkyrimModCommon
         {
             public static void WriteCellsParallel(
-                IListGroupGetter<ICellBlockGetter> group,
+                ISkyrimListGroupGetter<ICellBlockGetter> group,
                 IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var stream = new MutagenWriter(groupByteStream, gameConstants, dispose: false))
                 {
                     stream.Position += 8;
-                    ListGroupBinaryWriteTranslation.WriteEmbedded<ICellBlockGetter>(group, stream);
+                    SkyrimListGroupBinaryWriteTranslation.WriteEmbedded<ICellBlockGetter>(group, stream);
                 }
                 streams[0] = groupByteStream;
                 Parallel.ForEach(group.Records, (cellBlock, state, counter) =>
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public static void WriteWorldspacesParallel(
-                IGroupGetter<IWorldspaceGetter> group,
+                ISkyrimGroupGetter<IWorldspaceGetter> group,
                 IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var stream = new MutagenWriter(groupByteStream, gameConstants, dispose: false))
                 {
                     stream.Position += 8;
-                    GroupBinaryWriteTranslation.WriteEmbedded<IWorldspaceGetter>(group, stream);
+                    SkyrimGroupBinaryWriteTranslation.WriteEmbedded<IWorldspaceGetter>(group, stream);
                 }
                 streams[0] = groupByteStream;
                 Parallel.ForEach(group, (worldspace, worldspaceState, worldspaceCounter) =>
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public static void WriteGroupParallel<T>(
-                IGroupGetter<T> group,
+                ISkyrimGroupGetter<T> group,
                 IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var stream = new MutagenWriter(groupByteStream, gameConstants, dispose: false))
                 {
                     stream.Position += 8;
-                    GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
+                    SkyrimGroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
                 }
                 subStreams[0] = groupByteStream;
                 Parallel.ForEach(cuts, (cutItems, state, counter) =>
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public static void WriteDialogTopicsParallel(
-                IGroupGetter<IDialogTopicGetter> group,
+                ISkyrimGroupGetter<IDialogTopicGetter> group,
                 IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,

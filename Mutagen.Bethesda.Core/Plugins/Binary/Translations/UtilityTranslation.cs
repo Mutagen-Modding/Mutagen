@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             TypedParseParams? translationParams,
             RecordStructFill<M> fillStructs,
             MajorRecordFill<M> fillTyped)
-            where M : IMajorRecordCommonGetter
+            where M : IMajorRecordGetter
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(frame.Reader));
             fillStructs(

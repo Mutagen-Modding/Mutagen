@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Plugins.Xml
             XElement node,
             out FormLink<T> item,
             ErrorMaskBuilder? errorMask)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             throw new NotImplementedException();
         }
@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Plugins.Xml
             out FormLink<T> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             throw new NotImplementedException();
         }

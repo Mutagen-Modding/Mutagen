@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CombatStyleCloseRange_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
         CombatStyleCloseRange.VersioningBreaks Versioning { get; }
         Single CircleMult { get; }
         Single FallbackMult { get; }
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleCloseRange_Registration.Instance;
-        public static CombatStyleCloseRange_Registration Registration => CombatStyleCloseRange_Registration.Instance;
+        public static CombatStyleCloseRange_Registration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleCloseRangeCommon.Instance;
         [DebuggerStepThrough]
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleCloseRange_Registration.Instance;
-        public static CombatStyleCloseRange_Registration Registration => CombatStyleCloseRange_Registration.Instance;
+        public static CombatStyleCloseRange_Registration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleCloseRangeCommon.Instance;
         [DebuggerStepThrough]

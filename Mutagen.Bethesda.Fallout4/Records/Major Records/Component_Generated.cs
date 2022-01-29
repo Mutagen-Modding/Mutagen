@@ -611,6 +611,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Component>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IComponent);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -732,7 +734,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter
     {
-        static new ILoquiRegistration Registration => Component_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Component_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -1579,7 +1581,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Component_Registration.Instance;
-        public new static Component_Registration Registration => Component_Registration.Instance;
+        public new static Component_Registration StaticRegistration => Component_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ComponentCommon.Instance;
         [DebuggerStepThrough]
@@ -1801,7 +1803,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Component_Registration.Instance;
-        public new static Component_Registration Registration => Component_Registration.Instance;
+        public new static Component_Registration StaticRegistration => Component_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ComponentCommon.Instance;
         [DebuggerStepThrough]
@@ -1823,6 +1825,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IComponent);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

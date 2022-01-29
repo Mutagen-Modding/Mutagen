@@ -855,6 +855,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Climate>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IClimate);
+
         [Flags]
         public enum TNAMDataType
         {
@@ -977,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IClimateGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Climate_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; }
         String? SunTexture { get; }
         String? SunGlareTexture { get; }
@@ -1980,7 +1982,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration Registration => Climate_Registration.Instance;
+        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]
@@ -2252,7 +2254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration Registration => Climate_Registration.Instance;
+        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]
@@ -2274,6 +2276,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IClimate);
+
 
         public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
         #region SunTexture

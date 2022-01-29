@@ -607,6 +607,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Relationship>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IRelationship);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -728,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IRelationshipGetter>,
         IMapsToGetter<IRelationshipGetter>
     {
-        static new ILoquiRegistration Registration => Relationship_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Relationship_Registration.Instance;
         IFormLinkGetter<INpcGetter> Parent { get; }
         IFormLinkGetter<INpcGetter> Child { get; }
         Relationship.RankType Rank { get; }
@@ -1547,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relationship_Registration.Instance;
-        public new static Relationship_Registration Registration => Relationship_Registration.Instance;
+        public new static Relationship_Registration StaticRegistration => Relationship_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RelationshipCommon.Instance;
         [DebuggerStepThrough]
@@ -1752,7 +1754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relationship_Registration.Instance;
-        public new static Relationship_Registration Registration => Relationship_Registration.Instance;
+        public new static Relationship_Registration StaticRegistration => Relationship_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RelationshipCommon.Instance;
         [DebuggerStepThrough]
@@ -1774,6 +1776,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRelationship);
+
         public Relationship.MajorFlag MajorFlags => (Relationship.MajorFlag)this.MajorRecordFlagsRaw;
 
         private int? _DATALocation;

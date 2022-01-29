@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SkyrimModHeader_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SkyrimModHeader_Registration.Instance;
         SkyrimModHeader.HeaderFlag Flags { get; }
         UInt32 FormID { get; }
         Int32 Version { get; }
@@ -1916,7 +1916,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimModHeader_Registration.Instance;
-        public static SkyrimModHeader_Registration Registration => SkyrimModHeader_Registration.Instance;
+        public static SkyrimModHeader_Registration StaticRegistration => SkyrimModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -2196,7 +2196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimModHeader_Registration.Instance;
-        public static SkyrimModHeader_Registration Registration => SkyrimModHeader_Registration.Instance;
+        public static SkyrimModHeader_Registration StaticRegistration => SkyrimModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModHeaderCommon.Instance;
         [DebuggerStepThrough]

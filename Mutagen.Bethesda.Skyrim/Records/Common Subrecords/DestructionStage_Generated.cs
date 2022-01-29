@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DestructionStage_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => DestructionStage_Registration.Instance;
         IDestructionStageDataGetter? Data { get; }
         #region Model
         /// <summary>
@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructionStage_Registration.Instance;
-        public static DestructionStage_Registration Registration => DestructionStage_Registration.Instance;
+        public static DestructionStage_Registration StaticRegistration => DestructionStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructionStageCommon.Instance;
         [DebuggerStepThrough]
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructionStage_Registration.Instance;
-        public static DestructionStage_Registration Registration => DestructionStage_Registration.Instance;
+        public static DestructionStage_Registration StaticRegistration => DestructionStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructionStageCommon.Instance;
         [DebuggerStepThrough]

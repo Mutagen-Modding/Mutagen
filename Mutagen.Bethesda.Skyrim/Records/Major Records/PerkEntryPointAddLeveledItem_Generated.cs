@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IPerkEntryPointAddLeveledItemGetter>
     {
-        static new ILoquiRegistration Registration => PerkEntryPointAddLeveledItem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkEntryPointAddLeveledItem_Registration.Instance;
         IFormLinkGetter<ILeveledItemGetter> Item { get; }
 
     }
@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddLeveledItem_Registration.Instance;
-        public new static PerkEntryPointAddLeveledItem_Registration Registration => PerkEntryPointAddLeveledItem_Registration.Instance;
+        public new static PerkEntryPointAddLeveledItem_Registration StaticRegistration => PerkEntryPointAddLeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddLeveledItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddLeveledItem_Registration.Instance;
-        public new static PerkEntryPointAddLeveledItem_Registration Registration => PerkEntryPointAddLeveledItem_Registration.Instance;
+        public new static PerkEntryPointAddLeveledItem_Registration StaticRegistration => PerkEntryPointAddLeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddLeveledItemCommon.Instance;
         [DebuggerStepThrough]

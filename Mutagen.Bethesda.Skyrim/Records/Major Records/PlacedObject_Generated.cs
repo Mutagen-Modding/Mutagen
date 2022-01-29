@@ -3107,6 +3107,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<PlacedObject>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedObject);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -3283,7 +3285,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedThingGetter,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -6031,7 +6033,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
-        public new static PlacedObject_Registration Registration => PlacedObject_Registration.Instance;
+        public new static PlacedObject_Registration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -6872,7 +6874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
-        public new static PlacedObject_Registration Registration => PlacedObject_Registration.Instance;
+        public new static PlacedObject_Registration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -6894,6 +6896,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedObject);
+
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

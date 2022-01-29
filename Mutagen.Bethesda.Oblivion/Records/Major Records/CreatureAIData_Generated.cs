@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CreatureAIData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CreatureAIData_Registration.Instance;
         Byte Aggression { get; }
         Byte Confidence { get; }
         Byte EnergyLevel { get; }
@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureAIData_Registration.Instance;
-        public static CreatureAIData_Registration Registration => CreatureAIData_Registration.Instance;
+        public static CreatureAIData_Registration StaticRegistration => CreatureAIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureAIDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureAIData_Registration.Instance;
-        public static CreatureAIData_Registration Registration => CreatureAIData_Registration.Instance;
+        public static CreatureAIData_Registration StaticRegistration => CreatureAIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureAIDataCommon.Instance;
         [DebuggerStepThrough]

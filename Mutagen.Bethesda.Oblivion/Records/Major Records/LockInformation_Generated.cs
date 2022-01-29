@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LockInformation_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LockInformation_Registration.Instance;
         Byte LockLevel { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
         IFormLinkGetter<IKeyGetter> Key { get; }
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
-        public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
+        public static LockInformation_Registration StaticRegistration => LockInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LockInformationCommon.Instance;
         [DebuggerStepThrough]
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
-        public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
+        public static LockInformation_Registration StaticRegistration => LockInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LockInformationCommon.Instance;
         [DebuggerStepThrough]

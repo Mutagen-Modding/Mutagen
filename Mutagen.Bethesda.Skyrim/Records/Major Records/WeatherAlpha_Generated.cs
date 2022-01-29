@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeatherAlpha_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeatherAlpha_Registration.Instance;
         Single Sunrise { get; }
         Single Day { get; }
         Single Sunset { get; }
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAlpha_Registration.Instance;
-        public static WeatherAlpha_Registration Registration => WeatherAlpha_Registration.Instance;
+        public static WeatherAlpha_Registration StaticRegistration => WeatherAlpha_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAlphaCommon.Instance;
         [DebuggerStepThrough]
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAlpha_Registration.Instance;
-        public static WeatherAlpha_Registration Registration => WeatherAlpha_Registration.Instance;
+        public static WeatherAlpha_Registration StaticRegistration => WeatherAlpha_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAlphaCommon.Instance;
         [DebuggerStepThrough]

@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SoundLoopAndRumble_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SoundLoopAndRumble_Registration.Instance;
         Byte Unknown { get; }
         SoundDescriptor.LoopType Loop { get; }
         Byte Unknown2 { get; }
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundLoopAndRumble_Registration.Instance;
-        public static SoundLoopAndRumble_Registration Registration => SoundLoopAndRumble_Registration.Instance;
+        public static SoundLoopAndRumble_Registration StaticRegistration => SoundLoopAndRumble_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundLoopAndRumbleCommon.Instance;
         [DebuggerStepThrough]
@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundLoopAndRumble_Registration.Instance;
-        public static SoundLoopAndRumble_Registration Registration => SoundLoopAndRumble_Registration.Instance;
+        public static SoundLoopAndRumble_Registration StaticRegistration => SoundLoopAndRumble_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundLoopAndRumbleCommon.Instance;
         [DebuggerStepThrough]

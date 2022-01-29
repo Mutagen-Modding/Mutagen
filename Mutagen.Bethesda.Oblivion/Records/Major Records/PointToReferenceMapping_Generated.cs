@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PointToReferenceMapping_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PointToReferenceMapping_Registration.Instance;
         IFormLinkGetter<IPlacedGetter> Reference { get; }
         IReadOnlyList<Int16> Points { get; }
 
@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
-        public static PointToReferenceMapping_Registration Registration => PointToReferenceMapping_Registration.Instance;
+        public static PointToReferenceMapping_Registration StaticRegistration => PointToReferenceMapping_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PointToReferenceMappingCommon.Instance;
         [DebuggerStepThrough]
@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
-        public static PointToReferenceMapping_Registration Registration => PointToReferenceMapping_Registration.Instance;
+        public static PointToReferenceMapping_Registration StaticRegistration => PointToReferenceMapping_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PointToReferenceMappingCommon.Instance;
         [DebuggerStepThrough]

@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeatherColors_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeatherColors_Registration.Instance;
         Color Sunrise { get; }
         Color Day { get; }
         Color Sunset { get; }
@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherColors_Registration.Instance;
-        public static WeatherColors_Registration Registration => WeatherColors_Registration.Instance;
+        public static WeatherColors_Registration StaticRegistration => WeatherColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherColorsCommon.Instance;
         [DebuggerStepThrough]
@@ -1180,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherColors_Registration.Instance;
-        public static WeatherColors_Registration Registration => WeatherColors_Registration.Instance;
+        public static WeatherColors_Registration StaticRegistration => WeatherColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherColorsCommon.Instance;
         [DebuggerStepThrough]

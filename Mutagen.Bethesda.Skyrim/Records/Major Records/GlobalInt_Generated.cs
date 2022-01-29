@@ -399,6 +399,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<GlobalInt>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGlobalInt);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -499,7 +501,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGlobalIntGetter>,
         IMapsToGetter<IGlobalIntGetter>
     {
-        static new ILoquiRegistration Registration => GlobalInt_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GlobalInt_Registration.Instance;
         Int32? Data { get; }
 
     }
@@ -1304,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalInt_Registration.Instance;
-        public new static GlobalInt_Registration Registration => GlobalInt_Registration.Instance;
+        public new static GlobalInt_Registration StaticRegistration => GlobalInt_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalIntCommon.Instance;
         [DebuggerStepThrough]
@@ -1501,7 +1503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalInt_Registration.Instance;
-        public new static GlobalInt_Registration Registration => GlobalInt_Registration.Instance;
+        public new static GlobalInt_Registration StaticRegistration => GlobalInt_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalIntCommon.Instance;
         [DebuggerStepThrough]
@@ -1522,6 +1524,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGlobalInt);
+
 
         #region Data
         partial void DataCustomParse(

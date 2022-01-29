@@ -759,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => QuestLogEntry_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => QuestLogEntry_Registration.Instance;
         QuestLogEntry.Flag? Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         ITranslatedStringGetter? Entry { get; }
@@ -1447,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestLogEntry_Registration.Instance;
-        public static QuestLogEntry_Registration Registration => QuestLogEntry_Registration.Instance;
+        public static QuestLogEntry_Registration StaticRegistration => QuestLogEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestLogEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestLogEntry_Registration.Instance;
-        public static QuestLogEntry_Registration Registration => QuestLogEntry_Registration.Instance;
+        public static QuestLogEntry_Registration StaticRegistration => QuestLogEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestLogEntryCommon.Instance;
         [DebuggerStepThrough]

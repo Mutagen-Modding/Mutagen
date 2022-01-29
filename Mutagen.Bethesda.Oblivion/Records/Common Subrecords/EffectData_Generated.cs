@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => EffectData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => EffectData_Registration.Instance;
         IEDIDLinkGetter<IMagicEffectGetter> MagicEffect { get; }
         UInt32 Magnitude { get; }
         UInt32 Area { get; }
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectData_Registration.Instance;
-        public static EffectData_Registration Registration => EffectData_Registration.Instance;
+        public static EffectData_Registration StaticRegistration => EffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1314,7 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectData_Registration.Instance;
-        public static EffectData_Registration Registration => EffectData_Registration.Instance;
+        public static EffectData_Registration StaticRegistration => EffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectDataCommon.Instance;
         [DebuggerStepThrough]

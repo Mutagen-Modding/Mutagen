@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CombatStyleFlight_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CombatStyleFlight_Registration.Instance;
         CombatStyleFlight.VersioningBreaks Versioning { get; }
         Single HoverChance { get; }
         Single DiveBombChance { get; }
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleFlight_Registration.Instance;
-        public static CombatStyleFlight_Registration Registration => CombatStyleFlight_Registration.Instance;
+        public static CombatStyleFlight_Registration StaticRegistration => CombatStyleFlight_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleFlightCommon.Instance;
         [DebuggerStepThrough]
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleFlight_Registration.Instance;
-        public static CombatStyleFlight_Registration Registration => CombatStyleFlight_Registration.Instance;
+        public static CombatStyleFlight_Registration StaticRegistration => CombatStyleFlight_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleFlightCommon.Instance;
         [DebuggerStepThrough]

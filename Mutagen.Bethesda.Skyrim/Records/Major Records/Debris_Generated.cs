@@ -483,6 +483,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Debris>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDebris);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -583,7 +585,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IDebrisGetter>,
         IMapsToGetter<IDebrisGetter>
     {
-        static new ILoquiRegistration Registration => Debris_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Debris_Registration.Instance;
         IReadOnlyList<IDebrisModelGetter> Models { get; }
 
     }
@@ -1327,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
-        public new static Debris_Registration Registration => Debris_Registration.Instance;
+        public new static Debris_Registration StaticRegistration => Debris_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]
@@ -1507,7 +1509,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
-        public new static Debris_Registration Registration => Debris_Registration.Instance;
+        public new static Debris_Registration StaticRegistration => Debris_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]
@@ -1528,6 +1530,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDebris);
+
 
         public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = ListExt.Empty<DebrisModelBinaryOverlay>();
         partial void CustomFactoryEnd(

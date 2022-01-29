@@ -486,6 +486,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<DefaultObjectManager>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDefaultObjectManager);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -588,7 +590,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IDefaultObjectManagerGetter>,
         IMapsToGetter<IDefaultObjectManagerGetter>
     {
-        static new ILoquiRegistration Registration => DefaultObjectManager_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DefaultObjectManager_Registration.Instance;
         IReadOnlyList<IDefaultObjectGetter>? Objects { get; }
 
     }
@@ -1349,7 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DefaultObjectManager_Registration.Instance;
-        public new static DefaultObjectManager_Registration Registration => DefaultObjectManager_Registration.Instance;
+        public new static DefaultObjectManager_Registration StaticRegistration => DefaultObjectManager_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DefaultObjectManagerCommon.Instance;
         [DebuggerStepThrough]
@@ -1530,7 +1532,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DefaultObjectManager_Registration.Instance;
-        public new static DefaultObjectManager_Registration Registration => DefaultObjectManager_Registration.Instance;
+        public new static DefaultObjectManager_Registration StaticRegistration => DefaultObjectManager_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DefaultObjectManagerCommon.Instance;
         [DebuggerStepThrough]
@@ -1552,6 +1554,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDefaultObjectManager);
+
 
         public IReadOnlyList<IDefaultObjectGetter>? Objects { get; private set; }
         partial void CustomFactoryEnd(

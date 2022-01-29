@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => NavmeshNode_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NavmeshNode_Registration.Instance;
         IFormLinkGetter<IANavigationMeshGetter> NavMesh { get; }
         UInt32 NodeIndex { get; }
 
@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshNode_Registration.Instance;
-        public static NavmeshNode_Registration Registration => NavmeshNode_Registration.Instance;
+        public static NavmeshNode_Registration StaticRegistration => NavmeshNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshNode_Registration.Instance;
-        public static NavmeshNode_Registration Registration => NavmeshNode_Registration.Instance;
+        public static NavmeshNode_Registration StaticRegistration => NavmeshNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshNodeCommon.Instance;
         [DebuggerStepThrough]

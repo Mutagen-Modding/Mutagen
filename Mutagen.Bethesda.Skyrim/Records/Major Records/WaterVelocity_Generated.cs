@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WaterVelocity_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WaterVelocity_Registration.Instance;
         P3Float Offset { get; }
         Int32 Unknown { get; }
         P3Float Angle { get; }
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterVelocity_Registration.Instance;
-        public static WaterVelocity_Registration Registration => WaterVelocity_Registration.Instance;
+        public static WaterVelocity_Registration StaticRegistration => WaterVelocity_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterVelocityCommon.Instance;
         [DebuggerStepThrough]
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterVelocity_Registration.Instance;
-        public static WaterVelocity_Registration Registration => WaterVelocity_Registration.Instance;
+        public static WaterVelocity_Registration StaticRegistration => WaterVelocity_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterVelocityCommon.Instance;
         [DebuggerStepThrough]

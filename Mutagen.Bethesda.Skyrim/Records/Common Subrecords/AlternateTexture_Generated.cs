@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => AlternateTexture_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => AlternateTexture_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedRequiredGetter
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlternateTexture_Registration.Instance;
-        public static AlternateTexture_Registration Registration => AlternateTexture_Registration.Instance;
+        public static AlternateTexture_Registration StaticRegistration => AlternateTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AlternateTextureCommon.Instance;
         [DebuggerStepThrough]
@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlternateTexture_Registration.Instance;
-        public static AlternateTexture_Registration Registration => AlternateTexture_Registration.Instance;
+        public static AlternateTexture_Registration StaticRegistration => AlternateTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AlternateTextureCommon.Instance;
         [DebuggerStepThrough]

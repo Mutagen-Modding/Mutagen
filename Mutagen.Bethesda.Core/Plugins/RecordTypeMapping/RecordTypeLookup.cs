@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Plugins.RecordTypeMapping
     public static class RecordTypeLookup
     {
         public static RecordType GetMajorRecordType<TMajor>()
-            where TMajor : IMajorRecordCommonGetter
+            where TMajor : IMajorRecordGetter
         {
             return MajorRecordTypeLookup<TMajor>.RecordType;
         }
@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Plugins.RecordTypeMapping
     }
 
     public static class MajorRecordTypeLookup<TMajor>
-        where TMajor : IMajorRecordCommonGetter
+        where TMajor : IMajorRecordGetter
     {
         public static readonly RecordType RecordType;
 

@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LocationAliasReference_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LocationAliasReference_Registration.Instance;
         Int32? AliasIndex { get; }
         IFormLinkNullableGetter<IKeywordGetter> Keyword { get; }
         IFormLinkNullableGetter<ILocationReferenceTypeGetter> RefType { get; }
@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationAliasReference_Registration.Instance;
-        public static LocationAliasReference_Registration Registration => LocationAliasReference_Registration.Instance;
+        public static LocationAliasReference_Registration StaticRegistration => LocationAliasReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationAliasReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationAliasReference_Registration.Instance;
-        public static LocationAliasReference_Registration Registration => LocationAliasReference_Registration.Instance;
+        public static LocationAliasReference_Registration StaticRegistration => LocationAliasReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationAliasReferenceCommon.Instance;
         [DebuggerStepThrough]

@@ -63,9 +63,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
 
             // Interfaces
-            fg.AppendLine($"IGroupCommonGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
-            fg.AppendLine($"IGroupCommonGetter<IMajorRecordCommonGetter> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
-            fg.AppendLine($"IGroupCommon<T> {nameof(IMod)}.{nameof(IMod.GetTopLevelGroup)}<T>() => this.{nameof(IMod.GetTopLevelGroup)}<T>();");
+            fg.AppendLine($"IGroupGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
+            fg.AppendLine($"IGroupGetter {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
+            fg.AppendLine($"IGroup<T> {nameof(IMod)}.{nameof(IMod.GetTopLevelGroup)}<T>() => this.{nameof(IMod.GetTopLevelGroup)}<T>();");
+            fg.AppendLine($"IGroup {nameof(IMod)}.{nameof(IMod.GetTopLevelGroup)}(Type type) => this.{nameof(IMod.GetTopLevelGroup)}(type);");
             fg.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);");
             fg.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
@@ -148,7 +149,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     fg.AppendLine($"if (mask?.{field.Name} ?? true)");
                     using (new BraceWrapper(fg))
                     {
-                        if (loqui.TargetObjectGeneration.Name == "Group")
+                        if (loqui.TargetObjectGeneration.Name == $"{obj.ProtoGen.Protocol.Namespace}Group")
                         {
                             fg.AppendLine($"this.{field.Name}.RecordCache.Set(rhsMod.{field.Name}.RecordCache.Items);");
                         }
@@ -186,7 +187,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     if (!(field is LoquiType loqui)) continue;
                     if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
-                    if (loqui.TargetObjectGeneration.Name == "ListGroup")
+                    if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
                     {
                         fg.AppendLine($"count += {field.Name}.Records.Count > 0 ? 1 : default(uint);");
                     }
@@ -372,15 +373,15 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                $"public static IGroupCommonGetter<T> {nameof(IModGetter.GetTopLevelGroup)}<T>"))
+                $"public static IGroupGetter<T> {nameof(IModGetter.GetTopLevelGroup)}<T>"))
             {
-                args.Wheres.Add($"where T : {nameof(IMajorRecordCommonGetter)}");
+                args.Wheres.Add($"where T : {nameof(IMajorRecordGetter)}");
                 args.Add($"this {obj.Interface(getter: true)} obj");
             }
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return (IGroupCommonGetter<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
+                    $"return (IGroupGetter<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
                 {
                     args.AddPassArg("obj");
                     args.Add("type: typeof(T)");
@@ -389,7 +390,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine();
             
             using (var args = new FunctionWrapper(fg,
-                $"public static IGroupCommonGetter<{nameof(IMajorRecordCommonGetter)}> {nameof(IModGetter.GetTopLevelGroup)}"))
+                $"public static IGroupGetter {nameof(IModGetter.GetTopLevelGroup)}"))
             {
                 args.Add($"this {obj.Interface(getter: true)} obj");
                 args.Add("Type type");
@@ -397,7 +398,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return (IGroupCommonGetter<{nameof(IMajorRecordCommonGetter)}>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
+                    $"return (IGroupGetter){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
                 {
                     args.AddPassArg("obj");
                     args.AddPassArg("type");
@@ -406,18 +407,35 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public static IGroupCommon<T> {nameof(IMod.GetTopLevelGroup)}<T>"))
+                $"public static IGroup<T> {nameof(IMod.GetTopLevelGroup)}<T>"))
             {
-                args.Wheres.Add($"where T : {nameof(IMajorRecordCommon)}");
+                args.Wheres.Add($"where T : {nameof(IMajorRecord)}");
                 args.Add($"this {obj.Interface(getter: false)} obj");
             }
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return (IGroupCommon<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
+                    $"return (IGroup<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
                 {
                     args.AddPassArg("obj");
                     args.Add("type: typeof(T)");
+                }
+            }
+            fg.AppendLine();
+            
+            using (var args = new FunctionWrapper(fg,
+                $"public static IGroup {nameof(IModGetter.GetTopLevelGroup)}"))
+            {
+                args.Add($"this {obj.Interface(getter: false)} obj");
+                args.Add("Type type");
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new ArgsWrapper(fg,
+                           $"return (IGroup){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
+                {
+                    args.AddPassArg("obj");
+                    args.AddPassArg("type");
                 }
             }
             fg.AppendLine();
@@ -532,7 +550,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         using (new DepthWrapper(fg))
                         {
-                            if (loqui.TargetObjectGeneration.Name == "ListGroup")
+                            if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
                             {
                                 fg.AppendLine($"return obj.{field.Name}.Records;");
                             }
@@ -603,7 +621,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     if (!(field is LoquiType loqui)) continue;
                     if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
-                    if (loqui.TargetObjectGeneration.Name == "ListGroup")
+                    if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
                     {
                         listGroupInstance = loqui;
                     }
@@ -612,7 +630,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         groupInstance = loqui;
                     }
                     if (loqui.GetGroupTarget().GetObjectData().CustomBinaryEnd == CustomEnd.Off
-                        && loqui.TargetObjectGeneration.Name != "ListGroup")
+                        && !loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
                     {
                         fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, writer.MetaData.MasterReferences!, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams{(objData.UsesStringFiles ? ", param.StringsWriter" : null)}));");
                     }
@@ -637,7 +655,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 using (var args = new FunctionWrapper(fg,
                     $"public static void WriteGroupParallel<T>"))
                 {
-                    args.Add("IGroupGetter<T> group");
+                    args.Add($"I{obj.ProtoGen.Protocol.Namespace}GroupGetter<T> group");
                     args.Add($"{nameof(IMasterReferenceReader)} masters");
                     args.Add("int targetIndex");
                     if (objData.GameReleaseOptions != null)
@@ -672,7 +690,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
-                        fg.AppendLine($"GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);");
+                        fg.AppendLine($"{obj.ProtoGen.Protocol.Namespace}GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);");
                     }
                     fg.AppendLine($"subStreams[0] = groupByteStream;");
                     fg.AppendLine($"Parallel.ForEach(cuts, (cutItems, state, counter) =>");

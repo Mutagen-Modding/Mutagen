@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeatherSound_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeatherSound_Registration.Instance;
         IFormLinkGetter<ISoundGetter> Sound { get; }
         WeatherSound.TypeEnum Type { get; }
 
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
-        public static WeatherSound_Registration Registration => WeatherSound_Registration.Instance;
+        public static WeatherSound_Registration StaticRegistration => WeatherSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
-        public static WeatherSound_Registration Registration => WeatherSound_Registration.Instance;
+        public static WeatherSound_Registration StaticRegistration => WeatherSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherSoundCommon.Instance;
         [DebuggerStepThrough]

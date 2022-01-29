@@ -511,6 +511,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ArtObject>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IArtObject);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -627,7 +629,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter
     {
-        static new ILoquiRegistration Registration => ArtObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ArtObject_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -1446,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArtObject_Registration.Instance;
-        public new static ArtObject_Registration Registration => ArtObject_Registration.Instance;
+        public new static ArtObject_Registration StaticRegistration => ArtObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArtObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1642,7 +1644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArtObject_Registration.Instance;
-        public new static ArtObject_Registration Registration => ArtObject_Registration.Instance;
+        public new static ArtObject_Registration StaticRegistration => ArtObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArtObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1664,6 +1666,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IArtObject);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

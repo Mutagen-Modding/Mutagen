@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SoundData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SoundData_Registration.Instance;
         UInt16 MinimumAttenuationDistance { get; }
         UInt16 MaximumAttenuationDistance { get; }
         SByte FrequencyAdjustment { get; }
@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
-        public static SoundData_Registration Registration => SoundData_Registration.Instance;
+        public static SoundData_Registration StaticRegistration => SoundData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => SoundDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
-        public static SoundData_Registration Registration => SoundData_Registration.Instance;
+        public static SoundData_Registration StaticRegistration => SoundData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => SoundDataCommon.Instance;
         [DebuggerStepThrough]

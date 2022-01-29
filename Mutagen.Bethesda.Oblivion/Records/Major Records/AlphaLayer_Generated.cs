@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         ILoquiObject<IAlphaLayerGetter>
     {
-        static new ILoquiRegistration Registration => AlphaLayer_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AlphaLayer_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? AlphaLayerData { get; }
 
     }
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
-        public new static AlphaLayer_Registration Registration => AlphaLayer_Registration.Instance;
+        public new static AlphaLayer_Registration StaticRegistration => AlphaLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlphaLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
-        public new static AlphaLayer_Registration Registration => AlphaLayer_Registration.Instance;
+        public new static AlphaLayer_Registration StaticRegistration => AlphaLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlphaLayerCommon.Instance;
         [DebuggerStepThrough]

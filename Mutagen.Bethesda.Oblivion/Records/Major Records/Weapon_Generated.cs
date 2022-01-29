@@ -638,6 +638,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Weapon>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IWeapon);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -760,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Weapon_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1666,7 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
-        public new static Weapon_Registration Registration => Weapon_Registration.Instance;
+        public new static Weapon_Registration StaticRegistration => Weapon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeaponCommon.Instance;
         [DebuggerStepThrough]
@@ -1907,7 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
-        public new static Weapon_Registration Registration => Weapon_Registration.Instance;
+        public new static Weapon_Registration StaticRegistration => Weapon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeaponCommon.Instance;
         [DebuggerStepThrough]
@@ -1929,6 +1931,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IWeapon);
+
 
         #region Name
         private int? _NameLocation;

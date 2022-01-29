@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ClimateData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ClimateData_Registration.Instance;
         DateTime SunriseBegin { get; }
         DateTime SunriseEnd { get; }
         DateTime SunsetBegin { get; }
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClimateData_Registration.Instance;
-        public static ClimateData_Registration Registration => ClimateData_Registration.Instance;
+        public static ClimateData_Registration StaticRegistration => ClimateData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClimateDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClimateData_Registration.Instance;
-        public static ClimateData_Registration Registration => ClimateData_Registration.Instance;
+        public static ClimateData_Registration StaticRegistration => ClimateData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClimateDataCommon.Instance;
         [DebuggerStepThrough]

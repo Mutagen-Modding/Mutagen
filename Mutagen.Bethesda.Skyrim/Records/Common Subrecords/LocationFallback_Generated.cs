@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<ILocationFallbackGetter>
     {
-        static new ILoquiRegistration Registration => LocationFallback_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LocationFallback_Registration.Instance;
         LocationTargetRadius.LocationType Type { get; }
         Int32 Data { get; }
 
@@ -997,7 +997,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationFallback_Registration.Instance;
-        public new static LocationFallback_Registration Registration => LocationFallback_Registration.Instance;
+        public new static LocationFallback_Registration StaticRegistration => LocationFallback_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationFallbackCommon.Instance;
         [DebuggerStepThrough]
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationFallback_Registration.Instance;
-        public new static LocationFallback_Registration Registration => LocationFallback_Registration.Instance;
+        public new static LocationFallback_Registration StaticRegistration => LocationFallback_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationFallbackCommon.Instance;
         [DebuggerStepThrough]

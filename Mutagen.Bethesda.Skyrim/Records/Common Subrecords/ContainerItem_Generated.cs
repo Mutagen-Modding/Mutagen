@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ContainerItem_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ContainerItem_Registration.Instance;
         IFormLinkGetter<IItemGetter> Item { get; }
         Int32 Count { get; }
 
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
-        public static ContainerItem_Registration Registration => ContainerItem_Registration.Instance;
+        public static ContainerItem_Registration StaticRegistration => ContainerItem_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
-        public static ContainerItem_Registration Registration => ContainerItem_Registration.Instance;
+        public static ContainerItem_Registration StaticRegistration => ContainerItem_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerItemCommon.Instance;
         [DebuggerStepThrough]

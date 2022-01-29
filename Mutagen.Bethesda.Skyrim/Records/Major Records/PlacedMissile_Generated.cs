@@ -442,6 +442,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<PlacedMissile>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedMissile);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -546,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedMissileGetter>,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedMissile_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedMissile_Registration.Instance;
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }
@@ -1400,7 +1402,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedMissile_Registration.Instance;
-        public new static PlacedMissile_Registration Registration => PlacedMissile_Registration.Instance;
+        public new static PlacedMissile_Registration StaticRegistration => PlacedMissile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedMissileCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedMissile_Registration.Instance;
-        public new static PlacedMissile_Registration Registration => PlacedMissile_Registration.Instance;
+        public new static PlacedMissile_Registration StaticRegistration => PlacedMissile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedMissileCommon.Instance;
         [DebuggerStepThrough]
@@ -1565,6 +1567,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedMissile);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

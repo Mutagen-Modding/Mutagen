@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// Enumerates all contained Major Records  
         /// </summary> 
         /// <returns>Enumerable of all contained Major Records</returns>  
-        new IEnumerable<IMajorRecordCommon> EnumerateMajorRecords();
+        new IEnumerable<IMajorRecord> EnumerateMajorRecords();
 
         /// <summary>  
         /// Enumerates all contained Major Records of the specified generic type  
@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         /// <returns>Enumerable of all contained Major Records</returns>  
         new IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordCommon;
+            where TMajor : class, IMajorRecord;
 
         /// <summary>  
         /// Enumerates all contained Major Record of the specified type  
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <param name="throwIfUnknown">Whether to throw an exception if type is unknown</param> 
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         /// <returns>Enumerable of all applicable major records</returns>  
-        new IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(Type? t, bool throwIfUnknown = true);
+        new IEnumerable<IMajorRecord> EnumerateMajorRecords(Type? t, bool throwIfUnknown = true);
 
         /// <summary>
         /// Removes any records within matching the given FormKey.
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <typeparam name="TMajor">Type of major record to remove from</typeparam>
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         void Remove<TMajor>(FormKey formKey, bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter;
+            where TMajor : IMajorRecordGetter;
 
         /// <summary>
         /// Removes any records within matching the given FormKeys.<br/>
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <typeparam name="TMajor">Type of major record to remove from</typeparam>
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         void Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter;
+            where TMajor : IMajorRecordGetter;
 
         /// <summary>
         /// Removes any records within matching the given FormKeys.<br/>
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <typeparam name="TMajor">Type of major record to remove from</typeparam>
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         void Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter;
+            where TMajor : IMajorRecordGetter;
 
         /// <summary>
         /// Removes any records within matching the given FormKeys.<br/>
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <typeparam name="TMajor">Type of major record to remove from</typeparam>
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         void Remove<TMajor>(TMajor record, bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter;
+            where TMajor : IMajorRecordGetter;
 
         /// <summary>
         /// Removes any records within matching the given FormKeys.<br/>
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <typeparam name="TMajor">Type of major record to remove from</typeparam>
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         void Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown = true)
-            where TMajor : IMajorRecordCommonGetter;
+            where TMajor : IMajorRecordGetter;
     }
 
     /// <summary>  
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// Enumerates all contained Major Record Getters  
         /// </summary>  
         /// <returns>Enumerable of all contained Major Record Getters</returns>  
-        IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords();
+        IEnumerable<IMajorRecordGetter> EnumerateMajorRecords();
 
         /// <summary>  
         /// Enumerates all contained Major Record Getters of the specified generic type  
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         /// <returns>Enumerable of all applicable major records</returns>  
         IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true)
-            where T : class, IMajorRecordCommonGetter;
+            where T : class, IMajorRecordGetter;
 
         /// <summary>  
         /// Enumerates all contained Major Record Getters of the specified type  
@@ -167,6 +167,6 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <param name="throwIfUnknown">Whether to throw an exception if type is unknown</param> 
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         /// <returns>Enumerable of all applicable major records</returns>  
-        IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true);
+        IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true);
     }
 }

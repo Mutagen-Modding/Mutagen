@@ -654,6 +654,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<SoundOutputModel>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISoundOutputModel);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -760,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ISoundOutputModelGetter>,
         IMapsToGetter<ISoundOutputModelGetter>
     {
-        static new ILoquiRegistration Registration => SoundOutputModel_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoundOutputModel_Registration.Instance;
         ISoundOutputDataGetter? Data { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         SoundOutputModel.TypeEnum? Type { get; }
@@ -1708,7 +1710,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputModel_Registration.Instance;
-        public new static SoundOutputModel_Registration Registration => SoundOutputModel_Registration.Instance;
+        public new static SoundOutputModel_Registration StaticRegistration => SoundOutputModel_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundOutputModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1946,7 +1948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputModel_Registration.Instance;
-        public new static SoundOutputModel_Registration Registration => SoundOutputModel_Registration.Instance;
+        public new static SoundOutputModel_Registration StaticRegistration => SoundOutputModel_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundOutputModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1967,6 +1969,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISoundOutputModel);
+
 
         #region Data
         private RangeInt32? _DataLocation;

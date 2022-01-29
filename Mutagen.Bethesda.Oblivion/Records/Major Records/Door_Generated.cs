@@ -750,6 +750,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Door>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDoor);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -871,7 +873,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Door_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Door_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1803,7 +1805,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
-        public new static Door_Registration Registration => Door_Registration.Instance;
+        public new static Door_Registration StaticRegistration => Door_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]
@@ -2061,7 +2063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
-        public new static Door_Registration Registration => Door_Registration.Instance;
+        public new static Door_Registration StaticRegistration => Door_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]
@@ -2083,6 +2085,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDoor);
+
 
         #region Name
         private int? _NameLocation;

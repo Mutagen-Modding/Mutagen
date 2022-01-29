@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         ILoquiObject<IRegionMapGetter>
     {
-        static new ILoquiRegistration Registration => RegionMap_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => RegionMap_Registration.Instance;
         String? Map { get; }
 
     }
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionMap_Registration.Instance;
-        public new static RegionMap_Registration Registration => RegionMap_Registration.Instance;
+        public new static RegionMap_Registration StaticRegistration => RegionMap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionMapCommon.Instance;
         [DebuggerStepThrough]
@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionMap_Registration.Instance;
-        public new static RegionMap_Registration Registration => RegionMap_Registration.Instance;
+        public new static RegionMap_Registration StaticRegistration => RegionMap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionMapCommon.Instance;
         [DebuggerStepThrough]

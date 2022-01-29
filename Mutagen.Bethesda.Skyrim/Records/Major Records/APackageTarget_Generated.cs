@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => APackageTarget_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => APackageTarget_Registration.Instance;
         Int32 CountOrDistance { get; }
 
     }
@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APackageTarget_Registration.Instance;
-        public static APackageTarget_Registration Registration => APackageTarget_Registration.Instance;
+        public static APackageTarget_Registration StaticRegistration => APackageTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APackageTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -1015,14 +1015,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class APackageTargetBinaryOverlay :
+    public abstract partial class APackageTargetBinaryOverlay :
         PluginBinaryOverlay,
         IAPackageTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APackageTarget_Registration.Instance;
-        public static APackageTarget_Registration Registration => APackageTarget_Registration.Instance;
+        public static APackageTarget_Registration StaticRegistration => APackageTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APackageTargetCommon.Instance;
         [DebuggerStepThrough]

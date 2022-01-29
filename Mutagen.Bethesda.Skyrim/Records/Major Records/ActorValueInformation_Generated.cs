@@ -703,6 +703,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ActorValueInformation>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IActorValueInformation);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -821,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ActorValueInformation_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -1717,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueInformation_Registration.Instance;
-        public new static ActorValueInformation_Registration Registration => ActorValueInformation_Registration.Instance;
+        public new static ActorValueInformation_Registration StaticRegistration => ActorValueInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActorValueInformationCommon.Instance;
         [DebuggerStepThrough]
@@ -1962,7 +1964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueInformation_Registration.Instance;
-        public new static ActorValueInformation_Registration Registration => ActorValueInformation_Registration.Instance;
+        public new static ActorValueInformation_Registration StaticRegistration => ActorValueInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActorValueInformationCommon.Instance;
         [DebuggerStepThrough]
@@ -1984,6 +1986,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IActorValueInformation);
+
 
         #region Name
         private int? _NameLocation;

@@ -484,6 +484,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<FormList>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IFormList);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -592,7 +594,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IFormListGetter>,
         IObjectIdGetter
     {
-        static new ILoquiRegistration Registration => FormList_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>> Items { get; }
 
     }
@@ -1336,7 +1338,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration Registration => FormList_Registration.Instance;
+        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]
@@ -1514,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration Registration => FormList_Registration.Instance;
+        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]
@@ -1536,6 +1538,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IFormList);
+
 
         public IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>> Items { get; private set; } = ListExt.Empty<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
         partial void CustomFactoryEnd(

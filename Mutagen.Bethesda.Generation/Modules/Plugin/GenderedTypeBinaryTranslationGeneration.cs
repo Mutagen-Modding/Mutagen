@@ -175,9 +175,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 throw new ArgumentException("Unsupported type generator: " + gendered.SubTypeGeneration);
             }
             var allowDirectWrite = subTransl.AllowDirectWrite(objGen, gendered.SubTypeGeneration);
-            bool needsMasters = gendered.SubTypeGeneration is FormLinkType || gendered.SubTypeGeneration is LoquiType;
+            var loqui = gendered.SubTypeGeneration as LoquiType; 
+            bool needsMasters = gendered.SubTypeGeneration is FormLinkType || (loqui != null && loqui.GetFieldData().HasTrigger); 
             var typeName = gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
-            var loqui = gendered.SubTypeGeneration as LoquiType;
             if (loqui != null)
             {
                 typeName = loqui.TypeNameInternal(getter: true, internalInterface: true);
@@ -352,7 +352,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         using (new BraceWrapper(fg))
                         {
                             fg.AppendLine($"if (!_{typeGen.Name}_IsSet) return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>({gendered.SubTypeGeneration.GetDefault(getter: true)}, {gendered.SubTypeGeneration.GetDefault(getter: true)});");
-                            fg.AppendLine($"var data = {dataAccessor}.Span.Slice(_{typeGen.Name}Location);");
+                            fg.AppendLine($"var data = {dataAccessor}.Slice(_{typeGen.Name}Location);");
                             using (var args = new ArgsWrapper(fg,
                                 $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                             {

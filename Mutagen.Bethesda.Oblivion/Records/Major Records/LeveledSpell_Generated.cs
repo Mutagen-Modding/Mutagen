@@ -533,6 +533,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<LeveledSpell>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILeveledSpell);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -639,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<ILeveledSpellGetter>,
         ISpellRecordGetter
     {
-        static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
         IReadOnlyList<ILeveledSpellEntryGetter> Entries { get; }
@@ -1427,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static LeveledSpell_Registration Registration => LeveledSpell_Registration.Instance;
+        public new static LeveledSpell_Registration StaticRegistration => LeveledSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1630,7 +1632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static LeveledSpell_Registration Registration => LeveledSpell_Registration.Instance;
+        public new static LeveledSpell_Registration StaticRegistration => LeveledSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1652,6 +1654,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILeveledSpell);
+
 
         #region ChanceNone
         private int? _ChanceNoneLocation;

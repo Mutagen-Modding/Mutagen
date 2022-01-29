@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => FindMatchingRefNearAlias_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FindMatchingRefNearAlias_Registration.Instance;
         Int16? AliasIndex { get; }
         FindMatchingRefNearAlias.TypeEnum? Type { get; }
 
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefNearAlias_Registration.Instance;
-        public static FindMatchingRefNearAlias_Registration Registration => FindMatchingRefNearAlias_Registration.Instance;
+        public static FindMatchingRefNearAlias_Registration StaticRegistration => FindMatchingRefNearAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefNearAliasCommon.Instance;
         [DebuggerStepThrough]
@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefNearAlias_Registration.Instance;
-        public static FindMatchingRefNearAlias_Registration Registration => FindMatchingRefNearAlias_Registration.Instance;
+        public static FindMatchingRefNearAlias_Registration StaticRegistration => FindMatchingRefNearAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefNearAliasCommon.Instance;
         [DebuggerStepThrough]

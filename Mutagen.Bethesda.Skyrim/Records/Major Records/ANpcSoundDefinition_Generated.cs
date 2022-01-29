@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ANpcSoundDefinition_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ANpcSoundDefinition_Registration.Instance;
 
     }
 
@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcSoundDefinition_Registration.Instance;
-        public static ANpcSoundDefinition_Registration Registration => ANpcSoundDefinition_Registration.Instance;
+        public static ANpcSoundDefinition_Registration StaticRegistration => ANpcSoundDefinition_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcSoundDefinitionCommon.Instance;
         [DebuggerStepThrough]
@@ -940,14 +940,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ANpcSoundDefinitionBinaryOverlay :
+    public abstract partial class ANpcSoundDefinitionBinaryOverlay :
         PluginBinaryOverlay,
         IANpcSoundDefinitionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcSoundDefinition_Registration.Instance;
-        public static ANpcSoundDefinition_Registration Registration => ANpcSoundDefinition_Registration.Instance;
+        public static ANpcSoundDefinition_Registration StaticRegistration => ANpcSoundDefinition_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcSoundDefinitionCommon.Instance;
         [DebuggerStepThrough]

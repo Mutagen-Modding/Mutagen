@@ -513,6 +513,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Hair>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IHair);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -628,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Hair_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Hair_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
@@ -1439,7 +1441,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
-        public new static Hair_Registration Registration => Hair_Registration.Instance;
+        public new static Hair_Registration StaticRegistration => Hair_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HairCommon.Instance;
         [DebuggerStepThrough]
@@ -1651,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
-        public new static Hair_Registration Registration => Hair_Registration.Instance;
+        public new static Hair_Registration StaticRegistration => Hair_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HairCommon.Instance;
         [DebuggerStepThrough]
@@ -1672,6 +1674,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IHair);
+
 
         #region Name
         private int? _NameLocation;

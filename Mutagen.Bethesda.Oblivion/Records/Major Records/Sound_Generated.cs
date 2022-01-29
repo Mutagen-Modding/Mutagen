@@ -426,6 +426,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Sound>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISound);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<ISoundGetter>,
         IMapsToGetter<ISoundGetter>
     {
-        static new ILoquiRegistration Registration => Sound_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Sound_Registration.Instance;
         String? File { get; }
         ISoundDataInternalGetter? Data { get; }
 
@@ -1286,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
-        public new static Sound_Registration Registration => Sound_Registration.Instance;
+        public new static Sound_Registration StaticRegistration => Sound_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1475,7 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
-        public new static Sound_Registration Registration => Sound_Registration.Instance;
+        public new static Sound_Registration StaticRegistration => Sound_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1496,6 +1498,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISound);
+
 
         #region File
         private int? _FileLocation;

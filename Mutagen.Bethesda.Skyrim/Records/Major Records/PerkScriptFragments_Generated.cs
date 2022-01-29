@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PerkScriptFragments_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PerkScriptFragments_Registration.Instance;
         SByte Unknown { get; }
         String FileName { get; }
         IReadOnlyList<IIndexedScriptFragmentGetter> Fragments { get; }
@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkScriptFragments_Registration.Instance;
-        public static PerkScriptFragments_Registration Registration => PerkScriptFragments_Registration.Instance;
+        public static PerkScriptFragments_Registration StaticRegistration => PerkScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkScriptFragments_Registration.Instance;
-        public static PerkScriptFragments_Registration Registration => PerkScriptFragments_Registration.Instance;
+        public static PerkScriptFragments_Registration StaticRegistration => PerkScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]

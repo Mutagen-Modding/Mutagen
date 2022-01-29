@@ -712,6 +712,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<ConstructibleObject>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IConstructibleObject);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -818,7 +820,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IConstructibleObjectGetter>,
         IMapsToGetter<IConstructibleObjectGetter>
     {
-        static new ILoquiRegistration Registration => ConstructibleObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ConstructibleObject_Registration.Instance;
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IFormLinkNullableGetter<IConstructibleGetter> CreatedObject { get; }
@@ -1705,7 +1707,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConstructibleObject_Registration.Instance;
-        public new static ConstructibleObject_Registration Registration => ConstructibleObject_Registration.Instance;
+        public new static ConstructibleObject_Registration StaticRegistration => ConstructibleObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConstructibleObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1942,7 +1944,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConstructibleObject_Registration.Instance;
-        public new static ConstructibleObject_Registration Registration => ConstructibleObject_Registration.Instance;
+        public new static ConstructibleObject_Registration StaticRegistration => ConstructibleObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConstructibleObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1964,6 +1966,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IConstructibleObject);
+
 
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region Conditions

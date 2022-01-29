@@ -717,6 +717,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<LandscapeTexture>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ILandscapeTexture);
+
         [Flags]
         public enum HNAMDataType
         {
@@ -832,7 +834,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ILandscapeTextureGetter>,
         IRegionTargetGetter
     {
-        static new ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LandscapeTexture_Registration.Instance;
         IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
         IFormLinkGetter<IMaterialTypeGetter> MaterialType { get; }
         Byte HavokFriction { get; }
@@ -1706,7 +1708,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandscapeTexture_Registration.Instance;
-        public new static LandscapeTexture_Registration Registration => LandscapeTexture_Registration.Instance;
+        public new static LandscapeTexture_Registration StaticRegistration => LandscapeTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeTextureCommon.Instance;
         [DebuggerStepThrough]
@@ -1955,7 +1957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandscapeTexture_Registration.Instance;
-        public new static LandscapeTexture_Registration Registration => LandscapeTexture_Registration.Instance;
+        public new static LandscapeTexture_Registration StaticRegistration => LandscapeTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeTextureCommon.Instance;
         [DebuggerStepThrough]
@@ -1977,6 +1979,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ILandscapeTexture);
+
 
         #region TextureSet
         private int? _TextureSetLocation;

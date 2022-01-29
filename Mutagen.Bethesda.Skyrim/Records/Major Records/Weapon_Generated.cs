@@ -1747,6 +1747,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Weapon>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IWeapon);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1934,7 +1936,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Weapon_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -3685,7 +3687,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
-        public new static Weapon_Registration Registration => Weapon_Registration.Instance;
+        public new static Weapon_Registration StaticRegistration => Weapon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeaponCommon.Instance;
         [DebuggerStepThrough]
@@ -4208,7 +4210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
-        public new static Weapon_Registration Registration => Weapon_Registration.Instance;
+        public new static Weapon_Registration StaticRegistration => Weapon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeaponCommon.Instance;
         [DebuggerStepThrough]
@@ -4230,6 +4232,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IWeapon);
+
         public Weapon.MajorFlag MajorFlags => (Weapon.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

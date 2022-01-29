@@ -669,6 +669,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<IdleAnimation>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IIdleAnimation);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -779,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IIdleAnimationGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => IdleAnimation_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1663,7 +1665,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleAnimation_Registration.Instance;
-        public new static IdleAnimation_Registration Registration => IdleAnimation_Registration.Instance;
+        public new static IdleAnimation_Registration StaticRegistration => IdleAnimation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleAnimationCommon.Instance;
         [DebuggerStepThrough]
@@ -1891,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleAnimation_Registration.Instance;
-        public new static IdleAnimation_Registration Registration => IdleAnimation_Registration.Instance;
+        public new static IdleAnimation_Registration StaticRegistration => IdleAnimation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleAnimationCommon.Instance;
         [DebuggerStepThrough]
@@ -1913,6 +1915,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IIdleAnimation);
+
 
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();

@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Tests
             var mod = OblivionMod.CreateFromBinaryOverlay(
                 Path.Combine(settings.DataFolderLocations.Oblivion, target.Path));
             var set1 = new HashSet<FormKey>(mod.EnumerateMajorRecords().Select(m => m.FormKey));
-            var set2 = new HashSet<FormKey>(mod.EnumerateMajorRecords<IMajorRecordCommonGetter>().Select(m => m.FormKey));
+            var set2 = new HashSet<FormKey>(mod.EnumerateMajorRecords<IMajorRecordGetter>().Select(m => m.FormKey));
             set1.Count.Should().Equals(set2.Count);
             set1.Should().Equals(set2);
         }

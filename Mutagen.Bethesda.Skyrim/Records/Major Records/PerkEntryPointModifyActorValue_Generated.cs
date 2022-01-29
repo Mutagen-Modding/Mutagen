@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPerkEntryPointModifyActorValueGetter>
     {
-        static new ILoquiRegistration Registration => PerkEntryPointModifyActorValue_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
         ActorValue ActorValue { get; }
         Single Value { get; }
         PerkEntryPointModifyActorValue.ModificationType Modification { get; }
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointModifyActorValue_Registration.Instance;
-        public new static PerkEntryPointModifyActorValue_Registration Registration => PerkEntryPointModifyActorValue_Registration.Instance;
+        public new static PerkEntryPointModifyActorValue_Registration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointModifyActorValueCommon.Instance;
         [DebuggerStepThrough]
@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointModifyActorValue_Registration.Instance;
-        public new static PerkEntryPointModifyActorValue_Registration Registration => PerkEntryPointModifyActorValue_Registration.Instance;
+        public new static PerkEntryPointModifyActorValue_Registration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointModifyActorValueCommon.Instance;
         [DebuggerStepThrough]

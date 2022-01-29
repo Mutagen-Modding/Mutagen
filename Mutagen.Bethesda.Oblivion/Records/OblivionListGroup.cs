@@ -8,21 +8,21 @@ namespace Mutagen.Bethesda.Oblivion
 {
     namespace Internals
     {
-        public partial class ListGroupBinaryCreateTranslation<T>
+        public partial class OblivionListGroupBinaryCreateTranslation<T>
         {
             public static partial void FillBinaryContainedRecordTypeCustom(
                 MutagenFrame frame,
-                IListGroup<T> item)
+                IOblivionListGroup<T> item)
             {
                 frame.Reader.Position += 4;
             }
         }
 
-        public partial class ListGroupBinaryWriteTranslation
+        public partial class OblivionListGroupBinaryWriteTranslation
         {
             public static partial void WriteBinaryContainedRecordTypeCustom<T>(
                 MutagenWriter writer,
-                IListGroupGetter<T> item)
+                IOblivionListGroupGetter<T> item)
                 where T : class, ICellBlockGetter, IBinaryItem
             {
                 Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class ListGroupBinaryOverlay<T> : AListGroupBinaryOverlay<T>
+        public partial class OblivionListGroupBinaryOverlay<T> : AListGroupBinaryOverlay<T>
         {
             partial void CustomFactoryEnd(
                 OverlayStream stream,

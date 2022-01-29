@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ItemEntry_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ItemEntry_Registration.Instance;
         IFormLinkGetter<IItemGetter> Item { get; }
         Int32? Count { get; }
 
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ItemEntry_Registration.Instance;
-        public static ItemEntry_Registration Registration => ItemEntry_Registration.Instance;
+        public static ItemEntry_Registration StaticRegistration => ItemEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ItemEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ItemEntry_Registration.Instance;
-        public static ItemEntry_Registration Registration => ItemEntry_Registration.Instance;
+        public static ItemEntry_Registration StaticRegistration => ItemEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ItemEntryCommon.Instance;
         [DebuggerStepThrough]

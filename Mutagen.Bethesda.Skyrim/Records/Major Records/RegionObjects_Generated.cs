@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         ILoquiObject<IRegionObjectsGetter>
     {
-        static new ILoquiRegistration Registration => RegionObjects_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => RegionObjects_Registration.Instance;
         IReadOnlyList<IRegionObjectGetter>? Objects { get; }
 
     }
@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionObjects_Registration.Instance;
-        public new static RegionObjects_Registration Registration => RegionObjects_Registration.Instance;
+        public new static RegionObjects_Registration StaticRegistration => RegionObjects_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionObjectsCommon.Instance;
         [DebuggerStepThrough]
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionObjects_Registration.Instance;
-        public new static RegionObjects_Registration Registration => RegionObjects_Registration.Instance;
+        public new static RegionObjects_Registration StaticRegistration => RegionObjects_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionObjectsCommon.Instance;
         [DebuggerStepThrough]

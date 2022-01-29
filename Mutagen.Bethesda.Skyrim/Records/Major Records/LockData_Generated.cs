@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LockData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LockData_Registration.Instance;
         LockLevel Level { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
         IFormLinkGetter<IKeyGetter> Key { get; }
@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockData_Registration.Instance;
-        public static LockData_Registration Registration => LockData_Registration.Instance;
+        public static LockData_Registration StaticRegistration => LockData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LockDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockData_Registration.Instance;
-        public static LockData_Registration Registration => LockData_Registration.Instance;
+        public static LockData_Registration StaticRegistration => LockData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LockDataCommon.Instance;
         [DebuggerStepThrough]

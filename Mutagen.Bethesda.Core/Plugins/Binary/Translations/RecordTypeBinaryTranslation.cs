@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             out EDIDLink<T> item,
             TypedParseParams? translationParams = null)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (!reader.TryCheckUpcomingRead(4, out var ex))
             {
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             out IEDIDLinkGetter<T> item,
             TypedParseParams? translationParams = null)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             if (!reader.TryCheckUpcomingRead(4, out var ex))
             {
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         }
 
         public void Write<T>(MutagenWriter writer, IEDIDLinkGetter<T> item)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             this.Write(
                 writer,
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenWriter writer,
             IEDIDLinkGetter<T> item,
             RecordType header)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             this.Write(
                 writer,
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenWriter writer,
             IEDIDLinkGetter<T> item,
             RecordType header)
-            where T : class, IMajorRecordCommonGetter
+            where T : class, IMajorRecordGetter
         {
             this.Write(
                 writer,

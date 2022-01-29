@@ -1266,6 +1266,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<PlacedObject>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedObject);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1393,7 +1395,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IPlacedObjectGetter>,
         IPlacedGetter
     {
-        static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         IFormLinkNullableGetter<IOblivionMajorRecordGetter> Base { get; }
         ReadOnlyMemorySlice<Byte>? XPCIFluff { get; }
         ReadOnlyMemorySlice<Byte>? FULLFluff { get; }
@@ -2811,7 +2813,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
-        public new static PlacedObject_Registration Registration => PlacedObject_Registration.Instance;
+        public new static PlacedObject_Registration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -3250,7 +3252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
-        public new static PlacedObject_Registration Registration => PlacedObject_Registration.Instance;
+        public new static PlacedObject_Registration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -3272,6 +3274,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedObject);
+
 
         #region Base
         private int? _BaseLocation;

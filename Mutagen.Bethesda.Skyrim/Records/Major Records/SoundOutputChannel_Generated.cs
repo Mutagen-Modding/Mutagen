@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SoundOutputChannel_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SoundOutputChannel_Registration.Instance;
         Byte L { get; }
         Byte R { get; }
         Byte C { get; }
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputChannel_Registration.Instance;
-        public static SoundOutputChannel_Registration Registration => SoundOutputChannel_Registration.Instance;
+        public static SoundOutputChannel_Registration StaticRegistration => SoundOutputChannel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundOutputChannelCommon.Instance;
         [DebuggerStepThrough]
@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputChannel_Registration.Instance;
-        public static SoundOutputChannel_Registration Registration => SoundOutputChannel_Registration.Instance;
+        public static SoundOutputChannel_Registration StaticRegistration => SoundOutputChannel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundOutputChannelCommon.Instance;
         [DebuggerStepThrough]

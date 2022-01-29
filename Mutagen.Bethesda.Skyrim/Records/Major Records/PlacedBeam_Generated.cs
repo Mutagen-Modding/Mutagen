@@ -442,6 +442,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<PlacedBeam>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedBeam);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -546,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedBeamGetter>,
         IScriptedGetter
     {
-        static new ILoquiRegistration Registration => PlacedBeam_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedBeam_Registration.Instance;
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }
@@ -1400,7 +1402,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedBeam_Registration.Instance;
-        public new static PlacedBeam_Registration Registration => PlacedBeam_Registration.Instance;
+        public new static PlacedBeam_Registration StaticRegistration => PlacedBeam_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedBeamCommon.Instance;
         [DebuggerStepThrough]
@@ -1543,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedBeam_Registration.Instance;
-        public new static PlacedBeam_Registration Registration => PlacedBeam_Registration.Instance;
+        public new static PlacedBeam_Registration StaticRegistration => PlacedBeam_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedBeamCommon.Instance;
         [DebuggerStepThrough]
@@ -1565,6 +1567,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedBeam);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

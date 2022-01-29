@@ -335,6 +335,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<SpellLeveled>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISpellLeveled);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -438,7 +440,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => SpellLeveled_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SpellLeveled_Registration.Instance;
 
     }
 
@@ -1220,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellLeveled_Registration.Instance;
-        public new static SpellLeveled_Registration Registration => SpellLeveled_Registration.Instance;
+        public new static SpellLeveled_Registration StaticRegistration => SpellLeveled_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellLeveledCommon.Instance;
         [DebuggerStepThrough]
@@ -1354,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellLeveled_Registration.Instance;
-        public new static SpellLeveled_Registration Registration => SpellLeveled_Registration.Instance;
+        public new static SpellLeveled_Registration StaticRegistration => SpellLeveled_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellLeveledCommon.Instance;
         [DebuggerStepThrough]
@@ -1375,6 +1377,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISpellLeveled);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

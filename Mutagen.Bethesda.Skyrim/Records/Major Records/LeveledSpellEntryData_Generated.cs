@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LeveledSpellEntryData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LeveledSpellEntryData_Registration.Instance;
         Int16 Level { get; }
         Int16 Unknown { get; }
         IFormLinkGetter<ISpellRecordGetter> Reference { get; }
@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpellEntryData_Registration.Instance;
-        public static LeveledSpellEntryData_Registration Registration => LeveledSpellEntryData_Registration.Instance;
+        public static LeveledSpellEntryData_Registration StaticRegistration => LeveledSpellEntryData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledSpellEntryDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpellEntryData_Registration.Instance;
-        public static LeveledSpellEntryData_Registration Registration => LeveledSpellEntryData_Registration.Instance;
+        public static LeveledSpellEntryData_Registration StaticRegistration => LeveledSpellEntryData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledSpellEntryDataCommon.Instance;
         [DebuggerStepThrough]

@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => RegionDataHeader_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => RegionDataHeader_Registration.Instance;
         RegionData.RegionDataType DataType { get; }
         RegionData.RegionDataFlag Flags { get; }
         Byte Priority { get; }
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataHeader_Registration.Instance;
-        public static RegionDataHeader_Registration Registration => RegionDataHeader_Registration.Instance;
+        public static RegionDataHeader_Registration StaticRegistration => RegionDataHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionDataHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataHeader_Registration.Instance;
-        public static RegionDataHeader_Registration Registration => RegionDataHeader_Registration.Instance;
+        public static RegionDataHeader_Registration StaticRegistration => RegionDataHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionDataHeaderCommon.Instance;
         [DebuggerStepThrough]

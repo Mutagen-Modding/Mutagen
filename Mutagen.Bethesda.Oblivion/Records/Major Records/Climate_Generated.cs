@@ -633,6 +633,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Climate>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IClimate);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -744,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IClimateGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Climate_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
         String? SunTexture { get; }
         String? SunGlareTexture { get; }
@@ -1651,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration Registration => Climate_Registration.Instance;
+        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]
@@ -1884,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration Registration => Climate_Registration.Instance;
+        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]
@@ -1906,6 +1908,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IClimate);
+
 
         public IReadOnlyList<IWeatherTypeGetter>? Weathers { get; private set; }
         #region SunTexture

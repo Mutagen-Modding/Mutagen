@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SeasonalIngredientProduction_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
         Byte Spring { get; }
         Byte Summer { get; }
         Byte Fall { get; }
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SeasonalIngredientProduction_Registration.Instance;
-        public static SeasonalIngredientProduction_Registration Registration => SeasonalIngredientProduction_Registration.Instance;
+        public static SeasonalIngredientProduction_Registration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SeasonalIngredientProductionCommon.Instance;
         [DebuggerStepThrough]
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SeasonalIngredientProduction_Registration.Instance;
-        public static SeasonalIngredientProduction_Registration Registration => SeasonalIngredientProduction_Registration.Instance;
+        public static SeasonalIngredientProduction_Registration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SeasonalIngredientProductionCommon.Instance;
         [DebuggerStepThrough]

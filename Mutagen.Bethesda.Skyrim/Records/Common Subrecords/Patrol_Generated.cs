@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Patrol_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Patrol_Registration.Instance;
         Single IdleTime { get; }
         IFormLinkGetter<IIdleAnimationGetter> Idle { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Patrol_Registration.Instance;
-        public static Patrol_Registration Registration => Patrol_Registration.Instance;
+        public static Patrol_Registration StaticRegistration => Patrol_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PatrolCommon.Instance;
         [DebuggerStepThrough]
@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Patrol_Registration.Instance;
-        public static Patrol_Registration Registration => Patrol_Registration.Instance;
+        public static Patrol_Registration StaticRegistration => Patrol_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PatrolCommon.Instance;
         [DebuggerStepThrough]

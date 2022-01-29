@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IScriptFloatPropertyGetter>,
         INamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => ScriptFloatProperty_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ScriptFloatProperty_Registration.Instance;
         Single Data { get; }
 
     }
@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFloatProperty_Registration.Instance;
-        public new static ScriptFloatProperty_Registration Registration => ScriptFloatProperty_Registration.Instance;
+        public new static ScriptFloatProperty_Registration StaticRegistration => ScriptFloatProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptFloatPropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFloatProperty_Registration.Instance;
-        public new static ScriptFloatProperty_Registration Registration => ScriptFloatProperty_Registration.Instance;
+        public new static ScriptFloatProperty_Registration StaticRegistration => ScriptFloatProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptFloatPropertyCommon.Instance;
         [DebuggerStepThrough]

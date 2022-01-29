@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IMagicEffectSpawnHazardArchetypeGetter>
     {
-        static new ILoquiRegistration Registration => MagicEffectSpawnHazardArchetype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
 
     }
 
@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSpawnHazardArchetype_Registration.Instance;
-        public new static MagicEffectSpawnHazardArchetype_Registration Registration => MagicEffectSpawnHazardArchetype_Registration.Instance;
+        public new static MagicEffectSpawnHazardArchetype_Registration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectSpawnHazardArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSpawnHazardArchetype_Registration.Instance;
-        public new static MagicEffectSpawnHazardArchetype_Registration Registration => MagicEffectSpawnHazardArchetype_Registration.Instance;
+        public new static MagicEffectSpawnHazardArchetype_Registration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectSpawnHazardArchetypeCommon.Instance;
         [DebuggerStepThrough]

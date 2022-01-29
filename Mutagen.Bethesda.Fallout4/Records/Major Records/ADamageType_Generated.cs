@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<IADamageTypeGetter>
     {
-        static new ILoquiRegistration Registration => ADamageType_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ADamageType_Registration.Instance;
 
     }
 
@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ADamageType_Registration.Instance;
-        public new static ADamageType_Registration Registration => ADamageType_Registration.Instance;
+        public new static ADamageType_Registration StaticRegistration => ADamageType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ADamageTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1236,14 +1236,14 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class ADamageTypeBinaryOverlay :
+    public abstract partial class ADamageTypeBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IADamageTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ADamageType_Registration.Instance;
-        public new static ADamageType_Registration Registration => ADamageType_Registration.Instance;
+        public new static ADamageType_Registration StaticRegistration => ADamageType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ADamageTypeCommon.Instance;
         [DebuggerStepThrough]

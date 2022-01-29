@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => VendorValues_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => VendorValues_Registration.Instance;
         UInt16 StartHour { get; }
         UInt16 EndHour { get; }
         UInt16 Radius { get; }
@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VendorValues_Registration.Instance;
-        public static VendorValues_Registration Registration => VendorValues_Registration.Instance;
+        public static VendorValues_Registration StaticRegistration => VendorValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => VendorValuesCommon.Instance;
         [DebuggerStepThrough]
@@ -1391,7 +1391,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VendorValues_Registration.Instance;
-        public static VendorValues_Registration Registration => VendorValues_Registration.Instance;
+        public static VendorValues_Registration StaticRegistration => VendorValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => VendorValuesCommon.Instance;
         [DebuggerStepThrough]

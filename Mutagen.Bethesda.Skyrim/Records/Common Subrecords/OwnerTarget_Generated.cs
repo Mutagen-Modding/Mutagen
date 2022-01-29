@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => OwnerTarget_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => OwnerTarget_Registration.Instance;
 
     }
 
@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OwnerTarget_Registration.Instance;
-        public static OwnerTarget_Registration Registration => OwnerTarget_Registration.Instance;
+        public static OwnerTarget_Registration StaticRegistration => OwnerTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => OwnerTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -926,14 +926,14 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class OwnerTargetBinaryOverlay :
+    public abstract partial class OwnerTargetBinaryOverlay :
         PluginBinaryOverlay,
         IOwnerTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OwnerTarget_Registration.Instance;
-        public static OwnerTarget_Registration Registration => OwnerTarget_Registration.Instance;
+        public static OwnerTarget_Registration StaticRegistration => OwnerTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => OwnerTargetCommon.Instance;
         [DebuggerStepThrough]

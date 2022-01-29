@@ -920,6 +920,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Grass>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGrass);
+
         [Flags]
         public enum DATADataType
         {
@@ -1053,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter
     {
-        static new ILoquiRegistration Registration => Grass_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Grass_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -2089,7 +2091,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
-        public new static Grass_Registration Registration => Grass_Registration.Instance;
+        public new static Grass_Registration StaticRegistration => Grass_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GrassCommon.Instance;
         [DebuggerStepThrough]
@@ -2336,7 +2338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
-        public new static Grass_Registration Registration => Grass_Registration.Instance;
+        public new static Grass_Registration StaticRegistration => Grass_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GrassCommon.Instance;
         [DebuggerStepThrough]
@@ -2358,6 +2360,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGrass);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

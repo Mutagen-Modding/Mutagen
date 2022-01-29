@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IWorldspaceNavigationMeshDataGetter>
     {
-        static new ILoquiRegistration Registration => WorldspaceNavigationMeshData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
         IFormLinkGetter<IWorldspaceGetter> Parent { get; }
         P2Int16 Coordinates { get; }
 
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        public new static WorldspaceNavigationMeshData_Registration Registration => WorldspaceNavigationMeshData_Registration.Instance;
+        public new static WorldspaceNavigationMeshData_Registration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceNavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        public new static WorldspaceNavigationMeshData_Registration Registration => WorldspaceNavigationMeshData_Registration.Instance;
+        public new static WorldspaceNavigationMeshData_Registration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceNavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]

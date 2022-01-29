@@ -623,6 +623,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Shout>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IShout);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -752,7 +754,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => Shout_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Shout_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -1574,7 +1576,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Shout_Registration.Instance;
-        public new static Shout_Registration Registration => Shout_Registration.Instance;
+        public new static Shout_Registration StaticRegistration => Shout_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ShoutCommon.Instance;
         [DebuggerStepThrough]
@@ -1794,7 +1796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Shout_Registration.Instance;
-        public new static Shout_Registration Registration => Shout_Registration.Instance;
+        public new static Shout_Registration StaticRegistration => Shout_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ShoutCommon.Instance;
         [DebuggerStepThrough]
@@ -1816,6 +1818,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IShout);
+
         public Shout.MajorFlag MajorFlags => (Shout.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name

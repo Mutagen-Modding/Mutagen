@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ActorValueSkill_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ActorValueSkill_Registration.Instance;
         Single UseMult { get; }
         Single OffsetMult { get; }
         Single ImproveMult { get; }
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueSkill_Registration.Instance;
-        public static ActorValueSkill_Registration Registration => ActorValueSkill_Registration.Instance;
+        public static ActorValueSkill_Registration StaticRegistration => ActorValueSkill_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValueSkillCommon.Instance;
         [DebuggerStepThrough]
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueSkill_Registration.Instance;
-        public static ActorValueSkill_Registration Registration => ActorValueSkill_Registration.Instance;
+        public static ActorValueSkill_Registration StaticRegistration => ActorValueSkill_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValueSkillCommon.Instance;
         [DebuggerStepThrough]

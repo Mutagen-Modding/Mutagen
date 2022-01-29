@@ -421,6 +421,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<CellNavigationMesh>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ICellNavigationMesh);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -523,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ICellNavigationMeshGetter>,
         IMapsToGetter<ICellNavigationMeshGetter>
     {
-        static new ILoquiRegistration Registration => CellNavigationMesh_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CellNavigationMesh_Registration.Instance;
         ICellNavigationMeshDataGetter? Data { get; }
 
     }
@@ -1375,7 +1377,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellNavigationMesh_Registration.Instance;
-        public new static CellNavigationMesh_Registration Registration => CellNavigationMesh_Registration.Instance;
+        public new static CellNavigationMesh_Registration StaticRegistration => CellNavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellNavigationMeshCommon.Instance;
         [DebuggerStepThrough]
@@ -1518,7 +1520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellNavigationMesh_Registration.Instance;
-        public new static CellNavigationMesh_Registration Registration => CellNavigationMesh_Registration.Instance;
+        public new static CellNavigationMesh_Registration StaticRegistration => CellNavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellNavigationMeshCommon.Instance;
         [DebuggerStepThrough]
@@ -1540,6 +1542,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ICellNavigationMesh);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

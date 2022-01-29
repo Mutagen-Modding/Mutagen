@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WorkbenchData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WorkbenchData_Registration.Instance;
         WorkbenchData.Type BenchType { get; }
         Skill? UsesSkill { get; }
 
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorkbenchData_Registration.Instance;
-        public static WorkbenchData_Registration Registration => WorkbenchData_Registration.Instance;
+        public static WorkbenchData_Registration StaticRegistration => WorkbenchData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorkbenchDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorkbenchData_Registration.Instance;
-        public static WorkbenchData_Registration Registration => WorkbenchData_Registration.Instance;
+        public static WorkbenchData_Registration StaticRegistration => WorkbenchData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorkbenchDataCommon.Instance;
         [DebuggerStepThrough]

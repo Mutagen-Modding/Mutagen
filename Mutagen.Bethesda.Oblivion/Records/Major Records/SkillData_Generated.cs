@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => SkillData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => SkillData_Registration.Instance;
         ActorValue Action { get; }
         ActorValue Attribute { get; }
         Specialization Specialization { get; }
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillData_Registration.Instance;
-        public static SkillData_Registration Registration => SkillData_Registration.Instance;
+        public static SkillData_Registration StaticRegistration => SkillData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkillDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillData_Registration.Instance;
-        public static SkillData_Registration Registration => SkillData_Registration.Instance;
+        public static SkillData_Registration StaticRegistration => SkillData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkillDataCommon.Instance;
         [DebuggerStepThrough]

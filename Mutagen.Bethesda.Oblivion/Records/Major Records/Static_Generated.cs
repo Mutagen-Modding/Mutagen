@@ -401,6 +401,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<Static>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IStatic);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -506,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IStaticGetter>,
         IModeledGetter
     {
-        static new ILoquiRegistration Registration => Static_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Static_Registration.Instance;
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1249,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Static_Registration.Instance;
-        public new static Static_Registration Registration => Static_Registration.Instance;
+        public new static Static_Registration StaticRegistration => Static_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StaticCommon.Instance;
         [DebuggerStepThrough]
@@ -1422,7 +1424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Static_Registration.Instance;
-        public new static Static_Registration Registration => Static_Registration.Instance;
+        public new static Static_Registration StaticRegistration => Static_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StaticCommon.Instance;
         [DebuggerStepThrough]
@@ -1443,6 +1445,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IStatic);
+
 
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(

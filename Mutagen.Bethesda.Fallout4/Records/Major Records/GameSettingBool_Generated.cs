@@ -392,6 +392,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<GameSettingBool>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IGameSettingBool);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -492,7 +494,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IGameSettingBoolGetter>,
         IMapsToGetter<IGameSettingBoolGetter>
     {
-        static new ILoquiRegistration Registration => GameSettingBool_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GameSettingBool_Registration.Instance;
         Boolean? Data { get; }
 
     }
@@ -1297,7 +1299,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingBool_Registration.Instance;
-        public new static GameSettingBool_Registration Registration => GameSettingBool_Registration.Instance;
+        public new static GameSettingBool_Registration StaticRegistration => GameSettingBool_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingBoolCommon.Instance;
         [DebuggerStepThrough]
@@ -1494,7 +1496,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingBool_Registration.Instance;
-        public new static GameSettingBool_Registration Registration => GameSettingBool_Registration.Instance;
+        public new static GameSettingBool_Registration StaticRegistration => GameSettingBool_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingBoolCommon.Instance;
         [DebuggerStepThrough]
@@ -1515,6 +1517,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IGameSettingBool);
+
 
         #region Data
         partial void DataCustomParse(

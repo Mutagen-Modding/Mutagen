@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => Part_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => Part_Registration.Instance;
         Part.PartTypeEnum? PartType { get; }
         String? FileName { get; }
 
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Part_Registration.Instance;
-        public static Part_Registration Registration => Part_Registration.Instance;
+        public static Part_Registration StaticRegistration => Part_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PartCommon.Instance;
         [DebuggerStepThrough]
@@ -1138,7 +1138,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Part_Registration.Instance;
-        public static Part_Registration Registration => Part_Registration.Instance;
+        public static Part_Registration StaticRegistration => Part_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PartCommon.Instance;
         [DebuggerStepThrough]

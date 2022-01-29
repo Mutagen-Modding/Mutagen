@@ -1259,6 +1259,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<Ingestible>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IIngestible);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1434,7 +1436,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter
     {
-        static new ILoquiRegistration Registration => Ingestible_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Ingestible_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -2717,7 +2719,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingestible_Registration.Instance;
-        public new static Ingestible_Registration Registration => Ingestible_Registration.Instance;
+        public new static Ingestible_Registration StaticRegistration => Ingestible_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngestibleCommon.Instance;
         [DebuggerStepThrough]
@@ -3087,7 +3089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingestible_Registration.Instance;
-        public new static Ingestible_Registration Registration => Ingestible_Registration.Instance;
+        public new static Ingestible_Registration StaticRegistration => Ingestible_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngestibleCommon.Instance;
         [DebuggerStepThrough]
@@ -3109,6 +3111,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IIngestible);
+
         public Ingestible.MajorFlag MajorFlags => (Ingestible.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds

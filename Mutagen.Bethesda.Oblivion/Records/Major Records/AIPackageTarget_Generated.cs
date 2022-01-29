@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => AIPackageTarget_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => AIPackageTarget_Registration.Instance;
         AIPackageTarget.ObjectTypes ObjectType { get; }
         Int32 Object { get; }
         Int32 Count { get; }
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
-        public static AIPackageTarget_Registration Registration => AIPackageTarget_Registration.Instance;
+        public static AIPackageTarget_Registration StaticRegistration => AIPackageTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
-        public static AIPackageTarget_Registration Registration => AIPackageTarget_Registration.Instance;
+        public static AIPackageTarget_Registration StaticRegistration => AIPackageTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageTargetCommon.Instance;
         [DebuggerStepThrough]

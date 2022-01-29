@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ImpactData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ImpactData_Registration.Instance;
         IFormLinkGetter<IMaterialTypeGetter> Material { get; }
         IFormLinkGetter<IImpactGetter> Impact { get; }
 
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImpactData_Registration.Instance;
-        public static ImpactData_Registration Registration => ImpactData_Registration.Instance;
+        public static ImpactData_Registration StaticRegistration => ImpactData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImpactDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImpactData_Registration.Instance;
-        public static ImpactData_Registration Registration => ImpactData_Registration.Instance;
+        public static ImpactData_Registration StaticRegistration => ImpactData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImpactDataCommon.Instance;
         [DebuggerStepThrough]

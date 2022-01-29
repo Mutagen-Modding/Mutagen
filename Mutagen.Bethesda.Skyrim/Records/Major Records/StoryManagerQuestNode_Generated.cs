@@ -591,6 +591,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<StoryManagerQuestNode>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IStoryManagerQuestNode);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -696,7 +698,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IStoryManagerQuestNodeGetter>,
         IMapsToGetter<IStoryManagerQuestNodeGetter>
     {
-        static new ILoquiRegistration Registration => StoryManagerQuestNode_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => StoryManagerQuestNode_Registration.Instance;
         StoryManagerQuestNode.QuestFlag? Flags { get; }
         UInt32? MaxConcurrentQuests { get; }
         UInt32? MaxNumQuestsToRun { get; }
@@ -1611,7 +1613,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerQuestNode_Registration.Instance;
-        public new static StoryManagerQuestNode_Registration Registration => StoryManagerQuestNode_Registration.Instance;
+        public new static StoryManagerQuestNode_Registration StaticRegistration => StoryManagerQuestNode_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StoryManagerQuestNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1842,7 +1844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerQuestNode_Registration.Instance;
-        public new static StoryManagerQuestNode_Registration Registration => StoryManagerQuestNode_Registration.Instance;
+        public new static StoryManagerQuestNode_Registration StaticRegistration => StoryManagerQuestNode_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StoryManagerQuestNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1864,6 +1866,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IStoryManagerQuestNode);
+
 
         #region Flags
         private int? _FlagsLocation;

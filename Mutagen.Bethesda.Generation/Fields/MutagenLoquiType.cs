@@ -87,5 +87,17 @@ namespace Mutagen.Bethesda.Generation
                     throw new NotImplementedException();
             }
         }
+ 
+        public override string GetDefault(bool getter) 
+        { 
+            if (this.Nullable) 
+            { 
+                return "default"; 
+            } 
+            else 
+            { 
+                return $"new {this.TargetObjectGeneration.Name}()"; 
+            } 
+        } 
     }
 }

@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => FogDistance_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FogDistance_Registration.Instance;
         Single DayNear { get; }
         Single DayFar { get; }
         Single NightNear { get; }
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FogDistance_Registration.Instance;
-        public static FogDistance_Registration Registration => FogDistance_Registration.Instance;
+        public static FogDistance_Registration StaticRegistration => FogDistance_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FogDistanceCommon.Instance;
         [DebuggerStepThrough]
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FogDistance_Registration.Instance;
-        public static FogDistance_Registration Registration => FogDistance_Registration.Instance;
+        public static FogDistance_Registration StaticRegistration => FogDistance_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FogDistanceCommon.Instance;
         [DebuggerStepThrough]

@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         ILoquiObject<IPackageTargetAliasGetter>
     {
-        static new ILoquiRegistration Registration => PackageTargetAlias_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PackageTargetAlias_Registration.Instance;
         Int32 Alias { get; }
 
     }
@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageTargetAlias_Registration.Instance;
-        public new static PackageTargetAlias_Registration Registration => PackageTargetAlias_Registration.Instance;
+        public new static PackageTargetAlias_Registration StaticRegistration => PackageTargetAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageTargetAliasCommon.Instance;
         [DebuggerStepThrough]
@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageTargetAlias_Registration.Instance;
-        public new static PackageTargetAlias_Registration Registration => PackageTargetAlias_Registration.Instance;
+        public new static PackageTargetAlias_Registration StaticRegistration => PackageTargetAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageTargetAliasCommon.Instance;
         [DebuggerStepThrough]

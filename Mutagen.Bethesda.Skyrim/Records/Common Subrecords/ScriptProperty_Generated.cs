@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ScriptProperty_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ScriptProperty_Registration.Instance;
         #region Name
         /// <summary>
         /// Aspects: INamedRequiredGetter
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptProperty_Registration.Instance;
-        public static ScriptProperty_Registration Registration => ScriptProperty_Registration.Instance;
+        public static ScriptProperty_Registration StaticRegistration => ScriptProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ScriptPropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptProperty_Registration.Instance;
-        public static ScriptProperty_Registration Registration => ScriptProperty_Registration.Instance;
+        public static ScriptProperty_Registration StaticRegistration => ScriptProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ScriptPropertyCommon.Instance;
         [DebuggerStepThrough]

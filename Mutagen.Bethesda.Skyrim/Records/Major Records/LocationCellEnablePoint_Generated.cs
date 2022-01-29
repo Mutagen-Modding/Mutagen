@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LocationCellEnablePoint_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LocationCellEnablePoint_Registration.Instance;
         IFormLinkGetter<IPlacedGetter> Actor { get; }
         IFormLinkGetter<IPlacedGetter> Ref { get; }
         P2Int16 Grid { get; }
@@ -1039,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellEnablePoint_Registration.Instance;
-        public static LocationCellEnablePoint_Registration Registration => LocationCellEnablePoint_Registration.Instance;
+        public static LocationCellEnablePoint_Registration StaticRegistration => LocationCellEnablePoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellEnablePointCommon.Instance;
         [DebuggerStepThrough]
@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellEnablePoint_Registration.Instance;
-        public static LocationCellEnablePoint_Registration Registration => LocationCellEnablePoint_Registration.Instance;
+        public static LocationCellEnablePoint_Registration StaticRegistration => LocationCellEnablePoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellEnablePointCommon.Instance;
         [DebuggerStepThrough]

@@ -752,6 +752,8 @@ namespace Mutagen.Bethesda.Oblivion
             return MajorRecordPrinter<PlacedNpc>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IPlacedNpc);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -865,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IPlacedNpcGetter>,
         IPlacedGetter
     {
-        static new ILoquiRegistration Registration => PlacedNpc_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedNpc_Registration.Instance;
         IFormLinkNullableGetter<INpcGetter> Base { get; }
         ReadOnlyMemorySlice<Byte>? XPCIFluff { get; }
         ReadOnlyMemorySlice<Byte>? FULLFluff { get; }
@@ -1884,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNpc_Registration.Instance;
-        public new static PlacedNpc_Registration Registration => PlacedNpc_Registration.Instance;
+        public new static PlacedNpc_Registration StaticRegistration => PlacedNpc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedNpcCommon.Instance;
         [DebuggerStepThrough]
@@ -2153,7 +2155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNpc_Registration.Instance;
-        public new static PlacedNpc_Registration Registration => PlacedNpc_Registration.Instance;
+        public new static PlacedNpc_Registration StaticRegistration => PlacedNpc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedNpcCommon.Instance;
         [DebuggerStepThrough]
@@ -2175,6 +2177,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedNpc);
+
 
         #region Base
         private int? _BaseLocation;

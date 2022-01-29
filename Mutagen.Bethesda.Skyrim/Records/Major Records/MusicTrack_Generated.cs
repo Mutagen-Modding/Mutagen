@@ -925,6 +925,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<MusicTrack>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMusicTrack);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1035,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IMusicTrackGetter>,
         IMapsToGetter<IMusicTrackGetter>
     {
-        static new ILoquiRegistration Registration => MusicTrack_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MusicTrack_Registration.Instance;
         MusicTrack.TypeEnum Type { get; }
         Single? Duration { get; }
         Single? FadeOut { get; }
@@ -2072,7 +2074,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrack_Registration.Instance;
-        public new static MusicTrack_Registration Registration => MusicTrack_Registration.Instance;
+        public new static MusicTrack_Registration StaticRegistration => MusicTrack_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MusicTrackCommon.Instance;
         [DebuggerStepThrough]
@@ -2364,7 +2366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrack_Registration.Instance;
-        public new static MusicTrack_Registration Registration => MusicTrack_Registration.Instance;
+        public new static MusicTrack_Registration StaticRegistration => MusicTrack_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MusicTrackCommon.Instance;
         [DebuggerStepThrough]
@@ -2386,6 +2388,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMusicTrack);
+
 
         #region Type
         private int? _TypeLocation;

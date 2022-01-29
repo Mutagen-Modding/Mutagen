@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => LoadScreenLocation_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LoadScreenLocation_Registration.Instance;
         IFormLinkGetter<IPlaceGetter> Direct { get; }
         IFormLinkGetter<IWorldspaceGetter> Indirect { get; }
         P2Int16 GridPoint { get; }
@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
-        public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
+        public static LoadScreenLocation_Registration StaticRegistration => LoadScreenLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LoadScreenLocationCommon.Instance;
         [DebuggerStepThrough]
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
-        public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
+        public static LoadScreenLocation_Registration StaticRegistration => LoadScreenLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LoadScreenLocationCommon.Instance;
         [DebuggerStepThrough]

@@ -541,6 +541,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<SoundMarker>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISoundMarker);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -657,7 +659,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         ISoundGetter
     {
-        static new ILoquiRegistration Registration => SoundMarker_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoundMarker_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
@@ -1469,7 +1471,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundMarker_Registration.Instance;
-        public new static SoundMarker_Registration Registration => SoundMarker_Registration.Instance;
+        public new static SoundMarker_Registration StaticRegistration => SoundMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1668,7 +1670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundMarker_Registration.Instance;
-        public new static SoundMarker_Registration Registration => SoundMarker_Registration.Instance;
+        public new static SoundMarker_Registration StaticRegistration => SoundMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1690,6 +1692,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISoundMarker);
+
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;

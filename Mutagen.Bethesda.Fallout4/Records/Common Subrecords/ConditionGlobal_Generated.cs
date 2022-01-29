@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<IConditionGlobalGetter>
     {
-        static new ILoquiRegistration Registration => ConditionGlobal_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ConditionGlobal_Registration.Instance;
         IFormLinkGetter<IGlobalGetter> ComparisonValue { get; }
         IConditionDataGetter Data { get; }
 
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionGlobal_Registration.Instance;
-        public new static ConditionGlobal_Registration Registration => ConditionGlobal_Registration.Instance;
+        public new static ConditionGlobal_Registration StaticRegistration => ConditionGlobal_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionGlobalCommon.Instance;
         [DebuggerStepThrough]
@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionGlobal_Registration.Instance;
-        public new static ConditionGlobal_Registration Registration => ConditionGlobal_Registration.Instance;
+        public new static ConditionGlobal_Registration StaticRegistration => ConditionGlobal_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionGlobalCommon.Instance;
         [DebuggerStepThrough]

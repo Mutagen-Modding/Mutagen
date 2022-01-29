@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeatherColor_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => WeatherColor_Registration.Instance;
         Color Sunrise { get; }
         Color Day { get; }
         Color Sunset { get; }
@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherColor_Registration.Instance;
-        public static WeatherColor_Registration Registration => WeatherColor_Registration.Instance;
+        public static WeatherColor_Registration StaticRegistration => WeatherColor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherColorCommon.Instance;
         [DebuggerStepThrough]
@@ -1180,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherColor_Registration.Instance;
-        public static WeatherColor_Registration Registration => WeatherColor_Registration.Instance;
+        public static WeatherColor_Registration StaticRegistration => WeatherColor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherColorCommon.Instance;
         [DebuggerStepThrough]

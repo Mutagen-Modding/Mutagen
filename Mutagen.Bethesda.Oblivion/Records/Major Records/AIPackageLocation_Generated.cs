@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => AIPackageLocation_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => AIPackageLocation_Registration.Instance;
         AIPackageLocation.LocationType Type { get; }
         IFormLinkGetter<IPlacedGetter> LocationReference { get; }
         Single Radius { get; }
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
-        public static AIPackageLocation_Registration Registration => AIPackageLocation_Registration.Instance;
+        public static AIPackageLocation_Registration StaticRegistration => AIPackageLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageLocationCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
-        public static AIPackageLocation_Registration Registration => AIPackageLocation_Registration.Instance;
+        public static AIPackageLocation_Registration StaticRegistration => AIPackageLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageLocationCommon.Instance;
         [DebuggerStepThrough]

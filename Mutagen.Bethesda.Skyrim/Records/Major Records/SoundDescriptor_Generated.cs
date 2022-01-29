@@ -1019,6 +1019,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<SoundDescriptor>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ISoundDescriptor);
+
         [Flags]
         public enum BNAMDataType
         {
@@ -1140,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ISoundDescriptorGetter>,
         ISoundGetter
     {
-        static new ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? CNAM { get; }
         IFormLinkNullableGetter<ISoundCategoryGetter> Category { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor { get; }
@@ -2205,7 +2207,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDescriptor_Registration.Instance;
-        public new static SoundDescriptor_Registration Registration => SoundDescriptor_Registration.Instance;
+        public new static SoundDescriptor_Registration StaticRegistration => SoundDescriptor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDescriptorCommon.Instance;
         [DebuggerStepThrough]
@@ -2499,7 +2501,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDescriptor_Registration.Instance;
-        public new static SoundDescriptor_Registration Registration => SoundDescriptor_Registration.Instance;
+        public new static SoundDescriptor_Registration StaticRegistration => SoundDescriptor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDescriptorCommon.Instance;
         [DebuggerStepThrough]
@@ -2521,6 +2523,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ISoundDescriptor);
+
 
         #region CNAM
         private int? _CNAMLocation;

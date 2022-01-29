@@ -770,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => PackageEvent_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => PackageEvent_Registration.Instance;
         IFormLinkNullableGetter<IIdleAnimationGetter> Idle { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
         ReadOnlyMemorySlice<Byte>? SCDA { get; }
@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageEvent_Registration.Instance;
-        public static PackageEvent_Registration Registration => PackageEvent_Registration.Instance;
+        public static PackageEvent_Registration StaticRegistration => PackageEvent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageEventCommon.Instance;
         [DebuggerStepThrough]
@@ -1687,7 +1687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageEvent_Registration.Instance;
-        public static PackageEvent_Registration Registration => PackageEvent_Registration.Instance;
+        public static PackageEvent_Registration StaticRegistration => PackageEvent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageEventCommon.Instance;
         [DebuggerStepThrough]

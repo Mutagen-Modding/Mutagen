@@ -511,6 +511,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<DialogBranch>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDialogBranch);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -616,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IDialogBranchGetter>,
         IMapsToGetter<IDialogBranchGetter>
     {
-        static new ILoquiRegistration Registration => DialogBranch_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DialogBranch_Registration.Instance;
         IFormLinkGetter<IQuestGetter> Quest { get; }
         Int32? TNAM { get; }
         DialogBranch.Flag? Flags { get; }
@@ -1389,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogBranch_Registration.Instance;
-        public new static DialogBranch_Registration Registration => DialogBranch_Registration.Instance;
+        public new static DialogBranch_Registration StaticRegistration => DialogBranch_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogBranchCommon.Instance;
         [DebuggerStepThrough]
@@ -1591,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogBranch_Registration.Instance;
-        public new static DialogBranch_Registration Registration => DialogBranch_Registration.Instance;
+        public new static DialogBranch_Registration StaticRegistration => DialogBranch_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogBranchCommon.Instance;
         [DebuggerStepThrough]
@@ -1613,6 +1615,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDialogBranch);
+
 
         #region Quest
         private int? _QuestLocation;

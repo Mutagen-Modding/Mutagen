@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainerGetter,
         ILoquiObject<IScriptObjectReferenceGetter>
     {
-        static new ILoquiRegistration Registration => ScriptObjectReference_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ScriptObjectReference_Registration.Instance;
         IFormLinkGetter<IOblivionMajorRecordGetter> Reference { get; }
 
     }
@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptObjectReference_Registration.Instance;
-        public new static ScriptObjectReference_Registration Registration => ScriptObjectReference_Registration.Instance;
+        public new static ScriptObjectReference_Registration StaticRegistration => ScriptObjectReference_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptObjectReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptObjectReference_Registration.Instance;
-        public new static ScriptObjectReference_Registration Registration => ScriptObjectReference_Registration.Instance;
+        public new static ScriptObjectReference_Registration StaticRegistration => ScriptObjectReference_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptObjectReferenceCommon.Instance;
         [DebuggerStepThrough]

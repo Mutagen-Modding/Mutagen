@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Plugins.Utility
     /// Type of Major Record to instantiate.  Can be the direct class, or one of its interfaces.
     /// </typeparam>
     public static class MajorRecordInstantiator<TMajor>
-        where TMajor : IMajorRecordCommonGetter
+        where TMajor : IMajorRecordGetter
     {
         /// <summary>
         /// Function to call to retrieve a new Major Record of type T

@@ -42,8 +42,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Landscape.TranslationMask? LandscapeCopyMask = null;
 
-        internal static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
-            this IListGroupGetter<ICellBlockGetter> cellBlocks,
+        internal static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            this ISkyrimListGroupGetter<ICellBlockGetter> cellBlocks,
             ILinkCache linkCache,
             ModKey modKey,
             IModContext? parent)
@@ -51,14 +51,14 @@ namespace Mutagen.Bethesda.Skyrim
             return EnumerateMajorRecordContexts(
                 cellBlocks: cellBlocks,
                 linkCache: linkCache,
-                type: typeof(IMajorRecordCommonGetter),
+                type: typeof(IMajorRecordGetter),
                 modKey: modKey,
                 parent: parent,
                 throwIfUnknown: true);
         }
 
-        internal static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
-            this IListGroupGetter<ICellBlockGetter> cellBlocks,
+        internal static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            this ISkyrimListGroupGetter<ICellBlockGetter> cellBlocks,
             ILinkCache linkCache,
             Type type,
             ModKey modKey,
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
                         if (LoquiRegistration.TryGetRegister(type, out var regis)
                             && regis.ClassType == typeof(Cell))
                         {
-                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>(
                                 modKey: modKey,
                                 record: readOnlyCell,
                                 getOrAddAsOverride: (m, r) => cellGetter(m, (ICellGetter)r, false, default(string?)),
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        internal static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        internal static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks,
             IWorldspaceGetter worldspace,
             ILinkCache linkCache,
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Skyrim
                         if (LoquiRegistration.TryGetRegister(type, out var regis)
                             && regis.ClassType == typeof(Cell))
                         {
-                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>(
                                 modKey: modKey,
                                 record: readOnlyCell,
                                 getOrAddAsOverride: (m, r) => cellGetter(m, (ICellGetter)r, false, default(string?)),

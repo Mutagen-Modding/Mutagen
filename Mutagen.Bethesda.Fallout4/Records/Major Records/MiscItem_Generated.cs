@@ -344,6 +344,8 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<MiscItem>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IMiscItem);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -443,7 +445,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IMiscItemGetter>,
         IMapsToGetter<IMiscItemGetter>
     {
-        static new ILoquiRegistration Registration => MiscItem_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MiscItem_Registration.Instance;
 
     }
 
@@ -1133,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MiscItem_Registration.Instance;
-        public new static MiscItem_Registration Registration => MiscItem_Registration.Instance;
+        public new static MiscItem_Registration StaticRegistration => MiscItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MiscItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1256,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MiscItem_Registration.Instance;
-        public new static MiscItem_Registration Registration => MiscItem_Registration.Instance;
+        public new static MiscItem_Registration StaticRegistration => MiscItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MiscItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1277,6 +1279,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IMiscItem);
+
 
         partial void CustomFactoryEnd(
             OverlayStream stream,

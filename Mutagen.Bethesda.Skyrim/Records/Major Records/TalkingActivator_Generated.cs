@@ -906,6 +906,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<TalkingActivator>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(ITalkingActivator);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1059,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration Registration => TalkingActivator_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => TalkingActivator_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -2167,7 +2169,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TalkingActivator_Registration.Instance;
-        public new static TalkingActivator_Registration Registration => TalkingActivator_Registration.Instance;
+        public new static TalkingActivator_Registration StaticRegistration => TalkingActivator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TalkingActivatorCommon.Instance;
         [DebuggerStepThrough]
@@ -2458,7 +2460,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TalkingActivator_Registration.Instance;
-        public new static TalkingActivator_Registration Registration => TalkingActivator_Registration.Instance;
+        public new static TalkingActivator_Registration StaticRegistration => TalkingActivator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TalkingActivatorCommon.Instance;
         [DebuggerStepThrough]
@@ -2480,6 +2482,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(ITalkingActivator);
+
         public TalkingActivator.MajorFlag MajorFlags => (TalkingActivator.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

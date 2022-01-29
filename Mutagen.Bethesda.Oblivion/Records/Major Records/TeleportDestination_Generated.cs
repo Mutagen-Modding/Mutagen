@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => TeleportDestination_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => TeleportDestination_Registration.Instance;
         IFormLinkGetter<IPlacedGetter> Destination { get; }
         P3Float Position { get; }
         P3Float Rotation { get; }
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
-        public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
+        public static TeleportDestination_Registration StaticRegistration => TeleportDestination_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TeleportDestinationCommon.Instance;
         [DebuggerStepThrough]
@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
-        public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
+        public static TeleportDestination_Registration StaticRegistration => TeleportDestination_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TeleportDestinationCommon.Instance;
         [DebuggerStepThrough]

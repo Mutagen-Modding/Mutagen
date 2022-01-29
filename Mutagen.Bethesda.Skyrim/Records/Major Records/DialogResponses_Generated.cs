@@ -1261,6 +1261,8 @@ namespace Mutagen.Bethesda.Skyrim
             return MajorRecordPrinter<DialogResponses>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(IDialogResponses);
+
         public MajorFlag MajorFlags
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
@@ -1388,7 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IDialogResponsesGetter>,
         IMapsToGetter<IDialogResponsesGetter>
     {
-        static new ILoquiRegistration Registration => DialogResponses_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => DialogResponses_Registration.Instance;
         IDialogResponsesAdapterGetter? VirtualMachineAdapter { get; }
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         IDialogResponseFlagsGetter? Flags { get; }
@@ -2626,7 +2628,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponses_Registration.Instance;
-        public new static DialogResponses_Registration Registration => DialogResponses_Registration.Instance;
+        public new static DialogResponses_Registration StaticRegistration => DialogResponses_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogResponsesCommon.Instance;
         [DebuggerStepThrough]
@@ -2991,7 +2993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponses_Registration.Instance;
-        public new static DialogResponses_Registration Registration => DialogResponses_Registration.Instance;
+        public new static DialogResponses_Registration StaticRegistration => DialogResponses_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogResponsesCommon.Instance;
         [DebuggerStepThrough]
@@ -3013,6 +3015,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IDialogResponses);
+
         public DialogResponses.MajorFlag MajorFlags => (DialogResponses.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter

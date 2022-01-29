@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => HavokData_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => HavokData_Registration.Instance;
         HavokData.MaterialType Material { get; }
         Byte Friction { get; }
         Byte Restitution { get; }
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
-        public static HavokData_Registration Registration => HavokData_Registration.Instance;
+        public static HavokData_Registration StaticRegistration => HavokData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HavokDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
-        public static HavokData_Registration Registration => HavokData_Registration.Instance;
+        public static HavokData_Registration StaticRegistration => HavokData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HavokDataCommon.Instance;
         [DebuggerStepThrough]

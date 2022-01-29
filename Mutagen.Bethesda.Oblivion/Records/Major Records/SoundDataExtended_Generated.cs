@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         ILoquiObject<ISoundDataExtendedInternalGetter>
     {
-        static new ILoquiRegistration Registration => SoundDataExtended_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => SoundDataExtended_Registration.Instance;
         Single StaticAttenuation { get; }
         Single StopTime { get; }
         Single StartTime { get; }
@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDataExtended_Registration.Instance;
-        public new static SoundDataExtended_Registration Registration => SoundDataExtended_Registration.Instance;
+        public new static SoundDataExtended_Registration StaticRegistration => SoundDataExtended_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDataExtendedCommon.Instance;
         [DebuggerStepThrough]
@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDataExtended_Registration.Instance;
-        public new static SoundDataExtended_Registration Registration => SoundDataExtended_Registration.Instance;
+        public new static SoundDataExtended_Registration StaticRegistration => SoundDataExtended_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDataExtendedCommon.Instance;
         [DebuggerStepThrough]

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Noggog</Authors>
@@ -49,8 +49,8 @@
     <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Group.cs">
-      <DependentUpon>Group.xml</DependentUpon>
+    <Compile Include="Records\Fallout4Group.cs">
+      <DependentUpon>Fallout4Group.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ActionRecord.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
@@ -121,9 +121,6 @@
     </Compile>
     <Compile Include="Records\Fallout4Mod.cs">
       <DependentUpon>Fallout4Mod.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Group_Generated.cs">
-      <DependentUpon>Group.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ModStats_Generated.cs">
       <DependentUpon>Fallout4ModHeader.xml</DependentUpon>
@@ -348,14 +345,17 @@
     <Compile Include="Interfaces\IOwner_Generated.cs" />
     <Compile Include="Interfaces\IRelatable_Generated.cs" />
     <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
+    <Compile Include="Records\Fallout4Group_Generated.cs">
+      <DependentUpon>Fallout4Group.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.35.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.35.0" />
+    <PackageReference Include="Loqui" Version="2.37.1" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.37.0" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

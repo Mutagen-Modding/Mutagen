@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Plugins
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
     public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
-       where TMajor : class, IMajorRecordCommonGetter
+       where TMajor : class, IMajorRecordGetter
     {
         /// <summary>
         /// A readonly singleton representing an unlinked EDIDLink
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Plugins
         /// </summary>
         public RecordType EDID { get; set; }
         
-        Type ILink.Type => typeof(TMajor);
+        Type ILinkIdentifier.Type => typeof(TMajor);
 
         public EDIDLink()
         {
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Plugins
             return false;
         }
 
-        bool ILink.TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)]out IMajorRecordCommonGetter formKey)
+        bool ILink.TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)]out IMajorRecordGetter formKey)
         {
             if (TryResolve(cache, out TMajor rec))
             {

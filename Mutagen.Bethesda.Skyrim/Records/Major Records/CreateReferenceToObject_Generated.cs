@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => CreateReferenceToObject_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => CreateReferenceToObject_Registration.Instance;
         IFormLinkGetter<ISkyrimMajorRecordGetter> Object { get; }
         Int16 AliasIndex { get; }
         CreateReferenceToObject.CreateEnum Create { get; }
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreateReferenceToObject_Registration.Instance;
-        public static CreateReferenceToObject_Registration Registration => CreateReferenceToObject_Registration.Instance;
+        public static CreateReferenceToObject_Registration StaticRegistration => CreateReferenceToObject_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreateReferenceToObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreateReferenceToObject_Registration.Instance;
-        public static CreateReferenceToObject_Registration Registration => CreateReferenceToObject_Registration.Instance;
+        public static CreateReferenceToObject_Registration StaticRegistration => CreateReferenceToObject_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreateReferenceToObjectCommon.Instance;
         [DebuggerStepThrough]
