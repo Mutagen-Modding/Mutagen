@@ -120,6 +120,11 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
 
                     if (minimumFinalPos > stream.Position)
                     {
+                        if (minimumFinalPos > int.MaxValue || minimumFinalPos < 0)
+                        {
+                            throw new OverflowException(
+                                $"Stream asked to to move to a position that was too large: {minimumFinalPos}.  Major Meta reported a TotalLength of {majorMeta.TotalLength}");
+                        }
                         stream.Position = checked((int)minimumFinalPos);
                     }
 
