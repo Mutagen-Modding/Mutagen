@@ -1,4 +1,4 @@
-using Loqui;
+// using Loqui;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Linq.Expressions;
+using DynamicData;
+using Loqui;
+using Mutagen.Bethesda.Strings;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
@@ -25,9 +28,9 @@ namespace Mutagen.Bethesda.Plugins.Records
             }
         }
 
-        public static IModGetter Importer(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
+        public static IModGetter Importer(ModPath path, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null)
         {
-            return _dict[release.ToCategory()](path, release, fileSystem);
+            return _dict[release.ToCategory()](path, release, fileSystem, stringsParam);
         }
     }
     
@@ -41,7 +44,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         where TMod : IModGetter
     {
         public delegate TMod ActivatorDelegate(ModKey modKey, GameRelease release);
-        public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, IFileSystem? fileSystem = null);
+        public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null);
 
         /// <summary>
         /// Function to call to retrieve a new Mod of type T
@@ -123,36 +126,34 @@ namespace Mutagen.Bethesda.Plugins.Records
                     var funcType = Expression.GetFuncType(paramInfo.Select(p => p.ParameterType).And(typeof(TMod)).ToArray());
                     LambdaExpression lambda = Expression.Lambda(funcType, callExp, paramExprs);
                     var deleg = lambda.Compile();
-                    if (paramInfo[1].Name == "release")
+                    var releaseIndex = paramInfo.Select(x => x.Name).IndexOf("release");
+                    var fileSystemIndex = paramInfo.Select(x => x.Name).IndexOf("fileSystem");
+                    var stringsParamIndex = paramInfo.Select(x => x.Name).IndexOf("stringsParam");
+                    var parallelIndex = paramInfo.Select(x => x.Name).IndexOf("parallel");
+                    return (ModPath modPath, GameRelease release, IFileSystem? fileSystem, StringsReadParameters? stringsParam) =>
                     {
-                        return (ModPath modPath, GameRelease release, IFileSystem? fileSystem) =>
+                        var args = new object?[paramInfo.Length];
+                        args[0] = modPath;
+                        if (releaseIndex != -1)
                         {
-                            var args = new object?[paramInfo.Length];
-                            args[0] = modPath;
-                            args[1] = release;
-                            args[^2] = true;
-                            args[^1] = fileSystem;
-                            return (TMod)deleg.DynamicInvoke(args)!;
-                        };
-                    }
-                    else
-                    {
-                        return (ModPath modPath, GameRelease release, IFileSystem? fileSystem) =>
+                            args[releaseIndex] = release;
+                        }
+
+                        if (stringsParamIndex != -1)
                         {
-                            var args = new object?[paramInfo.Length];
-                            args[0] = modPath;
-                            args[^2] = true;
-                            args[^1] = fileSystem;
-                            return (TMod)deleg.DynamicInvoke(args)!;
-                        };
-                    }
+                            args[stringsParamIndex] = stringsParam;
+                        }
+                        args[parallelIndex] = true;
+                        args[fileSystemIndex] = fileSystem;
+                        return (TMod)deleg.DynamicInvoke(args)!;
+                    };
                 }
                 else if (regis.GetterType == typeof(TMod))
                 {
                     var overlayGet = GetOverlay<TMod>(regis);
-                    return (ModPath modPath, GameRelease release, IFileSystem? fileSystem) =>
+                    return (ModPath modPath, GameRelease release, IFileSystem? fileSystem, StringsReadParameters? stringsParam) =>
                     {
-                        return overlayGet(modPath, release, fileSystem);
+                        return overlayGet(modPath, release, fileSystem, stringsParam);
                     };
                 }
                 else
@@ -175,27 +176,26 @@ namespace Mutagen.Bethesda.Plugins.Records
                 var funcType = Expression.GetFuncType(paramInfo.Select(p => p.ParameterType).And(regis.GetterType).ToArray());
                 LambdaExpression lambda = Expression.Lambda(funcType, callExp, paramExprs);
                 var deleg = lambda.Compile();
-                if (paramInfo.Length > 1 && paramInfo[1].Name == "release")
+                var releaseIndex = paramInfo.Select(x => x.Name).IndexOf("release");
+                var fileSystemIndex = paramInfo.Select(x => x.Name).IndexOf("fileSystem");
+                var stringsParamIndex = paramInfo.Select(x => x.Name).IndexOf("stringsParam");
+                return (ModPath modPath, GameRelease release, IFileSystem? fileSystem, StringsReadParameters? stringsParam) =>
                 {
-                    return (ModPath modPath, GameRelease release, IFileSystem? fileSystem) =>
+                    var args = new object?[paramInfo.Length];
+                    args[0] = modPath;
+                    if (releaseIndex != -1)
                     {
-                        var args = new object?[paramInfo.Length];
-                        args[0] = modPath;
-                        args[1] = release;
-                        args[^1] = fileSystem;
-                        return (TMod)deleg.DynamicInvoke(args)!;
-                    };
-                }
-                else
-                {
-                    return (ModPath modPath, GameRelease release, IFileSystem? fileSystem) =>
+                        args[releaseIndex] = release;
+                    }
+
+                    if (stringsParamIndex != -1)
                     {
-                        var args = new object?[paramInfo.Length];
-                        args[0] = modPath;
-                        args[^1] = fileSystem;
-                        return (TMod)deleg.DynamicInvoke(args)!;
-                    };
-                }
+                        args[stringsParamIndex] = stringsParam;
+                    }
+                    
+                    args[fileSystemIndex] = fileSystem;
+                    return (TMod)deleg.DynamicInvoke(args)!;
+                };
             }
         }
     }

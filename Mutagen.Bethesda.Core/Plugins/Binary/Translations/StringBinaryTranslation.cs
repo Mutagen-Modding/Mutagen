@@ -87,8 +87,8 @@ public class StringBinaryTranslation
                 throw new ArgumentException($"String in Strings File format had unexpected length: {reader.Remaining} != 4");
             }
             uint key = reader.ReadUInt32();
-            if (key == 0) return new TranslatedString(reader.MetaData.TargetLanguage, directString: null);
-            return reader.MetaData.StringsLookup.CreateString(source, key, reader.MetaData.TargetLanguage);
+            if (key == 0) return new TranslatedString(reader.MetaData.TranslatedTargetLanguage, directString: null);
+            return reader.MetaData.StringsLookup.CreateString(source, key, reader.MetaData.TranslatedTargetLanguage);
         }
         else
         {
@@ -119,8 +119,8 @@ public class StringBinaryTranslation
                 throw new ArgumentException($"String in Strings File format had unexpected length: {data.Length} != 4");
             }
             uint key = BinaryPrimitives.ReadUInt32LittleEndian(data);
-            if (key == 0) return new TranslatedString(parsingBundle.TargetLanguage, directString: null);
-            return parsingBundle.StringsLookup.CreateString(source, key, parsingBundle.TargetLanguage);
+            if (key == 0) return new TranslatedString(parsingBundle.TranslatedTargetLanguage, directString: null);
+            return parsingBundle.StringsLookup.CreateString(source, key, parsingBundle.TranslatedTargetLanguage);
         }
         else
         {

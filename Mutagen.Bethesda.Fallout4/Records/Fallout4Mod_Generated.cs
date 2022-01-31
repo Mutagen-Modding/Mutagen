@@ -1323,7 +1323,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static Fallout4Mod CreateFromBinary(
             ModPath path,
             GroupMask? importMask = null,
-            Language? targetLanguage = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true,
             IFileSystem? fileSystem = null)
@@ -1336,10 +1335,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
-                    if (targetLanguage != null)
-                    {
-                        frame.MetaData.TargetLanguage = targetLanguage.Value;
-                    }
+                    frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -1364,7 +1360,6 @@ namespace Mutagen.Bethesda.Fallout4
             ModPath path,
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
-            Language? targetLanguage = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true,
             IFileSystem? fileSystem = null)
@@ -1377,10 +1372,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
-                    if (targetLanguage != null)
-                    {
-                        frame.MetaData.TargetLanguage = targetLanguage.Value;
-                    }
+                    frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -1458,13 +1450,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
-            Language? targetLanguage = null,
             StringsReadParameters? stringsParam = null,
             IFileSystem? fileSystem = null)
         {
             return Fallout4ModBinaryOverlay.Fallout4ModFactory(
                 path: path,
-                targetLanguage: targetLanguage,
                 stringsParam: stringsParam,
                 fileSystem: fileSystem);
         }
@@ -2066,7 +2056,6 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4Mod item,
             ModPath path,
             GroupMask? importMask = null,
-            Language? targetLanguage = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true,
             IFileSystem? fileSystem = null)
@@ -2079,10 +2068,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
-                    if (targetLanguage != null)
-                    {
-                        frame.MetaData.TargetLanguage = targetLanguage.Value;
-                    }
+                    frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -5170,7 +5156,6 @@ namespace Mutagen.Bethesda.Fallout4
             FilePath path,
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null,
-            Language? targetLanguage = null,
             IFileSystem? fileSystem = null)
         {
             param ??= BinaryWriteParameters.Default;
@@ -5396,7 +5381,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static Fallout4ModBinaryOverlay Fallout4ModFactory(
             ModPath path,
-            Language? targetLanguage = null,
             StringsReadParameters? stringsParam = null,
             IFileSystem? fileSystem = null)
         {
@@ -5410,10 +5394,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fileSystem: fileSystem);
             try
             {
-                if (targetLanguage != null)
-                {
-                    meta.TargetLanguage = targetLanguage.Value;
-                }
+                meta.Absorb(stringsParam);
                 if (stream.Remaining < 12)
                 {
                     throw new ArgumentException("File stream was too short to parse flags");

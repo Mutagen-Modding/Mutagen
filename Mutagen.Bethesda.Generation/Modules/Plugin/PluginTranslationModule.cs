@@ -139,14 +139,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     if (dir == TranslationDirection.Reader) return false;
                     return obj.GetObjectType() == ObjectType.Mod;
                 });
-            var languageOptional = new APILine(
-                nicknameKey: "LanguageOptional",
-                resolutionString: $"{nameof(Language)}? targetLanguage = null",
-                when: (obj, dir) =>
-                {
-                    return obj.GetObjectType() == ObjectType.Mod
-                           && obj.GetObjectData().UsesStringFiles;
-                });
             var stringsReadParamOptional = new APILine(
                 nicknameKey: "StringsParamsOptional",
                 resolutionString: $"{nameof(StringsReadParameters)}? stringsParam = null",
@@ -239,7 +231,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         optionalAPI: writeParamOptional
                             .AsEnumerable()
                             .And(modAPILines)
-                            .And(languageOptional)
                             .And(stringsReadParamOptional)
                             .And(parallel)
                             .And(fileSystem)
@@ -262,7 +253,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         optionalAPI: writeParamOptional
                             .AsEnumerable()
                             .And(modAPILines)
-                            .And(languageOptional)
                             .And(stringsReadParamOptional)
                             .And(parallel)
                             .And(fileSystem)
@@ -449,11 +439,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = path.ModKey;");
                     if (obj.GetObjectData().UsesStringFiles)
                     {
-                        fg.AppendLine("if (targetLanguage != null)");
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.TargetLanguage)} = targetLanguage.Value;");
-                        }
+                        fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Absorb)}(stringsParam);");
                         fg.AppendLine("if (reader.Remaining < 12)");
                         using (new BraceWrapper(fg))
                         {
@@ -498,7 +484,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
                 if (objData.UsesStringFiles)
                 {
-                    args.Add($"{nameof(Language)}? targetLanguage = null");
                     args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
                 }
                 args.Add($"IFileSystem? fileSystem = null");
@@ -511,7 +496,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     args.AddPassArg("path");
                     if (objData.UsesStringFiles)
                     {
-                        args.AddPassArg("targetLanguage");
                         args.AddPassArg("stringsParam");
                     }
                     if (objData.GameReleaseOptions != null)
@@ -2107,7 +2091,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             }
                             if (objData.UsesStringFiles)
                             {
-                                args.Add($"{nameof(Language)}? targetLanguage = null");
                                 args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
                             }
                             args.Add("IFileSystem? fileSystem = null");
@@ -2131,11 +2114,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             {
                                 if (objData.UsesStringFiles)
                                 {
-                                    fg.AppendLine("if (targetLanguage != null)");
-                                    using (new BraceWrapper(fg))
-                                    {
-                                        fg.AppendLine($"meta.{nameof(ParsingBundle.TargetLanguage)} = targetLanguage.Value;");
-                                    }
+                                    fg.AppendLine($"meta.{nameof(ParsingBundle.Absorb)}(stringsParam);");
                                     fg.AppendLine("if (stream.Remaining < 12)");
                                     using (new BraceWrapper(fg))
                                     {

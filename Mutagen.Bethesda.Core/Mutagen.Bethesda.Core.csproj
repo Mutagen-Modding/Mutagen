@@ -479,7 +479,7 @@
     <Compile Include="Strings\IStringsLookup.cs" />
     <Compile Include="Strings\ITranslatedString.cs" />
     <Compile Include="Strings\IStringsFolderLookup.cs" />
-    <Compile Include="Strings\StringsInstructions.cs" />
+    <Compile Include="Strings\StringsReadParameters.cs" />
     <Compile Include="Strings\StringsFolderLookupOverlay.cs" />
     <Compile Include="Strings\StringsUtility.cs" />
     <Compile Include="Strings\StringsWriter.cs" />
