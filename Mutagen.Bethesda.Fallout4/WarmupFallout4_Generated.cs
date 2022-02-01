@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Fallout4
                 new ProtocolDefinition_Bethesda(),
                 new ProtocolDefinition_Fallout4());
             LinkInterfaceMapping.AutomaticRegistration = false;
-            LinkInterfaceMapping.Register(new Mutagen.Bethesda.Fallout4.Internals.LinkInterfaceMapping());
+            LinkInterfaceMapping.InternalInstance.Register(new Mutagen.Bethesda.Fallout4.Internals.LinkInterfaceMapping());
             InitCustom();
         }
         static partial void InitCustom();

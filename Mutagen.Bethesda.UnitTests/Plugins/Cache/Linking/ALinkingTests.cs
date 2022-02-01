@@ -19,12 +19,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 {
     public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IClassFixture<LoquiUse>
     {
+        private readonly LinkingTestInit _testInit;
+
         public static readonly IEnumerable<object[]> ContextTestSources = new[]
         {
-            new object[] { LinkCacheTestTypes.Identifiers, new NormalContextRetriever() },
-            new object[] { LinkCacheTestTypes.WholeRecord, new NormalContextRetriever() },
-            new object[] { LinkCacheTestTypes.Identifiers, new SimpleContextRetriever() },
-            new object[] { LinkCacheTestTypes.WholeRecord, new SimpleContextRetriever() }
+            new object[] { LinkCachePreferences.RetentionType.OnlyIdentifiers, new NormalContextRetriever() },
+            new object[] { LinkCachePreferences.RetentionType.WholeRecord, new NormalContextRetriever() },
+            new object[] { LinkCachePreferences.RetentionType.OnlyIdentifiers, new SimpleContextRetriever() },
+            new object[] { LinkCachePreferences.RetentionType.WholeRecord, new SimpleContextRetriever() }
         };
 
         public static FormKey UnusedFormKey = new FormKey(TestConstants.PluginModKey, 123456);
@@ -34,6 +36,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         public static string TestFileEditorID = "Record1";
         public static string TestFileEditorID2 = "Record2";
 
+        public ALinkingTests(LinkingTestInit testInit)
+        {
+            _testInit = testInit;
+        }
+
         public abstract IDisposable ConvertMod(SkyrimMod mod, out ISkyrimModGetter getter);
         
         public abstract bool ReadOnly { get; }
@@ -42,22 +49,24 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 
         protected abstract (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs);
 
-        protected LinkCachePreferences GetPrefs(LinkCacheTestTypes type) => type switch
+        protected LinkCachePreferences GetPrefs(LinkCachePreferences.RetentionType type)
         {
-            LinkCacheTestTypes.Identifiers => LinkCachePreferences.OnlyIdentifiers(),
-            LinkCacheTestTypes.WholeRecord => LinkCachePreferences.WholeRecord(),
-            _ => throw new NotImplementedException()
-        };
+            return new LinkCachePreferences
+            {
+                Retention = type,
+                LinkInterfaceMapGetterOverride = _testInit.LinkInterfaceMapping
+            };
+        }
 
-        protected (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCacheTestTypes type) => GetLinkCache(modGetter, GetPrefs(type));
+        protected (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences.RetentionType type) => GetLinkCache(modGetter, GetPrefs(type));
 
-        protected (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCacheTestTypes type) => GetLinkCache(loadOrder, GetPrefs(type));
+        protected (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences.RetentionType type) => GetLinkCache(loadOrder, GetPrefs(type));
 
-        protected void WrapPotentialThrow(LinkCacheTestTypes cacheType, LinkCacheStyle style, Action a)
+        protected void WrapPotentialThrow(LinkCachePreferences.RetentionType cacheType, LinkCacheStyle style, Action a)
         {
             switch (cacheType)
             {
-                case LinkCacheTestTypes.Identifiers when style != LinkCacheStyle.OnlyDirect:
+                case LinkCachePreferences.RetentionType.OnlyIdentifiers when style != LinkCacheStyle.OnlyDirect:
                     Assert.Throws<ArgumentException>(a);
                     break;
                 default:

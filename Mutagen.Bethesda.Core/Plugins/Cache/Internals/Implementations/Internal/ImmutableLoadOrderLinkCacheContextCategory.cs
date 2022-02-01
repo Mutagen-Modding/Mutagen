@@ -43,6 +43,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 
         public ImmutableLoadOrderLinkCacheContextCategory(
             GameCategory category,
+            ILinkInterfaceMapGetter linkInterfaceMapGetter,
             bool simple,
             bool hasAny,
             ILinkCache linkCache,
@@ -55,7 +56,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             _linkCache = linkCache;
             _listedOrder = listedOrder;
             _keyGetter = keyGetter;
-            _linkInterfaces = LinkInterfaceMapping.InterfaceToObjectTypes(category);
+            _linkInterfaces = linkInterfaceMapGetter.InterfaceToObjectTypes(category);
             _shortCircuit = shortCircuit;
         }
 

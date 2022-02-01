@@ -28,13 +28,14 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             bool hasAny,
             bool simple,
             IReadOnlyList<IModGetter> listedOrder,
+            ILinkInterfaceMapGetter linkInterfaceMapGetter,
             Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
         {
             _hasAny = hasAny;
             _simple = simple;
             _listedOrder = listedOrder;
-            _linkInterfaces = LinkInterfaceMapping.InterfaceToObjectTypes(gameCategory);
+            _linkInterfaces = linkInterfaceMapGetter.InterfaceToObjectTypes(gameCategory);
             _keyGetter = keyGetter;
             _shortCircuit = shortCircuit;
         }

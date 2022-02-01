@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using FluentAssertions;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
@@ -15,7 +16,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
     {
         [Theory]
         [MemberData(nameof(ContextTestSources))]
-        public void PlacedInCellQuerySucceedsIfMajorRecordType(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
+        public void PlacedInCellQuerySucceedsIfMajorRecordType(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
         {
             var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             var placed = new PlacedObject(prototype);
@@ -56,7 +57,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 
         [Theory]
         [MemberData(nameof(ContextTestSources))]
-        public void PlacedInWorldspaceQuerySucceedsIfMajorRecordType(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
+        public void PlacedInWorldspaceQuerySucceedsIfMajorRecordType(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
         {
             var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             var placed = new PlacedObject(prototype);
@@ -102,9 +103,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void PlacedInWorldspaceOnlyOverridesPlaced(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void PlacedInWorldspaceOnlyOverridesPlaced(LinkCachePreferences.RetentionType cacheType)
         {
             var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             var placed = new PlacedObject(prototype);

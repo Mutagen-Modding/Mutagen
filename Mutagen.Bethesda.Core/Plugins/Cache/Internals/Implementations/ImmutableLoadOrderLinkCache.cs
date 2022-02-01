@@ -6,6 +6,7 @@ using System.Threading;
 using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
@@ -38,7 +39,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             var loadOrderArr = loadOrder.ToArray();
             var firstMod = loadOrderArr.FirstOrDefault();
             _hasAny = firstMod != null;
-            var simple = prefs is LinkCachePreferenceOnlyIdentifiers;
+            var simple = (prefs ?? LinkCachePreferences.Default).Retention == LinkCachePreferences.RetentionType.OnlyIdentifiers;
             gameCategory ??= firstMod?.GameRelease.ToCategory() ?? throw new ArgumentException($"Could not get {nameof(GameCategory)} via generic type or first mod");
             _cache = new InternalImmutableLoadOrderLinkCache(
                 loadOrderArr,
@@ -48,6 +49,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
                 prefs);
             _formKeyContexts = new ImmutableLoadOrderLinkCacheSimpleContextCategory<FormKey>(
                 gameCategory.Value,
+                linkInterfaceMapGetter: prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
                 simple: simple,
                 hasAny: _hasAny,
                 this,
@@ -56,6 +58,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
                 f => f.IsNull);
             _editorIdContexts = new ImmutableLoadOrderLinkCacheSimpleContextCategory<string>(
                 gameCategory.Value,
+                linkInterfaceMapGetter: prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
                 simple: simple,
                 hasAny: _hasAny,
                 this,
@@ -555,7 +558,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public ImmutableLoadOrderLinkCache(IEnumerable<TModGetter> loadOrder, LinkCachePreferences prefs)
         {
             var listedOrder = loadOrder.ToList();
-            var simple = prefs is LinkCachePreferenceOnlyIdentifiers;
+            var simple = prefs.Retention == LinkCachePreferences.RetentionType.OnlyIdentifiers;
             var firstMod = listedOrder.FirstOrDefault();
             _hasAny = firstMod != null;
             var gameCategory = GameCategoryHelper.TryFromModType<TModGetter>() ?? firstMod?.GameRelease.ToCategory() ?? throw new ArgumentException($"Could not get {nameof(GameCategory)} via generic type or first mod");
@@ -569,6 +572,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             
             _formKeyContextCache = new ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, FormKey>(
                 category: gameCategory,
+                linkInterfaceMapGetter: prefs.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
                 simple: simple,
                 hasAny: _hasAny,
                 linkCache: this,
@@ -577,6 +581,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
                 f => f.IsNull);
             _editorIdContextCache = new ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, string>(
                 category: gameCategory,
+                linkInterfaceMapGetter: prefs.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
                 simple: simple,
                 hasAny: _hasAny,
                 linkCache: this,

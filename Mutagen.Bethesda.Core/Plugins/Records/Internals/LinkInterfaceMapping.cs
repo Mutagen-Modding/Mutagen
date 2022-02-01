@@ -79,23 +79,7 @@ public static class LinkInterfaceMapping
         }
     });
 
-    public static IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes(GameCategory mode)
-    {
-        if (_mapper.Value.Mappings.TryGetValue(mode, out var value))
-        {
-            return value;
-        }
+    public static ILinkInterfaceMapGetter Instance => _mapper.Value;
 
-        return DictionaryExt.Empty<Type, Type[]>();
-    }
-
-    public static bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type)
-    {
-        return _mapper.Value.NameToInterfaceTypeMapping.TryGetValue(name, out type);
-    }
-
-    public static void Register(ILinkInterfaceMapping mapping)
-    {
-        _mapper.Value.Register(mapping);
-    }
+    public static LinkInterfaceMapper InternalInstance => _mapper.Value;
 }

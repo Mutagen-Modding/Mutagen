@@ -423,8 +423,6 @@
     <Compile Include="Plugins\Records\Internals\IMapsToGetter.cs" />
     <Compile Include="Plugins\Records\Internals\LinkInterfaceMapping.cs" />
     <Compile Include="Plugins\Aspects\IWeightValue.cs" />
-    <Compile Include="Plugins\Cache\LinkCachePreferenceOnlyIdentifiers.cs" />
-    <Compile Include="Plugins\Cache\LinkCachePreferenceWholeRecord.cs" />
     <Compile Include="Plugins\Internals\FormLinkInformation.cs" />
     <Compile Include="Plugins\FormLinkNullable.cs" />
     <Compile Include="Plugins\IFormLink.cs" />

@@ -5,6 +5,7 @@ using System.Threading;
 using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
@@ -29,13 +30,14 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public ImmutableModLinkCache(IModGetter sourceMod, LinkCachePreferences? prefs = null)
         {
             _sourceMod = sourceMod;
-            var simple = prefs is LinkCachePreferenceOnlyIdentifiers;
+            var simple = (prefs ?? LinkCachePreferences.Default).Retention == LinkCachePreferences.RetentionType.OnlyIdentifiers;
             var category = sourceMod.GameRelease.ToCategory();
             _cache = new InternalImmutableModLinkCache(sourceMod, prefs);
             _formKeyContexts = new ImmutableModLinkCacheSimpleContextCategory<FormKey>(
                 simple: simple,
                 linkCache: this,
                 category: category,
+                linkInterfaceMapGetter: prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
                 contextEnumerable: sourceMod,
                 keyGetter: m => TryGet<FormKey>.Succeed(m.FormKey),
                 shortCircuit: f => f.IsNull);
@@ -43,6 +45,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
                 simple: simple,
                 linkCache: this,
                 category: category,
+                linkInterfaceMapGetter: prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
                 contextEnumerable: sourceMod,
                 keyGetter: m =>
                 {
@@ -483,13 +486,15 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         {
             this._sourceMod = sourceMod;
             _cache = new InternalImmutableModLinkCache(sourceMod, prefs);
-            _simple = prefs is LinkCachePreferenceOnlyIdentifiers;
+            _simple = prefs.Retention == LinkCachePreferences.RetentionType.OnlyIdentifiers;
             _formKeyContexts = new ImmutableModLinkCacheContextCategory<TMod, TModGetter, FormKey>(
                 parent: this,
+                linkInterfaceMapGetter: prefs.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
                 keyGetter: m => TryGet<FormKey>.Succeed(m.FormKey),
                 shortCircuit: f => f.IsNull);
             _editorIdContexts = new ImmutableModLinkCacheContextCategory<TMod, TModGetter, string>(
                 parent: this,
+                linkInterfaceMapGetter: prefs.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
                 keyGetter: m =>
                 {
                     var edid = m.EditorID;
