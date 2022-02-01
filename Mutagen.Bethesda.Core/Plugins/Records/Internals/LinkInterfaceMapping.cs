@@ -4,55 +4,98 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-namespace Mutagen.Bethesda.Plugins.Records.Internals
-{
-    internal static class LinkInterfaceMappingInternal
-    {
-        public static Dictionary<GameCategory, IReadOnlyDictionary<Type, Type[]>> Mappings = new Dictionary<GameCategory, IReadOnlyDictionary<Type, Type[]>>();
-        public static Dictionary<string, Type> NameToInterfaceTypeMapping = new Dictionary<string, Type>();
+namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
-        static LinkInterfaceMappingInternal()
+public interface ILinkInterfaceMapGetter
+{
+    IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes(GameCategory mode);
+    bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type);
+}
+
+public class LinkInterfaceMapper : ILinkInterfaceMapGetter
+{
+    public Dictionary<GameCategory, IReadOnlyDictionary<Type, Type[]>> Mappings = new();
+    public Dictionary<string, Type> NameToInterfaceTypeMapping = new();
+        
+    private LinkInterfaceMapper()
+    {
+    }
+        
+    public IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes(GameCategory mode)
+    {
+        if (Mappings.TryGetValue(mode, out var value))
         {
-            if (!LinkInterfaceMapping.AutomaticRegistration) return;
-            foreach (var interf in TypeExt.GetInheritingFromInterface<ILinkInterfaceMapping>(
-                loadAssemblies: true))
-            {
-                Register((Activator.CreateInstance(interf) as ILinkInterfaceMapping)!);
-            }
+            return value;
         }
 
-        public static void Register(ILinkInterfaceMapping mapping)
+        return DictionaryExt.Empty<Type, Type[]>();
+    }
+
+    public bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type)
+    {
+        return NameToInterfaceTypeMapping.TryGetValue(name, out type);
+    }
+
+    public void Register(ILinkInterfaceMapping mapping)
+    {
+        Mappings[mapping.GameCategory] = mapping.InterfaceToObjectTypes;
+        foreach (var interf in mapping.InterfaceToObjectTypes.Keys)
         {
-            Mappings[mapping.GameCategory] = mapping.InterfaceToObjectTypes;
-            foreach (var interf in mapping.InterfaceToObjectTypes.Keys)
-            {
-                NameToInterfaceTypeMapping[interf.FullName!] = interf;
-            }
+            NameToInterfaceTypeMapping[interf.FullName!] = interf;
         }
     }
 
-    public static class LinkInterfaceMapping
+    public static LinkInterfaceMapper AutomaticFactory()
     {
-        public static bool AutomaticRegistration = true;
-
-        public static IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes(GameCategory mode)
+        var ret = new LinkInterfaceMapper();
+        foreach (var interf in TypeExt.GetInheritingFromInterface<ILinkInterfaceMapping>(
+                     loadAssemblies: true))
         {
-            if (LinkInterfaceMappingInternal.Mappings.TryGetValue(mode, out var value))
-            {
-                return value;
-            }
-
-            return DictionaryExt.Empty<Type, Type[]>();
+            ret.Register((Activator.CreateInstance(interf) as ILinkInterfaceMapping)!);
         }
 
-        public static bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type)
+        return ret;
+    }
+
+    public static LinkInterfaceMapper EmptyFactory()
+    {
+        return new LinkInterfaceMapper();
+    }
+}
+
+public static class LinkInterfaceMapping
+{
+    public static bool AutomaticRegistration = true;
+
+    private static Lazy<LinkInterfaceMapper> _mapper = new(() =>
+    {
+        if (AutomaticRegistration)
         {
-            return LinkInterfaceMappingInternal.NameToInterfaceTypeMapping.TryGetValue(name, out type);
+            return LinkInterfaceMapper.AutomaticFactory();
+        }
+        else
+        {
+            return LinkInterfaceMapper.EmptyFactory();
+        }
+    });
+
+    public static IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes(GameCategory mode)
+    {
+        if (_mapper.Value.Mappings.TryGetValue(mode, out var value))
+        {
+            return value;
         }
 
-        public static void Register(ILinkInterfaceMapping mapping)
-        {
-            LinkInterfaceMappingInternal.Register(mapping);
-        }
+        return DictionaryExt.Empty<Type, Type[]>();
+    }
+
+    public static bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type)
+    {
+        return _mapper.Value.NameToInterfaceTypeMapping.TryGetValue(name, out type);
+    }
+
+    public static void Register(ILinkInterfaceMapping mapping)
+    {
+        _mapper.Value.Register(mapping);
     }
 }
