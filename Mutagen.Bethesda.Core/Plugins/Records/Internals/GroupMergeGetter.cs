@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Loqui;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
@@ -61,6 +62,8 @@ public class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyC
 
         return false;
     }
+
+    public ILoquiRegistration ContainedRecordRegistration => SubGroups[0].ContainedRecordRegistration;
 
     #endregion
 

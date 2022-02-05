@@ -22,6 +22,8 @@ namespace Mutagen.Bethesda.Plugins.Records
     public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
         where TMajor : class, IMajorRecordInternal
     {
+        private static readonly ILoquiRegistration _registration = LoquiRegistration.GetRegister(typeof(TMajor));
+        
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected abstract ICache<TMajor, FormKey> ProtectedCache { get; }
 
@@ -149,6 +151,8 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         /// <inheritdoc />
         public bool ContainsKey(FormKey key) => InternalCache.ContainsKey(key);
+
+        public ILoquiRegistration ContainedRecordRegistration => _registration;
 
         /// <inheritdoc />
         public abstract IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
@@ -332,6 +336,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             where TMajor : class, IMajorRecordGetter
         {
             protected IReadOnlyCache<TMajor, FormKey> _recordCache = null!;
+            private static readonly ILoquiRegistration _registration = LoquiRegistration.GetRegister(typeof(TMajor));
 
             public TMajor this[FormKey key] => _recordCache[key];
             IMajorRecordGetter IGroupGetter.this[FormKey key] => _recordCache[key];
@@ -343,6 +348,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             public IEnumerable<TMajor> Items => _recordCache.Items;
             IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => _recordCache;
             IEnumerable<IMajorRecordGetter> IGroupGetter.Records => _recordCache.Items;
+            public ILoquiRegistration ContainedRecordRegistration => _registration;
 
             public abstract IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
 
