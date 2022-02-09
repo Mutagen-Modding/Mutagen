@@ -41,8 +41,8 @@
           <FormLink name="DualCastArt" refName="DualCastData" />
           <Float name="DualCastScale" />
           <FormLink name="EnchantArt" refName="ArtObject" />
-          <FormLink name="Unknown2" refName="SkyrimMajorRecord" />
-          <FormLink name="Unknown3" refName="SkyrimMajorRecord" />
+          <FormLink name="HitVisuals" refName="VisualEffect" />
+          <FormLink name="EnchantVisuals" refName="VisualEffect" />
           <FormLink name="EquipAbility" refName="Spell" />
           <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" />
           <FormLink name="PerkToApply" refName="Perk" />
