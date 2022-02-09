@@ -4850,9 +4850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ActorValue ResistValue => _ResistValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ResistValueLocation, 0x4)) : default;
         #endregion
         #region CounterEffectLogic
-        private int _CounterEffectLogicLocation => _DATALocation!.Value + 0x14;
-        private bool _CounterEffectLogic_IsSet => _DATALocation.HasValue;
-        partial void CounterEffectLogicCustomParse(
+         partial void CounterEffectLogicCustomParse(
             OverlayStream stream,
             int offset);
         #endregion

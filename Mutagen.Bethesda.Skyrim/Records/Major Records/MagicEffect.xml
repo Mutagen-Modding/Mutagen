@@ -80,7 +80,7 @@
     <Fields>
     </Fields>
   </Object>
-  <Object name="MagicEffectNpcArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="c51eb111-5b35-4955-941d-91d3a8a00692" ID="118">
+  <Object name="MagicEffectSummonCreatureArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="c51eb111-5b35-4955-941d-91d3a8a00692" ID="118">
     <Fields>
     </Fields>
   </Object>
@@ -92,7 +92,7 @@
     <Fields>
     </Fields>
   </Object>
-  <Object name="MagicEffectSpellArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="bcdbf09b-cdf0-4674-a8a7-4569bae2271e" ID="120">
+  <Object name="MagicEffectCloakArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="bcdbf09b-cdf0-4674-a8a7-4569bae2271e" ID="120">
     <Fields>
     </Fields>
   </Object>
@@ -104,11 +104,11 @@
     <Fields>
     </Fields>
   </Object>
-  <Object name="MagicEffectEnchantmentArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="10181691-291f-48d7-8b14-3b46a2670c64" ID="122">
+  <Object name="MagicEffectEnhanceWeaponArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="10181691-291f-48d7-8b14-3b46a2670c64" ID="122">
     <Fields>
     </Fields>
   </Object>
-  <Object name="MagicEffectKeywordArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="3675b91e-c3b8-491e-a449-d3891f88c467" ID="123">
+  <Object name="MagicEffectPeakValueModArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="3675b91e-c3b8-491e-a449-d3891f88c467" ID="123">
     <Fields>
     </Fields>
   </Object>

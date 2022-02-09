@@ -2,32 +2,32 @@ using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectSpellArchetype
+    public partial class MagicEffectCloakArchetype
     {
         public FormLink<ISpellGetter> Association => this.AssociationKey.AsLink<ISpellGetter>();
 
-        IFormLink<ISpellGetter> IMagicEffectSpellArchetype.Association => this.Association;
-        IFormLinkGetter<ISpellGetter> IMagicEffectSpellArchetypeGetter.Association => this.Association;
+        IFormLink<ISpellGetter> IMagicEffectCloakArchetype.Association => this.Association;
+        IFormLinkGetter<ISpellGetter> IMagicEffectCloakArchetypeGetter.Association => this.Association;
 
-        public MagicEffectSpellArchetype()
+        public MagicEffectCloakArchetype()
             : base(TypeEnum.Cloak)
         {
         }
     }
 
-    public partial interface IMagicEffectSpellArchetype
+    public partial interface IMagicEffectCloakArchetype
     {
         new IFormLink<ISpellGetter> Association { get; }
     }
 
-    public partial interface IMagicEffectSpellArchetypeGetter
+    public partial interface IMagicEffectCloakArchetypeGetter
     {
         IFormLinkGetter<ISpellGetter> Association { get; }
     }
 
     namespace Internals
     {
-        public partial class MagicEffectSpellArchetypeBinaryOverlay
+        public partial class MagicEffectCloakArchetypeBinaryOverlay
         {
             public IFormLinkGetter<ISpellGetter> Association => this.AssociationKey.AsLink<ISpellGetter>();
         }

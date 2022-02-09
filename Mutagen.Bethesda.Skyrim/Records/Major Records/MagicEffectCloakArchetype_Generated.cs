@@ -35,11 +35,11 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class MagicEffectEnchantmentArchetype :
+    public partial class MagicEffectCloakArchetype :
         MagicEffectArchetype,
-        IEquatable<IMagicEffectEnchantmentArchetypeGetter>,
-        ILoquiObjectSetter<MagicEffectEnchantmentArchetype>,
-        IMagicEffectEnchantmentArchetypeInternal
+        IEquatable<IMagicEffectCloakArchetypeGetter>,
+        ILoquiObjectSetter<MagicEffectCloakArchetype>,
+        IMagicEffectCloakArchetypeInternal
     {
 
         #region To String
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            MagicEffectEnchantmentArchetypeMixIn.ToString(
+            MagicEffectCloakArchetypeMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -58,16 +58,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IMagicEffectEnchantmentArchetypeGetter rhs) return false;
-            return ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IMagicEffectCloakArchetypeGetter rhs) return false;
+            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IMagicEffectEnchantmentArchetypeGetter? obj)
+        public bool Equals(IMagicEffectCloakArchetypeGetter? obj)
         {
-            return ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new MagicEffectEnchantmentArchetype.Mask<R>();
+                var ret = new MagicEffectCloakArchetype.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -160,16 +160,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(MagicEffectEnchantmentArchetype.Mask<bool>? printMask = null)
+            public string ToString(MagicEffectCloakArchetype.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, MagicEffectEnchantmentArchetype.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, MagicEffectCloakArchetype.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MagicEffectEnchantmentArchetype.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(MagicEffectCloakArchetype.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                MagicEffectEnchantmentArchetype_FieldIndex enu = (MagicEffectEnchantmentArchetype_FieldIndex)index;
+                MagicEffectCloakArchetype_FieldIndex enu = (MagicEffectCloakArchetype_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                MagicEffectEnchantmentArchetype_FieldIndex enu = (MagicEffectEnchantmentArchetype_FieldIndex)index;
+                MagicEffectCloakArchetype_FieldIndex enu = (MagicEffectCloakArchetype_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                MagicEffectEnchantmentArchetype_FieldIndex enu = (MagicEffectEnchantmentArchetype_FieldIndex)index;
+                MagicEffectCloakArchetype_FieldIndex enu = (MagicEffectCloakArchetype_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -304,23 +304,23 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MagicEffectEnchantmentArchetypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MagicEffectCloakArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((MagicEffectEnchantmentArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MagicEffectCloakArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static MagicEffectEnchantmentArchetype CreateFromBinary(
+        public new static MagicEffectCloakArchetype CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new MagicEffectEnchantmentArchetype();
-            ((MagicEffectEnchantmentArchetypeSetterCommon)((IMagicEffectEnchantmentArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MagicEffectCloakArchetype();
+            ((MagicEffectCloakArchetypeSetterCommon)((IMagicEffectCloakArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out MagicEffectEnchantmentArchetype item,
+            out MagicEffectCloakArchetype item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -346,80 +346,80 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((MagicEffectEnchantmentArchetypeSetterCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MagicEffectCloakArchetypeSetterCommon)((IMagicEffectCloakArchetypeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new MagicEffectEnchantmentArchetype GetNew()
+        internal static new MagicEffectCloakArchetype GetNew()
         {
-            return new MagicEffectEnchantmentArchetype();
+            return new MagicEffectCloakArchetype();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IMagicEffectEnchantmentArchetype :
-        ILoquiObjectSetter<IMagicEffectEnchantmentArchetypeInternal>,
+    public partial interface IMagicEffectCloakArchetype :
+        ILoquiObjectSetter<IMagicEffectCloakArchetypeInternal>,
         IMagicEffectArchetypeInternal,
-        IMagicEffectEnchantmentArchetypeGetter
+        IMagicEffectCloakArchetypeGetter
     {
     }
 
-    public partial interface IMagicEffectEnchantmentArchetypeInternal :
+    public partial interface IMagicEffectCloakArchetypeInternal :
         IMagicEffectArchetypeInternal,
-        IMagicEffectEnchantmentArchetype,
-        IMagicEffectEnchantmentArchetypeGetter
+        IMagicEffectCloakArchetype,
+        IMagicEffectCloakArchetypeGetter
     {
     }
 
-    public partial interface IMagicEffectEnchantmentArchetypeGetter :
+    public partial interface IMagicEffectCloakArchetypeGetter :
         IMagicEffectArchetypeGetter,
         IBinaryItem,
-        ILoquiObject<IMagicEffectEnchantmentArchetypeGetter>
+        ILoquiObject<IMagicEffectCloakArchetypeGetter>
     {
-        static new ILoquiRegistration StaticRegistration => MagicEffectEnchantmentArchetype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffectCloakArchetype_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class MagicEffectEnchantmentArchetypeMixIn
+    public static partial class MagicEffectCloakArchetypeMixIn
     {
-        public static void Clear(this IMagicEffectEnchantmentArchetypeInternal item)
+        public static void Clear(this IMagicEffectCloakArchetypeInternal item)
         {
-            ((MagicEffectEnchantmentArchetypeSetterCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MagicEffectCloakArchetypeSetterCommon)((IMagicEffectCloakArchetypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MagicEffectEnchantmentArchetype.Mask<bool> GetEqualsMask(
-            this IMagicEffectEnchantmentArchetypeGetter item,
-            IMagicEffectEnchantmentArchetypeGetter rhs,
+        public static MagicEffectCloakArchetype.Mask<bool> GetEqualsMask(
+            this IMagicEffectCloakArchetypeGetter item,
+            IMagicEffectCloakArchetypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IMagicEffectEnchantmentArchetypeGetter item,
+            this IMagicEffectCloakArchetypeGetter item,
             string? name = null,
-            MagicEffectEnchantmentArchetype.Mask<bool>? printMask = null)
+            MagicEffectCloakArchetype.Mask<bool>? printMask = null)
         {
-            return ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonInstance()!).ToString(
+            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IMagicEffectEnchantmentArchetypeGetter item,
+            this IMagicEffectCloakArchetypeGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffectEnchantmentArchetype.Mask<bool>? printMask = null)
+            MagicEffectCloakArchetype.Mask<bool>? printMask = null)
         {
-            ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonInstance()!).ToString(
+            ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -427,39 +427,39 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals(
-            this IMagicEffectEnchantmentArchetypeGetter item,
-            IMagicEffectEnchantmentArchetypeGetter rhs,
-            MagicEffectEnchantmentArchetype.TranslationMask? equalsMask = null)
+            this IMagicEffectCloakArchetypeGetter item,
+            IMagicEffectCloakArchetypeGetter rhs,
+            MagicEffectCloakArchetype.TranslationMask? equalsMask = null)
         {
-            return ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonInstance()!).Equals(
+            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectEnchantmentArchetypeInternal lhs,
-            IMagicEffectEnchantmentArchetypeGetter rhs,
-            out MagicEffectEnchantmentArchetype.ErrorMask errorMask,
-            MagicEffectEnchantmentArchetype.TranslationMask? copyMask = null)
+            this IMagicEffectCloakArchetypeInternal lhs,
+            IMagicEffectCloakArchetypeGetter rhs,
+            out MagicEffectCloakArchetype.ErrorMask errorMask,
+            MagicEffectCloakArchetype.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((MagicEffectEnchantmentArchetypeSetterTranslationCommon)((IMagicEffectEnchantmentArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MagicEffectCloakArchetypeSetterTranslationCommon)((IMagicEffectCloakArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = MagicEffectEnchantmentArchetype.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffectCloakArchetype.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectEnchantmentArchetypeInternal lhs,
-            IMagicEffectEnchantmentArchetypeGetter rhs,
+            this IMagicEffectCloakArchetypeInternal lhs,
+            IMagicEffectCloakArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((MagicEffectEnchantmentArchetypeSetterTranslationCommon)((IMagicEffectEnchantmentArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MagicEffectCloakArchetypeSetterTranslationCommon)((IMagicEffectCloakArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -467,32 +467,32 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static MagicEffectEnchantmentArchetype DeepCopy(
-            this IMagicEffectEnchantmentArchetypeGetter item,
-            MagicEffectEnchantmentArchetype.TranslationMask? copyMask = null)
+        public static MagicEffectCloakArchetype DeepCopy(
+            this IMagicEffectCloakArchetypeGetter item,
+            MagicEffectCloakArchetype.TranslationMask? copyMask = null)
         {
-            return ((MagicEffectEnchantmentArchetypeSetterTranslationCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MagicEffectCloakArchetypeSetterTranslationCommon)((IMagicEffectCloakArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static MagicEffectEnchantmentArchetype DeepCopy(
-            this IMagicEffectEnchantmentArchetypeGetter item,
-            out MagicEffectEnchantmentArchetype.ErrorMask errorMask,
-            MagicEffectEnchantmentArchetype.TranslationMask? copyMask = null)
+        public static MagicEffectCloakArchetype DeepCopy(
+            this IMagicEffectCloakArchetypeGetter item,
+            out MagicEffectCloakArchetype.ErrorMask errorMask,
+            MagicEffectCloakArchetype.TranslationMask? copyMask = null)
         {
-            return ((MagicEffectEnchantmentArchetypeSetterTranslationCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MagicEffectCloakArchetypeSetterTranslationCommon)((IMagicEffectCloakArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static MagicEffectEnchantmentArchetype DeepCopy(
-            this IMagicEffectEnchantmentArchetypeGetter item,
+        public static MagicEffectCloakArchetype DeepCopy(
+            this IMagicEffectCloakArchetypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((MagicEffectEnchantmentArchetypeSetterTranslationCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MagicEffectCloakArchetypeSetterTranslationCommon)((IMagicEffectCloakArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -500,11 +500,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IMagicEffectEnchantmentArchetypeInternal item,
+            this IMagicEffectCloakArchetypeInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((MagicEffectEnchantmentArchetypeSetterCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MagicEffectCloakArchetypeSetterCommon)((IMagicEffectCloakArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum MagicEffectEnchantmentArchetype_FieldIndex
+    public enum MagicEffectCloakArchetype_FieldIndex
     {
         Type = 0,
         AssociationKey = 1,
@@ -529,40 +529,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectEnchantmentArchetype_Registration : ILoquiRegistration
+    public partial class MagicEffectCloakArchetype_Registration : ILoquiRegistration
     {
-        public static readonly MagicEffectEnchantmentArchetype_Registration Instance = new MagicEffectEnchantmentArchetype_Registration();
+        public static readonly MagicEffectCloakArchetype_Registration Instance = new MagicEffectCloakArchetype_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 122,
+            msgID: 120,
             version: 0);
 
-        public const string GUID = "10181691-291f-48d7-8b14-3b46a2670c64";
+        public const string GUID = "bcdbf09b-cdf0-4674-a8a7-4569bae2271e";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(MagicEffectEnchantmentArchetype.Mask<>);
+        public static readonly Type MaskType = typeof(MagicEffectCloakArchetype.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MagicEffectEnchantmentArchetype.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MagicEffectCloakArchetype.ErrorMask);
 
-        public static readonly Type ClassType = typeof(MagicEffectEnchantmentArchetype);
+        public static readonly Type ClassType = typeof(MagicEffectCloakArchetype);
 
-        public static readonly Type GetterType = typeof(IMagicEffectEnchantmentArchetypeGetter);
+        public static readonly Type GetterType = typeof(IMagicEffectCloakArchetypeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IMagicEffectEnchantmentArchetype);
+        public static readonly Type SetterType = typeof(IMagicEffectCloakArchetype);
 
-        public static readonly Type? InternalSetterType = typeof(IMagicEffectEnchantmentArchetypeInternal);
+        public static readonly Type? InternalSetterType = typeof(IMagicEffectCloakArchetypeInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.MagicEffectEnchantmentArchetype";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.MagicEffectCloakArchetype";
 
-        public const string Name = "MagicEffectEnchantmentArchetype";
+        public const string Name = "MagicEffectCloakArchetype";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(MagicEffectEnchantmentArchetypeBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MagicEffectCloakArchetypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -603,13 +603,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectEnchantmentArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    public partial class MagicEffectCloakArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
     {
-        public new static readonly MagicEffectEnchantmentArchetypeSetterCommon Instance = new MagicEffectEnchantmentArchetypeSetterCommon();
+        public new static readonly MagicEffectCloakArchetypeSetterCommon Instance = new MagicEffectCloakArchetypeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IMagicEffectEnchantmentArchetypeInternal item)
+        public void Clear(IMagicEffectCloakArchetypeInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -617,11 +617,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void Clear(IMagicEffectArchetypeInternal item)
         {
-            Clear(item: (IMagicEffectEnchantmentArchetypeInternal)item);
+            Clear(item: (IMagicEffectCloakArchetypeInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IMagicEffectEnchantmentArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IMagicEffectCloakArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IMagicEffectEnchantmentArchetypeInternal item,
+            IMagicEffectCloakArchetypeInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MagicEffectEnchantmentArchetypeBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: MagicEffectCloakArchetypeBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (MagicEffectEnchantmentArchetype)item,
+                item: (MagicEffectCloakArchetype)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -654,17 +654,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectEnchantmentArchetypeCommon : MagicEffectArchetypeCommon
+    public partial class MagicEffectCloakArchetypeCommon : MagicEffectArchetypeCommon
     {
-        public new static readonly MagicEffectEnchantmentArchetypeCommon Instance = new MagicEffectEnchantmentArchetypeCommon();
+        public new static readonly MagicEffectCloakArchetypeCommon Instance = new MagicEffectCloakArchetypeCommon();
 
-        public MagicEffectEnchantmentArchetype.Mask<bool> GetEqualsMask(
-            IMagicEffectEnchantmentArchetypeGetter item,
-            IMagicEffectEnchantmentArchetypeGetter rhs,
+        public MagicEffectCloakArchetype.Mask<bool> GetEqualsMask(
+            IMagicEffectCloakArchetypeGetter item,
+            IMagicEffectCloakArchetypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MagicEffectEnchantmentArchetype.Mask<bool>(false);
-            ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MagicEffectCloakArchetype.Mask<bool>(false);
+            ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -673,9 +673,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IMagicEffectEnchantmentArchetypeGetter item,
-            IMagicEffectEnchantmentArchetypeGetter rhs,
-            MagicEffectEnchantmentArchetype.Mask<bool> ret,
+            IMagicEffectCloakArchetypeGetter item,
+            IMagicEffectCloakArchetypeGetter rhs,
+            MagicEffectCloakArchetype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -683,9 +683,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IMagicEffectEnchantmentArchetypeGetter item,
+            IMagicEffectCloakArchetypeGetter item,
             string? name = null,
-            MagicEffectEnchantmentArchetype.Mask<bool>? printMask = null)
+            MagicEffectCloakArchetype.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -697,18 +697,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IMagicEffectEnchantmentArchetypeGetter item,
+            IMagicEffectCloakArchetypeGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffectEnchantmentArchetype.Mask<bool>? printMask = null)
+            MagicEffectCloakArchetype.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MagicEffectEnchantmentArchetype =>");
+                fg.AppendLine($"MagicEffectCloakArchetype =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MagicEffectEnchantmentArchetype) =>");
+                fg.AppendLine($"{name} (MagicEffectCloakArchetype) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -722,9 +722,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IMagicEffectEnchantmentArchetypeGetter item,
+            IMagicEffectCloakArchetypeGetter item,
             FileGeneration fg,
-            MagicEffectEnchantmentArchetype.Mask<bool>? printMask = null)
+            MagicEffectCloakArchetype.Mask<bool>? printMask = null)
         {
             MagicEffectArchetypeCommon.ToStringFields(
                 item: item,
@@ -732,16 +732,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
         }
         
-        public static MagicEffectEnchantmentArchetype_FieldIndex ConvertFieldIndex(MagicEffectArchetype_FieldIndex index)
+        public static MagicEffectCloakArchetype_FieldIndex ConvertFieldIndex(MagicEffectArchetype_FieldIndex index)
         {
             switch (index)
             {
                 case MagicEffectArchetype_FieldIndex.Type:
-                    return (MagicEffectEnchantmentArchetype_FieldIndex)((int)index);
+                    return (MagicEffectCloakArchetype_FieldIndex)((int)index);
                 case MagicEffectArchetype_FieldIndex.AssociationKey:
-                    return (MagicEffectEnchantmentArchetype_FieldIndex)((int)index);
+                    return (MagicEffectCloakArchetype_FieldIndex)((int)index);
                 case MagicEffectArchetype_FieldIndex.ActorValue:
-                    return (MagicEffectEnchantmentArchetype_FieldIndex)((int)index);
+                    return (MagicEffectCloakArchetype_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -749,8 +749,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IMagicEffectEnchantmentArchetypeGetter? lhs,
-            IMagicEffectEnchantmentArchetypeGetter? rhs,
+            IMagicEffectCloakArchetypeGetter? lhs,
+            IMagicEffectCloakArchetypeGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -764,12 +764,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IMagicEffectEnchantmentArchetypeGetter?)lhs,
-                rhs: rhs as IMagicEffectEnchantmentArchetypeGetter,
+                lhs: (IMagicEffectCloakArchetypeGetter?)lhs,
+                rhs: rhs as IMagicEffectCloakArchetypeGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IMagicEffectEnchantmentArchetypeGetter item)
+        public virtual int GetHashCode(IMagicEffectCloakArchetypeGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override int GetHashCode(IMagicEffectArchetypeGetter item)
         {
-            return GetHashCode(item: (IMagicEffectEnchantmentArchetypeGetter)item);
+            return GetHashCode(item: (IMagicEffectCloakArchetypeGetter)item);
         }
         
         #endregion
@@ -786,11 +786,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return MagicEffectEnchantmentArchetype.GetNew();
+            return MagicEffectCloakArchetype.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectEnchantmentArchetypeGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectCloakArchetypeGetter obj)
         {
             yield break;
         }
@@ -798,14 +798,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectEnchantmentArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    public partial class MagicEffectCloakArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {
-        public new static readonly MagicEffectEnchantmentArchetypeSetterTranslationCommon Instance = new MagicEffectEnchantmentArchetypeSetterTranslationCommon();
+        public new static readonly MagicEffectCloakArchetypeSetterTranslationCommon Instance = new MagicEffectCloakArchetypeSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IMagicEffectEnchantmentArchetypeInternal item,
-            IMagicEffectEnchantmentArchetypeGetter rhs,
+            IMagicEffectCloakArchetypeInternal item,
+            IMagicEffectCloakArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -819,8 +819,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            IMagicEffectEnchantmentArchetype item,
-            IMagicEffectEnchantmentArchetypeGetter rhs,
+            IMagicEffectCloakArchetype item,
+            IMagicEffectCloakArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -841,8 +841,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMagicEffectEnchantmentArchetypeInternal)item,
-                rhs: (IMagicEffectEnchantmentArchetypeGetter)rhs,
+                item: (IMagicEffectCloakArchetypeInternal)item,
+                rhs: (IMagicEffectCloakArchetypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -856,8 +856,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMagicEffectEnchantmentArchetype)item,
-                rhs: (IMagicEffectEnchantmentArchetypeGetter)rhs,
+                item: (IMagicEffectCloakArchetype)item,
+                rhs: (IMagicEffectCloakArchetypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -865,12 +865,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public MagicEffectEnchantmentArchetype DeepCopy(
-            IMagicEffectEnchantmentArchetypeGetter item,
-            MagicEffectEnchantmentArchetype.TranslationMask? copyMask = null)
+        public MagicEffectCloakArchetype DeepCopy(
+            IMagicEffectCloakArchetypeGetter item,
+            MagicEffectCloakArchetype.TranslationMask? copyMask = null)
         {
-            MagicEffectEnchantmentArchetype ret = (MagicEffectEnchantmentArchetype)((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonInstance()!).GetNew();
-            ((MagicEffectEnchantmentArchetypeSetterTranslationCommon)((IMagicEffectEnchantmentArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MagicEffectCloakArchetype ret = (MagicEffectCloakArchetype)((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)item).CommonInstance()!).GetNew();
+            ((MagicEffectCloakArchetypeSetterTranslationCommon)((IMagicEffectCloakArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -879,30 +879,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public MagicEffectEnchantmentArchetype DeepCopy(
-            IMagicEffectEnchantmentArchetypeGetter item,
-            out MagicEffectEnchantmentArchetype.ErrorMask errorMask,
-            MagicEffectEnchantmentArchetype.TranslationMask? copyMask = null)
+        public MagicEffectCloakArchetype DeepCopy(
+            IMagicEffectCloakArchetypeGetter item,
+            out MagicEffectCloakArchetype.ErrorMask errorMask,
+            MagicEffectCloakArchetype.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MagicEffectEnchantmentArchetype ret = (MagicEffectEnchantmentArchetype)((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonInstance()!).GetNew();
-            ((MagicEffectEnchantmentArchetypeSetterTranslationCommon)((IMagicEffectEnchantmentArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MagicEffectCloakArchetype ret = (MagicEffectCloakArchetype)((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)item).CommonInstance()!).GetNew();
+            ((MagicEffectCloakArchetypeSetterTranslationCommon)((IMagicEffectCloakArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = MagicEffectEnchantmentArchetype.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffectCloakArchetype.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public MagicEffectEnchantmentArchetype DeepCopy(
-            IMagicEffectEnchantmentArchetypeGetter item,
+        public MagicEffectCloakArchetype DeepCopy(
+            IMagicEffectCloakArchetypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            MagicEffectEnchantmentArchetype ret = (MagicEffectEnchantmentArchetype)((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonInstance()!).GetNew();
-            ((MagicEffectEnchantmentArchetypeSetterTranslationCommon)((IMagicEffectEnchantmentArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MagicEffectCloakArchetype ret = (MagicEffectCloakArchetype)((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)item).CommonInstance()!).GetNew();
+            ((MagicEffectCloakArchetypeSetterTranslationCommon)((IMagicEffectCloakArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -918,21 +918,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectEnchantmentArchetype
+    public partial class MagicEffectCloakArchetype
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MagicEffectEnchantmentArchetype_Registration.Instance;
-        public new static MagicEffectEnchantmentArchetype_Registration StaticRegistration => MagicEffectEnchantmentArchetype_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MagicEffectCloakArchetype_Registration.Instance;
+        public new static MagicEffectCloakArchetype_Registration StaticRegistration => MagicEffectCloakArchetype_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MagicEffectEnchantmentArchetypeCommon.Instance;
+        protected override object CommonInstance() => MagicEffectCloakArchetypeCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return MagicEffectEnchantmentArchetypeSetterCommon.Instance;
+            return MagicEffectCloakArchetypeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MagicEffectEnchantmentArchetypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MagicEffectCloakArchetypeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -943,15 +943,15 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MagicEffectEnchantmentArchetypeBinaryWriteTranslation :
+    public partial class MagicEffectCloakArchetypeBinaryWriteTranslation :
         MagicEffectArchetypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MagicEffectEnchantmentArchetypeBinaryWriteTranslation Instance = new MagicEffectEnchantmentArchetypeBinaryWriteTranslation();
+        public new readonly static MagicEffectCloakArchetypeBinaryWriteTranslation Instance = new MagicEffectCloakArchetypeBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            IMagicEffectEnchantmentArchetypeGetter item,
+            IMagicEffectCloakArchetypeGetter item,
             TypedWriteParams? translationParams = null)
         {
             MagicEffectArchetypeBinaryWriteTranslation.WriteEmbedded(
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IMagicEffectEnchantmentArchetypeGetter)item,
+                item: (IMagicEffectCloakArchetypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -976,16 +976,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IMagicEffectEnchantmentArchetypeGetter)item,
+                item: (IMagicEffectCloakArchetypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class MagicEffectEnchantmentArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    public partial class MagicEffectCloakArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
-        public new readonly static MagicEffectEnchantmentArchetypeBinaryCreateTranslation Instance = new MagicEffectEnchantmentArchetypeBinaryCreateTranslation();
+        public new readonly static MagicEffectCloakArchetypeBinaryCreateTranslation Instance = new MagicEffectCloakArchetypeBinaryCreateTranslation();
 
     }
 
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class MagicEffectEnchantmentArchetypeBinaryTranslationMixIn
+    public static class MagicEffectCloakArchetypeBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1002,30 +1002,30 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MagicEffectEnchantmentArchetypeBinaryOverlay :
+    public partial class MagicEffectCloakArchetypeBinaryOverlay :
         MagicEffectArchetypeBinaryOverlay,
-        IMagicEffectEnchantmentArchetypeGetter
+        IMagicEffectCloakArchetypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MagicEffectEnchantmentArchetype_Registration.Instance;
-        public new static MagicEffectEnchantmentArchetype_Registration StaticRegistration => MagicEffectEnchantmentArchetype_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MagicEffectCloakArchetype_Registration.Instance;
+        public new static MagicEffectCloakArchetype_Registration StaticRegistration => MagicEffectCloakArchetype_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MagicEffectEnchantmentArchetypeCommon.Instance;
+        protected override object CommonInstance() => MagicEffectCloakArchetypeCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MagicEffectEnchantmentArchetypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MagicEffectCloakArchetypeSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MagicEffectEnchantmentArchetypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MagicEffectCloakArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((MagicEffectEnchantmentArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MagicEffectCloakArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected MagicEffectEnchantmentArchetypeBinaryOverlay(
+        protected MagicEffectCloakArchetypeBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1047,12 +1047,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static MagicEffectEnchantmentArchetypeBinaryOverlay MagicEffectEnchantmentArchetypeFactory(
+        public static MagicEffectCloakArchetypeBinaryOverlay MagicEffectCloakArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new MagicEffectEnchantmentArchetypeBinaryOverlay(
+            var ret = new MagicEffectCloakArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -1063,12 +1063,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static MagicEffectEnchantmentArchetypeBinaryOverlay MagicEffectEnchantmentArchetypeFactory(
+        public static MagicEffectCloakArchetypeBinaryOverlay MagicEffectCloakArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return MagicEffectEnchantmentArchetypeFactory(
+            return MagicEffectCloakArchetypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1080,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            MagicEffectEnchantmentArchetypeMixIn.ToString(
+            MagicEffectCloakArchetypeMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1090,16 +1090,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IMagicEffectEnchantmentArchetypeGetter rhs) return false;
-            return ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IMagicEffectCloakArchetypeGetter rhs) return false;
+            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IMagicEffectEnchantmentArchetypeGetter? obj)
+        public bool Equals(IMagicEffectCloakArchetypeGetter? obj)
         {
-            return ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

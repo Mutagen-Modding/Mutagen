@@ -2,32 +2,32 @@ using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectEnchantmentArchetype
+    public partial class MagicEffectEnhanceWeaponArchetype
     {
         public FormLink<IObjectEffectGetter> Association => this.AssociationKey.AsLink<IObjectEffectGetter>();
 
-        IFormLink<IObjectEffectGetter> IMagicEffectEnchantmentArchetype.Association => this.Association;
-        IFormLinkGetter<IObjectEffectGetter> IMagicEffectEnchantmentArchetypeGetter.Association => this.Association;
+        IFormLink<IObjectEffectGetter> IMagicEffectEnhanceWeaponArchetype.Association => this.Association;
+        IFormLinkGetter<IObjectEffectGetter> IMagicEffectEnhanceWeaponArchetypeGetter.Association => this.Association;
 
-        public MagicEffectEnchantmentArchetype()
+        public MagicEffectEnhanceWeaponArchetype()
             : base(TypeEnum.EnhanceWeapon)
         {
         }
     }
 
-    public partial interface IMagicEffectEnchantmentArchetype
+    public partial interface IMagicEffectEnhanceWeaponArchetype
     {
         new IFormLink<IObjectEffectGetter> Association { get; }
     }
 
-    public partial interface IMagicEffectEnchantmentArchetypeGetter
+    public partial interface IMagicEffectEnhanceWeaponArchetypeGetter
     {
         IFormLinkGetter<IObjectEffectGetter> Association { get; }
     }
 
     namespace Internals
     {
-        public partial class MagicEffectEnchantmentArchetypeBinaryOverlay
+        public partial class MagicEffectEnhanceWeaponArchetypeBinaryOverlay
         {
             public IFormLinkGetter<IObjectEffectGetter> Association => this.AssociationKey.AsLink<IObjectEffectGetter>();
         }

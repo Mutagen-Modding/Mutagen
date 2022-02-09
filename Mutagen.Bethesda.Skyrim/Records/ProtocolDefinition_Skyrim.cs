@@ -109,11 +109,11 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Spell_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectSound_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectBoundArchetype_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectNpcArchetype_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectSpellArchetype_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectSummonCreatureArchetype_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectCloakArchetype_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectWerewolfArchetype_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectEnchantmentArchetype_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectKeywordArchetype_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectEnhanceWeaponArchetype_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectPeakValueModArchetype_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Hazard_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectGuideArchetype_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MagicEffectSpawnHazardArchetype_Registration.Instance);

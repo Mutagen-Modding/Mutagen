@@ -35,11 +35,11 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class MagicEffectNpcArchetype :
+    public partial class MagicEffectEnhanceWeaponArchetype :
         MagicEffectArchetype,
-        IEquatable<IMagicEffectNpcArchetypeGetter>,
-        ILoquiObjectSetter<MagicEffectNpcArchetype>,
-        IMagicEffectNpcArchetypeInternal
+        IEquatable<IMagicEffectEnhanceWeaponArchetypeGetter>,
+        ILoquiObjectSetter<MagicEffectEnhanceWeaponArchetype>,
+        IMagicEffectEnhanceWeaponArchetypeInternal
     {
 
         #region To String
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            MagicEffectNpcArchetypeMixIn.ToString(
+            MagicEffectEnhanceWeaponArchetypeMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -58,16 +58,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IMagicEffectNpcArchetypeGetter rhs) return false;
-            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IMagicEffectEnhanceWeaponArchetypeGetter rhs) return false;
+            return ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IMagicEffectNpcArchetypeGetter? obj)
+        public bool Equals(IMagicEffectEnhanceWeaponArchetypeGetter? obj)
         {
-            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new MagicEffectNpcArchetype.Mask<R>();
+                var ret = new MagicEffectEnhanceWeaponArchetype.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -160,16 +160,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(MagicEffectNpcArchetype.Mask<bool>? printMask = null)
+            public string ToString(MagicEffectEnhanceWeaponArchetype.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, MagicEffectNpcArchetype.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, MagicEffectEnhanceWeaponArchetype.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MagicEffectNpcArchetype.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(MagicEffectEnhanceWeaponArchetype.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                MagicEffectNpcArchetype_FieldIndex enu = (MagicEffectNpcArchetype_FieldIndex)index;
+                MagicEffectEnhanceWeaponArchetype_FieldIndex enu = (MagicEffectEnhanceWeaponArchetype_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                MagicEffectNpcArchetype_FieldIndex enu = (MagicEffectNpcArchetype_FieldIndex)index;
+                MagicEffectEnhanceWeaponArchetype_FieldIndex enu = (MagicEffectEnhanceWeaponArchetype_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                MagicEffectNpcArchetype_FieldIndex enu = (MagicEffectNpcArchetype_FieldIndex)index;
+                MagicEffectEnhanceWeaponArchetype_FieldIndex enu = (MagicEffectEnhanceWeaponArchetype_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -304,23 +304,23 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MagicEffectNpcArchetypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((MagicEffectNpcArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static MagicEffectNpcArchetype CreateFromBinary(
+        public new static MagicEffectEnhanceWeaponArchetype CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new MagicEffectNpcArchetype();
-            ((MagicEffectNpcArchetypeSetterCommon)((IMagicEffectNpcArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MagicEffectEnhanceWeaponArchetype();
+            ((MagicEffectEnhanceWeaponArchetypeSetterCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out MagicEffectNpcArchetype item,
+            out MagicEffectEnhanceWeaponArchetype item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -346,80 +346,80 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((MagicEffectNpcArchetypeSetterCommon)((IMagicEffectNpcArchetypeGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MagicEffectEnhanceWeaponArchetypeSetterCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new MagicEffectNpcArchetype GetNew()
+        internal static new MagicEffectEnhanceWeaponArchetype GetNew()
         {
-            return new MagicEffectNpcArchetype();
+            return new MagicEffectEnhanceWeaponArchetype();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IMagicEffectNpcArchetype :
-        ILoquiObjectSetter<IMagicEffectNpcArchetypeInternal>,
+    public partial interface IMagicEffectEnhanceWeaponArchetype :
+        ILoquiObjectSetter<IMagicEffectEnhanceWeaponArchetypeInternal>,
         IMagicEffectArchetypeInternal,
-        IMagicEffectNpcArchetypeGetter
+        IMagicEffectEnhanceWeaponArchetypeGetter
     {
     }
 
-    public partial interface IMagicEffectNpcArchetypeInternal :
+    public partial interface IMagicEffectEnhanceWeaponArchetypeInternal :
         IMagicEffectArchetypeInternal,
-        IMagicEffectNpcArchetype,
-        IMagicEffectNpcArchetypeGetter
+        IMagicEffectEnhanceWeaponArchetype,
+        IMagicEffectEnhanceWeaponArchetypeGetter
     {
     }
 
-    public partial interface IMagicEffectNpcArchetypeGetter :
+    public partial interface IMagicEffectEnhanceWeaponArchetypeGetter :
         IMagicEffectArchetypeGetter,
         IBinaryItem,
-        ILoquiObject<IMagicEffectNpcArchetypeGetter>
+        ILoquiObject<IMagicEffectEnhanceWeaponArchetypeGetter>
     {
-        static new ILoquiRegistration StaticRegistration => MagicEffectNpcArchetype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class MagicEffectNpcArchetypeMixIn
+    public static partial class MagicEffectEnhanceWeaponArchetypeMixIn
     {
-        public static void Clear(this IMagicEffectNpcArchetypeInternal item)
+        public static void Clear(this IMagicEffectEnhanceWeaponArchetypeInternal item)
         {
-            ((MagicEffectNpcArchetypeSetterCommon)((IMagicEffectNpcArchetypeGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MagicEffectEnhanceWeaponArchetypeSetterCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MagicEffectNpcArchetype.Mask<bool> GetEqualsMask(
-            this IMagicEffectNpcArchetypeGetter item,
-            IMagicEffectNpcArchetypeGetter rhs,
+        public static MagicEffectEnhanceWeaponArchetype.Mask<bool> GetEqualsMask(
+            this IMagicEffectEnhanceWeaponArchetypeGetter item,
+            IMagicEffectEnhanceWeaponArchetypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IMagicEffectNpcArchetypeGetter item,
+            this IMagicEffectEnhanceWeaponArchetypeGetter item,
             string? name = null,
-            MagicEffectNpcArchetype.Mask<bool>? printMask = null)
+            MagicEffectEnhanceWeaponArchetype.Mask<bool>? printMask = null)
         {
-            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).ToString(
+            return ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IMagicEffectNpcArchetypeGetter item,
+            this IMagicEffectEnhanceWeaponArchetypeGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffectNpcArchetype.Mask<bool>? printMask = null)
+            MagicEffectEnhanceWeaponArchetype.Mask<bool>? printMask = null)
         {
-            ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).ToString(
+            ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -427,39 +427,39 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals(
-            this IMagicEffectNpcArchetypeGetter item,
-            IMagicEffectNpcArchetypeGetter rhs,
-            MagicEffectNpcArchetype.TranslationMask? equalsMask = null)
+            this IMagicEffectEnhanceWeaponArchetypeGetter item,
+            IMagicEffectEnhanceWeaponArchetypeGetter rhs,
+            MagicEffectEnhanceWeaponArchetype.TranslationMask? equalsMask = null)
         {
-            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).Equals(
+            return ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectNpcArchetypeInternal lhs,
-            IMagicEffectNpcArchetypeGetter rhs,
-            out MagicEffectNpcArchetype.ErrorMask errorMask,
-            MagicEffectNpcArchetype.TranslationMask? copyMask = null)
+            this IMagicEffectEnhanceWeaponArchetypeInternal lhs,
+            IMagicEffectEnhanceWeaponArchetypeGetter rhs,
+            out MagicEffectEnhanceWeaponArchetype.ErrorMask errorMask,
+            MagicEffectEnhanceWeaponArchetype.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((MagicEffectNpcArchetypeSetterTranslationCommon)((IMagicEffectNpcArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = MagicEffectNpcArchetype.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffectEnhanceWeaponArchetype.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectNpcArchetypeInternal lhs,
-            IMagicEffectNpcArchetypeGetter rhs,
+            this IMagicEffectEnhanceWeaponArchetypeInternal lhs,
+            IMagicEffectEnhanceWeaponArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((MagicEffectNpcArchetypeSetterTranslationCommon)((IMagicEffectNpcArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -467,32 +467,32 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static MagicEffectNpcArchetype DeepCopy(
-            this IMagicEffectNpcArchetypeGetter item,
-            MagicEffectNpcArchetype.TranslationMask? copyMask = null)
+        public static MagicEffectEnhanceWeaponArchetype DeepCopy(
+            this IMagicEffectEnhanceWeaponArchetypeGetter item,
+            MagicEffectEnhanceWeaponArchetype.TranslationMask? copyMask = null)
         {
-            return ((MagicEffectNpcArchetypeSetterTranslationCommon)((IMagicEffectNpcArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static MagicEffectNpcArchetype DeepCopy(
-            this IMagicEffectNpcArchetypeGetter item,
-            out MagicEffectNpcArchetype.ErrorMask errorMask,
-            MagicEffectNpcArchetype.TranslationMask? copyMask = null)
+        public static MagicEffectEnhanceWeaponArchetype DeepCopy(
+            this IMagicEffectEnhanceWeaponArchetypeGetter item,
+            out MagicEffectEnhanceWeaponArchetype.ErrorMask errorMask,
+            MagicEffectEnhanceWeaponArchetype.TranslationMask? copyMask = null)
         {
-            return ((MagicEffectNpcArchetypeSetterTranslationCommon)((IMagicEffectNpcArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static MagicEffectNpcArchetype DeepCopy(
-            this IMagicEffectNpcArchetypeGetter item,
+        public static MagicEffectEnhanceWeaponArchetype DeepCopy(
+            this IMagicEffectEnhanceWeaponArchetypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((MagicEffectNpcArchetypeSetterTranslationCommon)((IMagicEffectNpcArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -500,11 +500,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IMagicEffectNpcArchetypeInternal item,
+            this IMagicEffectEnhanceWeaponArchetypeInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((MagicEffectNpcArchetypeSetterCommon)((IMagicEffectNpcArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MagicEffectEnhanceWeaponArchetypeSetterCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum MagicEffectNpcArchetype_FieldIndex
+    public enum MagicEffectEnhanceWeaponArchetype_FieldIndex
     {
         Type = 0,
         AssociationKey = 1,
@@ -529,40 +529,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectNpcArchetype_Registration : ILoquiRegistration
+    public partial class MagicEffectEnhanceWeaponArchetype_Registration : ILoquiRegistration
     {
-        public static readonly MagicEffectNpcArchetype_Registration Instance = new MagicEffectNpcArchetype_Registration();
+        public static readonly MagicEffectEnhanceWeaponArchetype_Registration Instance = new MagicEffectEnhanceWeaponArchetype_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 118,
+            msgID: 122,
             version: 0);
 
-        public const string GUID = "c51eb111-5b35-4955-941d-91d3a8a00692";
+        public const string GUID = "10181691-291f-48d7-8b14-3b46a2670c64";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(MagicEffectNpcArchetype.Mask<>);
+        public static readonly Type MaskType = typeof(MagicEffectEnhanceWeaponArchetype.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MagicEffectNpcArchetype.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MagicEffectEnhanceWeaponArchetype.ErrorMask);
 
-        public static readonly Type ClassType = typeof(MagicEffectNpcArchetype);
+        public static readonly Type ClassType = typeof(MagicEffectEnhanceWeaponArchetype);
 
-        public static readonly Type GetterType = typeof(IMagicEffectNpcArchetypeGetter);
+        public static readonly Type GetterType = typeof(IMagicEffectEnhanceWeaponArchetypeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IMagicEffectNpcArchetype);
+        public static readonly Type SetterType = typeof(IMagicEffectEnhanceWeaponArchetype);
 
-        public static readonly Type? InternalSetterType = typeof(IMagicEffectNpcArchetypeInternal);
+        public static readonly Type? InternalSetterType = typeof(IMagicEffectEnhanceWeaponArchetypeInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.MagicEffectNpcArchetype";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.MagicEffectEnhanceWeaponArchetype";
 
-        public const string Name = "MagicEffectNpcArchetype";
+        public const string Name = "MagicEffectEnhanceWeaponArchetype";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(MagicEffectNpcArchetypeBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -603,13 +603,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectNpcArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    public partial class MagicEffectEnhanceWeaponArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
     {
-        public new static readonly MagicEffectNpcArchetypeSetterCommon Instance = new MagicEffectNpcArchetypeSetterCommon();
+        public new static readonly MagicEffectEnhanceWeaponArchetypeSetterCommon Instance = new MagicEffectEnhanceWeaponArchetypeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IMagicEffectNpcArchetypeInternal item)
+        public void Clear(IMagicEffectEnhanceWeaponArchetypeInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -617,11 +617,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void Clear(IMagicEffectArchetypeInternal item)
         {
-            Clear(item: (IMagicEffectNpcArchetypeInternal)item);
+            Clear(item: (IMagicEffectEnhanceWeaponArchetypeInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IMagicEffectNpcArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IMagicEffectEnhanceWeaponArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IMagicEffectNpcArchetypeInternal item,
+            IMagicEffectEnhanceWeaponArchetypeInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MagicEffectNpcArchetypeBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (MagicEffectNpcArchetype)item,
+                item: (MagicEffectEnhanceWeaponArchetype)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -654,17 +654,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectNpcArchetypeCommon : MagicEffectArchetypeCommon
+    public partial class MagicEffectEnhanceWeaponArchetypeCommon : MagicEffectArchetypeCommon
     {
-        public new static readonly MagicEffectNpcArchetypeCommon Instance = new MagicEffectNpcArchetypeCommon();
+        public new static readonly MagicEffectEnhanceWeaponArchetypeCommon Instance = new MagicEffectEnhanceWeaponArchetypeCommon();
 
-        public MagicEffectNpcArchetype.Mask<bool> GetEqualsMask(
-            IMagicEffectNpcArchetypeGetter item,
-            IMagicEffectNpcArchetypeGetter rhs,
+        public MagicEffectEnhanceWeaponArchetype.Mask<bool> GetEqualsMask(
+            IMagicEffectEnhanceWeaponArchetypeGetter item,
+            IMagicEffectEnhanceWeaponArchetypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MagicEffectNpcArchetype.Mask<bool>(false);
-            ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MagicEffectEnhanceWeaponArchetype.Mask<bool>(false);
+            ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -673,9 +673,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IMagicEffectNpcArchetypeGetter item,
-            IMagicEffectNpcArchetypeGetter rhs,
-            MagicEffectNpcArchetype.Mask<bool> ret,
+            IMagicEffectEnhanceWeaponArchetypeGetter item,
+            IMagicEffectEnhanceWeaponArchetypeGetter rhs,
+            MagicEffectEnhanceWeaponArchetype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -683,9 +683,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IMagicEffectNpcArchetypeGetter item,
+            IMagicEffectEnhanceWeaponArchetypeGetter item,
             string? name = null,
-            MagicEffectNpcArchetype.Mask<bool>? printMask = null)
+            MagicEffectEnhanceWeaponArchetype.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -697,18 +697,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IMagicEffectNpcArchetypeGetter item,
+            IMagicEffectEnhanceWeaponArchetypeGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffectNpcArchetype.Mask<bool>? printMask = null)
+            MagicEffectEnhanceWeaponArchetype.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MagicEffectNpcArchetype =>");
+                fg.AppendLine($"MagicEffectEnhanceWeaponArchetype =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MagicEffectNpcArchetype) =>");
+                fg.AppendLine($"{name} (MagicEffectEnhanceWeaponArchetype) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -722,9 +722,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IMagicEffectNpcArchetypeGetter item,
+            IMagicEffectEnhanceWeaponArchetypeGetter item,
             FileGeneration fg,
-            MagicEffectNpcArchetype.Mask<bool>? printMask = null)
+            MagicEffectEnhanceWeaponArchetype.Mask<bool>? printMask = null)
         {
             MagicEffectArchetypeCommon.ToStringFields(
                 item: item,
@@ -732,16 +732,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
         }
         
-        public static MagicEffectNpcArchetype_FieldIndex ConvertFieldIndex(MagicEffectArchetype_FieldIndex index)
+        public static MagicEffectEnhanceWeaponArchetype_FieldIndex ConvertFieldIndex(MagicEffectArchetype_FieldIndex index)
         {
             switch (index)
             {
                 case MagicEffectArchetype_FieldIndex.Type:
-                    return (MagicEffectNpcArchetype_FieldIndex)((int)index);
+                    return (MagicEffectEnhanceWeaponArchetype_FieldIndex)((int)index);
                 case MagicEffectArchetype_FieldIndex.AssociationKey:
-                    return (MagicEffectNpcArchetype_FieldIndex)((int)index);
+                    return (MagicEffectEnhanceWeaponArchetype_FieldIndex)((int)index);
                 case MagicEffectArchetype_FieldIndex.ActorValue:
-                    return (MagicEffectNpcArchetype_FieldIndex)((int)index);
+                    return (MagicEffectEnhanceWeaponArchetype_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -749,8 +749,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IMagicEffectNpcArchetypeGetter? lhs,
-            IMagicEffectNpcArchetypeGetter? rhs,
+            IMagicEffectEnhanceWeaponArchetypeGetter? lhs,
+            IMagicEffectEnhanceWeaponArchetypeGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -764,12 +764,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IMagicEffectNpcArchetypeGetter?)lhs,
-                rhs: rhs as IMagicEffectNpcArchetypeGetter,
+                lhs: (IMagicEffectEnhanceWeaponArchetypeGetter?)lhs,
+                rhs: rhs as IMagicEffectEnhanceWeaponArchetypeGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IMagicEffectNpcArchetypeGetter item)
+        public virtual int GetHashCode(IMagicEffectEnhanceWeaponArchetypeGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override int GetHashCode(IMagicEffectArchetypeGetter item)
         {
-            return GetHashCode(item: (IMagicEffectNpcArchetypeGetter)item);
+            return GetHashCode(item: (IMagicEffectEnhanceWeaponArchetypeGetter)item);
         }
         
         #endregion
@@ -786,11 +786,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return MagicEffectNpcArchetype.GetNew();
+            return MagicEffectEnhanceWeaponArchetype.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectNpcArchetypeGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectEnhanceWeaponArchetypeGetter obj)
         {
             yield break;
         }
@@ -798,14 +798,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectNpcArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    public partial class MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {
-        public new static readonly MagicEffectNpcArchetypeSetterTranslationCommon Instance = new MagicEffectNpcArchetypeSetterTranslationCommon();
+        public new static readonly MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon Instance = new MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IMagicEffectNpcArchetypeInternal item,
-            IMagicEffectNpcArchetypeGetter rhs,
+            IMagicEffectEnhanceWeaponArchetypeInternal item,
+            IMagicEffectEnhanceWeaponArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -819,8 +819,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            IMagicEffectNpcArchetype item,
-            IMagicEffectNpcArchetypeGetter rhs,
+            IMagicEffectEnhanceWeaponArchetype item,
+            IMagicEffectEnhanceWeaponArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -841,8 +841,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMagicEffectNpcArchetypeInternal)item,
-                rhs: (IMagicEffectNpcArchetypeGetter)rhs,
+                item: (IMagicEffectEnhanceWeaponArchetypeInternal)item,
+                rhs: (IMagicEffectEnhanceWeaponArchetypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -856,8 +856,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMagicEffectNpcArchetype)item,
-                rhs: (IMagicEffectNpcArchetypeGetter)rhs,
+                item: (IMagicEffectEnhanceWeaponArchetype)item,
+                rhs: (IMagicEffectEnhanceWeaponArchetypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -865,12 +865,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public MagicEffectNpcArchetype DeepCopy(
-            IMagicEffectNpcArchetypeGetter item,
-            MagicEffectNpcArchetype.TranslationMask? copyMask = null)
+        public MagicEffectEnhanceWeaponArchetype DeepCopy(
+            IMagicEffectEnhanceWeaponArchetypeGetter item,
+            MagicEffectEnhanceWeaponArchetype.TranslationMask? copyMask = null)
         {
-            MagicEffectNpcArchetype ret = (MagicEffectNpcArchetype)((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).GetNew();
-            ((MagicEffectNpcArchetypeSetterTranslationCommon)((IMagicEffectNpcArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MagicEffectEnhanceWeaponArchetype ret = (MagicEffectEnhanceWeaponArchetype)((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonInstance()!).GetNew();
+            ((MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -879,30 +879,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public MagicEffectNpcArchetype DeepCopy(
-            IMagicEffectNpcArchetypeGetter item,
-            out MagicEffectNpcArchetype.ErrorMask errorMask,
-            MagicEffectNpcArchetype.TranslationMask? copyMask = null)
+        public MagicEffectEnhanceWeaponArchetype DeepCopy(
+            IMagicEffectEnhanceWeaponArchetypeGetter item,
+            out MagicEffectEnhanceWeaponArchetype.ErrorMask errorMask,
+            MagicEffectEnhanceWeaponArchetype.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MagicEffectNpcArchetype ret = (MagicEffectNpcArchetype)((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).GetNew();
-            ((MagicEffectNpcArchetypeSetterTranslationCommon)((IMagicEffectNpcArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MagicEffectEnhanceWeaponArchetype ret = (MagicEffectEnhanceWeaponArchetype)((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonInstance()!).GetNew();
+            ((MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = MagicEffectNpcArchetype.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffectEnhanceWeaponArchetype.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public MagicEffectNpcArchetype DeepCopy(
-            IMagicEffectNpcArchetypeGetter item,
+        public MagicEffectEnhanceWeaponArchetype DeepCopy(
+            IMagicEffectEnhanceWeaponArchetypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            MagicEffectNpcArchetype ret = (MagicEffectNpcArchetype)((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).GetNew();
-            ((MagicEffectNpcArchetypeSetterTranslationCommon)((IMagicEffectNpcArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MagicEffectEnhanceWeaponArchetype ret = (MagicEffectEnhanceWeaponArchetype)((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonInstance()!).GetNew();
+            ((MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -918,21 +918,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectNpcArchetype
+    public partial class MagicEffectEnhanceWeaponArchetype
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MagicEffectNpcArchetype_Registration.Instance;
-        public new static MagicEffectNpcArchetype_Registration StaticRegistration => MagicEffectNpcArchetype_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
+        public new static MagicEffectEnhanceWeaponArchetype_Registration StaticRegistration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MagicEffectNpcArchetypeCommon.Instance;
+        protected override object CommonInstance() => MagicEffectEnhanceWeaponArchetypeCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return MagicEffectNpcArchetypeSetterCommon.Instance;
+            return MagicEffectEnhanceWeaponArchetypeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MagicEffectNpcArchetypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -943,15 +943,15 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MagicEffectNpcArchetypeBinaryWriteTranslation :
+    public partial class MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation :
         MagicEffectArchetypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MagicEffectNpcArchetypeBinaryWriteTranslation Instance = new MagicEffectNpcArchetypeBinaryWriteTranslation();
+        public new readonly static MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation Instance = new MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            IMagicEffectNpcArchetypeGetter item,
+            IMagicEffectEnhanceWeaponArchetypeGetter item,
             TypedWriteParams? translationParams = null)
         {
             MagicEffectArchetypeBinaryWriteTranslation.WriteEmbedded(
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IMagicEffectNpcArchetypeGetter)item,
+                item: (IMagicEffectEnhanceWeaponArchetypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -976,16 +976,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IMagicEffectNpcArchetypeGetter)item,
+                item: (IMagicEffectEnhanceWeaponArchetypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class MagicEffectNpcArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    public partial class MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
-        public new readonly static MagicEffectNpcArchetypeBinaryCreateTranslation Instance = new MagicEffectNpcArchetypeBinaryCreateTranslation();
+        public new readonly static MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation Instance = new MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation();
 
     }
 
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class MagicEffectNpcArchetypeBinaryTranslationMixIn
+    public static class MagicEffectEnhanceWeaponArchetypeBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1002,30 +1002,30 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MagicEffectNpcArchetypeBinaryOverlay :
+    public partial class MagicEffectEnhanceWeaponArchetypeBinaryOverlay :
         MagicEffectArchetypeBinaryOverlay,
-        IMagicEffectNpcArchetypeGetter
+        IMagicEffectEnhanceWeaponArchetypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MagicEffectNpcArchetype_Registration.Instance;
-        public new static MagicEffectNpcArchetype_Registration StaticRegistration => MagicEffectNpcArchetype_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
+        public new static MagicEffectEnhanceWeaponArchetype_Registration StaticRegistration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MagicEffectNpcArchetypeCommon.Instance;
+        protected override object CommonInstance() => MagicEffectEnhanceWeaponArchetypeCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MagicEffectNpcArchetypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MagicEffectNpcArchetypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((MagicEffectNpcArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected MagicEffectNpcArchetypeBinaryOverlay(
+        protected MagicEffectEnhanceWeaponArchetypeBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1047,12 +1047,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static MagicEffectNpcArchetypeBinaryOverlay MagicEffectNpcArchetypeFactory(
+        public static MagicEffectEnhanceWeaponArchetypeBinaryOverlay MagicEffectEnhanceWeaponArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new MagicEffectNpcArchetypeBinaryOverlay(
+            var ret = new MagicEffectEnhanceWeaponArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -1063,12 +1063,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static MagicEffectNpcArchetypeBinaryOverlay MagicEffectNpcArchetypeFactory(
+        public static MagicEffectEnhanceWeaponArchetypeBinaryOverlay MagicEffectEnhanceWeaponArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return MagicEffectNpcArchetypeFactory(
+            return MagicEffectEnhanceWeaponArchetypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1080,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            MagicEffectNpcArchetypeMixIn.ToString(
+            MagicEffectEnhanceWeaponArchetypeMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1090,16 +1090,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IMagicEffectNpcArchetypeGetter rhs) return false;
-            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IMagicEffectEnhanceWeaponArchetypeGetter rhs) return false;
+            return ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IMagicEffectNpcArchetypeGetter? obj)
+        public bool Equals(IMagicEffectEnhanceWeaponArchetypeGetter? obj)
         {
-            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

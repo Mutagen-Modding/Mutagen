@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Skyrim
                         archetype = new MagicEffectBoundArchetype();
                         break;
                     case MagicEffectArchetype.TypeEnum.SummonCreature:
-                        archetype = new MagicEffectNpcArchetype();
+                        archetype = new MagicEffectSummonCreatureArchetype();
                         break;
                     case MagicEffectArchetype.TypeEnum.Guide:
                         archetype = new MagicEffectGuideArchetype();
@@ -94,10 +94,10 @@ namespace Mutagen.Bethesda.Skyrim
                         archetype = new MagicEffectSpawnHazardArchetype();
                         break;
                     case MagicEffectArchetype.TypeEnum.PeakValueModifier:
-                        archetype = new MagicEffectKeywordArchetype();
+                        archetype = new MagicEffectPeakValueModArchetype();
                         break;
                     case MagicEffectArchetype.TypeEnum.Cloak:
-                        archetype = new MagicEffectSpellArchetype();
+                        archetype = new MagicEffectCloakArchetype();
                         break;
                     case MagicEffectArchetype.TypeEnum.Werewolf:
                         archetype = new MagicEffectWerewolfArchetype();
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
                         archetype = new MagicEffectVampireArchetype();
                         break;
                     case MagicEffectArchetype.TypeEnum.EnhanceWeapon:
-                        archetype = new MagicEffectEnchantmentArchetype();
+                        archetype = new MagicEffectEnhanceWeaponArchetype();
                         break;
                     case MagicEffectArchetype.TypeEnum.Calm:
                     case MagicEffectArchetype.TypeEnum.Frenzy:

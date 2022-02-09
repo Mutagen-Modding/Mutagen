@@ -35,11 +35,11 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class MagicEffectSpellArchetype :
+    public partial class MagicEffectSummonCreatureArchetype :
         MagicEffectArchetype,
-        IEquatable<IMagicEffectSpellArchetypeGetter>,
-        ILoquiObjectSetter<MagicEffectSpellArchetype>,
-        IMagicEffectSpellArchetypeInternal
+        IEquatable<IMagicEffectSummonCreatureArchetypeGetter>,
+        ILoquiObjectSetter<MagicEffectSummonCreatureArchetype>,
+        IMagicEffectSummonCreatureArchetypeInternal
     {
 
         #region To String
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            MagicEffectSpellArchetypeMixIn.ToString(
+            MagicEffectSummonCreatureArchetypeMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -58,16 +58,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IMagicEffectSpellArchetypeGetter rhs) return false;
-            return ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IMagicEffectSummonCreatureArchetypeGetter rhs) return false;
+            return ((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IMagicEffectSpellArchetypeGetter? obj)
+        public bool Equals(IMagicEffectSummonCreatureArchetypeGetter? obj)
         {
-            return ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new MagicEffectSpellArchetype.Mask<R>();
+                var ret = new MagicEffectSummonCreatureArchetype.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -160,16 +160,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(MagicEffectSpellArchetype.Mask<bool>? printMask = null)
+            public string ToString(MagicEffectSummonCreatureArchetype.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, MagicEffectSpellArchetype.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, MagicEffectSummonCreatureArchetype.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MagicEffectSpellArchetype.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(MagicEffectSummonCreatureArchetype.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                MagicEffectSpellArchetype_FieldIndex enu = (MagicEffectSpellArchetype_FieldIndex)index;
+                MagicEffectSummonCreatureArchetype_FieldIndex enu = (MagicEffectSummonCreatureArchetype_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                MagicEffectSpellArchetype_FieldIndex enu = (MagicEffectSpellArchetype_FieldIndex)index;
+                MagicEffectSummonCreatureArchetype_FieldIndex enu = (MagicEffectSummonCreatureArchetype_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                MagicEffectSpellArchetype_FieldIndex enu = (MagicEffectSpellArchetype_FieldIndex)index;
+                MagicEffectSummonCreatureArchetype_FieldIndex enu = (MagicEffectSummonCreatureArchetype_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -304,23 +304,23 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MagicEffectSpellArchetypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MagicEffectSummonCreatureArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((MagicEffectSpellArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MagicEffectSummonCreatureArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static MagicEffectSpellArchetype CreateFromBinary(
+        public new static MagicEffectSummonCreatureArchetype CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new MagicEffectSpellArchetype();
-            ((MagicEffectSpellArchetypeSetterCommon)((IMagicEffectSpellArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MagicEffectSummonCreatureArchetype();
+            ((MagicEffectSummonCreatureArchetypeSetterCommon)((IMagicEffectSummonCreatureArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out MagicEffectSpellArchetype item,
+            out MagicEffectSummonCreatureArchetype item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -346,80 +346,80 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((MagicEffectSpellArchetypeSetterCommon)((IMagicEffectSpellArchetypeGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MagicEffectSummonCreatureArchetypeSetterCommon)((IMagicEffectSummonCreatureArchetypeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new MagicEffectSpellArchetype GetNew()
+        internal static new MagicEffectSummonCreatureArchetype GetNew()
         {
-            return new MagicEffectSpellArchetype();
+            return new MagicEffectSummonCreatureArchetype();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IMagicEffectSpellArchetype :
-        ILoquiObjectSetter<IMagicEffectSpellArchetypeInternal>,
+    public partial interface IMagicEffectSummonCreatureArchetype :
+        ILoquiObjectSetter<IMagicEffectSummonCreatureArchetypeInternal>,
         IMagicEffectArchetypeInternal,
-        IMagicEffectSpellArchetypeGetter
+        IMagicEffectSummonCreatureArchetypeGetter
     {
     }
 
-    public partial interface IMagicEffectSpellArchetypeInternal :
+    public partial interface IMagicEffectSummonCreatureArchetypeInternal :
         IMagicEffectArchetypeInternal,
-        IMagicEffectSpellArchetype,
-        IMagicEffectSpellArchetypeGetter
+        IMagicEffectSummonCreatureArchetype,
+        IMagicEffectSummonCreatureArchetypeGetter
     {
     }
 
-    public partial interface IMagicEffectSpellArchetypeGetter :
+    public partial interface IMagicEffectSummonCreatureArchetypeGetter :
         IMagicEffectArchetypeGetter,
         IBinaryItem,
-        ILoquiObject<IMagicEffectSpellArchetypeGetter>
+        ILoquiObject<IMagicEffectSummonCreatureArchetypeGetter>
     {
-        static new ILoquiRegistration StaticRegistration => MagicEffectSpellArchetype_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MagicEffectSummonCreatureArchetype_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class MagicEffectSpellArchetypeMixIn
+    public static partial class MagicEffectSummonCreatureArchetypeMixIn
     {
-        public static void Clear(this IMagicEffectSpellArchetypeInternal item)
+        public static void Clear(this IMagicEffectSummonCreatureArchetypeInternal item)
         {
-            ((MagicEffectSpellArchetypeSetterCommon)((IMagicEffectSpellArchetypeGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MagicEffectSummonCreatureArchetypeSetterCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MagicEffectSpellArchetype.Mask<bool> GetEqualsMask(
-            this IMagicEffectSpellArchetypeGetter item,
-            IMagicEffectSpellArchetypeGetter rhs,
+        public static MagicEffectSummonCreatureArchetype.Mask<bool> GetEqualsMask(
+            this IMagicEffectSummonCreatureArchetypeGetter item,
+            IMagicEffectSummonCreatureArchetypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IMagicEffectSpellArchetypeGetter item,
+            this IMagicEffectSummonCreatureArchetypeGetter item,
             string? name = null,
-            MagicEffectSpellArchetype.Mask<bool>? printMask = null)
+            MagicEffectSummonCreatureArchetype.Mask<bool>? printMask = null)
         {
-            return ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)item).CommonInstance()!).ToString(
+            return ((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IMagicEffectSpellArchetypeGetter item,
+            this IMagicEffectSummonCreatureArchetypeGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffectSpellArchetype.Mask<bool>? printMask = null)
+            MagicEffectSummonCreatureArchetype.Mask<bool>? printMask = null)
         {
-            ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)item).CommonInstance()!).ToString(
+            ((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -427,39 +427,39 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals(
-            this IMagicEffectSpellArchetypeGetter item,
-            IMagicEffectSpellArchetypeGetter rhs,
-            MagicEffectSpellArchetype.TranslationMask? equalsMask = null)
+            this IMagicEffectSummonCreatureArchetypeGetter item,
+            IMagicEffectSummonCreatureArchetypeGetter rhs,
+            MagicEffectSummonCreatureArchetype.TranslationMask? equalsMask = null)
         {
-            return ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)item).CommonInstance()!).Equals(
+            return ((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectSpellArchetypeInternal lhs,
-            IMagicEffectSpellArchetypeGetter rhs,
-            out MagicEffectSpellArchetype.ErrorMask errorMask,
-            MagicEffectSpellArchetype.TranslationMask? copyMask = null)
+            this IMagicEffectSummonCreatureArchetypeInternal lhs,
+            IMagicEffectSummonCreatureArchetypeGetter rhs,
+            out MagicEffectSummonCreatureArchetype.ErrorMask errorMask,
+            MagicEffectSummonCreatureArchetype.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((MagicEffectSpellArchetypeSetterTranslationCommon)((IMagicEffectSpellArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MagicEffectSummonCreatureArchetypeSetterTranslationCommon)((IMagicEffectSummonCreatureArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = MagicEffectSpellArchetype.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffectSummonCreatureArchetype.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectSpellArchetypeInternal lhs,
-            IMagicEffectSpellArchetypeGetter rhs,
+            this IMagicEffectSummonCreatureArchetypeInternal lhs,
+            IMagicEffectSummonCreatureArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((MagicEffectSpellArchetypeSetterTranslationCommon)((IMagicEffectSpellArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MagicEffectSummonCreatureArchetypeSetterTranslationCommon)((IMagicEffectSummonCreatureArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -467,32 +467,32 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static MagicEffectSpellArchetype DeepCopy(
-            this IMagicEffectSpellArchetypeGetter item,
-            MagicEffectSpellArchetype.TranslationMask? copyMask = null)
+        public static MagicEffectSummonCreatureArchetype DeepCopy(
+            this IMagicEffectSummonCreatureArchetypeGetter item,
+            MagicEffectSummonCreatureArchetype.TranslationMask? copyMask = null)
         {
-            return ((MagicEffectSpellArchetypeSetterTranslationCommon)((IMagicEffectSpellArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MagicEffectSummonCreatureArchetypeSetterTranslationCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static MagicEffectSpellArchetype DeepCopy(
-            this IMagicEffectSpellArchetypeGetter item,
-            out MagicEffectSpellArchetype.ErrorMask errorMask,
-            MagicEffectSpellArchetype.TranslationMask? copyMask = null)
+        public static MagicEffectSummonCreatureArchetype DeepCopy(
+            this IMagicEffectSummonCreatureArchetypeGetter item,
+            out MagicEffectSummonCreatureArchetype.ErrorMask errorMask,
+            MagicEffectSummonCreatureArchetype.TranslationMask? copyMask = null)
         {
-            return ((MagicEffectSpellArchetypeSetterTranslationCommon)((IMagicEffectSpellArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MagicEffectSummonCreatureArchetypeSetterTranslationCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static MagicEffectSpellArchetype DeepCopy(
-            this IMagicEffectSpellArchetypeGetter item,
+        public static MagicEffectSummonCreatureArchetype DeepCopy(
+            this IMagicEffectSummonCreatureArchetypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((MagicEffectSpellArchetypeSetterTranslationCommon)((IMagicEffectSpellArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MagicEffectSummonCreatureArchetypeSetterTranslationCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -500,11 +500,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IMagicEffectSpellArchetypeInternal item,
+            this IMagicEffectSummonCreatureArchetypeInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((MagicEffectSpellArchetypeSetterCommon)((IMagicEffectSpellArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MagicEffectSummonCreatureArchetypeSetterCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum MagicEffectSpellArchetype_FieldIndex
+    public enum MagicEffectSummonCreatureArchetype_FieldIndex
     {
         Type = 0,
         AssociationKey = 1,
@@ -529,40 +529,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectSpellArchetype_Registration : ILoquiRegistration
+    public partial class MagicEffectSummonCreatureArchetype_Registration : ILoquiRegistration
     {
-        public static readonly MagicEffectSpellArchetype_Registration Instance = new MagicEffectSpellArchetype_Registration();
+        public static readonly MagicEffectSummonCreatureArchetype_Registration Instance = new MagicEffectSummonCreatureArchetype_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 120,
+            msgID: 118,
             version: 0);
 
-        public const string GUID = "bcdbf09b-cdf0-4674-a8a7-4569bae2271e";
+        public const string GUID = "c51eb111-5b35-4955-941d-91d3a8a00692";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(MagicEffectSpellArchetype.Mask<>);
+        public static readonly Type MaskType = typeof(MagicEffectSummonCreatureArchetype.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MagicEffectSpellArchetype.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MagicEffectSummonCreatureArchetype.ErrorMask);
 
-        public static readonly Type ClassType = typeof(MagicEffectSpellArchetype);
+        public static readonly Type ClassType = typeof(MagicEffectSummonCreatureArchetype);
 
-        public static readonly Type GetterType = typeof(IMagicEffectSpellArchetypeGetter);
+        public static readonly Type GetterType = typeof(IMagicEffectSummonCreatureArchetypeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IMagicEffectSpellArchetype);
+        public static readonly Type SetterType = typeof(IMagicEffectSummonCreatureArchetype);
 
-        public static readonly Type? InternalSetterType = typeof(IMagicEffectSpellArchetypeInternal);
+        public static readonly Type? InternalSetterType = typeof(IMagicEffectSummonCreatureArchetypeInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.MagicEffectSpellArchetype";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.MagicEffectSummonCreatureArchetype";
 
-        public const string Name = "MagicEffectSpellArchetype";
+        public const string Name = "MagicEffectSummonCreatureArchetype";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(MagicEffectSpellArchetypeBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MagicEffectSummonCreatureArchetypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -603,13 +603,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectSpellArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    public partial class MagicEffectSummonCreatureArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
     {
-        public new static readonly MagicEffectSpellArchetypeSetterCommon Instance = new MagicEffectSpellArchetypeSetterCommon();
+        public new static readonly MagicEffectSummonCreatureArchetypeSetterCommon Instance = new MagicEffectSummonCreatureArchetypeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IMagicEffectSpellArchetypeInternal item)
+        public void Clear(IMagicEffectSummonCreatureArchetypeInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -617,11 +617,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void Clear(IMagicEffectArchetypeInternal item)
         {
-            Clear(item: (IMagicEffectSpellArchetypeInternal)item);
+            Clear(item: (IMagicEffectSummonCreatureArchetypeInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IMagicEffectSpellArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IMagicEffectSummonCreatureArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IMagicEffectSpellArchetypeInternal item,
+            IMagicEffectSummonCreatureArchetypeInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MagicEffectSpellArchetypeBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: MagicEffectSummonCreatureArchetypeBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (MagicEffectSpellArchetype)item,
+                item: (MagicEffectSummonCreatureArchetype)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -654,17 +654,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectSpellArchetypeCommon : MagicEffectArchetypeCommon
+    public partial class MagicEffectSummonCreatureArchetypeCommon : MagicEffectArchetypeCommon
     {
-        public new static readonly MagicEffectSpellArchetypeCommon Instance = new MagicEffectSpellArchetypeCommon();
+        public new static readonly MagicEffectSummonCreatureArchetypeCommon Instance = new MagicEffectSummonCreatureArchetypeCommon();
 
-        public MagicEffectSpellArchetype.Mask<bool> GetEqualsMask(
-            IMagicEffectSpellArchetypeGetter item,
-            IMagicEffectSpellArchetypeGetter rhs,
+        public MagicEffectSummonCreatureArchetype.Mask<bool> GetEqualsMask(
+            IMagicEffectSummonCreatureArchetypeGetter item,
+            IMagicEffectSummonCreatureArchetypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MagicEffectSpellArchetype.Mask<bool>(false);
-            ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MagicEffectSummonCreatureArchetype.Mask<bool>(false);
+            ((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -673,9 +673,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IMagicEffectSpellArchetypeGetter item,
-            IMagicEffectSpellArchetypeGetter rhs,
-            MagicEffectSpellArchetype.Mask<bool> ret,
+            IMagicEffectSummonCreatureArchetypeGetter item,
+            IMagicEffectSummonCreatureArchetypeGetter rhs,
+            MagicEffectSummonCreatureArchetype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -683,9 +683,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IMagicEffectSpellArchetypeGetter item,
+            IMagicEffectSummonCreatureArchetypeGetter item,
             string? name = null,
-            MagicEffectSpellArchetype.Mask<bool>? printMask = null)
+            MagicEffectSummonCreatureArchetype.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -697,18 +697,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IMagicEffectSpellArchetypeGetter item,
+            IMagicEffectSummonCreatureArchetypeGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffectSpellArchetype.Mask<bool>? printMask = null)
+            MagicEffectSummonCreatureArchetype.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MagicEffectSpellArchetype =>");
+                fg.AppendLine($"MagicEffectSummonCreatureArchetype =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MagicEffectSpellArchetype) =>");
+                fg.AppendLine($"{name} (MagicEffectSummonCreatureArchetype) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -722,9 +722,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IMagicEffectSpellArchetypeGetter item,
+            IMagicEffectSummonCreatureArchetypeGetter item,
             FileGeneration fg,
-            MagicEffectSpellArchetype.Mask<bool>? printMask = null)
+            MagicEffectSummonCreatureArchetype.Mask<bool>? printMask = null)
         {
             MagicEffectArchetypeCommon.ToStringFields(
                 item: item,
@@ -732,16 +732,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
         }
         
-        public static MagicEffectSpellArchetype_FieldIndex ConvertFieldIndex(MagicEffectArchetype_FieldIndex index)
+        public static MagicEffectSummonCreatureArchetype_FieldIndex ConvertFieldIndex(MagicEffectArchetype_FieldIndex index)
         {
             switch (index)
             {
                 case MagicEffectArchetype_FieldIndex.Type:
-                    return (MagicEffectSpellArchetype_FieldIndex)((int)index);
+                    return (MagicEffectSummonCreatureArchetype_FieldIndex)((int)index);
                 case MagicEffectArchetype_FieldIndex.AssociationKey:
-                    return (MagicEffectSpellArchetype_FieldIndex)((int)index);
+                    return (MagicEffectSummonCreatureArchetype_FieldIndex)((int)index);
                 case MagicEffectArchetype_FieldIndex.ActorValue:
-                    return (MagicEffectSpellArchetype_FieldIndex)((int)index);
+                    return (MagicEffectSummonCreatureArchetype_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -749,8 +749,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IMagicEffectSpellArchetypeGetter? lhs,
-            IMagicEffectSpellArchetypeGetter? rhs,
+            IMagicEffectSummonCreatureArchetypeGetter? lhs,
+            IMagicEffectSummonCreatureArchetypeGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -764,12 +764,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IMagicEffectSpellArchetypeGetter?)lhs,
-                rhs: rhs as IMagicEffectSpellArchetypeGetter,
+                lhs: (IMagicEffectSummonCreatureArchetypeGetter?)lhs,
+                rhs: rhs as IMagicEffectSummonCreatureArchetypeGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IMagicEffectSpellArchetypeGetter item)
+        public virtual int GetHashCode(IMagicEffectSummonCreatureArchetypeGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override int GetHashCode(IMagicEffectArchetypeGetter item)
         {
-            return GetHashCode(item: (IMagicEffectSpellArchetypeGetter)item);
+            return GetHashCode(item: (IMagicEffectSummonCreatureArchetypeGetter)item);
         }
         
         #endregion
@@ -786,11 +786,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return MagicEffectSpellArchetype.GetNew();
+            return MagicEffectSummonCreatureArchetype.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectSpellArchetypeGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectSummonCreatureArchetypeGetter obj)
         {
             yield break;
         }
@@ -798,14 +798,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectSpellArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    public partial class MagicEffectSummonCreatureArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {
-        public new static readonly MagicEffectSpellArchetypeSetterTranslationCommon Instance = new MagicEffectSpellArchetypeSetterTranslationCommon();
+        public new static readonly MagicEffectSummonCreatureArchetypeSetterTranslationCommon Instance = new MagicEffectSummonCreatureArchetypeSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IMagicEffectSpellArchetypeInternal item,
-            IMagicEffectSpellArchetypeGetter rhs,
+            IMagicEffectSummonCreatureArchetypeInternal item,
+            IMagicEffectSummonCreatureArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -819,8 +819,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            IMagicEffectSpellArchetype item,
-            IMagicEffectSpellArchetypeGetter rhs,
+            IMagicEffectSummonCreatureArchetype item,
+            IMagicEffectSummonCreatureArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -841,8 +841,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMagicEffectSpellArchetypeInternal)item,
-                rhs: (IMagicEffectSpellArchetypeGetter)rhs,
+                item: (IMagicEffectSummonCreatureArchetypeInternal)item,
+                rhs: (IMagicEffectSummonCreatureArchetypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -856,8 +856,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMagicEffectSpellArchetype)item,
-                rhs: (IMagicEffectSpellArchetypeGetter)rhs,
+                item: (IMagicEffectSummonCreatureArchetype)item,
+                rhs: (IMagicEffectSummonCreatureArchetypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -865,12 +865,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public MagicEffectSpellArchetype DeepCopy(
-            IMagicEffectSpellArchetypeGetter item,
-            MagicEffectSpellArchetype.TranslationMask? copyMask = null)
+        public MagicEffectSummonCreatureArchetype DeepCopy(
+            IMagicEffectSummonCreatureArchetypeGetter item,
+            MagicEffectSummonCreatureArchetype.TranslationMask? copyMask = null)
         {
-            MagicEffectSpellArchetype ret = (MagicEffectSpellArchetype)((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)item).CommonInstance()!).GetNew();
-            ((MagicEffectSpellArchetypeSetterTranslationCommon)((IMagicEffectSpellArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MagicEffectSummonCreatureArchetype ret = (MagicEffectSummonCreatureArchetype)((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonInstance()!).GetNew();
+            ((MagicEffectSummonCreatureArchetypeSetterTranslationCommon)((IMagicEffectSummonCreatureArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -879,30 +879,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public MagicEffectSpellArchetype DeepCopy(
-            IMagicEffectSpellArchetypeGetter item,
-            out MagicEffectSpellArchetype.ErrorMask errorMask,
-            MagicEffectSpellArchetype.TranslationMask? copyMask = null)
+        public MagicEffectSummonCreatureArchetype DeepCopy(
+            IMagicEffectSummonCreatureArchetypeGetter item,
+            out MagicEffectSummonCreatureArchetype.ErrorMask errorMask,
+            MagicEffectSummonCreatureArchetype.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MagicEffectSpellArchetype ret = (MagicEffectSpellArchetype)((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)item).CommonInstance()!).GetNew();
-            ((MagicEffectSpellArchetypeSetterTranslationCommon)((IMagicEffectSpellArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MagicEffectSummonCreatureArchetype ret = (MagicEffectSummonCreatureArchetype)((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonInstance()!).GetNew();
+            ((MagicEffectSummonCreatureArchetypeSetterTranslationCommon)((IMagicEffectSummonCreatureArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = MagicEffectSpellArchetype.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffectSummonCreatureArchetype.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public MagicEffectSpellArchetype DeepCopy(
-            IMagicEffectSpellArchetypeGetter item,
+        public MagicEffectSummonCreatureArchetype DeepCopy(
+            IMagicEffectSummonCreatureArchetypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            MagicEffectSpellArchetype ret = (MagicEffectSpellArchetype)((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)item).CommonInstance()!).GetNew();
-            ((MagicEffectSpellArchetypeSetterTranslationCommon)((IMagicEffectSpellArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MagicEffectSummonCreatureArchetype ret = (MagicEffectSummonCreatureArchetype)((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)item).CommonInstance()!).GetNew();
+            ((MagicEffectSummonCreatureArchetypeSetterTranslationCommon)((IMagicEffectSummonCreatureArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -918,21 +918,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectSpellArchetype
+    public partial class MagicEffectSummonCreatureArchetype
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MagicEffectSpellArchetype_Registration.Instance;
-        public new static MagicEffectSpellArchetype_Registration StaticRegistration => MagicEffectSpellArchetype_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MagicEffectSummonCreatureArchetype_Registration.Instance;
+        public new static MagicEffectSummonCreatureArchetype_Registration StaticRegistration => MagicEffectSummonCreatureArchetype_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MagicEffectSpellArchetypeCommon.Instance;
+        protected override object CommonInstance() => MagicEffectSummonCreatureArchetypeCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return MagicEffectSpellArchetypeSetterCommon.Instance;
+            return MagicEffectSummonCreatureArchetypeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MagicEffectSpellArchetypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MagicEffectSummonCreatureArchetypeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -943,15 +943,15 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MagicEffectSpellArchetypeBinaryWriteTranslation :
+    public partial class MagicEffectSummonCreatureArchetypeBinaryWriteTranslation :
         MagicEffectArchetypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MagicEffectSpellArchetypeBinaryWriteTranslation Instance = new MagicEffectSpellArchetypeBinaryWriteTranslation();
+        public new readonly static MagicEffectSummonCreatureArchetypeBinaryWriteTranslation Instance = new MagicEffectSummonCreatureArchetypeBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            IMagicEffectSpellArchetypeGetter item,
+            IMagicEffectSummonCreatureArchetypeGetter item,
             TypedWriteParams? translationParams = null)
         {
             MagicEffectArchetypeBinaryWriteTranslation.WriteEmbedded(
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IMagicEffectSpellArchetypeGetter)item,
+                item: (IMagicEffectSummonCreatureArchetypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -976,16 +976,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IMagicEffectSpellArchetypeGetter)item,
+                item: (IMagicEffectSummonCreatureArchetypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class MagicEffectSpellArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    public partial class MagicEffectSummonCreatureArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
-        public new readonly static MagicEffectSpellArchetypeBinaryCreateTranslation Instance = new MagicEffectSpellArchetypeBinaryCreateTranslation();
+        public new readonly static MagicEffectSummonCreatureArchetypeBinaryCreateTranslation Instance = new MagicEffectSummonCreatureArchetypeBinaryCreateTranslation();
 
     }
 
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class MagicEffectSpellArchetypeBinaryTranslationMixIn
+    public static class MagicEffectSummonCreatureArchetypeBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1002,30 +1002,30 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MagicEffectSpellArchetypeBinaryOverlay :
+    public partial class MagicEffectSummonCreatureArchetypeBinaryOverlay :
         MagicEffectArchetypeBinaryOverlay,
-        IMagicEffectSpellArchetypeGetter
+        IMagicEffectSummonCreatureArchetypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MagicEffectSpellArchetype_Registration.Instance;
-        public new static MagicEffectSpellArchetype_Registration StaticRegistration => MagicEffectSpellArchetype_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MagicEffectSummonCreatureArchetype_Registration.Instance;
+        public new static MagicEffectSummonCreatureArchetype_Registration StaticRegistration => MagicEffectSummonCreatureArchetype_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MagicEffectSpellArchetypeCommon.Instance;
+        protected override object CommonInstance() => MagicEffectSummonCreatureArchetypeCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MagicEffectSpellArchetypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MagicEffectSummonCreatureArchetypeSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MagicEffectSpellArchetypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MagicEffectSummonCreatureArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((MagicEffectSpellArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MagicEffectSummonCreatureArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected MagicEffectSpellArchetypeBinaryOverlay(
+        protected MagicEffectSummonCreatureArchetypeBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1047,12 +1047,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static MagicEffectSpellArchetypeBinaryOverlay MagicEffectSpellArchetypeFactory(
+        public static MagicEffectSummonCreatureArchetypeBinaryOverlay MagicEffectSummonCreatureArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new MagicEffectSpellArchetypeBinaryOverlay(
+            var ret = new MagicEffectSummonCreatureArchetypeBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -1063,12 +1063,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static MagicEffectSpellArchetypeBinaryOverlay MagicEffectSpellArchetypeFactory(
+        public static MagicEffectSummonCreatureArchetypeBinaryOverlay MagicEffectSummonCreatureArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return MagicEffectSpellArchetypeFactory(
+            return MagicEffectSummonCreatureArchetypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1080,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            MagicEffectSpellArchetypeMixIn.ToString(
+            MagicEffectSummonCreatureArchetypeMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1090,16 +1090,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IMagicEffectSpellArchetypeGetter rhs) return false;
-            return ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IMagicEffectSummonCreatureArchetypeGetter rhs) return false;
+            return ((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IMagicEffectSpellArchetypeGetter? obj)
+        public bool Equals(IMagicEffectSummonCreatureArchetypeGetter? obj)
         {
-            return ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MagicEffectSummonCreatureArchetypeCommon)((IMagicEffectSummonCreatureArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

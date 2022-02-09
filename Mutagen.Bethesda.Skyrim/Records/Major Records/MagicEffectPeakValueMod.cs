@@ -2,32 +2,32 @@ using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectKeywordArchetype
+    public partial class MagicEffectPeakValueModArchetype
     {
         public FormLink<IKeywordGetter> Association => this.AssociationKey.AsLink<IKeywordGetter>();
 
-        IFormLink<IKeywordGetter> IMagicEffectKeywordArchetype.Association => this.Association;
-        IFormLinkGetter<IKeywordGetter> IMagicEffectKeywordArchetypeGetter.Association => this.Association;
+        IFormLink<IKeywordGetter> IMagicEffectPeakValueModArchetype.Association => this.Association;
+        IFormLinkGetter<IKeywordGetter> IMagicEffectPeakValueModArchetypeGetter.Association => this.Association;
 
-        public MagicEffectKeywordArchetype()
+        public MagicEffectPeakValueModArchetype()
             : base(TypeEnum.PeakValueModifier)
         {
         }
     }
 
-    public partial interface IMagicEffectKeywordArchetype
+    public partial interface IMagicEffectPeakValueModArchetype
     {
         new IFormLink<IKeywordGetter> Association { get; }
     }
 
-    public partial interface IMagicEffectKeywordArchetypeGetter
+    public partial interface IMagicEffectPeakValueModArchetypeGetter
     {
         IFormLinkGetter<IKeywordGetter> Association { get; }
     }
 
     namespace Internals
     {
-        public partial class MagicEffectKeywordArchetypeBinaryOverlay
+        public partial class MagicEffectPeakValueModArchetypeBinaryOverlay
         {
             public IFormLinkGetter<IKeywordGetter> Association => this.AssociationKey.AsLink<IKeywordGetter>();
         }
