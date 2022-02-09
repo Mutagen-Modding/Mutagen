@@ -154,9 +154,6 @@ namespace Mutagen.Bethesda.Skyrim
         public readonly static ActorValue _ResistValue_Default = ActorValue.None;
         public ActorValue ResistValue { get; set; } = _ResistValue_Default;
         #endregion
-        #region CounterEffectCount
-        public UInt16 CounterEffectCount { get; set; } = default;
-        #endregion
         #region Unknown1
         public UInt16 Unknown1 { get; set; } = default;
         #endregion
@@ -443,7 +440,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseCost = initialValue;
                 this.MagicSkill = initialValue;
                 this.ResistValue = initialValue;
-                this.CounterEffectCount = initialValue;
                 this.Unknown1 = initialValue;
                 this.CastingLight = initialValue;
                 this.TaperWeight = initialValue;
@@ -498,7 +494,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem BaseCost,
                 TItem MagicSkill,
                 TItem ResistValue,
-                TItem CounterEffectCount,
                 TItem Unknown1,
                 TItem CastingLight,
                 TItem TaperWeight,
@@ -552,7 +547,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseCost = BaseCost;
                 this.MagicSkill = MagicSkill;
                 this.ResistValue = ResistValue;
-                this.CounterEffectCount = CounterEffectCount;
                 this.Unknown1 = Unknown1;
                 this.CastingLight = CastingLight;
                 this.TaperWeight = TaperWeight;
@@ -609,7 +603,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem BaseCost;
             public TItem MagicSkill;
             public TItem ResistValue;
-            public TItem CounterEffectCount;
             public TItem Unknown1;
             public TItem CastingLight;
             public TItem TaperWeight;
@@ -668,7 +661,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.BaseCost, rhs.BaseCost)) return false;
                 if (!object.Equals(this.MagicSkill, rhs.MagicSkill)) return false;
                 if (!object.Equals(this.ResistValue, rhs.ResistValue)) return false;
-                if (!object.Equals(this.CounterEffectCount, rhs.CounterEffectCount)) return false;
                 if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
                 if (!object.Equals(this.CastingLight, rhs.CastingLight)) return false;
                 if (!object.Equals(this.TaperWeight, rhs.TaperWeight)) return false;
@@ -719,7 +711,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.BaseCost);
                 hash.Add(this.MagicSkill);
                 hash.Add(this.ResistValue);
-                hash.Add(this.CounterEffectCount);
                 hash.Add(this.Unknown1);
                 hash.Add(this.CastingLight);
                 hash.Add(this.TaperWeight);
@@ -789,7 +780,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.BaseCost)) return false;
                 if (!eval(this.MagicSkill)) return false;
                 if (!eval(this.ResistValue)) return false;
-                if (!eval(this.CounterEffectCount)) return false;
                 if (!eval(this.Unknown1)) return false;
                 if (!eval(this.CastingLight)) return false;
                 if (!eval(this.TaperWeight)) return false;
@@ -893,7 +883,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.BaseCost)) return true;
                 if (eval(this.MagicSkill)) return true;
                 if (eval(this.ResistValue)) return true;
-                if (eval(this.CounterEffectCount)) return true;
                 if (eval(this.Unknown1)) return true;
                 if (eval(this.CastingLight)) return true;
                 if (eval(this.TaperWeight)) return true;
@@ -1003,7 +992,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.BaseCost = eval(this.BaseCost);
                 obj.MagicSkill = eval(this.MagicSkill);
                 obj.ResistValue = eval(this.ResistValue);
-                obj.CounterEffectCount = eval(this.CounterEffectCount);
                 obj.Unknown1 = eval(this.Unknown1);
                 obj.CastingLight = eval(this.CastingLight);
                 obj.TaperWeight = eval(this.TaperWeight);
@@ -1154,10 +1142,6 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.ResistValue ?? true)
                     {
                         fg.AppendItem(ResistValue, "ResistValue");
-                    }
-                    if (printMask?.CounterEffectCount ?? true)
-                    {
-                        fg.AppendItem(CounterEffectCount, "CounterEffectCount");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
@@ -1384,7 +1368,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? BaseCost;
             public Exception? MagicSkill;
             public Exception? ResistValue;
-            public Exception? CounterEffectCount;
             public Exception? Unknown1;
             public Exception? CastingLight;
             public Exception? TaperWeight;
@@ -1446,8 +1429,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return MagicSkill;
                     case MagicEffect_FieldIndex.ResistValue:
                         return ResistValue;
-                    case MagicEffect_FieldIndex.CounterEffectCount:
-                        return CounterEffectCount;
                     case MagicEffect_FieldIndex.Unknown1:
                         return Unknown1;
                     case MagicEffect_FieldIndex.CastingLight:
@@ -1555,9 +1536,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case MagicEffect_FieldIndex.ResistValue:
                         this.ResistValue = ex;
-                        break;
-                    case MagicEffect_FieldIndex.CounterEffectCount:
-                        this.CounterEffectCount = ex;
                         break;
                     case MagicEffect_FieldIndex.Unknown1:
                         this.Unknown1 = ex;
@@ -1705,9 +1683,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffect_FieldIndex.ResistValue:
                         this.ResistValue = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.CounterEffectCount:
-                        this.CounterEffectCount = (Exception?)obj;
-                        break;
                     case MagicEffect_FieldIndex.Unknown1:
                         this.Unknown1 = (Exception?)obj;
                         break;
@@ -1836,7 +1811,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (BaseCost != null) return true;
                 if (MagicSkill != null) return true;
                 if (ResistValue != null) return true;
-                if (CounterEffectCount != null) return true;
                 if (Unknown1 != null) return true;
                 if (CastingLight != null) return true;
                 if (TaperWeight != null) return true;
@@ -1938,7 +1912,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(BaseCost, "BaseCost");
                 fg.AppendItem(MagicSkill, "MagicSkill");
                 fg.AppendItem(ResistValue, "ResistValue");
-                fg.AppendItem(CounterEffectCount, "CounterEffectCount");
                 fg.AppendItem(Unknown1, "Unknown1");
                 fg.AppendItem(CastingLight, "CastingLight");
                 fg.AppendItem(TaperWeight, "TaperWeight");
@@ -2055,7 +2028,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
                 ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);
                 ret.ResistValue = this.ResistValue.Combine(rhs.ResistValue);
-                ret.CounterEffectCount = this.CounterEffectCount.Combine(rhs.CounterEffectCount);
                 ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
                 ret.CastingLight = this.CastingLight.Combine(rhs.CastingLight);
                 ret.TaperWeight = this.TaperWeight.Combine(rhs.TaperWeight);
@@ -2123,7 +2095,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool BaseCost;
             public bool MagicSkill;
             public bool ResistValue;
-            public bool CounterEffectCount;
             public bool Unknown1;
             public bool CastingLight;
             public bool TaperWeight;
@@ -2176,7 +2147,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseCost = defaultOn;
                 this.MagicSkill = defaultOn;
                 this.ResistValue = defaultOn;
-                this.CounterEffectCount = defaultOn;
                 this.Unknown1 = defaultOn;
                 this.CastingLight = defaultOn;
                 this.TaperWeight = defaultOn;
@@ -2226,7 +2196,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((BaseCost, null));
                 ret.Add((MagicSkill, null));
                 ret.Add((ResistValue, null));
-                ret.Add((CounterEffectCount, null));
                 ret.Add((Unknown1, null));
                 ret.Add((CastingLight, null));
                 ret.Add((TaperWeight, null));
@@ -2438,7 +2407,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single BaseCost { get; set; }
         new ActorValue MagicSkill { get; set; }
         new ActorValue ResistValue { get; set; }
-        new UInt16 CounterEffectCount { get; set; }
         new UInt16 Unknown1 { get; set; }
         new IFormLink<ILightGetter> CastingLight { get; set; }
         new Single TaperWeight { get; set; }
@@ -2523,7 +2491,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single BaseCost { get; }
         ActorValue MagicSkill { get; }
         ActorValue ResistValue { get; }
-        UInt16 CounterEffectCount { get; }
         UInt16 Unknown1 { get; }
         IFormLinkGetter<ILightGetter> CastingLight { get; }
         Single TaperWeight { get; }
@@ -2733,44 +2700,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         BaseCost = 11,
         MagicSkill = 12,
         ResistValue = 13,
-        CounterEffectCount = 14,
-        Unknown1 = 15,
-        CastingLight = 16,
-        TaperWeight = 17,
-        HitShader = 18,
-        EnchantShader = 19,
-        MinimumSkillLevel = 20,
-        SpellmakingArea = 21,
-        SpellmakingCastingTime = 22,
-        TaperCurve = 23,
-        TaperDuration = 24,
-        SecondActorValueWeight = 25,
-        Archetype = 26,
-        Projectile = 27,
-        Explosion = 28,
-        CastType = 29,
-        TargetType = 30,
-        SecondActorValue = 31,
-        CastingArt = 32,
-        HitEffectArt = 33,
-        ImpactData = 34,
-        SkillUsageMultiplier = 35,
-        DualCastArt = 36,
-        DualCastScale = 37,
-        EnchantArt = 38,
-        HitVisuals = 39,
-        EnchantVisuals = 40,
-        EquipAbility = 41,
-        ImageSpaceModifier = 42,
-        PerkToApply = 43,
-        CastingSoundLevel = 44,
-        ScriptEffectAIScore = 45,
-        ScriptEffectAIDelayTime = 46,
-        CounterEffects = 47,
-        Sounds = 48,
-        Description = 49,
-        Conditions = 50,
-        DATADataTypeState = 51,
+        Unknown1 = 14,
+        CastingLight = 15,
+        TaperWeight = 16,
+        HitShader = 17,
+        EnchantShader = 18,
+        MinimumSkillLevel = 19,
+        SpellmakingArea = 20,
+        SpellmakingCastingTime = 21,
+        TaperCurve = 22,
+        TaperDuration = 23,
+        SecondActorValueWeight = 24,
+        Archetype = 25,
+        Projectile = 26,
+        Explosion = 27,
+        CastType = 28,
+        TargetType = 29,
+        SecondActorValue = 30,
+        CastingArt = 31,
+        HitEffectArt = 32,
+        ImpactData = 33,
+        SkillUsageMultiplier = 34,
+        DualCastArt = 35,
+        DualCastScale = 36,
+        EnchantArt = 37,
+        HitVisuals = 38,
+        EnchantVisuals = 39,
+        EquipAbility = 40,
+        ImageSpaceModifier = 41,
+        PerkToApply = 42,
+        CastingSoundLevel = 43,
+        ScriptEffectAIScore = 44,
+        ScriptEffectAIDelayTime = 45,
+        CounterEffects = 46,
+        Sounds = 47,
+        Description = 48,
+        Conditions = 49,
+        DATADataTypeState = 50,
     }
     #endregion
 
@@ -2788,9 +2754,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "6f4b3983-51e3-47e9-894e-9c442948e6d1";
 
-        public const ushort AdditionalFieldCount = 46;
+        public const ushort AdditionalFieldCount = 45;
 
-        public const ushort FieldCount = 52;
+        public const ushort FieldCount = 51;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -2867,7 +2833,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BaseCost = default;
             item.MagicSkill = MagicEffect._MagicSkill_Default;
             item.ResistValue = MagicEffect._ResistValue_Default;
-            item.CounterEffectCount = default;
             item.Unknown1 = default;
             item.CastingLight.Clear();
             item.TaperWeight = default;
@@ -3026,7 +2991,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
             ret.MagicSkill = item.MagicSkill == rhs.MagicSkill;
             ret.ResistValue = item.ResistValue == rhs.ResistValue;
-            ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
             ret.Unknown1 = item.Unknown1 == rhs.Unknown1;
             ret.CastingLight = item.CastingLight.Equals(rhs.CastingLight);
             ret.TaperWeight = item.TaperWeight.EqualsWithin(rhs.TaperWeight);
@@ -3172,10 +3136,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (printMask?.ResistValue ?? true)
             {
                 fg.AppendItem(item.ResistValue, "ResistValue");
-            }
-            if (printMask?.CounterEffectCount ?? true)
-            {
-                fg.AppendItem(item.CounterEffectCount, "CounterEffectCount");
             }
             if (printMask?.Unknown1 ?? true)
             {
@@ -3453,10 +3413,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (lhs.ResistValue != rhs.ResistValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
-            {
-                if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
-            }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
             {
                 if (lhs.Unknown1 != rhs.Unknown1) return false;
@@ -3651,7 +3607,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.BaseCost);
             hash.Add(item.MagicSkill);
             hash.Add(item.ResistValue);
-            hash.Add(item.CounterEffectCount);
             hash.Add(item.Unknown1);
             hash.Add(item.CastingLight);
             hash.Add(item.TaperWeight);
@@ -3920,10 +3875,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ResistValue) ?? true))
             {
                 item.ResistValue = rhs.ResistValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
-            {
-                item.CounterEffectCount = rhs.CounterEffectCount;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
             {
@@ -4369,7 +4320,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.ResistValue,
                     length: 4);
-                writer.Write(item.CounterEffectCount);
+                MagicEffectBinaryWriteTranslation.WriteBinaryCounterEffectLogic(
+                    writer: writer,
+                    item: item);
                 writer.Write(item.Unknown1);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -4507,6 +4460,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMagicEffectGetter item)
         {
             WriteBinaryAssociatedItemCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCounterEffectLogicCustom(
+            MutagenWriter writer,
+            IMagicEffectGetter item);
+
+        public static void WriteBinaryCounterEffectLogic(
+            MutagenWriter writer,
+            IMagicEffectGetter item)
+        {
+            WriteBinaryCounterEffectLogicCustom(
                 writer: writer,
                 item: item);
         }
@@ -4676,7 +4642,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ResistValue = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
-                    item.CounterEffectCount = dataFrame.ReadUInt16();
+                    MagicEffectBinaryCreateTranslation.FillBinaryCounterEffectLogicCustom(
+                        frame: dataFrame,
+                        item: item);
                     item.Unknown1 = dataFrame.ReadUInt16();
                     item.CastingLight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.TaperWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
@@ -4768,6 +4736,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static partial void FillBinaryAssociatedItemCustom(
+            MutagenFrame frame,
+            IMagicEffectInternal item);
+
+        public static partial void FillBinaryCounterEffectLogicCustom(
             MutagenFrame frame,
             IMagicEffectInternal item);
 
@@ -4877,10 +4849,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool _ResistValue_IsSet => _DATALocation.HasValue;
         public ActorValue ResistValue => _ResistValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ResistValueLocation, 0x4)) : default;
         #endregion
-        #region CounterEffectCount
-        private int _CounterEffectCountLocation => _DATALocation!.Value + 0x14;
-        private bool _CounterEffectCount_IsSet => _DATALocation.HasValue;
-        public UInt16 CounterEffectCount => _CounterEffectCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_CounterEffectCountLocation, 2)) : default;
+        #region CounterEffectLogic
+        private int _CounterEffectLogicLocation => _DATALocation!.Value + 0x14;
+        private bool _CounterEffectLogic_IsSet => _DATALocation.HasValue;
+        partial void CounterEffectLogicCustomParse(
+            OverlayStream stream,
+            int offset);
         #endregion
         #region Unknown1
         private int _Unknown1Location => _DATALocation!.Value + 0x16;

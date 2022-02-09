@@ -48,6 +48,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class MagicEffectBinaryCreateTranslation
         {
+            public static partial void FillBinaryCounterEffectLogicCustom(MutagenFrame frame, IMagicEffectInternal item)
+            {
+                // Don't care about counter
+                frame.Position += 2;
+            }
+
             public static partial void FillBinaryConditionsCustom(MutagenFrame frame, IMagicEffectInternal item)
             {
                 ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
@@ -150,6 +156,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class MagicEffectBinaryWriteTranslation
         {
+            public static partial void WriteBinaryCounterEffectLogicCustom(MutagenWriter writer, IMagicEffectGetter item)
+            {
+                writer.Write((ushort)item.CounterEffects.Count);
+            }
+
             public static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IMagicEffectGetter item)
             {
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
@@ -174,6 +185,12 @@ namespace Mutagen.Bethesda.Skyrim
             partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
+            }
+
+            partial void CounterEffectLogicCustomParse(OverlayStream stream, int offset)
+            {
+                // Don't care about counter
+                stream.Position += 2;
             }
 
             public IMagicEffectArchetypeGetter GetArchetypeCustom()

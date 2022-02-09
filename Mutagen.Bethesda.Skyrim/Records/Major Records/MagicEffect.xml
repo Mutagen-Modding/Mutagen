@@ -15,7 +15,7 @@
           <CustomLogic name="AssociatedItem" byteLength="4" />
           <Enum name="MagicSkill" enumName="ActorValue" byteLength="4" default="ActorValue.None" />
           <Enum name="ResistValue" enumName="ActorValue" byteLength="4" default="ActorValue.None" />
-          <UInt16 name="CounterEffectCount" />
+          <CustomLogic name="CounterEffectLogic" byteLength="2" />
           <UInt16 name="Unknown1" />
           <FormLink name="CastingLight" refName="Light" />
           <Float name="TaperWeight" />
