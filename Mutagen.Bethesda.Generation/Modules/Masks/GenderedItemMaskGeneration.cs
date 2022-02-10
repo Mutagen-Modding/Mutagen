@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Mutagen.Bethesda.Generation.Fields;
 
 namespace Mutagen.Bethesda.Generation
 {

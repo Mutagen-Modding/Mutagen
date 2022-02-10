@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ReverbParameters" recordType="REVB" objType="Record" baseClass="Fallout4MajorRecord" GUID="ff9240a5-43c1-4889-b0ec-6fd0889e4bbf" ID="97">
+    <Fields>
+      <Data>
+        <Fields>
+          <UInt16 name="DecayMilliseconds" />
+          <UInt16 name="HfReferenceHertz" />
+          <Int8 name="RoomFilter" />
+          <Int8 name="RoomHfFilter" />
+          <Int8 name="Reflections" />
+          <Int8 name="ReverbAmp" />
+          <Float name="DecayHfRatio" integerType="Byte" divisor="100" />
+          <UInt8 name="ReflectDelayMS" />
+          <UInt8 name="ReverbDelayMS" />
+          <UInt8 name="DiffusionPercent" />
+          <UInt8 name="DensityPercent" />
+          <UInt8 name="Unknown" />
+        </Fields>
+      </Data>
+      <UInt32 name="ReverbClass" recordType="ANAM" />
+    </Fields>
+  </Object>
+</Loqui>

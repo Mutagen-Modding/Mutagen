@@ -11,6 +11,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Mutagen.Bethesda.Generation.Fields;
+using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -731,7 +733,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine("using Mutagen.Bethesda.Plugins;");
             fg.AppendLine();
 
-            using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals"))
+            using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals", fileScoped: false))
             {
                 using (var c = new ClassWrapper(fg, "RecordTypes"))
                 {
@@ -748,7 +750,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.Generate(path);
             proto.GeneratedFiles.Add(path, ProjItemType.Compile);
             fg = new FileGeneration();
-            using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals"))
+            using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals", fileScoped: false))
             {
                 using (var c = new ClassWrapper(fg, "RecordTypeInts"))
                 {

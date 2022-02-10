@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Strings
     public interface IStringsFolderLookup
     {
         /// <summary>
-        /// Retrieves the availables languages present in a source
+        /// Retrieves the available languages present in a source
         /// </summary>
         /// <param name="source">Source to query</param>
         /// <returns>Enumerable of languages present for given source</returns>
@@ -48,7 +48,8 @@ namespace Mutagen.Bethesda.Strings
         /// </summary>
         /// <param name="source">Strings source to look to</param>
         /// <param name="key">Index key to look up</param>
+        /// <param name="targetLanguage">Language to target by default</param>
         /// <returns>TranslatedString with located strings</returns>
-        TranslatedString CreateString(StringsSource source, uint key);
+        TranslatedString CreateString(StringsSource source, uint key, Language targetLanguage);
     }
 }

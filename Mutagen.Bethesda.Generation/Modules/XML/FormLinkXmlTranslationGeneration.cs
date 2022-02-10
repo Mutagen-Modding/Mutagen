@@ -1,6 +1,7 @@
 using System;
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Generation

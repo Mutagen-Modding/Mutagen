@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.Text = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(0x2));
+            ret.Text = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(0x2), package.MetaData.Encodings.NonTranslated);
             ret.TextEndingPos = 0x2 + ret.Text.Length + 1;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,

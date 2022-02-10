@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region AttackEvent
         private int? _AttackEventLocation;
-        public String? AttackEvent => _AttackEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackEventLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? AttackEvent => _AttackEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackEventLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -2405,11 +2405,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region TrackFilename
         private int? _TrackFilenameLocation;
-        public String? TrackFilename => _TrackFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TrackFilenameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? TrackFilename => _TrackFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region FinaleFilename
         private int? _FinaleFilenameLocation;
-        public String? FinaleFilename => _FinaleFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FinaleFilenameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? FinaleFilename => _FinaleFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region LoopData
         private RangeInt32? _LoopDataLocation;

@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Tests
             FilePath outputPath,
             GameRelease gameMode,
             AlignmentRules alignmentRules,
-            TempFolder temp)
+            DirectoryPath temp)
         {
             var interest = new RecordInterest(alignmentRules.Alignments.Keys)
             {
@@ -206,14 +206,14 @@ namespace Mutagen.Bethesda.Tests
             var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest);
             if (gameMode == GameRelease.Oblivion)
             {
-                var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp.Dir.Path, "alignedRules"));
+                var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedRules"));
                 using (var inputStream = new MutagenBinaryReadStream(inputPath, gameMode))
                 {
                     using var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create), gameMode);
                     AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
                 }
 
-                var alignedGroupsFile = new ModPath(inputPath.ModKey, Path.Combine(temp.Dir.Path, "alignedGroups"));
+                var alignedGroupsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedGroups"));
                 using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, gameMode))
                 {
                     using var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode);
@@ -221,11 +221,11 @@ namespace Mutagen.Bethesda.Tests
                 }
 
                 fileLocs = RecordLocator.GetLocations(alignedGroupsFile, gameMode, interest);
-                var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp.Dir.Path, "alignedCells"));
+                var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedCells"));
                 using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                 {
                     using var writer = new MutagenWriter(alignedCellsFile, gameMode);
-                    foreach (var grup in fileLocs.GrupLocations)
+                    foreach (var grup in fileLocs.GrupLocations.Keys)
                     {
                         if (grup <= mutaReader.Position) continue;
                         var noRecordLength = grup - mutaReader.Position;
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Tests
                 using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, gameMode))
                 {
                     using var writer = new MutagenWriter(outputPath.Path, gameMode);
-                    foreach (var grup in fileLocs.GrupLocations)
+                    foreach (var grup in fileLocs.GrupLocations.Keys)
                     {
                         if (grup <= mutaReader.Position) continue;
                         var noRecordLength = grup - mutaReader.Position;
@@ -271,14 +271,14 @@ namespace Mutagen.Bethesda.Tests
             }
             else
             {
-                var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp.Dir.Path, "alignedRules"));
+                var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedRules"));
                 using (var inputStream = new MutagenBinaryReadStream(inputPath, gameMode))
                 {
                     using var writer = new MutagenWriter(alignedMajorRecordsFile, gameMode);
                     AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
                 }
 
-                var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
+                var alignedGroupsFile = Path.Combine(temp, "alignedGroups");
                 using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, gameMode))
                 {
                     using var writer = new MutagenWriter(new FileStream(outputPath.Path, FileMode.Create), gameMode);
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Tests
                     higher: true,
                     result: out var nextRec))
                 {
-                    noRecordLength = nextRec.Value - inputStream.Position;
+                    noRecordLength = nextRec.Value.Location.Min - inputStream.Position;
                 }
                 else
                 {

@@ -16,6 +16,12 @@
       <Group name="Factions" refName="Faction" />
       <Group name="HeadParts" refName="HeadPart" />
       <!--<Group name="Races" refName="Race" />-->
-    </Fields>
+      <Group name="SoundMarkers" refName="SoundMarker" />
+	  <Group name="AcousticSpaces" refName="AcousticSpace" />
+	  <!--<Group name="MagicEffects" refName="MagicEffect" />-->
+	  <Group name="LandscapeTextures" refName="LandscapeTexture" />
+	  <Group name="Grasses" refName="Grass" />
+	  <Group name="MaterialTypes" refName="MaterialType" />
+	</Fields>
   </Object>
 </Loqui>

@@ -5435,7 +5435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -5744,19 +5744,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region NoiseLayerOneTexture
         private int? _NoiseLayerOneTextureLocation;
-        public String? NoiseLayerOneTexture => _NoiseLayerOneTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerOneTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? NoiseLayerOneTexture => _NoiseLayerOneTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerOneTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region NoiseLayerTwoTexture
         private int? _NoiseLayerTwoTextureLocation;
-        public String? NoiseLayerTwoTexture => _NoiseLayerTwoTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerTwoTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? NoiseLayerTwoTexture => _NoiseLayerTwoTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerTwoTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region NoiseLayerThreeTexture
         private int? _NoiseLayerThreeTextureLocation;
-        public String? NoiseLayerThreeTexture => _NoiseLayerThreeTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerThreeTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? NoiseLayerThreeTexture => _NoiseLayerThreeTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerThreeTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region FlowNormalsNoiseTexture
         private int? _FlowNormalsNoiseTextureLocation;
-        public String? FlowNormalsNoiseTexture => _FlowNormalsNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FlowNormalsNoiseTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? FlowNormalsNoiseTexture => _FlowNormalsNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FlowNormalsNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -5834,7 +5834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.UnusedNoisemaps = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content),
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Map
         private int? _MapLocation;
-        public String? Map => _MapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MapLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Map => _MapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

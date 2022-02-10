@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var magicEffName2 = frame.GetMemory(amount: Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength, offset: efitMeta.HeaderLength);
                 if (!magicEffName.Span.SequenceEqual(magicEffName2.Span))
                 {
-                    throw new ArgumentException($"Magic effect names did not match. {BinaryStringUtility.ToZString(magicEffName)} != {BinaryStringUtility.ToZString(magicEffName2)}");
+                    throw new ArgumentException($"Magic effect names did not match. {BinaryStringUtility.ToZString(magicEffName, frame.MetaData.Encodings.NonTranslated)} != {BinaryStringUtility.ToZString(magicEffName2, frame.MetaData.Encodings.NonTranslated)}");
                 }
 
                 return lastParsed.ParsedIndex;

@@ -126,36 +126,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RegionBinaryOverlay : IRegionGetter
     {
         #region Icon
-        private int? _IconLocation;
-        private int? _SecondaryIconLocation;
+        private int? _iconLocation;
+        private int? _secondaryIconLocation;
         string? GetIconCustom()
         {
-            if (_IconLocation.HasValue)
+            if (_iconLocation.HasValue)
             {
-                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants));
+                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _iconLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonLocalized);
             }
-            if (_SecondaryIconLocation.HasValue)
+            if (_secondaryIconLocation.HasValue)
             {
-                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SecondaryIconLocation.Value, _package.MetaData.Constants));
+                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _secondaryIconLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonLocalized);
             }
             return default;
         }
         #endregion
 
-        private ReadOnlyMemorySlice<byte>? _ObjectsSpan;
-        public IRegionObjectsGetter? Objects => _ObjectsSpan.HasValue ? RegionObjectsBinaryOverlay.RegionObjectsFactory(new OverlayStream(_ObjectsSpan.Value, _package), _package) : default;
+        private ReadOnlyMemorySlice<byte>? _objectsSpan;
+        public IRegionObjectsGetter? Objects => _objectsSpan.HasValue ? RegionObjectsBinaryOverlay.RegionObjectsFactory(new OverlayStream(_objectsSpan.Value, _package), _package) : default;
 
-        private ReadOnlyMemorySlice<byte>? _WeatherSpan;
-        public IRegionWeatherGetter? Weather => _WeatherSpan.HasValue ? RegionWeatherBinaryOverlay.RegionWeatherFactory(new OverlayStream(_WeatherSpan.Value, _package), _package) : default;
+        private ReadOnlyMemorySlice<byte>? _weatherSpan;
+        public IRegionWeatherGetter? Weather => _weatherSpan.HasValue ? RegionWeatherBinaryOverlay.RegionWeatherFactory(new OverlayStream(_weatherSpan.Value, _package), _package) : default;
         
-        private ReadOnlyMemorySlice<byte>? _MapSpan;
-        public IRegionMapGetter? MapName => _MapSpan.HasValue ? RegionMapBinaryOverlay.RegionMapFactory(new OverlayStream(_MapSpan.Value, _package), _package) : default;
+        private ReadOnlyMemorySlice<byte>? _mapSpan;
+        public IRegionMapGetter? MapName => _mapSpan.HasValue ? RegionMapBinaryOverlay.RegionMapFactory(new OverlayStream(_mapSpan.Value, _package), _package) : default;
         
-        private ReadOnlyMemorySlice<byte>? _GrassesSpan;
-        public IRegionGrassesGetter? Grasses => _GrassesSpan.HasValue ? RegionGrassesBinaryOverlay.RegionGrassesFactory(new OverlayStream(_GrassesSpan.Value, _package), _package) : default;
+        private ReadOnlyMemorySlice<byte>? _grassesSpan;
+        public IRegionGrassesGetter? Grasses => _grassesSpan.HasValue ? RegionGrassesBinaryOverlay.RegionGrassesFactory(new OverlayStream(_grassesSpan.Value, _package), _package) : default;
 
-        private ReadOnlyMemorySlice<byte>? _SoundsSpan;
-        public IRegionSoundsGetter? Sounds => _SoundsSpan.HasValue ? RegionSoundsBinaryOverlay.RegionSoundsFactory(new OverlayStream(_SoundsSpan.Value, _package), _package) : default;
+        private ReadOnlyMemorySlice<byte>? _soundsSpan;
+        public IRegionSoundsGetter? Sounds => _soundsSpan.HasValue ? RegionSoundsBinaryOverlay.RegionSoundsFactory(new OverlayStream(_soundsSpan.Value, _package), _package) : default;
 
         public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void IconCustomParse(OverlayStream stream, long finalPos, int offset)
         {
-            _IconLocation = (ushort)(stream.Position - offset);
+            _iconLocation = (ushort)(stream.Position - offset);
         }
 
         private void ParseRegionData(OverlayStream stream, int offset)
@@ -195,13 +195,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (dataType)
             {
                 case RegionData.RegionDataType.Object:
-                    _ObjectsSpan = this._data.Slice(loc, len);
+                    _objectsSpan = this._data.Slice(loc, len);
                     break;
                 case RegionData.RegionDataType.Map:
-                    _MapSpan = this._data.Slice(loc, len);
+                    _mapSpan = this._data.Slice(loc, len);
                     break;
                 case RegionData.RegionDataType.Grass:
-                    _GrassesSpan = this._data.Slice(loc, len);
+                    _grassesSpan = this._data.Slice(loc, len);
                     break;
                 case RegionData.RegionDataType.Sound:
                     var nextRec = stream.GetSubrecord();
@@ -209,13 +209,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         len += nextRec.TotalLength;
                     }
-                    _SoundsSpan = this._data.Slice(loc, len);
+                    _soundsSpan = this._data.Slice(loc, len);
                     break;
                 case RegionData.RegionDataType.Weather:
-                    _WeatherSpan = this._data.Slice(loc, len);
+                    _weatherSpan = this._data.Slice(loc, len);
                     break;
                 case RegionData.RegionDataType.Icon:
-                    _SecondaryIconLocation = loc + rdatFrame.TotalLength;
+                    _secondaryIconLocation = loc + rdatFrame.TotalLength;
                     break;
                 default:
                     throw new NotImplementedException();

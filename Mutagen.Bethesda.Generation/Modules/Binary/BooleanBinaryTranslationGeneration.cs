@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 using Noggog;
+using BoolType = Mutagen.Bethesda.Generation.Fields.BoolType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {

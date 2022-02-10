@@ -9,6 +9,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Oblivion.Records;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -105,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionGroupCommon<T>.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionGroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -1426,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionGroupCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -1468,6 +1469,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: package)
         {
             this.CustomCtor();
+        }
+
+        public static IOblivionGroupGetter<T> OblivionGroupFactory(
+            IBinaryReadStream stream,
+            IReadOnlyList<RangeInt64> locs,
+            BinaryOverlayFactoryPackage package)
+        {
+            var subGroups = locs.Select(x => OblivionGroupFactory(
+                new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package),
+                package)).ToArray();
+            return new OblivionGroupWrapper<T>(new GroupMergeGetter<IOblivionGroupGetter<T>, T>(subGroups));
         }
 
         public static OblivionGroupBinaryOverlay<T> OblivionGroupFactory(

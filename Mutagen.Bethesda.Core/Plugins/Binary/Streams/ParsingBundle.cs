@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams
 {
@@ -50,6 +51,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         /// </summary>
         public ModKey ModKey { get; set; }
 
+        public EncodingBundle Encodings { get; set; } = new(MutagenEncodingProvider._1252, MutagenEncodingProvider._1252);
+
+        public Language TranslatedTargetLanguage { get; set; } = Language.English;
+
         public ParsingBundle(GameConstants constants, IMasterReferenceCollection masterReferences)
         {
             this.Constants = constants;
@@ -64,6 +69,39 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         public void ReportIssue(RecordType? recordType, string note)
         {
             // Nothing for now.  Need to implement
+        }
+
+        public void Absorb(StringsReadParameters? stringsReadParameters)
+        {
+            if (stringsReadParameters == null) return;
+            if (stringsReadParameters.TargetLanguage != null)
+            {
+                TranslatedTargetLanguage = stringsReadParameters.TargetLanguage.Value;
+            }
+
+            if (stringsReadParameters.NonLocalizedEncodingOverride == null)
+            {
+                var encodingProv = stringsReadParameters.EncodingProvider ?? MutagenEncodingProvider.Instance;
+                Encodings = Encodings with
+                {
+                    NonLocalized = encodingProv.GetEncoding(Constants.Release, TranslatedTargetLanguage)
+                };
+            }
+            else
+            {
+                Encodings = Encodings with
+                {
+                    NonLocalized = stringsReadParameters.NonLocalizedEncodingOverride
+                };
+            }
+
+            if (stringsReadParameters.NonTranslatedEncodingOverride != null)
+            {
+                Encodings = Encodings with
+                {
+                    NonTranslated = stringsReadParameters.NonTranslatedEncodingOverride
+                };
+            }
         }
     }
 }

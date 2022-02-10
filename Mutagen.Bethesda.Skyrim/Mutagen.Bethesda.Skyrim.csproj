@@ -128,6 +128,9 @@
     <Compile Include="Records\Common Subrecords\WaterReflection.cs">
       <DependentUpon>WaterReflection.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\SkyrimGroupWrapper.cs">
+      <DependentUpon>SkyrimGroup.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\SkyrimGroup.cs">
       <DependentUpon>SkyrimGroup.xml</DependentUpon>
     </Compile>
@@ -2084,8 +2087,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.37.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.37.0" />
+    <PackageReference Include="Loqui" Version="2.39.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.39.0" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

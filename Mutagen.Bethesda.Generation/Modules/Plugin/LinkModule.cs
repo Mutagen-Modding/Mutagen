@@ -9,23 +9,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Fields;
+using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class LinkModule : GenerationModule
     {
-        public enum LinkCase { No, Yes, Maybe }
-
         public override async IAsyncEnumerable<(LoquiInterfaceType Location, string Interface)> Interfaces(ObjectGeneration obj)
         {
-            if (await HasLinks(obj, includeBaseClass: false) != LinkCase.No)
+            if (await HasLinks(obj, includeBaseClass: false) != Case.No)
             {
                 yield return (LoquiInterfaceType.IGetter, $"{nameof(IFormLinkContainerGetter)}");
                 yield return (LoquiInterfaceType.ISetter, $"{nameof(IFormLinkContainer)}");
             }
         }
 
-        public static async Task<LinkCase> HasLinks(LoquiType loqui, bool includeBaseClass, GenericSpecification specifications = null)
+        public static async Task<Case> HasLinks(LoquiType loqui, bool includeBaseClass, GenericSpecification specifications = null)
         {
             if (loqui.TargetObjectGeneration != null)
             {
@@ -39,19 +39,19 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     var specObj = loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[key];
                     return await HasLinks(specObj, includeBaseClass);
                 }
-                return LinkCase.Maybe;
+                return Case.Maybe;
             }
             else
             {
-                return LinkCase.Maybe;
+                return Case.Maybe;
             }
         }
 
-        public static async Task<LinkCase> HasLinks(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
+        public static async Task<Case> HasLinks(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
         {
-            if (obj.Name == "MajorRecord") return LinkCase.Yes;
-            if (obj.IterateFields(includeBaseClass: includeBaseClass).Any((f) => f is FormLinkType)) return LinkCase.Yes;
-            LinkCase bestCase = LinkCase.No;
+            if (obj.Name == "MajorRecord") return Case.Yes;
+            if (obj.IterateFields(includeBaseClass: includeBaseClass).Any((f) => f is FormLinkType)) return Case.Yes;
+            Case bestCase = Case.No;
             foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
             {
                 if (field is LoquiType loqui)
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     }
                     else if (cont.SubTypeGeneration is FormLinkType)
                     {
-                        return LinkCase.Yes;
+                        return Case.Yes;
                     }
                 }
                 else if (field is DictType dict)
@@ -97,18 +97,18 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     }
                     if (dict.ValueTypeGen is FormLinkType)
                     {
-                        return LinkCase.Yes;
+                        return Case.Yes;
                     }
                 }
             }
 
             // If no, check subclasses
-            if (bestCase == LinkCase.No)
+            if (bestCase == Case.No)
             {
                 foreach (var inheritingObject in await obj.InheritingObjects())
                 {
                     var subCase = await HasLinks(inheritingObject, includeBaseClass: false, specifications: specifications);
-                    if (subCase != LinkCase.No) return LinkCase.Maybe;
+                    if (subCase != Case.No) return Case.Maybe;
                 }
             }
 
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     foreach (var baseClass in obj.BaseClassTrail())
                     {
-                        if (await HasLinks(baseClass, includeBaseClass: true) != LinkCase.No)
+                        if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
                         {
                             fg.AppendLine("foreach (var item in base.GetContainedFormLinks(obj))");
                             using (new BraceWrapper(fg))
@@ -170,19 +170,19 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         else if (field is LoquiType loqui)
                         {
-                            LinkCase subLinkCase;
+                            Case subLinkCase;
                             if (loqui.TargetObjectGeneration != null)
                             {
                                 subLinkCase = await HasLinks(loqui, includeBaseClass: true);
                             }
                             else
                             {
-                                subLinkCase = LinkCase.Maybe;
+                                subLinkCase = Case.Maybe;
                             }
-                            if (subLinkCase == LinkCase.No) continue;
+                            if (subLinkCase == Case.No) continue;
                             var doBrace = true;
                             var access = $"obj.{field.Name}";
-                            if (subLinkCase == LinkCase.Maybe)
+                            if (subLinkCase == Case.Maybe)
                             {
                                 fg.AppendLine($"if (obj.{field.Name} is {nameof(IFormLinkContainerGetter)} {field.Name}linkCont)");
                                 access = $"{field.Name}linkCont";
@@ -215,18 +215,18 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
                             FileGeneration subFg = new FileGeneration();
                             if (cont.SubTypeGeneration is LoquiType contLoqui
-                                && await HasLinks(contLoqui, includeBaseClass: true) != LinkCase.No)
+                                && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
                             {
                                 string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
                                 var linktype = await HasLinks(contLoqui, includeBaseClass: true);
-                                if (linktype != LinkCase.No)
+                                if (linktype != Case.No)
                                 {
                                     switch (linktype)
                                     {
-                                        case LinkCase.Yes:
+                                        case Case.Yes:
                                             subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
                                             break;
-                                        case LinkCase.Maybe:
+                                        case Case.Maybe:
                                             subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
                                             using (new DepthWrapper(subFg))
                                             {
@@ -266,15 +266,15 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         {
                             if (dict.Mode == DictMode.KeyedValue
                                 && dict.ValueTypeGen is LoquiType dictLoqui
-                                && await HasLinks(dictLoqui, includeBaseClass: true) != LinkCase.No)
+                                && await HasLinks(dictLoqui, includeBaseClass: true) != Case.No)
                             {
                                 var linktype = await HasLinks(dictLoqui, includeBaseClass: true);
                                 switch (linktype)
                                 {
-                                    case LinkCase.Yes:
+                                    case Case.Yes:
                                         fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
                                         break;
-                                    case LinkCase.Maybe:
+                                    case Case.Maybe:
                                         fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
                                         using (new DepthWrapper(fg))
                                         {
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     foreach (var baseClass in obj.BaseClassTrail())
                     {
-                        if (await HasLinks(baseClass, includeBaseClass: true) != LinkCase.No)
+                        if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
                         {
                             fg.AppendLine("base.RemapLinks(obj, mapping);");
                             break;
@@ -351,22 +351,22 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         else if (field is LoquiType loqui)
                         {
-                            LinkCase subLinkCase;
+                            Case subLinkCase;
                             if (loqui.TargetObjectGeneration != null)
                             {
                                 subLinkCase = await HasLinks(loqui, includeBaseClass: true);
                             }
                             else
                             {
-                                subLinkCase = LinkCase.Maybe;
+                                subLinkCase = Case.Maybe;
                             }
-                            if (subLinkCase == LinkCase.No) continue;
+                            if (subLinkCase == Case.No) continue;
                             fg.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
                         }
                         else if (field is WrapperType cont)
                         {
                             if ((cont.SubTypeGeneration is LoquiType contLoqui
-                                && await HasLinks(contLoqui, includeBaseClass: true) != LinkCase.No)
+                                && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
                                 || (cont.SubTypeGeneration is FormLinkType formIDType
                                     && formIDType.FormIDType == FormLinkType.FormIDTypeEnum.Normal))
                             {
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         {
                             if (dict.Mode == DictMode.KeyedValue
                                 && dict.ValueTypeGen is LoquiType dictLoqui
-                                && await HasLinks(dictLoqui, includeBaseClass: true) != LinkCase.No)
+                                && await HasLinks(dictLoqui, includeBaseClass: true) != Case.No)
                             {
                                 fg.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
                             }
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     // Remove trailing breaks
                     while (fg.Count > startCount)
                     {
-                        if (fg[fg.Count - 1].AsSpan().TrimStart().StartsWith($"if (obj.{VersioningModule.VersioningFieldName}"))
+                        if (fg[^1].AsSpan().TrimStart().StartsWith($"if (obj.{VersioningModule.VersioningFieldName}"))
                         {
                             fg.RemoveAt(fg.Count - 1);
                         }
@@ -417,18 +417,19 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             if (obj.GetObjectType() != ObjectType.Mod)
             {
                 var linkCase = await HasLinks(obj, includeBaseClass: false);
-                if (linkCase == LinkCase.No) return;
+                if (linkCase == Case.No) return;
             }
             await GenerateInterfaceImplementation(obj, fg, getter: false);
         }
 
         public static async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
         {
-            fg.AppendLine($"public{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(IFormLinkGetter)}> {nameof(IFormLinkContainerGetter.ContainedFormLinks)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetContainedFormLinks(this);");
+            var shouldAlwaysOverride = obj.IsTopLevelGroup();
+            fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IFormLinkGetter)}> {nameof(IFormLinkContainerGetter.ContainedFormLinks)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetContainedFormLinks(this);");
 
             if (!getter)
             {
-                fg.AppendLine($"public{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}void {nameof(IFormLinkContainer.RemapLinks)}(IReadOnlyDictionary<FormKey, FormKey> mapping) => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.RemapLinks(this, mapping);");
+                fg.AppendLine($"public{await obj.FunctionOverride(async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}void {nameof(IFormLinkContainer.RemapLinks)}(IReadOnlyDictionary<FormKey, FormKey> mapping) => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.RemapLinks(this, mapping);");
             }
         }
     }

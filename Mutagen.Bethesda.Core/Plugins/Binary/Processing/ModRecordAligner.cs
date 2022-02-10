@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing
                 using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                 {
                     using var writer = new MutagenWriter(alignedCellsFile, release);
-                    foreach (var grup in fileLocs.GrupLocations)
+                    foreach (var grup in fileLocs.GrupLocations.Keys)
                     {
                         if (grup <= mutaReader.Position) continue;
                         var noRecordLength = grup - mutaReader.Position;
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing
                 using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, parsingBundle))
                 {
                     using var writer = new MutagenWriter(outputPath.Path, GameConstants.Get(release));
-                    foreach (var grup in fileLocs.GrupLocations)
+                    foreach (var grup in fileLocs.GrupLocations.Keys)
                     {
                         if (grup <= mutaReader.Position) continue;
                         var noRecordLength = grup - mutaReader.Position;
@@ -318,14 +318,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing
         {
             while (!inputStream.Complete)
             {
-                // Import until next listed major record
+                // Import until next listed group
                 long noRecordLength;
                 if (fileLocs.GrupLocations.TryGetInDirection(
                     inputStream.Position,
                     higher: true,
                     result: out var nextRec))
                 {
-                    noRecordLength = nextRec.Value - inputStream.Position;
+                    noRecordLength = nextRec.Value.Location.Min - inputStream.Position;
                 }
                 else
                 {
@@ -336,11 +336,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing
                 // If complete overall, return
                 if (inputStream.Complete) break;
                 var groupMeta = inputStream.GetGroup();
-                if (!groupMeta.IsGroup)
-                {
-                    throw new ArgumentException();
-                }
-                inputStream.WriteTo(writer.BaseStream, checked((int)groupMeta.HeaderLength));
+                inputStream.WriteTo(writer.BaseStream, groupMeta.HeaderLength);
 
                 if (!alignmentRules.GroupTypeAlignment.TryGetValue(groupMeta.GroupType, out var groupRules)) continue;
                 

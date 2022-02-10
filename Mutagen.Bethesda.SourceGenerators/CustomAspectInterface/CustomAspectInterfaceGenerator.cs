@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.SourceGenerators.CustomAspectInterface
                     }
                     fg.AppendLine();
 
-                    using (new NamespaceWrapper(fg, namespaceGroup.Key))
+                    using (new NamespaceWrapper(fg, namespaceGroup.Key, fileScoped: false))
                     {
                         using (new RegionWrapper(fg, "Wrappers"))
                         {

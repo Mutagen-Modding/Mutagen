@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             (TempFolder TempFolder, Test Test) = passthrough.SetupProcessedFiles();
             using var tmp = TempFolder;
             await Test.Start();
-            using (var stream = new BinaryReadStream(passthrough.ProcessedPath(ProcessedFilesFolder)))
+            using (var stream = new BinaryReadStream(passthrough.ProcessedPath(ProcessedFilesFolder.Dir)))
             {
                 stream.Position = 0xCF614B;
                 PathGridBytes = stream.ReadBytes(0x14C7);

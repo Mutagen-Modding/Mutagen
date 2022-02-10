@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
@@ -159,7 +160,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 return GetResponse<GameSettingType>.Fail($"EDID was not located");
             }
             var edidMeta = meta.SubrecordFrame(majorMeta.Content.Slice(edidLoc.Value));
-            var edid = BinaryStringUtility.ProcessWholeToZString(edidMeta.Content);
+            var edid = BinaryStringUtility.ProcessWholeToZString(edidMeta.Content, MutagenEncodingProvider._1252);
             if (edid.Length == 0)
             {
                 return GetResponse<GameSettingType>.Fail("No EDID parsed.");

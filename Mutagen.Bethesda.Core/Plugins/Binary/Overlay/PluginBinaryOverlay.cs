@@ -7,10 +7,11 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using Loqui;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay
 {
-    public abstract class PluginBinaryOverlay
+    public abstract class PluginBinaryOverlay : ILoquiObject
     {
         public delegate ParseResult RecordTypeFillWrapper(
             OverlayStream stream,
@@ -27,6 +28,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             RecordType type,
             PreviousParse lastParsed,
             TypedParseParams? parseParams);
+
+        ILoquiRegistration ILoquiObject.Registration => throw new NotImplementedException();
 
         protected ReadOnlyMemorySlice<byte> _data;
         protected BinaryOverlayFactoryPackage _package;
@@ -62,11 +65,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");
                 }
-                if (groupMeta.ContentLength == 0)
-                {
-                    stream.Position += groupMeta.TotalLength;
-                    continue;
-                }
                 minimumFinalPos = checked((int)(stream.Position + groupMeta.TotalLength));
                 var parsed = fill(
                     stream: stream,
@@ -97,29 +95,45 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             while (!stream.Complete && stream.Position < finalPos)
             {
                 MajorRecordHeader majorMeta = stream.GetMajorRecord();
-                var minimumFinalPos = stream.Position + majorMeta.TotalLength;
-                var parsed = fill(
-                    stream: stream,
-                    finalPos: finalPos,
-                    offset: offset,
-                    recordParseCount: recordParseCount,
-                    type: majorMeta.RecordType,
-                    lastParsed: lastParsed,
-                    parseParams: parseParams);
-                if (!parsed.KeepParsing) break;
-                if (parsed.DuplicateParseMarker != null)
+                try
                 {
-                    if (recordParseCount == null)
+                    var minimumFinalPos = stream.Position + majorMeta.TotalLength;
+                    var parsed = fill(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        recordParseCount: recordParseCount,
+                        type: majorMeta.RecordType,
+                        lastParsed: lastParsed,
+                        parseParams: parseParams);
+                    if (!parsed.KeepParsing) break;
+                    if (parsed.DuplicateParseMarker != null)
                     {
-                        recordParseCount = new Dictionary<RecordType, int>();
+                        if (recordParseCount == null)
+                        {
+                            recordParseCount = new Dictionary<RecordType, int>();
+                        }
+
+                        recordParseCount[parsed.DuplicateParseMarker!.Value] =
+                            recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
+
+                    if (minimumFinalPos > stream.Position)
+                    {
+                        if (minimumFinalPos > int.MaxValue || minimumFinalPos < 0)
+                        {
+                            throw new OverflowException(
+                                $"Stream asked to to move to a position that was too large: {minimumFinalPos}.  Major Meta reported a TotalLength of {majorMeta.TotalLength}");
+                        }
+                        stream.Position = checked((int)minimumFinalPos);
+                    }
+
+                    lastParsed = parsed;
                 }
-                if (minimumFinalPos > stream.Position)
+                catch (Exception ex)
                 {
-                    stream.Position = checked((int)minimumFinalPos);
+                    throw RecordException.Enrich(ex, FormKey.Factory(stream.MetaData.MasterReferences, majorMeta.FormID.ID), ((ILoquiObject)this).Registration.ClassType, edid: null);
                 }
-                lastParsed = parsed;
             }
         }
 

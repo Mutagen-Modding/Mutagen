@@ -24,7 +24,8 @@ namespace Mutagen.Bethesda.Skyrim
                 var flag = (Flag)frame.ReadUInt8();
                 item.FileName = StringBinaryTranslation.Instance.Parse(
                      reader: frame,
-                     stringBinaryType: StringBinaryType.PrependLengthUShort);
+                     stringBinaryType: StringBinaryType.PrependLengthUShort,
+                     encoding: frame.MetaData.Encodings.NonTranslated);
                 if (flag.HasFlag(Flag.OnBegin))
                 {
                     item.OnBegin = ScriptFragment.CreateFromBinary(frame);
@@ -75,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Flag Flags => (Flag)_data.Span.Slice(0x1, 0x1)[0];
 
-            public string FileName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x2), lengthLength: 2);
+            public string FileName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x2), lengthLength: 2, _package.MetaData.Encodings.NonTranslated);
 
             public IScriptFragmentGetter? OnBegin { get; private set; }
 

@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region InsigniaUnused
         private int? _InsigniaUnusedLocation;
-        public String? InsigniaUnused => _InsigniaUnusedLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaUnusedLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? InsigniaUnused => _InsigniaUnusedLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaUnusedLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (m, p) => StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup));
+                        creator: (m, p) => StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), StringsSource.Normal, parsingBundle: p.MetaData));
                     return (int)Rank_FieldIndex.Title;
                 }
                 case RecordTypeInts.INAM:

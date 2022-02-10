@@ -2800,7 +2800,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         IGroup IMod.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
         public override bool CanUseLocalization => false;
         public override bool UsingLocalization
@@ -3717,11 +3717,13 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinaryParallel(
             this IOblivionModGetter item,
             Stream stream,
-            BinaryWriteParameters? param = null)
+            BinaryWriteParameters? param = null,
+            ParallelWriteParameters? parallelParam = null)
         {
             OblivionModCommon.WriteParallel(
                 item: item,
                 stream: stream,
+                parallelParam: parallelParam ?? ParallelWriteParameters.Default,
                 param: param ?? BinaryWriteParameters.Default,
                 modKey: item.ModKey);
         }
@@ -3730,9 +3732,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionModGetter item,
             string path,
             BinaryWriteParameters? param = null,
+            ParallelWriteParameters? parallelParam = null,
             IFileSystem? fileSystem = null)
         {
             param ??= BinaryWriteParameters.Default;
+            parallelParam ??= ParallelWriteParameters.Default;
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
@@ -3741,6 +3745,7 @@ namespace Mutagen.Bethesda.Oblivion
                 OblivionModCommon.WriteParallel(
                     item: item,
                     stream: stream,
+                    parallelParam: parallelParam,
                     param: param,
                     modKey: modKey);
             }
@@ -6229,14 +6234,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        const int CutCount = 100;
         public static void WriteParallel(
             IOblivionModGetter item,
             Stream stream,
             BinaryWriteParameters param,
+            ParallelWriteParameters parallelParam,
             ModKey modKey)
         {
-            var bundle = new WritingBundle(GameConstants.Oblivion);
+            var bundle = new WritingBundle(GameConstants.Oblivion)
+            {
+                StringsWriter = param.StringsWriter,
+                TargetLanguageOverride = param.TargetLanguageOverride,
+            };
             var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
@@ -6246,63 +6255,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 modKey: modKey);
             Stream[] outputStreams = new Stream[56];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Globals, writer.MetaData.MasterReferences!, 1, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Classes, writer.MetaData.MasterReferences!, 2, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Factions, writer.MetaData.MasterReferences!, 3, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Hairs, writer.MetaData.MasterReferences!, 4, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Eyes, writer.MetaData.MasterReferences!, 5, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Races, writer.MetaData.MasterReferences!, 6, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Sounds, writer.MetaData.MasterReferences!, 7, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Skills, writer.MetaData.MasterReferences!, 8, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.MagicEffects, writer.MetaData.MasterReferences!, 9, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Scripts, writer.MetaData.MasterReferences!, 10, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.LandTextures, writer.MetaData.MasterReferences!, 11, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Enchantments, writer.MetaData.MasterReferences!, 12, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Spells, writer.MetaData.MasterReferences!, 13, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Birthsigns, writer.MetaData.MasterReferences!, 14, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Activators, writer.MetaData.MasterReferences!, 15, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatus, writer.MetaData.MasterReferences!, 16, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Armors, writer.MetaData.MasterReferences!, 17, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Books, writer.MetaData.MasterReferences!, 18, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Clothes, writer.MetaData.MasterReferences!, 19, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Containers, writer.MetaData.MasterReferences!, 20, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Doors, writer.MetaData.MasterReferences!, 21, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Ingredients, writer.MetaData.MasterReferences!, 22, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Lights, writer.MetaData.MasterReferences!, 23, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Miscellaneous, writer.MetaData.MasterReferences!, 24, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Statics, writer.MetaData.MasterReferences!, 25, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Grasses, writer.MetaData.MasterReferences!, 26, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Trees, writer.MetaData.MasterReferences!, 27, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Flora, writer.MetaData.MasterReferences!, 28, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Furniture, writer.MetaData.MasterReferences!, 29, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, writer.MetaData.MasterReferences!, 30, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Ammunitions, writer.MetaData.MasterReferences!, 31, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, writer.MetaData.MasterReferences!, 32, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Creatures, writer.MetaData.MasterReferences!, 33, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.LeveledCreatures, writer.MetaData.MasterReferences!, 34, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.SoulGems, writer.MetaData.MasterReferences!, 35, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Keys, writer.MetaData.MasterReferences!, 36, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Potions, writer.MetaData.MasterReferences!, 37, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Subspaces, writer.MetaData.MasterReferences!, 38, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.SigilStones, writer.MetaData.MasterReferences!, 39, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, writer.MetaData.MasterReferences!, 40, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, writer.MetaData.MasterReferences!, 41, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Climates, writer.MetaData.MasterReferences!, 42, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Regions, writer.MetaData.MasterReferences!, 43, outputStreams));
-            toDo.Add(() => WriteCellsParallel(item.Cells, writer.MetaData.MasterReferences!, 44, outputStreams));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, writer.MetaData.MasterReferences!, 45, outputStreams));
-            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, writer.MetaData.MasterReferences!, 46, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Quests, writer.MetaData.MasterReferences!, 47, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, writer.MetaData.MasterReferences!, 48, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.AIPackages, writer.MetaData.MasterReferences!, 49, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, writer.MetaData.MasterReferences!, 50, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, writer.MetaData.MasterReferences!, 51, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, writer.MetaData.MasterReferences!, 52, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, writer.MetaData.MasterReferences!, 53, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Waters, writer.MetaData.MasterReferences!, 54, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.EffectShaders, writer.MetaData.MasterReferences!, 55, outputStreams));
-            Parallel.Invoke(toDo.ToArray());
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Globals, 1, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Classes, 2, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Factions, 3, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Hairs, 4, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Eyes, 5, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Races, 6, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Sounds, 7, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Skills, 8, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MagicEffects, 9, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Scripts, 10, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LandTextures, 11, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Enchantments, 12, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Spells, 13, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Birthsigns, 14, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Activators, 15, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatus, 16, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Armors, 17, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Books, 18, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Clothes, 19, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Containers, 20, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Doors, 21, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Ingredients, 22, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Lights, 23, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Miscellaneous, 24, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Statics, 25, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, 26, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Trees, 27, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Flora, 28, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Furniture, 29, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, 30, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, 31, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, 32, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Creatures, 33, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledCreatures, 34, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SoulGems, 35, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Keys, 36, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Potions, 37, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Subspaces, 38, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SigilStones, 39, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 40, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 41, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Climates, 42, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Regions, 43, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteCellsParallel(item.Cells, 44, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 45, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, 46, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Quests, 47, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 48, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AIPackages, 49, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 50, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 51, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, 52, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 53, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Waters, 54, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, 55, outputStreams, bundle, parallelParam));
+            Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
                 stream);
@@ -6310,31 +6319,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public static void WriteGroupParallel<T>(
             IOblivionGroupGetter<T> group,
-            IMasterReferenceReader masters,
             int targetIndex,
-            Stream[] streamDepositArray)
+            Stream[] streamDepositArray,
+            WritingBundle bundle,
+            ParallelWriteParameters parallelParam)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
             if (group.RecordCache.Count == 0) return;
-            var cuts = group.Cut(CutCount).ToArray();
+            var cuts = group.Cut(parallelParam.CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
-            byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
+            byte[] groupBytes = new byte[bundle.Constants.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
-            using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
+            using (var stream = new MutagenWriter(groupByteStream, bundle.Constants, dispose: false))
             {
                 stream.Position += 8;
                 OblivionGroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
             }
             subStreams[0] = groupByteStream;
-            Parallel.ForEach(cuts, (cutItems, state, counter) =>
+            Parallel.ForEach(cuts, parallelParam.ParallelOptions, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
-                var bundle = new WritingBundle(GameConstants.Oblivion)
-                {
-                    MasterReferences = masters
-                };
-                using (var stream = new MutagenWriter(trib, bundle, dispose: false))
+                using (var stream = new MutagenWriter(trib, bundle with {}, dispose: false))
                 {
                     foreach (var item in cutItems)
                     {
@@ -12431,7 +12437,8 @@ namespace Mutagen.Bethesda.Oblivion
                 path: path);
             var bundle = new WritingBundle(GameRelease.Oblivion)
             {
-                CleanNulls = param.CleanNulls
+                CleanNulls = param.CleanNulls,
+                TargetLanguageOverride = param.TargetLanguageOverride
             };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(
@@ -12507,7 +12514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => false;
         public bool UsingLocalization => false;
@@ -12543,223 +12550,223 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IOblivionModHeaderGetter ModHeader => _ModHeader ?? new OblivionModHeader();
         #endregion
         #region GameSettings
-        private RangeInt64? _GameSettingsLocation;
-        private IOblivionGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocation.HasValue ? OblivionGroupBinaryOverlay<IGameSettingGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GameSettingsLocation!.Value.Min, _GameSettingsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _GameSettingsLocations;
+        private IOblivionGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? OblivionGroupBinaryOverlay<IGameSettingGetter>.OblivionGroupFactory(_data, _GameSettingsLocations, _package) : default;
         public IOblivionGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new OblivionGroup<GameSetting>(this);
         #endregion
         #region Globals
-        private RangeInt64? _GlobalsLocation;
-        private IOblivionGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocation.HasValue ? OblivionGroupBinaryOverlay<IGlobalGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GlobalsLocation!.Value.Min, _GlobalsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _GlobalsLocations;
+        private IOblivionGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? OblivionGroupBinaryOverlay<IGlobalGetter>.OblivionGroupFactory(_data, _GlobalsLocations, _package) : default;
         public IOblivionGroupGetter<IGlobalGetter> Globals => _Globals ?? new OblivionGroup<Global>(this);
         #endregion
         #region Classes
-        private RangeInt64? _ClassesLocation;
-        private IOblivionGroupGetter<IClassGetter>? _Classes => _ClassesLocation.HasValue ? OblivionGroupBinaryOverlay<IClassGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClassesLocation!.Value.Min, _ClassesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ClassesLocations;
+        private IOblivionGroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? OblivionGroupBinaryOverlay<IClassGetter>.OblivionGroupFactory(_data, _ClassesLocations, _package) : default;
         public IOblivionGroupGetter<IClassGetter> Classes => _Classes ?? new OblivionGroup<Class>(this);
         #endregion
         #region Factions
-        private RangeInt64? _FactionsLocation;
-        private IOblivionGroupGetter<IFactionGetter>? _Factions => _FactionsLocation.HasValue ? OblivionGroupBinaryOverlay<IFactionGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FactionsLocation!.Value.Min, _FactionsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _FactionsLocations;
+        private IOblivionGroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? OblivionGroupBinaryOverlay<IFactionGetter>.OblivionGroupFactory(_data, _FactionsLocations, _package) : default;
         public IOblivionGroupGetter<IFactionGetter> Factions => _Factions ?? new OblivionGroup<Faction>(this);
         #endregion
         #region Hairs
-        private RangeInt64? _HairsLocation;
-        private IOblivionGroupGetter<IHairGetter>? _Hairs => _HairsLocation.HasValue ? OblivionGroupBinaryOverlay<IHairGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _HairsLocation!.Value.Min, _HairsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _HairsLocations;
+        private IOblivionGroupGetter<IHairGetter>? _Hairs => _HairsLocations != null ? OblivionGroupBinaryOverlay<IHairGetter>.OblivionGroupFactory(_data, _HairsLocations, _package) : default;
         public IOblivionGroupGetter<IHairGetter> Hairs => _Hairs ?? new OblivionGroup<Hair>(this);
         #endregion
         #region Eyes
-        private RangeInt64? _EyesLocation;
-        private IOblivionGroupGetter<IEyeGetter>? _Eyes => _EyesLocation.HasValue ? OblivionGroupBinaryOverlay<IEyeGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EyesLocation!.Value.Min, _EyesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _EyesLocations;
+        private IOblivionGroupGetter<IEyeGetter>? _Eyes => _EyesLocations != null ? OblivionGroupBinaryOverlay<IEyeGetter>.OblivionGroupFactory(_data, _EyesLocations, _package) : default;
         public IOblivionGroupGetter<IEyeGetter> Eyes => _Eyes ?? new OblivionGroup<Eye>(this);
         #endregion
         #region Races
-        private RangeInt64? _RacesLocation;
-        private IOblivionGroupGetter<IRaceGetter>? _Races => _RacesLocation.HasValue ? OblivionGroupBinaryOverlay<IRaceGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _RacesLocation!.Value.Min, _RacesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _RacesLocations;
+        private IOblivionGroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? OblivionGroupBinaryOverlay<IRaceGetter>.OblivionGroupFactory(_data, _RacesLocations, _package) : default;
         public IOblivionGroupGetter<IRaceGetter> Races => _Races ?? new OblivionGroup<Race>(this);
         #endregion
         #region Sounds
-        private RangeInt64? _SoundsLocation;
-        private IOblivionGroupGetter<ISoundGetter>? _Sounds => _SoundsLocation.HasValue ? OblivionGroupBinaryOverlay<ISoundGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoundsLocation!.Value.Min, _SoundsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SoundsLocations;
+        private IOblivionGroupGetter<ISoundGetter>? _Sounds => _SoundsLocations != null ? OblivionGroupBinaryOverlay<ISoundGetter>.OblivionGroupFactory(_data, _SoundsLocations, _package) : default;
         public IOblivionGroupGetter<ISoundGetter> Sounds => _Sounds ?? new OblivionGroup<Sound>(this);
         #endregion
         #region Skills
-        private RangeInt64? _SkillsLocation;
-        private IOblivionGroupGetter<ISkillRecordGetter>? _Skills => _SkillsLocation.HasValue ? OblivionGroupBinaryOverlay<ISkillRecordGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SkillsLocation!.Value.Min, _SkillsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SkillsLocations;
+        private IOblivionGroupGetter<ISkillRecordGetter>? _Skills => _SkillsLocations != null ? OblivionGroupBinaryOverlay<ISkillRecordGetter>.OblivionGroupFactory(_data, _SkillsLocations, _package) : default;
         public IOblivionGroupGetter<ISkillRecordGetter> Skills => _Skills ?? new OblivionGroup<SkillRecord>(this);
         #endregion
         #region MagicEffects
-        private RangeInt64? _MagicEffectsLocation;
-        private IOblivionGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocation.HasValue ? OblivionGroupBinaryOverlay<IMagicEffectGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MagicEffectsLocation!.Value.Min, _MagicEffectsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _MagicEffectsLocations;
+        private IOblivionGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? OblivionGroupBinaryOverlay<IMagicEffectGetter>.OblivionGroupFactory(_data, _MagicEffectsLocations, _package) : default;
         public IOblivionGroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new OblivionGroup<MagicEffect>(this);
         #endregion
         #region Scripts
-        private RangeInt64? _ScriptsLocation;
-        private IOblivionGroupGetter<IScriptGetter>? _Scripts => _ScriptsLocation.HasValue ? OblivionGroupBinaryOverlay<IScriptGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ScriptsLocation!.Value.Min, _ScriptsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ScriptsLocations;
+        private IOblivionGroupGetter<IScriptGetter>? _Scripts => _ScriptsLocations != null ? OblivionGroupBinaryOverlay<IScriptGetter>.OblivionGroupFactory(_data, _ScriptsLocations, _package) : default;
         public IOblivionGroupGetter<IScriptGetter> Scripts => _Scripts ?? new OblivionGroup<Script>(this);
         #endregion
         #region LandTextures
-        private RangeInt64? _LandTexturesLocation;
-        private IOblivionGroupGetter<ILandTextureGetter>? _LandTextures => _LandTexturesLocation.HasValue ? OblivionGroupBinaryOverlay<ILandTextureGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LandTexturesLocation!.Value.Min, _LandTexturesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LandTexturesLocations;
+        private IOblivionGroupGetter<ILandTextureGetter>? _LandTextures => _LandTexturesLocations != null ? OblivionGroupBinaryOverlay<ILandTextureGetter>.OblivionGroupFactory(_data, _LandTexturesLocations, _package) : default;
         public IOblivionGroupGetter<ILandTextureGetter> LandTextures => _LandTextures ?? new OblivionGroup<LandTexture>(this);
         #endregion
         #region Enchantments
-        private RangeInt64? _EnchantmentsLocation;
-        private IOblivionGroupGetter<IEnchantmentGetter>? _Enchantments => _EnchantmentsLocation.HasValue ? OblivionGroupBinaryOverlay<IEnchantmentGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EnchantmentsLocation!.Value.Min, _EnchantmentsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _EnchantmentsLocations;
+        private IOblivionGroupGetter<IEnchantmentGetter>? _Enchantments => _EnchantmentsLocations != null ? OblivionGroupBinaryOverlay<IEnchantmentGetter>.OblivionGroupFactory(_data, _EnchantmentsLocations, _package) : default;
         public IOblivionGroupGetter<IEnchantmentGetter> Enchantments => _Enchantments ?? new OblivionGroup<Enchantment>(this);
         #endregion
         #region Spells
-        private RangeInt64? _SpellsLocation;
-        private IOblivionGroupGetter<ISpellUnleveledGetter>? _Spells => _SpellsLocation.HasValue ? OblivionGroupBinaryOverlay<ISpellUnleveledGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SpellsLocation!.Value.Min, _SpellsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SpellsLocations;
+        private IOblivionGroupGetter<ISpellUnleveledGetter>? _Spells => _SpellsLocations != null ? OblivionGroupBinaryOverlay<ISpellUnleveledGetter>.OblivionGroupFactory(_data, _SpellsLocations, _package) : default;
         public IOblivionGroupGetter<ISpellUnleveledGetter> Spells => _Spells ?? new OblivionGroup<SpellUnleveled>(this);
         #endregion
         #region Birthsigns
-        private RangeInt64? _BirthsignsLocation;
-        private IOblivionGroupGetter<IBirthsignGetter>? _Birthsigns => _BirthsignsLocation.HasValue ? OblivionGroupBinaryOverlay<IBirthsignGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _BirthsignsLocation!.Value.Min, _BirthsignsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _BirthsignsLocations;
+        private IOblivionGroupGetter<IBirthsignGetter>? _Birthsigns => _BirthsignsLocations != null ? OblivionGroupBinaryOverlay<IBirthsignGetter>.OblivionGroupFactory(_data, _BirthsignsLocations, _package) : default;
         public IOblivionGroupGetter<IBirthsignGetter> Birthsigns => _Birthsigns ?? new OblivionGroup<Birthsign>(this);
         #endregion
         #region Activators
-        private RangeInt64? _ActivatorsLocation;
-        private IOblivionGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocation.HasValue ? OblivionGroupBinaryOverlay<IActivatorGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ActivatorsLocation!.Value.Min, _ActivatorsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ActivatorsLocations;
+        private IOblivionGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? OblivionGroupBinaryOverlay<IActivatorGetter>.OblivionGroupFactory(_data, _ActivatorsLocations, _package) : default;
         public IOblivionGroupGetter<IActivatorGetter> Activators => _Activators ?? new OblivionGroup<Activator>(this);
         #endregion
         #region AlchemicalApparatus
-        private RangeInt64? _AlchemicalApparatusLocation;
-        private IOblivionGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatus => _AlchemicalApparatusLocation.HasValue ? OblivionGroupBinaryOverlay<IAlchemicalApparatusGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AlchemicalApparatusLocation!.Value.Min, _AlchemicalApparatusLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _AlchemicalApparatusLocations;
+        private IOblivionGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatus => _AlchemicalApparatusLocations != null ? OblivionGroupBinaryOverlay<IAlchemicalApparatusGetter>.OblivionGroupFactory(_data, _AlchemicalApparatusLocations, _package) : default;
         public IOblivionGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatus => _AlchemicalApparatus ?? new OblivionGroup<AlchemicalApparatus>(this);
         #endregion
         #region Armors
-        private RangeInt64? _ArmorsLocation;
-        private IOblivionGroupGetter<IArmorGetter>? _Armors => _ArmorsLocation.HasValue ? OblivionGroupBinaryOverlay<IArmorGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ArmorsLocation!.Value.Min, _ArmorsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ArmorsLocations;
+        private IOblivionGroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? OblivionGroupBinaryOverlay<IArmorGetter>.OblivionGroupFactory(_data, _ArmorsLocations, _package) : default;
         public IOblivionGroupGetter<IArmorGetter> Armors => _Armors ?? new OblivionGroup<Armor>(this);
         #endregion
         #region Books
-        private RangeInt64? _BooksLocation;
-        private IOblivionGroupGetter<IBookGetter>? _Books => _BooksLocation.HasValue ? OblivionGroupBinaryOverlay<IBookGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _BooksLocation!.Value.Min, _BooksLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _BooksLocations;
+        private IOblivionGroupGetter<IBookGetter>? _Books => _BooksLocations != null ? OblivionGroupBinaryOverlay<IBookGetter>.OblivionGroupFactory(_data, _BooksLocations, _package) : default;
         public IOblivionGroupGetter<IBookGetter> Books => _Books ?? new OblivionGroup<Book>(this);
         #endregion
         #region Clothes
-        private RangeInt64? _ClothesLocation;
-        private IOblivionGroupGetter<IClothingGetter>? _Clothes => _ClothesLocation.HasValue ? OblivionGroupBinaryOverlay<IClothingGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClothesLocation!.Value.Min, _ClothesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ClothesLocations;
+        private IOblivionGroupGetter<IClothingGetter>? _Clothes => _ClothesLocations != null ? OblivionGroupBinaryOverlay<IClothingGetter>.OblivionGroupFactory(_data, _ClothesLocations, _package) : default;
         public IOblivionGroupGetter<IClothingGetter> Clothes => _Clothes ?? new OblivionGroup<Clothing>(this);
         #endregion
         #region Containers
-        private RangeInt64? _ContainersLocation;
-        private IOblivionGroupGetter<IContainerGetter>? _Containers => _ContainersLocation.HasValue ? OblivionGroupBinaryOverlay<IContainerGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ContainersLocation!.Value.Min, _ContainersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ContainersLocations;
+        private IOblivionGroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? OblivionGroupBinaryOverlay<IContainerGetter>.OblivionGroupFactory(_data, _ContainersLocations, _package) : default;
         public IOblivionGroupGetter<IContainerGetter> Containers => _Containers ?? new OblivionGroup<Container>(this);
         #endregion
         #region Doors
-        private RangeInt64? _DoorsLocation;
-        private IOblivionGroupGetter<IDoorGetter>? _Doors => _DoorsLocation.HasValue ? OblivionGroupBinaryOverlay<IDoorGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DoorsLocation!.Value.Min, _DoorsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _DoorsLocations;
+        private IOblivionGroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? OblivionGroupBinaryOverlay<IDoorGetter>.OblivionGroupFactory(_data, _DoorsLocations, _package) : default;
         public IOblivionGroupGetter<IDoorGetter> Doors => _Doors ?? new OblivionGroup<Door>(this);
         #endregion
         #region Ingredients
-        private RangeInt64? _IngredientsLocation;
-        private IOblivionGroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocation.HasValue ? OblivionGroupBinaryOverlay<IIngredientGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IngredientsLocation!.Value.Min, _IngredientsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _IngredientsLocations;
+        private IOblivionGroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocations != null ? OblivionGroupBinaryOverlay<IIngredientGetter>.OblivionGroupFactory(_data, _IngredientsLocations, _package) : default;
         public IOblivionGroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new OblivionGroup<Ingredient>(this);
         #endregion
         #region Lights
-        private RangeInt64? _LightsLocation;
-        private IOblivionGroupGetter<ILightGetter>? _Lights => _LightsLocation.HasValue ? OblivionGroupBinaryOverlay<ILightGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LightsLocation!.Value.Min, _LightsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LightsLocations;
+        private IOblivionGroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? OblivionGroupBinaryOverlay<ILightGetter>.OblivionGroupFactory(_data, _LightsLocations, _package) : default;
         public IOblivionGroupGetter<ILightGetter> Lights => _Lights ?? new OblivionGroup<Light>(this);
         #endregion
         #region Miscellaneous
-        private RangeInt64? _MiscellaneousLocation;
-        private IOblivionGroupGetter<IMiscellaneousGetter>? _Miscellaneous => _MiscellaneousLocation.HasValue ? OblivionGroupBinaryOverlay<IMiscellaneousGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _MiscellaneousLocation!.Value.Min, _MiscellaneousLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _MiscellaneousLocations;
+        private IOblivionGroupGetter<IMiscellaneousGetter>? _Miscellaneous => _MiscellaneousLocations != null ? OblivionGroupBinaryOverlay<IMiscellaneousGetter>.OblivionGroupFactory(_data, _MiscellaneousLocations, _package) : default;
         public IOblivionGroupGetter<IMiscellaneousGetter> Miscellaneous => _Miscellaneous ?? new OblivionGroup<Miscellaneous>(this);
         #endregion
         #region Statics
-        private RangeInt64? _StaticsLocation;
-        private IOblivionGroupGetter<IStaticGetter>? _Statics => _StaticsLocation.HasValue ? OblivionGroupBinaryOverlay<IStaticGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _StaticsLocation!.Value.Min, _StaticsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _StaticsLocations;
+        private IOblivionGroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? OblivionGroupBinaryOverlay<IStaticGetter>.OblivionGroupFactory(_data, _StaticsLocations, _package) : default;
         public IOblivionGroupGetter<IStaticGetter> Statics => _Statics ?? new OblivionGroup<Static>(this);
         #endregion
         #region Grasses
-        private RangeInt64? _GrassesLocation;
-        private IOblivionGroupGetter<IGrassGetter>? _Grasses => _GrassesLocation.HasValue ? OblivionGroupBinaryOverlay<IGrassGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GrassesLocation!.Value.Min, _GrassesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _GrassesLocations;
+        private IOblivionGroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? OblivionGroupBinaryOverlay<IGrassGetter>.OblivionGroupFactory(_data, _GrassesLocations, _package) : default;
         public IOblivionGroupGetter<IGrassGetter> Grasses => _Grasses ?? new OblivionGroup<Grass>(this);
         #endregion
         #region Trees
-        private RangeInt64? _TreesLocation;
-        private IOblivionGroupGetter<ITreeGetter>? _Trees => _TreesLocation.HasValue ? OblivionGroupBinaryOverlay<ITreeGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TreesLocation!.Value.Min, _TreesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _TreesLocations;
+        private IOblivionGroupGetter<ITreeGetter>? _Trees => _TreesLocations != null ? OblivionGroupBinaryOverlay<ITreeGetter>.OblivionGroupFactory(_data, _TreesLocations, _package) : default;
         public IOblivionGroupGetter<ITreeGetter> Trees => _Trees ?? new OblivionGroup<Tree>(this);
         #endregion
         #region Flora
-        private RangeInt64? _FloraLocation;
-        private IOblivionGroupGetter<IFloraGetter>? _Flora => _FloraLocation.HasValue ? OblivionGroupBinaryOverlay<IFloraGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FloraLocation!.Value.Min, _FloraLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _FloraLocations;
+        private IOblivionGroupGetter<IFloraGetter>? _Flora => _FloraLocations != null ? OblivionGroupBinaryOverlay<IFloraGetter>.OblivionGroupFactory(_data, _FloraLocations, _package) : default;
         public IOblivionGroupGetter<IFloraGetter> Flora => _Flora ?? new OblivionGroup<Flora>(this);
         #endregion
         #region Furniture
-        private RangeInt64? _FurnitureLocation;
-        private IOblivionGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocation.HasValue ? OblivionGroupBinaryOverlay<IFurnitureGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FurnitureLocation!.Value.Min, _FurnitureLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _FurnitureLocations;
+        private IOblivionGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? OblivionGroupBinaryOverlay<IFurnitureGetter>.OblivionGroupFactory(_data, _FurnitureLocations, _package) : default;
         public IOblivionGroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new OblivionGroup<Furniture>(this);
         #endregion
         #region Weapons
-        private RangeInt64? _WeaponsLocation;
-        private IOblivionGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocation.HasValue ? OblivionGroupBinaryOverlay<IWeaponGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WeaponsLocation!.Value.Min, _WeaponsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _WeaponsLocations;
+        private IOblivionGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? OblivionGroupBinaryOverlay<IWeaponGetter>.OblivionGroupFactory(_data, _WeaponsLocations, _package) : default;
         public IOblivionGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new OblivionGroup<Weapon>(this);
         #endregion
         #region Ammunitions
-        private RangeInt64? _AmmunitionsLocation;
-        private IOblivionGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocation.HasValue ? OblivionGroupBinaryOverlay<IAmmunitionGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AmmunitionsLocation!.Value.Min, _AmmunitionsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _AmmunitionsLocations;
+        private IOblivionGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? OblivionGroupBinaryOverlay<IAmmunitionGetter>.OblivionGroupFactory(_data, _AmmunitionsLocations, _package) : default;
         public IOblivionGroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new OblivionGroup<Ammunition>(this);
         #endregion
         #region Npcs
-        private RangeInt64? _NpcsLocation;
-        private IOblivionGroupGetter<INpcGetter>? _Npcs => _NpcsLocation.HasValue ? OblivionGroupBinaryOverlay<INpcGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _NpcsLocation!.Value.Min, _NpcsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _NpcsLocations;
+        private IOblivionGroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? OblivionGroupBinaryOverlay<INpcGetter>.OblivionGroupFactory(_data, _NpcsLocations, _package) : default;
         public IOblivionGroupGetter<INpcGetter> Npcs => _Npcs ?? new OblivionGroup<Npc>(this);
         #endregion
         #region Creatures
-        private RangeInt64? _CreaturesLocation;
-        private IOblivionGroupGetter<ICreatureGetter>? _Creatures => _CreaturesLocation.HasValue ? OblivionGroupBinaryOverlay<ICreatureGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CreaturesLocation!.Value.Min, _CreaturesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _CreaturesLocations;
+        private IOblivionGroupGetter<ICreatureGetter>? _Creatures => _CreaturesLocations != null ? OblivionGroupBinaryOverlay<ICreatureGetter>.OblivionGroupFactory(_data, _CreaturesLocations, _package) : default;
         public IOblivionGroupGetter<ICreatureGetter> Creatures => _Creatures ?? new OblivionGroup<Creature>(this);
         #endregion
         #region LeveledCreatures
-        private RangeInt64? _LeveledCreaturesLocation;
-        private IOblivionGroupGetter<ILeveledCreatureGetter>? _LeveledCreatures => _LeveledCreaturesLocation.HasValue ? OblivionGroupBinaryOverlay<ILeveledCreatureGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledCreaturesLocation!.Value.Min, _LeveledCreaturesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LeveledCreaturesLocations;
+        private IOblivionGroupGetter<ILeveledCreatureGetter>? _LeveledCreatures => _LeveledCreaturesLocations != null ? OblivionGroupBinaryOverlay<ILeveledCreatureGetter>.OblivionGroupFactory(_data, _LeveledCreaturesLocations, _package) : default;
         public IOblivionGroupGetter<ILeveledCreatureGetter> LeveledCreatures => _LeveledCreatures ?? new OblivionGroup<LeveledCreature>(this);
         #endregion
         #region SoulGems
-        private RangeInt64? _SoulGemsLocation;
-        private IOblivionGroupGetter<ISoulGemGetter>? _SoulGems => _SoulGemsLocation.HasValue ? OblivionGroupBinaryOverlay<ISoulGemGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SoulGemsLocation!.Value.Min, _SoulGemsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SoulGemsLocations;
+        private IOblivionGroupGetter<ISoulGemGetter>? _SoulGems => _SoulGemsLocations != null ? OblivionGroupBinaryOverlay<ISoulGemGetter>.OblivionGroupFactory(_data, _SoulGemsLocations, _package) : default;
         public IOblivionGroupGetter<ISoulGemGetter> SoulGems => _SoulGems ?? new OblivionGroup<SoulGem>(this);
         #endregion
         #region Keys
-        private RangeInt64? _KeysLocation;
-        private IOblivionGroupGetter<IKeyGetter>? _Keys => _KeysLocation.HasValue ? OblivionGroupBinaryOverlay<IKeyGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _KeysLocation!.Value.Min, _KeysLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _KeysLocations;
+        private IOblivionGroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? OblivionGroupBinaryOverlay<IKeyGetter>.OblivionGroupFactory(_data, _KeysLocations, _package) : default;
         public IOblivionGroupGetter<IKeyGetter> Keys => _Keys ?? new OblivionGroup<Key>(this);
         #endregion
         #region Potions
-        private RangeInt64? _PotionsLocation;
-        private IOblivionGroupGetter<IPotionGetter>? _Potions => _PotionsLocation.HasValue ? OblivionGroupBinaryOverlay<IPotionGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _PotionsLocation!.Value.Min, _PotionsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _PotionsLocations;
+        private IOblivionGroupGetter<IPotionGetter>? _Potions => _PotionsLocations != null ? OblivionGroupBinaryOverlay<IPotionGetter>.OblivionGroupFactory(_data, _PotionsLocations, _package) : default;
         public IOblivionGroupGetter<IPotionGetter> Potions => _Potions ?? new OblivionGroup<Potion>(this);
         #endregion
         #region Subspaces
-        private RangeInt64? _SubspacesLocation;
-        private IOblivionGroupGetter<ISubspaceGetter>? _Subspaces => _SubspacesLocation.HasValue ? OblivionGroupBinaryOverlay<ISubspaceGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SubspacesLocation!.Value.Min, _SubspacesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SubspacesLocations;
+        private IOblivionGroupGetter<ISubspaceGetter>? _Subspaces => _SubspacesLocations != null ? OblivionGroupBinaryOverlay<ISubspaceGetter>.OblivionGroupFactory(_data, _SubspacesLocations, _package) : default;
         public IOblivionGroupGetter<ISubspaceGetter> Subspaces => _Subspaces ?? new OblivionGroup<Subspace>(this);
         #endregion
         #region SigilStones
-        private RangeInt64? _SigilStonesLocation;
-        private IOblivionGroupGetter<ISigilStoneGetter>? _SigilStones => _SigilStonesLocation.HasValue ? OblivionGroupBinaryOverlay<ISigilStoneGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _SigilStonesLocation!.Value.Min, _SigilStonesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _SigilStonesLocations;
+        private IOblivionGroupGetter<ISigilStoneGetter>? _SigilStones => _SigilStonesLocations != null ? OblivionGroupBinaryOverlay<ISigilStoneGetter>.OblivionGroupFactory(_data, _SigilStonesLocations, _package) : default;
         public IOblivionGroupGetter<ISigilStoneGetter> SigilStones => _SigilStones ?? new OblivionGroup<SigilStone>(this);
         #endregion
         #region LeveledItems
-        private RangeInt64? _LeveledItemsLocation;
-        private IOblivionGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocation.HasValue ? OblivionGroupBinaryOverlay<ILeveledItemGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledItemsLocation!.Value.Min, _LeveledItemsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LeveledItemsLocations;
+        private IOblivionGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? OblivionGroupBinaryOverlay<ILeveledItemGetter>.OblivionGroupFactory(_data, _LeveledItemsLocations, _package) : default;
         public IOblivionGroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new OblivionGroup<LeveledItem>(this);
         #endregion
         #region Weathers
-        private RangeInt64? _WeathersLocation;
-        private IOblivionGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocation.HasValue ? OblivionGroupBinaryOverlay<IWeatherGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WeathersLocation!.Value.Min, _WeathersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _WeathersLocations;
+        private IOblivionGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? OblivionGroupBinaryOverlay<IWeatherGetter>.OblivionGroupFactory(_data, _WeathersLocations, _package) : default;
         public IOblivionGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new OblivionGroup<Weather>(this);
         #endregion
         #region Climates
-        private RangeInt64? _ClimatesLocation;
-        private IOblivionGroupGetter<IClimateGetter>? _Climates => _ClimatesLocation.HasValue ? OblivionGroupBinaryOverlay<IClimateGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClimatesLocation!.Value.Min, _ClimatesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _ClimatesLocations;
+        private IOblivionGroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? OblivionGroupBinaryOverlay<IClimateGetter>.OblivionGroupFactory(_data, _ClimatesLocations, _package) : default;
         public IOblivionGroupGetter<IClimateGetter> Climates => _Climates ?? new OblivionGroup<Climate>(this);
         #endregion
         #region Regions
-        private RangeInt64? _RegionsLocation;
-        private IOblivionGroupGetter<IRegionGetter>? _Regions => _RegionsLocation.HasValue ? OblivionGroupBinaryOverlay<IRegionGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _RegionsLocation!.Value.Min, _RegionsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _RegionsLocations;
+        private IOblivionGroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? OblivionGroupBinaryOverlay<IRegionGetter>.OblivionGroupFactory(_data, _RegionsLocations, _package) : default;
         public IOblivionGroupGetter<IRegionGetter> Regions => _Regions ?? new OblivionGroup<Region>(this);
         #endregion
         #region Cells
@@ -12768,58 +12775,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IOblivionListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new OblivionListGroup<CellBlock>();
         #endregion
         #region Worldspaces
-        private RangeInt64? _WorldspacesLocation;
-        private IOblivionGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocation.HasValue ? OblivionGroupBinaryOverlay<IWorldspaceGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WorldspacesLocation!.Value.Min, _WorldspacesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _WorldspacesLocations;
+        private IOblivionGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? OblivionGroupBinaryOverlay<IWorldspaceGetter>.OblivionGroupFactory(_data, _WorldspacesLocations, _package) : default;
         public IOblivionGroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new OblivionGroup<Worldspace>(this);
         #endregion
         #region DialogTopics
-        private RangeInt64? _DialogTopicsLocation;
-        private IOblivionGroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocation.HasValue ? OblivionGroupBinaryOverlay<IDialogTopicGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DialogTopicsLocation!.Value.Min, _DialogTopicsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _DialogTopicsLocations;
+        private IOblivionGroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocations != null ? OblivionGroupBinaryOverlay<IDialogTopicGetter>.OblivionGroupFactory(_data, _DialogTopicsLocations, _package) : default;
         public IOblivionGroupGetter<IDialogTopicGetter> DialogTopics => _DialogTopics ?? new OblivionGroup<DialogTopic>(this);
         #endregion
         #region Quests
-        private RangeInt64? _QuestsLocation;
-        private IOblivionGroupGetter<IQuestGetter>? _Quests => _QuestsLocation.HasValue ? OblivionGroupBinaryOverlay<IQuestGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _QuestsLocation!.Value.Min, _QuestsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _QuestsLocations;
+        private IOblivionGroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? OblivionGroupBinaryOverlay<IQuestGetter>.OblivionGroupFactory(_data, _QuestsLocations, _package) : default;
         public IOblivionGroupGetter<IQuestGetter> Quests => _Quests ?? new OblivionGroup<Quest>(this);
         #endregion
         #region IdleAnimations
-        private RangeInt64? _IdleAnimationsLocation;
-        private IOblivionGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocation.HasValue ? OblivionGroupBinaryOverlay<IIdleAnimationGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _IdleAnimationsLocation!.Value.Min, _IdleAnimationsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _IdleAnimationsLocations;
+        private IOblivionGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? OblivionGroupBinaryOverlay<IIdleAnimationGetter>.OblivionGroupFactory(_data, _IdleAnimationsLocations, _package) : default;
         public IOblivionGroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new OblivionGroup<IdleAnimation>(this);
         #endregion
         #region AIPackages
-        private RangeInt64? _AIPackagesLocation;
-        private IOblivionGroupGetter<IAIPackageGetter>? _AIPackages => _AIPackagesLocation.HasValue ? OblivionGroupBinaryOverlay<IAIPackageGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AIPackagesLocation!.Value.Min, _AIPackagesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _AIPackagesLocations;
+        private IOblivionGroupGetter<IAIPackageGetter>? _AIPackages => _AIPackagesLocations != null ? OblivionGroupBinaryOverlay<IAIPackageGetter>.OblivionGroupFactory(_data, _AIPackagesLocations, _package) : default;
         public IOblivionGroupGetter<IAIPackageGetter> AIPackages => _AIPackages ?? new OblivionGroup<AIPackage>(this);
         #endregion
         #region CombatStyles
-        private RangeInt64? _CombatStylesLocation;
-        private IOblivionGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocation.HasValue ? OblivionGroupBinaryOverlay<ICombatStyleGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CombatStylesLocation!.Value.Min, _CombatStylesLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _CombatStylesLocations;
+        private IOblivionGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? OblivionGroupBinaryOverlay<ICombatStyleGetter>.OblivionGroupFactory(_data, _CombatStylesLocations, _package) : default;
         public IOblivionGroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new OblivionGroup<CombatStyle>(this);
         #endregion
         #region LoadScreens
-        private RangeInt64? _LoadScreensLocation;
-        private IOblivionGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocation.HasValue ? OblivionGroupBinaryOverlay<ILoadScreenGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LoadScreensLocation!.Value.Min, _LoadScreensLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LoadScreensLocations;
+        private IOblivionGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? OblivionGroupBinaryOverlay<ILoadScreenGetter>.OblivionGroupFactory(_data, _LoadScreensLocations, _package) : default;
         public IOblivionGroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new OblivionGroup<LoadScreen>(this);
         #endregion
         #region LeveledSpells
-        private RangeInt64? _LeveledSpellsLocation;
-        private IOblivionGroupGetter<ILeveledSpellGetter>? _LeveledSpells => _LeveledSpellsLocation.HasValue ? OblivionGroupBinaryOverlay<ILeveledSpellGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LeveledSpellsLocation!.Value.Min, _LeveledSpellsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _LeveledSpellsLocations;
+        private IOblivionGroupGetter<ILeveledSpellGetter>? _LeveledSpells => _LeveledSpellsLocations != null ? OblivionGroupBinaryOverlay<ILeveledSpellGetter>.OblivionGroupFactory(_data, _LeveledSpellsLocations, _package) : default;
         public IOblivionGroupGetter<ILeveledSpellGetter> LeveledSpells => _LeveledSpells ?? new OblivionGroup<LeveledSpell>(this);
         #endregion
         #region AnimatedObjects
-        private RangeInt64? _AnimatedObjectsLocation;
-        private IOblivionGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocation.HasValue ? OblivionGroupBinaryOverlay<IAnimatedObjectGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _AnimatedObjectsLocation!.Value.Min, _AnimatedObjectsLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _AnimatedObjectsLocations;
+        private IOblivionGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? OblivionGroupBinaryOverlay<IAnimatedObjectGetter>.OblivionGroupFactory(_data, _AnimatedObjectsLocations, _package) : default;
         public IOblivionGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new OblivionGroup<AnimatedObject>(this);
         #endregion
         #region Waters
-        private RangeInt64? _WatersLocation;
-        private IOblivionGroupGetter<IWaterGetter>? _Waters => _WatersLocation.HasValue ? OblivionGroupBinaryOverlay<IWaterGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _WatersLocation!.Value.Min, _WatersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _WatersLocations;
+        private IOblivionGroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? OblivionGroupBinaryOverlay<IWaterGetter>.OblivionGroupFactory(_data, _WatersLocations, _package) : default;
         public IOblivionGroupGetter<IWaterGetter> Waters => _Waters ?? new OblivionGroup<Water>(this);
         #endregion
         #region EffectShaders
-        private RangeInt64? _EffectShadersLocation;
-        private IOblivionGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocation.HasValue ? OblivionGroupBinaryOverlay<IEffectShaderGetter>.OblivionGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _EffectShadersLocation!.Value.Min, _EffectShadersLocation!.Value.Max), _package), _package) : default;
+        private List<RangeInt64>? _EffectShadersLocations;
+        private IOblivionGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? OblivionGroupBinaryOverlay<IEffectShaderGetter>.OblivionGroupFactory(_data, _EffectShadersLocations, _package) : default;
         public IOblivionGroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new OblivionGroup<EffectShader>(this);
         #endregion
         protected OblivionModBinaryOverlay(
@@ -12901,222 +12908,266 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.GMST:
                 {
-                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GameSettingsLocations ??= new();
+                    _GameSettingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.GLOB:
                 {
-                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GlobalsLocations ??= new();
+                    _GlobalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
-                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ClassesLocations ??= new();
+                    _ClassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
-                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FactionsLocations ??= new();
+                    _FactionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HAIR:
                 {
-                    _HairsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _HairsLocations ??= new();
+                    _HairsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
-                    _EyesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EyesLocations ??= new();
+                    _EyesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
-                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _RacesLocations ??= new();
+                    _RacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
-                    _SoundsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoundsLocations ??= new();
+                    _SoundsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.SKIL:
                 {
-                    _SkillsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SkillsLocations ??= new();
+                    _SkillsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Skills;
                 }
                 case RecordTypeInts.MGEF:
                 {
-                    _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MagicEffectsLocations ??= new();
+                    _MagicEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.SCPT:
                 {
-                    _ScriptsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ScriptsLocations ??= new();
+                    _ScriptsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Scripts;
                 }
                 case RecordTypeInts.LTEX:
                 {
-                    _LandTexturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LandTexturesLocations ??= new();
+                    _LandTexturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.LandTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
-                    _EnchantmentsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EnchantmentsLocations ??= new();
+                    _EnchantmentsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Enchantments;
                 }
                 case RecordTypeInts.SPEL:
                 {
-                    _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SpellsLocations ??= new();
+                    _SpellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.BSGN:
                 {
-                    _BirthsignsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _BirthsignsLocations ??= new();
+                    _BirthsignsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Birthsigns;
                 }
                 case RecordTypeInts.ACTI:
                 {
-                    _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ActivatorsLocations ??= new();
+                    _ActivatorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.APPA:
                 {
-                    _AlchemicalApparatusLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AlchemicalApparatusLocations ??= new();
+                    _AlchemicalApparatusLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.AlchemicalApparatus;
                 }
                 case RecordTypeInts.ARMO:
                 {
-                    _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ArmorsLocations ??= new();
+                    _ArmorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
-                    _BooksLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _BooksLocations ??= new();
+                    _BooksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CLOT:
                 {
-                    _ClothesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ClothesLocations ??= new();
+                    _ClothesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Clothes;
                 }
                 case RecordTypeInts.CONT:
                 {
-                    _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ContainersLocations ??= new();
+                    _ContainersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
-                    _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DoorsLocations ??= new();
+                    _DoorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
-                    _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IngredientsLocations ??= new();
+                    _IngredientsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
-                    _LightsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LightsLocations ??= new();
+                    _LightsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
-                    _MiscellaneousLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _MiscellaneousLocations ??= new();
+                    _MiscellaneousLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Miscellaneous;
                 }
                 case RecordTypeInts.STAT:
                 {
-                    _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _StaticsLocations ??= new();
+                    _StaticsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.GRAS:
                 {
-                    _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _GrassesLocations ??= new();
+                    _GrassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
-                    _TreesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _TreesLocations ??= new();
+                    _TreesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
-                    _FloraLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FloraLocations ??= new();
+                    _FloraLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Flora;
                 }
                 case RecordTypeInts.FURN:
                 {
-                    _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _FurnitureLocations ??= new();
+                    _FurnitureLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
-                    _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WeaponsLocations ??= new();
+                    _WeaponsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
-                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AmmunitionsLocations ??= new();
+                    _AmmunitionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
-                    _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _NpcsLocations ??= new();
+                    _NpcsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.CREA:
                 {
-                    _CreaturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CreaturesLocations ??= new();
+                    _CreaturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Creatures;
                 }
                 case RecordTypeInts.LVLC:
                 {
-                    _LeveledCreaturesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledCreaturesLocations ??= new();
+                    _LeveledCreaturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.LeveledCreatures;
                 }
                 case RecordTypeInts.SLGM:
                 {
-                    _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SoulGemsLocations ??= new();
+                    _SoulGemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.KEYM:
                 {
-                    _KeysLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _KeysLocations ??= new();
+                    _KeysLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
-                    _PotionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _PotionsLocations ??= new();
+                    _PotionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Potions;
                 }
                 case RecordTypeInts.SBSP:
                 {
-                    _SubspacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SubspacesLocations ??= new();
+                    _SubspacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Subspaces;
                 }
                 case RecordTypeInts.SGST:
                 {
-                    _SigilStonesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _SigilStonesLocations ??= new();
+                    _SigilStonesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.SigilStones;
                 }
                 case RecordTypeInts.LVLI:
                 {
-                    _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledItemsLocations ??= new();
+                    _LeveledItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
-                    _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WeathersLocations ??= new();
+                    _WeathersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
-                    _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _ClimatesLocations ??= new();
+                    _ClimatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.REGN:
                 {
-                    _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _RegionsLocations ??= new();
+                    _RegionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.CELL:
@@ -13126,57 +13177,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.WRLD:
                 {
-                    _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WorldspacesLocations ??= new();
+                    _WorldspacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
-                    _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _DialogTopicsLocations ??= new();
+                    _DialogTopicsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
-                    _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _QuestsLocations ??= new();
+                    _QuestsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
-                    _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _IdleAnimationsLocations ??= new();
+                    _IdleAnimationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
-                    _AIPackagesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AIPackagesLocations ??= new();
+                    _AIPackagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.AIPackages;
                 }
                 case RecordTypeInts.CSTY:
                 {
-                    _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CombatStylesLocations ??= new();
+                    _CombatStylesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
-                    _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LoadScreensLocations ??= new();
+                    _LoadScreensLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
-                    _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _LeveledSpellsLocations ??= new();
+                    _LeveledSpellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
-                    _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _AnimatedObjectsLocations ??= new();
+                    _AnimatedObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
-                    _WatersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _WatersLocations ??= new();
+                    _WatersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
-                    _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _EffectShadersLocations ??= new();
+                    _EffectShadersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.EffectShaders;
                 }
                 default:

@@ -3060,7 +3060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IDialogResponsesUnknownDataGetter> UnknownData { get; private set; } = ListExt.Empty<DialogResponsesUnknownDataBinaryOverlay>();
         #region Prompt
         private int? _PromptLocation;
-        public ITranslatedStringGetter? Prompt => _PromptLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _PromptLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Prompt => _PromptLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _PromptLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         #region Speaker
         private int? _SpeakerLocation;

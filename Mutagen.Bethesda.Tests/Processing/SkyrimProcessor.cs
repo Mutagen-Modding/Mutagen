@@ -13,655 +13,556 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 using Noggog;
 
-namespace Mutagen.Bethesda.Tests
+namespace Mutagen.Bethesda.Tests;
+
+public class SkyrimProcessor : Processor
 {
-    public class SkyrimProcessor : Processor
+    public override GameRelease GameRelease { get; }
+
+    private Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>> _knownDeadKeys = new()
     {
-        public override GameRelease GameRelease { get; }
+        { (Skyrim.Constants.Update, StringsSource.Normal), new() { 34 } }
+    };
 
-        private Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>> _knownDeadKeys = new()
+    public SkyrimProcessor(GameRelease release, bool multithread) 
+        : base(multithread)
+    {
+        GameRelease = release;
+    }
+
+    protected override void AddDynamicProcessorInstructions()
+    {
+        base.AddDynamicProcessorInstructions();
+        AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
+        AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
+        AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
+        AddDynamicProcessing(RecordTypes.REGN, ProcessRegions);
+        AddDynamicProcessing(RecordTypes.CELL, ProcessCells);
+        AddDynamicProcessing(
+            ProcessPlaced,
+            PlacedObject_Registration.TriggeringRecordType,
+            PlacedNpc_Registration.TriggeringRecordType,
+            PlacedArrow_Registration.TriggeringRecordType,
+            PlacedBarrier_Registration.TriggeringRecordType,
+            PlacedBeam_Registration.TriggeringRecordType,
+            PlacedCone_Registration.TriggeringRecordType,
+            PlacedFlame_Registration.TriggeringRecordType,
+            PlacedHazard_Registration.TriggeringRecordType,
+            PlacedMissile_Registration.TriggeringRecordType,
+            PlacedTrap_Registration.TriggeringRecordType);
+        AddDynamicProcessing(RecordTypes.NAVM, ProcessNavmeshes);
+        AddDynamicProcessing(RecordTypes.DIAL, ProcessDialogs);
+        AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
+        AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
+        AddDynamicProcessing(RecordTypes.EFSH, ProcessShaders);
+        AddDynamicProcessing(RecordTypes.EXPL, ProcessExplosions);
+        AddDynamicProcessing(RecordTypes.IMAD, ProcessImageSpaceAdapters);
+        AddDynamicProcessing(RecordTypes.LSCR, ProcessLoadScreens);
+        AddDynamicProcessing(RecordTypes.ACTI, ProcessActivators);
+        AddDynamicProcessing(RecordTypes.WTHR, ProcessWeathers);
+    }
+
+    private void ProcessGameSettings(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame)) return;
+        if ((char)edidFrame.Content[0] != 'f') return;
+
+        if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec)) return;
+        ProcessZeroFloat(dataRec, fileOffset);
+    }
+
+    private void ProcessFurniture(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        // Find and store marker data
+        var data = new Dictionary<int, ReadOnlyMemorySlice<byte>>();
+        var indices = new List<int>();
+        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.ENAM, out var enamFrame, out var initialPos)) return;
+        var pos = initialPos - majorFrame.HeaderLength;
+        while (pos < majorFrame.Content.Length)
         {
-            { (Skyrim.Constants.Update, StringsSource.Normal), new() { 34 } }
-        };
-
-        public SkyrimProcessor(GameRelease release, bool multithread) 
-            : base(multithread)
-        {
-            GameRelease = release;
-        }
-
-        protected override void AddDynamicProcessorInstructions()
-        {
-            base.AddDynamicProcessorInstructions();
-            AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
-            AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
-            AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
-            AddDynamicProcessing(RecordTypes.REGN, ProcessRegions);
-            AddDynamicProcessing(RecordTypes.CELL, ProcessCells);
-            AddDynamicProcessing(
-                ProcessPlaced,
-                PlacedObject_Registration.TriggeringRecordType,
-                PlacedNpc_Registration.TriggeringRecordType,
-                PlacedArrow_Registration.TriggeringRecordType,
-                PlacedBarrier_Registration.TriggeringRecordType,
-                PlacedBeam_Registration.TriggeringRecordType,
-                PlacedCone_Registration.TriggeringRecordType,
-                PlacedFlame_Registration.TriggeringRecordType,
-                PlacedHazard_Registration.TriggeringRecordType,
-                PlacedMissile_Registration.TriggeringRecordType,
-                PlacedTrap_Registration.TriggeringRecordType);
-            AddDynamicProcessing(RecordTypes.NAVM, ProcessNavmeshes);
-            AddDynamicProcessing(RecordTypes.DIAL, ProcessDialogs);
-            AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
-            AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
-            AddDynamicProcessing(RecordTypes.EFSH, ProcessShaders);
-            AddDynamicProcessing(RecordTypes.EXPL, ProcessExplosions);
-            AddDynamicProcessing(RecordTypes.IMAD, ProcessImageSpaceAdapters);
-            AddDynamicProcessing(RecordTypes.LSCR, ProcessLoadScreens);
-            AddDynamicProcessing(RecordTypes.ACTI, ProcessActivators);
-            AddDynamicProcessing(RecordTypes.WTHR, ProcessWeathers);
-        }
-
-        private void ProcessGameSettings(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
-        {
-            if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame)) return;
-            if ((char)edidFrame.Content[0] != 'f') return;
-
-            if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec)) return;
-            ProcessZeroFloat(dataRec, fileOffset);
-        }
-
-        private void ProcessFurniture(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
-        {
-            // Find and store marker data
-            var data = new Dictionary<int, ReadOnlyMemorySlice<byte>>();
-            var indices = new List<int>();
-            if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.ENAM, out var enamFrame, out var initialPos)) return;
-            var pos = initialPos - majorFrame.HeaderLength;
-            while (pos < majorFrame.Content.Length)
-            {
-                var positions = PluginUtilityTranslation.FindNextSubrecords(
-                    majorFrame.Content.Slice(pos),
-                    majorFrame.Meta,
-                    out var lenParsed,
-                    stopOnAlreadyEncounteredRecord: true,
-                    new RecordType[]
-                    {
-                        RecordTypes.ENAM,
-                        new RecordType("NAM0"),
-                        new RecordType("FNMK"),
-                    });
-                var enamPos = positions[0];
-                if (enamPos == null) break;
-                enamFrame = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(pos + enamPos.Value));
-                var index = BinaryPrimitives.ReadInt32LittleEndian(enamFrame.Content);
-                data.Add(index, majorFrame.Content.Slice(pos + enamPos.Value, lenParsed));
-                indices.Add(index);
-                pos += lenParsed;
-            }
-
-            if (indices.SequenceEqual(indices.OrderBy(i => i))) return;
-            byte[] reordered = new byte[data.Values.Select(l => l.Length).Sum()];
-            int transferPos = 0;
-            foreach (var index in indices.OrderBy(i => i))
-            {
-                var bytes = data[index];
-                bytes.Span.CopyTo(reordered.AsSpan().Slice(transferPos));
-                transferPos += bytes.Length;
-            }
-            this._Instructions.SetSubstitution(fileOffset + initialPos, reordered);
-        }
-
-        private void ProcessNpcs(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
-        {
-            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.QNAM, out var qnamFrame, out var qnamLoc))
-            {
-                // Standardize float rounding errors
-                var r = IBinaryStreamExt.GetColorByte(qnamFrame.Content.Slice(0, 4).Float());
-                var g = IBinaryStreamExt.GetColorByte(qnamFrame.Content.Slice(4, 4).Float());
-                var b = IBinaryStreamExt.GetColorByte(qnamFrame.Content.Slice(8, 4).Float());
-                byte[] bytes = new byte[12];
-                using var writer = new MutagenWriter(new MemoryStream(bytes), majorFrame.Meta);
-                writer.Write(r / 255f);
-                writer.Write(g / 255f);
-                writer.Write(b / 255f);
-                this._Instructions.SetSubstitution(fileOffset + qnamLoc + qnamFrame.HeaderLength, bytes);
-            }
-            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NAM9, out var nam9Frame, out var nam9Loc))
-            {
-                nam9Loc += nam9Frame.HeaderLength;
-                var endPos = nam9Loc + nam9Frame.ContentLength;
-                while (nam9Loc < endPos)
+            var positions = PluginUtilityTranslation.FindNextSubrecords(
+                majorFrame.Content.Slice(pos),
+                majorFrame.Meta,
+                out var lenParsed,
+                stopOnAlreadyEncounteredRecord: true,
+                new RecordType[]
                 {
-                    ProcessZeroFloat(majorFrame, fileOffset, ref nam9Loc);
-                }
+                    RecordTypes.ENAM,
+                    new RecordType("NAM0"),
+                    new RecordType("FNMK"),
+                });
+            var enamPos = positions[0];
+            if (enamPos == null) break;
+            enamFrame = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(pos + enamPos.Value));
+            var index = BinaryPrimitives.ReadInt32LittleEndian(enamFrame.Content);
+            data.Add(index, majorFrame.Content.Slice(pos + enamPos.Value, lenParsed));
+            indices.Add(index);
+            pos += lenParsed;
+        }
+
+        if (indices.SequenceEqual(indices.OrderBy(i => i))) return;
+        byte[] reordered = new byte[data.Values.Select(l => l.Length).Sum()];
+        int transferPos = 0;
+        foreach (var index in indices.OrderBy(i => i))
+        {
+            var bytes = data[index];
+            bytes.Span.CopyTo(reordered.AsSpan().Slice(transferPos));
+            transferPos += bytes.Length;
+        }
+        this._instructions.SetSubstitution(fileOffset + initialPos, reordered);
+    }
+
+    private void ProcessNpcs(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.QNAM, out var qnamFrame, out var qnamLoc))
+        {
+            // Standardize float rounding errors
+            var r = IBinaryStreamExt.GetColorByte(qnamFrame.Content.Slice(0, 4).Float());
+            var g = IBinaryStreamExt.GetColorByte(qnamFrame.Content.Slice(4, 4).Float());
+            var b = IBinaryStreamExt.GetColorByte(qnamFrame.Content.Slice(8, 4).Float());
+            byte[] bytes = new byte[12];
+            using var writer = new MutagenWriter(new MemoryStream(bytes), majorFrame.Meta);
+            writer.Write(r / 255f);
+            writer.Write(g / 255f);
+            writer.Write(b / 255f);
+            this._instructions.SetSubstitution(fileOffset + qnamLoc + qnamFrame.HeaderLength, bytes);
+        }
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NAM9, out var nam9Frame, out var nam9Loc))
+        {
+            nam9Loc += nam9Frame.HeaderLength;
+            var endPos = nam9Loc + nam9Frame.ContentLength;
+            while (nam9Loc < endPos)
+            {
+                ProcessZeroFloat(majorFrame, fileOffset, ref nam9Loc);
+            }
+        }
+    }
+
+    private void ProcessRegions(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var rdat = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT, navigateToContent: false);
+        if (rdat == null) return;
+
+        // Order RDATs by index
+        SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
+        List<uint> raw = new List<uint>();
+        while (rdat != null)
+        {
+            var rdatHeader = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(rdat.Value));
+            var index = BinaryPrimitives.ReadUInt32LittleEndian(rdatHeader.Content);
+            var nextRdat = PluginUtilityTranslation.FindFirstSubrecord(
+                majorFrame.Content,
+                majorFrame.Meta,
+                RecordTypes.RDAT,
+                navigateToContent: false,
+                offset: rdat.Value + rdatHeader.TotalLength);
+            rdats[index] =
+                new RangeInt64(
+                    fileOffset + majorFrame.HeaderLength + rdat.Value,
+                    nextRdat == null ? fileOffset + majorFrame.TotalLength - 1 : nextRdat.Value - 1 + fileOffset + majorFrame.HeaderLength);
+            raw.Add(index);
+            rdat = nextRdat;
+        }
+        if (raw.SequenceEqual(rdats.Keys)) return;
+        foreach (var item in rdats.Reverse())
+        {
+            this._instructions.SetMove(
+                loc: fileOffset + majorFrame.TotalLength,
+                section: item.Value);
+        }
+    }
+
+    private void ProcessCells(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
+        CleanEmptyCellGroups(
+            stream,
+            formKey,
+            fileOffset,
+            numSubGroups: 2);
+
+        // Process odd length changing flags
+        var sizeChange = 0;
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec, out var dataIndex))
+        {
+            if (dataRec.ContentLength == 1)
+            {
+                _instructions.SetSubstitution(
+                    fileOffset + dataIndex + 4,
+                    2);
+                _instructions.SetAddition(
+                    fileOffset + dataIndex + stream.MetaData.Constants.SubConstants.HeaderLength + 1,
+                    new byte[] { 0 });
+                sizeChange++;
             }
         }
 
-        private void ProcessRegions(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
+        ProcessLengths(
+            majorFrame,
+            sizeChange,
+            fileOffset);
+    }
+
+    private void ProcessDialogs(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
+        CleanEmptyDialogGroups(
+            stream,
+            formKey,
+            fileOffset);
+
+        // Reset misnumbered counter
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.TIFC, out var tifcRec, out var tifcIndex))
         {
-            var rdat = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT, navigateToContent: false);
-            if (rdat == null) return;
+            var count = tifcRec.AsUInt32();
 
-            // Order RDATs by index
-            SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
-            List<uint> raw = new List<uint>();
-            while (rdat != null)
+            uint actualCount = 0;
+            stream.Position = fileOffset + majorFrame.TotalLength;
+            if (stream.TryReadGroupFrame(out var groupFrame))
             {
-                var rdatHeader = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(rdat.Value));
-                var index = BinaryPrimitives.ReadUInt32LittleEndian(rdatHeader.Content);
-                var nextRdat = PluginUtilityTranslation.FindFirstSubrecord(
-                    majorFrame.Content,
-                    majorFrame.Meta,
-                    RecordTypes.RDAT,
-                    navigateToContent: false,
-                    offset: rdat.Value + rdatHeader.TotalLength);
-                rdats[index] =
-                    new RangeInt64(
-                        fileOffset + majorFrame.HeaderLength + rdat.Value,
-                        nextRdat == null ? fileOffset + majorFrame.TotalLength - 1 : nextRdat.Value - 1 + fileOffset + majorFrame.HeaderLength);
-                raw.Add(index);
-                rdat = nextRdat;
-            }
-            if (raw.SequenceEqual(rdats.Keys)) return;
-            foreach (var item in rdats.Reverse())
-            {
-                this._Instructions.SetMove(
-                    loc: fileOffset + majorFrame.TotalLength,
-                    section: item.Value);
-            }
-        }
-
-        private void ProcessCells(
-            IMutagenReadStream stream,
-            MajorRecordFrame majorFrame,
-            long fileOffset)
-        {
-            var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
-            CleanEmptyCellGroups(
-                stream,
-                formKey,
-                fileOffset,
-                numSubGroups: 2);
-
-            // Process odd length changing flags
-            var sizeChange = 0;
-            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec, out var dataIndex))
-            {
-                if (dataRec.ContentLength == 1)
+                int groupPos = 0;
+                while (groupPos < groupFrame.Content.Length)
                 {
-                    _Instructions.SetSubstitution(
-                        fileOffset + dataIndex + 4,
-                        2);
-                    _Instructions.SetAddition(
-                        fileOffset + dataIndex + stream.MetaData.Constants.SubConstants.HeaderLength + 1,
-                        new byte[] { 0 });
-                    sizeChange++;
-                }
-            }
-
-            ProcessLengths(
-                majorFrame,
-                sizeChange,
-                fileOffset);
-        }
-
-        private void ProcessDialogs(
-            IMutagenReadStream stream,
-            MajorRecordFrame majorFrame,
-            long fileOffset)
-        {
-            var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
-            CleanEmptyDialogGroups(
-                stream,
-                formKey,
-                fileOffset);
-
-            // Reset misnumbered counter
-            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.TIFC, out var tifcRec, out var tifcIndex))
-            {
-                var count = tifcRec.AsUInt32();
-
-                uint actualCount = 0;
-                stream.Position = fileOffset + majorFrame.TotalLength;
-                if (stream.TryReadGroupFrame(out var groupFrame))
-                {
-                    int groupPos = 0;
-                    while (groupPos < groupFrame.Content.Length)
-                    {
-                        var majorMeta = stream.MetaData.Constants.MajorRecord(groupFrame.Content.Slice(groupPos));
-                        actualCount++;
-                        groupPos += checked((int)majorMeta.TotalLength);
-                    }
-                }
-
-                if (actualCount != count)
-                {
-                    byte[] b = new byte[4];
-                    BinaryPrimitives.WriteUInt32LittleEndian(b, actualCount);
-                    _Instructions.SetSubstitution(
-                        fileOffset + tifcIndex + stream.MetaData.Constants.SubConstants.HeaderLength,
-                        b);
-                }
-            }
-        }
-
-        private void ProcessQuests(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
-        {
-            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.ANAM, out var anamRec, out var anamIndex))
-            {
-                var next = anamRec.AsUInt32();
-                var targets = new RecordType[]
-                {
-                    RecordTypes.ALST,
-                    RecordTypes.ALLS
-                };
-                var locs = PluginUtilityTranslation.FindAllOfSubrecords(
-                    majorFrame.Content,
-                    majorFrame.Meta,
-                    targets.ToGetter(),
-                    navigateToContent: true);
-                uint actualNext = 0;
-                if (locs.Length > 0)
-                {
-                    actualNext = locs
-                        .Select(l =>
-                        {
-                            return BinaryPrimitives.ReadUInt32LittleEndian(majorFrame.Content.Slice(l));
-                        })
-                        .Max();
-                    actualNext++;
-                }
-                if (actualNext != next)
-                {
-                    byte[] sub = new byte[4];
-                    BinaryPrimitives.WriteUInt32LittleEndian(sub, actualNext);
-                    _Instructions.SetSubstitution(
-                        fileOffset + anamIndex + anamRec.HeaderLength,
-                        sub);
+                    var majorMeta = stream.MetaData.Constants.MajorRecord(groupFrame.Content.Slice(groupPos));
+                    actualCount++;
+                    groupPos += checked((int)majorMeta.TotalLength);
                 }
             }
 
-            var sizeChange = FixMissingCounters(
-                majorFrame,
-                fileOffset,
-                new RecordType("COCT"),
-                new RecordType("CNTO"));
-
-            ProcessLengths(
-                majorFrame,
-                sizeChange,
-                fileOffset);
-
-            FixVMADFormIDs(
-                majorFrame,
-                fileOffset,
-                out var vmadPos,
-                out var objectFormat,
-                out var processedLen);
-            if (vmadPos != null)
+            if (actualCount != count)
             {
-                var vmadFrame = Meta.SubrecordFrame(majorFrame.Content.Slice(vmadPos.Value));
-                var stream = new MutagenMemoryReadStream(vmadFrame.Content, Bundle)
-                {
-                    Position = processedLen - vmadFrame.HeaderLength
-                };
-                if (stream.Complete) return;
-                // skip unknown
-                stream.Position += 1;
-                var fragCount = stream.ReadUInt16();
-                // skip name
-                var len = stream.ReadUInt16();
-                stream.Position += len;
-                for (int i = 0; i < fragCount; i++)
-                {
-                    stream.Position += 9;
-                    // skip name
-                    len = stream.ReadUInt16();
-                    stream.Position += len;
-                    // skip name
-                    len = stream.ReadUInt16();
-                    stream.Position += len;
-                }
-                var aliasCount = stream.ReadUInt16();
-                for (int i = 0; i < aliasCount; i++)
-                {
-                    FixObjectPropertyIDs(stream, fileOffset, objectFormat);
-                    // skip version
-                    stream.Position += 2;
-                    objectFormat = stream.ReadUInt16();
-                    var numScripts = stream.ReadUInt16();
-                    for (int j = 0; j < numScripts; j++)
-                    {
-                        FixVMADScriptIDs(stream, fileOffset, objectFormat);
-                    }
-                }
+                byte[] b = new byte[4];
+                BinaryPrimitives.WriteUInt32LittleEndian(b, actualCount);
+                _instructions.SetSubstitution(
+                    fileOffset + tifcIndex + stream.MetaData.Constants.SubConstants.HeaderLength,
+                    b);
             }
         }
+    }
 
-        public void FixVMADFormIDs(
-            MajorRecordFrame frame,
-            long fileOffset,
-            out int? vmadPos,
-            out ushort objectFormat,
-            out int processed)
+    private void ProcessQuests(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.ANAM, out var anamRec, out var anamIndex))
         {
-            vmadPos = PluginUtilityTranslation.FindFirstSubrecord(frame.Content, Meta, RecordTypes.VMAD);
-            if (vmadPos == null)
+            var next = anamRec.AsUInt32();
+            var targets = new RecordType[]
             {
-                processed = 0;
-                objectFormat = 0;
-                return;
-            }
-            var stream = new MutagenMemoryReadStream(frame.HeaderAndContentData, Bundle)
-            {
-                Position = vmadPos.Value + frame.HeaderLength
+                RecordTypes.ALST,
+                RecordTypes.ALLS
             };
-            stream.Position += Meta.SubConstants.HeaderLength;
-            // Skip version
-            stream.Position += 2;
-            objectFormat = stream.ReadUInt16();
-            var scriptCt = stream.ReadUInt16();
-            for (int i = 0; i < scriptCt; i++)
+            var locs = PluginUtilityTranslation.FindAllOfSubrecords(
+                majorFrame.Content,
+                majorFrame.Meta,
+                targets.ToGetter(),
+                navigateToContent: true);
+            uint actualNext = 0;
+            if (locs.Length > 0)
             {
-                FixVMADScriptIDs(stream, fileOffset, objectFormat);
+                actualNext = locs
+                    .Select(l =>
+                    {
+                        return BinaryPrimitives.ReadUInt32LittleEndian(majorFrame.Content.Slice(l));
+                    })
+                    .Max();
+                actualNext++;
             }
-            processed = (int)(stream.Position - vmadPos.Value - frame.HeaderLength);
+            if (actualNext != next)
+            {
+                byte[] sub = new byte[4];
+                BinaryPrimitives.WriteUInt32LittleEndian(sub, actualNext);
+                _instructions.SetSubstitution(
+                    fileOffset + anamIndex + anamRec.HeaderLength,
+                    sub);
+            }
         }
 
-        private void FixVMADScriptIDs(IMutagenReadStream stream, long fileOffset, ushort objectFormat)
+        var sizeChange = FixMissingCounters(
+            majorFrame,
+            fileOffset,
+            new RecordType("COCT"),
+            new RecordType("CNTO"));
+
+        ProcessLengths(
+            majorFrame,
+            sizeChange,
+            fileOffset);
+
+        FixVMADFormIDs(
+            majorFrame,
+            fileOffset,
+            out var vmadPos,
+            out var objectFormat,
+            out var processedLen);
+        if (vmadPos != null)
         {
+            var vmadFrame = Meta.SubrecordFrame(majorFrame.Content.Slice(vmadPos.Value));
+            var stream = new MutagenMemoryReadStream(vmadFrame.Content, Bundle)
+            {
+                Position = processedLen - vmadFrame.HeaderLength
+            };
+            if (stream.Complete) return;
+            // skip unknown
+            stream.Position += 1;
+            var fragCount = stream.ReadUInt16();
             // skip name
             var len = stream.ReadUInt16();
             stream.Position += len;
-            // Skip flags
-            stream.Position += 1;
-            var propCount = stream.ReadUInt16();
-            for (int j = 0; j < propCount; j++)
+            for (int i = 0; i < fragCount; i++)
             {
+                stream.Position += 9;
                 // skip name
                 len = stream.ReadUInt16();
                 stream.Position += len;
-                var type = (ScriptProperty.Type)stream.ReadUInt8();
-                // skip flags
-                stream.Position += 1;
-                // Going to cheat here, and use the autogenerated records
-                ScriptProperty prop = type switch
+                // skip name
+                len = stream.ReadUInt16();
+                stream.Position += len;
+            }
+            var aliasCount = stream.ReadUInt16();
+            for (int i = 0; i < aliasCount; i++)
+            {
+                FixObjectPropertyIDs(stream, fileOffset, objectFormat);
+                // skip version
+                stream.Position += 2;
+                objectFormat = stream.ReadUInt16();
+                var numScripts = stream.ReadUInt16();
+                for (int j = 0; j < numScripts; j++)
                 {
-                    ScriptProperty.Type.None => new ScriptProperty(),
-                    ScriptProperty.Type.Object => new ScriptObjectProperty(),
-                    ScriptProperty.Type.String => new ScriptStringProperty(),
-                    ScriptProperty.Type.Int => new ScriptIntProperty(),
-                    ScriptProperty.Type.Float => new ScriptFloatProperty(),
-                    ScriptProperty.Type.Bool => new ScriptBoolProperty(),
-                    ScriptProperty.Type.ArrayOfObject => new ScriptObjectListProperty(),
-                    ScriptProperty.Type.ArrayOfString => new ScriptStringListProperty(),
-                    ScriptProperty.Type.ArrayOfInt => new ScriptIntListProperty(),
-                    ScriptProperty.Type.ArrayOfFloat => new ScriptFloatListProperty(),
-                    ScriptProperty.Type.ArrayOfBool => new ScriptBoolListProperty(),
-                    _ => throw new NotImplementedException(),
-                };
-                switch (prop)
-                {
-                    case ScriptObjectProperty obj:
-                        FixObjectPropertyIDs(stream, fileOffset, objectFormat);
-                        break;
-                    case ScriptObjectListProperty objList:
-                        var count = stream.ReadUInt32();
-                        for (int i = 0; i < count; i++)
-                        {
-                            FixObjectPropertyIDs(stream, fileOffset, objectFormat);
-                        }
-                        break;
-                    default:
-                        prop.CopyInFromBinary(new MutagenFrame(stream));
-                        break;
+                    FixVMADScriptIDs(stream, fileOffset, objectFormat);
                 }
             }
         }
+    }
 
-        private void FixObjectPropertyIDs(IMutagenReadStream stream, long fileOffset, ushort objectFormat)
+    public void FixVMADFormIDs(
+        MajorRecordFrame frame,
+        long fileOffset,
+        out int? vmadPos,
+        out ushort objectFormat,
+        out int processed)
+    {
+        vmadPos = PluginUtilityTranslation.FindFirstSubrecord(frame.Content, Meta, RecordTypes.VMAD);
+        if (vmadPos == null)
         {
-            switch (objectFormat)
+            processed = 0;
+            objectFormat = 0;
+            return;
+        }
+        var stream = new MutagenMemoryReadStream(frame.HeaderAndContentData, Bundle)
+        {
+            Position = vmadPos.Value + frame.HeaderLength
+        };
+        stream.Position += Meta.SubConstants.HeaderLength;
+        // Skip version
+        stream.Position += 2;
+        objectFormat = stream.ReadUInt16();
+        var scriptCt = stream.ReadUInt16();
+        for (int i = 0; i < scriptCt; i++)
+        {
+            FixVMADScriptIDs(stream, fileOffset, objectFormat);
+        }
+        processed = (int)(stream.Position - vmadPos.Value - frame.HeaderLength);
+    }
+
+    private void FixVMADScriptIDs(IMutagenReadStream stream, long fileOffset, ushort objectFormat)
+    {
+        // skip name
+        var len = stream.ReadUInt16();
+        stream.Position += len;
+        // Skip flags
+        stream.Position += 1;
+        var propCount = stream.ReadUInt16();
+        for (int j = 0; j < propCount; j++)
+        {
+            // skip name
+            len = stream.ReadUInt16();
+            stream.Position += len;
+            var type = (ScriptProperty.Type)stream.ReadUInt8();
+            // skip flags
+            stream.Position += 1;
+            // Going to cheat here, and use the autogenerated records
+            ScriptProperty prop = type switch
             {
-                case 2:
-                    {
-                        stream.Position += 4;
-                        long offset = fileOffset + stream.Position;
-                        ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
-                    }
+                ScriptProperty.Type.None => new ScriptProperty(),
+                ScriptProperty.Type.Object => new ScriptObjectProperty(),
+                ScriptProperty.Type.String => new ScriptStringProperty(),
+                ScriptProperty.Type.Int => new ScriptIntProperty(),
+                ScriptProperty.Type.Float => new ScriptFloatProperty(),
+                ScriptProperty.Type.Bool => new ScriptBoolProperty(),
+                ScriptProperty.Type.ArrayOfObject => new ScriptObjectListProperty(),
+                ScriptProperty.Type.ArrayOfString => new ScriptStringListProperty(),
+                ScriptProperty.Type.ArrayOfInt => new ScriptIntListProperty(),
+                ScriptProperty.Type.ArrayOfFloat => new ScriptFloatListProperty(),
+                ScriptProperty.Type.ArrayOfBool => new ScriptBoolListProperty(),
+                _ => throw new NotImplementedException(),
+            };
+            switch (prop)
+            {
+                case ScriptObjectProperty obj:
+                    FixObjectPropertyIDs(stream, fileOffset, objectFormat);
                     break;
-                case 1:
+                case ScriptObjectListProperty objList:
+                    var count = stream.ReadUInt32();
+                    for (int i = 0; i < count; i++)
                     {
-                        long offset = fileOffset + stream.Position;
-                        ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
-                        stream.Position += 4;
+                        FixObjectPropertyIDs(stream, fileOffset, objectFormat);
                     }
                     break;
                 default:
-                    throw new NotImplementedException();
+                    prop.CopyInFromBinary(new MutagenFrame(stream));
+                    break;
+            }
+        }
+    }
+
+    private void FixObjectPropertyIDs(IMutagenReadStream stream, long fileOffset, ushort objectFormat)
+    {
+        switch (objectFormat)
+        {
+            case 2:
+            {
+                stream.Position += 4;
+                long offset = fileOffset + stream.Position;
+                ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
+            }
+                break;
+            case 1:
+            {
+                long offset = fileOffset + stream.Position;
+                ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
+                stream.Position += 4;
+            }
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+
+    private void ProcessPlaced(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var sizeChange = 0;
+
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        {
+            ProcessZeroFloats(dataRec, fileOffset, 6);
+        }
+
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XTEL, out var xtelRec))
+        {
+            var offset = 4;
+            ProcessZeroFloats(xtelRec, fileOffset, ref offset, 6);
+        }
+
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XPRM, out var xprmRec))
+        {
+            int offset = 0;
+            ProcessZeroFloats(xprmRec, fileOffset, ref offset, 3);
+            ProcessColorFloat(xprmRec, fileOffset, ref offset);
+            ProcessZeroFloat(xprmRec, fileOffset, ref offset);
+        }
+
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XRMR, out var xrmrRec, out var xrmrIndex))
+        {
+            if (xrmrRec.AsInt32() == 0)
+            {
+                _instructions.SetRemove(
+                    RangeInt64.FactoryFromLength(
+                        fileOffset + xrmrIndex,
+                        10));
+                sizeChange -= 10;
             }
         }
 
-        private void ProcessPlaced(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
+        ProcessLengths(
+            majorFrame,
+            sizeChange,
+            fileOffset);
+    }
+
+    private void ProcessNavmeshes(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NVNM, out var nvnmRec, out var nvnmIndex))
         {
-            var sizeChange = 0;
-
-            if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+            nvnmIndex += nvnmRec.HeaderLength + 16;
+            var count = majorFrame.HeaderAndContentData.Slice(nvnmIndex).Int32() * 3;
+            nvnmIndex += 4;
+            for (int i = 0; i < count; i++)
             {
-                ProcessZeroFloats(dataRec, fileOffset, 6);
-            }
-
-            if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XTEL, out var xtelRec))
-            {
-                var offset = 4;
-                ProcessZeroFloats(xtelRec, fileOffset, ref offset, 6);
-            }
-
-            if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XPRM, out var xprmRec))
-            {
-                int offset = 0;
-                ProcessZeroFloats(xprmRec, fileOffset, ref offset, 3);
-                ProcessColorFloat(xprmRec, fileOffset, ref offset);
-                ProcessZeroFloat(xprmRec, fileOffset, ref offset);
-            }
-
-            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XRMR, out var xrmrRec, out var xrmrIndex))
-            {
-                if (xrmrRec.AsInt32() == 0)
-                {
-                    _Instructions.SetRemove(
-                        RangeInt64.FactoryFromLength(
-                            fileOffset + xrmrIndex,
-                            10));
-                    sizeChange -= 10;
-                }
-            }
-
-            ProcessLengths(
-                majorFrame,
-                sizeChange,
-                fileOffset);
-        }
-
-        private void ProcessNavmeshes(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
-        {
-            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NVNM, out var nvnmRec, out var nvnmIndex))
-            {
-                nvnmIndex += nvnmRec.HeaderLength + 16;
-                var count = majorFrame.HeaderAndContentData.Slice(nvnmIndex).Int32() * 3;
-                nvnmIndex += 4;
-                for (int i = 0; i < count; i++)
-                {
-                    ProcessZeroFloat(majorFrame, fileOffset, ref nvnmIndex);
-                }
+                ProcessZeroFloat(majorFrame, fileOffset, ref nvnmIndex);
             }
         }
+    }
 
-        private void ProcessPackages(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
+    private void ProcessPackages(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        // Reorder Idle subrecords
+
+        // Reorder data values
+        var xnamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.XNAM);
+        if (xnamPos == null)
         {
-            // Reorder Idle subrecords
+            throw new ArgumentException();
+        }
 
-            // Reorder data values
-            var xnamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.XNAM);
-            if (xnamPos == null)
+        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.PKCU, out var pkcuRec))
+        {
+            throw new ArgumentException();
+        }
+        var count = pkcuRec.Content.Int32();
+
+        if (count == 0) return;
+
+        var anamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.ANAM);
+        RecordType pldt = new RecordType("PLDT");
+        RecordType ptda = new RecordType("PTDA");
+        RecordType pdto = new RecordType("PDTO");
+        RecordType tpic = new RecordType("TPIC");
+        RecordType unam = new RecordType("UNAM");
+        RecordType bnam = new RecordType("BNAM");
+        RecordType pnam = new RecordType("PNAM");
+        // Reorder data values to be in index ordering
+        if (anamPos.HasValue && anamPos.Value < xnamPos.Value)
+        {
+            var startLoc = anamPos.Value;
+            var dataValues = new List<(sbyte Index, ReadOnlyMemorySlice<byte> Data)>();
+            var curLoc = startLoc;
+            while (anamPos.HasValue && anamPos.Value < xnamPos.Value)
             {
-                throw new ArgumentException();
-            }
-
-            if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.PKCU, out var pkcuRec))
-            {
-                throw new ArgumentException();
-            }
-            var count = pkcuRec.Content.Int32();
-
-            if (count == 0) return;
-
-            var anamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.ANAM);
-            RecordType pldt = new RecordType("PLDT");
-            RecordType ptda = new RecordType("PTDA");
-            RecordType pdto = new RecordType("PDTO");
-            RecordType tpic = new RecordType("TPIC");
-            RecordType unam = new RecordType("UNAM");
-            RecordType bnam = new RecordType("BNAM");
-            RecordType pnam = new RecordType("PNAM");
-            // Reorder data values to be in index ordering
-            if (anamPos.HasValue && anamPos.Value < xnamPos.Value)
-            {
-                var startLoc = anamPos.Value;
-                var dataValues = new List<(sbyte Index, ReadOnlyMemorySlice<byte> Data)>();
-                var curLoc = startLoc;
-                while (anamPos.HasValue && anamPos.Value < xnamPos.Value)
-                {
-                    var anamRecord = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(anamPos.Value));
-                    var recs = PluginUtilityTranslation.FindNextSubrecords(
-                        majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength),
-                        majorFrame.Meta,
-                        out var _,
-                        RecordTypes.ANAM,
-                        RecordTypes.CNAM,
-                        pldt,
-                        ptda,
-                        pdto,
-                        tpic);
-                    int finalLoc;
-                    if (recs[0] == null)
-                    {
-                        finalLoc = recs.NotNull().Max();
-                    }
-                    else if (recs[0] == 0)
-                    {
-                        dataValues.Add(
-                            (-1, majorFrame.Content.Slice(anamPos.Value, anamRecord.TotalLength)));
-                        curLoc = anamPos.Value + anamRecord.TotalLength;
-                        anamPos = anamPos.Value + anamRecord.TotalLength;
-                        continue;
-                    }
-                    else
-                    {
-                        finalLoc = recs
-                            .NotNull()
-                            .Where(i => i < recs[0]!.Value)
-                            .Max();
-                    }
-                    var finalRec = majorFrame.Meta.Subrecord(majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + finalLoc));
-                    var dataSlice = majorFrame.Content.Slice(anamPos.Value, anamRecord.TotalLength + finalLoc + finalRec.TotalLength);
-                    if (BinaryStringUtility.ProcessWholeToZString(anamRecord.Content) == "Bool"
-                        && recs[1] != null)
-                    {
-                        // Ensure bool value is 1 or 0
-                        var cnam = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + recs[1].Value));
-                        if (cnam.Content.Length != 1)
-                        {
-                            throw new ArgumentException();
-                        }
-                        if (cnam.Content[0] > 1)
-                        {
-                            var bytes = dataSlice.ToArray();
-                            int boolIndex = anamRecord.TotalLength + recs[1].Value + cnam.HeaderLength;
-                            bytes[boolIndex] = (byte)(bytes[boolIndex] > 0 ? 1 : 0);
-                            dataSlice = bytes;
-                        }
-                    }
-                    dataValues.Add((-1, dataSlice));
-
-                    curLoc = anamPos.Value + anamRecord.TotalLength + finalLoc + finalRec.TotalLength;
-                    anamPos = anamPos.Value + anamRecord.TotalLength + recs[0];
-                }
-
-                var unamLocs = PluginUtilityTranslation.ParseRepeatingSubrecord(
-                    majorFrame.Content.Slice(curLoc),
-                    majorFrame.Meta,
-                    unam,
-                    out var _);
-                if (unamLocs == null
-                    || unamLocs.Length != dataValues.Count
-                    || unamLocs.Length != count)
-                {
-                    throw new ArgumentException();
-                }
-
-                for (sbyte i = 0; i < unamLocs.Length; i++)
-                {
-                    var unamRec = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(curLoc + unamLocs[i]));
-                    dataValues[i] = (
-                        (sbyte)unamRec.Content[0],
-                        dataValues[i].Data);
-                }
-
-                var subLoc = startLoc;
-                foreach (var item in dataValues.OrderBy(i => i.Index))
-                {
-                    _Instructions.SetSubstitution(
-                        fileOffset + majorFrame.HeaderLength + subLoc,
-                        item.Data.ToArray());
-                    subLoc += item.Data.Length;
-                }
-                foreach (var item in dataValues.OrderBy(i => i.Index))
-                {
-                    byte[] bytes = new byte[] { 0x55, 0x4E, 0x41, 0x4D, 0x01, 0x00, 0x00 };
-                    bytes[6] = (byte)item.Index;
-                    _Instructions.SetSubstitution(
-                        fileOffset + majorFrame.HeaderLength + subLoc,
-                        bytes.ToArray());
-                    subLoc += bytes.Length;
-                }
-            }
-
-            // Reorder inputs
-            var unamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(xnamPos.Value), majorFrame.Meta, unam);
-            if (!unamPos.HasValue) return;
-            unamPos += xnamPos.Value;
-            var writeLoc = fileOffset + majorFrame.HeaderLength + unamPos.Value;
-            var inputValues = new List<(sbyte Index, ReadOnlyMemorySlice<byte> Data)>();
-            while (unamPos.HasValue)
-            {
-                var unamRecord = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(unamPos.Value));
+                var anamRecord = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(anamPos.Value));
                 var recs = PluginUtilityTranslation.FindNextSubrecords(
-                    majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength),
+                    majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength),
                     majorFrame.Meta,
                     out var _,
-                    unam,
-                    bnam,
-                    pnam);
+                    RecordTypes.ANAM,
+                    RecordTypes.CNAM,
+                    pldt,
+                    ptda,
+                    pdto,
+                    tpic);
                 int finalLoc;
                 if (recs[0] == null)
                 {
@@ -669,9 +570,10 @@ namespace Mutagen.Bethesda.Tests
                 }
                 else if (recs[0] == 0)
                 {
-                    inputValues.Add(
-                        ((sbyte)unamRecord.Content[0], majorFrame.Content.Slice(unamPos.Value, unamRecord.TotalLength)));
-                    unamPos = unamPos.Value + unamRecord.TotalLength;
+                    dataValues.Add(
+                        (-1, majorFrame.Content.Slice(anamPos.Value, anamRecord.TotalLength)));
+                    curLoc = anamPos.Value + anamRecord.TotalLength;
+                    anamPos = anamPos.Value + anamRecord.TotalLength;
                     continue;
                 }
                 else
@@ -681,344 +583,442 @@ namespace Mutagen.Bethesda.Tests
                         .Where(i => i < recs[0]!.Value)
                         .Max();
                 }
-                var finalRec = majorFrame.Meta.Subrecord(majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength + finalLoc));
-                inputValues.Add(
-                    ((sbyte)unamRecord.Content[0], majorFrame.Content.Slice(unamPos.Value, unamRecord.TotalLength + finalLoc + finalRec.TotalLength)));
+                var finalRec = majorFrame.Meta.Subrecord(majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + finalLoc));
+                var dataSlice = majorFrame.Content.Slice(anamPos.Value, anamRecord.TotalLength + finalLoc + finalRec.TotalLength);
+                if (BinaryStringUtility.ProcessWholeToZString(anamRecord.Content, MutagenEncodingProvider._1252) == "Bool"
+                    && recs[1] != null)
+                {
+                    // Ensure bool value is 1 or 0
+                    var cnam = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + recs[1].Value));
+                    if (cnam.Content.Length != 1)
+                    {
+                        throw new ArgumentException();
+                    }
+                    if (cnam.Content[0] > 1)
+                    {
+                        var bytes = dataSlice.ToArray();
+                        int boolIndex = anamRecord.TotalLength + recs[1].Value + cnam.HeaderLength;
+                        bytes[boolIndex] = (byte)(bytes[boolIndex] > 0 ? 1 : 0);
+                        dataSlice = bytes;
+                    }
+                }
+                dataValues.Add((-1, dataSlice));
 
-                unamPos = unamPos.Value + unamRecord.TotalLength + recs[0];
+                curLoc = anamPos.Value + anamRecord.TotalLength + finalLoc + finalRec.TotalLength;
+                anamPos = anamPos.Value + anamRecord.TotalLength + recs[0];
             }
-            foreach (var item in inputValues.OrderBy(i => i.Index))
+
+            var unamLocs = PluginUtilityTranslation.ParseRepeatingSubrecord(
+                majorFrame.Content.Slice(curLoc),
+                majorFrame.Meta,
+                unam,
+                out var _);
+            if (unamLocs == null
+                || unamLocs.Length != dataValues.Count
+                || unamLocs.Length != count)
             {
-                _Instructions.SetSubstitution(
-                    writeLoc,
+                throw new ArgumentException();
+            }
+
+            for (sbyte i = 0; i < unamLocs.Length; i++)
+            {
+                var unamRec = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(curLoc + unamLocs[i]));
+                dataValues[i] = (
+                    (sbyte)unamRec.Content[0],
+                    dataValues[i].Data);
+            }
+
+            var subLoc = startLoc;
+            foreach (var item in dataValues.OrderBy(i => i.Index))
+            {
+                _instructions.SetSubstitution(
+                    fileOffset + majorFrame.HeaderLength + subLoc,
                     item.Data.ToArray());
-                writeLoc += item.Data.Length;
+                subLoc += item.Data.Length;
+            }
+            foreach (var item in dataValues.OrderBy(i => i.Index))
+            {
+                byte[] bytes = new byte[] { 0x55, 0x4E, 0x41, 0x4D, 0x01, 0x00, 0x00 };
+                bytes[6] = (byte)item.Index;
+                _instructions.SetSubstitution(
+                    fileOffset + majorFrame.HeaderLength + subLoc,
+                    bytes.ToArray());
+                subLoc += bytes.Length;
             }
         }
 
-        private void ProcessShaders(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
+        // Reorder inputs
+        var unamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(xnamPos.Value), majorFrame.Meta, unam);
+        if (!unamPos.HasValue) return;
+        unamPos += xnamPos.Value;
+        var writeLoc = fileOffset + majorFrame.HeaderLength + unamPos.Value;
+        var inputValues = new List<(sbyte Index, ReadOnlyMemorySlice<byte> Data)>();
+        while (unamPos.HasValue)
         {
-            if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+            var unamRecord = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(unamPos.Value));
+            var recs = PluginUtilityTranslation.FindNextSubrecords(
+                majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength),
+                majorFrame.Meta,
+                out var _,
+                unam,
+                bnam,
+                pnam);
+            int finalLoc;
+            if (recs[0] == null)
             {
-                var index = 20;
-                ProcessZeroFloats(dataRec, fileOffset, ref index, 9);
-                index += 4;
-                ProcessZeroFloats(dataRec, fileOffset, ref index, 8);
-                index += 20;
-                ProcessZeroFloats(dataRec, fileOffset, ref index, 19);
-                index += 12;
-                ProcessZeroFloats(dataRec, fileOffset, ref index, 11);
-                index += 4;
-                ProcessZeroFloats(dataRec, fileOffset, ref index, 5);
-                index += 4;
-                ProcessZeroFloat(dataRec, fileOffset, ref index);
-                index += 8;
-                ProcessZeroFloats(dataRec, fileOffset, ref index, 6);
-                index += 12;
-                ProcessZeroFloats(dataRec, fileOffset, ref index, 9);
-                index += 32;
-                ProcessZeroFloats(dataRec, fileOffset, ref index, 2);
+                finalLoc = recs.NotNull().Max();
+            }
+            else if (recs[0] == 0)
+            {
+                inputValues.Add(
+                    ((sbyte)unamRecord.Content[0], majorFrame.Content.Slice(unamPos.Value, unamRecord.TotalLength)));
+                unamPos = unamPos.Value + unamRecord.TotalLength;
+                continue;
+            }
+            else
+            {
+                finalLoc = recs
+                    .NotNull()
+                    .Where(i => i < recs[0]!.Value)
+                    .Max();
+            }
+            var finalRec = majorFrame.Meta.Subrecord(majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength + finalLoc));
+            inputValues.Add(
+                ((sbyte)unamRecord.Content[0], majorFrame.Content.Slice(unamPos.Value, unamRecord.TotalLength + finalLoc + finalRec.TotalLength)));
+
+            unamPos = unamPos.Value + unamRecord.TotalLength + recs[0];
+        }
+        foreach (var item in inputValues.OrderBy(i => i.Index))
+        {
+            _instructions.SetSubstitution(
+                writeLoc,
+                item.Data.ToArray());
+            writeLoc += item.Data.Length;
+        }
+    }
+
+    private void ProcessShaders(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        {
+            var index = 20;
+            ProcessZeroFloats(dataRec, fileOffset, ref index, 9);
+            index += 4;
+            ProcessZeroFloats(dataRec, fileOffset, ref index, 8);
+            index += 20;
+            ProcessZeroFloats(dataRec, fileOffset, ref index, 19);
+            index += 12;
+            ProcessZeroFloats(dataRec, fileOffset, ref index, 11);
+            index += 4;
+            ProcessZeroFloats(dataRec, fileOffset, ref index, 5);
+            index += 4;
+            ProcessZeroFloat(dataRec, fileOffset, ref index);
+            index += 8;
+            ProcessZeroFloats(dataRec, fileOffset, ref index, 6);
+            index += 12;
+            ProcessZeroFloats(dataRec, fileOffset, ref index, 9);
+            index += 32;
+            ProcessZeroFloats(dataRec, fileOffset, ref index, 2);
+        }
+    }
+
+    private void ProcessExplosions(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        {
+            int offset = 0;
+            ProcessFormIDOverflows(dataRec, fileOffset, ref offset, 6);
+            ProcessZeroFloats(dataRec, fileOffset, ref offset, 5);
+        }
+    }
+
+    private void ProcessImageSpaceAdapters(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        void ProcessKeyframe(SubrecordPinFrame subrecord)
+        {
+            ProcessZeroFloats(subrecord, fileOffset, subrecord.ContentLength / 4);
+        }
+
+        foreach (var subrecord in majorFrame)
+        {
+            switch (subrecord.RecordTypeInt)
+            {
+                case RecordTypeInts.QIAD:
+                case RecordTypeInts.RIAD:
+                    ProcessKeyframe(subrecord);
+                    break;
+                default:
+                    break;
             }
         }
 
-        private void ProcessExplosions(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
         {
-            if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+            int offset = 0;
+            ProcessFormIDOverflows(dataRec, fileOffset, ref offset, 6);
+            ProcessZeroFloats(dataRec, fileOffset, ref offset, 5);
+        }
+    }
+
+    private void ProcessLoadScreens(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XNAM, out var xnamRec))
+        {
+            ProcessZeroFloats(xnamRec, fileOffset, 3);
+        }
+    }
+
+    private void ProcessActivators(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        FixVMADFormIDs(
+            majorFrame,
+            fileOffset,
+            out var vmadPos,
+            out var objectFormat,
+            out var processedLen);
+    }
+
+    private void ProcessWeathers(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.SNAM, out var _, out var initialIndex))
+        {
+            foreach (var snam in majorFrame.FindEnumerateSubrecords(RecordTypes.SNAM))
             {
-                int offset = 0;
-                ProcessFormIDOverflows(dataRec, fileOffset, ref offset, 6);
-                ProcessZeroFloats(dataRec, fileOffset, ref offset, 5);
+                ProcessFormIDOverflow(snam, fileOffset);
             }
         }
+    }
 
-        private void ProcessImageSpaceAdapters(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
+    protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
+    {
+        foreach (var t in base.ExtraJobs(streamGetter))
         {
-            void ProcessKeyframe(SubrecordPinFrame subrecord)
-            {
-                ProcessZeroFloats(subrecord, fileOffset, subrecord.ContentLength / 4);
-            }
-
-            foreach (var subrecord in majorFrame)
-            {
-                switch (subrecord.RecordTypeInt)
-                {
-                    case RecordTypeInts.QIAD:
-                    case RecordTypeInts.RIAD:
-                        ProcessKeyframe(subrecord);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
-            {
-                int offset = 0;
-                ProcessFormIDOverflows(dataRec, fileOffset, ref offset, 6);
-                ProcessZeroFloats(dataRec, fileOffset, ref offset, 5);
-            }
+            yield return t;
         }
-
-        private void ProcessLoadScreens(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
+        var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
+        foreach (var source in EnumExt.GetValues<StringsSource>())
         {
-            if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XNAM, out var xnamRec))
+            yield return TaskExt.Run(DoMultithreading, () =>
             {
-                ProcessZeroFloats(xnamRec, fileOffset, 3);
-            }
+                var modKey = ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath));
+                return ProcessStringsFilesIndices(
+                    streamGetter, 
+                    new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)),
+                    Language.English, 
+                    source,
+                    modKey,
+                    _knownDeadKeys.GetOrDefault((modKey, source)),
+                    bsaOrder);
+            });
         }
+    }
 
-        private void ProcessActivators(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
+    public void PerkStringHandler(
+        IMutagenReadStream stream,
+        MajorRecordHeader major,
+        BinaryFileProcessor.ConfigConstructor instr,
+        List<KeyValuePair<uint, uint>> processedStrings,
+        IStringsLookup overlay,
+        ref uint newIndex)
+    {
+        var majorCompletePos = stream.Position + major.ContentLength;
+        long? lastepft = null;
+        while (stream.Position < majorCompletePos)
         {
-            FixVMADFormIDs(
-                majorFrame,
-                fileOffset,
-                out var vmadPos,
-                out var objectFormat,
-                out var processedLen);
-        }
-
-        private void ProcessWeathers(
-            MajorRecordFrame majorFrame,
-            long fileOffset)
-        {
-            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.SNAM, out var _, out var initialIndex))
+            var sub = stream.GetSubrecord();
+            switch (sub.RecordTypeInt)
             {
-                foreach (var snam in majorFrame.FindEnumerateSubrecords(RecordTypes.SNAM))
-                {
-                    ProcessFormIDOverflow(snam, fileOffset);
-                }
-            }
-        }
-
-        protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
-        {
-            foreach (var t in base.ExtraJobs(streamGetter))
-            {
-                yield return t;
-            }
-            var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
-            foreach (var source in EnumExt.GetValues<StringsSource>())
-            {
-                yield return TaskExt.Run(DoMultithreading, () =>
-                {
-                    var modKey = ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath));
-                    return ProcessStringsFilesIndices(
-                        streamGetter, 
-                        new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)),
-                        Language.English, 
-                        source,
-                        modKey,
-                        _knownDeadKeys.GetOrDefault((modKey, source)),
-                        bsaOrder);
-                });
-            }
-        }
-
-        public void PerkStringHandler(
-            IMutagenReadStream stream,
-            MajorRecordHeader major,
-            BinaryFileProcessor.ConfigConstructor instr,
-            List<KeyValuePair<uint, uint>> processedStrings,
-            IStringsLookup overlay,
-            ref uint newIndex)
-        {
-            var majorCompletePos = stream.Position + major.ContentLength;
-            long? lastepft = null;
-            while (stream.Position < majorCompletePos)
-            {
-                var sub = stream.GetSubrecord();
-                switch (sub.RecordTypeInt)
-                {
-                    case RecordTypeInts.FULL:
-                    case RecordTypeInts.EPF2:
-                        AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
-                        break;
-                    case RecordTypeInts.EPFT:
-                        lastepft = stream.Position;
-                        break;
-                    case RecordTypeInts.EPFD:
-                        var pos = stream.Position;
-                        stream.Position = lastepft.Value;
-                        var epftFrame = stream.ReadSubrecordFrame();
-                        if (epftFrame.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
-                        {
-                            stream.Position = pos;
-                            AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
-                        }
+                case RecordTypeInts.FULL:
+                case RecordTypeInts.EPF2:
+                    AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+                    break;
+                case RecordTypeInts.EPFT:
+                    lastepft = stream.Position;
+                    break;
+                case RecordTypeInts.EPFD:
+                    var pos = stream.Position;
+                    stream.Position = lastepft.Value;
+                    var epftFrame = stream.ReadSubrecordFrame();
+                    if (epftFrame.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
+                    {
                         stream.Position = pos;
-                        break;
-                    default:
-                        break;
-                }
-                stream.Position += sub.TotalLength;
+                        AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+                    }
+                    stream.Position = pos;
+                    break;
+                default:
+                    break;
             }
+            stream.Position += sub.TotalLength;
         }
+    }
 
-        public void GameSettingStringHandler(
-            IMutagenReadStream stream,
-            MajorRecordHeader major,
-            BinaryFileProcessor.ConfigConstructor instr,
-            List<KeyValuePair<uint, uint>> processedStrings,
-            IStringsLookup overlay,
-            ref uint newIndex)
-        {
-            stream.Position -= major.HeaderLength;
-            var majorRec = stream.GetMajorRecordFrame();
-            if (!majorRec.TryLocateSubrecordFrame("EDID", out var edidRec)) throw new ArgumentException();
-            if (edidRec.Content[0] != (byte)'s') return;
-            if (!majorRec.TryLocateSubrecordPinFrame("DATA", out var dataRec)) throw new ArgumentException();
-            stream.Position += dataRec.Location;
-            AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
-        }
+    public void GameSettingStringHandler(
+        IMutagenReadStream stream,
+        MajorRecordHeader major,
+        BinaryFileProcessor.ConfigConstructor instr,
+        List<KeyValuePair<uint, uint>> processedStrings,
+        IStringsLookup overlay,
+        ref uint newIndex)
+    {
+        stream.Position -= major.HeaderLength;
+        var majorRec = stream.GetMajorRecordFrame();
+        if (!majorRec.TryLocateSubrecordFrame("EDID", out var edidRec)) throw new ArgumentException();
+        if (edidRec.Content[0] != (byte)'s') return;
+        if (!majorRec.TryLocateSubrecordPinFrame("DATA", out var dataRec)) throw new ArgumentException();
+        stream.Position += dataRec.Location;
+        AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+    }
 
-        private async Task ProcessStringsFilesIndices(
-            Func<IMutagenReadStream> streamGetter,
-            DirectoryPath dataFolder,
-            Language language, 
-            StringsSource source, 
-            ModKey modKey,
-            HashSet<uint> knownDeadKeys,
-            IEnumerable<FileName> bsaOrder)
+    private async Task ProcessStringsFilesIndices(
+        Func<IMutagenReadStream> streamGetter,
+        DirectoryPath dataFolder,
+        Language language, 
+        StringsSource source, 
+        ModKey modKey,
+        HashSet<uint> knownDeadKeys,
+        IEnumerable<FileName> bsaOrder)
+    {
+        using var stream = streamGetter();
+        switch (source)
         {
-            using var stream = streamGetter();
-            switch (source)
-            {
-                case StringsSource.Normal:
-                    ProcessStringsFiles(
+            case StringsSource.Normal:
+                ProcessStringsFiles(
+                    GameRelease,
+                    modKey,
+                    dataFolder,
+                    language,
+                    StringsSource.Normal,
+                    strict: true,
+                    knownDeadKeys: knownDeadKeys,
+                    bsaOrder: bsaOrder,
+                    RenumberStringsFileEntries(
                         GameRelease,
                         modKey,
+                        stream,
                         dataFolder,
                         language,
                         StringsSource.Normal,
-                        strict: true,
-                        knownDeadKeys: knownDeadKeys,
-                        bsaOrder: bsaOrder,
-                        RenumberStringsFileEntries(
-                            GameRelease,
-                            modKey,
-                            stream,
-                            dataFolder,
-                            language,
-                            StringsSource.Normal,
-                            new StringsAlignmentCustom("GMST", GameSettingStringHandler),
-                            new RecordType[] { "LSCR", "DESC" },
-                            new RecordType[] { "ACTI", "FULL", "RNAM" },
-                            new RecordType[] { "APPA", "FULL" },
-                            new RecordType[] { "AMMO", "FULL" },
-                            new RecordType[] { "ARMO", "FULL" },
-                            new RecordType[] { "BOOK", "FULL" },
-                            new RecordType[] { "CLAS", "FULL" },
-                            new RecordType[] { "EYES", "FULL" },
-                            new RecordType[] { "CONT", "FULL" },
-                            new RecordType[] { "DOOR", "FULL" },
-                            new RecordType[] { "FACT", "FULL", "MNAM", "FNAM" },
-                            new RecordType[] { "FURN", "FULL" },
-                            new RecordType[] { "HAZD", "FULL" },
-                            new RecordType[] { "HDPT", "FULL" },
-                            new RecordType[] { "ALCH", "FULL" },
-                            new RecordType[] { "INGR", "FULL" },
-                            new RecordType[] { "LIGH", "FULL" },
-                            new RecordType[] { "MGEF", "FULL", "DNAM" },
-                            new RecordType[] { "MISC", "FULL" },
-                            new RecordType[] { "MSTT", "FULL" },
-                            new RecordType[] { "NPC_", "FULL", "SHRT" },
-                            new RecordType[] { "ENCH", "FULL" },
-                            new RecordType[] { "PROJ", "FULL" },
-                            new RecordType[] { "RACE", "FULL" },
-                            new RecordType[] { "SCRL", "FULL" },
-                            new RecordType[] { "SLGM", "FULL" },
-                            new RecordType[] { "SPEL", "FULL" },
-                            new RecordType[] { "TACT", "FULL" },
-                            new RecordType[] { "TREE", "FULL" },
-                            new RecordType[] { "WEAP", "FULL" },
-                            new RecordType[] { "FLOR", "FULL", "RNAM" },
-                            new RecordType[] { "KEYM", "FULL" },
-                            new RecordType[] { "CELL", "FULL" },
-                            new RecordType[] { "REFR", "FULL" },
-                            new RecordType[] { "WRLD", "FULL" },
-                            new RecordType[] { "DIAL", "FULL" },
-                            new RecordType[] { "INFO", "RNAM" },
-                            new RecordType[] { "QUST", "FULL", "NNAM" },
-                            new RecordType[] { "WATR", "FULL" },
-                            new RecordType[] { "EXPL", "FULL" },
-                            new StringsAlignmentCustom("PERK", PerkStringHandler),
-                            new RecordType[] { "BPTD", "BPTN" },
-                            new RecordType[] { "AVIF", "FULL" },
-                            new RecordType[] { "LCTN", "FULL" },
-                            new RecordType[] { "MESG", "FULL", "ITXT" },
-                            new RecordType[] { "WOOP", "FULL", "TNAM" },
-                            new RecordType[] { "SHOU", "FULL" },
-                            new RecordType[] { "SNCT", "FULL" },
-                            new RecordType[] { "CLFM", "FULL" },
-                            new RecordType[] { "REGN", "RDMP" }
-                        ));
-                    break;
-                case StringsSource.DL:
-                    ProcessStringsFiles(
+                        new StringsAlignmentCustom("GMST", GameSettingStringHandler),
+                        new RecordType[] { "LSCR", "DESC" },
+                        new RecordType[] { "ACTI", "FULL", "RNAM" },
+                        new RecordType[] { "APPA", "FULL" },
+                        new RecordType[] { "AMMO", "FULL" },
+                        new RecordType[] { "ARMO", "FULL" },
+                        new RecordType[] { "BOOK", "FULL" },
+                        new RecordType[] { "CLAS", "FULL" },
+                        new RecordType[] { "EYES", "FULL" },
+                        new RecordType[] { "CONT", "FULL" },
+                        new RecordType[] { "DOOR", "FULL" },
+                        new RecordType[] { "FACT", "FULL", "MNAM", "FNAM" },
+                        new RecordType[] { "FURN", "FULL" },
+                        new RecordType[] { "HAZD", "FULL" },
+                        new RecordType[] { "HDPT", "FULL" },
+                        new RecordType[] { "ALCH", "FULL" },
+                        new RecordType[] { "INGR", "FULL" },
+                        new RecordType[] { "LIGH", "FULL" },
+                        new RecordType[] { "MGEF", "FULL", "DNAM" },
+                        new RecordType[] { "MISC", "FULL" },
+                        new RecordType[] { "MSTT", "FULL" },
+                        new RecordType[] { "NPC_", "FULL", "SHRT" },
+                        new RecordType[] { "ENCH", "FULL" },
+                        new RecordType[] { "PROJ", "FULL" },
+                        new RecordType[] { "RACE", "FULL" },
+                        new RecordType[] { "SCRL", "FULL" },
+                        new RecordType[] { "SLGM", "FULL" },
+                        new RecordType[] { "SPEL", "FULL" },
+                        new RecordType[] { "TACT", "FULL" },
+                        new RecordType[] { "TREE", "FULL" },
+                        new RecordType[] { "WEAP", "FULL" },
+                        new RecordType[] { "FLOR", "FULL", "RNAM" },
+                        new RecordType[] { "KEYM", "FULL" },
+                        new RecordType[] { "CELL", "FULL" },
+                        new RecordType[] { "REFR", "FULL" },
+                        new RecordType[] { "WRLD", "FULL" },
+                        new RecordType[] { "DIAL", "FULL" },
+                        new RecordType[] { "INFO", "RNAM" },
+                        new RecordType[] { "QUST", "FULL", "NNAM" },
+                        new RecordType[] { "WATR", "FULL" },
+                        new RecordType[] { "EXPL", "FULL" },
+                        new StringsAlignmentCustom("PERK", PerkStringHandler),
+                        new RecordType[] { "BPTD", "BPTN" },
+                        new RecordType[] { "AVIF", "FULL" },
+                        new RecordType[] { "LCTN", "FULL" },
+                        new RecordType[] { "MESG", "FULL", "ITXT" },
+                        new RecordType[] { "WOOP", "FULL", "TNAM" },
+                        new RecordType[] { "SHOU", "FULL" },
+                        new RecordType[] { "SNCT", "FULL" },
+                        new RecordType[] { "CLFM", "FULL" },
+                        new RecordType[] { "REGN", "RDMP" }
+                    ));
+                break;
+            case StringsSource.DL:
+                ProcessStringsFiles(
+                    GameRelease,
+                    modKey,
+                    dataFolder,
+                    language,
+                    StringsSource.DL,
+                    strict: true,
+                    knownDeadKeys: knownDeadKeys,
+                    bsaOrder: bsaOrder,
+                    RenumberStringsFileEntries(
                         GameRelease,
                         modKey,
+                        stream,
                         dataFolder,
                         language,
                         StringsSource.DL,
-                        strict: true,
-                        knownDeadKeys: knownDeadKeys,
-                        bsaOrder: bsaOrder,
-                        RenumberStringsFileEntries(
-                            GameRelease,
-                            modKey,
-                            stream,
-                            dataFolder,
-                            language,
-                            StringsSource.DL,
-                            new RecordType[] { "SCRL", "DESC" },
-                            new RecordType[] { "APPA", "DESC" },
-                            new RecordType[] { "AMMO", "DESC" },
-                            new RecordType[] { "ARMO", "DESC" },
-                            new RecordType[] { "ALCH", "DESC" },
-                            new RecordType[] { "WEAP", "DESC" },
-                            new RecordType[] { "BOOK", "DESC", "CNAM" },
-                            new RecordType[] { "QUST", "CNAM" },
-                            new RecordType[] { "PERK", "DESC" },
-                            new RecordType[] { "AVIF", "DESC" },
-                            new RecordType[] { "MESG", "DESC" },
-                            new RecordType[] { "SHOU", "DESC" },
-                            new RecordType[] { "COLL", "DESC" },
-                            new RecordType[] { "RACE", "DESC" },
-                            new RecordType[] { "SPEL", "DESC" }
-                        ));
-                    break;
-                case StringsSource.IL:
-                    ProcessStringsFiles(
+                        new RecordType[] { "SCRL", "DESC" },
+                        new RecordType[] { "APPA", "DESC" },
+                        new RecordType[] { "AMMO", "DESC" },
+                        new RecordType[] { "ARMO", "DESC" },
+                        new RecordType[] { "ALCH", "DESC" },
+                        new RecordType[] { "WEAP", "DESC" },
+                        new RecordType[] { "BOOK", "DESC", "CNAM" },
+                        new RecordType[] { "QUST", "CNAM" },
+                        new RecordType[] { "PERK", "DESC" },
+                        new RecordType[] { "AVIF", "DESC" },
+                        new RecordType[] { "MESG", "DESC" },
+                        new RecordType[] { "SHOU", "DESC" },
+                        new RecordType[] { "COLL", "DESC" },
+                        new RecordType[] { "RACE", "DESC" },
+                        new RecordType[] { "SPEL", "DESC" }
+                    ));
+                break;
+            case StringsSource.IL:
+                ProcessStringsFiles(
+                    GameRelease,
+                    modKey,
+                    dataFolder,
+                    language,
+                    StringsSource.IL,
+                    strict: true,
+                    knownDeadKeys: knownDeadKeys,
+                    bsaOrder: bsaOrder,
+                    RenumberStringsFileEntries(
                         GameRelease,
                         modKey,
+                        stream,
                         dataFolder,
                         language,
                         StringsSource.IL,
-                        strict: true,
-                        knownDeadKeys: knownDeadKeys,
-                        bsaOrder: bsaOrder,
-                        RenumberStringsFileEntries(
-                            GameRelease,
-                            modKey,
-                            stream,
-                            dataFolder,
-                            language,
-                            StringsSource.IL,
-                            new RecordType[] { "DIAL" },
-                            new RecordType[] { "INFO", "NAM1" }
-                        ));
-                    break;
-            }
+                        new RecordType[] { "DIAL" },
+                        new RecordType[] { "INFO", "NAM1" }
+                    ));
+                break;
         }
     }
 }

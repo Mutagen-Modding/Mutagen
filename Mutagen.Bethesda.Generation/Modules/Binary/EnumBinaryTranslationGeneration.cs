@@ -4,11 +4,13 @@ using System;
 using System.Linq;
 using Noggog;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Meta;
+using EnumType = Mutagen.Bethesda.Generation.Fields.EnumType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {

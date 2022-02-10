@@ -12,6 +12,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Mutagen.Bethesda.Generation.Fields;
+using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {

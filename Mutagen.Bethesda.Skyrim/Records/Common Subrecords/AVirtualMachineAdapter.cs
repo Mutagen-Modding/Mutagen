@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ushort count = frame.ReadUInt16();
                 for (int i = 0; i < count; i++)
                 {
-                    var scriptName = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
+                    var scriptName = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort, encoding: frame.MetaData.Encodings.NonTranslated);
                     var scriptFlags = (ScriptEntry.Flag)frame.ReadUInt8();
                     var entry = new ScriptEntry()
                     {
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var count = frame.ReadUInt16();
                 for (int i = 0; i < count; i++)
                 {
-                    var name = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
+                    var name = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort, encoding: frame.MetaData.Encodings.NonTranslated);
                     var type = (ScriptProperty.Type)frame.ReadUInt8();
                     var flags = (ScriptProperty.Flag)frame.ReadUInt8();
                     ScriptProperty prop = type switch
@@ -133,13 +133,13 @@ namespace Mutagen.Bethesda.Skyrim
                 writer.Write(checked((ushort)scripts.Count));
                 foreach (var entry in scripts)
                 {
-                    writer.Write(entry.Name, StringBinaryType.PrependLengthUShort);
+                    writer.Write(entry.Name, StringBinaryType.PrependLengthUShort, encoding: writer.MetaData.Encodings.NonTranslated);
                     writer.Write((byte)entry.Flags);
                     var properties = entry.Properties;
                     writer.Write(checked((ushort)properties.Count));
                     foreach (var property in properties)
                     {
-                        writer.Write(property.Name, StringBinaryType.PrependLengthUShort);
+                        writer.Write(property.Name, StringBinaryType.PrependLengthUShort, encoding: writer.MetaData.Encodings.NonTranslated);
                         var type = property switch
                         {
                             ScriptObjectProperty _ => ScriptProperty.Type.Object,

@@ -17,9 +17,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Strings.DI;
+using BoolType = Mutagen.Bethesda.Generation.Fields.BoolType;
+using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
+using EnumType = Mutagen.Bethesda.Generation.Fields.EnumType;
+using FloatType = Mutagen.Bethesda.Generation.Fields.FloatType;
+using PercentType = Mutagen.Bethesda.Generation.Fields.PercentType;
+using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -139,7 +146,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     if (dir == TranslationDirection.Writer) return false;
                     return obj.GetObjectType() == ObjectType.Mod
-                        && obj.GetObjectData().UsesStringFiles;
+                           && obj.GetObjectData().UsesStringFiles;
                 });
             var recordInfoCache = new APILine(
                 nicknameKey: "RecordInfoCache",
@@ -374,6 +381,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     prop.Add($"{nameof(WritingBundle.StringsWriter)} = param.StringsWriter");
                 }
                 prop.Add($"{nameof(WritingBundle.CleanNulls)} = param.{nameof(BinaryWriteParameters.CleanNulls)}");
+                prop.Add($"{nameof(WritingBundle.TargetLanguageOverride)} = param.{nameof(BinaryWriteParameters.TargetLanguageOverride)}");
             }
             fg.AppendLine("using var memStream = new MemoryTributary();");
             using (var args = new ArgsWrapper(fg,
@@ -431,6 +439,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = path.ModKey;");
                     if (obj.GetObjectData().UsesStringFiles)
                     {
+                        fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Absorb)}(stringsParam);");
                         fg.AppendLine("if (reader.Remaining < 12)");
                         using (new BraceWrapper(fg))
                         {
@@ -619,8 +628,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             yield return "Mutagen.Bethesda.Plugins.Binary.Translations";
             yield return "Mutagen.Bethesda.Plugins.Binary.Streams";
             yield return "Mutagen.Bethesda.Plugins.Exceptions";
+            
+            if (obj.GetObjectType() == ObjectType.Group && !obj.IsListGroup())
+            {
+                yield return $"Mutagen.Bethesda.{obj.ProtoGen.Protocol.Namespace}.Records";
+            }
 
-            if (await LinkModule.HasLinks(obj, includeBaseClass: false) != LinkModule.LinkCase.No
+            if (await LinkModule.HasLinks(obj, includeBaseClass: false) != Case.No
                 || obj.IterateFields().Any(f => f is FormKeyType))
             {
                 yield return "Mutagen.Bethesda.Plugins.Cache";
@@ -1213,7 +1227,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInVoid(obj, fg);
-            using (new NamespaceWrapper(fg, obj.InternalNamespace))
+            using (new NamespaceWrapper(fg, obj.InternalNamespace, fileScoped: false))
             {
                 await GenerateImportWrapper(obj, fg);
             }
@@ -1821,7 +1835,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     fg.AppendLine($"IGroupGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
                     fg.AppendLine($"IGroupGetter {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
                     fg.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
-                    fg.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);");
+                    fg.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
                     if (obj.GetObjectData().UsesStringFiles)
                     {
@@ -1837,7 +1851,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
 
                 if (obj.GetObjectType() == ObjectType.Mod
-                    || (await LinkModule.HasLinks(obj, includeBaseClass: false) != LinkModule.LinkCase.No))
+                    || (await LinkModule.HasLinks(obj, includeBaseClass: false) != Case.No))
                 {
                     await LinkModule.GenerateInterfaceImplementation(obj, fg, getter: true);
                 }
@@ -2100,6 +2114,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             {
                                 if (objData.UsesStringFiles)
                                 {
+                                    fg.AppendLine($"meta.{nameof(ParsingBundle.Absorb)}(stringsParam);");
                                     fg.AppendLine("if (stream.Remaining < 12)");
                                     using (new BraceWrapper(fg))
                                     {
@@ -2130,6 +2145,33 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             {
                                 fg.AppendLine("stream.Dispose();");
                                 fg.AppendLine("throw;");
+                            }
+                        }
+                        fg.AppendLine();
+                    }
+
+                    if (obj.IsTopLevelGroup())
+                    {
+                        using (var args = new FunctionWrapper(fg,
+                                   $"public static {obj.Interface(getter: true)} {obj.Name}Factory"))
+                        {
+                            args.Add($"{nameof(IBinaryReadStream)} stream");
+                            args.Add("IReadOnlyList<RangeInt64> locs");
+                            args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                       $"var subGroups = locs.Select(x => {obj.ProtoGen.Protocol.Namespace}GroupFactory",
+                                       suffixLine: ").ToArray()"))
+                            {
+                                args.Add("new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package)");
+                                args.Add("package");
+                            }
+                            using (var args = new ArgsWrapper(fg,
+                                       $"return new {obj.ProtoGen.Protocol.Namespace}GroupWrapper<T>"))
+                            {
+                                args.Add($"new GroupMergeGetter<I{obj.ProtoGen.Protocol.Namespace}GroupGetter<T>, T>(subGroups)");
                             }
                         }
                         fg.AppendLine();
@@ -2284,7 +2326,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
 
                         // Parse struct section ending positions 
-                        string structPassedAccessor = null;
+                        string? structPassedAccessor = null;
                         int? structPassedLen = 0;
                         await foreach (var lengths in IteratePassedLengths(
                             obj,

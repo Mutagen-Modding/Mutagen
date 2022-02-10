@@ -3,6 +3,7 @@ using Loqui.Generation;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Fields;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records.Internals;
@@ -31,7 +32,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine("using Mutagen.Bethesda.Plugins.Order;");
             fg.AppendLine("using Mutagen.Bethesda.Plugins.Order.Internals;");
             fg.AppendLine();
-            using (var n = new NamespaceWrapper(fg, proto.DefaultNamespace))
+            using (var n = new NamespaceWrapper(fg, proto.DefaultNamespace, fileScoped: false))
             {
                 using (var c = new ClassWrapper(fg, "TypeOptionSolidifierMixIns"))
                 {

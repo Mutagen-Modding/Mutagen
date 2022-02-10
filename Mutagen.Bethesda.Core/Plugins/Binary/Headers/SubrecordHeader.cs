@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <summary>
         /// The length that the header itself takes
         /// </summary>
-        public sbyte HeaderLength => Meta.SubConstants.HeaderLength;
+        public byte HeaderLength => Meta.SubConstants.HeaderLength;
         
         /// <summary>
         /// RecordType of the header
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>
-        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength);
+        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(Header.HeaderLength);
 
         /// <summary>
         /// Constructor
@@ -97,14 +97,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public SubrecordFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = meta.Subrecord(span);
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            Header = meta.Subrecord(span);
+            HeaderAndContentData = span.Slice(0, Header.TotalLength);
         }
 
         private SubrecordFrame(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = header;
-            this.HeaderAndContentData = span;
+            Header = header;
+            HeaderAndContentData = span;
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         }
 
         /// <inheritdoc/>
-        public override string ToString() => this.Header.ToString();
+        public override string ToString() => Header.ToString();
 
         #region Header Forwarding
         /// <summary>
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <summary>
         /// The length that the header itself takes
         /// </summary>
-        public sbyte HeaderLength => Header.HeaderLength;
+        public byte HeaderLength => Header.HeaderLength;
 
         /// <summary>
         /// RecordType of the header
@@ -235,7 +235,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         }
 
         /// <inheritdoc/>
-        public override string ToString() => $"{this.Frame.ToString()} @ {Location.ToString()}";
+        public override string ToString() => $"{Frame.ToString()} @ {Location.ToString()}";
 
         #region Forwarding
         /// <summary>
@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// <summary>
         /// The length that the header itself takes
         /// </summary>
-        public sbyte HeaderLength => Frame.HeaderLength;
+        public byte HeaderLength => Frame.HeaderLength;
 
         /// <summary>
         /// RecordType of the header

@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// <summary>
     /// An interface that Group Record objects implement to hook into the common systems
     /// </summary>
-    public interface IGroupGetter
+    public interface IGroupGetter : IFormLinkContainerGetter
     {
         /// <summary>
         /// Mod object the Group belongs to

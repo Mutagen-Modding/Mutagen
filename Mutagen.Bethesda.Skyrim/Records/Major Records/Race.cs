@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (!frame.Reader.TryReadSubrecordFrame(RecordTypes.NAME, out var subHeader)) break;
                     BipedObject type = (BipedObject)i;
-                    var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
+                    var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content, frame.MetaData.Encodings.NonTranslated);
                     if (!string.IsNullOrEmpty(val))
                     {
                         item.BipedObjectNames[type] = val;
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         if (!_package.MetaData.Constants.TrySubrecordFrame(_data.Slice(loc), RecordTypes.NAME, out var subHeader)) break;
                         BipedObject type = (BipedObject)i;
-                        var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
+                        var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content, _package.MetaData.Encodings.NonTranslated);
                         if (!string.IsNullOrEmpty(val))
                         {
                             ret[type] = val;
@@ -236,11 +236,11 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         if (bipedObjs.TryGetValue(bipedObj, out var val))
                         {
-                            writer.Write(val, StringBinaryType.NullTerminate);
+                            writer.Write(val, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
                         }
                         else
                         {
-                            writer.Write(string.Empty, StringBinaryType.NullTerminate);
+                            writer.Write(string.Empty, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
                         }
                     }
                 }

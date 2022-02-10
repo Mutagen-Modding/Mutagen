@@ -52,6 +52,9 @@
     <Compile Include="Records\Fallout4Group.cs">
       <DependentUpon>Fallout4Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Fallout4GroupWrapper.cs">
+      <DependentUpon>Fallout4Group.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ActionRecord.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
@@ -97,11 +100,17 @@
     <Compile Include="Records\Major Records\GlobalShort.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Grass.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\HeadPart.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Keyword.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MaterialType.cs">
+      <DependentUpon>MaterialType.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Part.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
@@ -348,14 +357,39 @@
     <Compile Include="Records\Fallout4Group_Generated.cs">
       <DependentUpon>Fallout4Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SoundMarker_Generated.cs">
+      <DependentUpon>SoundMarker.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundRepeat_Generated.cs">
+      <DependentUpon>SoundMarker.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AcousticSpace_Generated.cs">
+      <DependentUpon>AcousticSpace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Region_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ReverbParameters_Generated.cs">
+      <DependentUpon>ReverbParameters.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Grass_Generated.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LandscapeTexture_Generated.cs">
+      <DependentUpon>LandscapeTexture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MaterialType_Generated.cs">
+      <DependentUpon>MaterialType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IRegionTarget_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.37.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.37.0" />
+    <PackageReference Include="Loqui" Version="2.39.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.39.0" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

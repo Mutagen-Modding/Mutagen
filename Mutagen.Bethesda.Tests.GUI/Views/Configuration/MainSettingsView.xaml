@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:Mutagen.Bethesda.Tests.GUI.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:noggog="clr-namespace:Noggog.WPF;assembly=Noggog.WPF"
+    xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:sys="clr-namespace:System;assembly=System.Runtime"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -28,6 +29,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0"
@@ -40,21 +45,48 @@
             <CheckBox x:Name="TestImport" Content="Import" />
             <CheckBox x:Name="TestCopyIn" Content="CopyIn" />
             <CheckBox x:Name="TestEquals" Content="Equals" />
+            <CheckBox x:Name="TestParallel" Content="Parallel" />
         </WrapPanel>
         <TextBlock Grid.Row="2"
             FontSize="{StaticResource HeaderFontSize}"
             FontWeight="Bold"
             Text="Caches" />
         <WrapPanel Grid.Row="3">
+            <CheckBox x:Name="CacheTrimming" Content="Trimming" />
             <CheckBox x:Name="CacheDecompression" Content="Decompression" />
+            <CheckBox x:Name="CacheMerging" Content="Trimming" />
             <CheckBox x:Name="CacheAlignment" Content="Alignment" />
             <CheckBox x:Name="CacheProcessing" Content="Processing" />
         </WrapPanel>
         <TextBlock Grid.Row="4"
-            FontSize="{StaticResource HeaderFontSize}"
-            FontWeight="Bold"
-            Text="Data Folders" />
-        <ItemsControl Grid.Row="5"
+                   FontSize="{StaticResource HeaderFontSize}"
+                   FontWeight="Bold"
+                   Text="Skipped Groups" />
+        <CheckBox Grid.Row="5" x:Name="TrimmedGroupsEnable" Content="Enable" Margin="5" />
+        <ListBox x:Name="SkippedTypes" Grid.Row="6" MaxHeight="200" Margin="5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding RecordType}" Margin="4,4,8,4" />
+                        <Button Command="{Binding DeleteCommand}">
+                            <icon:PackIconMaterial
+                                Width="10"
+                                Height="10"
+                                Kind="Close" />
+                            </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="0,0,0,5">
+            <TextBox x:Name="SkipInput" Width="80" />
+            <Button Content="Add" x:Name="AddSkipButton" />
+        </StackPanel>
+        <TextBlock Grid.Row="8"
+                   FontSize="{StaticResource HeaderFontSize}"
+                   FontWeight="Bold"
+                   Text="Data Folders" />
+        <ItemsControl Grid.Row="9"
             x:Name="DataFolders"
             Margin="0,5,0,0">
             <ItemsControl.ItemTemplate>

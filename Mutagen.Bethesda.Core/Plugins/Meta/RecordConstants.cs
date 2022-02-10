@@ -18,27 +18,27 @@ namespace Mutagen.Bethesda.Plugins.Meta
         /// <summary>
         /// The length that the header itself takes
         /// </summary>
-        public sbyte HeaderLength { get; }
+        public byte HeaderLength { get; }
         
         /// <summary>
         /// Number of bytes that hold length information
         /// </summary>
-        public sbyte LengthLength { get; }
+        public byte LengthLength { get; }
         
         /// <summary>
         /// Number of bytes in the header following the length information
         /// </summary>
-        public sbyte LengthAfterLength { get; }
+        public byte LengthAfterLength { get; }
         
         /// <summary>
         /// Number of bytes in the header following the record type information
         /// </summary>
-        public sbyte LengthAfterType { get; }
+        public byte LengthAfterType { get; }
         
         /// <summary>
         /// Size of the record type and length bytes
         /// </summary>
-        public sbyte TypeAndLengthLength { get; }
+        public byte TypeAndLengthLength { get; }
         
         /// <summary>
         /// Whether the size of the header itself is included in the length bytes, in addition to the content length
@@ -53,15 +53,15 @@ namespace Mutagen.Bethesda.Plugins.Meta
         /// <param name="lengthLength">Number of bytes containing content length information</param>
         public RecordHeaderConstants(
             ObjectType type,
-            sbyte headerLength,
-            sbyte lengthLength)
+            byte headerLength,
+            byte lengthLength)
         {
             this.ObjectType = type;
             this.HeaderLength = headerLength;
             this.LengthLength = lengthLength;
-            this.LengthAfterLength = (sbyte)(this.HeaderLength - Constants.HeaderLength - this.LengthLength);
-            this.LengthAfterType = (sbyte)(this.HeaderLength - Constants.HeaderLength);
-            this.TypeAndLengthLength = (sbyte)(Constants.HeaderLength + this.LengthLength);
+            this.LengthAfterLength = (byte)(this.HeaderLength - Constants.HeaderLength - this.LengthLength);
+            this.LengthAfterType = (byte)(this.HeaderLength - Constants.HeaderLength);
+            this.TypeAndLengthLength = (byte)(Constants.HeaderLength + this.LengthLength);
             this.HeaderIncludedInLength = type == ObjectType.Group;
         }
 

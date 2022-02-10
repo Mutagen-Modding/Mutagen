@@ -20,8 +20,6 @@ namespace Mutagen.Bethesda.Strings.DI
         public static readonly IMutagenEncoding _1256;
         public static readonly IMutagenEncoding _utf8;
 
-        public IMutagenEncoding Default => _1252;
-
         public static readonly IMutagenEncoding _utf8_932;
         public static readonly IMutagenEncoding _utf8_1250;
         public static readonly IMutagenEncoding _utf8_1251;
@@ -92,6 +90,8 @@ namespace Mutagen.Bethesda.Strings.DI
             switch (language)
             {
                 case Language.Polish:
+                case Language.Hungarian:
+                case Language.Czech:
                     return _1250;
                 case Language.Russian:
                     return _1251;
@@ -99,12 +99,24 @@ namespace Mutagen.Bethesda.Strings.DI
                 case Language.French:
                 case Language.German:
                 case Language.Spanish:
-                case Language.Portuguese_Brazil:
                 case Language.Spanish_Mexico:
+                case Language.Finnish:
+                case Language.Danish:
+                case Language.Norwegian:
+                case Language.Swedish:
+                case Language.Portuguese_Brazil:
                 case Language.Italian:
                     return _1252;
+                case Language.Greek:
+                    return _1253;
+                case Language.Turkish:
+                    return _1254;
+                case Language.Arabic:
+                    return _1256;
+                case Language.Korean:
                 case Language.Chinese:
                 case Language.Japanese:
+                case Language.Thai:
                     return _utf8;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(language), language, null);
@@ -128,6 +140,7 @@ namespace Mutagen.Bethesda.Strings.DI
                 case Language.German:
                 case Language.Italian:
                 case Language.Spanish:
+                case Language.Spanish_Mexico:
                 case Language.Danish:
                 case Language.Finnish:
                 case Language.Norwegian:

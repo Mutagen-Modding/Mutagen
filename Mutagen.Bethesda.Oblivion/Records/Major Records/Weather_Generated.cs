@@ -2323,11 +2323,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region TextureLowerLayer
         private int? _TextureLowerLayerLocation;
-        public String? TextureLowerLayer => _TextureLowerLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureLowerLayerLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? TextureLowerLayer => _TextureLowerLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureLowerLayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region TextureUpperLayer
         private int? _TextureUpperLayerLocation;
-        public String? TextureUpperLayer => _TextureUpperLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureUpperLayerLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? TextureUpperLayer => _TextureUpperLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureUpperLayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IWeatherColorsGetter>? Colors { get; private set; }

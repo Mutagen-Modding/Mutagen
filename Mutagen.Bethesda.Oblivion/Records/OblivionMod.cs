@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Noggog;
 using System.IO;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -77,28 +78,30 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public static void WriteCellsParallel(
                 IOblivionListGroupGetter<ICellBlockGetter> group,
-                IMasterReferenceReader masters,
                 int targetIndex,
-                Stream[] streamDepositArray)
+                Stream[] streamDepositArray,
+                WritingBundle bundle,
+                ParallelWriteParameters parallelWriteParameters)
             {
                 if (group.Records.Count == 0) return;
                 Stream[] streams = new Stream[group.Records.Count + 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
-                using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
+                using (var stream = new MutagenWriter(groupByteStream, bundle with {}, dispose: false))
                 {
                     stream.Position += 8;
                     OblivionListGroupBinaryWriteTranslation.WriteEmbedded<ICellBlockGetter>(group, stream);
                 }
                 streams[0] = groupByteStream;
-                Parallel.ForEach(group.Records, (cellBlock, state, counter) =>
+                Parallel.ForEach(group.Records, parallelWriteParameters.ParallelOptions, (cellBlock, state, counter) =>
                 {
                     WriteBlocksParallel(
                         cellBlock,
-                        masters,
                         (int)counter + 1,
-                        streams);
+                        streams,
+                        bundle,
+                        parallelWriteParameters);
                 });
                 PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
@@ -106,16 +109,17 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteBlocksParallel(
                 ICellBlockGetter block,
-                IMasterReferenceReader masters,
                 int targetIndex,
-                Stream[] streamDepositArray)
+                Stream[] streamDepositArray,
+                WritingBundle bundle,
+                ParallelWriteParameters parallelWriteParameters)
             {
                 var subBlocks = block.SubBlocks;
                 Stream[] streams = new Stream[(subBlocks?.Count ?? 0) + 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
-                using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
+                using (var stream = new MutagenWriter(groupByteStream, bundle with {}, dispose: false))
                 {
                     stream.Position += 8;
                     CellBlockBinaryWriteTranslation.WriteEmbedded(block, stream);
@@ -123,13 +127,14 @@ namespace Mutagen.Bethesda.Oblivion
                 streams[0] = groupByteStream;
                 if (subBlocks != null)
                 {
-                    Parallel.ForEach(subBlocks, (cellSubBlock, state, counter) =>
+                    Parallel.ForEach(subBlocks, parallelWriteParameters.ParallelOptions, (cellSubBlock, state, counter) =>
                     {
                         WriteSubBlocksParallel(
                             cellSubBlock,
-                            masters,
                             (int)counter + 1,
-                            streams);
+                            streams,
+                            bundle,
+                            parallelWriteParameters);
                     });
                 }
                 PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
@@ -138,20 +143,17 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteSubBlocksParallel(
                 ICellSubBlockGetter subBlock,
-                IMasterReferenceReader masters,
                 int targetIndex,
-                Stream[] streamDepositArray)
+                Stream[] streamDepositArray,
+                WritingBundle bundle,
+                ParallelWriteParameters parallelWriteParameters)
             {
                 var cells = subBlock.Cells;
                 Stream[] streams = new Stream[(cells?.Count ?? 0) + 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 var groupByteStream = new MemoryStream(groupBytes);
-                var bundle = new WritingBundle(GameConstants.Oblivion)
-                {
-                    MasterReferences = masters
-                };
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
-                using (var stream = new MutagenWriter(groupByteStream, bundle, dispose: false))
+                using (var stream = new MutagenWriter(groupByteStream, bundle with {}, dispose: false))
                 {
                     stream.Position += 8;
                     CellSubBlockBinaryWriteTranslation.WriteEmbedded(subBlock, stream);
@@ -159,10 +161,10 @@ namespace Mutagen.Bethesda.Oblivion
                 streams[0] = groupByteStream;
                 if (cells != null)
                 {
-                    Parallel.ForEach(cells, (cell, state, counter) =>
+                    Parallel.ForEach(cells, parallelWriteParameters.ParallelOptions, (cell, state, counter) =>
                     {
                         MemoryTributary trib = new MemoryTributary();
-                        cell.WriteToBinary(new MutagenWriter(trib, bundle, dispose: false));
+                        cell.WriteToBinary(new MutagenWriter(trib, bundle with {}, dispose: false));
                         streams[(int)counter + 1] = trib;
                     });
                 }
@@ -172,30 +174,27 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteWorldspacesParallel(
                 IOblivionGroupGetter<IWorldspaceGetter> group,
-                IMasterReferenceReader masters,
                 int targetIndex,
-                Stream[] streamDepositArray)
+                Stream[] streamDepositArray,
+                WritingBundle bundle,
+                ParallelWriteParameters parallelWriteParameters)
             {
                 var cache = group.RecordCache;
                 if (cache == null || cache.Count == 0) return;
                 Stream[] streams = new Stream[cache.Count + 1];
-                var bundle = new WritingBundle(GameConstants.Oblivion)
-                {
-                    MasterReferences = masters
-                };
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
-                using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
+                using (var stream = new MutagenWriter(groupByteStream, bundle with {}, dispose: false))
                 {
                     stream.Position += 8;
                     OblivionGroupBinaryWriteTranslation.WriteEmbedded<IWorldspaceGetter>(group, stream);
                 }
                 streams[0] = groupByteStream;
-                Parallel.ForEach(group, (worldspace, worldspaceState, worldspaceCounter) =>
+                Parallel.ForEach(group, parallelWriteParameters.ParallelOptions, (worldspace, worldspaceState, worldspaceCounter) =>
                 {
                     var worldTrib = new MemoryTributary();
-                    using (var writer = new MutagenWriter(worldTrib, bundle, dispose: false))
+                    using (var writer = new MutagenWriter(worldTrib, bundle with {}, dispose: false))
                     {
                         using (HeaderExport.Header(
                             writer: writer,
@@ -225,7 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Stream[] subStreams = new Stream[(subCells?.Count ?? 0) + 1];
 
                     var worldGroupTrib = new MemoryTributary();
-                    var worldGroupWriter = new MutagenWriter(worldGroupTrib, bundle, dispose: false);
+                    var worldGroupWriter = new MutagenWriter(worldGroupTrib, bundle with {}, dispose: false);
                     worldGroupWriter.Write(RecordTypes.GRUP.TypeInt);
                     worldGroupWriter.Write(Zeros.Slice(0, GameConstants.Oblivion.GroupConstants.LengthLength));
                     FormKeyBinaryTranslation.Instance.Write(
@@ -239,13 +238,14 @@ namespace Mutagen.Bethesda.Oblivion
 
                     if (subCells != null)
                     {
-                        Parallel.ForEach(subCells, (block, blockState, blockCounter) =>
+                        Parallel.ForEach(subCells, parallelWriteParameters.ParallelOptions, (block, blockState, blockCounter) =>
                         {
                             WriteBlocksParallel(
                                 block,
-                                masters,
                                 (int)blockCounter + 1,
-                                subStreams);
+                                subStreams,
+                                bundle,
+                                parallelWriteParameters);
                         });
                     }
 
@@ -259,16 +259,17 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteBlocksParallel(
                 IWorldspaceBlockGetter block,
-                IMasterReferenceReader masters,
                 int targetIndex,
-                Stream[] streamDepositArray)
+                Stream[] streamDepositArray,
+                WritingBundle bundle,
+                ParallelWriteParameters parallelWriteParameters)
             {
                 var items = block.Items;
                 Stream[] streams = new Stream[(items?.Count ?? 0)+ 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
-                using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
+                using (var stream = new MutagenWriter(groupByteStream, bundle with {}, dispose: false))
                 {
                     stream.Position += 8;
                     WorldspaceBlockBinaryWriteTranslation.WriteEmbedded(block, stream);
@@ -276,13 +277,14 @@ namespace Mutagen.Bethesda.Oblivion
                 streams[0] = groupByteStream;
                 if (items != null)
                 {
-                    Parallel.ForEach(items, (subBlock, state, counter) =>
+                    Parallel.ForEach(items, parallelWriteParameters.ParallelOptions, (subBlock, state, counter) =>
                     {
                         WriteSubBlocksParallel(
                             subBlock,
-                            masters,
                             (int)counter + 1,
-                            streams);
+                            streams,
+                            bundle,
+                            parallelWriteParameters);
                     });
                 }
                 PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
@@ -291,20 +293,17 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteSubBlocksParallel(
                 IWorldspaceSubBlockGetter subBlock,
-                IMasterReferenceReader masters,
                 int targetIndex,
-                Stream[] streamDepositArray)
+                Stream[] streamDepositArray,
+                WritingBundle bundle,
+                ParallelWriteParameters parallelWriteParameters)
             {
                 var items = subBlock.Items;
-                var bundle = new WritingBundle(GameConstants.Oblivion)
-                {
-                    MasterReferences = masters
-                };
                 Stream[] streams = new Stream[(items?.Count ?? 0) + 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
-                using (var stream = new MutagenWriter(groupByteStream, bundle, dispose: false))
+                using (var stream = new MutagenWriter(groupByteStream, bundle with {}, dispose: false))
                 {
                     stream.Position += 8;
                     WorldspaceSubBlockBinaryWriteTranslation.WriteEmbedded(subBlock, stream);
@@ -312,10 +311,10 @@ namespace Mutagen.Bethesda.Oblivion
                 streams[0] = groupByteStream;
                 if (items != null)
                 {
-                    Parallel.ForEach(items, (cell, state, counter) =>
+                    Parallel.ForEach(items, parallelWriteParameters.ParallelOptions, (cell, state, counter) =>
                     {
                         MemoryTributary trib = new MemoryTributary();
-                        cell.WriteToBinary(new MutagenWriter(trib, bundle, dispose: false));
+                        cell.WriteToBinary(new MutagenWriter(trib, bundle with {}, dispose: false));
                         streams[(int)counter + 1] = trib;
                     });
                 }
@@ -325,11 +324,12 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static void WriteDialogTopicsParallel(
                 IOblivionGroupGetter<IDialogTopicGetter> group,
-                IMasterReferenceReader masters,
                 int targetIndex,
-                Stream[] streamDepositArray)
+                Stream[] streamDepositArray,
+                WritingBundle bundle,
+                ParallelWriteParameters parallelWriteParameters)
             {
-                WriteGroupParallel(group, masters, targetIndex, streamDepositArray);
+                WriteGroupParallel(group, targetIndex, streamDepositArray, bundle, parallelWriteParameters);
             }
         }
     }

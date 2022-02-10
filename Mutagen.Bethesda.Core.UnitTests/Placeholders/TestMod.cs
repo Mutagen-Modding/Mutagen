@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
             throw new NotImplementedException();
         }
 
-        public void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null)
+        public void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null, ParallelWriteParameters? parallelWriteParameters = null)
         {
             throw new NotImplementedException();
         }

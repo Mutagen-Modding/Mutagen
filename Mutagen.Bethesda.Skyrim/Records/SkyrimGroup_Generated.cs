@@ -18,6 +18,7 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Skyrim.Records;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -108,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimGroupCommon<T>.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimGroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -1451,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimGroupCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -1494,6 +1495,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package)
         {
             this.CustomCtor();
+        }
+
+        public static ISkyrimGroupGetter<T> SkyrimGroupFactory(
+            IBinaryReadStream stream,
+            IReadOnlyList<RangeInt64> locs,
+            BinaryOverlayFactoryPackage package)
+        {
+            var subGroups = locs.Select(x => SkyrimGroupFactory(
+                new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package),
+                package)).ToArray();
+            return new SkyrimGroupWrapper<T>(new GroupMergeGetter<ISkyrimGroupGetter<T>, T>(subGroups));
         }
 
         public static SkyrimGroupBinaryOverlay<T> SkyrimGroupFactory(
