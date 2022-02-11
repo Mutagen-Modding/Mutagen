@@ -2054,9 +2054,6 @@
     <Compile Include="Records\Major Records\MagicEffectLightArchetype_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MagicEffectBoundArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MagicEffectSummonCreatureArchetype_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
@@ -2081,14 +2078,17 @@
     <Compile Include="Records\Major Records\MagicEffectPeakValueModArchetype_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\MagicEffectBoundArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.39.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.39.0" />
+    <PackageReference Include="Loqui" Version="2.39.0.1-dev" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.39.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

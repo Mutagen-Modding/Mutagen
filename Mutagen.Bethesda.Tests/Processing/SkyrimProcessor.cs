@@ -486,7 +486,7 @@ public class SkyrimProcessor : Processor
             if (xrmrRec.AsInt32() == 0)
             {
                 _instructions.SetRemove(
-                    RangeInt64.FactoryFromLength(
+                    RangeInt64.FromLength(
                         fileOffset + xrmrIndex,
                         10));
                 sizeChange -= 10;
