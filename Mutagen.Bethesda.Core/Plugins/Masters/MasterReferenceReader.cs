@@ -151,7 +151,8 @@ public class MasterReferenceReader : IMasterReferenceCollection
         return FromStream(interf);
     }
 
-    public static MasterReferenceReader FromStream(IMutagenReadStream stream)
+    public static MasterReferenceReader FromStream<TStream>(TStream stream)
+        where TStream : IMutagenReadStream
     {
         var mutaFrame = new MutagenFrame(stream);
         var header = stream.ReadModHeaderFrame(readSafe: true);
