@@ -5384,7 +5384,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             StringsReadParameters? stringsParam = null,
             IFileSystem? fileSystem = null)
         {
-            var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(path.ModKey))
+            var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceCollection(path.ModKey))
             {
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4))
             };

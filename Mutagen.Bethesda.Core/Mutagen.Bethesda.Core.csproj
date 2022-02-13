@@ -204,7 +204,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Plugins\Masters\MasterReferenceReader.cs" />
+    <Compile Include="Plugins\Masters\MasterReferenceCollection.cs" />
     <Compile Include="Plugins\Order\CreationClubListings.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

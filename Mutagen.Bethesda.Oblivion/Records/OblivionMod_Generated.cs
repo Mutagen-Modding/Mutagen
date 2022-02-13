@@ -12844,7 +12844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModPath path,
             IFileSystem? fileSystem = null)
         {
-            var meta = new ParsingBundle(GameRelease.Oblivion, new MasterReferenceReader(path.ModKey))
+            var meta = new ParsingBundle(GameRelease.Oblivion, new MasterReferenceCollection(path.ModKey))
             {
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion))
             };

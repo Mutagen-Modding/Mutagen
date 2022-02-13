@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Plugins.Analysis
                 filePath,
                 new ParsingBundle(
                     constants, 
-                    MasterReferenceReader.FromPath(filePath, constants.Release)));
+                    MasterReferenceCollection.FromPath(filePath, constants.Release)));
             return GetLocations(stream, interest);
         }
 

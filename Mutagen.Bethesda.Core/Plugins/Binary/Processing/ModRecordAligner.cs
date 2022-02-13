@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing
                 EmptyMeansInterested = false
             };
             var constants = GameConstants.Get(release);
-            var parsingBundle = new ParsingBundle(constants, MasterReferenceReader.FromPath(inputPath, release));
+            var parsingBundle = new ParsingBundle(constants, MasterReferenceCollection.FromPath(inputPath, release));
             var fileLocs = RecordLocator.GetLocations(inputPath.Path, release, interest);
             temp ??= TempFolder.Factory();
             using (temp)

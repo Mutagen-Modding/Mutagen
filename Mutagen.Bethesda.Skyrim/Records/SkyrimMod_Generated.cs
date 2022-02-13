@@ -24781,7 +24781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             StringsReadParameters? stringsParam = null,
             IFileSystem? fileSystem = null)
         {
-            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceReader(path.ModKey))
+            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceCollection(path.ModKey))
             {
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease()))
             };

@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         LoquiBinaryTranslation<Ammunition>.CREATE_FUNC _create = LoquiBinaryTranslation<Ammunition>.CREATE;
         byte[] _data = new byte[0x14];
         MutagenFrame _frame;
-        MasterReferenceReader _masterRefs = new MasterReferenceReader(Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        MasterReferenceCollection _masterRefs = new MasterReferenceCollection(Mutagen.Bethesda.Oblivion.Constants.Oblivion);
         ParsingBundle _parsingBundle;
 
         [GlobalSetup]

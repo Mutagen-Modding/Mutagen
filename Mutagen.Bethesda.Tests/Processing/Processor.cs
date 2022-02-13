@@ -70,7 +70,7 @@ public abstract class Processor
         Logging = logging;
         TempFolder = tmpFolder;
         SourcePath = sourcePath;
-        Masters = MasterReferenceReader.FromPath(SourcePath, GameRelease);
+        Masters = MasterReferenceCollection.FromPath(SourcePath, GameRelease);
         Bundle = new ParsingBundle(GameRelease, Masters);
         _numMasters = GetNumMasters();
         _alignedFileLocs = RecordLocator.GetLocations(new ModPath(ModKey, preprocessedPath), GameRelease);

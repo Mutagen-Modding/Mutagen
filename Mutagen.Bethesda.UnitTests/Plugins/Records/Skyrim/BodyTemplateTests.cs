@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim
             using (var writer = new MutagenWriter(fs.FileStream.Create("C:/output", FileMode.Create),
                 new WritingBundle(GameConstants.SkyrimSE)
                 {
-                    MasterReferences = new MasterReferenceReader("Skyrim.esm"),
+                    MasterReferences = new MasterReferenceCollection("Skyrim.esm"),
                     FormVersion = race.FormVersion
                 }))
             {

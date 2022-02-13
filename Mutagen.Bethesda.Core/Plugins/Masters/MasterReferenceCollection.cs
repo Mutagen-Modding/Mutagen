@@ -48,14 +48,14 @@ public interface IMasterReferenceCollection : IMasterReferenceReader
 /// A registry of master listings.
 /// Generally used for reference when converting FormIDs to FormKeys
 /// </summary>
-public class MasterReferenceReader : IMasterReferenceCollection
+public class MasterReferenceCollection : IMasterReferenceCollection
 {
     private readonly Dictionary<ModKey, ModIndex> _masterIndices = new();
         
     /// <summary>
     /// A static singleton that is an empty registry containing no masters
     /// </summary>
-    public static IMasterReferenceReader Empty { get; } = new MasterReferenceReader(ModKey.Null);
+    public static IMasterReferenceReader Empty { get; } = new MasterReferenceCollection(ModKey.Null);
 
     /// <inheritdoc />
     public IReadOnlyList<IMasterReferenceGetter> Masters { get; private set; } = ListExt.Empty<IMasterReferenceGetter>();
@@ -67,7 +67,7 @@ public class MasterReferenceReader : IMasterReferenceCollection
     /// Constructor
     /// </summary>
     /// <param name="modKey">Mod to associate as the "current" mod</param>
-    public MasterReferenceReader(ModKey modKey)
+    public MasterReferenceCollection(ModKey modKey)
     {
         CurrentMod = modKey;
         SetTo(Enumerable.Empty<IMasterReferenceGetter>());
@@ -78,7 +78,7 @@ public class MasterReferenceReader : IMasterReferenceCollection
     /// </summary>
     /// <param name="modKey">Mod to associate as the "current" mod</param>
     /// <param name="masters">Masters to add to the registrar</param>
-    public MasterReferenceReader(ModKey modKey, IEnumerable<IMasterReferenceGetter> masters)
+    public MasterReferenceCollection(ModKey modKey, IEnumerable<IMasterReferenceGetter> masters)
     {
         CurrentMod = modKey;
         SetTo(masters);
@@ -130,7 +130,7 @@ public class MasterReferenceReader : IMasterReferenceCollection
         throw new ArgumentException($"Could not map FormKey to a master index: {key}");
     }
 
-    public static MasterReferenceReader FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
+    public static MasterReferenceCollection FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
     {
         var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Open, FileAccess.Read);
         using var stream = new MutagenBinaryReadStream(fs, new ParsingBundle(release, masterReferences: null!)
@@ -140,7 +140,7 @@ public class MasterReferenceReader : IMasterReferenceCollection
         return FromStream(stream);
     }
 
-    public static MasterReferenceReader FromStream(Stream stream, ModKey modKey, GameRelease release, bool disposeStream = true)
+    public static MasterReferenceCollection FromStream(Stream stream, ModKey modKey, GameRelease release, bool disposeStream = true)
     {
         using var interf = new MutagenInterfaceReadStream(
             new BinaryReadStream(stream, dispose: disposeStream), 
@@ -151,12 +151,12 @@ public class MasterReferenceReader : IMasterReferenceCollection
         return FromStream(interf);
     }
 
-    public static MasterReferenceReader FromStream<TStream>(TStream stream)
+    public static MasterReferenceCollection FromStream<TStream>(TStream stream)
         where TStream : IMutagenReadStream
     {
         var mutaFrame = new MutagenFrame(stream);
         var header = stream.ReadModHeaderFrame(readSafe: true);
-        return new MasterReferenceReader(
+        return new MasterReferenceCollection(
             stream.MetaData.ModKey,
             header
                 .Masters()

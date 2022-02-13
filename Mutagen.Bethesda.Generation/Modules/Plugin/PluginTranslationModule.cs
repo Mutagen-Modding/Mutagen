@@ -2097,7 +2097,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(path.ModKey))");
+                            fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceCollection)}(path.ModKey))");
                             using (new BraceWrapper(fg) { AppendSemicolon = true })
                             {
                                 fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");

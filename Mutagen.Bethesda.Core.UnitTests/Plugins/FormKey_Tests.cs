@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins
         public ModKey TargetModKey() => new ModKey("Master2", ModType.Master);
 
         public IMasterReferenceReader TypicalMasters() =>
-            new MasterReferenceReader(
+            new MasterReferenceCollection(
                 TestConstants.PluginModKey,
                 new List<IMasterReferenceGetter>()
                 {

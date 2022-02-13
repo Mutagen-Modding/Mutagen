@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
         private IMasterReferenceReader ConstructWriteMasters(IModGetter mod)
         {
-            MasterReferenceReader ret = new MasterReferenceReader(mod.ModKey);
+            MasterReferenceCollection ret = new MasterReferenceCollection(mod.ModKey);
             _modKeys.Remove(mod.ModKey);
             _modKeys.Remove(ModKey.Null);
             var modKeysList = _modKeys.Keys.ToList();
