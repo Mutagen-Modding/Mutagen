@@ -38,19 +38,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Update="AutoData\ModPathMultipleBuilder.cs">
-            <CodeLanguage>cs</CodeLanguage>
-            <DefaultPackFolder>content</DefaultPackFolder>
-            <BuildAction>Compile</BuildAction>
-        </Compile>
-        <Compile Update="TestDataPathing.cs">
-            <CodeLanguage>cs</CodeLanguage>
-            <DefaultPackFolder>content</DefaultPackFolder>
-            <BuildAction>Compile</BuildAction>
-        </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
         <None Include="$(SolutionDir)Mutagen.Bethesda.Testing\Files\**" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
