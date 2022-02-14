@@ -5,6 +5,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using Mutagen.Bethesda.Strings.DI;
 
@@ -17,71 +18,61 @@ namespace Mutagen.Bethesda.Strings
     {
         public DirectoryPath WriteDir { get; }
         private readonly GameRelease _release;
-        private readonly ModKey _modKey;
-        private readonly IMutagenEncodingProvider _encodingProvider;
-        private readonly StringsLanguageFormat _languageFormat;
+        public ModKey ModKey { get; }
+        public IMutagenEncodingProvider EncodingProvider { get; }
+        public IFileSystem FileSystem { get; }
+        public StringsLanguageFormat LanguageFormat { get; }
         private readonly List<KeyValuePair<Language, string>[]> _strings = new();
         private readonly List<KeyValuePair<Language, string>[]> _ilStrings = new();
         private readonly List<KeyValuePair<Language, string>[]> _dlStrings = new();
 
-        public StringsWriter(GameRelease release, ModKey modKey, DirectoryPath writeDirectory, IMutagenEncodingProvider encodingProvider)
+        public StringsWriter(
+            GameRelease release,
+            ModKey modKey, 
+            DirectoryPath writeDirectory,
+            IMutagenEncodingProvider encodingProvider,
+            IFileSystem? fileSystem = null)
         {
             _release = release;
-            _modKey = modKey;
-            _encodingProvider = encodingProvider;
-            _languageFormat = release.GetLanguageFormat();
+            ModKey = modKey;
+            EncodingProvider = encodingProvider;
+            FileSystem = fileSystem.GetOrDefault();
+            LanguageFormat = release.GetLanguageFormat();
             WriteDir = writeDirectory;
         }
 
         public uint Register(ITranslatedStringGetter str, StringsSource source)
         {
-            List<KeyValuePair<Language, string>[]> strs = source switch
-            {
-                StringsSource.Normal => _strings,
-                StringsSource.IL => _ilStrings,
-                StringsSource.DL => _dlStrings,
-                _ => throw new NotImplementedException(),
-            };
-            lock (strs)
-            {
-                // ToDo
-                // Add Count member to TranslatedString, or something similar to short circuit array creation if unnecessary
-                var arr = str.ToArray();
-                if (!arr.Any(x => x.Value != null))
-                {
-                    // Do not insert into strings writer
-                    return 0;
-                }
-                strs.Add(arr);
-                try
-                {
-                    return checked((uint)strs.Count);
-                }
-                catch (OverflowException)
-                {
-                    throw new OverflowException("Too many translated strings for current system to handle.");
-                }
-            }
+            // ToDo
+            // Add Count member to TranslatedString, or something similar to short circuit array creation if unnecessary
+            return Register(source, str);
         }
 
         public uint Register(string str, Language language, StringsSource source)
         {
-            List<KeyValuePair<Language, string>[]> strs = source switch
+            return Register(source, new KeyValuePair<Language, string>(language, str));
+        }
+
+        public uint Register(StringsSource source, params KeyValuePair<Language, string>[] strs)
+        {
+            return Register(source, (IEnumerable<KeyValuePair<Language, string>>)strs);
+        }
+
+        public uint Register(StringsSource source, IEnumerable<KeyValuePair<Language, string>> strs)
+        {
+            List<KeyValuePair<Language, string>[]> strsList = source switch
             {
                 StringsSource.Normal => _strings,
                 StringsSource.IL => _ilStrings,
                 StringsSource.DL => _dlStrings,
                 _ => throw new NotImplementedException(),
             };
-            lock (strs)
+            lock (strsList)
             {
-                strs.Add(new KeyValuePair<Language, string>[]
-                {
-                    new KeyValuePair<Language, string>(language, str)
-                });
+                strsList.Add(strs.ToArray());
                 try
                 {
-                    return checked((uint)strs.Count);
+                    return checked((uint)strsList.Count);
                 }
                 catch (OverflowException)
                 {
@@ -100,7 +91,7 @@ namespace Mutagen.Bethesda.Strings
         private void WriteStrings(List<KeyValuePair<Language, string>[]> strs, StringsSource source)
         {
             if (strs.Count == 0) return;
-            WriteDir.Create();
+            FileSystem.Directory.CreateDirectory(WriteDir);
 
             var subLists = new Dictionary<Language, List<(string String, int Index)>>();
             for (int i = 0; i < strs.Count; i++)
@@ -119,9 +110,11 @@ namespace Mutagen.Bethesda.Strings
 
             foreach (var language in subLists)
             {
-                var encoding = _encodingProvider.GetEncoding(_release, language.Key);
+                var encoding = EncodingProvider.GetEncoding(_release, language.Key);
                 using var writer = new MutagenWriter(
-                    Path.Combine(WriteDir.Path, StringsUtility.GetFileName(_languageFormat, _modKey, language.Key, source)),
+                    FileSystem.FileStream.Create(
+                        Path.Combine(WriteDir.Path, StringsUtility.GetFileName(LanguageFormat, ModKey, language.Key, source)), 
+                        FileMode.Create, FileAccess.Write),
                     meta: null!);
                 // Write count
                 writer.Write(language.Value.Count);
