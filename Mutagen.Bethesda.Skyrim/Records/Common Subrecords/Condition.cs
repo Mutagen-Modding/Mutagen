@@ -884,8 +884,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void CustomStringImports(MutagenFrame frame, IConditionData item)
             {
+                if (item is not IFunctionConditionData funcData) return;
+                ParseString(frame, funcData);
+                ParseString(frame, funcData);
+            }
+
+            private static void ParseString(MutagenFrame frame, IFunctionConditionData funcData)
+            {
                 if (!frame.Reader.TryGetSubrecordFrame(out var subMeta)) return;
-                if (!(item is IFunctionConditionData funcData)) return;
                 switch (subMeta.RecordType.TypeInt)
                 {
                     case 0x31534943: // CIS1
@@ -1261,16 +1267,24 @@ namespace Mutagen.Bethesda.Skyrim
                 stream.Position -= 0x4;
                 _data2 = stream.RemainingMemory.Slice(4, 0x14);
                 stream.Position += 0x18;
+                ParseStringParameter(stream);
+                ParseStringParameter(stream);
+            }
+
+            private void ParseStringParameter(OverlayStream stream)
+            {
                 if (stream.Complete || !stream.TryGetSubrecord(out var subFrame)) return;
                 switch (subFrame.RecordTypeInt)
                 {
                     case 0x31534943: // CIS1
                         _stringParamData1 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
                         ParameterOneStringIsSet = true;
+                        stream.Position += subFrame.TotalLength;
                         break;
                     case 0x32534943: // CIS2
                         _stringParamData2 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
                         ParameterTwoStringIsSet = true;
+                        stream.Position += subFrame.TotalLength;
                         break;
                     default:
                         break;
