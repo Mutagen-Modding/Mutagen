@@ -56,6 +56,7 @@ namespace Mutagen.Bethesda.Strings
             DirectoryPath dataPath,
             StringsReadParameters? instructions)
         {
+            var languageFormat = release.GetLanguageFormat();
             var encodings = instructions?.EncodingProvider ?? new MutagenEncodingProvider();
             var stringsFolderPath = instructions?.StringsFolderOverride;
             if (stringsFolderPath == null)
@@ -73,7 +74,7 @@ namespace Mutagen.Bethesda.Strings
                         foreach (var file in bsaEnumer)
                         {
                             if (!StringsUtility.TryRetrieveInfoFromString(
-                                release.GetLanguageFormat(),
+                                languageFormat,
                                 file.Name.String, 
                                 out var type,
                                 out var lang, 

@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda
             switch (release)
             {
                 case GameRelease.Oblivion:
-                    throw new ArgumentException();
+                    throw new ArgumentException($"Tried to get language format for an unsupported game: {release}", nameof(release));
                 case GameRelease.SkyrimLE:
                 case GameRelease.SkyrimSE:
                 case GameRelease.SkyrimVR:
