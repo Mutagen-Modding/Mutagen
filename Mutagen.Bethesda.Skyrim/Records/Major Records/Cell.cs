@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,
-                                    locs: ParseRecordLocations(
+                                    locs: ParseLocationsRecordPerTrigger(
                                         stream: new OverlayStream(contentSpan, _package),
                                         triggers: TypicalPlacedTypes,
                                         constants: stream.MetaData.Constants.MajorConstants,

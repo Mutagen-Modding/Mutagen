@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             return ret.ToArray();
         }
 
-        public static int[] ParseRecordLocations(
+        public static int[] ParseLocationsRecordPerTrigger(
             OverlayStream stream,
             TriggeringRecordCollection triggers,
             RecordHeaderConstants constants,

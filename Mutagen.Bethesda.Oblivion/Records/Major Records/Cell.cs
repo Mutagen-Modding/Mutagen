@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         contentSpan,
                                         _package,
                                         getter: TypicalGetter,
-                                        locs: ParseRecordLocations(
+                                        locs: ParseLocationsRecordPerTrigger(
                                             stream: new OverlayStream(contentSpan, stream.MetaData),
                                             triggers: TypicalPlacedTypes,
                                             constants: GameConstants.Oblivion.MajorConstants,
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         contentSpan,
                                         _package,
                                         getter: TypicalGetter,
-                                        locs: ParseRecordLocations(
+                                        locs: ParseLocationsRecordPerTrigger(
                                             stream: new OverlayStream(contentSpan, stream.MetaData),
                                             triggers: TypicalPlacedTypes,
                                             constants: GameConstants.Oblivion.MajorConstants,

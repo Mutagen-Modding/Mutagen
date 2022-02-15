@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     package: package,
                     parseParams: parseParams,
                     getter: getter,
-                    locs: PluginBinaryOverlay.ParseRecordLocations(
+                    locs: PluginBinaryOverlay.ParseLocationsRecordPerTrigger(
                         stream: stream,
                         constants: package.MetaData.Constants.SubConstants,
                         triggers: subrecordType,
