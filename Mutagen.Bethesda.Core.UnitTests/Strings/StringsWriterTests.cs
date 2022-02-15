@@ -21,18 +21,18 @@ public class StringsWriterTests
         sut.Register(StringsSource.DL,
                 new KeyValuePair<Language, string>(Language.English, "There"),
                 new KeyValuePair<Language, string>(Language.French, "Le"))
-            .Should().Be(1);
+            .Should().Be(2);
         sut.Register(StringsSource.IL,
                 new KeyValuePair<Language, string>(Language.English, "World"),
                 new KeyValuePair<Language, string>(Language.French, "Monde"))
-            .Should().Be(1);
+            .Should().Be(3);
         sut.Dispose();
         AssertStringInFile(sut, Language.English, StringsSource.Normal, "Hello", 1);
-        AssertStringInFile(sut, Language.English, StringsSource.DL, "There", 1);
-        AssertStringInFile(sut, Language.English, StringsSource.IL, "World", 1);
+        AssertStringInFile(sut, Language.English, StringsSource.DL, "There", 2);
+        AssertStringInFile(sut, Language.English, StringsSource.IL, "World", 3);
         AssertStringInFile(sut, Language.French, StringsSource.Normal, "Bonjour", 1);
-        AssertStringInFile(sut, Language.French, StringsSource.DL, "Le", 1);
-        AssertStringInFile(sut, Language.French, StringsSource.IL, "Monde", 1);
+        AssertStringInFile(sut, Language.French, StringsSource.DL, "Le", 2);
+        AssertStringInFile(sut, Language.French, StringsSource.IL, "Monde", 3);
     }
 
     public void AssertStringInFile(

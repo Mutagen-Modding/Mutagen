@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Threading;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings
@@ -22,9 +23,10 @@ namespace Mutagen.Bethesda.Strings
         public IMutagenEncodingProvider EncodingProvider { get; }
         public IFileSystem FileSystem { get; }
         public StringsLanguageFormat LanguageFormat { get; }
-        private readonly List<KeyValuePair<Language, string>[]> _strings = new();
-        private readonly List<KeyValuePair<Language, string>[]> _ilStrings = new();
-        private readonly List<KeyValuePair<Language, string>[]> _dlStrings = new();
+        private readonly List<ValueTuple<Language, string, uint>[]> _strings = new();
+        private readonly List<ValueTuple<Language, string, uint>[]> _ilStrings = new();
+        private readonly List<ValueTuple<Language, string, uint>[]> _dlStrings = new();
+        private uint _index = 0;
 
         public StringsWriter(
             GameRelease release,
@@ -60,24 +62,29 @@ namespace Mutagen.Bethesda.Strings
 
         public uint Register(StringsSource source, IEnumerable<KeyValuePair<Language, string>> strs)
         {
-            List<KeyValuePair<Language, string>[]> strsList = source switch
+            List<ValueTuple<Language, string, uint>[]> strsList = source switch
             {
                 StringsSource.Normal => _strings,
                 StringsSource.IL => _ilStrings,
                 StringsSource.DL => _dlStrings,
                 _ => throw new NotImplementedException(),
             };
-            lock (strsList)
+            try
             {
-                strsList.Add(strs.ToArray());
-                try
+                var nextIndex = Interlocked.Increment(ref _index);
+                if (nextIndex == 0)
                 {
-                    return checked((uint)strsList.Count);
+                    throw new OverflowException();
                 }
-                catch (OverflowException)
+                lock (strsList)
                 {
-                    throw new OverflowException("Too many translated strings for current system to handle.");
+                    strsList.Add(strs.Select(x => new ValueTuple<Language, string, uint>(x.Key, x.Value, nextIndex)).ToArray());
+                    return nextIndex;
                 }
+            }
+            catch (OverflowException)
+            {
+                throw new OverflowException("Too many translated strings for current system to handle.");
             }
         }
 
@@ -88,23 +95,22 @@ namespace Mutagen.Bethesda.Strings
             WriteStrings(_dlStrings, StringsSource.DL);
         }
 
-        private void WriteStrings(List<KeyValuePair<Language, string>[]> strs, StringsSource source)
+        private void WriteStrings(List<ValueTuple<Language, string, uint>[]> strs, StringsSource source)
         {
             if (strs.Count == 0) return;
             FileSystem.Directory.CreateDirectory(WriteDir);
 
-            var subLists = new Dictionary<Language, List<(string String, int Index)>>();
-            for (int i = 0; i < strs.Count; i++)
+            var subLists = new Dictionary<Language, List<(string String, uint Index)>>();
+            foreach (var item in strs)
             {
-                var item = strs[i];
                 foreach (var lang in item)
                 {
-                    if (!subLists.TryGetValue(lang.Key, out var list))
+                    if (!subLists.TryGetValue(lang.Item1, out var list))
                     {
-                        list = new List<(string String, int Index)>();
-                        subLists[lang.Key] = list;
+                        list = new List<(string String, uint Index)>();
+                        subLists[lang.Item1] = list;
                     }
-                    list.Add((lang.Value, i + 1));
+                    list.Add((lang.Item2, lang.Item3));
                 }
             }
 
