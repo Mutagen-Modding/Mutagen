@@ -29,6 +29,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> PriorityOrder => ListedOrder;
 
+        public TModGetter SourceMod => _sourceMod;
+
         /// <summary>
         /// Constructs a link cache around a target mod
         /// </summary>
