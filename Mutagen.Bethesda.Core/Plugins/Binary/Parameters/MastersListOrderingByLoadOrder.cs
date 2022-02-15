@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Mutagen.Bethesda.Plugins.Order;
 
@@ -21,6 +21,11 @@ namespace Mutagen.Bethesda.Plugins.Binary.Parameters
         public MastersListOrderingByLoadOrder(IEnumerable<ModKey> modKeys)
         {
             _modKeys = modKeys.ToList();
+        }
+
+        public MastersListOrderingByLoadOrder(ILoadOrderGetter lo)
+            : this(lo.ListedOrder)
+        {
         }
 
         public static MastersListOrderingByLoadOrder Factory(IEnumerable<ModKey> modKeys) => new MastersListOrderingByLoadOrder(modKeys);
