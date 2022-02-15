@@ -165,30 +165,30 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             }
         }
 
-        public static void Write<TStream>(this TStream stream, string str, StringBinaryType binaryType, IMutagenEncoding encoding)
+        public static void Write<TStream>(this TStream stream, ReadOnlySpan<char> str, StringBinaryType binaryType, IMutagenEncoding encoding)
             where TStream : IBinaryWriteStream
         {
             switch (binaryType)
             {
                 case StringBinaryType.Plain:
-                    Write(stream, str.AsSpan(), encoding);
+                    Write(stream, str, encoding);
                     break;
                 case StringBinaryType.NullTerminate:
-                    Write(stream, str.AsSpan(), encoding);
+                    Write(stream, str, encoding);
                     stream.Write((byte)0);
                     break;
                 case StringBinaryType.PrependLength:
                 {
                     var len = encoding.GetByteCount(str);
                     stream.Write(len);
-                    Write(stream, str.AsSpan(), encoding, len);
+                    Write(stream, str, encoding, len);
                     break;
                 }
                 case StringBinaryType.PrependLengthUShort:
                 {
                     var len = encoding.GetByteCount(str);
                     stream.Write(checked((ushort)len));
-                    Write(stream, str.AsSpan(), encoding, len);
+                    Write(stream, str, encoding, len);
                     break;
                 }
                 default:
