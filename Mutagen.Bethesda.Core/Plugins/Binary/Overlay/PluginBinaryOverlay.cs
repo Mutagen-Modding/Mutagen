@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker.Value) + 1;
                 }
                 lastParsed = parsed;
             }
