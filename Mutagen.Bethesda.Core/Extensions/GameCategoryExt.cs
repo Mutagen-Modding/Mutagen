@@ -49,5 +49,18 @@ namespace Mutagen.Bethesda
                     throw new NotImplementedException();
             }
         }
+
+        public static bool HasLocalization(this GameCategory category)
+        {
+            switch (category)
+            {
+                case GameCategory.Oblivion:
+                    return false;
+                case GameCategory.Skyrim:
+                case GameCategory.Fallout4:
+                default:
+                    return true;
+            }
+        }
     }
 }

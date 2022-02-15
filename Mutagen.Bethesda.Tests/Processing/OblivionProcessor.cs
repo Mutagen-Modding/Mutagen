@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Tests;
@@ -46,6 +47,11 @@ public class OblivionProcessor : Processor
         AddDynamicProcessing(RecordTypes.BOOK, ProcessBooks);
         AddDynamicProcessing(RecordTypes.LIGH, ProcessLights);
         AddDynamicProcessing(RecordTypes.SPEL, ProcessSpell);
+    }
+
+    protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
+    {
+        return Array.Empty<AStringsAlignment>();
     }
 
     private void ProcessNPC(

@@ -9,7 +9,7 @@ using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Xunit;
 
-namespace Mutagen.Bethesda.Core.UnitTests.Strings
+namespace Mutagen.Bethesda.UnitTests.Strings
 {
     public class StringsLookupOverlayTests
     {

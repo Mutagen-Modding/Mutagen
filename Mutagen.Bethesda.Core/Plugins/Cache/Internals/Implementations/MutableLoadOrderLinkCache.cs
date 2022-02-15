@@ -31,6 +31,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         {
             WrappedImmutableCache = immutableBaseCache;
             _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache<TMod, TModGetter>()).ToList();
+            ListedOrder = WrappedImmutableCache.ListedOrder.Concat(_mutableMods.Select(x => x.SourceMod)).ToArray();
+            PriorityOrder = ListedOrder.Reverse().ToArray();
         }
 
         /// <summary>
@@ -42,13 +44,15 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         {
             WrappedImmutableCache = ImmutableLoadOrderLinkCache<TMod, TModGetter>.Empty;
             _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache<TMod, TModGetter>()).ToList();
+            ListedOrder = _mutableMods.Select(x => x.SourceMod).ToArray();
+            PriorityOrder = ListedOrder.Reverse().ToArray();
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<IModGetter> ListedOrder => throw new NotImplementedException();
+        public IReadOnlyList<IModGetter> ListedOrder { get; }
 
         /// <inheritdoc />
-        public IReadOnlyList<IModGetter> PriorityOrder => throw new NotImplementedException();
+        public IReadOnlyList<IModGetter> PriorityOrder { get; }
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]

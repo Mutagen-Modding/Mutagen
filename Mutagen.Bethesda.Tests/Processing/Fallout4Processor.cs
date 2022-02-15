@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -26,29 +27,6 @@ public class Fallout4Processor : Processor
         base.AddDynamicProcessorInstructions();
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
-    }
-
-    protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
-    {
-        foreach (var t in base.ExtraJobs(streamGetter))
-        {
-            yield return t;
-        }
-        var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
-        foreach (var source in EnumExt.GetValues<StringsSource>())
-        {
-            yield return TaskExt.Run(DoMultithreading, () =>
-            {
-                return ProcessStringsFilesIndices(
-                    streamGetter, 
-                    new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)),
-                    Language.English, 
-                    source, 
-                    ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)),
-                    knownDeadKeys: null,
-                    bsaOrder: bsaOrder);
-            });
-        }
     }
 
     private void ProcessGameSettings(
@@ -74,10 +52,8 @@ public class Fallout4Processor : Processor
     public void GameSettingStringHandler(
         IMutagenReadStream stream,
         MajorRecordHeader major,
-        BinaryFileProcessor.ConfigConstructor instr,
-        List<KeyValuePair<uint, uint>> processedStrings,
-        IStringsLookup overlay,
-        ref uint newIndex)
+        List<StringEntry> processedStrings,
+        IStringsLookup overlay)
     {
         stream.Position -= major.HeaderLength;
         var majorRec = stream.GetMajorRecordFrame();
@@ -85,42 +61,19 @@ public class Fallout4Processor : Processor
         if (edidRec.Content[0] != (byte)'s') return;
         if (!majorRec.TryLocateSubrecordPinFrame("DATA", out var dataRec)) throw new ArgumentException();
         stream.Position += dataRec.Location;
-        AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
     }
 
-    private async Task ProcessStringsFilesIndices(
-        Func<IMutagenReadStream> streamGetter, 
-        DirectoryInfo dataFolder, 
-        Language language, 
-        StringsSource source, 
-        ModKey modKey,
-        HashSet<uint> knownDeadKeys,
-        IEnumerable<FileName> bsaOrder)
+    protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
     {
-        using var stream = streamGetter();
         switch (source)
         {
             case StringsSource.Normal:
-                ProcessStringsFiles(
-                    GameRelease.Fallout4,
-                    modKey,
-                    dataFolder,
-                    language,
-                    StringsSource.Normal,
-                    strict: false,
-                    knownDeadKeys: knownDeadKeys,
-                    bsaOrder: bsaOrder,
-                    RenumberStringsFileEntries(
-                        GameRelease.Fallout4,
-                        modKey,
-                        stream,
-                        dataFolder,
-                        language,
-                        StringsSource.Normal,
-                        new StringsAlignmentCustom("GMST", GameSettingStringHandler),
-                        new RecordType[] { "KYWD", "FULL" }
-                    ));
-                break;
+                return new AStringsAlignment[]
+                {
+                    new StringsAlignmentCustom("GMST", GameSettingStringHandler),
+                    new RecordType[] { "KYWD", "FULL" }
+                };
             //case StringsSource.DL:
             //    ProcessStringsFiles(
             //        modKey,
@@ -154,6 +107,8 @@ public class Fallout4Processor : Processor
             //            new RecordType[] { "INFO", "NAM1" }
             //        ));
             //    break;
+            default:
+                throw new NotImplementedException();
         }
     }
 

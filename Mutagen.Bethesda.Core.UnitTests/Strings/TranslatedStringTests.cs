@@ -6,7 +6,7 @@ using Mutagen.Bethesda.Strings;
 using Noggog;
 using Xunit;
 
-namespace Mutagen.Bethesda.Core.UnitTests.Strings
+namespace Mutagen.Bethesda.UnitTests.Strings
 {
     public abstract class ATranslatedString_Tests
     {

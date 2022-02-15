@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
 		<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
@@ -38,20 +38,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Update="AutoData\ModPathMultipleBuilder.cs">
-            <CodeLanguage>cs</CodeLanguage>
-            <DefaultPackFolder>content</DefaultPackFolder>
-            <BuildAction>Compile</BuildAction>
-        </Compile>
-        <Compile Update="TestDataPathing.cs">
-            <CodeLanguage>cs</CodeLanguage>
-            <DefaultPackFolder>content</DefaultPackFolder>
-            <BuildAction>Compile</BuildAction>
-        </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="$(SolutionDir)Mutagen.Bethesda.Testing\Files\**" CopyToOutputDirectory="Always" />
+        <None Include="$(SolutionDir)Mutagen.Bethesda.Testing\Files\**" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>
