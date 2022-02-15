@@ -355,6 +355,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         {
             var count = countLength switch
             {
+                1 => mem[0],
                 4 => BinaryPrimitives.ReadUInt32LittleEndian(mem),
                 _ => throw new NotImplementedException(),
             };

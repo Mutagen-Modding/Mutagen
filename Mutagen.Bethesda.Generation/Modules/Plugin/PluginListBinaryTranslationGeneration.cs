@@ -998,6 +998,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     byte countLen = (byte)list.CustomData[CounterByteLength];
                     switch (countLen)
                     {
+                        case 1:
+                            fg.AppendLine($"var count = stream.ReadUInt8();");
+                            break;
                         case 2:
                             fg.AppendLine($"var count = stream.ReadUInt16();");
                             break;

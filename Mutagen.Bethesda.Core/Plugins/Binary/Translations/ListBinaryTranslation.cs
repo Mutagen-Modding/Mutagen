@@ -812,6 +812,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     {
                         switch (countLengthLength)
                         {
+                            case 1:
+                                writer.Write(checked((byte)items.Count));
+                                break;
                             case 2:
                                 writer.Write(checked((ushort)items.Count));
                                 break;
@@ -852,6 +855,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             {
                 switch (countLengthLength)
                 {
+                    case 1:
+                        writer.Write(checked((byte)items.Count));
+                        break;
                     case 2:
                         writer.Write(checked((ushort)items.Count));
                         break;
