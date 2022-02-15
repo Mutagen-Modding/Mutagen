@@ -21,13 +21,16 @@ namespace Mutagen.Bethesda.Tests;
 public class SkyrimProcessor : Processor
 {
     public override GameRelease GameRelease { get; }
-
-    private Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>> _knownDeadKeys = new()
+    
+    protected override Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>? KnownDeadStringKeys()
     {
-        { (Skyrim.Constants.Update, StringsSource.Normal), new() { 34 } }
-    };
+        return new()
+        {
+            { (Skyrim.Constants.Update, StringsSource.Normal), new() { 34 } }
+        };
+    }
 
-    public SkyrimProcessor(GameRelease release, bool multithread) 
+    public SkyrimProcessor(GameRelease release, bool multithread)
         : base(multithread)
     {
         GameRelease = release;
@@ -116,6 +119,7 @@ public class SkyrimProcessor : Processor
             bytes.Span.CopyTo(reordered.AsSpan().Slice(transferPos));
             transferPos += bytes.Length;
         }
+
         this._instructions.SetSubstitution(fileOffset + initialPos, reordered);
     }
 
@@ -136,6 +140,7 @@ public class SkyrimProcessor : Processor
             writer.Write(b / 255f);
             this._instructions.SetSubstitution(fileOffset + qnamLoc + qnamFrame.HeaderLength, bytes);
         }
+
         if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NAM9, out var nam9Frame, out var nam9Loc))
         {
             nam9Loc += nam9Frame.HeaderLength;
@@ -151,7 +156,8 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var rdat = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT, navigateToContent: false);
+        var rdat = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT,
+            navigateToContent: false);
         if (rdat == null) return;
 
         // Order RDATs by index
@@ -170,10 +176,13 @@ public class SkyrimProcessor : Processor
             rdats[index] =
                 new RangeInt64(
                     fileOffset + majorFrame.HeaderLength + rdat.Value,
-                    nextRdat == null ? fileOffset + majorFrame.TotalLength - 1 : nextRdat.Value - 1 + fileOffset + majorFrame.HeaderLength);
+                    nextRdat == null
+                        ? fileOffset + majorFrame.TotalLength - 1
+                        : nextRdat.Value - 1 + fileOffset + majorFrame.HeaderLength);
             raw.Add(index);
             rdat = nextRdat;
         }
+
         if (raw.SequenceEqual(rdats.Keys)) return;
         foreach (var item in rdats.Reverse())
         {
@@ -278,13 +287,11 @@ public class SkyrimProcessor : Processor
             if (locs.Length > 0)
             {
                 actualNext = locs
-                    .Select(l =>
-                    {
-                        return BinaryPrimitives.ReadUInt32LittleEndian(majorFrame.Content.Slice(l));
-                    })
+                    .Select(l => { return BinaryPrimitives.ReadUInt32LittleEndian(majorFrame.Content.Slice(l)); })
                     .Max();
                 actualNext++;
             }
+
             if (actualNext != next)
             {
                 byte[] sub = new byte[4];
@@ -336,6 +343,7 @@ public class SkyrimProcessor : Processor
                 len = stream.ReadUInt16();
                 stream.Position += len;
             }
+
             var aliasCount = stream.ReadUInt16();
             for (int i = 0; i < aliasCount; i++)
             {
@@ -366,6 +374,7 @@ public class SkyrimProcessor : Processor
             objectFormat = 0;
             return;
         }
+
         var stream = new MutagenMemoryReadStream(frame.HeaderAndContentData, Bundle)
         {
             Position = vmadPos.Value + frame.HeaderLength
@@ -379,6 +388,7 @@ public class SkyrimProcessor : Processor
         {
             FixVMADScriptIDs(stream, fileOffset, objectFormat);
         }
+
         processed = (int)(stream.Position - vmadPos.Value - frame.HeaderLength);
     }
 
@@ -425,6 +435,7 @@ public class SkyrimProcessor : Processor
                     {
                         FixObjectPropertyIDs(stream, fileOffset, objectFormat);
                     }
+
                     break;
                 default:
                     prop.CopyInFromBinary(new MutagenFrame(stream));
@@ -522,7 +533,8 @@ public class SkyrimProcessor : Processor
         // Reorder Idle subrecords
 
         // Reorder data values
-        var xnamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.XNAM);
+        var xnamPos =
+            PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.XNAM);
         if (xnamPos == null)
         {
             throw new ArgumentException();
@@ -532,11 +544,13 @@ public class SkyrimProcessor : Processor
         {
             throw new ArgumentException();
         }
+
         var count = pkcuRec.Content.Int32();
 
         if (count == 0) return;
 
-        var anamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.ANAM);
+        var anamPos =
+            PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.ANAM);
         RecordType pldt = new RecordType("PLDT");
         RecordType ptda = new RecordType("PTDA");
         RecordType pdto = new RecordType("PDTO");
@@ -583,17 +597,24 @@ public class SkyrimProcessor : Processor
                         .Where(i => i < recs[0]!.Value)
                         .Max();
                 }
-                var finalRec = majorFrame.Meta.Subrecord(majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + finalLoc));
-                var dataSlice = majorFrame.Content.Slice(anamPos.Value, anamRecord.TotalLength + finalLoc + finalRec.TotalLength);
-                if (BinaryStringUtility.ProcessWholeToZString(anamRecord.Content, MutagenEncodingProvider._1252) == "Bool"
+
+                var finalRec =
+                    majorFrame.Meta.Subrecord(
+                        majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + finalLoc));
+                var dataSlice = majorFrame.Content.Slice(anamPos.Value,
+                    anamRecord.TotalLength + finalLoc + finalRec.TotalLength);
+                if (BinaryStringUtility.ProcessWholeToZString(anamRecord.Content, MutagenEncodingProvider._1252) ==
+                    "Bool"
                     && recs[1] != null)
                 {
                     // Ensure bool value is 1 or 0
-                    var cnam = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + recs[1].Value));
+                    var cnam = majorFrame.Meta.SubrecordFrame(
+                        majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + recs[1].Value));
                     if (cnam.Content.Length != 1)
                     {
                         throw new ArgumentException();
                     }
+
                     if (cnam.Content[0] > 1)
                     {
                         var bytes = dataSlice.ToArray();
@@ -602,6 +623,7 @@ public class SkyrimProcessor : Processor
                         dataSlice = bytes;
                     }
                 }
+
                 dataValues.Add((-1, dataSlice));
 
                 curLoc = anamPos.Value + anamRecord.TotalLength + finalLoc + finalRec.TotalLength;
@@ -636,6 +658,7 @@ public class SkyrimProcessor : Processor
                     item.Data.ToArray());
                 subLoc += item.Data.Length;
             }
+
             foreach (var item in dataValues.OrderBy(i => i.Index))
             {
                 byte[] bytes = new byte[] { 0x55, 0x4E, 0x41, 0x4D, 0x01, 0x00, 0x00 };
@@ -648,7 +671,8 @@ public class SkyrimProcessor : Processor
         }
 
         // Reorder inputs
-        var unamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(xnamPos.Value), majorFrame.Meta, unam);
+        var unamPos =
+            PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(xnamPos.Value), majorFrame.Meta, unam);
         if (!unamPos.HasValue) return;
         unamPos += xnamPos.Value;
         var writeLoc = fileOffset + majorFrame.HeaderLength + unamPos.Value;
@@ -682,12 +706,16 @@ public class SkyrimProcessor : Processor
                     .Where(i => i < recs[0]!.Value)
                     .Max();
             }
-            var finalRec = majorFrame.Meta.Subrecord(majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength + finalLoc));
+
+            var finalRec =
+                majorFrame.Meta.Subrecord(majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength + finalLoc));
             inputValues.Add(
-                ((sbyte)unamRecord.Content[0], majorFrame.Content.Slice(unamPos.Value, unamRecord.TotalLength + finalLoc + finalRec.TotalLength)));
+                ((sbyte)unamRecord.Content[0],
+                    majorFrame.Content.Slice(unamPos.Value, unamRecord.TotalLength + finalLoc + finalRec.TotalLength)));
 
             unamPos = unamPos.Value + unamRecord.TotalLength + recs[0];
         }
+
         foreach (var item in inputValues.OrderBy(i => i.Index))
         {
             _instructions.SetSubstitution(
@@ -801,37 +829,11 @@ public class SkyrimProcessor : Processor
         }
     }
 
-    protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
-    {
-        foreach (var t in base.ExtraJobs(streamGetter))
-        {
-            yield return t;
-        }
-        var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
-        foreach (var source in EnumExt.GetValues<StringsSource>())
-        {
-            yield return TaskExt.Run(DoMultithreading, () =>
-            {
-                var modKey = ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath));
-                return ProcessStringsFilesIndices(
-                    streamGetter, 
-                    new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)),
-                    Language.English, 
-                    source,
-                    modKey,
-                    _knownDeadKeys.GetOrDefault((modKey, source)),
-                    bsaOrder);
-            });
-        }
-    }
-
     public void PerkStringHandler(
         IMutagenReadStream stream,
         MajorRecordHeader major,
-        BinaryFileProcessor.ConfigConstructor instr,
-        List<KeyValuePair<uint, uint>> processedStrings,
-        IStringsLookup overlay,
-        ref uint newIndex)
+        List<StringEntry> processedStrings,
+        IStringsLookup overlay)
     {
         var majorCompletePos = stream.Position + major.ContentLength;
         long? lastepft = null;
@@ -842,7 +844,7 @@ public class SkyrimProcessor : Processor
             {
                 case RecordTypeInts.FULL:
                 case RecordTypeInts.EPF2:
-                    AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+                    AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
                     break;
                 case RecordTypeInts.EPFT:
                     lastepft = stream.Position;
@@ -854,13 +856,15 @@ public class SkyrimProcessor : Processor
                     if (epftFrame.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
                     {
                         stream.Position = pos;
-                        AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+                        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
                     }
+
                     stream.Position = pos;
                     break;
                 default:
                     break;
             }
+
             stream.Position += sub.TotalLength;
         }
     }
@@ -868,10 +872,8 @@ public class SkyrimProcessor : Processor
     public void GameSettingStringHandler(
         IMutagenReadStream stream,
         MajorRecordHeader major,
-        BinaryFileProcessor.ConfigConstructor instr,
-        List<KeyValuePair<uint, uint>> processedStrings,
-        IStringsLookup overlay,
-        ref uint newIndex)
+        List<StringEntry> processedStrings,
+        IStringsLookup overlay)
     {
         stream.Position -= major.HeaderLength;
         var majorRec = stream.GetMajorRecordFrame();
@@ -879,146 +881,96 @@ public class SkyrimProcessor : Processor
         if (edidRec.Content[0] != (byte)'s') return;
         if (!majorRec.TryLocateSubrecordPinFrame("DATA", out var dataRec)) throw new ArgumentException();
         stream.Position += dataRec.Location;
-        AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
     }
 
-    private async Task ProcessStringsFilesIndices(
-        Func<IMutagenReadStream> streamGetter,
-        DirectoryPath dataFolder,
-        Language language, 
-        StringsSource source, 
-        ModKey modKey,
-        HashSet<uint> knownDeadKeys,
-        IEnumerable<FileName> bsaOrder)
+    protected override AStringsAlignment[] GetStringsFileAlignments(
+        StringsSource source)
     {
-        using var stream = streamGetter();
         switch (source)
         {
             case StringsSource.Normal:
-                ProcessStringsFiles(
-                    GameRelease,
-                    modKey,
-                    dataFolder,
-                    language,
-                    StringsSource.Normal,
-                    strict: true,
-                    knownDeadKeys: knownDeadKeys,
-                    bsaOrder: bsaOrder,
-                    RenumberStringsFileEntries(
-                        GameRelease,
-                        modKey,
-                        stream,
-                        dataFolder,
-                        language,
-                        StringsSource.Normal,
-                        new StringsAlignmentCustom("GMST", GameSettingStringHandler),
-                        new RecordType[] { "LSCR", "DESC" },
-                        new RecordType[] { "ACTI", "FULL", "RNAM" },
-                        new RecordType[] { "APPA", "FULL" },
-                        new RecordType[] { "AMMO", "FULL" },
-                        new RecordType[] { "ARMO", "FULL" },
-                        new RecordType[] { "BOOK", "FULL" },
-                        new RecordType[] { "CLAS", "FULL" },
-                        new RecordType[] { "EYES", "FULL" },
-                        new RecordType[] { "CONT", "FULL" },
-                        new RecordType[] { "DOOR", "FULL" },
-                        new RecordType[] { "FACT", "FULL", "MNAM", "FNAM" },
-                        new RecordType[] { "FURN", "FULL" },
-                        new RecordType[] { "HAZD", "FULL" },
-                        new RecordType[] { "HDPT", "FULL" },
-                        new RecordType[] { "ALCH", "FULL" },
-                        new RecordType[] { "INGR", "FULL" },
-                        new RecordType[] { "LIGH", "FULL" },
-                        new RecordType[] { "MGEF", "FULL", "DNAM" },
-                        new RecordType[] { "MISC", "FULL" },
-                        new RecordType[] { "MSTT", "FULL" },
-                        new RecordType[] { "NPC_", "FULL", "SHRT" },
-                        new RecordType[] { "ENCH", "FULL" },
-                        new RecordType[] { "PROJ", "FULL" },
-                        new RecordType[] { "RACE", "FULL" },
-                        new RecordType[] { "SCRL", "FULL" },
-                        new RecordType[] { "SLGM", "FULL" },
-                        new RecordType[] { "SPEL", "FULL" },
-                        new RecordType[] { "TACT", "FULL" },
-                        new RecordType[] { "TREE", "FULL" },
-                        new RecordType[] { "WEAP", "FULL" },
-                        new RecordType[] { "FLOR", "FULL", "RNAM" },
-                        new RecordType[] { "KEYM", "FULL" },
-                        new RecordType[] { "CELL", "FULL" },
-                        new RecordType[] { "REFR", "FULL" },
-                        new RecordType[] { "WRLD", "FULL" },
-                        new RecordType[] { "DIAL", "FULL" },
-                        new RecordType[] { "INFO", "RNAM" },
-                        new RecordType[] { "QUST", "FULL", "NNAM" },
-                        new RecordType[] { "WATR", "FULL" },
-                        new RecordType[] { "EXPL", "FULL" },
-                        new StringsAlignmentCustom("PERK", PerkStringHandler),
-                        new RecordType[] { "BPTD", "BPTN" },
-                        new RecordType[] { "AVIF", "FULL" },
-                        new RecordType[] { "LCTN", "FULL" },
-                        new RecordType[] { "MESG", "FULL", "ITXT" },
-                        new RecordType[] { "WOOP", "FULL", "TNAM" },
-                        new RecordType[] { "SHOU", "FULL" },
-                        new RecordType[] { "SNCT", "FULL" },
-                        new RecordType[] { "CLFM", "FULL" },
-                        new RecordType[] { "REGN", "RDMP" }
-                    ));
-                break;
+                return new AStringsAlignment[]
+                {
+                    new StringsAlignmentCustom("GMST", GameSettingStringHandler),
+                    new RecordType[] { "LSCR", "DESC" },
+                    new RecordType[] { "ACTI", "FULL", "RNAM" },
+                    new RecordType[] { "APPA", "FULL" },
+                    new RecordType[] { "AMMO", "FULL" },
+                    new RecordType[] { "ARMO", "FULL" },
+                    new RecordType[] { "BOOK", "FULL" },
+                    new RecordType[] { "CLAS", "FULL" },
+                    new RecordType[] { "EYES", "FULL" },
+                    new RecordType[] { "CONT", "FULL" },
+                    new RecordType[] { "DOOR", "FULL" },
+                    new RecordType[] { "FACT", "FULL", "MNAM", "FNAM" },
+                    new RecordType[] { "FURN", "FULL" },
+                    new RecordType[] { "HAZD", "FULL" },
+                    new RecordType[] { "HDPT", "FULL" },
+                    new RecordType[] { "ALCH", "FULL" },
+                    new RecordType[] { "INGR", "FULL" },
+                    new RecordType[] { "LIGH", "FULL" },
+                    new RecordType[] { "MGEF", "FULL", "DNAM" },
+                    new RecordType[] { "MISC", "FULL" },
+                    new RecordType[] { "MSTT", "FULL" },
+                    new RecordType[] { "NPC_", "FULL", "SHRT" },
+                    new RecordType[] { "ENCH", "FULL" },
+                    new RecordType[] { "PROJ", "FULL" },
+                    new RecordType[] { "RACE", "FULL" },
+                    new RecordType[] { "SCRL", "FULL" },
+                    new RecordType[] { "SLGM", "FULL" },
+                    new RecordType[] { "SPEL", "FULL" },
+                    new RecordType[] { "TACT", "FULL" },
+                    new RecordType[] { "TREE", "FULL" },
+                    new RecordType[] { "WEAP", "FULL" },
+                    new RecordType[] { "FLOR", "FULL", "RNAM" },
+                    new RecordType[] { "KEYM", "FULL" },
+                    new RecordType[] { "CELL", "FULL" },
+                    new RecordType[] { "REFR", "FULL" },
+                    new RecordType[] { "WRLD", "FULL" },
+                    new RecordType[] { "DIAL", "FULL" },
+                    new RecordType[] { "INFO", "RNAM" },
+                    new RecordType[] { "QUST", "FULL", "NNAM" },
+                    new RecordType[] { "WATR", "FULL" },
+                    new RecordType[] { "EXPL", "FULL" },
+                    new StringsAlignmentCustom("PERK", PerkStringHandler),
+                    new RecordType[] { "BPTD", "BPTN" },
+                    new RecordType[] { "AVIF", "FULL" },
+                    new RecordType[] { "LCTN", "FULL" },
+                    new RecordType[] { "MESG", "FULL", "ITXT" },
+                    new RecordType[] { "WOOP", "FULL", "TNAM" },
+                    new RecordType[] { "SHOU", "FULL" },
+                    new RecordType[] { "SNCT", "FULL" },
+                    new RecordType[] { "CLFM", "FULL" },
+                    new RecordType[] { "REGN", "RDMP" }
+                };
             case StringsSource.DL:
-                ProcessStringsFiles(
-                    GameRelease,
-                    modKey,
-                    dataFolder,
-                    language,
-                    StringsSource.DL,
-                    strict: true,
-                    knownDeadKeys: knownDeadKeys,
-                    bsaOrder: bsaOrder,
-                    RenumberStringsFileEntries(
-                        GameRelease,
-                        modKey,
-                        stream,
-                        dataFolder,
-                        language,
-                        StringsSource.DL,
-                        new RecordType[] { "SCRL", "DESC" },
-                        new RecordType[] { "APPA", "DESC" },
-                        new RecordType[] { "AMMO", "DESC" },
-                        new RecordType[] { "ARMO", "DESC" },
-                        new RecordType[] { "ALCH", "DESC" },
-                        new RecordType[] { "WEAP", "DESC" },
-                        new RecordType[] { "BOOK", "DESC", "CNAM" },
-                        new RecordType[] { "QUST", "CNAM" },
-                        new RecordType[] { "PERK", "DESC" },
-                        new RecordType[] { "AVIF", "DESC" },
-                        new RecordType[] { "MESG", "DESC" },
-                        new RecordType[] { "SHOU", "DESC" },
-                        new RecordType[] { "COLL", "DESC" },
-                        new RecordType[] { "RACE", "DESC" },
-                        new RecordType[] { "SPEL", "DESC" }
-                    ));
-                break;
+                return new AStringsAlignment[]
+                {
+                    new RecordType[] { "SCRL", "DESC" },
+                    new RecordType[] { "APPA", "DESC" },
+                    new RecordType[] { "AMMO", "DESC" },
+                    new RecordType[] { "ARMO", "DESC" },
+                    new RecordType[] { "ALCH", "DESC" },
+                    new RecordType[] { "WEAP", "DESC" },
+                    new RecordType[] { "BOOK", "DESC", "CNAM" },
+                    new RecordType[] { "QUST", "CNAM" },
+                    new RecordType[] { "PERK", "DESC" },
+                    new RecordType[] { "AVIF", "DESC" },
+                    new RecordType[] { "MESG", "DESC" },
+                    new RecordType[] { "SHOU", "DESC" },
+                    new RecordType[] { "COLL", "DESC" },
+                    new RecordType[] { "RACE", "DESC" },
+                    new RecordType[] { "SPEL", "DESC" }
+                };
             case StringsSource.IL:
-                ProcessStringsFiles(
-                    GameRelease,
-                    modKey,
-                    dataFolder,
-                    language,
-                    StringsSource.IL,
-                    strict: true,
-                    knownDeadKeys: knownDeadKeys,
-                    bsaOrder: bsaOrder,
-                    RenumberStringsFileEntries(
-                        GameRelease,
-                        modKey,
-                        stream,
-                        dataFolder,
-                        language,
-                        StringsSource.IL,
-                        new RecordType[] { "DIAL" },
-                        new RecordType[] { "INFO", "NAM1" }
-                    ));
-                break;
+                return new AStringsAlignment[]
+                {
+                    new RecordType[] { "DIAL" },
+                    new RecordType[] { "INFO", "NAM1" }
+                };
+            default:
+                throw new NotImplementedException();
         }
     }
 }

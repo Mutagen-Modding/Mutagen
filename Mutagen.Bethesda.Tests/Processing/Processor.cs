@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
@@ -36,6 +37,7 @@ public abstract class Processor
     protected DirectoryPath TempFolder;
     public bool DoMultithreading = true;
     public ModKey ModKey => SourcePath.ModKey;
+    protected DirectoryPath DataFolder => new DirectoryInfo(Path.GetDirectoryName(this.SourcePath));
     public delegate void DynamicProcessor(MajorRecordFrame majorFrame, long fileOffset);
     public delegate void DynamicStreamProcessor(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset);
     protected Dictionary<RecordType, List<DynamicProcessor>> DynamicProcessors = new();
@@ -142,6 +144,11 @@ public abstract class Processor
     protected virtual IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
     {
         yield return TaskExt.Run(DoMultithreading, () => RemoveEmptyGroups(streamGetter));
+        
+        if (GameRelease.ToCategory().HasLocalization())
+        {
+            yield return TaskExt.Run(DoMultithreading, () => RealignStrings(streamGetter));
+        }
     }
 
     protected virtual void AddDynamicProcessorInstructions()
@@ -517,7 +524,7 @@ public abstract class Processor
 
     public abstract class AStringsAlignment
     {
-        public delegate void Handle(IMutagenReadStream stream, MajorRecordHeader major, BinaryFileProcessor.ConfigConstructor instr, List<KeyValuePair<uint, uint>> processedStrings, IStringsLookup overlay, ref uint newIndex);
+        public delegate void Handle(IMutagenReadStream stream, MajorRecordHeader major, List<StringEntry> processedStrings, IStringsLookup overlay);
 
         public RecordType MajorType;
 
@@ -533,11 +540,10 @@ public abstract class Processor
 
         public static void ProcessStringLink(
             IMutagenReadStream stream,
-            BinaryFileProcessor.ConfigConstructor instr,
-            List<KeyValuePair<uint, uint>> processedStrings,
-            IStringsLookup overlay,
-            ref uint newIndex)
+            List<StringEntry> processedStrings,
+            IStringsLookup overlay)
         {
+            var loc = stream.Position;
             var sub = stream.ReadSubrecord();
             if (sub.ContentLength != 4)
             {
@@ -546,15 +552,11 @@ public abstract class Processor
             var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
             if (!overlay.TryLookup(curIndex, out var str))
             {
-                instr.SetSubstitution(stream.Position, new byte[4]);
+                processedStrings.Add(new StringEntry(curIndex, loc + sub.HeaderLength, false));
             }
             else if (curIndex != 0)
             {
-                var assignedIndex = newIndex++;
-                processedStrings.Add(new KeyValuePair<uint, uint>(curIndex, assignedIndex));
-                byte[] b = new byte[4];
-                BinaryPrimitives.WriteUInt32LittleEndian(b, assignedIndex);
-                instr.SetSubstitution(stream.Position, b);
+                processedStrings.Add(new StringEntry(curIndex, loc + sub.HeaderLength, true));
             }
             stream.Position -= sub.HeaderLength;
         }
@@ -585,10 +587,8 @@ public abstract class Processor
         private void Align(
             IMutagenReadStream stream,
             MajorRecordHeader major,
-            BinaryFileProcessor.ConfigConstructor instr,
-            List<KeyValuePair<uint, uint>> processedStrings,
-            IStringsLookup overlay,
-            ref uint newIndex)
+            List<StringEntry> processedStrings,
+            IStringsLookup overlay)
         {
             var majorCompletePos = stream.Position + major.ContentLength;
             while (stream.Position < majorCompletePos)
@@ -596,26 +596,110 @@ public abstract class Processor
                 var sub = stream.GetSubrecord();
                 if (StringTypes.Contains(sub.RecordType))
                 {
-                    ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+                    ProcessStringLink(stream, processedStrings, overlay);
                 }
                 stream.Position += sub.TotalLength;
             }
         }
     }
 
-    public IReadOnlyList<KeyValuePair<uint, uint>> RenumberStringsFileEntries(
-        GameRelease release,
-        ModKey modKey,
+    public record StringEntry(uint OrigIndex, long FileLocation, bool Fill)
+    {
+        public StringsSource Source { get; set; }
+    }
+
+    public async Task RealignStrings(Func<IMutagenReadStream> streamGetter)
+    {
+        bool strict = false;
+        using var stream = streamGetter();
+        var outFolder = Path.Combine(TempFolder, "Strings/Processed");
+        var language = Language.English;
+        using var writer = new StringsWriter(GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(SourcePath)), outFolder, MutagenEncodingProvider.Instance);
+        var stringEntries = EnumExt.GetValues<StringsSource>()
+            .SelectMany(source =>
+            {
+                return GetStringFileEntries(
+                        stream,
+                        language,
+                        source,
+                        GetStringsFileAlignments(source))
+                    .Select(x => x with { Source = source });
+            })
+            .ToArray();
+
+        var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
+        var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder, new StringsReadParameters()
+        {
+            BsaOrdering = bsaOrder
+        });
+
+        var overlays = EnumExt
+            .GetValues<StringsSource>().Select(x => (x, stringsOverlay.Get(x)))
+            .ToDictionary(x => x.x, x => (x.Item2, x.Item2.ToDictionary(x => x.Key, x => x.Value.Value.ToDictionary())));
+
+        var deadKeys = KnownDeadStringKeys();
+
+        foreach (var entry in stringEntries.OrderBy(x => x.FileLocation))
+        {
+            var knownDeadKeys = deadKeys.GetOrDefault((ModKey, entry.Source));
+            List<KeyValuePair<Language, string>> toWrite = new();
+            var dict = overlays[entry.Source];
+            foreach (var lang in dict.Item1)
+            {
+                if (lang.Key != language) continue;
+                var overlay = lang.Value.Value;
+                var overlayDict = dict.Item2[lang.Key];
+                if (knownDeadKeys != null)
+                {
+                    overlayDict.Remove(knownDeadKeys);
+                }
+                overlayDict.Remove(entry.OrigIndex);
+                if (entry.Fill)
+                {
+                    if (!overlay.TryLookup(entry.OrigIndex, out var str))
+                    {
+                        throw new ArgumentException();
+                    }
+                    toWrite.Add(new KeyValuePair<Language, string>(lang.Key, str));
+                }
+                else
+                {
+                    _instructions.SetSubstitution(entry.FileLocation, new byte[4]);
+                }
+            }
+
+            var regis = writer.Register(entry.Source, toWrite);
+            var bytes = new byte[4];
+            BinaryPrimitives.WriteUInt32LittleEndian(bytes, regis);
+            _instructions.SetSubstitution(entry.FileLocation, bytes);
+
+            if (strict)
+            {
+                foreach (var item in dict.Item2)
+                {
+                    if (item.Value.Count > 0)
+                    {
+                        foreach (var overlayStr in item.Value.First(100))
+                        {
+                            Logging.OnNext($"Unaccounted for string: {overlayStr.Key} {overlayStr.Value}");
+                        }
+                        throw new ArgumentException($"String unaccounted for: {item.Value.Keys.First()}");
+                    }
+                }
+            }
+        }
+    }
+
+    private IReadOnlyList<StringEntry> GetStringFileEntries(
         IMutagenReadStream stream,
-        DirectoryPath dataFolder,
         Language language,
         StringsSource source,
         params AStringsAlignment[] recordTypes)
     {
-        var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder, null);
+        var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder, null);
         var sourceDict = folderOverlay.Get(source);
-        if (!sourceDict.TryGetValue(language, out var overlay)) return ListExt.Empty<KeyValuePair<uint, uint>>();
-        var ret = new List<KeyValuePair<uint, uint>>();
+        if (!sourceDict.TryGetValue(language, out var overlay)) return ListExt.Empty<StringEntry>();
+        var ret = new List<StringEntry>();
         var dict = new Dictionary<RecordType, AStringsAlignment>();
         foreach (var item in recordTypes)
         {
@@ -624,14 +708,13 @@ public abstract class Processor
 
         stream.Position = 0;
         var mod = stream.ReadModHeader();
-        if (!EnumExt.HasFlag(mod.Flags, (int)ModHeaderCommonFlag.Localized)) return ListExt.Empty<KeyValuePair<uint, uint>>();
+        if (!EnumExt.HasFlag(mod.Flags, (int)ModHeaderCommonFlag.Localized)) return ListExt.Empty<StringEntry>();
 
         stream.Position = 0;
         var locs = RecordLocator.GetLocations(
             stream,
             interest: new RecordInterest(dict.Keys));
 
-        uint newIndex = 1;
         foreach (var rec in locs.ListedRecords)
         {
             stream.Position = rec.Key;
@@ -640,68 +723,15 @@ public abstract class Processor
             {
                 continue;
             }
-            instructions.Handler(stream, major, _instructions, ret, overlay.Value, ref newIndex);
+            instructions.Handler(stream, major, ret, overlay.Value);
         }
 
         return ret;
     }
 
-    public void ProcessStringsFiles(
-        GameRelease release,
-        ModKey modKey,
-        DirectoryPath dataFolder,
-        Language language,
-        StringsSource source,
-        bool strict,
-        HashSet<uint> knownDeadKeys,
-        IEnumerable<FileName> bsaOrder,
-        IReadOnlyList<KeyValuePair<uint, uint>> reindexing)
-    {
-        if (reindexing.Count == 0) return;
+    protected abstract AStringsAlignment[] GetStringsFileAlignments(StringsSource source);
 
-        var outFolder = Path.Combine(TempFolder, "Strings/Processed");
-        var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder, new StringsReadParameters()
-        {
-            BsaOrdering = bsaOrder
-        });
-        using var writer = new StringsWriter(GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(SourcePath)), outFolder, MutagenEncodingProvider.Instance);
-        var dict = stringsOverlay.Get(source);
-        foreach (var lang in dict)
-        {
-            if (lang.Key != language) continue;
-            var overlay = lang.Value.Value;
-            var overlayDict = strict ? overlay.ToDictionary() : null;
-            if (knownDeadKeys != null)
-            {
-                overlayDict?.Remove(knownDeadKeys);
-            }
-            foreach (var item in reindexing)
-            {
-                if (!overlay.TryLookup(item.Key, out var str))
-                {
-                    throw new ArgumentException();
-                }
-                var regis = writer.Register(str, lang.Key, source);
-                if (item.Value != regis)
-                {
-                    throw new ArgumentException();
-                }
-                if (strict)
-                {
-                    overlayDict.Remove(item.Key);
-                }
-            }
-            if (strict
-                && overlayDict.Count > 0)
-            {
-                foreach (var str in overlayDict.First(100))
-                {
-                    Logging.OnNext($"Unaccounted for string: {str.Key} {str.Value}");
-                }
-                throw new ArgumentException($"String unaccounted for: {overlayDict.Keys.First()}");
-            }
-        }
-    }
+    protected virtual Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>? KnownDeadStringKeys() => null;
 
     public void CleanEmptyCellGroups(
         IMutagenReadStream stream,
