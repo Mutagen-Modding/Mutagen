@@ -457,23 +457,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             }
             return ret.ToArray();
         }
-
-        /// <summary>
-        /// Finds locations of a number of records given by count that match a set of record types.
-        /// A new location is marked each time a record type that has already been encounterd is seen
-        /// </summary>
-        /// <param name="stream">Stream to read and progress</param>
-        /// <param name="count">Number of expected records</param>
-        /// <param name="trigger">Set of record types expected within one record</param>
-        /// <param name="constants">Metadata for reference</param>
-        /// <param name="skipHeader">Whether to skip the header in the return location values</param>
-        /// <returns>Array of located positions relative to the stream's position at the start</returns>
-        public static int[] ParseRecordLocationsByCount(
+        
+        private static int[] ParseRecordLocationsInternal(
             OverlayStream stream,
-            uint count,
+            uint? count,
             TriggeringRecordCollection trigger,
             RecordHeaderConstants constants,
-            bool skipHeader)
+            bool skipHeader,
+            TypedParseParams? parseParams = null)
         {
             var ret = new List<int>();
             var set = new HashSet<RecordType>();
@@ -481,7 +472,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             while (!stream.Complete)
             {
                 var varMeta = constants.GetVariableMeta(stream);
-                var recType = varMeta.RecordType;
+                var recType = parseParams.ConvertToStandard(varMeta.RecordType);
                 if (trigger.Contains(recType))
                 {
                     // If new record type we haven't seen before in our current record, just continue
@@ -508,7 +499,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     set.Clear();
                     set.Add(recType);
                 }
-                else if (ret.Count == count)
+                else if (count.HasValue && ret.Count == count)
                 {
                     break;
                 }
@@ -518,6 +509,46 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 }
             }
             return ret.ToArray();
+        }
+
+        /// <summary>
+        /// Finds locations of a number of records given by count that match a set of record types.
+        /// A new location is marked each time a record type that has already been encounterd is seen
+        /// </summary>
+        /// <param name="stream">Stream to read and progress</param>
+        /// <param name="count">Number of expected records</param>
+        /// <param name="trigger">Set of record types expected within one record</param>
+        /// <param name="constants">Metadata for reference</param>
+        /// <param name="skipHeader">Whether to skip the header in the return location values</param>
+        /// <returns>Array of located positions relative to the stream's position at the start</returns>
+        public static int[] ParseRecordLocationsByCount(
+            OverlayStream stream,
+            uint count,
+            TriggeringRecordCollection trigger,
+            RecordHeaderConstants constants,
+            bool skipHeader,
+            TypedParseParams? parseParams = null)
+        {
+            return ParseRecordLocationsInternal(stream, count, trigger, constants, skipHeader, parseParams);
+        }
+
+        /// <summary>
+        /// Finds locations of a number of records given by count that match a set of record types.
+        /// A new location is marked each time a record type that has already been encounterd is seen
+        /// </summary>
+        /// <param name="stream">Stream to read and progress</param>
+        /// <param name="trigger">Set of record types expected within one record</param>
+        /// <param name="constants">Metadata for reference</param>
+        /// <param name="skipHeader">Whether to skip the header in the return location values</param>
+        /// <returns>Array of located positions relative to the stream's position at the start</returns>
+        public static int[] ParseRecordLocations(
+            OverlayStream stream,
+            TriggeringRecordCollection trigger,
+            RecordHeaderConstants constants,
+            bool skipHeader,
+            TypedParseParams? parseParams = null)
+        {
+            return ParseRecordLocationsInternal(stream, count: null, trigger, constants, skipHeader, parseParams);
         }
 
         public static int[] ParseRecordLocations(
