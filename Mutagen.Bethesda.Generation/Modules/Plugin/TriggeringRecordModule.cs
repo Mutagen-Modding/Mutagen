@@ -119,6 +119,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
         {
             yield return $"{obj.ProtoGen.DefaultNamespace}.Internals";
+            yield return $"Mutagen.Bethesda.Plugins.Internals";
         }
 
         public async IAsyncEnumerable<RecordType> GetAllRecordTypes(ObjectGeneration obj)
