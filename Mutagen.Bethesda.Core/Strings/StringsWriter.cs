@@ -90,26 +90,32 @@ namespace Mutagen.Bethesda.Strings
 
         public void Dispose()
         {
-            WriteStrings(_strings, StringsSource.Normal);
-            WriteStrings(_ilStrings, StringsSource.IL);
-            WriteStrings(_dlStrings, StringsSource.DL);
+            var languages = 
+                _strings
+                .Concat(_ilStrings)
+                .Concat(_dlStrings)
+                .SelectMany(x => x)
+                .Select(x => x.Item1)
+                .ToHashSet();
+            WriteStrings(_strings, StringsSource.Normal, languages);
+            WriteStrings(_ilStrings, StringsSource.IL, languages);
+            WriteStrings(_dlStrings, StringsSource.DL, languages);
         }
 
-        private void WriteStrings(List<ValueTuple<Language, string, uint>[]> strs, StringsSource source)
+        private void WriteStrings(List<ValueTuple<Language, string, uint>[]> strs, StringsSource source, IReadOnlyCollection<Language> requiredLanguages)
         {
-            if (strs.Count == 0) return;
             FileSystem.Directory.CreateDirectory(WriteDir);
 
             var subLists = new Dictionary<Language, List<(string String, uint Index)>>();
+            foreach (var req in requiredLanguages)
+            {
+                subLists.GetOrAdd(req);
+            }
             foreach (var item in strs)
             {
                 foreach (var lang in item)
                 {
-                    if (!subLists.TryGetValue(lang.Item1, out var list))
-                    {
-                        list = new List<(string String, uint Index)>();
-                        subLists[lang.Item1] = list;
-                    }
+                    var list = subLists[lang.Item1];
                     list.Add((lang.Item2, lang.Item3));
                 }
             }

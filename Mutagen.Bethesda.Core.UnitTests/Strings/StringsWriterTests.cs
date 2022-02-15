@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -42,16 +43,52 @@ public class StringsWriterTests
         string str, 
         uint index)
     {
-        var path = Path.Combine(sut.WriteDir, StringsUtility.GetFileName(
-            sut.LanguageFormat,
-            sut.ModKey, lang, source));
-        var reader = new StringsLookupOverlay(
-            sut.FileSystem.File.ReadAllBytes(path),
-            source, 
-            sut.EncodingProvider.GetEncoding(GameRelease.SkyrimSE, lang));
+        StringsLookupOverlay reader = GetStringOverlay(sut, lang, source);
         reader.Count.Should().Be(1);
         var kv = reader.First();
         kv.Key.Should().Be(index);
         kv.Value.Should().Be(str);
+    }
+
+    private static StringsLookupOverlay GetStringOverlay(StringsWriter sut, Language lang, StringsSource source)
+    {
+        string path = GetStringPath(sut, lang, source);
+        var reader = new StringsLookupOverlay(
+            sut.FileSystem.File.ReadAllBytes(path),
+            source,
+            sut.EncodingProvider.GetEncoding(GameRelease.SkyrimSE, lang));
+        return reader;
+    }
+
+    private static string GetStringPath(StringsWriter sut, Language lang, StringsSource source)
+    {
+        return Path.Combine(sut.WriteDir, StringsUtility.GetFileName(
+            sut.LanguageFormat,
+            sut.ModKey, lang, source));
+    }
+
+    [Theory]
+    [MutagenAutoData]
+    public void WritesNothingIfEmpty(StringsWriter sut)
+    {
+        sut.Dispose();
+        foreach (var source in Enum.GetValues<StringsSource>())
+        {
+            sut.FileSystem.File.Exists(GetStringPath(sut, Language.English, source)).Should().BeFalse();
+        }
+    }
+
+    [Theory]
+    [MutagenAutoData]
+    public void WritesOtherStringFilesIfOnlyOneNeeded(StringsWriter sut)
+    {
+        sut.Register(StringsSource.Normal,
+                new KeyValuePair<Language, string>(Language.English, "Hello"))
+            .Should().Be(1);
+        sut.Dispose();
+        foreach (var source in Enum.GetValues<StringsSource>())
+        {
+            sut.FileSystem.File.Exists(GetStringPath(sut, Language.English, source)).Should().BeTrue();
+        }
     }
 }
