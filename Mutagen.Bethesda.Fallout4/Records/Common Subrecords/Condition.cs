@@ -8,6 +8,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using static Mutagen.Bethesda.Fallout4.Condition;
+using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Fallout4
 {
@@ -929,16 +930,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             public static readonly RecordType CIS1 = new RecordType("CIS1");
             public static readonly RecordType CIS2 = new RecordType("CIS2");
-
-            public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-            private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+            public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+            private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
             {
-                return new CollectionGetterWrapper<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.CTDA,
-                    }
-                );
+                return new TriggeringRecordCollection(RecordTypes.CTDA);
             });
         }
 
@@ -1043,12 +1038,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionBinaryOverlay
         {
-            private static ICollectionGetter<RecordType> IncludeTriggers = new CollectionGetterWrapper<RecordType>(
-                new RecordType[]
-                {
-                    new RecordType("CIS1"),
-                    new RecordType("CIS2"),
-                });
+            private static TriggeringRecordCollection IncludeTriggers = new TriggeringRecordCollection(
+                new RecordType("CIS1"),
+                new RecordType("CIS2"));
 
             private Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_data.Span[location]);
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);

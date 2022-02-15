@@ -11,6 +11,7 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Translations.Binary;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations
 {
@@ -90,7 +91,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public ExtendedList<T> Parse(
             MutagenFrame reader,
             BinarySubParseRecordDelegate<T> transl,
-            ICollectionGetter<RecordType>? triggeringRecord = null)
+            TriggeringRecordCollection? triggeringRecord = null)
         {
             var ret = new ExtendedList<T>();
             while (!reader.Complete)
@@ -117,7 +118,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public ExtendedList<T> Parse(
             MutagenFrame reader,
             BinaryMasterParseRecordDelegate<T> transl,
-            ICollectionGetter<RecordType>? triggeringRecord = null,
+            TriggeringRecordCollection? triggeringRecord = null,
             TypedParseParams? translationParams = null)
         {
             var ret = new ExtendedList<T>();
@@ -242,7 +243,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public ExtendedList<T> Parse(
             MutagenFrame reader,
             BinarySubParseDelegate<MutagenFrame, T> transl,
-            ICollectionGetter<RecordType> triggeringRecord)
+            TriggeringRecordCollection triggeringRecord)
         {
             var ret = new ExtendedList<T>();
             while (!reader.Complete)
@@ -269,7 +270,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
         public ExtendedList<T> Parse(
             MutagenFrame reader,
             BinaryMasterParseDelegate<T> transl,
-            ICollectionGetter<RecordType> triggeringRecord,
+            TriggeringRecordCollection triggeringRecord,
             TypedParseParams? translationParams = null)
         {
             var ret = new ExtendedList<T>();
@@ -616,7 +617,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             RecordType countRecord,
             int countLengthLength,
             BinaryMasterParseDelegate<T> transl,
-            ICollectionGetter<RecordType> triggeringRecord,
+            TriggeringRecordCollection triggeringRecord,
             TypedParseParams? translationParams = null)
         {
             var subHeader = reader.GetSubrecordFrame();
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             MutagenFrame reader,
             int amount,
             BinaryMasterParseDelegate<T> transl,
-            ICollectionGetter<RecordType>? triggeringRecord = null,
+            TriggeringRecordCollection? triggeringRecord = null,
             TypedParseParams? translationParams = null)
         {
             if (amount == 0) return Enumerable.Empty<T>();

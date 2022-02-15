@@ -37,15 +37,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Binary
             }
 
             data.Position = 0;
-            var triggers = new HashSet<RecordType>()
-            {
-                RecordTypes.EDID
-            };
+            var triggers = new TriggeringRecordCollection(RecordTypes.EDID);
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
             var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
-                triggers.ToGetter(),
+                triggers,
                 GameConstants.Oblivion.SubConstants,
                 skipHeader: false);
             Assert.Equal(3, pos.Length);
@@ -81,15 +78,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Binary
             }
 
             data.Position = 0;
-            var triggers = new HashSet<RecordType>()
-            {
-                RecordTypes.EDID
-            };
+            var triggers = new TriggeringRecordCollection(RecordTypes.EDID);
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
             var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
-                triggers.ToGetter(),
+                triggers,
                 GameConstants.Oblivion.SubConstants,
                 skipHeader: false);
             Assert.Equal(3, pos.Length);
@@ -133,16 +127,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Binary
             }
 
             data.Position = 0;
-            var triggers = new HashSet<RecordType>()
-            {
-                RecordTypes.EDID,
-                RecordTypes.DATA,
-            };
+            var triggers = new TriggeringRecordCollection(RecordTypes.EDID, RecordTypes.DATA);
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
             var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
-                triggers.ToGetter(),
+                triggers,
                 GameConstants.Oblivion.SubConstants,
                 skipHeader: false);
             Assert.Equal(3, pos.Length);
@@ -190,16 +180,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Binary
             }
 
             data.Position = 0;
-            var triggers = new HashSet<RecordType>()
-            {
-                RecordTypes.EDID,
-                RecordTypes.DATA,
-            };
+            var triggers = new TriggeringRecordCollection(RecordTypes.EDID, RecordTypes.DATA);
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
             var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
-                triggers.ToGetter(),
+                triggers,
                 GameConstants.Oblivion.SubConstants,
                 skipHeader: false);
             Assert.Equal(3, pos.Length);

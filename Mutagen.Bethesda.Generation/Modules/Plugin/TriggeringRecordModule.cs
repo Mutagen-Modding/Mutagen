@@ -231,30 +231,18 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             else if (count > 1)
             {
-                fg.AppendLine($"public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
-                fg.AppendLine($"private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>");
+                fg.AppendLine($"public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
+                fg.AppendLine($"private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>");
                 using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
                 {
-                    fg.AppendLine($"return new CollectionGetterWrapper<RecordType>(");
-                    using (new DepthWrapper(fg))
+                    using (var args = new ArgsWrapper(fg,
+                        "return new TriggeringRecordCollection"))
                     {
-                        fg.AppendLine("new HashSet<RecordType>(");
-                        using (new DepthWrapper(fg))
+                        foreach (var trigger in trigRecordTypes)
                         {
-                            fg.AppendLine($"new RecordType[]");
-                            using (new BraceWrapper(fg) { AppendParenthesis = true })
-                            {
-                                using (var comma = new CommaWrapper(fg))
-                                {
-                                    foreach (var trigger in trigRecordTypes)
-                                    {
-                                        comma.Add($"{obj.RecordTypeHeaderName(trigger)}");
-                                    }
-                                }
-                            }
+                            args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                         }
                     }
-                    fg.AppendLine(");");
                 }
             }
             await base.GenerateInRegistration(obj, fg);

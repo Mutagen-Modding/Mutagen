@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
@@ -329,20 +330,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class CellBinaryOverlay
         {
-            static readonly ICollectionGetter<RecordType> TypicalPlacedTypes = new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>()
-                {
-                    RecordTypes.ACHR,
-                    RecordTypes.REFR,
-                    RecordTypes.PARW,
-                    RecordTypes.PBAR,
-                    RecordTypes.PBEA,
-                    RecordTypes.PCON,
-                    RecordTypes.PFLA,
-                    RecordTypes.PHZD,
-                    RecordTypes.PMIS,
-                    RecordTypes.PGRE,
-                });
+            static readonly TriggeringRecordCollection TypicalPlacedTypes = new TriggeringRecordCollection(
+                RecordTypes.ACHR,
+                RecordTypes.REFR,
+                RecordTypes.PARW,
+                RecordTypes.PBAR,
+                RecordTypes.PBEA,
+                RecordTypes.PCON,
+                RecordTypes.PFLA,
+                RecordTypes.PHZD,
+                RecordTypes.PMIS,
+                RecordTypes.PGRE);
 
             internal bool InsideWorldspace;
 

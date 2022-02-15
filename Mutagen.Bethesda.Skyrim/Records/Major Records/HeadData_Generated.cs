@@ -1379,30 +1379,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.INDX,
-                        RecordTypes.HEAD,
-                        RecordTypes.MPAI,
-                        RecordTypes.RPRM,
-                        RecordTypes.AHCM,
-                        RecordTypes.FTSM,
-                        RecordTypes.DFTM,
-                        RecordTypes.TINI,
-                        RecordTypes.TINT,
-                        RecordTypes.TINP,
-                        RecordTypes.TIND,
-                        RecordTypes.TINC,
-                        RecordTypes.TINV,
-                        RecordTypes.TIRS,
-                        RecordTypes.MODL
-                    })
-            );
+            return new TriggeringRecordCollection(
+                RecordTypes.INDX,
+                RecordTypes.HEAD,
+                RecordTypes.MPAI,
+                RecordTypes.RPRM,
+                RecordTypes.AHCM,
+                RecordTypes.FTSM,
+                RecordTypes.DFTM,
+                RecordTypes.TINI,
+                RecordTypes.TINT,
+                RecordTypes.TINP,
+                RecordTypes.TIND,
+                RecordTypes.TINC,
+                RecordTypes.TINV,
+                RecordTypes.TIRS,
+                RecordTypes.MODL);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HeadDataBinaryWriteTranslation);
         #region Interface

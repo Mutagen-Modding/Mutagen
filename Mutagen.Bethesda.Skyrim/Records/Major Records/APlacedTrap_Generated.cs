@@ -1734,42 +1734,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.VMAD,
-                        RecordTypes.NAME,
-                        RecordTypes.XEZN,
-                        RecordTypes.XOWN,
-                        RecordTypes.XRNK,
-                        RecordTypes.XHTW,
-                        RecordTypes.XFVC,
-                        RecordTypes.XPWR,
-                        RecordTypes.XLKR,
-                        RecordTypes.XAPD,
-                        RecordTypes.XESP,
-                        RecordTypes.XEMI,
-                        RecordTypes.XMBR,
-                        RecordTypes.XIS2,
-                        RecordTypes.XLRT,
-                        RecordTypes.XLRL,
-                        RecordTypes.XLOD,
-                        RecordTypes.XSCL,
-                        RecordTypes.DATA,
-                        RecordTypes.PARW,
-                        RecordTypes.PBEA,
-                        RecordTypes.PFLA,
-                        RecordTypes.PCON,
-                        RecordTypes.PBAR,
-                        RecordTypes.PGRE,
-                        RecordTypes.PHZD,
-                        RecordTypes.PMIS
-                    })
-            );
+            return new TriggeringRecordCollection(
+                RecordTypes.VMAD,
+                RecordTypes.NAME,
+                RecordTypes.XEZN,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XHTW,
+                RecordTypes.XFVC,
+                RecordTypes.XPWR,
+                RecordTypes.XLKR,
+                RecordTypes.XAPD,
+                RecordTypes.XESP,
+                RecordTypes.XEMI,
+                RecordTypes.XMBR,
+                RecordTypes.XIS2,
+                RecordTypes.XLRT,
+                RecordTypes.XLRL,
+                RecordTypes.XLOD,
+                RecordTypes.XSCL,
+                RecordTypes.DATA,
+                RecordTypes.PARW,
+                RecordTypes.PBEA,
+                RecordTypes.PFLA,
+                RecordTypes.PCON,
+                RecordTypes.PBAR,
+                RecordTypes.PGRE,
+                RecordTypes.PHZD,
+                RecordTypes.PMIS);
         });
         public static readonly Type BinaryWriteTranslation = typeof(APlacedTrapBinaryWriteTranslation);
         #region Interface

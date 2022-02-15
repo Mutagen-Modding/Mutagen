@@ -199,6 +199,7 @@
     </Compile>
     <Compile Include="Plugins\Implicit\ImplicitCollection.cs" />
     <Compile Include="Plugins\Implicit\ImplicitRegistration.cs" />
+    <Compile Include="Plugins\Internals\TriggeringRecordCollection.cs" />
     <Compile Include="Plugins\Masters\DI\MasterReferenceReaderFactory.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

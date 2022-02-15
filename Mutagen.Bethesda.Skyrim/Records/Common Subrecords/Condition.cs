@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -829,15 +830,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static readonly RecordType CIS1 = new RecordType("CIS1");
             public static readonly RecordType CIS2 = new RecordType("CIS2");
-            public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-            private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+            public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+            private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
             {
-                return new CollectionGetterWrapper<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.CTDA,
-                    }
-                );
+                return new TriggeringRecordCollection(
+                    RecordTypes.CTDA);
             });
         }
 
@@ -949,12 +946,9 @@ namespace Mutagen.Bethesda.Skyrim
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             IConditionDataGetter IConditionGetter.Data => this.Data;
 
-            private static ICollectionGetter<RecordType> IncludeTriggers = new CollectionGetterWrapper<RecordType>(
-                new RecordType[]
-                {
-                    new RecordType("CIS1"),
-                    new RecordType("CIS2"),
-                });
+            private static TriggeringRecordCollection IncludeTriggers = new TriggeringRecordCollection(
+                new RecordType("CIS1"),
+                new RecordType("CIS2"));
 
             private Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_data.Span[location]);
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);

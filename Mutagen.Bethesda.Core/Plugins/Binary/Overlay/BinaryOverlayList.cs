@@ -6,6 +6,7 @@ using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay
 {
@@ -161,7 +162,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int countLength,
-            ICollectionGetter<RecordType> subrecordType,
+            TriggeringRecordCollection subrecordType,
             RecordType countType,
             TypedParseParams? parseParams,
             PluginBinaryOverlay.SpanRecordFactory<T> getter,
@@ -310,7 +311,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         public static IReadOnlyList<T> FactoryByCount<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
-            ICollectionGetter<RecordType> subrecordType,
+            TriggeringRecordCollection subrecordType,
             int itemLength,
             uint count,
             PluginBinaryOverlay.SpanFactory<T> getter)
@@ -636,7 +637,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             private readonly BinaryOverlayFactoryPackage _package;
             private readonly ReadOnlyMemorySlice<byte> _mem;
             private readonly PluginBinaryOverlay.SpanFactory<T> _getter;
-            private readonly ICollectionGetter<RecordType> _recordTypes;
+            private readonly TriggeringRecordCollection _recordTypes;
             private readonly int _totalItemLength;
 
             public BinaryOverlayListByStartIndexWithRecordSet(
@@ -644,7 +645,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 BinaryOverlayFactoryPackage package,
                 PluginBinaryOverlay.SpanFactory<T> getter,
                 int itemLength,
-                ICollectionGetter<RecordType> recordTypes)
+                TriggeringRecordCollection recordTypes)
             {
                 this._mem = mem;
                 this._package = package;
