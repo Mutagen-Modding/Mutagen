@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DynamicData;
 
 namespace Mutagen.Bethesda.Plugins.Internals
 {
@@ -20,5 +21,7 @@ namespace Mutagen.Bethesda.Plugins.Internals
         }
 
         public bool Contains(RecordType type) => _set.Contains(type);
+
+        public int IndexOf(RecordType type) => _ordered.IndexOf(type);
     }
 }

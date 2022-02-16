@@ -467,17 +467,19 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             TypedParseParams? parseParams = null)
         {
             var ret = new List<int>();
-            var set = new HashSet<RecordType>();
+            int? lastParsed = null;
             var startingPos = stream.Position;
             while (!stream.Complete)
             {
                 var varMeta = constants.GetVariableMeta(stream);
                 var recType = parseParams.ConvertToStandard(varMeta.RecordType);
-                if (trigger.Contains(recType))
+                var index = trigger.IndexOf(recType);
+                if (index != -1)
                 {
-                    // If new record type we haven't seen before in our current record, just continue
-                    if (set.Add(recType) && ret.Count > 0)
+                    // If new record isn't before one we've already parsed, just continue
+                    if (lastParsed != null && lastParsed.Value < index)
                     {
+                        lastParsed = index;
                         stream.Position += (int)varMeta.TotalLength;
                         continue;
                     }
@@ -495,9 +497,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                         stream.Position += (int)varMeta.TotalLength;
                     }
 
-                    // Clear set of seen types
-                    set.Clear();
-                    set.Add(recType);
+                    lastParsed = index;
                 }
                 else if (count.HasValue && ret.Count == count)
                 {
