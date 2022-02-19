@@ -2350,6 +2350,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
+                case "GameSettingInt":
+                case "IGameSettingIntGetter":
+                case "IGameSettingInt":
+                case "IGameSettingIntInternal":
                     obj.GameSettings.Remove(
                         type: type,
                         keys: keys);
@@ -2406,6 +2410,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
+                case "GlobalInt":
+                case "IGlobalIntGetter":
+                case "IGlobalInt":
+                case "IGlobalIntInternal":
+                case "GlobalShort":
+                case "IGlobalShortGetter":
+                case "IGlobalShort":
+                case "IGlobalShortInternal":
+                case "GlobalFloat":
+                case "IGlobalFloatGetter":
+                case "IGlobalFloat":
+                case "IGlobalFloatInternal":
+                case "GlobalBool":
+                case "IGlobalBoolGetter":
+                case "IGlobalBool":
+                case "IGlobalBoolInternal":
                     obj.Globals.Remove(
                         type: type,
                         keys: keys);
@@ -2414,6 +2434,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IADamageTypeGetter":
                 case "IADamageType":
                 case "IADamageTypeInternal":
+                case "DamageType":
+                case "IDamageTypeGetter":
+                case "IDamageType":
+                case "IDamageTypeInternal":
+                case "DamageTypeIndexed":
+                case "IDamageTypeIndexedGetter":
+                case "IDamageTypeIndexed":
+                case "IDamageTypeIndexedInternal":
                     obj.DamageTypes.Remove(
                         type: type,
                         keys: keys);
