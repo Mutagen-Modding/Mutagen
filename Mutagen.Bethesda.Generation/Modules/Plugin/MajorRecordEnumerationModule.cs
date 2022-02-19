@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             }
                             else if (field is ContainerType cont)
                             {
-                                if (!(cont.SubTypeGeneration is LoquiType contLoqui)) continue;
+                                if (cont.SubTypeGeneration is not LoquiType contLoqui) continue;
                                 if (contLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
                                     fieldGen = generationDict.GetOrAdd("default:");
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             else if (field is DictType dict)
                             {
                                 if (dict.Mode != DictMode.KeyedValue) continue;
-                                if (!(dict.ValueTypeGen is LoquiType dictLoqui)) continue;
+                                if (dict.ValueTypeGen is not LoquiType dictLoqui) continue;
                                 if (dictLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
                                     fieldGen = generationDict.GetOrAdd("default:");
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                             }
 
-                            HashSet<string> blackList = new HashSet<string>();
+                            var blackList = new HashSet<string>();
                             foreach (var kv in generationDict)
                             {
                                 switch (kv.Key)
