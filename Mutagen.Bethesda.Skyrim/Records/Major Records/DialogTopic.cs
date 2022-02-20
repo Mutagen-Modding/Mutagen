@@ -8,6 +8,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -164,7 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Reader.Position += groupMeta.HeaderLength;
                     obj.Responses.SetTo(ListBinaryTranslation<DialogResponses>.Instance.Parse(
                         reader: frame.SpawnWithLength(groupMeta.ContentLength),
-                        transl: (MutagenFrame r, RecordType header, out DialogResponses listItem) =>
+                        transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out DialogResponses listItem) =>
                         {
                             return LoquiBinaryTranslation<DialogResponses>.Instance.Parse(
                                 frame: r,

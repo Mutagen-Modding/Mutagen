@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Types = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MapMarker.Type>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
+                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out MapMarker.Type listSubItem) =>
                             {
                                 return EnumBinaryTranslation<MapMarker.Type, MutagenFrame, MutagenWriter>.Instance.Parse(
                                     reader: r.SpawnWithLength(2),

@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [GameSettingInt]
+    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool, GameSettingUInt]
     /// </summary>
     public abstract partial class GameSetting :
         Fallout4MajorRecord,
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [GameSettingInt]
+    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool, GameSettingUInt]
     /// </summary>
     public partial interface IGameSetting :
         IFallout4MajorRecordInternal,
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [GameSettingInt]
+    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool, GameSettingUInt]
     /// </summary>
     public partial interface IGameSettingGetter :
         IFallout4MajorRecordGetter,

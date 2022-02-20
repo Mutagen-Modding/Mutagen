@@ -1171,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
-                    transl: (MutagenFrame r, out String listSubItem) =>
+                    transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
                     {
                         return StringBinaryTranslation.Instance.Parse(
                             r,

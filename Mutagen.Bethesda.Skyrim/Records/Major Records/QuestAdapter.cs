@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -19,7 +20,7 @@ namespace Mutagen.Bethesda.Skyrim
                     ListBinaryTranslation<QuestScriptFragment>.Instance.Parse(
                         frame,
                         amount: count,
-                        transl: (MutagenFrame r, out QuestScriptFragment listSubItem) =>
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out QuestScriptFragment listSubItem) =>
                         {
                             listSubItem = QuestScriptFragment.CreateFromBinary(frame);
                             return true;
@@ -29,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
                     ListBinaryTranslation<QuestFragmentAlias>.Instance.Parse(
                         frame,
                         amount: aliasCount,
-                        transl: (MutagenFrame r, out QuestFragmentAlias listSubItem) =>
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out QuestFragmentAlias listSubItem) =>
                         {
                             listSubItem = QuestFragmentAlias.CreateFromBinary(frame);
                             return true;
@@ -111,7 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
                     ListBinaryTranslation<QuestScriptFragment>.Instance.Parse(
                         frame,
                         amount: count,
-                        transl: (MutagenFrame r, out QuestScriptFragment listSubItem) =>
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out QuestScriptFragment listSubItem) =>
                         {
                             listSubItem = QuestScriptFragment.CreateFromBinary(frame);
                             return true;
@@ -122,7 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
                     ListBinaryTranslation<QuestFragmentAlias>.Instance.Parse(
                         frame,
                         amount: aliasCount,
-                        transl: (MutagenFrame r, out QuestFragmentAlias listSubItem) =>
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out QuestFragmentAlias listSubItem) =>
                         {
                             listSubItem = QuestFragmentAlias.CreateFromBinary(frame);
                             return true;

@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [WorldspaceNavigationMesh, CellNavigationMesh]
+    /// Implemented by: [WorldspaceNavigationMesh]
     /// </summary>
     public abstract partial class ANavigationMesh :
         SkyrimMajorRecord,
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [WorldspaceNavigationMesh, CellNavigationMesh]
+    /// Implemented by: [WorldspaceNavigationMesh]
     /// </summary>
     public partial interface IANavigationMesh :
         IANavigationMeshGetter,
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [WorldspaceNavigationMesh, CellNavigationMesh]
+    /// Implemented by: [WorldspaceNavigationMesh]
     /// </summary>
     public partial interface IANavigationMeshGetter :
         ISkyrimMajorRecordGetter,

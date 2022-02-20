@@ -1608,7 +1608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             reader: frame,
                             triggeringRecord: AScriptReference_Registration.TriggeringRecordTypes,
                             translationParams: translationParams,
-                            transl: (MutagenFrame r, RecordType header, out AScriptReference listSubItem, TypedParseParams? translationParams) =>
+                            transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out AScriptReference listSubItem, TypedParseParams? translationParams) =>
                             {
                                 switch (header.TypeInt)
                                 {

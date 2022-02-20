@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);";
+            string testString = "MutagenFrame r, [MaybeNullWhen(false)] out TranslatedString genSubItem";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

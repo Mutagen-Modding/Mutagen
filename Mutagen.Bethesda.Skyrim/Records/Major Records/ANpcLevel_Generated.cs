@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [NpcLevel, PcLevelMult]
+    /// Implemented by: [NpcLevel]
     /// </summary>
     public abstract partial class ANpcLevel :
         IANpcLevel,
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [NpcLevel, PcLevelMult]
+    /// Implemented by: [NpcLevel]
     /// </summary>
     public partial interface IANpcLevel :
         IANpcLevelGetter,
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [NpcLevel, PcLevelMult]
+    /// Implemented by: [NpcLevel]
     /// </summary>
     public partial interface IANpcLevelGetter :
         ILoquiObject,

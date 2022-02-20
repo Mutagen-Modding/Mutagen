@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
                     reader: frame,
                     amount: 2,
-                    transl: (MutagenFrame r, out ActorValue listSubItem) =>
+                    transl: (MutagenFrame r, [MaybeNullWhen(false)] out ActorValue listSubItem) =>
                     {
                         return EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
                             reader: r.SpawnWithLength(4),
@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
                     reader: frame,
                     amount: 7,
-                    transl: (MutagenFrame r, out ActorValue listSubItem) =>
+                    transl: (MutagenFrame r, [MaybeNullWhen(false)] out ActorValue listSubItem) =>
                     {
                         return EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
                             reader: r.SpawnWithLength(4),

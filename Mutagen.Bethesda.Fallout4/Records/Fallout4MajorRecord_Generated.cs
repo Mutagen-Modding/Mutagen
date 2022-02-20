@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
+    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, Grass, HeadPart, ImpactDataSet, Keyword, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
     /// </summary>
     public abstract partial class Fallout4MajorRecord :
         MajorRecord,
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
+    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, Grass, HeadPart, ImpactDataSet, Keyword, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecord :
         IFallout4MajorRecordGetter,
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
+    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, Grass, HeadPart, ImpactDataSet, Keyword, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecordGetter :
         IMajorRecordGetter,

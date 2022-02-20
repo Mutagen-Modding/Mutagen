@@ -1,6 +1,7 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -122,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
                 coll.AddRange(
                     ListBinaryTranslation<IPlaced>.Instance.Parse(
                         reader: frame,
-                        transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
+                        transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out IPlaced placed) =>
                         {
                             switch (header.TypeInt)
                             {
@@ -173,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 var items = ListBinaryTranslation<IPlaced>.Instance.Parse(
                     reader: frame,
-                    transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
+                    transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out IPlaced placed) =>
                     {
                         switch (header.TypeInt)
                         {

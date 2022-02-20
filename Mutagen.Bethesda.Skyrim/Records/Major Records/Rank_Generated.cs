@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
                         skipMarker: false,
-                        transl: (MutagenFrame r, out TranslatedString genSubItem) =>
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out TranslatedString genSubItem) =>
                         {
                             return StringBinaryTranslation.Instance.Parse(
                                 r,
