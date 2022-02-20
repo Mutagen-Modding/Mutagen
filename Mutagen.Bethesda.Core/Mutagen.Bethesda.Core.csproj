@@ -23,7 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.16.0" />
-    <PackageReference Include="DynamicData" Version="7.4.11" />
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -38,7 +37,6 @@
     </PackageReference>
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-    <PackageReference Include="System.IO.Abstractions" Version="16.1.10" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
   <PropertyGroup>
