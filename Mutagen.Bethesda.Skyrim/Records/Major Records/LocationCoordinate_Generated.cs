@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Coordinates.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Parse(
                     reader: frame,
-                    transl: (MutagenFrame r, out P2Int16 listSubItem) =>
+                    transl: (MutagenFrame r, [MaybeNullWhen(false)] out P2Int16 listSubItem) =>
                     {
                         listSubItem = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                             r,

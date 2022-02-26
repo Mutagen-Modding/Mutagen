@@ -7,6 +7,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -58,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 effect.Conditions.SetTo(
                                     ListBinaryTranslation<PerkCondition>.Instance.Parse(
                                         reader: new MutagenFrame(stream),
-                                        transl: (MutagenFrame r, out PerkCondition listSubItem) =>
+                                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out PerkCondition listSubItem) =>
                                         {
                                             return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
                                                 frame: r,
@@ -73,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 effect.Conditions.SetTo(
                                     ListBinaryTranslation<PerkCondition>.Instance.Parse(
                                         reader: new MutagenFrame(stream),
-                                        transl: (MutagenFrame r, out PerkCondition listSubItem) =>
+                                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out PerkCondition listSubItem) =>
                                         {
                                             return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
                                                 frame: r,
@@ -86,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 var tabCount = dataFrame.Content[2];
                                 var conditions = ListBinaryTranslation<PerkCondition>.Instance.Parse(
                                     reader: new MutagenFrame(stream),
-                                    transl: (MutagenFrame r, out PerkCondition listSubItem) =>
+                                    transl: (MutagenFrame r, [MaybeNullWhen(false)] out PerkCondition listSubItem) =>
                                     {
                                         return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
                                             frame: r,
