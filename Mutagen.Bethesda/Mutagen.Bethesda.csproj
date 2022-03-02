@@ -26,6 +26,11 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Environments\GameEnvironmentBuilder.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Records\Internals\GameCategoryExt.cs" />
     <Compile Include="Plugins\Records\ProtocolDefinition_All.cs" />
     <Compile Include="Plugins\Utility\GameEnvironmentMixIn_Generated.cs" />
