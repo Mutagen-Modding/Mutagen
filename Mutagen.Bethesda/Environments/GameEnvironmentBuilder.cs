@@ -56,7 +56,7 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
         return new(release);
     }
 
-    public GameEnvironmentBuilder<TMod, TModGetter> WithLoadOrder(Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>> transformer)
+    public GameEnvironmentBuilder<TMod, TModGetter> TransformLoadOrder(Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>> transformer)
     {
         return this with { LoadOrderProcessors = LoadOrderProcessors.Add(transformer) };
     }
