@@ -31,6 +31,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Environments\OutputModTrimming.cs" />
     <Compile Include="Plugins\Records\Internals\GameCategoryExt.cs" />
     <Compile Include="Plugins\Records\ProtocolDefinition_All.cs" />
     <Compile Include="Plugins\Utility\GameEnvironmentMixIn_Generated.cs" />
