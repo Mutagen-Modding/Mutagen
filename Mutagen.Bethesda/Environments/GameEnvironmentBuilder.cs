@@ -56,16 +56,45 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
         return new(release);
     }
 
+    /// <summary>
+    /// Exposes the load order for transformation by the user
+    /// </summary>
+    /// <param name="transformer">Transformation lambda to process the incoming enuerable and return a new desired one</param>
+    /// <returns>New builder with the new rules</returns>
     public GameEnvironmentBuilder<TMod, TModGetter> TransformLoadOrder(Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>> transformer)
     {
         return this with { LoadOrderProcessors = LoadOrderProcessors.Add(transformer) };
     }
 
-    public GameEnvironmentBuilder<TMod, TModGetter> WithOutputMod(TMod mod)
+    /// <summary>
+    /// Adds an output mod to the end of the load order as a mod that is safe to mutate.
+    /// </summary>
+    /// <param name="mod">Mutable safe mod to add to the end of the load order</param>
+    /// <param name="trimming">What load order trimming rules to follow</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder<TMod, TModGetter> WithOutputMod(TMod mod, OutputModTrimming trimming = OutputModTrimming.SelfAndPast)
     {
-        return this with { MutableMods = MutableMods.Add(mod) };
+        var ret = this;
+        switch (trimming)
+        {
+            case OutputModTrimming.NoTrimming:
+                break;
+            case OutputModTrimming.Self:
+                ret = ret.TransformLoadOrder(x => x.Where(x => x.ModKey != mod.ModKey));
+                break;
+            case OutputModTrimming.SelfAndPast:
+                ret = ret.TransformLoadOrder(x => x.TakeWhile(x => x.ModKey != mod.ModKey));
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+        return ret with { MutableMods = MutableMods.Add(mod) };
     }
 
+    /// <summary>
+    /// Creates an environment with all the given rules added to the builder
+    /// </summary>
+    /// <returns>GameEnvironment with the rules applied</returns>
     public IGameEnvironmentState<TMod, TModGetter> Build()
     {
         var category = new GameCategoryContext(Release);
