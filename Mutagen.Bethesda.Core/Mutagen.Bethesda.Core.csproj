@@ -131,6 +131,16 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Environments\GameEnvironment.cs" />
+    <Compile Include="Environments\GameEnvironmentBuilder.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Environments\OutputModTrimming.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Installs\DI\GameLocator.cs" />
     <Compile Include="Installs\GameLocations.cs" />
     <Compile Include="Installs\GameMetaData.cs" />
