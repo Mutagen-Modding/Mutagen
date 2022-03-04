@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [ConditionFloat]
+    /// Implemented by: [ConditionGlobal, ConditionFloat]
     /// </summary>
     public abstract partial class Condition :
         ICondition,
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [ConditionFloat]
+    /// Implemented by: [ConditionGlobal, ConditionFloat]
     /// </summary>
     public partial interface ICondition :
         IConditionGetter,
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [ConditionFloat]
+    /// Implemented by: [ConditionGlobal, ConditionFloat]
     /// </summary>
     public partial interface IConditionGetter :
         ILoquiObject,

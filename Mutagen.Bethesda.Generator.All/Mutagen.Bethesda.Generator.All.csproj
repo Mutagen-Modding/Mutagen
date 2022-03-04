@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,7 +22,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Fallout4.Generator\Mutagen.Bethesda.Fallout4.Generator.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Oblivion.Generator\Mutagen.Bethesda.Oblivion.Generator.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Pex.Generator\Mutagen.Bethesda.Pex.Generator.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Skyrim.Generator\Mutagen.Bethesda.Skyrim.Generator.csproj" />
   </ItemGroup>
 
 </Project>
