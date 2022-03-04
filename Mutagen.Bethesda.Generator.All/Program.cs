@@ -14,6 +14,7 @@ using EnumType = Mutagen.Bethesda.Generation.Fields.EnumType;
 using FloatType = Mutagen.Bethesda.Generation.Fields.FloatType;
 using PercentType = Mutagen.Bethesda.Generation.Fields.PercentType;
 using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
+using Mutagen.Bethesda.Generation.Generator;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -50,7 +51,8 @@ namespace Mutagen.Bethesda.Generation
         }
 
         static async Task GenerateRecords()
-        { 
+        {
+            var adder = new TypicalRecordProtocolAdder();
             LoquiGenerator gen = new LoquiGenerator(typical: false)
             {
                 NotifyingDefault = NotifyingType.None,
@@ -114,44 +116,17 @@ namespace Mutagen.Bethesda.Generation
 
             if (ShouldRun("Oblivion"))
             {
-                var proto = gen.AddProtocol(
-                new ProtocolGeneration(
-                    gen,
-                    new ProtocolKey("Oblivion"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda.Oblivion/Records"))
-                {
-                    DefaultNamespace = "Mutagen.Bethesda.Oblivion",
-                });
-                proto.AddProjectToModify(
-                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Oblivion.csproj")));
+                adder.Add(gen, "Oblivion");
             }
 
             if (ShouldRun("Skyrim"))
             {
-                var proto = gen.AddProtocol(
-                new ProtocolGeneration(
-                    gen,
-                    new ProtocolKey("Skyrim"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda.Skyrim/Records"))
-                {
-                    DefaultNamespace = "Mutagen.Bethesda.Skyrim",
-                });
-                proto.AddProjectToModify(
-                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Skyrim.csproj")));
+                adder.Add(gen, "Skyrim");
             }
 
             if (ShouldRun("Fallout4"))
             {
-                var proto = gen.AddProtocol(
-                new ProtocolGeneration(
-                    gen,
-                    new ProtocolKey("Fallout4"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda.Fallout4/Records"))
-                {
-                    DefaultNamespace = "Mutagen.Bethesda.Fallout4",
-                });
-                proto.AddProjectToModify(
-                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Fallout4.csproj")));
+                adder.Add(gen, "Fallout4");
             }
 
             await gen.Generate();
