@@ -382,6 +382,7 @@
       <DependentUpon>MaterialType.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IRegionTarget_Generated.cs" />
+    <Compile Include="GameEnvironmentMixIn_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

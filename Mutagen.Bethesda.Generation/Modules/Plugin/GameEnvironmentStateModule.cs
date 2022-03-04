@@ -1,75 +1,60 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins.Cache;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Environments;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin
+namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+
+public class GameEnvironmentStateModule : GenerationModule
 {
-    public class GameEnvironmentStateModule : GenerationModule
+    public override async Task FinalizeGeneration(ProtocolGeneration proto)
     {
-        List<ObjectGeneration> mods = new List<ObjectGeneration>();
+        await base.FinalizeGeneration(proto);
 
+        if (proto.Protocol.Namespace.Equals("All")
+            || proto.Protocol.Namespace.Equals("Bethesda")) return;
+            
+        FileGeneration fg = new FileGeneration();
+        
+        var modObj = proto.ObjectGenerationsByID.Values.FirstOrDefault(x => x.GetObjectType() == ObjectType.Mod);
+        if (modObj == null) return;
 
-        public override async Task PreLoad(ObjectGeneration obj)
+        fg.AppendLine($"using Mutagen.Bethesda.{proto.Protocol.Namespace};");
+        fg.AppendLine($"using Mutagen.Bethesda.Environments;");
+        fg.AppendLine($"using Mutagen.Bethesda.Plugins.Cache;");
+        fg.AppendLine();
+
+        using (new NamespaceWrapper(fg, "Mutagen.Bethesda", fileScoped: false))
         {
-            if (obj.GetObjectType() == ObjectType.Mod)
+            using (var c = new ClassWrapper(fg, "GameEnvironmentMixIn"))
             {
-                mods.Add(obj);
+                c.Static = true;
             }
-        }
-
-        public override async Task FinalizeGeneration(ProtocolGeneration proto)
-        {
-            await base.FinalizeGeneration(proto);
-
-            if (proto.Protocol.Namespace != "All") return;
-            await Task.WhenAll(proto.Gen.Protocols.Values.SelectMany(p => p.ObjectGenerationsByID.Values.Select(o => o.LoadingCompleteTask.Task)));
-
-            FileGeneration fg = new FileGeneration();
-
-            foreach (var modObj in mods)
+            using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"using Mutagen.Bethesda.{modObj.ProtoGen.Protocol.Namespace};");
-            }
-            fg.AppendLine($"using Mutagen.Bethesda.Environments;");
-            fg.AppendLine($"using Mutagen.Bethesda.Plugins.Cache;");
-            fg.AppendLine();
-
-            using (new NamespaceWrapper(fg, "Mutagen.Bethesda", fileScoped: false))
-            {
-                using (var c = new ClassWrapper(fg, "GameEnvironmentMixIn"))
+                var hasMultipleReleases = modObj.GetObjectData().HasMultipleReleases;
+                var retType = $"IGameEnvironmentState<I{modObj.Name}, I{modObj.Name}Getter>";
+                using (var args = new FunctionWrapper(fg,
+                           $"public static {retType} {modObj.ProtoGen.Protocol.Namespace}"))
                 {
-                    c.Static = true;
+                    args.Add($"this {nameof(GameEnvironment)} env");
+                    if (hasMultipleReleases)
+                    {
+                        args.Add($"{modObj.GetObjectData().GameCategory}Release gameRelease");
+                    }
+                    args.Add($"{nameof(LinkCachePreferences)}? linkCachePrefs = null");
                 }
                 using (new BraceWrapper(fg))
                 {
-                    foreach (var modObj in mods)
-                    {
-                        var relStr = modObj.GetObjectData().HasMultipleReleases ? $"{modObj.GetObjectData().GameCategory}Release gameRelease" : string.Empty;
-                        var retType = $"IGameEnvironmentState<I{modObj.Name}, I{modObj.Name}Getter>";
-                        using (var args = new FunctionWrapper(fg,
-                            $"public static {retType} {modObj.ProtoGen.Protocol.Namespace}"))
-                        {
-                            args.Add($"this {nameof(GameEnvironment)} env");
-                            if (modObj.GetObjectData().HasMultipleReleases)
-                            {
-                                args.Add(modObj.GetObjectData().HasMultipleReleases ? $"{modObj.GetObjectData().GameCategory}Release gameRelease" : string.Empty);
-                            }
-                            args.Add($"{nameof(LinkCachePreferences)}? linkCachePrefs = null");
-                        }
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine($"return env.Construct<I{modObj.Name}, I{modObj.Name}Getter>({(modObj.GetObjectData().HasMultipleReleases ? "gameRelease.ToGameRelease()" : $"GameRelease.{modObj.ProtoGen.Protocol.Namespace}")}, linkCachePrefs);");
-                        }
-                        fg.AppendLine();
-                    }
+                    fg.AppendLine($"return env.Construct<I{modObj.Name}, I{modObj.Name}Getter>({(hasMultipleReleases ? "gameRelease.ToGameRelease()" : $"GameRelease.{modObj.ProtoGen.Protocol.Namespace}")}, linkCachePrefs);");
                 }
+                fg.AppendLine();
             }
-
-            var path = Path.Combine(proto.DefFileLocation.FullName, $"../Utility/GameEnvironmentMixIn{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
-            fg.Generate(path);
-            proto.GeneratedFiles.Add(path, ProjItemType.Compile);
         }
+
+        var path = Path.Combine(proto.DefFileLocation.FullName, $"../GameEnvironmentMixIn{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
+        fg.Generate(path);
+        proto.GeneratedFiles.Add(path, ProjItemType.Compile);
     }
 }

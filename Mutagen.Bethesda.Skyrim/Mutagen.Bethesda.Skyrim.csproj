@@ -2081,6 +2081,7 @@
     <Compile Include="Records\Major Records\MagicEffectBoundArchetype_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="GameEnvironmentMixIn_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
