@@ -1307,6 +1307,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWorldspaceNavigationMeshGetter":
                 case "IWorldspaceNavigationMesh":
                 case "IWorldspaceNavigationMeshInternal":
+                case "CellNavigationMesh":
+                case "ICellNavigationMeshGetter":
+                case "ICellNavigationMesh":
+                case "ICellNavigationMeshInternal":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1354,6 +1358,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedBarrierGetter":
                 case "IPlacedBarrier":
                 case "IPlacedBarrierInternal":
+                case "PlacedTrap":
+                case "IPlacedTrapGetter":
+                case "IPlacedTrap":
+                case "IPlacedTrapInternal":
+                case "PlacedHazard":
+                case "IPlacedHazardGetter":
+                case "IPlacedHazard":
+                case "IPlacedHazardInternal":
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);

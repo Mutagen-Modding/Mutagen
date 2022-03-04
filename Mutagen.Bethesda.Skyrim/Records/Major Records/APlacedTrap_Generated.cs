@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier]
+    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
     /// </summary>
     public abstract partial class APlacedTrap :
         SkyrimMajorRecord,
@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier]
+    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
     /// </summary>
     public partial interface IAPlacedTrap :
         IAPlacedTrapGetter,
@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier]
+    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
     /// </summary>
     public partial interface IAPlacedTrapGetter :
         ISkyrimMajorRecordGetter,
@@ -1761,7 +1761,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.PBEA,
                 RecordTypes.PFLA,
                 RecordTypes.PCON,
-                RecordTypes.PBAR);
+                RecordTypes.PBAR,
+                RecordTypes.PGRE,
+                RecordTypes.PHZD,
+                RecordTypes.PMIS);
         });
         public static readonly Type BinaryWriteTranslation = typeof(APlacedTrapBinaryWriteTranslation);
         #region Interface
