@@ -2,7 +2,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>Mutagen</Company>
@@ -25,18 +24,6 @@
     <DebugType>embedded</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Environments\GameEnvironmentBuilder.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
-    <Compile Include="Environments\OutputModTrimming.cs" />
-    <Compile Include="Plugins\Records\Internals\GameCategoryExt.cs" />
-    <Compile Include="Plugins\Records\ProtocolDefinition_All.cs" />
-    <Compile Include="Plugins\Utility\GameEnvironmentMixIn_Generated.cs" />
-    <Compile Include="Plugins\WarmupAll_Generated.cs" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.16.0" />
     <PackageReference Include="GitInfo" Version="2.2.0">

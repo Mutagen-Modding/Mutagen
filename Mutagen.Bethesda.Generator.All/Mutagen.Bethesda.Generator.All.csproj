@@ -1,13 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
 	<TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <WarningsAsErrors></WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,18 +13,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.39.0.1-dev" />
-    <PackageReference Include="Loqui.Generation" Version="2.39.0.1-dev" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.39.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-  </ItemGroup>		
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj" />
   </ItemGroup>
 
 </Project>
