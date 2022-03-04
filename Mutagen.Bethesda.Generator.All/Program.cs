@@ -100,20 +100,6 @@ namespace Mutagen.Bethesda.Generation
             bethesdaProto.AddProjectToModify(
                 new FileInfo(Path.Combine(bethesdaProto.GenerationFolder.FullName, "../../Mutagen.Bethesda.Core.csproj")));
 
-            if (ShouldRun("All"))
-            {
-                var proto = gen.AddProtocol(
-                new ProtocolGeneration(
-                    gen,
-                    new ProtocolKey("All"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda/Plugins/Records"))
-                {
-                    DefaultNamespace = "Mutagen.Bethesda",
-                });
-                proto.AddProjectToModify(
-                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../../Mutagen.Bethesda.csproj")));
-            }
-
             if (ShouldRun("Oblivion"))
             {
                 adder.Add(gen, "Oblivion");
