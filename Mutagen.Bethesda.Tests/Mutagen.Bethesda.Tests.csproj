@@ -32,8 +32,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Testing\Mutagen.Bethesda.Testing.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

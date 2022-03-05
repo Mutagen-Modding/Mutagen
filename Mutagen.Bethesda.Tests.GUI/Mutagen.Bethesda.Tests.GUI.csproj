@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -31,10 +31,7 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Fallout4\Mutagen.Bethesda.Fallout4.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Tests\Mutagen.Bethesda.Tests.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
 
   <Target Name="SetVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" Condition="'$(ExcludeRestorePackageImports)' != 'true'">
