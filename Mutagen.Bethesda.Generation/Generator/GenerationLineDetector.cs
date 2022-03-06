@@ -1,5 +1,7 @@
 using Loqui;
 using System.Reactive.Linq;
+using DynamicData;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation.Generator;
 
@@ -9,20 +11,23 @@ public class GenerationLineDetector
 
     public GenerationLineDetector(GenerationLineDetectionSettingsReader settings)
     {
-        var lines = settings.ReadLinesToDetect().ToList();
-        if (lines.Count == 0)
-        {
-            LineDetected = Observable.Empty<string>();
-            return;
-        }
+        var lines = settings.Lines.QueryWhenChanged(q => q)
+            .Replay(1)
+            .RefCount();
         LineDetected = FileGeneration.LineAppended
+            .WithLatestFrom(
+                lines,
+                (Line, Lines) => (Line, Lines))
             .Where(i =>
             {
-                foreach (var line in lines)
+                foreach (var line in i.Lines)
                 {
-                    if (i.Contains(line)) return true;
+                    if (i.Line.Contains(line)) return true;
                 }
+
                 return false;
-            });
+            })
+            .Select(x => x.Line)
+            .FlowSwitch(lines.Select(x => x.Count > 0));
     }
 }
