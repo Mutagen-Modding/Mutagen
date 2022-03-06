@@ -1972,13 +1972,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 switch (header.TypeInt)
                                 {
-                                    case 0x54585442: // BTXT
+                                    case RecordTypeInts.BTXT:
                                     {
                                         var ret = BaseLayer.TryCreateFromBinary(r, out var tmplistSubItem, translationParams);
                                         listSubItem = tmplistSubItem;
                                         return ret;
                                     }
-                                    case 0x54585441: // ATXT
+                                    case RecordTypeInts.ATXT:
                                     {
                                         var ret = AlphaLayer.TryCreateFromBinary(r, out var tmplistSubItem, translationParams);
                                         listSubItem = tmplistSubItem;
@@ -2173,9 +2173,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             switch (r.TypeInt)
                             {
-                                case 0x54585442: // BTXT
+                                case RecordTypeInts.BTXT:
                                     return BaseLayerBinaryOverlay.BaseLayerFactory(s, p);
-                                case 0x54585441: // ATXT
+                                case RecordTypeInts.ATXT:
                                     return AlphaLayerBinaryOverlay.AlphaLayerFactory(s, p);
                                 default:
                                     throw new NotImplementedException();

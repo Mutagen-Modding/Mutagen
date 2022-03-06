@@ -1612,13 +1612,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 switch (header.TypeInt)
                                 {
-                                    case 0x56524353: // SCRV
+                                    case RecordTypeInts.SCRV:
                                     {
                                         var ret = ScriptVariableReference.TryCreateFromBinary(r, out var tmplistSubItem, translationParams);
                                         listSubItem = tmplistSubItem;
                                         return ret;
                                     }
-                                    case 0x4F524353: // SCRO
+                                    case RecordTypeInts.SCRO:
                                     {
                                         var ret = ScriptObjectReference.TryCreateFromBinary(r, out var tmplistSubItem, translationParams);
                                         listSubItem = tmplistSubItem;
@@ -1827,9 +1827,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             switch (r.TypeInt)
                             {
-                                case 0x56524353: // SCRV
+                                case RecordTypeInts.SCRV:
                                     return ScriptVariableReferenceBinaryOverlay.ScriptVariableReferenceFactory(s, p);
-                                case 0x4F524353: // SCRO
+                                case RecordTypeInts.SCRO:
                                     return ScriptObjectReferenceBinaryOverlay.ScriptObjectReferenceFactory(s, p);
                                 default:
                                     throw new NotImplementedException();
