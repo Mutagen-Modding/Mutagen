@@ -87,16 +87,21 @@ public class MasterReferenceCollection : IMasterReferenceCollection
     /// <inheritdoc />
     public void SetTo(IEnumerable<IMasterReferenceGetter> masters)
     {
+        // ToDo
+        // Throw exceptions early before making modifications to members
+        
         Masters = masters.ToList();
         _masterIndices.Clear();
+
+        const byte max = 0xFE;
 
         byte index = 0;
         foreach (var master in Masters)
         {
             var modKey = master.Master;
-            if (index >= 0xFE)
+            if (index >= max)
             {
-                throw new ArgumentException($"{CurrentMod} has too many masters on masters list");
+                throw new ArgumentException($"{CurrentMod} has too many masters on masters list. {Masters.Count} >= {max}.");
             }
             if (modKey == CurrentMod)
             {
