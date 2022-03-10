@@ -87,16 +87,21 @@ namespace Mutagen.Bethesda.Plugins.Masters
         /// <inheritdoc />
         public void SetTo(IEnumerable<IMasterReferenceGetter> masters)
         {
+            // ToDo
+            // Throw exceptions early before making modifications to members
+            
             this.Masters = new List<IMasterReferenceGetter>(masters);
             this._masterIndices.Clear();
+
+            const byte max = 0xFE;
 
             byte index = 0;
             foreach (var master in masters)
             {
                 var modKey = master.Master;
-                if (index >= 0xFE)
+                if (index >= max)
                 {
-                    throw new ArgumentException($"{CurrentMod} has too many masters on masters list");
+                    throw new ArgumentException($"{CurrentMod} has too many masters on masters list. {Masters.Count} >= {max}.");
                 }
                 if (modKey == this.CurrentMod)
                 {
