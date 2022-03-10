@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Noggog;
 
@@ -8,14 +9,14 @@ namespace Mutagen.Bethesda.Installs
     {
         private static GetResponse<object> GetObjectFromRegistry(RegistryKey key, string valueName)
         {
-#if _WIN64
-            var value = key.GetValue(valueName);
-            return value == null 
-                ? GetResponse<object>.Fail($"RegistryKey {key} does not have value {valueName}!") 
-                : GetResponse<object>.Succeed(value);
-#else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var value = key.GetValue(valueName);
+                return value == null 
+                    ? GetResponse<object>.Fail($"RegistryKey {key} does not have value {valueName}!") 
+                    : GetResponse<object>.Succeed(value);
+            }
             throw new NotImplementedException();
-#endif
         }
         
         internal static GetResponse<string> GetStringValueFromRegistry(RegistryKey key, string valueName)
