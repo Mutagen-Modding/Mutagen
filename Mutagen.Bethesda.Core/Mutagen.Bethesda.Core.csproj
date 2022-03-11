@@ -153,6 +153,7 @@
     </Compile>
     <Compile Include="Plugins\Analysis\RecordLocatorResults.cs" />
     <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
+    <Compile Include="Plugins\Binary\Overlay\BinaryOverlayArray2d.cs" />
     <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
     <Compile Include="Plugins\Binary\Parameters\FormIDUniquenessOption.cs" />
@@ -169,6 +170,11 @@
     <Compile Include="Plugins\Binary\Processing\ModGroupMerger.cs" />
     <Compile Include="Plugins\Binary\Processing\ModTrimmer.cs" />
     <Compile Include="Plugins\Binary\Streams\EncodingBundle.cs" />
+    <Compile Include="Plugins\Binary\Translations\Array2dBinaryTranslation.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />
     <Compile Include="Plugins\Binary\Translations\TypedParseParams.cs" />
     <Compile Include="Plugins\Binary\Translations\TypedWriteParams.cs" />
@@ -521,6 +527,11 @@
     <Compile Include="Translations\Binary\P3Int16BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\P3IntBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\P3UInt16BinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\P3UInt8BinaryTranslation.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Translations\Binary\PrimitiveBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\TypicalBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\UInt16BinaryTranslation.cs" />

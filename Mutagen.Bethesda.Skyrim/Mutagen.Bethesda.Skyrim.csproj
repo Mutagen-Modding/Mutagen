@@ -128,6 +128,9 @@
     <Compile Include="Records\Common Subrecords\WaterReflection.cs">
       <DependentUpon>WaterReflection.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Landscape.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\SkyrimGroupWrapper.cs">
       <DependentUpon>SkyrimGroup.xml</DependentUpon>
     </Compile>
@@ -2082,6 +2085,9 @@
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
+    <Compile Include="Records\Major Records\VertexHeightMap_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
