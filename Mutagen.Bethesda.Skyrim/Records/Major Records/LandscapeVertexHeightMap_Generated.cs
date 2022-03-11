@@ -35,13 +35,13 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class VertexHeightMap :
-        IEquatable<IVertexHeightMapGetter>,
-        ILoquiObjectSetter<VertexHeightMap>,
-        IVertexHeightMap
+    public partial class LandscapeVertexHeightMap :
+        IEquatable<ILandscapeVertexHeightMapGetter>,
+        ILandscapeVertexHeightMap,
+        ILoquiObjectSetter<LandscapeVertexHeightMap>
     {
         #region Ctor
-        public VertexHeightMap()
+        public LandscapeVertexHeightMap()
         {
             CustomCtor();
         }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyArray2d<Byte> IVertexHeightMapGetter.HeightMap => _HeightMap;
+        IReadOnlyArray2d<Byte> ILandscapeVertexHeightMapGetter.HeightMap => _HeightMap;
         #endregion
 
         #endregion
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            VertexHeightMapMixIn.ToString(
+            LandscapeVertexHeightMapMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -85,16 +85,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IVertexHeightMapGetter rhs) return false;
-            return ((VertexHeightMapCommon)((IVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not ILandscapeVertexHeightMapGetter rhs) return false;
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IVertexHeightMapGetter? obj)
+        public bool Equals(ILandscapeVertexHeightMapGetter? obj)
         {
-            return ((VertexHeightMapCommon)((IVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((VertexHeightMapCommon)((IVertexHeightMapGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new VertexHeightMap.Mask<R>();
+                var ret = new LandscapeVertexHeightMap.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -236,16 +236,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(VertexHeightMap.Mask<bool>? printMask = null)
+            public string ToString(LandscapeVertexHeightMap.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, VertexHeightMap.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, LandscapeVertexHeightMap.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(VertexHeightMap.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(LandscapeVertexHeightMap.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -313,14 +313,14 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                VertexHeightMap_FieldIndex enu = (VertexHeightMap_FieldIndex)index;
+                LandscapeVertexHeightMap_FieldIndex enu = (LandscapeVertexHeightMap_FieldIndex)index;
                 switch (enu)
                 {
-                    case VertexHeightMap_FieldIndex.Offset:
+                    case LandscapeVertexHeightMap_FieldIndex.Offset:
                         return Offset;
-                    case VertexHeightMap_FieldIndex.HeightMap:
+                    case LandscapeVertexHeightMap_FieldIndex.HeightMap:
                         return HeightMap;
-                    case VertexHeightMap_FieldIndex.Unknown:
+                    case LandscapeVertexHeightMap_FieldIndex.Unknown:
                         return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -329,16 +329,16 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                VertexHeightMap_FieldIndex enu = (VertexHeightMap_FieldIndex)index;
+                LandscapeVertexHeightMap_FieldIndex enu = (LandscapeVertexHeightMap_FieldIndex)index;
                 switch (enu)
                 {
-                    case VertexHeightMap_FieldIndex.Offset:
+                    case LandscapeVertexHeightMap_FieldIndex.Offset:
                         this.Offset = ex;
                         break;
-                    case VertexHeightMap_FieldIndex.HeightMap:
+                    case LandscapeVertexHeightMap_FieldIndex.HeightMap:
                         this.HeightMap = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
                         break;
-                    case VertexHeightMap_FieldIndex.Unknown:
+                    case LandscapeVertexHeightMap_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
                     default:
@@ -348,16 +348,16 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                VertexHeightMap_FieldIndex enu = (VertexHeightMap_FieldIndex)index;
+                LandscapeVertexHeightMap_FieldIndex enu = (LandscapeVertexHeightMap_FieldIndex)index;
                 switch (enu)
                 {
-                    case VertexHeightMap_FieldIndex.Offset:
+                    case LandscapeVertexHeightMap_FieldIndex.Offset:
                         this.Offset = (Exception?)obj;
                         break;
-                    case VertexHeightMap_FieldIndex.HeightMap:
+                    case LandscapeVertexHeightMap_FieldIndex.HeightMap:
                         this.HeightMap = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
                         break;
-                    case VertexHeightMap_FieldIndex.Unknown:
+                    case LandscapeVertexHeightMap_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
                     default:
@@ -507,30 +507,30 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = VertexHeightMap_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = LandscapeVertexHeightMap_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => VertexHeightMapBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LandscapeVertexHeightMapBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((VertexHeightMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LandscapeVertexHeightMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static VertexHeightMap CreateFromBinary(
+        public static LandscapeVertexHeightMap CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new VertexHeightMap();
-            ((VertexHeightMapSetterCommon)((IVertexHeightMapGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new LandscapeVertexHeightMap();
+            ((LandscapeVertexHeightMapSetterCommon)((ILandscapeVertexHeightMapGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out VertexHeightMap item,
+            out LandscapeVertexHeightMap item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -556,31 +556,31 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((VertexHeightMapSetterCommon)((IVertexHeightMapGetter)this).CommonSetterInstance()!).Clear(this);
+            ((LandscapeVertexHeightMapSetterCommon)((ILandscapeVertexHeightMapGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static VertexHeightMap GetNew()
+        internal static LandscapeVertexHeightMap GetNew()
         {
-            return new VertexHeightMap();
+            return new LandscapeVertexHeightMap();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IVertexHeightMap :
-        ILoquiObjectSetter<IVertexHeightMap>,
-        IVertexHeightMapGetter
+    public partial interface ILandscapeVertexHeightMap :
+        ILandscapeVertexHeightMapGetter,
+        ILoquiObjectSetter<ILandscapeVertexHeightMap>
     {
         new Single Offset { get; set; }
         new IArray2d<Byte> HeightMap { get; }
         new P3UInt8 Unknown { get; set; }
     }
 
-    public partial interface IVertexHeightMapGetter :
+    public partial interface ILandscapeVertexHeightMapGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IVertexHeightMapGetter>
+        ILoquiObject<ILandscapeVertexHeightMapGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => VertexHeightMap_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LandscapeVertexHeightMap_Registration.Instance;
         Single Offset { get; }
         IReadOnlyArray2d<Byte> HeightMap { get; }
         P3UInt8 Unknown { get; }
@@ -598,42 +598,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class VertexHeightMapMixIn
+    public static partial class LandscapeVertexHeightMapMixIn
     {
-        public static void Clear(this IVertexHeightMap item)
+        public static void Clear(this ILandscapeVertexHeightMap item)
         {
-            ((VertexHeightMapSetterCommon)((IVertexHeightMapGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((LandscapeVertexHeightMapSetterCommon)((ILandscapeVertexHeightMapGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static VertexHeightMap.Mask<bool> GetEqualsMask(
-            this IVertexHeightMapGetter item,
-            IVertexHeightMapGetter rhs,
+        public static LandscapeVertexHeightMap.Mask<bool> GetEqualsMask(
+            this ILandscapeVertexHeightMapGetter item,
+            ILandscapeVertexHeightMapGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((VertexHeightMapCommon)((IVertexHeightMapGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IVertexHeightMapGetter item,
+            this ILandscapeVertexHeightMapGetter item,
             string? name = null,
-            VertexHeightMap.Mask<bool>? printMask = null)
+            LandscapeVertexHeightMap.Mask<bool>? printMask = null)
         {
-            return ((VertexHeightMapCommon)((IVertexHeightMapGetter)item).CommonInstance()!).ToString(
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IVertexHeightMapGetter item,
+            this ILandscapeVertexHeightMapGetter item,
             FileGeneration fg,
             string? name = null,
-            VertexHeightMap.Mask<bool>? printMask = null)
+            LandscapeVertexHeightMap.Mask<bool>? printMask = null)
         {
-            ((VertexHeightMapCommon)((IVertexHeightMapGetter)item).CommonInstance()!).ToString(
+            ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -641,21 +641,21 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals(
-            this IVertexHeightMapGetter item,
-            IVertexHeightMapGetter rhs,
-            VertexHeightMap.TranslationMask? equalsMask = null)
+            this ILandscapeVertexHeightMapGetter item,
+            ILandscapeVertexHeightMapGetter rhs,
+            LandscapeVertexHeightMap.TranslationMask? equalsMask = null)
         {
-            return ((VertexHeightMapCommon)((IVertexHeightMapGetter)item).CommonInstance()!).Equals(
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IVertexHeightMap lhs,
-            IVertexHeightMapGetter rhs)
+            this ILandscapeVertexHeightMap lhs,
+            ILandscapeVertexHeightMapGetter rhs)
         {
-            ((VertexHeightMapSetterTranslationCommon)((IVertexHeightMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LandscapeVertexHeightMapSetterTranslationCommon)((ILandscapeVertexHeightMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -664,11 +664,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IVertexHeightMap lhs,
-            IVertexHeightMapGetter rhs,
-            VertexHeightMap.TranslationMask? copyMask = null)
+            this ILandscapeVertexHeightMap lhs,
+            ILandscapeVertexHeightMapGetter rhs,
+            LandscapeVertexHeightMap.TranslationMask? copyMask = null)
         {
-            ((VertexHeightMapSetterTranslationCommon)((IVertexHeightMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LandscapeVertexHeightMapSetterTranslationCommon)((ILandscapeVertexHeightMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -677,28 +677,28 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IVertexHeightMap lhs,
-            IVertexHeightMapGetter rhs,
-            out VertexHeightMap.ErrorMask errorMask,
-            VertexHeightMap.TranslationMask? copyMask = null)
+            this ILandscapeVertexHeightMap lhs,
+            ILandscapeVertexHeightMapGetter rhs,
+            out LandscapeVertexHeightMap.ErrorMask errorMask,
+            LandscapeVertexHeightMap.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((VertexHeightMapSetterTranslationCommon)((IVertexHeightMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LandscapeVertexHeightMapSetterTranslationCommon)((ILandscapeVertexHeightMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = VertexHeightMap.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LandscapeVertexHeightMap.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IVertexHeightMap lhs,
-            IVertexHeightMapGetter rhs,
+            this ILandscapeVertexHeightMap lhs,
+            ILandscapeVertexHeightMapGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((VertexHeightMapSetterTranslationCommon)((IVertexHeightMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LandscapeVertexHeightMapSetterTranslationCommon)((ILandscapeVertexHeightMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -706,32 +706,32 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static VertexHeightMap DeepCopy(
-            this IVertexHeightMapGetter item,
-            VertexHeightMap.TranslationMask? copyMask = null)
+        public static LandscapeVertexHeightMap DeepCopy(
+            this ILandscapeVertexHeightMapGetter item,
+            LandscapeVertexHeightMap.TranslationMask? copyMask = null)
         {
-            return ((VertexHeightMapSetterTranslationCommon)((IVertexHeightMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LandscapeVertexHeightMapSetterTranslationCommon)((ILandscapeVertexHeightMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static VertexHeightMap DeepCopy(
-            this IVertexHeightMapGetter item,
-            out VertexHeightMap.ErrorMask errorMask,
-            VertexHeightMap.TranslationMask? copyMask = null)
+        public static LandscapeVertexHeightMap DeepCopy(
+            this ILandscapeVertexHeightMapGetter item,
+            out LandscapeVertexHeightMap.ErrorMask errorMask,
+            LandscapeVertexHeightMap.TranslationMask? copyMask = null)
         {
-            return ((VertexHeightMapSetterTranslationCommon)((IVertexHeightMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LandscapeVertexHeightMapSetterTranslationCommon)((ILandscapeVertexHeightMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static VertexHeightMap DeepCopy(
-            this IVertexHeightMapGetter item,
+        public static LandscapeVertexHeightMap DeepCopy(
+            this ILandscapeVertexHeightMapGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((VertexHeightMapSetterTranslationCommon)((IVertexHeightMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LandscapeVertexHeightMapSetterTranslationCommon)((ILandscapeVertexHeightMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -739,11 +739,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IVertexHeightMap item,
+            this ILandscapeVertexHeightMap item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((VertexHeightMapSetterCommon)((IVertexHeightMapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((LandscapeVertexHeightMapSetterCommon)((ILandscapeVertexHeightMapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -759,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum VertexHeightMap_FieldIndex
+    public enum LandscapeVertexHeightMap_FieldIndex
     {
         Offset = 0,
         HeightMap = 1,
@@ -768,9 +768,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class VertexHeightMap_Registration : ILoquiRegistration
+    public partial class LandscapeVertexHeightMap_Registration : ILoquiRegistration
     {
-        public static readonly VertexHeightMap_Registration Instance = new VertexHeightMap_Registration();
+        public static readonly LandscapeVertexHeightMap_Registration Instance = new LandscapeVertexHeightMap_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
@@ -785,23 +785,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(VertexHeightMap.Mask<>);
+        public static readonly Type MaskType = typeof(LandscapeVertexHeightMap.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(VertexHeightMap.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LandscapeVertexHeightMap.ErrorMask);
 
-        public static readonly Type ClassType = typeof(VertexHeightMap);
+        public static readonly Type ClassType = typeof(LandscapeVertexHeightMap);
 
-        public static readonly Type GetterType = typeof(IVertexHeightMapGetter);
+        public static readonly Type GetterType = typeof(ILandscapeVertexHeightMapGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IVertexHeightMap);
+        public static readonly Type SetterType = typeof(ILandscapeVertexHeightMap);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.VertexHeightMap";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.LandscapeVertexHeightMap";
 
-        public const string Name = "VertexHeightMap";
+        public const string Name = "LandscapeVertexHeightMap";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.VHGT;
-        public static readonly Type BinaryWriteTranslation = typeof(VertexHeightMapBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(LandscapeVertexHeightMapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -843,13 +843,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class VertexHeightMapSetterCommon
+    public partial class LandscapeVertexHeightMapSetterCommon
     {
-        public static readonly VertexHeightMapSetterCommon Instance = new VertexHeightMapSetterCommon();
+        public static readonly LandscapeVertexHeightMapSetterCommon Instance = new LandscapeVertexHeightMapSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IVertexHeightMap item)
+        public void Clear(ILandscapeVertexHeightMap item)
         {
             ClearPartial();
             item.Offset = default;
@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public void RemapLinks(IVertexHeightMap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ILandscapeVertexHeightMap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IVertexHeightMap item,
+            ILandscapeVertexHeightMap item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -878,23 +878,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: VertexHeightMapBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: LandscapeVertexHeightMapBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class VertexHeightMapCommon
+    public partial class LandscapeVertexHeightMapCommon
     {
-        public static readonly VertexHeightMapCommon Instance = new VertexHeightMapCommon();
+        public static readonly LandscapeVertexHeightMapCommon Instance = new LandscapeVertexHeightMapCommon();
 
-        public VertexHeightMap.Mask<bool> GetEqualsMask(
-            IVertexHeightMapGetter item,
-            IVertexHeightMapGetter rhs,
+        public LandscapeVertexHeightMap.Mask<bool> GetEqualsMask(
+            ILandscapeVertexHeightMapGetter item,
+            ILandscapeVertexHeightMapGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new VertexHeightMap.Mask<bool>(false);
-            ((VertexHeightMapCommon)((IVertexHeightMapGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new LandscapeVertexHeightMap.Mask<bool>(false);
+            ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -903,9 +903,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IVertexHeightMapGetter item,
-            IVertexHeightMapGetter rhs,
-            VertexHeightMap.Mask<bool> ret,
+            ILandscapeVertexHeightMapGetter item,
+            ILandscapeVertexHeightMapGetter rhs,
+            LandscapeVertexHeightMap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -918,9 +918,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IVertexHeightMapGetter item,
+            ILandscapeVertexHeightMapGetter item,
             string? name = null,
-            VertexHeightMap.Mask<bool>? printMask = null)
+            LandscapeVertexHeightMap.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -932,18 +932,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IVertexHeightMapGetter item,
+            ILandscapeVertexHeightMapGetter item,
             FileGeneration fg,
             string? name = null,
-            VertexHeightMap.Mask<bool>? printMask = null)
+            LandscapeVertexHeightMap.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"VertexHeightMap =>");
+                fg.AppendLine($"LandscapeVertexHeightMap =>");
             }
             else
             {
-                fg.AppendLine($"{name} (VertexHeightMap) =>");
+                fg.AppendLine($"{name} (LandscapeVertexHeightMap) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -957,9 +957,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IVertexHeightMapGetter item,
+            ILandscapeVertexHeightMapGetter item,
             FileGeneration fg,
-            VertexHeightMap.Mask<bool>? printMask = null)
+            LandscapeVertexHeightMap.Mask<bool>? printMask = null)
         {
             if (printMask?.Offset ?? true)
             {
@@ -991,27 +991,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IVertexHeightMapGetter? lhs,
-            IVertexHeightMapGetter? rhs,
+            ILandscapeVertexHeightMapGetter? lhs,
+            ILandscapeVertexHeightMapGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)VertexHeightMap_FieldIndex.Offset) ?? true))
+            if ((crystal?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Offset) ?? true))
             {
                 if (!lhs.Offset.EqualsWithin(rhs.Offset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VertexHeightMap_FieldIndex.HeightMap) ?? true))
+            if ((crystal?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.HeightMap) ?? true))
             {
                 if (!lhs.HeightMap.SequenceEqualNullable(rhs.HeightMap)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VertexHeightMap_FieldIndex.Unknown) ?? true))
+            if ((crystal?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Unknown) ?? true))
             {
                 if (!lhs.Unknown.Equals(rhs.Unknown)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IVertexHeightMapGetter item)
+        public virtual int GetHashCode(ILandscapeVertexHeightMapGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Offset);
@@ -1025,11 +1025,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public object GetNew()
         {
-            return VertexHeightMap.GetNew();
+            return LandscapeVertexHeightMap.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IVertexHeightMapGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILandscapeVertexHeightMapGetter obj)
         {
             yield break;
         }
@@ -1037,25 +1037,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VertexHeightMapSetterTranslationCommon
+    public partial class LandscapeVertexHeightMapSetterTranslationCommon
     {
-        public static readonly VertexHeightMapSetterTranslationCommon Instance = new VertexHeightMapSetterTranslationCommon();
+        public static readonly LandscapeVertexHeightMapSetterTranslationCommon Instance = new LandscapeVertexHeightMapSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IVertexHeightMap item,
-            IVertexHeightMapGetter rhs,
+            ILandscapeVertexHeightMap item,
+            ILandscapeVertexHeightMapGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)VertexHeightMap_FieldIndex.Offset) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Offset) ?? true))
             {
                 item.Offset = rhs.Offset;
             }
-            if ((copyMask?.GetShouldTranslate((int)VertexHeightMap_FieldIndex.HeightMap) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.HeightMap) ?? true))
             {
-                errorMask?.PushIndex((int)VertexHeightMap_FieldIndex.HeightMap);
+                errorMask?.PushIndex((int)LandscapeVertexHeightMap_FieldIndex.HeightMap);
                 try
                 {
                     item.HeightMap.SetTo(rhs.HeightMap);
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)VertexHeightMap_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
             }
@@ -1078,12 +1078,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public VertexHeightMap DeepCopy(
-            IVertexHeightMapGetter item,
-            VertexHeightMap.TranslationMask? copyMask = null)
+        public LandscapeVertexHeightMap DeepCopy(
+            ILandscapeVertexHeightMapGetter item,
+            LandscapeVertexHeightMap.TranslationMask? copyMask = null)
         {
-            VertexHeightMap ret = (VertexHeightMap)((VertexHeightMapCommon)((IVertexHeightMapGetter)item).CommonInstance()!).GetNew();
-            ((VertexHeightMapSetterTranslationCommon)((IVertexHeightMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LandscapeVertexHeightMap ret = (LandscapeVertexHeightMap)((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)item).CommonInstance()!).GetNew();
+            ((LandscapeVertexHeightMapSetterTranslationCommon)((ILandscapeVertexHeightMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1092,30 +1092,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public VertexHeightMap DeepCopy(
-            IVertexHeightMapGetter item,
-            out VertexHeightMap.ErrorMask errorMask,
-            VertexHeightMap.TranslationMask? copyMask = null)
+        public LandscapeVertexHeightMap DeepCopy(
+            ILandscapeVertexHeightMapGetter item,
+            out LandscapeVertexHeightMap.ErrorMask errorMask,
+            LandscapeVertexHeightMap.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            VertexHeightMap ret = (VertexHeightMap)((VertexHeightMapCommon)((IVertexHeightMapGetter)item).CommonInstance()!).GetNew();
-            ((VertexHeightMapSetterTranslationCommon)((IVertexHeightMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LandscapeVertexHeightMap ret = (LandscapeVertexHeightMap)((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)item).CommonInstance()!).GetNew();
+            ((LandscapeVertexHeightMapSetterTranslationCommon)((ILandscapeVertexHeightMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = VertexHeightMap.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LandscapeVertexHeightMap.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public VertexHeightMap DeepCopy(
-            IVertexHeightMapGetter item,
+        public LandscapeVertexHeightMap DeepCopy(
+            ILandscapeVertexHeightMapGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            VertexHeightMap ret = (VertexHeightMap)((VertexHeightMapCommon)((IVertexHeightMapGetter)item).CommonInstance()!).GetNew();
-            ((VertexHeightMapSetterTranslationCommon)((IVertexHeightMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LandscapeVertexHeightMap ret = (LandscapeVertexHeightMap)((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)item).CommonInstance()!).GetNew();
+            ((LandscapeVertexHeightMapSetterTranslationCommon)((ILandscapeVertexHeightMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1131,27 +1131,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class VertexHeightMap
+    public partial class LandscapeVertexHeightMap
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => VertexHeightMap_Registration.Instance;
-        public static VertexHeightMap_Registration StaticRegistration => VertexHeightMap_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LandscapeVertexHeightMap_Registration.Instance;
+        public static LandscapeVertexHeightMap_Registration StaticRegistration => LandscapeVertexHeightMap_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => VertexHeightMapCommon.Instance;
+        protected object CommonInstance() => LandscapeVertexHeightMapCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return VertexHeightMapSetterCommon.Instance;
+            return LandscapeVertexHeightMapSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => VertexHeightMapSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LandscapeVertexHeightMapSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IVertexHeightMapGetter.CommonInstance() => this.CommonInstance();
+        object ILandscapeVertexHeightMapGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IVertexHeightMapGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILandscapeVertexHeightMapGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IVertexHeightMapGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILandscapeVertexHeightMapGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1162,12 +1162,12 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class VertexHeightMapBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class LandscapeVertexHeightMapBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static VertexHeightMapBinaryWriteTranslation Instance = new VertexHeightMapBinaryWriteTranslation();
+        public readonly static LandscapeVertexHeightMapBinaryWriteTranslation Instance = new LandscapeVertexHeightMapBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IVertexHeightMapGetter item,
+            ILandscapeVertexHeightMapGetter item,
             MutagenWriter writer)
         {
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             MutagenWriter writer,
-            IVertexHeightMapGetter item,
+            ILandscapeVertexHeightMapGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Subrecord(
@@ -1205,19 +1205,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IVertexHeightMapGetter)item,
+                item: (ILandscapeVertexHeightMapGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class VertexHeightMapBinaryCreateTranslation
+    public partial class LandscapeVertexHeightMapBinaryCreateTranslation
     {
-        public readonly static VertexHeightMapBinaryCreateTranslation Instance = new VertexHeightMapBinaryCreateTranslation();
+        public readonly static LandscapeVertexHeightMapBinaryCreateTranslation Instance = new LandscapeVertexHeightMapBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IVertexHeightMap item,
+            ILandscapeVertexHeightMap item,
             MutagenFrame frame)
         {
             item.Offset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
@@ -1235,14 +1235,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class VertexHeightMapBinaryTranslationMixIn
+    public static class LandscapeVertexHeightMapBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IVertexHeightMapGetter item,
+            this ILandscapeVertexHeightMapGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((VertexHeightMapBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((LandscapeVertexHeightMapBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1255,38 +1255,38 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class VertexHeightMapBinaryOverlay :
+    public partial class LandscapeVertexHeightMapBinaryOverlay :
         PluginBinaryOverlay,
-        IVertexHeightMapGetter
+        ILandscapeVertexHeightMapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => VertexHeightMap_Registration.Instance;
-        public static VertexHeightMap_Registration StaticRegistration => VertexHeightMap_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LandscapeVertexHeightMap_Registration.Instance;
+        public static LandscapeVertexHeightMap_Registration StaticRegistration => LandscapeVertexHeightMap_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => VertexHeightMapCommon.Instance;
+        protected object CommonInstance() => LandscapeVertexHeightMapCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => VertexHeightMapSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LandscapeVertexHeightMapSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IVertexHeightMapGetter.CommonInstance() => this.CommonInstance();
+        object ILandscapeVertexHeightMapGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IVertexHeightMapGetter.CommonSetterInstance() => null;
+        object? ILandscapeVertexHeightMapGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IVertexHeightMapGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILandscapeVertexHeightMapGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => VertexHeightMapBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LandscapeVertexHeightMapBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((VertexHeightMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LandscapeVertexHeightMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1308,7 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected VertexHeightMapBinaryOverlay(
+        protected LandscapeVertexHeightMapBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1318,12 +1318,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static VertexHeightMapBinaryOverlay VertexHeightMapFactory(
+        public static LandscapeVertexHeightMapBinaryOverlay LandscapeVertexHeightMapFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new VertexHeightMapBinaryOverlay(
+            var ret = new LandscapeVertexHeightMapBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
@@ -1336,12 +1336,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static VertexHeightMapBinaryOverlay VertexHeightMapFactory(
+        public static LandscapeVertexHeightMapBinaryOverlay LandscapeVertexHeightMapFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return VertexHeightMapFactory(
+            return LandscapeVertexHeightMapFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            VertexHeightMapMixIn.ToString(
+            LandscapeVertexHeightMapMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1363,16 +1363,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IVertexHeightMapGetter rhs) return false;
-            return ((VertexHeightMapCommon)((IVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not ILandscapeVertexHeightMapGetter rhs) return false;
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IVertexHeightMapGetter? obj)
+        public bool Equals(ILandscapeVertexHeightMapGetter? obj)
         {
-            return ((VertexHeightMapCommon)((IVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((VertexHeightMapCommon)((IVertexHeightMapGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -2085,7 +2085,10 @@
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
-    <Compile Include="Records\Major Records\VertexHeightMap_Generated.cs">
+    <Compile Include="Records\Major Records\CellMaxHeightData_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LandscapeVertexHeightMap_Generated.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
   </ItemGroup>
