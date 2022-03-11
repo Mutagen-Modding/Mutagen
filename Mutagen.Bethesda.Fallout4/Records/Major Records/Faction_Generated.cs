@@ -559,9 +559,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<MaskItemIndexed<R, Relation.Mask<R>?>>();
                         obj.Relations.Specific = l;
-                        foreach (var item in Relations.Specific.WithIndex())
+                        foreach (var item in Relations.Specific)
                         {
-                            MaskItemIndexed<R, Relation.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Relation.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Relation.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Relation.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -582,9 +582,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<MaskItemIndexed<R, Rank.Mask<R>?>>();
                         obj.Ranks.Specific = l;
-                        foreach (var item in Ranks.Specific.WithIndex())
+                        foreach (var item in Ranks.Specific)
                         {
-                            MaskItemIndexed<R, Rank.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Rank.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Rank.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Rank.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -601,9 +601,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

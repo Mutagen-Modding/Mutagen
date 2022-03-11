@@ -305,9 +305,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.PrimaryAttributes.Specific = l;
-                        foreach (var item in PrimaryAttributes.Specific.WithIndex())
+                        foreach (var item in PrimaryAttributes.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -320,9 +320,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.SecondaryAttributes.Specific = l;
-                        foreach (var item in SecondaryAttributes.Specific.WithIndex())
+                        foreach (var item in SecondaryAttributes.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

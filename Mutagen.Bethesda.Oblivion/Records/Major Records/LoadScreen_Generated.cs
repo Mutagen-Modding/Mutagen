@@ -233,9 +233,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>>();
                         obj.Locations.Specific = l;
-                        foreach (var item in Locations.Specific.WithIndex())
+                        foreach (var item in Locations.Specific)
                         {
-                            MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

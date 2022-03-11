@@ -267,9 +267,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>>();
                         obj.MapInfos.Specific = l;
-                        foreach (var item in MapInfos.Specific.WithIndex())
+                        foreach (var item in MapInfos.Specific)
                         {
-                            MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

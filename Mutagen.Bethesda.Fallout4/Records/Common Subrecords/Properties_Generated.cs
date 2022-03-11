@@ -190,9 +190,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.PropertyList.Specific = l;
-                        foreach (var item in PropertyList.Specific.WithIndex())
+                        foreach (var item in PropertyList.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

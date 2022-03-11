@@ -1307,9 +1307,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.CloudTextures.Specific = l;
-                        foreach (var item in CloudTextures.Specific.WithIndex())
+                        foreach (var item in CloudTextures.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1329,9 +1329,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, CloudLayer.Mask<R>?>>();
                         obj.Clouds.Specific = l;
-                        foreach (var item in Clouds.Specific.WithIndex())
+                        foreach (var item in Clouds.Specific)
                         {
-                            MaskItemIndexed<R, CloudLayer.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, CloudLayer.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, CloudLayer.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, CloudLayer.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1385,9 +1385,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, WeatherSound.Mask<R>?>>();
                         obj.Sounds.Specific = l;
-                        foreach (var item in Sounds.Specific.WithIndex())
+                        foreach (var item in Sounds.Specific)
                         {
-                            MaskItemIndexed<R, WeatherSound.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherSound.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WeatherSound.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WeatherSound.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1400,9 +1400,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.SkyStatics.Specific = l;
-                        foreach (var item in SkyStatics.Specific.WithIndex())
+                        foreach (var item in SkyStatics.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

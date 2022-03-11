@@ -394,9 +394,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectStructInfo.Mask<R>?>>();
                         obj.StructInfos.Specific = l;
-                        foreach (var item in StructInfos.Specific.WithIndex())
+                        foreach (var item in StructInfos.Specific)
                         {
-                            MaskItemIndexed<R, PexObjectStructInfo.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PexObjectStructInfo.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PexObjectStructInfo.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PexObjectStructInfo.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -409,9 +409,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectVariable.Mask<R>?>>();
                         obj.Variables.Specific = l;
-                        foreach (var item in Variables.Specific.WithIndex())
+                        foreach (var item in Variables.Specific)
                         {
-                            MaskItemIndexed<R, PexObjectVariable.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PexObjectVariable.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PexObjectVariable.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PexObjectVariable.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -424,9 +424,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectProperty.Mask<R>?>>();
                         obj.Properties.Specific = l;
-                        foreach (var item in Properties.Specific.WithIndex())
+                        foreach (var item in Properties.Specific)
                         {
-                            MaskItemIndexed<R, PexObjectProperty.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PexObjectProperty.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PexObjectProperty.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PexObjectProperty.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -439,9 +439,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectState.Mask<R>?>>();
                         obj.States.Specific = l;
-                        foreach (var item in States.Specific.WithIndex())
+                        foreach (var item in States.Specific)
                         {
-                            MaskItemIndexed<R, PexObjectState.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PexObjectState.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PexObjectState.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PexObjectState.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

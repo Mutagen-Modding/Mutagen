@@ -238,9 +238,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Types.Specific = l;
-                        foreach (var item in Types.Specific.WithIndex())
+                        foreach (var item in Types.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

@@ -262,9 +262,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Triangles.Specific = l;
-                        foreach (var item in Triangles.Specific.WithIndex())
+                        foreach (var item in Triangles.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -276,9 +276,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Vertices.Specific = l;
-                        foreach (var item in Vertices.Specific.WithIndex())
+                        foreach (var item in Vertices.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

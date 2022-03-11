@@ -327,9 +327,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, BaseLayer.Mask<R>?>>();
                         obj.Layers.Specific = l;
-                        foreach (var item in Layers.Specific.WithIndex())
+                        foreach (var item in Layers.Specific)
                         {
-                            MaskItemIndexed<R, BaseLayer.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, BaseLayer.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, BaseLayer.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, BaseLayer.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -342,9 +342,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Textures.Specific = l;
-                        foreach (var item in Textures.Specific.WithIndex())
+                        foreach (var item in Textures.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

@@ -205,9 +205,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.DamageTypes.Specific = l;
-                        foreach (var item in DamageTypes.Specific.WithIndex())
+                        foreach (var item in DamageTypes.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

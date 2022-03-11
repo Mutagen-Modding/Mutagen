@@ -338,9 +338,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, PexObject.Mask<R>?>>();
                         obj.Objects.Specific = l;
-                        foreach (var item in Objects.Specific.WithIndex())
+                        foreach (var item in Objects.Specific)
                         {
-                            MaskItemIndexed<R, PexObject.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PexObject.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PexObject.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PexObject.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -353,9 +353,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.UserFlags.Specific = l;
-                        foreach (var item in UserFlags.Specific.WithIndex())
+                        foreach (var item in UserFlags.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

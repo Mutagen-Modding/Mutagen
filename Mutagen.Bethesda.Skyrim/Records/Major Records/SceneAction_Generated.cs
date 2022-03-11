@@ -452,9 +452,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Packages.Specific = l;
-                        foreach (var item in Packages.Specific.WithIndex())
+                        foreach (var item in Packages.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

@@ -210,9 +210,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.RegionPointListData.Specific = l;
-                        foreach (var item in RegionPointListData.Specific.WithIndex())
+                        foreach (var item in RegionPointListData.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

@@ -450,9 +450,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, HeadPartReference.Mask<R>?>>();
                         obj.HeadParts.Specific = l;
-                        foreach (var item in HeadParts.Specific.WithIndex())
+                        foreach (var item in HeadParts.Specific)
                         {
-                            MaskItemIndexed<R, HeadPartReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, HeadPartReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, HeadPartReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, HeadPartReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -466,9 +466,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.RacePresets.Specific = l;
-                        foreach (var item in RacePresets.Specific.WithIndex())
+                        foreach (var item in RacePresets.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -480,9 +480,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.AvailableHairColors.Specific = l;
-                        foreach (var item in AvailableHairColors.Specific.WithIndex())
+                        foreach (var item in AvailableHairColors.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -494,9 +494,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.FaceDetails.Specific = l;
-                        foreach (var item in FaceDetails.Specific.WithIndex())
+                        foreach (var item in FaceDetails.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -509,9 +509,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, TintAssets.Mask<R>?>>();
                         obj.TintMasks.Specific = l;
-                        foreach (var item in TintMasks.Specific.WithIndex())
+                        foreach (var item in TintMasks.Specific)
                         {
-                            MaskItemIndexed<R, TintAssets.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, TintAssets.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, TintAssets.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, TintAssets.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

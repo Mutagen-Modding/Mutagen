@@ -202,9 +202,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, NpcSoundType.Mask<R>?>>();
                         obj.Types.Specific = l;
-                        foreach (var item in Types.Specific.WithIndex())
+                        foreach (var item in Types.Specific)
                         {
-                            MaskItemIndexed<R, NpcSoundType.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, NpcSoundType.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, NpcSoundType.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NpcSoundType.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

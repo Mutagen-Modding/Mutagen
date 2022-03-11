@@ -216,9 +216,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Coordinates.Specific = l;
-                        foreach (var item in Coordinates.Specific.WithIndex())
+                        foreach (var item in Coordinates.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

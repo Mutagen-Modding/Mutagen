@@ -394,9 +394,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, WeatherColors.Mask<R>?>>();
                         obj.Colors.Specific = l;
-                        foreach (var item in Colors.Specific.WithIndex())
+                        foreach (var item in Colors.Specific)
                         {
-                            MaskItemIndexed<R, WeatherColors.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherColors.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WeatherColors.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WeatherColors.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -412,9 +412,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, WeatherSound.Mask<R>?>>();
                         obj.Sounds.Specific = l;
-                        foreach (var item in Sounds.Specific.WithIndex())
+                        foreach (var item in Sounds.Specific)
                         {
-                            MaskItemIndexed<R, WeatherSound.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherSound.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WeatherSound.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WeatherSound.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

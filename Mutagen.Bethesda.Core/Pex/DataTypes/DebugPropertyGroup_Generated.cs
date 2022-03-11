@@ -205,9 +205,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.PropertyNames.Specific = l;
-                        foreach (var item in PropertyNames.Specific.WithIndex())
+                        foreach (var item in PropertyNames.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

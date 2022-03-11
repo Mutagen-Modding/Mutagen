@@ -382,9 +382,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -397,9 +397,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, QuestStage.Mask<R>?>>();
                         obj.Stages.Specific = l;
-                        foreach (var item in Stages.Specific.WithIndex())
+                        foreach (var item in Stages.Specific)
                         {
-                            MaskItemIndexed<R, QuestStage.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, QuestStage.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, QuestStage.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, QuestStage.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -412,9 +412,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, QuestTarget.Mask<R>?>>();
                         obj.Targets.Specific = l;
-                        foreach (var item in Targets.Specific.WithIndex())
+                        foreach (var item in Targets.Specific)
                         {
-                            MaskItemIndexed<R, QuestTarget.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, QuestTarget.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, QuestTarget.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, QuestTarget.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

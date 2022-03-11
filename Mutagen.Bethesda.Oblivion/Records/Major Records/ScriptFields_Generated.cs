@@ -291,9 +291,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, LocalVariable.Mask<R>?>>();
                         obj.LocalVariables.Specific = l;
-                        foreach (var item in LocalVariables.Specific.WithIndex())
+                        foreach (var item in LocalVariables.Specific)
                         {
-                            MaskItemIndexed<R, LocalVariable.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocalVariable.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocalVariable.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocalVariable.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -306,9 +306,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, AScriptReference.Mask<R>?>>();
                         obj.References.Specific = l;
-                        foreach (var item in References.Specific.WithIndex())
+                        foreach (var item in References.Specific)
                         {
-                            MaskItemIndexed<R, AScriptReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, AScriptReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, AScriptReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AScriptReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

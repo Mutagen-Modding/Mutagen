@@ -901,9 +901,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Regions.Specific = l;
-                        foreach (var item in Regions.Specific.WithIndex())
+                        foreach (var item in Regions.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -929,9 +929,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ANavigationMesh.Mask<R>?>>();
                         obj.NavigationMeshes.Specific = l;
-                        foreach (var item in NavigationMeshes.Specific.WithIndex())
+                        foreach (var item in NavigationMeshes.Specific)
                         {
-                            MaskItemIndexed<R, ANavigationMesh.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ANavigationMesh.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ANavigationMesh.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ANavigationMesh.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
                         obj.Persistent.Specific = l;
-                        foreach (var item in Persistent.Specific.WithIndex())
+                        foreach (var item in Persistent.Specific)
                         {
                             MaskItemIndexed<R, IMask<R>?>? mask;
                             throw new NotImplementedException();
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
                         obj.Temporary.Specific = l;
-                        foreach (var item in Temporary.Specific.WithIndex())
+                        foreach (var item in Temporary.Specific)
                         {
                             MaskItemIndexed<R, IMask<R>?>? mask;
                             throw new NotImplementedException();
