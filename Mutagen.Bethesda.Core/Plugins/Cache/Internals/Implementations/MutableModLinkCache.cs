@@ -22,6 +22,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         where TModGetter : class, IContextGetterMod<TMod, TModGetter>
     {
         private readonly TModGetter _sourceMod;
+        private bool _disposed;
 
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> ListedOrder { get; }
@@ -44,10 +45,20 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             };
         }
 
+        private void CheckDisposal()
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException($"MutableModLinkCache<{typeof(TMod)}, {typeof(TModGetter)}>");
+            }
+        }
+
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
+            
             if (formKey.IsNull)
             {
                 majorRec = default;
@@ -82,6 +93,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
+            CheckDisposal();
+            
             if (editorId.IsNullOrWhitespace())
             {
                 majorRec = default;
@@ -109,6 +122,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
+            
             if (formKey.IsNull)
             {
                 majorRec = default;
@@ -144,6 +159,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolve<TMajor>(string editorId, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
+            
             if (editorId.IsNullOrWhitespace())
             {
                 majorRec = default;
@@ -171,6 +188,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
+            
             if (formKey.IsNull)
             {
                 majorRec = default;
@@ -205,6 +224,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
+            CheckDisposal();
+            
             if (editorId.IsNullOrWhitespace())
             {
                 majorRec = default;
@@ -277,6 +298,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
+            
             if (formKey.IsNull)
             {
                 majorRec = default;
@@ -311,6 +334,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolveContext(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec)
         {
+            CheckDisposal();
+            
             if (editorId.IsNullOrWhitespace())
             {
                 majorRec = default;
@@ -339,6 +364,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             where TMajor : class, IMajorRecord, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter
         {
+            CheckDisposal();
+            
             if (formKey.IsNull)
             {
                 majorRec = default;
@@ -375,6 +402,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             where TMajor : class, IMajorRecord, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter
         {
+            CheckDisposal();
+            
             if (editorId.IsNullOrWhitespace())
             {
                 majorRec = default;
@@ -402,6 +431,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
+            
             if (formKey.IsNull)
             {
                 majorRec = default;
@@ -436,6 +467,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public bool TryResolveContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec)
         {
+            CheckDisposal();
+            
             if (editorId.IsNullOrWhitespace())
             {
                 majorRec = default;
@@ -568,6 +601,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveSimpleContext<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
+            
             if (formKey.IsNull)
             {
                 majorRec = default;
@@ -602,6 +637,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public bool TryResolveSimpleContext<TMajor>(string editorId, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec) where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
+            
             if (editorId.IsNullOrWhitespace())
             {
                 majorRec = default;
@@ -947,6 +984,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         internal IEnumerable<IMajorRecordIdentifier> AllIdentifiersNoUniqueness(Type type, CancellationToken? cancel)
         {
+            CheckDisposal();
+            
             return _sourceMod.EnumerateMajorRecords(type);
         }
 
@@ -973,22 +1012,27 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public void Dispose()
         {
+            _disposed = true;
         }
 
         public void Warmup(Type type)
         {
+            CheckDisposal();
         }
 
         public void Warmup<TMajor>()
         {
+            CheckDisposal();
         }
 
         public void Warmup(params Type[] types)
         {
+            CheckDisposal();
         }
 
         public void Warmup(IEnumerable<Type> types)
         {
+            CheckDisposal();
         }
     }
 }

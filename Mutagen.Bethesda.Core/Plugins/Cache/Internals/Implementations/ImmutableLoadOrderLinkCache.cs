@@ -30,6 +30,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         private readonly IImmutableLoadOrderLinkCacheSimpleContextCategory<string> _editorIdContexts;
         private readonly IReadOnlyDictionary<ModKey, ILinkCache> _modsByKey;
         private readonly bool _hasAny;
+        private bool _disposed;
 
         public ImmutableLoadOrderLinkCache(
             IEnumerable<IModGetter> loadOrder, 
@@ -89,18 +90,29 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
 
         public void Dispose()
         {
+            _disposed = true;
             _cache.Dispose();
+        }
+
+        private void CheckDisposal()
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(nameof(ImmutableLoadOrderLinkCache));
+            }
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(FormKey formKey, out string? editorId, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(formKey, out editorId, target);
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(string editorId, out FormKey formKey)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(editorId, out formKey);
         }
 
@@ -108,12 +120,14 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveIdentifier(FormKey formKey, Type type, out string? editorId,
             ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(formKey, type, out editorId, target);
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(string editorId, Type type, out FormKey formKey)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(editorId, type, out formKey);
         }
 
@@ -121,6 +135,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveIdentifier<TMajor>(FormKey formKey, out string? editorId, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier<TMajor>(formKey, out editorId, target);
         }
 
@@ -128,18 +143,21 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveIdentifier<TMajor>(string editorId, out FormKey formKey) 
             where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier<TMajor>(editorId, out formKey);
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(FormKey formKey, out string? editorId, params Type[] types)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(formKey, out editorId, types);
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(string editorId, out FormKey formKey, params Type[] types)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(editorId, out formKey, types);
         }
 
@@ -147,36 +165,42 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, out string? editorId,
             ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(formKey, types, out editorId, target);
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, out FormKey formKey)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(editorId, types, out formKey);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
         {
+            CheckDisposal();
             return _cache.AllIdentifiers(type, cancel);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null) where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.AllIdentifiers<TMajor>(cancel);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
         {
+            CheckDisposal();
             return _cache.AllIdentifiers(types, cancel);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
         {
+            CheckDisposal();
             return _cache.AllIdentifiers(types);
         }
 
@@ -184,6 +208,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolve(formKey, out majorRec, target);
         }
 
@@ -191,6 +216,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
+            CheckDisposal();
             return _cache.TryResolve(editorId, out majorRec);
         }
 
@@ -198,6 +224,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec, ResolveTarget target = ResolveTarget.Winner) 
             where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.TryResolve<TMajor>(formKey, out majorRec, target);
         }
 
@@ -205,6 +232,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolve<TMajor>(string editorId, [MaybeNullWhen(false)] out TMajor majorRec) 
             where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.TryResolve<TMajor>(editorId, out majorRec);
         }
 
@@ -212,24 +240,28 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec,
             ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolve(formKey, type, out majorRec, target);
         }
 
         /// <inheritdoc />
         public bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
+            CheckDisposal();
             return _cache.TryResolve(editorId, type, out majorRec);
         }
 
         /// <inheritdoc />
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
         {
+            CheckDisposal();
             return _cache.TryResolve(formKey, out majorRec, types);
         }
 
         /// <inheritdoc />
         public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
         {
+            CheckDisposal();
             return _cache.TryResolve(editorId, out majorRec, types);
         }
 
@@ -237,12 +269,14 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec,
             ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolve(formKey, types, out majorRec, target);
         }
 
         /// <inheritdoc />
         public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
+            CheckDisposal();
             return _cache.TryResolve(editorId, types, out majorRec);
         }
 
@@ -250,6 +284,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public IMajorRecordGetter Resolve(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.Resolve(formKey, target);
         }
 
@@ -257,66 +292,77 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public IMajorRecordGetter Resolve(string editorId)
         {
+            CheckDisposal();
             return _cache.Resolve(editorId);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.Resolve(formKey, type, target);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(string editorId, Type type)
         {
+            CheckDisposal();
             return _cache.Resolve(editorId, type);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(FormKey formKey, params Type[] types)
         {
+            CheckDisposal();
             return _cache.Resolve(formKey, types);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(string editorId, params Type[] types)
         {
+            CheckDisposal();
             return _cache.Resolve(editorId, types);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(FormKey formKey, IEnumerable<Type> types, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.Resolve(formKey, types, target);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(string editorId, IEnumerable<Type> types)
         {
+            CheckDisposal();
             return _cache.Resolve(editorId, types);
         }
 
         /// <inheritdoc />
         public TMajor Resolve<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.Resolve<TMajor>(formKey, target);
         }
 
         /// <inheritdoc />
         public TMajor Resolve<TMajor>(string editorId) where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.Resolve<TMajor>(editorId);
         }
 
         /// <inheritdoc />
         public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.ResolveAll<TMajor>(formKey, target);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordGetter> ResolveAll(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.ResolveAll(formKey, type, target);
         }
 
@@ -324,6 +370,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public IEnumerable<IMajorRecordGetter> ResolveAll(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.ResolveAll(formKey, target);
         }
 
@@ -331,6 +378,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolveSimpleContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
+            
             if (target == ResolveTarget.Origin)
             {
                 if (!_modsByKey.TryGetValue(formKey.ModKey, out var origMod))
@@ -348,6 +397,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public bool TryResolveSimpleContext(string editorId, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec)
         {
+            CheckDisposal();
+            
             if (!_hasAny || string.IsNullOrWhiteSpace(editorId))
             {
                 majorRec = default;
@@ -361,6 +412,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveSimpleContext<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec,
             ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
+            
             if (!TryResolveSimpleContext(formKey, typeof(TMajor), out var commonRec, target)
                 || !(commonRec.Record is TMajor))
             {
@@ -375,6 +428,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public bool TryResolveSimpleContext<TMajor>(string editorId, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec) where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
+            
             if (!TryResolveSimpleContext(editorId, typeof(TMajor), out var commonRec)
                 || !(commonRec.Record is TMajor))
             {
@@ -390,6 +445,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveSimpleContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec,
             ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
+            
             if (target == ResolveTarget.Origin)
             {
                 if (!_modsByKey.TryGetValue(formKey.ModKey, out var origMod))
@@ -407,6 +464,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public bool TryResolveSimpleContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec)
         {
+            CheckDisposal();
+            
             if (!_hasAny || string.IsNullOrWhiteSpace(editorId))
             {
                 majorRec = default;
@@ -470,6 +529,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
+            
             // Break early if no content
             if (!_hasAny || formKey.IsNull)
             {
@@ -496,32 +557,50 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public void Warmup(Type type)
         {
+            CheckDisposal();
             _cache.Warmup(type);
         }
 
         /// <inheritdoc />
         public void Warmup<TMajor>()
         {
+            CheckDisposal();
             _cache.Warmup<TMajor>();
         }
 
         /// <inheritdoc />
         public void Warmup(params Type[] types)
         {
+            CheckDisposal();
             _cache.Warmup(types);
         }
 
         /// <inheritdoc />
         public void Warmup(IEnumerable<Type> types)
         {
+            CheckDisposal();
             _cache.Warmup(types);
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<IModGetter> ListedOrder => _cache.ListedOrder;
+        public IReadOnlyList<IModGetter> ListedOrder
+        {
+            get
+            {
+                CheckDisposal();
+                return _cache.ListedOrder;
+            }
+        }
 
         /// <inheritdoc />
-        public IReadOnlyList<IModGetter> PriorityOrder => _cache.PriorityOrder;
+        public IReadOnlyList<IModGetter> PriorityOrder
+        {
+            get
+            {
+                CheckDisposal();
+                return _cache.PriorityOrder;
+            }
+        }
     }
 
     /// <summary>
@@ -550,6 +629,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         private readonly IImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, string> _editorIdContextCache;
 
         private readonly IReadOnlyDictionary<ModKey, ILinkCache<TMod, TModGetter>> _modsByKey;
+        private bool _disposed;
 
         /// <summary>
         /// Constructs a LoadOrderLinkCache around a target load order
@@ -610,20 +690,31 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             _modsByKey = modsByKey;
         }
 
+        private void CheckDisposal()
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException($"{nameof(ImmutableLoadOrderLinkCache)}<{typeof(TMod)}, {typeof(TModGetter)}>");
+            }
+        }
+
         public void Dispose()
         {
+            _disposed = true;
             _cache.Dispose();
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(FormKey formKey, out string? editorId, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(formKey, out editorId, target);
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(string editorId, out FormKey formKey)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(editorId, out formKey);
         }
 
@@ -631,12 +722,14 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveIdentifier(FormKey formKey, Type type, out string? editorId,
             ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(formKey, type, out editorId, target);
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(string editorId, Type type, out FormKey formKey)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(editorId, type, out formKey);
         }
 
@@ -644,6 +737,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveIdentifier<TMajor>(FormKey formKey, out string? editorId, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier<TMajor>(formKey, out editorId, target);
         }
 
@@ -651,18 +745,21 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveIdentifier<TMajor>(string editorId, out FormKey formKey) 
             where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier<TMajor>(editorId, out formKey);
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(FormKey formKey, out string? editorId, params Type[] types)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(formKey, out editorId, types);
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(string editorId, out FormKey formKey, params Type[] types)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(editorId, out formKey, types);
         }
 
@@ -670,36 +767,42 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, out string? editorId,
             ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(formKey, types, out editorId, target);
         }
 
         /// <inheritdoc />
         public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, out FormKey formKey)
         {
+            CheckDisposal();
             return _cache.TryResolveIdentifier(editorId, types, out formKey);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
         {
+            CheckDisposal();
             return _cache.AllIdentifiers(type, cancel);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null) where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.AllIdentifiers<TMajor>(cancel);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
         {
+            CheckDisposal();
             return _cache.AllIdentifiers(types, cancel);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
         {
+            CheckDisposal();
             return _cache.AllIdentifiers(types);
         }
 
@@ -707,6 +810,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolve(formKey, out majorRec, target);
         }
 
@@ -714,6 +818,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
+            CheckDisposal();
             return _cache.TryResolve(editorId, out majorRec);
         }
 
@@ -721,6 +826,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec, ResolveTarget target = ResolveTarget.Winner) 
             where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.TryResolve<TMajor>(formKey, out majorRec, target);
         }
 
@@ -728,6 +834,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolve<TMajor>(string editorId, [MaybeNullWhen(false)] out TMajor majorRec) 
             where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.TryResolve<TMajor>(editorId, out majorRec);
         }
 
@@ -735,24 +842,28 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec,
             ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolve(formKey, type, out majorRec, target);
         }
 
         /// <inheritdoc />
         public bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
+            CheckDisposal();
             return _cache.TryResolve(editorId, type, out majorRec);
         }
 
         /// <inheritdoc />
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
         {
+            CheckDisposal();
             return _cache.TryResolve(formKey, out majorRec, types);
         }
 
         /// <inheritdoc />
         public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
         {
+            CheckDisposal();
             return _cache.TryResolve(editorId, out majorRec, types);
         }
 
@@ -760,12 +871,14 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec,
             ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.TryResolve(formKey, types, out majorRec, target);
         }
 
         /// <inheritdoc />
         public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
+            CheckDisposal();
             return _cache.TryResolve(editorId, types, out majorRec);
         }
 
@@ -773,6 +886,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public IMajorRecordGetter Resolve(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.Resolve(formKey, target);
         }
 
@@ -780,66 +894,77 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public IMajorRecordGetter Resolve(string editorId)
         {
+            CheckDisposal();
             return _cache.Resolve(editorId);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.Resolve(formKey, type, target);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(string editorId, Type type)
         {
+            CheckDisposal();
             return _cache.Resolve(editorId, type);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(FormKey formKey, params Type[] types)
         {
+            CheckDisposal();
             return _cache.Resolve(formKey, types);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(string editorId, params Type[] types)
         {
+            CheckDisposal();
             return _cache.Resolve(editorId, types);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(FormKey formKey, IEnumerable<Type> types, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.Resolve(formKey, types, target);
         }
 
         /// <inheritdoc />
         public IMajorRecordGetter Resolve(string editorId, IEnumerable<Type> types)
         {
+            CheckDisposal();
             return _cache.Resolve(editorId, types);
         }
 
         /// <inheritdoc />
         public TMajor Resolve<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.Resolve<TMajor>(formKey, target);
         }
 
         /// <inheritdoc />
         public TMajor Resolve<TMajor>(string editorId) where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.Resolve<TMajor>(editorId);
         }
 
         /// <inheritdoc />
         public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordGetter
         {
+            CheckDisposal();
             return _cache.ResolveAll<TMajor>(formKey, target);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordGetter> ResolveAll(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.ResolveAll(formKey, type, target);
         }
 
@@ -847,6 +972,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public IEnumerable<IMajorRecordGetter> ResolveAll(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
             return _cache.ResolveAll(formKey, target);
         }
 
@@ -990,32 +1116,50 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public void Warmup(Type type)
         {
+            CheckDisposal();
             _cache.Warmup(type);
         }
 
         /// <inheritdoc />
         public void Warmup<TMajor>()
         {
+            CheckDisposal();
             _cache.Warmup<TMajor>();
         }
 
         /// <inheritdoc />
         public void Warmup(params Type[] types)
         {
+            CheckDisposal();
             _cache.Warmup(types);
         }
 
         /// <inheritdoc />
         public void Warmup(IEnumerable<Type> types)
         {
+            CheckDisposal();
             _cache.Warmup(types);
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<IModGetter> ListedOrder => _cache.ListedOrder;
+        public IReadOnlyList<IModGetter> ListedOrder
+        {
+            get
+            {
+                CheckDisposal();
+                return  _cache.ListedOrder;
+            }
+        }
 
         /// <inheritdoc />
-        public IReadOnlyList<IModGetter> PriorityOrder => _cache.PriorityOrder;
+        public IReadOnlyList<IModGetter> PriorityOrder
+        {
+            get
+            {
+                CheckDisposal();
+                return _cache.PriorityOrder;
+            }
+        }
         
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
@@ -1036,6 +1180,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             where TMajor : class, IMajorRecord, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter
         {
+            CheckDisposal();
+            
             if (!TryResolveContext(formKey, typeof(TMajorGetter), out var commonRec, target)
                 || !(commonRec.Record is TMajorGetter))
             {
@@ -1052,6 +1198,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             where TMajor : class, IMajorRecord, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter
         {
+            CheckDisposal();
+            
             if (!TryResolveContext(editorId, typeof(TMajorGetter), out var commonRec)
                 || !(commonRec.Record is TMajorGetter))
             {
@@ -1066,6 +1214,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
+            
             if (target == ResolveTarget.Origin)
             {
                 if (!_modsByKey.TryGetValue(formKey.ModKey, out var origMod))
@@ -1083,6 +1233,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public bool TryResolveContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec)
         {
+            CheckDisposal();
+            
             if (!_hasAny || string.IsNullOrWhiteSpace(editorId))
             {
                 majorRec = default;
@@ -1151,6 +1303,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         /// <inheritdoc />
         public IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> ResolveAllContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
         {
+            CheckDisposal();
+            
             // Break early if no content
             if (!_hasAny || formKey.IsNull)
             {
