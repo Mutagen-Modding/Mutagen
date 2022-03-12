@@ -6,67 +6,68 @@
 using System;
 using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Loqui;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public class LinkInterfaceMapping : ILinkInterfaceMapping
     {
-        public IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes { get; }
+        public IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Oblivion;
 
         public LinkInterfaceMapping()
         {
-            var dict = new Dictionary<Type, Type[]>();
-            dict[typeof(IItem)] = new Type[]
+            var dict = new Dictionary<Type, ILoquiRegistration[]>();
+            dict[typeof(IItem)] = new ILoquiRegistration[]
             {
-                typeof(AlchemicalApparatus),
-                typeof(Ammunition),
-                typeof(Armor),
-                typeof(Book),
-                typeof(Clothing),
-                typeof(Ingredient),
-                typeof(Key),
-                typeof(LeveledItem),
-                typeof(Light),
-                typeof(Miscellaneous),
-                typeof(Potion),
-                typeof(SigilStone),
-                typeof(SoulGem),
-                typeof(Weapon),
+                AlchemicalApparatus_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                Clothing_Registration.Instance,
+                Ingredient_Registration.Instance,
+                Key_Registration.Instance,
+                LeveledItem_Registration.Instance,
+                Light_Registration.Instance,
+                Miscellaneous_Registration.Instance,
+                Potion_Registration.Instance,
+                SigilStone_Registration.Instance,
+                SoulGem_Registration.Instance,
+                Weapon_Registration.Instance,
             };
             dict[typeof(IItemGetter)] = dict[typeof(IItem)];
-            dict[typeof(INpcSpawn)] = new Type[]
+            dict[typeof(INpcSpawn)] = new ILoquiRegistration[]
             {
-                typeof(Creature),
-                typeof(LeveledCreature),
-                typeof(Npc),
+                Creature_Registration.Instance,
+                LeveledCreature_Registration.Instance,
+                Npc_Registration.Instance,
             };
             dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)];
-            dict[typeof(INpcRecord)] = new Type[]
+            dict[typeof(INpcRecord)] = new ILoquiRegistration[]
             {
-                typeof(Creature),
-                typeof(Npc),
+                Creature_Registration.Instance,
+                Npc_Registration.Instance,
             };
             dict[typeof(INpcRecordGetter)] = dict[typeof(INpcRecord)];
-            dict[typeof(IOwner)] = new Type[]
+            dict[typeof(IOwner)] = new ILoquiRegistration[]
             {
-                typeof(Faction),
-                typeof(Npc),
+                Faction_Registration.Instance,
+                Npc_Registration.Instance,
             };
             dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)];
-            dict[typeof(IPlaced)] = new Type[]
+            dict[typeof(IPlaced)] = new ILoquiRegistration[]
             {
-                typeof(Landscape),
-                typeof(PlacedCreature),
-                typeof(PlacedNpc),
-                typeof(PlacedObject),
+                Landscape_Registration.Instance,
+                PlacedCreature_Registration.Instance,
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
             };
             dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)];
-            dict[typeof(ISpellRecord)] = new Type[]
+            dict[typeof(ISpellRecord)] = new ILoquiRegistration[]
             {
-                typeof(LeveledSpell),
-                typeof(Spell),
+                LeveledSpell_Registration.Instance,
+                Spell_Registration.Instance,
             };
             dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)];
             InterfaceToObjectTypes = dict;

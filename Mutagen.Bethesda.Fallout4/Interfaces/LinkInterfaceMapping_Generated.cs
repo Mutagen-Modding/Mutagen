@@ -6,69 +6,70 @@
 using System;
 using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Loqui;
 
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public class LinkInterfaceMapping : ILinkInterfaceMapping
     {
-        public IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes { get; }
+        public IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Fallout4;
 
         public LinkInterfaceMapping()
         {
-            var dict = new Dictionary<Type, Type[]>();
-            dict[typeof(IIdleRelation)] = new Type[]
+            var dict = new Dictionary<Type, ILoquiRegistration[]>();
+            dict[typeof(IIdleRelation)] = new ILoquiRegistration[]
             {
-                typeof(ActionRecord),
+                ActionRecord_Registration.Instance,
             };
             dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)];
-            dict[typeof(IDamageTypeTarget)] = new Type[]
+            dict[typeof(IDamageTypeTarget)] = new ILoquiRegistration[]
             {
-                typeof(ActorValueInformation),
+                ActorValueInformation_Registration.Instance,
             };
             dict[typeof(IDamageTypeTargetGetter)] = dict[typeof(IDamageTypeTarget)];
-            dict[typeof(IObjectId)] = new Type[]
+            dict[typeof(IObjectId)] = new ILoquiRegistration[]
             {
-                typeof(Door),
-                typeof(Faction),
-                typeof(TextureSet),
+                Door_Registration.Instance,
+                Faction_Registration.Instance,
+                TextureSet_Registration.Instance,
             };
             dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)];
-            dict[typeof(ILocationTargetable)] = new Type[]
+            dict[typeof(ILocationTargetable)] = new ILoquiRegistration[]
             {
-                typeof(Door),
+                Door_Registration.Instance,
             };
             dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)];
-            dict[typeof(IOwner)] = new Type[]
+            dict[typeof(IOwner)] = new ILoquiRegistration[]
             {
-                typeof(Faction),
+                Faction_Registration.Instance,
             };
             dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)];
-            dict[typeof(IRelatable)] = new Type[]
+            dict[typeof(IRelatable)] = new ILoquiRegistration[]
             {
-                typeof(Faction),
-                typeof(Race),
+                Faction_Registration.Instance,
+                Race_Registration.Instance,
             };
             dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)];
-            dict[typeof(IKeywordLinkedReference)] = new Type[]
+            dict[typeof(IKeywordLinkedReference)] = new ILoquiRegistration[]
             {
-                typeof(Keyword),
+                Keyword_Registration.Instance,
             };
             dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)];
-            dict[typeof(IRegionTarget)] = new Type[]
+            dict[typeof(IRegionTarget)] = new ILoquiRegistration[]
             {
-                typeof(LandscapeTexture),
+                LandscapeTexture_Registration.Instance,
             };
             dict[typeof(IRegionTargetGetter)] = dict[typeof(IRegionTarget)];
-            dict[typeof(ISpellRecord)] = new Type[]
+            dict[typeof(ISpellRecord)] = new ILoquiRegistration[]
             {
-                typeof(LeveledSpell),
+                LeveledSpell_Registration.Instance,
             };
             dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)];
-            dict[typeof(ILocationRecord)] = new Type[]
+            dict[typeof(ILocationRecord)] = new ILoquiRegistration[]
             {
-                typeof(LocationReferenceType),
+                LocationReferenceType_Registration.Instance,
             };
             dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)];
             InterfaceToObjectTypes = dict;

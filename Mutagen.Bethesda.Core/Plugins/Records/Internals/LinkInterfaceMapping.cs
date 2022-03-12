@@ -3,32 +3,33 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Loqui;
 
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
 public interface ILinkInterfaceMapGetter
 {
-    IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes(GameCategory mode);
+    IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes(GameCategory mode);
     bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type);
 }
 
 public class LinkInterfaceMapper : ILinkInterfaceMapGetter
 {
-    public Dictionary<GameCategory, IReadOnlyDictionary<Type, Type[]>> Mappings = new();
+    public Dictionary<GameCategory, IReadOnlyDictionary<Type, ILoquiRegistration[]>> Mappings = new();
     public Dictionary<string, Type> NameToInterfaceTypeMapping = new();
         
     private LinkInterfaceMapper()
     {
     }
         
-    public IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes(GameCategory mode)
+    public IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes(GameCategory mode)
     {
         if (Mappings.TryGetValue(mode, out var value))
         {
             return value;
         }
 
-        return DictionaryExt.Empty<Type, Type[]>();
+        return DictionaryExt.Empty<Type, ILoquiRegistration[]>();
     }
 
     public bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type)

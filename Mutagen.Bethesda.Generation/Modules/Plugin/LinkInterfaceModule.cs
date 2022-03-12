@@ -2,156 +2,152 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin
-{
-    public class LinkInterfaceModule : GenerationModule
-    {
-        public static Dictionary<ProtocolKey, Dictionary<string, List<ObjectGeneration>>> ObjectMappings = new Dictionary<ProtocolKey, Dictionary<string, List<ObjectGeneration>>>();
+namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
-        public override async Task PreLoad(ObjectGeneration obj)
+public class LinkInterfaceModule : GenerationModule
+{
+    public static Dictionary<ProtocolKey, Dictionary<string, List<ObjectGeneration>>> ObjectMappings = new Dictionary<ProtocolKey, Dictionary<string, List<ObjectGeneration>>>();
+
+    public override async Task PreLoad(ObjectGeneration obj)
+    {
+        await base.PreLoad(obj);
+        foreach (var item in obj.Node.Elements(XName.Get("LinkInterface", LoquiGenerator.Namespace)))
         {
-            await base.PreLoad(obj);
+            obj.Interfaces.Add(LoquiInterfaceDefinitionType.Dual, item.Value);
+        }
+    }
+
+    public override async Task PrepareGeneration(ProtocolGeneration proto)
+    {
+        await base.PrepareGeneration(proto);
+
+        // Compile interfaces implementing interfaces mapping data
+        var interfaceInheritenceMappings = new Dictionary<string, HashSet<string>>();
+
+        foreach (var obj in proto.ObjectGenerationsByID.Values)
+        {
             foreach (var item in obj.Node.Elements(XName.Get("LinkInterface", LoquiGenerator.Namespace)))
             {
-                obj.Interfaces.Add(LoquiInterfaceDefinitionType.Dual, item.Value);
+                ObjectMappings.GetOrAdd(proto.Protocol).GetOrAdd(item.Value).Add(obj);
             }
         }
 
-        public override async Task PrepareGeneration(ProtocolGeneration proto)
+        // Generate interface files themselves
+        if (!ObjectMappings.TryGetValue(proto.Protocol, out var mappings)) return;
+        foreach (var interf in mappings)
         {
-            await base.PrepareGeneration(proto);
+            FileGeneration fg = new FileGeneration();
+            ObjectGeneration.AddAutogenerationComment(fg);
 
-            // Compile interfaces implementing interfaces mapping data
-            var interfaceInheritenceMappings = new Dictionary<string, HashSet<string>>();
+            fg.AppendLine("using Mutagen.Bethesda;");
+            fg.AppendLine();
 
-            foreach (var obj in proto.ObjectGenerationsByID.Values)
+            var implementedObjs = new HashSet<ObjectGeneration>();
+
+            void AddObjs(string interfKey)
             {
-                foreach (var item in obj.Node.Elements(XName.Get("LinkInterface", LoquiGenerator.Namespace)))
+                implementedObjs.Add(ObjectMappings[proto.Protocol][interfKey]);
+                if (interfaceInheritenceMappings.TryGetValue(interfKey, out var parents))
                 {
-                    ObjectMappings.GetOrAdd(proto.Protocol).GetOrAdd(item.Value).Add(obj);
+                    foreach (var parent in parents)
+                    {
+                        AddObjs(parent);
+                    }
                 }
             }
+            AddObjs(interf.Key);
 
-            // Generate interface files themselves
-            if (!ObjectMappings.TryGetValue(proto.Protocol, out var mappings)) return;
-            foreach (var interf in mappings)
+            using (new NamespaceWrapper(fg, proto.DefaultNamespace, fileScoped: false))
             {
-                FileGeneration fg = new FileGeneration();
-                ObjectGeneration.AddAutogenerationComment(fg);
-
-                fg.AppendLine("using Mutagen.Bethesda;");
+                fg.AppendLine("/// <summary>");
+                fg.AppendLine($"/// Implemented by: [{string.Join(", ", implementedObjs.Select(o => o.ObjectName))}]");
+                fg.AppendLine("/// </summary>");
+                using (var c = new ClassWrapper(fg, interf.Key))
+                {
+                    c.Type = ClassWrapper.ObjectType.@interface;
+                    c.Interfaces.Add($"I{proto.Protocol.Namespace}MajorRecordInternal");
+                    c.Interfaces.Add($"{interf.Key}Getter");
+                    if (interfaceInheritenceMappings.TryGetValue(interf.Key, out var impls))
+                    {
+                        c.Interfaces.Add(impls);
+                    }
+                    c.Partial = true;
+                }
+                using (new BraceWrapper(fg))
+                {
+                }
                 fg.AppendLine();
 
-                var implementedObjs = new HashSet<ObjectGeneration>();
-
-                void AddObjs(string interfKey)
+                fg.AppendLine("/// <summary>");
+                fg.AppendLine($"/// Implemented by: [{string.Join(", ", implementedObjs.Select(o => o.ObjectName))}]");
+                fg.AppendLine("/// </summary>");
+                using (var c = new ClassWrapper(fg, $"{interf.Key}Getter"))
                 {
-                    implementedObjs.Add(ObjectMappings[proto.Protocol][interfKey]);
-                    if (interfaceInheritenceMappings.TryGetValue(interfKey, out var parents))
+                    c.Type = ClassWrapper.ObjectType.@interface;
+                    c.Interfaces.Add($"I{proto.Protocol.Namespace}MajorRecordGetter");
+                    if (interfaceInheritenceMappings.TryGetValue(interf.Key, out var impls))
                     {
-                        foreach (var parent in parents)
-                        {
-                            AddObjs(parent);
-                        }
+                        c.Interfaces.Add(impls.Select(i => $"{i}Getter"));
                     }
+                    c.Partial = true;
                 }
-                AddObjs(interf.Key);
-
-                using (new NamespaceWrapper(fg, proto.DefaultNamespace, fileScoped: false))
+                using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine("/// <summary>");
-                    fg.AppendLine($"/// Implemented by: [{string.Join(", ", implementedObjs.Select(o => o.ObjectName))}]");
-                    fg.AppendLine("/// </summary>");
-                    using (var c = new ClassWrapper(fg, interf.Key))
-                    {
-                        c.Type = ClassWrapper.ObjectType.@interface;
-                        c.Interfaces.Add($"I{proto.Protocol.Namespace}MajorRecordInternal");
-                        c.Interfaces.Add($"{interf.Key}Getter");
-                        if (interfaceInheritenceMappings.TryGetValue(interf.Key, out var impls))
-                        {
-                            c.Interfaces.Add(impls);
-                        }
-                        c.Partial = true;
-                    }
-                    using (new BraceWrapper(fg))
-                    {
-                    }
-                    fg.AppendLine();
-
-                    fg.AppendLine("/// <summary>");
-                    fg.AppendLine($"/// Implemented by: [{string.Join(", ", implementedObjs.Select(o => o.ObjectName))}]");
-                    fg.AppendLine("/// </summary>");
-                    using (var c = new ClassWrapper(fg, $"{interf.Key}Getter"))
-                    {
-                        c.Type = ClassWrapper.ObjectType.@interface;
-                        c.Interfaces.Add($"I{proto.Protocol.Namespace}MajorRecordGetter");
-                        if (interfaceInheritenceMappings.TryGetValue(interf.Key, out var impls))
-                        {
-                            c.Interfaces.Add(impls.Select(i => $"{i}Getter"));
-                        }
-                        c.Partial = true;
-                    }
-                    using (new BraceWrapper(fg))
-                    {
-                    }
                 }
-                
-                var path = Path.Combine(proto.DefFileLocation.FullName, $"../Interfaces/{interf.Key}{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
-                fg.Generate(path);
-                proto.GeneratedFiles.Add(path, ProjItemType.Compile);
             }
+                
+            var path = Path.Combine(proto.DefFileLocation.FullName, $"../Interfaces/{interf.Key}{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
+            fg.Generate(path);
+            proto.GeneratedFiles.Add(path, ProjItemType.Compile);
+        }
 
-            // Generate interface to major record mapping registry
-            FileGeneration mappingGen = new FileGeneration();
-            ObjectGeneration.AddAutogenerationComment(mappingGen);
-            mappingGen.AppendLine($"using System;");
-            mappingGen.AppendLine($"using System.Collections.Generic;");
-            mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Internals;");
-            mappingGen.AppendLine();
-            using (new NamespaceWrapper(mappingGen, $"{proto.DefaultNamespace}.Internals", fileScoped: false))
+        // Generate interface to major record mapping registry
+        FileGeneration mappingGen = new FileGeneration();
+        ObjectGeneration.AddAutogenerationComment(mappingGen);
+        mappingGen.AppendLine($"using System;");
+        mappingGen.AppendLine($"using System.Collections.Generic;");
+        mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Internals;");
+        mappingGen.AppendLine($"using Loqui;");
+        mappingGen.AppendLine();
+        using (new NamespaceWrapper(mappingGen, $"{proto.DefaultNamespace}.Internals", fileScoped: false))
+        {
+            using (var c = new ClassWrapper(mappingGen, "LinkInterfaceMapping"))
             {
-                using (var c = new ClassWrapper(mappingGen, "LinkInterfaceMapping"))
-                {
-                    c.Interfaces.Add(nameof(ILinkInterfaceMapping));
-                }
+                c.Interfaces.Add(nameof(ILinkInterfaceMapping));
+            }
+            using (new BraceWrapper(mappingGen))
+            {
+                mappingGen.AppendLine($"public IReadOnlyDictionary<Type, {nameof(ILoquiRegistration)}[]> InterfaceToObjectTypes {{ get; }}");
+                mappingGen.AppendLine();
+                mappingGen.AppendLine($"public {nameof(GameCategory)} GameCategory => {nameof(GameCategory)}.{proto.Protocol.Namespace};");
+                mappingGen.AppendLine();
+
+                mappingGen.AppendLine("public LinkInterfaceMapping()");
                 using (new BraceWrapper(mappingGen))
                 {
-                    mappingGen.AppendLine($"public IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes {{ get; }}");
-                    mappingGen.AppendLine();
-                    mappingGen.AppendLine($"public {nameof(GameCategory)} GameCategory => {nameof(GameCategory)}.{proto.Protocol.Namespace};");
-                    mappingGen.AppendLine();
-
-                    mappingGen.AppendLine("public LinkInterfaceMapping()");
-                    using (new BraceWrapper(mappingGen))
+                    mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(ILoquiRegistration)}[]>();");
+                    foreach (var interf in mappings)
                     {
-                        mappingGen.AppendLine($"var dict = new Dictionary<Type, Type[]>();");
-                        foreach (var interf in mappings)
+                        mappingGen.AppendLine($"dict[typeof({interf.Key})] = new {nameof(ILoquiRegistration)}[]");
+                        using (new BraceWrapper(mappingGen) { AppendSemicolon = true })
                         {
-                            mappingGen.AppendLine($"dict[typeof({interf.Key})] = new Type[]");
-                            using (new BraceWrapper(mappingGen) { AppendSemicolon = true })
+                            foreach (var obj in interf.Value)
                             {
-                                foreach (var obj in interf.Value)
-                                {
-                                    mappingGen.AppendLine($"typeof({obj.ObjectName}),");
-                                }
+                                mappingGen.AppendLine($"{obj.RegistrationName}.Instance,");
                             }
-                            mappingGen.AppendLine($"dict[typeof({interf.Key}Getter)] = dict[typeof({interf.Key})];");
                         }
-
-                        mappingGen.AppendLine($"InterfaceToObjectTypes = dict;");
+                        mappingGen.AppendLine($"dict[typeof({interf.Key}Getter)] = dict[typeof({interf.Key})];");
                     }
+
+                    mappingGen.AppendLine($"InterfaceToObjectTypes = dict;");
                 }
             }
-            mappingGen.AppendLine();
-            var mappingPath = Path.Combine(proto.DefFileLocation.FullName, $"../Interfaces/LinkInterfaceMapping{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
-            mappingGen.Generate(mappingPath);
-            proto.GeneratedFiles.Add(mappingPath, ProjItemType.Compile);
         }
+        mappingGen.AppendLine();
+        var mappingPath = Path.Combine(proto.DefFileLocation.FullName, $"../Interfaces/LinkInterfaceMapping{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
+        mappingGen.Generate(mappingPath);
+        proto.GeneratedFiles.Add(mappingPath, ProjItemType.Compile);
     }
 }

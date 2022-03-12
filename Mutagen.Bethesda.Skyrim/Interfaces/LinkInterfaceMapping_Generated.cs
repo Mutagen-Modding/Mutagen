@@ -6,232 +6,233 @@
 using System;
 using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Loqui;
 
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public class LinkInterfaceMapping : ILinkInterfaceMapping
     {
-        public IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes { get; }
+        public IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Skyrim;
 
         public LinkInterfaceMapping()
         {
-            var dict = new Dictionary<Type, Type[]>();
-            dict[typeof(IIdleRelation)] = new Type[]
+            var dict = new Dictionary<Type, ILoquiRegistration[]>();
+            dict[typeof(IIdleRelation)] = new ILoquiRegistration[]
             {
-                typeof(ActionRecord),
-                typeof(IdleAnimation),
+                ActionRecord_Registration.Instance,
+                IdleAnimation_Registration.Instance,
             };
             dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)];
-            dict[typeof(IObjectId)] = new Type[]
+            dict[typeof(IObjectId)] = new ILoquiRegistration[]
             {
-                typeof(Activator),
-                typeof(Ammunition),
-                typeof(Armor),
-                typeof(Book),
-                typeof(Container),
-                typeof(Door),
-                typeof(Faction),
-                typeof(FormList),
-                typeof(Furniture),
-                typeof(IdleMarker),
-                typeof(Ingestible),
-                typeof(Key),
-                typeof(Light),
-                typeof(MiscItem),
-                typeof(MoveableStatic),
-                typeof(Npc),
-                typeof(Projectile),
-                typeof(Scroll),
-                typeof(Shout),
-                typeof(SoundMarker),
-                typeof(Spell),
-                typeof(Static),
-                typeof(TextureSet),
-                typeof(Weapon),
+                Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                Container_Registration.Instance,
+                Door_Registration.Instance,
+                Faction_Registration.Instance,
+                FormList_Registration.Instance,
+                Furniture_Registration.Instance,
+                IdleMarker_Registration.Instance,
+                Ingestible_Registration.Instance,
+                Key_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                MoveableStatic_Registration.Instance,
+                Npc_Registration.Instance,
+                Projectile_Registration.Instance,
+                Scroll_Registration.Instance,
+                Shout_Registration.Instance,
+                SoundMarker_Registration.Instance,
+                Spell_Registration.Instance,
+                Static_Registration.Instance,
+                TextureSet_Registration.Instance,
+                Weapon_Registration.Instance,
             };
             dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)];
-            dict[typeof(IItem)] = new Type[]
+            dict[typeof(IItem)] = new ILoquiRegistration[]
             {
-                typeof(AlchemicalApparatus),
-                typeof(Ammunition),
-                typeof(Armor),
-                typeof(Book),
-                typeof(Ingestible),
-                typeof(Ingredient),
-                typeof(Key),
-                typeof(LeveledItem),
-                typeof(Light),
-                typeof(MiscItem),
-                typeof(Scroll),
-                typeof(SoulGem),
-                typeof(Weapon),
+                AlchemicalApparatus_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                Ingestible_Registration.Instance,
+                Ingredient_Registration.Instance,
+                Key_Registration.Instance,
+                LeveledItem_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                Scroll_Registration.Instance,
+                SoulGem_Registration.Instance,
+                Weapon_Registration.Instance,
             };
             dict[typeof(IItemGetter)] = dict[typeof(IItem)];
-            dict[typeof(IConstructible)] = new Type[]
+            dict[typeof(IConstructible)] = new ILoquiRegistration[]
             {
-                typeof(AlchemicalApparatus),
-                typeof(Ammunition),
-                typeof(Armor),
-                typeof(Book),
-                typeof(Ingestible),
-                typeof(Ingredient),
-                typeof(Key),
-                typeof(Light),
-                typeof(MiscItem),
-                typeof(Scroll),
-                typeof(SoulGem),
-                typeof(Weapon),
+                AlchemicalApparatus_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                Ingestible_Registration.Instance,
+                Ingredient_Registration.Instance,
+                Key_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                Scroll_Registration.Instance,
+                SoulGem_Registration.Instance,
+                Weapon_Registration.Instance,
             };
             dict[typeof(IConstructibleGetter)] = dict[typeof(IConstructible)];
-            dict[typeof(IOutfitTarget)] = new Type[]
+            dict[typeof(IOutfitTarget)] = new ILoquiRegistration[]
             {
-                typeof(Armor),
-                typeof(LeveledItem),
+                Armor_Registration.Instance,
+                LeveledItem_Registration.Instance,
             };
             dict[typeof(IOutfitTargetGetter)] = dict[typeof(IOutfitTarget)];
-            dict[typeof(IBindableEquipment)] = new Type[]
+            dict[typeof(IBindableEquipment)] = new ILoquiRegistration[]
             {
-                typeof(Armor),
-                typeof(Weapon),
+                Armor_Registration.Instance,
+                Weapon_Registration.Instance,
             };
             dict[typeof(IBindableEquipmentGetter)] = dict[typeof(IBindableEquipment)];
-            dict[typeof(IComplexLocation)] = new Type[]
+            dict[typeof(IComplexLocation)] = new ILoquiRegistration[]
             {
-                typeof(Cell),
-                typeof(Worldspace),
+                Cell_Registration.Instance,
+                Worldspace_Registration.Instance,
             };
             dict[typeof(IComplexLocationGetter)] = dict[typeof(IComplexLocation)];
-            dict[typeof(IDialog)] = new Type[]
+            dict[typeof(IDialog)] = new ILoquiRegistration[]
             {
-                typeof(DialogResponses),
-                typeof(DialogTopic),
+                DialogResponses_Registration.Instance,
+                DialogTopic_Registration.Instance,
             };
             dict[typeof(IDialogGetter)] = dict[typeof(IDialog)];
-            dict[typeof(ILocationTargetable)] = new Type[]
+            dict[typeof(ILocationTargetable)] = new ILoquiRegistration[]
             {
-                typeof(Door),
-                typeof(PlacedNpc),
-                typeof(PlacedObject),
+                Door_Registration.Instance,
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
             };
             dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)];
-            dict[typeof(IOwner)] = new Type[]
+            dict[typeof(IOwner)] = new ILoquiRegistration[]
             {
-                typeof(Faction),
-                typeof(PlacedNpc),
+                Faction_Registration.Instance,
+                PlacedNpc_Registration.Instance,
             };
             dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)];
-            dict[typeof(IRelatable)] = new Type[]
+            dict[typeof(IRelatable)] = new ILoquiRegistration[]
             {
-                typeof(Faction),
-                typeof(Race),
+                Faction_Registration.Instance,
+                Race_Registration.Instance,
             };
             dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)];
-            dict[typeof(IRegionTarget)] = new Type[]
+            dict[typeof(IRegionTarget)] = new ILoquiRegistration[]
             {
-                typeof(Flora),
-                typeof(LandscapeTexture),
-                typeof(MoveableStatic),
-                typeof(Static),
-                typeof(Tree),
+                Flora_Registration.Instance,
+                LandscapeTexture_Registration.Instance,
+                MoveableStatic_Registration.Instance,
+                Static_Registration.Instance,
+                Tree_Registration.Instance,
             };
             dict[typeof(IRegionTargetGetter)] = dict[typeof(IRegionTarget)];
-            dict[typeof(IAliasVoiceType)] = new Type[]
+            dict[typeof(IAliasVoiceType)] = new ILoquiRegistration[]
             {
-                typeof(FormList),
-                typeof(Npc),
+                FormList_Registration.Instance,
+                Npc_Registration.Instance,
             };
             dict[typeof(IAliasVoiceTypeGetter)] = dict[typeof(IAliasVoiceType)];
-            dict[typeof(ILockList)] = new Type[]
+            dict[typeof(ILockList)] = new ILoquiRegistration[]
             {
-                typeof(FormList),
-                typeof(Npc),
+                FormList_Registration.Instance,
+                Npc_Registration.Instance,
             };
             dict[typeof(ILockListGetter)] = dict[typeof(ILockList)];
-            dict[typeof(IPlacedTrapTarget)] = new Type[]
+            dict[typeof(IPlacedTrapTarget)] = new ILoquiRegistration[]
             {
-                typeof(Hazard),
-                typeof(Projectile),
+                Hazard_Registration.Instance,
+                Projectile_Registration.Instance,
             };
             dict[typeof(IPlacedTrapTargetGetter)] = dict[typeof(IPlacedTrapTarget)];
-            dict[typeof(IHarvestTarget)] = new Type[]
+            dict[typeof(IHarvestTarget)] = new ILoquiRegistration[]
             {
-                typeof(Ingestible),
-                typeof(Ingredient),
-                typeof(LeveledItem),
-                typeof(MiscItem),
+                Ingestible_Registration.Instance,
+                Ingredient_Registration.Instance,
+                LeveledItem_Registration.Instance,
+                MiscItem_Registration.Instance,
             };
             dict[typeof(IHarvestTargetGetter)] = dict[typeof(IHarvestTarget)];
-            dict[typeof(IKeywordLinkedReference)] = new Type[]
+            dict[typeof(IKeywordLinkedReference)] = new ILoquiRegistration[]
             {
-                typeof(Keyword),
-                typeof(PlacedNpc),
-                typeof(PlacedObject),
-                typeof(APlacedTrap),
+                Keyword_Registration.Instance,
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
+                APlacedTrap_Registration.Instance,
             };
             dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)];
-            dict[typeof(INpcSpawn)] = new Type[]
+            dict[typeof(INpcSpawn)] = new ILoquiRegistration[]
             {
-                typeof(LeveledNpc),
-                typeof(Npc),
+                LeveledNpc_Registration.Instance,
+                Npc_Registration.Instance,
             };
             dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)];
-            dict[typeof(ISpellRecord)] = new Type[]
+            dict[typeof(ISpellRecord)] = new ILoquiRegistration[]
             {
-                typeof(LeveledSpell),
-                typeof(Shout),
-                typeof(Spell),
+                LeveledSpell_Registration.Instance,
+                Shout_Registration.Instance,
+                Spell_Registration.Instance,
             };
             dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)];
-            dict[typeof(IEmittance)] = new Type[]
+            dict[typeof(IEmittance)] = new ILoquiRegistration[]
             {
-                typeof(Light),
-                typeof(Region),
+                Light_Registration.Instance,
+                Region_Registration.Instance,
             };
             dict[typeof(IEmittanceGetter)] = dict[typeof(IEmittance)];
-            dict[typeof(ILocationRecord)] = new Type[]
+            dict[typeof(ILocationRecord)] = new ILoquiRegistration[]
             {
-                typeof(Location),
-                typeof(LocationReferenceType),
+                Location_Registration.Instance,
+                LocationReferenceType_Registration.Instance,
             };
             dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)];
-            dict[typeof(IEffectRecord)] = new Type[]
+            dict[typeof(IEffectRecord)] = new ILoquiRegistration[]
             {
-                typeof(ObjectEffect),
-                typeof(Spell),
+                ObjectEffect_Registration.Instance,
+                Spell_Registration.Instance,
             };
             dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)];
-            dict[typeof(ILinkedReference)] = new Type[]
+            dict[typeof(ILinkedReference)] = new ILoquiRegistration[]
             {
-                typeof(PlacedNpc),
-                typeof(PlacedObject),
-                typeof(APlacedTrap),
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
+                APlacedTrap_Registration.Instance,
             };
             dict[typeof(ILinkedReferenceGetter)] = dict[typeof(ILinkedReference)];
-            dict[typeof(IPlaced)] = new Type[]
+            dict[typeof(IPlaced)] = new ILoquiRegistration[]
             {
-                typeof(PlacedNpc),
-                typeof(PlacedObject),
-                typeof(APlacedTrap),
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
+                APlacedTrap_Registration.Instance,
             };
             dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)];
-            dict[typeof(IPlacedSimple)] = new Type[]
+            dict[typeof(IPlacedSimple)] = new ILoquiRegistration[]
             {
-                typeof(PlacedNpc),
-                typeof(PlacedObject),
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
             };
             dict[typeof(IPlacedSimpleGetter)] = dict[typeof(IPlacedSimple)];
-            dict[typeof(IPlacedThing)] = new Type[]
+            dict[typeof(IPlacedThing)] = new ILoquiRegistration[]
             {
-                typeof(PlacedObject),
-                typeof(APlacedTrap),
+                PlacedObject_Registration.Instance,
+                APlacedTrap_Registration.Instance,
             };
             dict[typeof(IPlacedThingGetter)] = dict[typeof(IPlacedThing)];
-            dict[typeof(ISound)] = new Type[]
+            dict[typeof(ISound)] = new ILoquiRegistration[]
             {
-                typeof(SoundDescriptor),
-                typeof(SoundMarker),
+                SoundDescriptor_Registration.Instance,
+                SoundMarker_Registration.Instance,
             };
             dict[typeof(ISoundGetter)] = dict[typeof(ISound)];
             InterfaceToObjectTypes = dict;

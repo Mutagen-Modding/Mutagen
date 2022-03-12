@@ -181,11 +181,10 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
                         var majorRecords = new Cache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
-                        foreach (var objType in objs)
+                        foreach (var regis in objs)
                         {
                             majorRecords.Set(
-                                GetContextCache(
-                                    LoquiRegistration.GetRegister(objType).GetterType).Items);
+                                GetContextCache(regis.GetterType).Items);
                         }
                         _contexts[type] = majorRecords;
                         cache = majorRecords;
