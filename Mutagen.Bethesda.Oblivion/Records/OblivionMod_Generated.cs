@@ -7625,60 +7625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield break;
                 case "IItem":
                 {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAlchemicalApparatusGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IClothingGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscellaneousGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IPotionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISigilStoneGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoulGemGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IItem), setter: true))
                     {
                         yield return item;
                     }
@@ -7686,59 +7633,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "IItemGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAlchemicalApparatusGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IClothingGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscellaneousGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IPotionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISigilStoneGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoulGemGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IItemGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -7746,16 +7641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "INpcSpawn":
                 {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledCreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(INpcSpawn), setter: true))
                     {
                         yield return item;
                     }
@@ -7763,15 +7649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "INpcSpawnGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledCreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(INpcSpawnGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -7779,12 +7657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "INpcRecord":
                 {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(INpcRecord), setter: true))
                     {
                         yield return item;
                     }
@@ -7792,11 +7665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "INpcRecordGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(INpcRecordGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -7804,12 +7673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "IOwner":
                 {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IOwner), setter: true))
                     {
                         yield return item;
                     }
@@ -7817,11 +7681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "IOwnerGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IOwnerGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -7829,12 +7689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "IPlaced":
                 {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IPlaced), setter: true))
                     {
                         yield return item;
                     }
@@ -7842,11 +7697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "IPlacedGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IPlacedGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -7854,8 +7705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "ISpellRecord":
                 {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(ISpellRecord), setter: true))
                     {
                         yield return item;
                     }
@@ -7863,7 +7713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "ISpellRecordGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(ISpellRecordGetter), setter: false))
                     {
                         yield return item;
                     }

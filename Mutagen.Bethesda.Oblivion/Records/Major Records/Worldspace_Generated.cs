@@ -2648,44 +2648,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield break;
                 case "IPlaced":
                 {
-                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IPlaced), setter: true))
                     {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IPlacedGetter":
                 {
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IPlacedGetter), setter: false))
                     {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }

@@ -1604,24 +1604,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield break;
                 case "IPlaced":
                 {
-                    if (!CellBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.SubBlocks)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IPlaced), setter: true))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IPlacedGetter":
                 {
-                    foreach (var subItem in obj.SubBlocks)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IPlacedGetter), setter: false))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }

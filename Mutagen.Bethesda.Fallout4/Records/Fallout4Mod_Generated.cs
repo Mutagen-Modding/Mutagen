@@ -3500,8 +3500,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield break;
                 case "IIdleRelation":
                 {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IIdleRelation), setter: true))
                     {
                         yield return item;
                     }
@@ -3509,7 +3508,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "IIdleRelationGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IIdleRelationGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -3517,12 +3516,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "IObjectId":
                 {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IObjectId), setter: true))
                     {
                         yield return item;
                     }
@@ -3530,11 +3524,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "IObjectIdGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IObjectIdGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -3542,8 +3532,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "IOwner":
                 {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IOwner), setter: true))
                     {
                         yield return item;
                     }
@@ -3551,7 +3540,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "IOwnerGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IOwnerGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -3559,8 +3548,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "IRelatable":
                 {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IRelatable), setter: true))
                     {
                         yield return item;
                     }
@@ -3568,7 +3556,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "IRelatableGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IRelatableGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -3576,8 +3564,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "IKeywordLinkedReference":
                 {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IKeywordLinkedReference), setter: true))
                     {
                         yield return item;
                     }
@@ -3585,7 +3572,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "IKeywordLinkedReferenceGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IKeywordLinkedReferenceGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -3593,8 +3580,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "IRegionTarget":
                 {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IRegionTarget), setter: true))
                     {
                         yield return item;
                     }
@@ -3602,7 +3588,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "IRegionTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(IRegionTargetGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -3610,8 +3596,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "ILocationRecord":
                 {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(ILocationRecord), setter: true))
                     {
                         yield return item;
                     }
@@ -3619,7 +3604,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case "ILocationRecordGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Fallout4, obj, typeof(ILocationRecordGetter), setter: false))
                     {
                         yield return item;
                     }

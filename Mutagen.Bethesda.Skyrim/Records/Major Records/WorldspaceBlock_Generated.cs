@@ -1783,185 +1783,129 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 case "IComplexLocation":
                 {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IComplexLocation), setter: true))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IComplexLocationGetter":
                 {
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IComplexLocationGetter), setter: false))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "ILocationTargetable":
                 {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILocationTargetable), setter: true))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "ILocationTargetableGetter":
                 {
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILocationTargetableGetter), setter: false))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IOwner":
                 {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IOwner), setter: true))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IOwnerGetter":
                 {
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IOwnerGetter), setter: false))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IKeywordLinkedReference":
                 {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IKeywordLinkedReference), setter: true))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IKeywordLinkedReferenceGetter":
                 {
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IKeywordLinkedReferenceGetter), setter: false))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "ILinkedReference":
                 {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILinkedReference), setter: true))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "ILinkedReferenceGetter":
                 {
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILinkedReferenceGetter), setter: false))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IPlaced":
                 {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlaced), setter: true))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IPlacedGetter":
                 {
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedGetter), setter: false))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IPlacedSimple":
                 {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedSimple), setter: true))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IPlacedSimpleGetter":
                 {
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedSimpleGetter), setter: false))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IPlacedThing":
                 {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedThing), setter: true))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
                 case "IPlacedThingGetter":
                 {
-                    foreach (var subItem in obj.Items)
+                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedThingGetter), setter: false))
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
                     }
                     yield break;
                 }
