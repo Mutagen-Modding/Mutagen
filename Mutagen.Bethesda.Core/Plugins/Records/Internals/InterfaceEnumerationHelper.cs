@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
 public static class InterfaceEnumerationHelper
 {
-    public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsFor<T>(
+    public static IEnumerable<IMajorRecordGetter> EnumerateLinkRecordsFor<T>(
         GameCategory category,
         T obj, 
         Type linkInterface,

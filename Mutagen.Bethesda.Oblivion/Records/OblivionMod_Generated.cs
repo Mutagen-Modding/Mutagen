@@ -7625,7 +7625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield break;
                 case "IItem":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IItem), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(IItem), setter: true))
                     {
                         yield return item;
                     }
@@ -7633,7 +7633,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "IItemGetter":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IItemGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(IItemGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -7641,7 +7641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "INpcSpawn":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(INpcSpawn), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(INpcSpawn), setter: true))
                     {
                         yield return item;
                     }
@@ -7649,7 +7649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "INpcSpawnGetter":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(INpcSpawnGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(INpcSpawnGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -7657,7 +7657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "INpcRecord":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(INpcRecord), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(INpcRecord), setter: true))
                     {
                         yield return item;
                     }
@@ -7665,7 +7665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "INpcRecordGetter":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(INpcRecordGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(INpcRecordGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -7673,7 +7673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "IOwner":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IOwner), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(IOwner), setter: true))
                     {
                         yield return item;
                     }
@@ -7681,7 +7681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "IOwnerGetter":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IOwnerGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(IOwnerGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -7689,7 +7689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "IPlaced":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IPlaced), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(IPlaced), setter: true))
                     {
                         yield return item;
                     }
@@ -7697,7 +7697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "IPlacedGetter":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IPlacedGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(IPlacedGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -7705,7 +7705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "ISpellRecord":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(ISpellRecord), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(ISpellRecord), setter: true))
                     {
                         yield return item;
                     }
@@ -7713,7 +7713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "ISpellRecordGetter":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(ISpellRecordGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(ISpellRecordGetter), setter: false))
                     {
                         yield return item;
                     }

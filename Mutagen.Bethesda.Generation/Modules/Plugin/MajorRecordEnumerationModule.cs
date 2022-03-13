@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     fg.AppendLine($"case \"{interf.Key}\":");
                                     using (new BraceWrapper(fg))
                                     {
-                                        fg.AppendLine($"foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.{obj.ProtoGen.Protocol.Namespace}, {accessor}, typeof({interf.Key}), setter: true))");
+                                        fg.AppendLine($"foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.{obj.ProtoGen.Protocol.Namespace}, {accessor}, typeof({interf.Key}), setter: true))");
                                         using (new BraceWrapper(fg))
                                         {
                                             fg.AppendLine("yield return item;");
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     fg.AppendLine($"case \"{interf.Key}Getter\":");
                                     using (new BraceWrapper(fg))
                                     {
-                                        fg.AppendLine($"foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.{obj.ProtoGen.Protocol.Namespace}, {accessor}, typeof({interf.Key}Getter), setter: false))");
+                                        fg.AppendLine($"foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.{obj.ProtoGen.Protocol.Namespace}, {accessor}, typeof({interf.Key}Getter), setter: false))");
                                         using (new BraceWrapper(fg))
                                         {
                                             fg.AppendLine("yield return item;");

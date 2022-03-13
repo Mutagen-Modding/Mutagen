@@ -1655,7 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield break;
                 case "IPlaced":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IPlaced), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(IPlaced), setter: true))
                     {
                         yield return item;
                     }
@@ -1663,7 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case "IPlacedGetter":
                 {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Oblivion, obj, typeof(IPlacedGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(IPlacedGetter), setter: false))
                     {
                         yield return item;
                     }
