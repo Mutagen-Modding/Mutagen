@@ -103,6 +103,39 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
+        [MemberData(nameof(ContextTestSources))]
+        public void LocationTargetableInWorldspaceQuerySucceeds(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
+        {
+            var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+            var placed = new PlacedNpc(prototype);
+            prototype.Worldspaces.Add(new Worldspace(prototype)
+            {
+                TopCell = 
+                    new Cell(prototype)
+                    {
+                        Temporary = new ExtendedList<IPlaced>()
+                        {
+                            placed
+                        }
+                    }
+            });
+            using var disp = ConvertMod(prototype, out var mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                package.TryResolve<ILocationTargetableGetter>(placed.FormKey, out var rec2)
+                    .Should().BeTrue();
+                rec2.Should().Be(placed);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                contextRetriever.TryResolveContext<ILocationTargetable, ILocationTargetableGetter>(placed.AsLink(), package, out var rec)
+                    .Should().BeTrue();
+                rec.Record.Should().Be(placed);
+            });
+        }
+
+        [Theory]
         [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
         [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
         public void PlacedInWorldspaceOnlyOverridesPlaced(LinkCachePreferences.RetentionType cacheType)
