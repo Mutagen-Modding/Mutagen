@@ -891,6 +891,7 @@
       <DependentUpon>OblivionGroup.xml</DependentUpon>
     </Compile>
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
+    <Compile Include="Interfaces\AspectInterfaceMapping_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

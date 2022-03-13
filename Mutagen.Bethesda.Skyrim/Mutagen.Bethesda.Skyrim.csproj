@@ -2091,6 +2091,7 @@
     <Compile Include="Records\Major Records\LandscapeVertexHeightMap_Generated.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\AspectInterfaceMapping_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

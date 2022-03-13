@@ -377,7 +377,18 @@
     <Compile Include="Plugins\Records\DI\ModActivator.cs" />
     <Compile Include="Plugins\Records\DI\ModImporter.cs" />
     <Compile Include="Plugins\Records\IFormKeyGetter.cs" />
+    <Compile Include="Plugins\Records\Internals\AspectInterfaceMapping.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Records\Internals\GroupMergeGetter.cs" />
+    <Compile Include="Plugins\Records\Internals\IAspectInterfaceMapping.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Records\Internals\IMetaInterfaceMapGetter.cs" />
     <Compile Include="Plugins\Records\Internals\IModRegistration.cs" />
     <Compile Include="Plugins\Records\Internals\LinkInterfaceEnumerationHelper.cs" />
     <Compile Include="Plugins\RecordTypeMapping\AssociatedRecordTypesAttribute.cs" />

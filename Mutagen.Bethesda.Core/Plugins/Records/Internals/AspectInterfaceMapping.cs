@@ -7,13 +7,13 @@ using Loqui;
 
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
-public interface ILinkInterfaceMapGetter
+public interface IAspectInterfaceMapGetter
 {
     IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes(GameCategory mode);
     bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type);
 }
 
-public class LinkInterfaceMapper : ILinkInterfaceMapGetter
+public class AspectInterfaceMapper : IAspectInterfaceMapGetter
 {
     public Dictionary<GameCategory, IReadOnlyDictionary<Type, ILoquiRegistration[]>> Mappings = new();
     public Dictionary<string, Type> NameToInterfaceTypeMapping = new();
@@ -33,7 +33,7 @@ public class LinkInterfaceMapper : ILinkInterfaceMapGetter
         return NameToInterfaceTypeMapping.TryGetValue(name, out type);
     }
 
-    public void Register(ILinkInterfaceMapping mapping)
+    public void Register(IAspectInterfaceMapping mapping)
     {
         Mappings[mapping.GameCategory] = mapping.InterfaceToObjectTypes;
         foreach (var interf in mapping.InterfaceToObjectTypes.Keys)
@@ -42,41 +42,41 @@ public class LinkInterfaceMapper : ILinkInterfaceMapGetter
         }
     }
 
-    public static LinkInterfaceMapper AutomaticFactory()
+    public static AspectInterfaceMapper AutomaticFactory()
     {
-        var ret = new LinkInterfaceMapper();
-        foreach (var interf in TypeExt.GetInheritingFromInterface<ILinkInterfaceMapping>(
+        var ret = new AspectInterfaceMapper();
+        foreach (var interf in TypeExt.GetInheritingFromInterface<IAspectInterfaceMapping>(
                      loadAssemblies: true))
         {
-            ret.Register((Activator.CreateInstance(interf) as ILinkInterfaceMapping)!);
+            ret.Register((Activator.CreateInstance(interf) as IAspectInterfaceMapping)!);
         }
 
         return ret;
     }
 
-    public static LinkInterfaceMapper EmptyFactory()
+    public static AspectInterfaceMapper EmptyFactory()
     {
-        return new LinkInterfaceMapper();
+        return new AspectInterfaceMapper();
     }
 }
 
-public static class LinkInterfaceMapping
+public static class AspectInterfaceMapping
 {
     public static bool AutomaticRegistration = true;
 
-    private static Lazy<LinkInterfaceMapper> _mapper = new(() =>
+    private static Lazy<AspectInterfaceMapper> _mapper = new(() =>
     {
         if (AutomaticRegistration)
         {
-            return LinkInterfaceMapper.AutomaticFactory();
+            return AspectInterfaceMapper.AutomaticFactory();
         }
         else
         {
-            return LinkInterfaceMapper.EmptyFactory();
+            return AspectInterfaceMapper.EmptyFactory();
         }
     });
 
-    public static ILinkInterfaceMapGetter Instance => _mapper.Value;
+    public static IAspectInterfaceMapGetter Instance => _mapper.Value;
 
-    public static LinkInterfaceMapper InternalInstance => _mapper.Value;
+    public static AspectInterfaceMapper InternalInstance => _mapper.Value;
 }

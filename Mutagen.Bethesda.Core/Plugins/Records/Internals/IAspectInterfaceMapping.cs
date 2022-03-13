@@ -5,7 +5,7 @@ using Loqui;
 
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
-public interface ILinkInterfaceMapping
+public interface IAspectInterfaceMapping
 {
     GameCategory GameCategory { get; }
     IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes { get; } 
