@@ -13,14 +13,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public class AspectInterfaceMapping : IAspectInterfaceMapping
     {
-        public IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes { get; }
+        public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Skyrim;
 
         public AspectInterfaceMapping()
         {
-            var dict = new Dictionary<Type, ILoquiRegistration[]>();
-            dict[typeof(IHasIcons)] = new ILoquiRegistration[]
+            var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IHasIcons)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AlchemicalApparatus_Registration.Instance,
                 Ammunition_Registration.Instance,
@@ -42,14 +42,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RegionWeather_Registration.Instance,
                 SoulGem_Registration.Instance,
                 Weapon_Registration.Instance,
-            };
-            dict[typeof(IHasIconsGetter)] = dict[typeof(IHasIcons)];
-            dict[typeof(IKeywordCommon)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IHasIconsGetter)] = dict[typeof(IHasIcons)] with { Setter = false };
+            dict[typeof(IKeywordCommon)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Keyword_Registration.Instance,
-            };
-            dict[typeof(IKeywordCommonGetter)] = dict[typeof(IKeywordCommon)];
-            dict[typeof(IKeyworded<IKeywordGetter>)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IKeywordCommonGetter)] = dict[typeof(IKeywordCommon)] with { Setter = false };
+            dict[typeof(IKeyworded<IKeywordGetter>)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
                 Ammunition_Registration.Instance,
@@ -71,9 +71,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Spell_Registration.Instance,
                 TalkingActivator_Registration.Instance,
                 Weapon_Registration.Instance,
-            };
-            dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)];
-            dict[typeof(IModeled)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)] with { Setter = false };
+            dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
                 AddonNode_Registration.Instance,
@@ -114,9 +114,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 TalkingActivator_Registration.Instance,
                 Tree_Registration.Instance,
                 Weapon_Registration.Instance,
-            };
-            dict[typeof(IModeledGetter)] = dict[typeof(IModeled)];
-            dict[typeof(INamed)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
+            dict[typeof(INamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
                 ActorValueInformation_Registration.Instance,
@@ -194,9 +194,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Weapon_Registration.Instance,
                 WordOfPower_Registration.Instance,
                 Worldspace_Registration.Instance,
-            };
-            dict[typeof(INamedGetter)] = dict[typeof(INamed)];
-            dict[typeof(IObjectBounded)] = new ILoquiRegistration[]
+            });
+            dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
+            dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AcousticSpace_Registration.Instance,
                 Activator_Registration.Instance,
@@ -236,9 +236,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 TextureSet_Registration.Instance,
                 Tree_Registration.Instance,
                 Weapon_Registration.Instance,
-            };
-            dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)];
-            dict[typeof(IScripted)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
+            dict[typeof(IScripted)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
                 AlchemicalApparatus_Registration.Instance,
@@ -269,9 +269,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 TalkingActivator_Registration.Instance,
                 Tree_Registration.Instance,
                 Weapon_Registration.Instance,
-            };
-            dict[typeof(IScriptedGetter)] = dict[typeof(IScripted)];
-            dict[typeof(IWeightValue)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IScriptedGetter)] = dict[typeof(IScripted)] with { Setter = false };
+            dict[typeof(IWeightValue)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AlchemicalApparatus_Registration.Instance,
                 Ammunition_Registration.Instance,
@@ -285,8 +285,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Scroll_Registration.Instance,
                 SoulGem_Registration.Instance,
                 WeaponBasicStats_Registration.Instance,
-            };
-            dict[typeof(IWeightValueGetter)] = dict[typeof(IWeightValue)];
+            });
+            dict[typeof(IWeightValueGetter)] = dict[typeof(IWeightValue)] with { Setter = false };
             InterfaceToObjectTypes = dict;
         }
     }

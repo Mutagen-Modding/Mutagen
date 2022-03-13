@@ -2,39 +2,42 @@
 using System.Collections.Generic;
 using System.Linq;
 using Loqui;
-using Mutagen.Bethesda.Plugins.Cache;
 
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
 public static class InterfaceEnumerationHelper
 {
-    public static IEnumerable<IMajorRecordGetter> EnumerateLinkRecordsFor<T>(
+    public static bool TryEnumerateLinkRecordsFor<T>(
         GameCategory category,
         T obj, 
         Type linkInterface,
-        bool setter)
+        out IEnumerable<IMajorRecordGetter> interfaces)
         where T : IMajorRecordGetterEnumerable, ILoquiObjectGetter
     {
-        if (setter && !obj.Registration.SetterType.IsAssignableFrom(obj.GetType())) return Enumerable.Empty<IMajorRecordGetter>();
         var mapping = LinkInterfaceMapping.Instance.InterfaceToObjectTypes(category);
-        if (!mapping.TryGetValue(linkInterface, out var inheritingTypes)) return Enumerable.Empty<IMajorRecordGetter>();
-        return inheritingTypes.SelectMany(t => obj.EnumerateMajorRecords(setter ? t.SetterType : t.GetterType));
+        if (!mapping.TryGetValue(linkInterface, out var inheritingTypes))
+        {
+            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            return false;
+        }
+
+        if (inheritingTypes.Setter && !obj.Registration.SetterType.IsAssignableFrom(obj.GetType()))
+        {
+            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            return true;
+        }
+        
+        interfaces = inheritingTypes.Registrations.SelectMany(t => obj.EnumerateMajorRecords(inheritingTypes.Setter ? t.SetterType : t.GetterType));
+        return true;
     }
     
-    public static IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> EnumerateMajorRecordContextsFor<TObj, TMod, TModGetter, TMajor, TMajorGetter>(
+    public static bool TryEnumerateInterfaceRecordsFor<T>(
         GameCategory category,
-        TObj obj, 
+        T obj, 
         Type linkInterface,
-        ILinkCache linkCache)
-        where TObj : IMajorRecordContextEnumerable<TMod, TModGetter>, ILoquiObjectGetter
-        where TModGetter : IModGetter
-        where TMod : TModGetter, IMod
-        where TMajor : class, IMajorRecord, TMajorGetter
-        where TMajorGetter : class, IMajorRecordGetter
+        out IEnumerable<IMajorRecordGetter> interfaces)
+        where T : IMajorRecordGetterEnumerable, ILoquiObjectGetter
     {
-        var mapping = LinkInterfaceMapping.Instance.InterfaceToObjectTypes(category);
-        if (!mapping.TryGetValue(linkInterface, out var inheritingTypes)) return Enumerable.Empty<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>();
-        return inheritingTypes.SelectMany(t => obj.EnumerateMajorRecordContexts(linkCache, t.GetterType))
-            .Select(m => m.AsType<TMod, TModGetter, IMajorRecord, IMajorRecordGetter, TMajor, TMajorGetter>());
+        return TryEnumerateLinkRecordsFor(category, obj, linkInterface, out interfaces);
     }
 }

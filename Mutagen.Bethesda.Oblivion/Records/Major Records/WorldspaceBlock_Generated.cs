@@ -1647,23 +1647,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     }
                     yield break;
-                case "IPlaced":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(IPlaced), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IPlacedGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Oblivion, obj, typeof(IPlacedGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Oblivion, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");

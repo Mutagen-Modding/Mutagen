@@ -13,14 +13,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public class AspectInterfaceMapping : IAspectInterfaceMapping
     {
-        public IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes { get; }
+        public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Oblivion;
 
         public AspectInterfaceMapping()
         {
-            var dict = new Dictionary<Type, ILoquiRegistration[]>();
-            dict[typeof(IModeled)] = new ILoquiRegistration[]
+            var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
                 AlchemicalApparatus_Registration.Instance,
@@ -51,9 +51,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Tree_Registration.Instance,
                 Weapon_Registration.Instance,
                 Weather_Registration.Instance,
-            };
-            dict[typeof(IModeledGetter)] = dict[typeof(IModeled)];
-            dict[typeof(INamed)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
+            dict[typeof(INamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
                 AlchemicalApparatus_Registration.Instance,
@@ -93,9 +93,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 SpellUnleveled_Registration.Instance,
                 Weapon_Registration.Instance,
                 Worldspace_Registration.Instance,
-            };
-            dict[typeof(INamedGetter)] = dict[typeof(INamed)];
-            dict[typeof(IWeightValue)] = new ILoquiRegistration[]
+            });
+            dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
+            dict[typeof(IWeightValue)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AlchemicalApparatusData_Registration.Instance,
                 AmmunitionData_Registration.Instance,
@@ -106,8 +106,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 SigilStoneData_Registration.Instance,
                 SoulGemData_Registration.Instance,
                 WeaponData_Registration.Instance,
-            };
-            dict[typeof(IWeightValueGetter)] = dict[typeof(IWeightValue)];
+            });
+            dict[typeof(IWeightValueGetter)] = dict[typeof(IWeightValue)] with { Setter = false };
             InterfaceToObjectTypes = dict;
         }
     }

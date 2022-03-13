@@ -8,5 +8,5 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals;
 public interface IAspectInterfaceMapping
 {
     GameCategory GameCategory { get; }
-    IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes { get; } 
+    IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 }

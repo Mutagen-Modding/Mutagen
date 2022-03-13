@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         private readonly bool _hasAny;
         private readonly ILinkCache _linkCache;
         private readonly IReadOnlyList<TModGetter> _listedOrder;
-        private readonly IReadOnlyDictionary<Type, ILoquiRegistration[]> _linkInterfaces;
+        private readonly IReadOnlyDictionary<Type, InterfaceMappingResult> _linkInterfaces;
         private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
         private readonly Dictionary<Type, DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>> _winningContexts = new();
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                     // Add records from that mod that aren't already cached
                     if (_linkInterfaces.TryGetValue(type, out var objs))
                     {
-                        foreach (var regis in objs)
+                        foreach (var regis in objs.Registrations)
                         {
                             AddRecords(targetMod, regis.GetterType);
                         }
@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                         // Add records from that mod that aren't already cached
                         if (_linkInterfaces.TryGetValue(type, out var objs))
                         {
-                            foreach (var regis in objs)
+                            foreach (var regis in objs.Registrations)
                             {
                                 AddRecords(targetMod, regis.GetterType);
                             }

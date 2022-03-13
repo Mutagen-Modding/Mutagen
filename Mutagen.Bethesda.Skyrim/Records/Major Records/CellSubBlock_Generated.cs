@@ -1735,119 +1735,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
-                case "ILocationTargetable":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(ILocationTargetable), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILocationTargetableGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(ILocationTargetableGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IOwner":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(IOwner), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IOwnerGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(IOwnerGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReference":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(IKeywordLinkedReference), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReferenceGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(IKeywordLinkedReferenceGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILinkedReference":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(ILinkedReference), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILinkedReferenceGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(ILinkedReferenceGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IPlaced":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(IPlaced), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IPlacedGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IPlacedSimple":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedSimple), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IPlacedSimpleGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedSimpleGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IPlacedThing":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedThing), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IPlacedThingGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedThingGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Skyrim, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");

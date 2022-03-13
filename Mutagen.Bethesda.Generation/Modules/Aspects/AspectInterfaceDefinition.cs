@@ -28,12 +28,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             Name = name;
         }
 
-        public virtual IEnumerable<string> Registrations
+        public virtual IEnumerable<(string Name, bool Setter)> Registrations
         {
             get
             {
-                yield return $"typeof({Name})";
-                yield return $"typeof({Name}Getter)";
+                yield return ($"typeof({Name})", true);
+                yield return ($"typeof({Name}Getter)", false);
             }
         }
 

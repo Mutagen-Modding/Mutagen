@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals;
 public interface IMetaInterfaceMapGetter
 {
     bool TryGetRegistrationsForInterface(GameCategory mode, Type type,
-        [MaybeNullWhen(false)] out ILoquiRegistration[] registrations);
+        [MaybeNullWhen(false)] out InterfaceMappingResult registrations);
 }
 
 public class MetaInterfaceMapper : IMetaInterfaceMapGetter
@@ -23,7 +23,7 @@ public class MetaInterfaceMapper : IMetaInterfaceMapGetter
         _linkInterfaceMapGetter = linkInterfaceMapGetter;
     }
 
-    public bool TryGetRegistrationsForInterface(GameCategory mode, Type type, [MaybeNullWhen(false)] out ILoquiRegistration[] registrations)
+    public bool TryGetRegistrationsForInterface(GameCategory mode, Type type, [MaybeNullWhen(false)] out InterfaceMappingResult registrations)
     {
         if (_aspectInterfaceMapGetter.InterfaceToObjectTypes(mode).TryGetValue(type, out registrations)) return true;
         if (_linkInterfaceMapGetter.InterfaceToObjectTypes(mode).TryGetValue(type, out registrations)) return true;

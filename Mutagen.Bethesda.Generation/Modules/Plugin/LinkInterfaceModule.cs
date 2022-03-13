@@ -126,7 +126,7 @@ public class LinkInterfaceModule : GenerationModule
             using (new BraceWrapper(mappingGen))
             {
                 mappingGen.AppendLine(
-                    $"public IReadOnlyDictionary<Type, {nameof(ILoquiRegistration)}[]> InterfaceToObjectTypes {{ get; }}");
+                    $"public IReadOnlyDictionary<Type, {nameof(InterfaceMappingResult)}> InterfaceToObjectTypes {{ get; }}");
                 mappingGen.AppendLine();
                 mappingGen.AppendLine(
                     $"public {nameof(GameCategory)} GameCategory => {nameof(GameCategory)}.{proto.Protocol.Namespace};");
@@ -135,11 +135,11 @@ public class LinkInterfaceModule : GenerationModule
                 mappingGen.AppendLine("public LinkInterfaceMapping()");
                 using (new BraceWrapper(mappingGen))
                 {
-                    mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(ILoquiRegistration)}[]>();");
+                    mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
                     foreach (var interf in mappings)
                     {
-                        mappingGen.AppendLine($"dict[typeof({interf.Key})] = new {nameof(ILoquiRegistration)}[]");
-                        using (new BraceWrapper(mappingGen) { AppendSemicolon = true })
+                        mappingGen.AppendLine($"dict[typeof({interf.Key})] = new {nameof(InterfaceMappingResult)}(true, new {nameof(ILoquiRegistration)}[]");
+                        using (new BraceWrapper(mappingGen) { AppendSemicolon = true, AppendParenthesis = true })
                         {
                             foreach (var obj in interf.Value)
                             {
@@ -147,7 +147,7 @@ public class LinkInterfaceModule : GenerationModule
                             }
                         }
 
-                        mappingGen.AppendLine($"dict[typeof({interf.Key}Getter)] = dict[typeof({interf.Key})];");
+                        mappingGen.AppendLine($"dict[typeof({interf.Key}Getter)] = dict[typeof({interf.Key})] with {{ Setter = false }};");
                     }
 
                     mappingGen.AppendLine($"InterfaceToObjectTypes = dict;");

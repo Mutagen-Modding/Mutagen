@@ -24,12 +24,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             };
         }
 
-        public override IEnumerable<string> Registrations
+        public override IEnumerable<(string Name, bool Setter)> Registrations
         {
             get
             {
-                yield return $"typeof(IKeyworded<IKeywordGetter>)";
-                yield return $"typeof(IKeywordedGetter<IKeywordGetter>)";
+                yield return ($"typeof(IKeyworded<IKeywordGetter>)", true);
+                yield return ($"typeof(IKeywordedGetter<IKeywordGetter>)", false);
             }
         }
 

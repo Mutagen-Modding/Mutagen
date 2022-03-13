@@ -12,66 +12,66 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public class LinkInterfaceMapping : ILinkInterfaceMapping
     {
-        public IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes { get; }
+        public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Fallout4;
 
         public LinkInterfaceMapping()
         {
-            var dict = new Dictionary<Type, ILoquiRegistration[]>();
-            dict[typeof(IIdleRelation)] = new ILoquiRegistration[]
+            var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IIdleRelation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 ActionRecord_Registration.Instance,
-            };
-            dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)];
-            dict[typeof(IDamageTypeTarget)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)] with { Setter = false };
+            dict[typeof(IDamageTypeTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 ActorValueInformation_Registration.Instance,
-            };
-            dict[typeof(IDamageTypeTargetGetter)] = dict[typeof(IDamageTypeTarget)];
-            dict[typeof(IObjectId)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IDamageTypeTargetGetter)] = dict[typeof(IDamageTypeTarget)] with { Setter = false };
+            dict[typeof(IObjectId)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Door_Registration.Instance,
                 Faction_Registration.Instance,
                 TextureSet_Registration.Instance,
-            };
-            dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)];
-            dict[typeof(ILocationTargetable)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)] with { Setter = false };
+            dict[typeof(ILocationTargetable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Door_Registration.Instance,
-            };
-            dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)];
-            dict[typeof(IOwner)] = new ILoquiRegistration[]
+            });
+            dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)] with { Setter = false };
+            dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Faction_Registration.Instance,
-            };
-            dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)];
-            dict[typeof(IRelatable)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
+            dict[typeof(IRelatable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Faction_Registration.Instance,
                 Race_Registration.Instance,
-            };
-            dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)];
-            dict[typeof(IKeywordLinkedReference)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)] with { Setter = false };
+            dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Keyword_Registration.Instance,
-            };
-            dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)];
-            dict[typeof(IRegionTarget)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)] with { Setter = false };
+            dict[typeof(IRegionTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 LandscapeTexture_Registration.Instance,
-            };
-            dict[typeof(IRegionTargetGetter)] = dict[typeof(IRegionTarget)];
-            dict[typeof(ISpellRecord)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IRegionTargetGetter)] = dict[typeof(IRegionTarget)] with { Setter = false };
+            dict[typeof(ISpellRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 LeveledSpell_Registration.Instance,
-            };
-            dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)];
-            dict[typeof(ILocationRecord)] = new ILoquiRegistration[]
+            });
+            dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)] with { Setter = false };
+            dict[typeof(ILocationRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 LocationReferenceType_Registration.Instance,
-            };
-            dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)];
+            });
+            dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)] with { Setter = false };
             InterfaceToObjectTypes = dict;
         }
     }

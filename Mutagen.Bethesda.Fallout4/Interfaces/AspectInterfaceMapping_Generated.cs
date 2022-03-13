@@ -13,30 +13,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public class AspectInterfaceMapping : IAspectInterfaceMapping
     {
-        public IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes { get; }
+        public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Fallout4;
 
         public AspectInterfaceMapping()
         {
-            var dict = new Dictionary<Type, ILoquiRegistration[]>();
-            dict[typeof(IKeywordCommon)] = new ILoquiRegistration[]
+            var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IKeywordCommon)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Keyword_Registration.Instance,
-            };
-            dict[typeof(IKeywordCommonGetter)] = dict[typeof(IKeywordCommon)];
-            dict[typeof(IKeyworded<IKeywordGetter>)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IKeywordCommonGetter)] = dict[typeof(IKeywordCommon)] with { Setter = false };
+            dict[typeof(IKeyworded<IKeywordGetter>)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Race_Registration.Instance,
-            };
-            dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)];
-            dict[typeof(IModeled)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)] with { Setter = false };
+            dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Grass_Registration.Instance,
                 HeadPart_Registration.Instance,
-            };
-            dict[typeof(IModeledGetter)] = dict[typeof(IModeled)];
-            dict[typeof(INamed)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
+            dict[typeof(INamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 ActionRecord_Registration.Instance,
                 Class_Registration.Instance,
@@ -46,17 +46,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Keyword_Registration.Instance,
                 MaterialType_Registration.Instance,
                 Race_Registration.Instance,
-            };
-            dict[typeof(INamedGetter)] = dict[typeof(INamed)];
-            dict[typeof(IObjectBounded)] = new ILoquiRegistration[]
+            });
+            dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
+            dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AcousticSpace_Registration.Instance,
                 Component_Registration.Instance,
                 Grass_Registration.Instance,
                 SoundMarker_Registration.Instance,
                 TextureSet_Registration.Instance,
-            };
-            dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)];
+            });
+            dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
             InterfaceToObjectTypes = dict;
         }
     }

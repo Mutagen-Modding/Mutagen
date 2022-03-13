@@ -2,30 +2,28 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Loqui;
 
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
 public interface ILinkInterfaceMapGetter
 {
-    IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes(GameCategory mode);
+    IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes(GameCategory mode);
     bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type);
 }
 
 public class LinkInterfaceMapper : ILinkInterfaceMapGetter
 {
-    public Dictionary<GameCategory, IReadOnlyDictionary<Type, ILoquiRegistration[]>> Mappings = new();
+    public Dictionary<GameCategory, IReadOnlyDictionary<Type, InterfaceMappingResult>> Mappings = new();
     public Dictionary<string, Type> NameToInterfaceTypeMapping = new();
         
-    public IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes(GameCategory mode)
+    public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes(GameCategory mode)
     {
         if (Mappings.TryGetValue(mode, out var value))
         {
             return value;
         }
 
-        return DictionaryExt.Empty<Type, ILoquiRegistration[]>();
+        return DictionaryExt.Empty<Type, InterfaceMappingResult>();
     }
 
     public bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type)

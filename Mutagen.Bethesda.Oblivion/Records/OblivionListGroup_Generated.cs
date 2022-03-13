@@ -1082,6 +1082,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Oblivion, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     foreach (var item in obj.Records)
                     {
                         foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))

@@ -571,10 +571,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
 
                         bool doAdditionlDeepLogic = !obj.Name.EndsWith("ListGroup");
+                        var blackList = new HashSet<string>();
+                        var deepRecordMapping = new Dictionary<ObjectGeneration, HashSet<TypeGeneration>>();
 
                         if (doAdditionlDeepLogic)
                         {
-                            var deepRecordMapping = await MajorRecordModule.FindDeepRecords(obj);
+                            deepRecordMapping = await MajorRecordModule.FindDeepRecords(obj);
                             foreach (var deepRec in deepRecordMapping)
                             {
                                 FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);
@@ -584,7 +586,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                             }
 
-                            var blackList = new HashSet<string>();
                             foreach (var kv in generationDict)
                             {
                                 switch (kv.Key)
@@ -631,55 +632,25 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     fg.AppendLine("yield break;");
                                 }
                             }
-
-                            // Generate for major record marker interfaces 
-                            if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out var interfs))
-                            {
-                                foreach (var interf in interfs)
-                                {
-                                    if (blackList.Contains(interf.Key)) continue;
-                                    if (!interf.Value.Any(subObj =>
-                                        {
-                                            if (obj.Fields
-                                                    .WhereCastable<TypeGeneration, GroupType>()
-                                                    .Where(g => g.GetGroupTarget() == subObj)
-                                                    .FirstOrDefault() != null)
-                                            {
-                                                return true;
-                                            }
-
-                                            return deepRecordMapping.ContainsKey(subObj);
-                                        }))
-                                    {
-                                        continue;
-                                    }
-                                    fg.AppendLine($"case \"{interf.Key}\":");
-                                    using (new BraceWrapper(fg))
-                                    {
-                                        fg.AppendLine($"foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.{obj.ProtoGen.Protocol.Namespace}, {accessor}, typeof({interf.Key}), setter: true))");
-                                        using (new BraceWrapper(fg))
-                                        {
-                                            fg.AppendLine("yield return item;");
-                                        }
-                                        fg.AppendLine("yield break;");
-                                    }
-                                    fg.AppendLine($"case \"{interf.Key}Getter\":");
-                                    using (new BraceWrapper(fg))
-                                    {
-                                        fg.AppendLine($"foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.{obj.ProtoGen.Protocol.Namespace}, {accessor}, typeof({interf.Key}Getter), setter: false))");
-                                        using (new BraceWrapper(fg))
-                                        {
-                                            fg.AppendLine("yield return item;");
-                                        }
-                                        fg.AppendLine("yield break;");
-                                    }
-                                }
-                            }
                         }
 
                         fg.AppendLine("default:");
                         using (new DepthWrapper(fg))
                         {
+                            // Generate for major record marker interfaces 
+                            if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _))
+                            {
+                                fg.AppendLine($"if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.{obj.ProtoGen.Protocol.Namespace}, {accessor}, type, out var linkInterfaces))");
+                                using (new BraceWrapper(fg))
+                                {
+                                    fg.AppendLine($"foreach (var item in linkInterfaces)");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        fg.AppendLine("yield return item;");
+                                    }
+                                    fg.AppendLine("yield break;");
+                                }
+                            }
                             if (generationDict.TryGetValue("default:", out var gen))
                             {
                                 fg.AppendLines(gen);

@@ -9,23 +9,23 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
 public interface IAspectInterfaceMapGetter
 {
-    IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes(GameCategory mode);
+    IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes(GameCategory mode);
     bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type);
 }
 
 public class AspectInterfaceMapper : IAspectInterfaceMapGetter
 {
-    public Dictionary<GameCategory, IReadOnlyDictionary<Type, ILoquiRegistration[]>> Mappings = new();
+    public Dictionary<GameCategory, IReadOnlyDictionary<Type, InterfaceMappingResult>> Mappings = new();
     public Dictionary<string, Type> NameToInterfaceTypeMapping = new();
         
-    public IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes(GameCategory mode)
+    public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes(GameCategory mode)
     {
         if (Mappings.TryGetValue(mode, out var value))
         {
             return value;
         }
 
-        return DictionaryExt.Empty<Type, ILoquiRegistration[]>();
+        return DictionaryExt.Empty<Type, InterfaceMappingResult>();
     }
 
     public bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type)

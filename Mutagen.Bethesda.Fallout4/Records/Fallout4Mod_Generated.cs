@@ -3498,119 +3498,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
-                case "IIdleRelation":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IIdleRelation), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IIdleRelationGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IIdleRelationGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IObjectId":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IObjectId), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IObjectIdGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IObjectIdGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IOwner":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IOwner), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IOwnerGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IOwnerGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IRelatable":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IRelatable), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IRelatableGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IRelatableGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReference":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IKeywordLinkedReference), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReferenceGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IKeywordLinkedReferenceGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IRegionTarget":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IRegionTarget), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IRegionTargetGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(IRegionTargetGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILocationRecord":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(ILocationRecord), setter: true))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILocationRecordGetter":
-                {
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateLinkRecordsFor(GameCategory.Fallout4, obj, typeof(ILocationRecordGetter), setter: false))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");

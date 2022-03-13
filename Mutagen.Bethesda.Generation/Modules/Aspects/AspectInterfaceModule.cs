@@ -155,7 +155,7 @@ public class AspectInterfaceModule : GenerationModule
             using (new BraceWrapper(mappingGen))
             {
                 mappingGen.AppendLine(
-                    $"public IReadOnlyDictionary<Type, {nameof(ILoquiRegistration)}[]> InterfaceToObjectTypes {{ get; }}");
+                    $"public IReadOnlyDictionary<Type, {nameof(InterfaceMappingResult)}> InterfaceToObjectTypes {{ get; }}");
                 mappingGen.AppendLine();
                 mappingGen.AppendLine(
                     $"public {nameof(GameCategory)} GameCategory => {nameof(GameCategory)}.{proto.Protocol.Namespace};");
@@ -164,17 +164,17 @@ public class AspectInterfaceModule : GenerationModule
                 mappingGen.AppendLine("public AspectInterfaceMapping()");
                 using (new BraceWrapper(mappingGen))
                 {
-                    mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(ILoquiRegistration)}[]>();");
+                    mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
                     foreach (var interf in mappings.OrderBy(x => x.Key.Name))
                     {
-                        string? first = null;
+                        (string Name, bool Setter)? first = null;
                         foreach (var reg in interf.Key.Registrations.OrderBy(x => x))
                         {
                             if (first == null)
                             {
                                 first = reg;
-                                mappingGen.AppendLine($"dict[{first}] = new {nameof(ILoquiRegistration)}[]");
-                                using (new BraceWrapper(mappingGen) { AppendSemicolon = true })
+                                mappingGen.AppendLine($"dict[{first.Value.Name}] = new {nameof(InterfaceMappingResult)}({first.Value.Setter.ToString().ToLower()}, new {nameof(ILoquiRegistration)}[]");
+                                using (new BraceWrapper(mappingGen) { AppendSemicolon = true, AppendParenthesis = true })
                                 {
                                     foreach (var obj in interf.Value.OrderBy(x => x.Name))
                                     {
@@ -184,7 +184,7 @@ public class AspectInterfaceModule : GenerationModule
                             }
                             else
                             {
-                                mappingGen.AppendLine($"dict[{reg}] = dict[{first}];");
+                                mappingGen.AppendLine($"dict[{reg.Name}] = dict[{first.Value.Name}] with {{ Setter = {reg.Setter.ToString().ToLower()} }};");
                             }
                         }
 

@@ -12,14 +12,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public class LinkInterfaceMapping : ILinkInterfaceMapping
     {
-        public IReadOnlyDictionary<Type, ILoquiRegistration[]> InterfaceToObjectTypes { get; }
+        public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Oblivion;
 
         public LinkInterfaceMapping()
         {
-            var dict = new Dictionary<Type, ILoquiRegistration[]>();
-            dict[typeof(IItem)] = new ILoquiRegistration[]
+            var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AlchemicalApparatus_Registration.Instance,
                 Ammunition_Registration.Instance,
@@ -35,41 +35,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 SigilStone_Registration.Instance,
                 SoulGem_Registration.Instance,
                 Weapon_Registration.Instance,
-            };
-            dict[typeof(IItemGetter)] = dict[typeof(IItem)];
-            dict[typeof(INpcSpawn)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IItemGetter)] = dict[typeof(IItem)] with { Setter = false };
+            dict[typeof(INpcSpawn)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Creature_Registration.Instance,
                 LeveledCreature_Registration.Instance,
                 Npc_Registration.Instance,
-            };
-            dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)];
-            dict[typeof(INpcRecord)] = new ILoquiRegistration[]
+            });
+            dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)] with { Setter = false };
+            dict[typeof(INpcRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Creature_Registration.Instance,
                 Npc_Registration.Instance,
-            };
-            dict[typeof(INpcRecordGetter)] = dict[typeof(INpcRecord)];
-            dict[typeof(IOwner)] = new ILoquiRegistration[]
+            });
+            dict[typeof(INpcRecordGetter)] = dict[typeof(INpcRecord)] with { Setter = false };
+            dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Faction_Registration.Instance,
                 Npc_Registration.Instance,
-            };
-            dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)];
-            dict[typeof(IPlaced)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
+            dict[typeof(IPlaced)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Landscape_Registration.Instance,
                 PlacedCreature_Registration.Instance,
                 PlacedNpc_Registration.Instance,
                 PlacedObject_Registration.Instance,
-            };
-            dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)];
-            dict[typeof(ISpellRecord)] = new ILoquiRegistration[]
+            });
+            dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)] with { Setter = false };
+            dict[typeof(ISpellRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 LeveledSpell_Registration.Instance,
                 Spell_Registration.Instance,
-            };
-            dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)];
+            });
+            dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)] with { Setter = false };
             InterfaceToObjectTypes = dict;
         }
     }
