@@ -3934,7 +3934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 case "ILocationTargetable":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILocationTargetable), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILocationTargetable), setter: true))
                     {
                         yield return item;
                     }
@@ -3942,7 +3942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "ILocationTargetableGetter":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILocationTargetableGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILocationTargetableGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -3950,7 +3950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "IOwner":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IOwner), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IOwner), setter: true))
                     {
                         yield return item;
                     }
@@ -3958,7 +3958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "IOwnerGetter":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IOwnerGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IOwnerGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -3966,7 +3966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "IKeywordLinkedReference":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IKeywordLinkedReference), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IKeywordLinkedReference), setter: true))
                     {
                         yield return item;
                     }
@@ -3974,7 +3974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "IKeywordLinkedReferenceGetter":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IKeywordLinkedReferenceGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IKeywordLinkedReferenceGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -3982,7 +3982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "ILinkedReference":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILinkedReference), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILinkedReference), setter: true))
                     {
                         yield return item;
                     }
@@ -3990,7 +3990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "ILinkedReferenceGetter":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILinkedReferenceGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(ILinkedReferenceGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -3998,7 +3998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "IPlacedSimple":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedSimple), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedSimple), setter: true))
                     {
                         yield return item;
                     }
@@ -4006,7 +4006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "IPlacedSimpleGetter":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedSimpleGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedSimpleGetter), setter: false))
                     {
                         yield return item;
                     }
@@ -4014,7 +4014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "IPlacedThing":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedThing), setter: true))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedThing), setter: true))
                     {
                         yield return item;
                     }
@@ -4022,7 +4022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "IPlacedThingGetter":
                 {
-                    foreach (var item in LinkInterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedThingGetter), setter: false))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateMajorRecordsFor(GameCategory.Skyrim, obj, typeof(IPlacedThingGetter), setter: false))
                     {
                         yield return item;
                     }

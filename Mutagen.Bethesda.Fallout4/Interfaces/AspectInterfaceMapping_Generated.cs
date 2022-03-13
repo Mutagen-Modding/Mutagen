@@ -25,38 +25,38 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 ActionRecord_Registration.Instance,
                 Class_Registration.Instance,
                 Keyword_Registration.Instance,
-                MaterialType_Registration.Instance,
-                Race_Registration.Instance,
                 Component_Registration.Instance,
-                HeadPart_Registration.Instance,
+                Race_Registration.Instance,
+                MaterialType_Registration.Instance,
                 Faction_Registration.Instance,
+                HeadPart_Registration.Instance,
             };
             dict[typeof(INamedGetter)] = dict[typeof(INamed)];
-            dict[typeof(IKeywordCommon)] = new ILoquiRegistration[]
-            {
-                Keyword_Registration.Instance,
-            };
-            dict[typeof(IKeywordCommonGetter)] = dict[typeof(IKeywordCommon)];
             dict[typeof(IObjectBounded)] = new ILoquiRegistration[]
             {
-                TextureSet_Registration.Instance,
                 Grass_Registration.Instance,
                 Component_Registration.Instance,
                 AcousticSpace_Registration.Instance,
+                TextureSet_Registration.Instance,
                 SoundMarker_Registration.Instance,
             };
             dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)];
-            dict[typeof(IKeyworded<IKeywordGetter>)] = new ILoquiRegistration[]
-            {
-                Race_Registration.Instance,
-            };
-            dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)];
             dict[typeof(IModeled)] = new ILoquiRegistration[]
             {
                 Grass_Registration.Instance,
                 HeadPart_Registration.Instance,
             };
             dict[typeof(IModeledGetter)] = dict[typeof(IModeled)];
+            dict[typeof(IKeywordCommon)] = new ILoquiRegistration[]
+            {
+                Keyword_Registration.Instance,
+            };
+            dict[typeof(IKeywordCommonGetter)] = dict[typeof(IKeywordCommon)];
+            dict[typeof(IKeyworded<IKeywordGetter>)] = new ILoquiRegistration[]
+            {
+                Race_Registration.Instance,
+            };
+            dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)];
             InterfaceToObjectTypes = dict;
         }
     }

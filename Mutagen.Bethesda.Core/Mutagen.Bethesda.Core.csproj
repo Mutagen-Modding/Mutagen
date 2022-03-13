@@ -390,7 +390,7 @@
     </Compile>
     <Compile Include="Plugins\Records\Internals\IMetaInterfaceMapGetter.cs" />
     <Compile Include="Plugins\Records\Internals\IModRegistration.cs" />
-    <Compile Include="Plugins\Records\Internals\LinkInterfaceEnumerationHelper.cs" />
+    <Compile Include="Plugins\Records\Internals\InterfaceEnumerationHelper.cs" />
     <Compile Include="Plugins\RecordTypeMapping\AssociatedRecordTypesAttribute.cs" />
     <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookup.cs" />
     <Compile Include="Strings\DI\MutagenEncodingProvider.cs" />
