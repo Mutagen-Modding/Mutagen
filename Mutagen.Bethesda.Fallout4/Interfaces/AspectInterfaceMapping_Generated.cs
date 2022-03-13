@@ -20,33 +20,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public AspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, ILoquiRegistration[]>();
-            dict[typeof(INamed)] = new ILoquiRegistration[]
-            {
-                ActionRecord_Registration.Instance,
-                Class_Registration.Instance,
-                Keyword_Registration.Instance,
-                Component_Registration.Instance,
-                Race_Registration.Instance,
-                MaterialType_Registration.Instance,
-                Faction_Registration.Instance,
-                HeadPart_Registration.Instance,
-            };
-            dict[typeof(INamedGetter)] = dict[typeof(INamed)];
-            dict[typeof(IObjectBounded)] = new ILoquiRegistration[]
-            {
-                Grass_Registration.Instance,
-                Component_Registration.Instance,
-                AcousticSpace_Registration.Instance,
-                TextureSet_Registration.Instance,
-                SoundMarker_Registration.Instance,
-            };
-            dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)];
-            dict[typeof(IModeled)] = new ILoquiRegistration[]
-            {
-                Grass_Registration.Instance,
-                HeadPart_Registration.Instance,
-            };
-            dict[typeof(IModeledGetter)] = dict[typeof(IModeled)];
             dict[typeof(IKeywordCommon)] = new ILoquiRegistration[]
             {
                 Keyword_Registration.Instance,
@@ -57,6 +30,33 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Race_Registration.Instance,
             };
             dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)];
+            dict[typeof(IModeled)] = new ILoquiRegistration[]
+            {
+                Grass_Registration.Instance,
+                HeadPart_Registration.Instance,
+            };
+            dict[typeof(IModeledGetter)] = dict[typeof(IModeled)];
+            dict[typeof(INamed)] = new ILoquiRegistration[]
+            {
+                ActionRecord_Registration.Instance,
+                Class_Registration.Instance,
+                Component_Registration.Instance,
+                Faction_Registration.Instance,
+                HeadPart_Registration.Instance,
+                Keyword_Registration.Instance,
+                MaterialType_Registration.Instance,
+                Race_Registration.Instance,
+            };
+            dict[typeof(INamedGetter)] = dict[typeof(INamed)];
+            dict[typeof(IObjectBounded)] = new ILoquiRegistration[]
+            {
+                AcousticSpace_Registration.Instance,
+                Component_Registration.Instance,
+                Grass_Registration.Instance,
+                SoundMarker_Registration.Instance,
+                TextureSet_Registration.Instance,
+            };
+            dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)];
             InterfaceToObjectTypes = dict;
         }
     }

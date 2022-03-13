@@ -151,7 +151,7 @@ public class AspectInterfaceModule : GenerationModule
             {
                 c.Interfaces.Add(nameof(IAspectInterfaceMapping));
             }
-
+            
             using (new BraceWrapper(mappingGen))
             {
                 mappingGen.AppendLine(
@@ -165,10 +165,10 @@ public class AspectInterfaceModule : GenerationModule
                 using (new BraceWrapper(mappingGen))
                 {
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(ILoquiRegistration)}[]>();");
-                    foreach (var interf in mappings)
+                    foreach (var interf in mappings.OrderBy(x => x.Key.Name))
                     {
                         string? first = null;
-                        foreach (var reg in interf.Key.Registrations)
+                        foreach (var reg in interf.Key.Registrations.OrderBy(x => x))
                         {
                             if (first == null)
                             {
@@ -176,7 +176,7 @@ public class AspectInterfaceModule : GenerationModule
                                 mappingGen.AppendLine($"dict[{first}] = new {nameof(ILoquiRegistration)}[]");
                                 using (new BraceWrapper(mappingGen) { AppendSemicolon = true })
                                 {
-                                    foreach (var obj in interf.Value)
+                                    foreach (var obj in interf.Value.OrderBy(x => x.Name))
                                     {
                                         mappingGen.AppendLine($"{obj.RegistrationName}.Instance,");
                                     }
