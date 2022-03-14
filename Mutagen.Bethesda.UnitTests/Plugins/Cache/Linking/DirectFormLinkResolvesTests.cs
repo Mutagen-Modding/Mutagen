@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
@@ -12,9 +13,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
     public partial class ALinkingTests
     {
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_TryResolve_NoLink(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_TryResolve_NoLink(LinkCachePreferences.RetentionType cacheType)
         {
             var formLink = new FormLink<INpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
@@ -22,9 +23,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_TryResolve_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_TryResolve_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -38,9 +39,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_TryResolve_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_TryResolve_DeepRecord_NoLink(LinkCachePreferences.RetentionType cacheType)
         {
             var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
@@ -48,9 +49,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_TryResolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_TryResolve_DeepRecord_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -84,9 +85,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_Resolve_NoLink(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_Resolve_NoLink(LinkCachePreferences.RetentionType cacheType)
         {
             var formLink = new FormLink<INpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
@@ -94,9 +95,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_Resolve_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_Resolve_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -109,9 +110,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_Resolve_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_Resolve_DeepRecord_NoLink(LinkCachePreferences.RetentionType cacheType)
         {
             var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
@@ -119,9 +120,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_Resolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_Resolve_DeepRecord_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -152,9 +153,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_TryResolve_MarkerInterface(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_TryResolve_MarkerInterface(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var spell = mod.Spells.AddNew();
@@ -168,9 +169,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_TryResolve_MarkerInterface_NoLink(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_TryResolve_MarkerInterface_NoLink(LinkCachePreferences.RetentionType cacheType)
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
@@ -178,9 +179,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_NoLink(LinkCachePreferences.RetentionType cacheType)
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
@@ -188,9 +189,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -224,9 +225,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_Resolve_MarkerInterface(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_Resolve_MarkerInterface(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var spell = mod.Spells.AddNew();
@@ -239,9 +240,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_Resolve_MarkerInterface_NoLink(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_Resolve_MarkerInterface_NoLink(LinkCachePreferences.RetentionType cacheType)
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
@@ -249,9 +250,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_NoLink(LinkCachePreferences.RetentionType cacheType)
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
@@ -259,9 +260,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();

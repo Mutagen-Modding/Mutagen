@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             }
                             else if (field is ContainerType cont)
                             {
-                                if (!(cont.SubTypeGeneration is LoquiType contLoqui)) continue;
+                                if (cont.SubTypeGeneration is not LoquiType contLoqui) continue;
                                 if (contLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
                                     fieldGen = generationDict.GetOrAdd("default:");
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             else if (field is DictType dict)
                             {
                                 if (dict.Mode != DictMode.KeyedValue) continue;
-                                if (!(dict.ValueTypeGen is LoquiType dictLoqui)) continue;
+                                if (dict.ValueTypeGen is not LoquiType dictLoqui) continue;
                                 if (dictLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
                                     fieldGen = generationDict.GetOrAdd("default:");
@@ -571,10 +571,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
 
                         bool doAdditionlDeepLogic = !obj.Name.EndsWith("ListGroup");
+                        var blackList = new HashSet<string>();
+                        var deepRecordMapping = new Dictionary<ObjectGeneration, HashSet<TypeGeneration>>();
 
                         if (doAdditionlDeepLogic)
                         {
-                            var deepRecordMapping = await MajorRecordModule.FindDeepRecords(obj);
+                            deepRecordMapping = await MajorRecordModule.FindDeepRecords(obj);
                             foreach (var deepRec in deepRecordMapping)
                             {
                                 FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);
@@ -584,7 +586,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                             }
 
-                            HashSet<string> blackList = new HashSet<string>();
                             foreach (var kv in generationDict)
                             {
                                 switch (kv.Key)
@@ -614,17 +615,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                         }
                                         break;
                                     case ObjectGeneration targetObj:
-                                        fg.AppendLine($"case \"{targetObj.ObjectName}\":");
-                                        fg.AppendLine($"case \"{targetObj.Interface(getter: true)}\":");
-                                        fg.AppendLine($"case \"{targetObj.Interface(getter: false)}\":");
-                                        if (targetObj.HasInternalGetInterface)
-                                        {
-                                            fg.AppendLine($"case \"{targetObj.Interface(getter: true, internalInterface: true)}\":");
-                                        }
-                                        if (targetObj.HasInternalSetInterface)
-                                        {
-                                            fg.AppendLine($"case \"{targetObj.Interface(getter: false, internalInterface: true)}\":");
-                                        }
+                                        targetObj.AppendSwitchCases(fg);
                                         break;
                                     case string str:
                                         if (str != "default:")
@@ -641,67 +632,25 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     fg.AppendLine("yield break;");
                                 }
                             }
-
-                            // Generate for major record marker interfaces 
-                            if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out var interfs))
-                            {
-                                foreach (var interf in interfs)
-                                {
-                                    if (blackList.Contains(interf.Key)) continue;
-                                    FileGeneration subFg = new FileGeneration();
-                                    HashSet<ObjectGeneration> passedObjects = new HashSet<ObjectGeneration>();
-                                    HashSet<TypeGeneration> deepObjects = new HashSet<TypeGeneration>();
-                                    foreach (var subObj in interf.Value)
-                                    {
-                                        var grup = obj.Fields
-                                            .WhereCastable<TypeGeneration, GroupType>()
-                                            .Where(g => g.GetGroupTarget() == subObj)
-                                            .FirstOrDefault();
-
-                                        if (grup != null)
-                                        {
-                                            subFg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().Interface(getter: true)}), throwIfUnknown: throwIfUnknown))");
-                                            using (new BraceWrapper(subFg))
-                                            {
-                                                subFg.AppendLine("yield return item;");
-                                            }
-                                            passedObjects.Add(grup.GetGroupTarget());
-                                        }
-                                        else if (deepRecordMapping.TryGetValue(subObj, out var deepRec))
-                                        {
-                                            foreach (var field in deepRec)
-                                            {
-                                                deepObjects.Add(field);
-                                            }
-                                        }
-                                    }
-                                    foreach (var deepObj in deepObjects)
-                                    {
-                                        await ApplyIterationLines(deepObj, subFg, accessor, getter, blackList: passedObjects);
-                                    }
-                                    if (!subFg.Empty)
-                                    {
-                                        fg.AppendLine($"case \"{interf.Key}\":");
-                                        using (new BraceWrapper(fg))
-                                        {
-                                            fg.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
-                                            fg.AppendLines(subFg);
-                                            fg.AppendLine("yield break;");
-                                        }
-                                        fg.AppendLine($"case \"{interf.Key}Getter\":");
-                                        using (new BraceWrapper(fg))
-                                        {
-                                            fg.AppendLines(subFg);
-                                            fg.AppendLine("yield break;");
-                                        }
-                                    }
-                                }
-                            }
                         }
 
                         fg.AppendLine("default:");
                         using (new DepthWrapper(fg))
                         {
+                            // Generate for major record marker interfaces 
+                            if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _))
+                            {
+                                fg.AppendLine($"if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.{obj.ProtoGen.Protocol.Namespace}, {accessor}, type, out var linkInterfaces))");
+                                using (new BraceWrapper(fg))
+                                {
+                                    fg.AppendLine($"foreach (var item in linkInterfaces)");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        fg.AppendLine("yield return item;");
+                                    }
+                                    fg.AppendLine("yield break;");
+                                }
+                            }
                             if (generationDict.TryGetValue("default:", out var gen))
                             {
                                 fg.AppendLines(gen);

@@ -8,6 +8,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using Loqui;
+using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay
 {
@@ -279,7 +280,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker.Value) + 1;
                 }
                 lastParsed = parsed;
             }
@@ -314,9 +315,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             return ret.ToArray();
         }
 
-        public static int[] ParseRecordLocations(
+        public static int[] ParseLocationsRecordPerTrigger(
             OverlayStream stream,
-            ICollectionGetter<RecordType> triggers,
+            TriggeringRecordCollection triggers,
             RecordHeaderConstants constants,
             bool skipHeader,
             TypedParseParams? parseParams = null)
@@ -346,8 +347,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         public static int[] ParseRecordLocations(
             OverlayStream stream,
             long finalPos,
-            ICollectionGetter<RecordType> triggers,
-            ICollectionGetter<RecordType> includeTriggers,
+            TriggeringRecordCollection triggers,
+            TriggeringRecordCollection includeTriggers,
             RecordHeaderConstants constants,
             bool skipHeader)
         {
@@ -386,7 +387,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             long finalPos,
             RecordType trigger,
-            ICollectionGetter<RecordType> includeTriggers,
+            TriggeringRecordCollection includeTriggers,
             RecordHeaderConstants constants,
             bool skipHeader)
         {
@@ -456,36 +457,29 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             }
             return ret.ToArray();
         }
-
-        /// <summary>
-        /// Finds locations of a number of records given by count that match a set of record types.
-        /// A new location is marked each time a record type that has already been encounterd is seen
-        /// </summary>
-        /// <param name="stream">Stream to read and progress</param>
-        /// <param name="count">Number of expected records</param>
-        /// <param name="trigger">Set of record types expected within one record</param>
-        /// <param name="constants">Metadata for reference</param>
-        /// <param name="skipHeader">Whether to skip the header in the return location values</param>
-        /// <returns>Array of located positions relative to the stream's position at the start</returns>
-        public static int[] ParseRecordLocationsByCount(
+        
+        private static int[] ParseRecordLocationsInternal(
             OverlayStream stream,
-            uint count,
-            ICollectionGetter<RecordType> trigger,
+            uint? count,
+            TriggeringRecordCollection trigger,
             RecordHeaderConstants constants,
-            bool skipHeader)
+            bool skipHeader,
+            TypedParseParams? parseParams = null)
         {
             var ret = new List<int>();
-            var set = new HashSet<RecordType>();
+            int? lastParsed = null;
             var startingPos = stream.Position;
             while (!stream.Complete)
             {
                 var varMeta = constants.GetVariableMeta(stream);
-                var recType = varMeta.RecordType;
-                if (trigger.Contains(recType))
+                var recType = parseParams.ConvertToStandard(varMeta.RecordType);
+                var index = trigger.IndexOf(recType);
+                if (index != -1)
                 {
-                    // If new record type we haven't seen before in our current record, just continue
-                    if (set.Add(recType) && ret.Count > 0)
+                    // If new record isn't before one we've already parsed, just continue
+                    if (lastParsed != null && lastParsed.Value < index)
                     {
+                        lastParsed = index;
                         stream.Position += (int)varMeta.TotalLength;
                         continue;
                     }
@@ -503,11 +497,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                         stream.Position += (int)varMeta.TotalLength;
                     }
 
-                    // Clear set of seen types
-                    set.Clear();
-                    set.Add(recType);
+                    lastParsed = index;
                 }
-                else if (ret.Count == count)
+                else if (count.HasValue && ret.Count == count)
                 {
                     break;
                 }
@@ -519,10 +511,50 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             return ret.ToArray();
         }
 
+        /// <summary>
+        /// Finds locations of a number of records given by count that match a set of record types.
+        /// A new location is marked each time a record type that has already been encounterd is seen
+        /// </summary>
+        /// <param name="stream">Stream to read and progress</param>
+        /// <param name="count">Number of expected records</param>
+        /// <param name="trigger">Set of record types expected within one record</param>
+        /// <param name="constants">Metadata for reference</param>
+        /// <param name="skipHeader">Whether to skip the header in the return location values</param>
+        /// <returns>Array of located positions relative to the stream's position at the start</returns>
+        public static int[] ParseRecordLocationsByCount(
+            OverlayStream stream,
+            uint count,
+            TriggeringRecordCollection trigger,
+            RecordHeaderConstants constants,
+            bool skipHeader,
+            TypedParseParams? parseParams = null)
+        {
+            return ParseRecordLocationsInternal(stream, count, trigger, constants, skipHeader, parseParams);
+        }
+
+        /// <summary>
+        /// Finds locations of a number of records given by count that match a set of record types.
+        /// A new location is marked each time a record type that has already been encounterd is seen
+        /// </summary>
+        /// <param name="stream">Stream to read and progress</param>
+        /// <param name="trigger">Set of record types expected within one record</param>
+        /// <param name="constants">Metadata for reference</param>
+        /// <param name="skipHeader">Whether to skip the header in the return location values</param>
+        /// <returns>Array of located positions relative to the stream's position at the start</returns>
+        public static int[] ParseRecordLocations(
+            OverlayStream stream,
+            TriggeringRecordCollection trigger,
+            RecordHeaderConstants constants,
+            bool skipHeader,
+            TypedParseParams? parseParams = null)
+        {
+            return ParseRecordLocationsInternal(stream, count: null, trigger, constants, skipHeader, parseParams);
+        }
+
         public static int[] ParseRecordLocations(
             OverlayStream stream,
             long finalPos,
-            ICollectionGetter<RecordType> triggers,
+            TriggeringRecordCollection triggers,
             RecordType includeTrigger,
             RecordHeaderConstants constants,
             bool skipHeader)
@@ -627,7 +659,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
 
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
             OverlayStream stream,
-            ICollectionGetter<RecordType> trigger,
+            TriggeringRecordCollection trigger,
             StreamTypedFactory<T> factory,
             TypedParseParams? parseParams)
         {
@@ -649,7 +681,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
 
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
             OverlayStream stream,
-            ICollectionGetter<RecordType> trigger,
+            TriggeringRecordCollection trigger,
             ConverterFactory<T> factory,
             TypedParseParams? parseParams)
         {

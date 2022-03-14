@@ -27,17 +27,17 @@ namespace Mutagen.Bethesda.Plugins.Masters.DI
         
         public IMasterReferenceReader FromPath(ModPath path)
         {
-            return MasterReferenceReader.FromPath(path, _gameReleaseContext.Release, fileSystem: _fileSystem);
+            return MasterReferenceCollection.FromPath(path, _gameReleaseContext.Release, fileSystem: _fileSystem);
         }
 
         public IMasterReferenceReader FromStream(Stream stream, ModKey modKey, bool disposeStream = true)
         {
-            return MasterReferenceReader.FromStream(stream, modKey, _gameReleaseContext.Release, disposeStream);
+            return MasterReferenceCollection.FromStream(stream, modKey, _gameReleaseContext.Release, disposeStream);
         }
 
         public IMasterReferenceReader FromStream(IMutagenReadStream stream)
         {
-            return MasterReferenceReader.FromStream(stream);
+            return MasterReferenceCollection.FromStream(stream);
         }
     }
 }

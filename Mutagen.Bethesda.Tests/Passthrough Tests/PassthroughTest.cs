@@ -231,7 +231,7 @@ public abstract class PassthroughTest
         var copyInPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_CopyIn");
         var strsProcessedPath = Path.Combine(tmp.Dir.Path, "Strings/Processed");
 
-        var masterRefs = MasterReferenceReader.FromPath(new ModPath(ModKey, this.FilePath.Path), GameRelease);
+        var masterRefs = MasterReferenceCollection.FromPath(new ModPath(ModKey, this.FilePath.Path), GameRelease);
 
         // Do normal
         if (Settings.TestNormal)

@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         {
         }
 
-        public virtual void GenerateWrapperCtor(
+        public virtual async Task GenerateWrapperCtor(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen)

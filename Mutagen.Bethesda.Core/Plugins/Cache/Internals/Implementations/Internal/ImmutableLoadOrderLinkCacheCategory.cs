@@ -14,10 +14,11 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
     internal class ImmutableLoadOrderLinkCacheCategory<TKey>
         where TKey : notnull
     {
+        private readonly GameCategory _gameCategory;
         private readonly bool _hasAny;
         private readonly bool _simple;
         private readonly IReadOnlyList<IModGetter> _listedOrder;
-        private readonly IReadOnlyDictionary<Type, Type[]> _linkInterfaces;
+        private readonly IMetaInterfaceMapGetter _metaInterfaceMapGetter;
         private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
         private readonly Dictionary<Type, DepthCache<TKey, LinkCacheItem>> _winningRecords = new();
@@ -28,13 +29,15 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             bool hasAny,
             bool simple,
             IReadOnlyList<IModGetter> listedOrder,
+            IMetaInterfaceMapGetter metaInterfaceMapGetter,
             Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
         {
+            _gameCategory = gameCategory;
             _hasAny = hasAny;
             _simple = simple;
             _listedOrder = listedOrder;
-            _linkInterfaces = LinkInterfaceMapping.InterfaceToObjectTypes(gameCategory);
+            _metaInterfaceMapGetter = metaInterfaceMapGetter;
             _keyGetter = keyGetter;
             _shortCircuit = shortCircuit;
         }
@@ -69,7 +72,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                     }
                     else
                     {
-                        if (!_linkInterfaces.TryGetValue(type, out var objs))
+                        if (!_metaInterfaceMapGetter.TryGetRegistrationsForInterface(_gameCategory, type, out _))
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
@@ -102,11 +105,11 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             }
 
             // Add records from that mod that aren't already cached 
-            if (_linkInterfaces.TryGetValue(type, out var objs))
+            if (_metaInterfaceMapGetter.TryGetRegistrationsForInterface(_gameCategory, type, out var objs))
             {
-                foreach (var objType in objs)
+                foreach (var regis in objs.Registrations)
                 {
-                    AddRecords(targetMod, LoquiRegistration.GetRegister(objType).GetterType);
+                    AddRecords(targetMod, regis.GetterType);
                 }
             }
             else
@@ -254,11 +257,11 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                         }
 
                         // Add records from that mod that aren't already cached
-                        if (_linkInterfaces.TryGetValue(type, out var objs))
+                        if (_metaInterfaceMapGetter.TryGetRegistrationsForInterface(_gameCategory, type, out var objs))
                         {
-                            foreach (var objType in objs)
+                            foreach (var regis in objs.Registrations)
                             {
-                                AddRecords(targetMod, LoquiRegistration.GetRegister(objType).GetterType);
+                                AddRecords(targetMod, regis.GetterType);
                             }
                         }
                         else

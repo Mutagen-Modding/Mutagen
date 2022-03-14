@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
@@ -16,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
     {
         [Theory]
         [MemberData(nameof(ContextTestSources))]
-        public void FormLink_Direct_ResolveAllContexts_Empty(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
+        public void FormLink_Direct_ResolveAllContexts_Empty(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
@@ -28,7 +29,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 
         [Theory]
         [MemberData(nameof(ContextTestSources))]
-        public void FormLink_Direct_ResolveAllContexts_Typed_Empty(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
+        public void FormLink_Direct_ResolveAllContexts_Typed_Empty(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
@@ -40,7 +41,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 
         [Theory]
         [MemberData(nameof(ContextTestSources))]
-        public void FormLink_Direct_ResolveAllContexts_Linked(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
+        public void FormLink_Direct_ResolveAllContexts_Linked(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();

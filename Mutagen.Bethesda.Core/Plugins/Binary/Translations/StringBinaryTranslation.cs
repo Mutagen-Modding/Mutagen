@@ -135,6 +135,13 @@ public class StringBinaryTranslation
         BinaryStringUtility.Write(writer, item, binaryType: StringBinaryType.NullTerminate, encoding: writer.MetaData.Encodings.NonTranslated);
     }
 
+    public void Write(
+        MutagenWriter writer,
+        ReadOnlySpan<char> item)
+    {
+        BinaryStringUtility.Write(writer, item, binaryType: StringBinaryType.NullTerminate, encoding: writer.MetaData.Encodings.NonTranslated);
+    }
+
     public void WriteNullable(
         MutagenWriter writer,
         string? item)

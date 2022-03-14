@@ -261,9 +261,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, TintPreset.Mask<R>?>>();
                         obj.Presets.Specific = l;
-                        foreach (var item in Presets.Specific.WithIndex())
+                        foreach (var item in Presets.Specific)
                         {
-                            MaskItemIndexed<R, TintPreset.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, TintPreset.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, TintPreset.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, TintPreset.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -897,22 +897,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.TINI,
-                        RecordTypes.TINT,
-                        RecordTypes.TINP,
-                        RecordTypes.TIND,
-                        RecordTypes.TINC,
-                        RecordTypes.TINV,
-                        RecordTypes.TIRS
-                    })
-            );
+            return new TriggeringRecordCollection(
+                RecordTypes.TINI,
+                RecordTypes.TINT,
+                RecordTypes.TINP,
+                RecordTypes.TIND,
+                RecordTypes.TINC,
+                RecordTypes.TINV,
+                RecordTypes.TIRS);
         });
         public static readonly Type BinaryWriteTranslation = typeof(TintAssetsBinaryWriteTranslation);
         #region Interface

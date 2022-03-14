@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -23,9 +24,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_ResolveAll_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAll_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -45,9 +46,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_ResolveAll_MultipleLinks(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAll_MultipleLinks(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -72,9 +73,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_ResolveAll_DoubleQuery(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAll_DoubleQuery(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -99,9 +100,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_ResolveAll_UnrelatedNotIncluded(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAll_UnrelatedNotIncluded(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -127,9 +128,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_ResolveAll_SeparateQueries(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAll_SeparateQueries(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();

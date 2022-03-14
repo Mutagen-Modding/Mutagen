@@ -12,6 +12,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Implementations
     {
         public override bool ReadOnly => false;
 
+        public ImmutableDirectTests(LinkingTestInit testInit) : base(testInit)
+        {
+        }
+
         public override IDisposable ConvertMod(SkyrimMod mod, out ISkyrimModGetter getter)
         {
             getter = mod;

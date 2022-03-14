@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -30,9 +31,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_TryResolve_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_TryResolve_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -59,9 +60,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_TryResolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_TryResolve_DeepRecord_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -108,9 +109,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_Resolve_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_Resolve_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -136,9 +137,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_Resolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_Resolve_DeepRecord_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -174,9 +175,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_TryResolve_MarkerInterface(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_TryResolve_MarkerInterface(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var spell = mod.Spells.AddNew();
@@ -211,9 +212,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_TryResolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_TryResolve_MarkerInterface_DeepRecord_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -252,9 +253,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_Resolve_MarkerInterface(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_Resolve_MarkerInterface(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var spell = mod.Spells.AddNew();
@@ -288,9 +289,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void FormLink_LoadOrder_Resolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void FormLink_LoadOrder_Resolve_MarkerInterface_DeepRecord_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();

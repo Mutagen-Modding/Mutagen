@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -24,7 +25,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 
         [Theory]
         [MemberData(nameof(ContextTestSources))]
-        public void FormLink_LoadOrder_ResolveAllContexts_Linked(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
+        public void FormLink_LoadOrder_ResolveAllContexts_Linked(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -44,7 +45,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 
         [Theory]
         [MemberData(nameof(ContextTestSources))]
-        public void FormLink_LoadOrder_ResolveAllContexts_MultipleLinks(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
+        public void FormLink_LoadOrder_ResolveAllContexts_MultipleLinks(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -71,7 +72,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 
         [Theory]
         [MemberData(nameof(ContextTestSources))]
-        public void FormLink_LoadOrder_ResolveAllContexts_DoubleQuery(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
+        public void FormLink_LoadOrder_ResolveAllContexts_DoubleQuery(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -99,7 +100,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 
         [Theory]
         [MemberData(nameof(ContextTestSources))]
-        public void FormLink_LoadOrder_ResolveAllContexts_UnrelatedNotIncluded(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
+        public void FormLink_LoadOrder_ResolveAllContexts_UnrelatedNotIncluded(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -127,7 +128,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 
         [Theory]
         [MemberData(nameof(ContextTestSources))]
-        public void FormLink_LoadOrder_ResolveAllContexts_SeparateQueries(LinkCacheTestTypes cacheType, AContextRetriever contextRetriever)
+        public void FormLink_LoadOrder_ResolveAllContexts_SeparateQueries(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();

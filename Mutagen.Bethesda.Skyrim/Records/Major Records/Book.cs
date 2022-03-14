@@ -89,10 +89,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 switch (item.Teaches)
                 {
-                    case BookSpell spell:
+                    case IBookSpellGetter spell:
                         FormLinkBinaryTranslation.Instance.Write(writer, spell.Spell);
                         break;
-                    case BookSkill skill:
+                    case IBookSkillGetter skill:
                         var skillVal = skill.Skill;
                         if (skillVal == null)
                         {
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
                             writer.Write((int)skillVal);
                         }
                         break;
-                    case BookTeachesNothing nothing:
+                    case IBookTeachesNothingGetter nothing:
                         writer.Write(nothing.RawContent);
                         break;
                     default:

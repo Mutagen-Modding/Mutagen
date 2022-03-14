@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
@@ -330,20 +331,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class CellBinaryOverlay
         {
-            static readonly ICollectionGetter<RecordType> TypicalPlacedTypes = new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>()
-                {
-                    RecordTypes.ACHR,
-                    RecordTypes.REFR,
-                    RecordTypes.PARW,
-                    RecordTypes.PBAR,
-                    RecordTypes.PBEA,
-                    RecordTypes.PCON,
-                    RecordTypes.PFLA,
-                    RecordTypes.PHZD,
-                    RecordTypes.PMIS,
-                    RecordTypes.PGRE,
-                });
+            static readonly TriggeringRecordCollection TypicalPlacedTypes = new TriggeringRecordCollection(
+                RecordTypes.ACHR,
+                RecordTypes.REFR,
+                RecordTypes.PARW,
+                RecordTypes.PBAR,
+                RecordTypes.PBEA,
+                RecordTypes.PCON,
+                RecordTypes.PFLA,
+                RecordTypes.PHZD,
+                RecordTypes.PMIS,
+                RecordTypes.PGRE);
 
             internal bool InsideWorldspace;
 
@@ -505,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,
-                                    locs: ParseRecordLocations(
+                                    locs: ParseLocationsRecordPerTrigger(
                                         stream: new OverlayStream(contentSpan, _package),
                                         triggers: TypicalPlacedTypes,
                                         constants: stream.MetaData.Constants.MajorConstants,

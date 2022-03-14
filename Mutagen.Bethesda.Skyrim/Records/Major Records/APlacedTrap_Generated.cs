@@ -616,9 +616,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, WaterReflection.Mask<R>?>>();
                         obj.Reflections.Specific = l;
-                        foreach (var item in Reflections.Specific.WithIndex())
+                        foreach (var item in Reflections.Specific)
                         {
-                            MaskItemIndexed<R, WaterReflection.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WaterReflection.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WaterReflection.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WaterReflection.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -631,9 +631,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>();
                         obj.LinkedReferences.Specific = l;
-                        foreach (var item in LinkedReferences.Specific.WithIndex())
+                        foreach (var item in LinkedReferences.Specific)
                         {
-                            MaskItemIndexed<R, LinkedReferences.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LinkedReferences.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LinkedReferences.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LinkedReferences.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -651,9 +651,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.LocationRefTypes.Specific = l;
-                        foreach (var item in LocationRefTypes.Specific.WithIndex())
+                        foreach (var item in LocationRefTypes.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -666,9 +666,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.DistantLodData.Specific = l;
-                        foreach (var item in DistantLodData.Specific.WithIndex())
+                        foreach (var item in DistantLodData.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1734,42 +1734,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.VMAD,
-                        RecordTypes.NAME,
-                        RecordTypes.XEZN,
-                        RecordTypes.XOWN,
-                        RecordTypes.XRNK,
-                        RecordTypes.XHTW,
-                        RecordTypes.XFVC,
-                        RecordTypes.XPWR,
-                        RecordTypes.XLKR,
-                        RecordTypes.XAPD,
-                        RecordTypes.XESP,
-                        RecordTypes.XEMI,
-                        RecordTypes.XMBR,
-                        RecordTypes.XIS2,
-                        RecordTypes.XLRT,
-                        RecordTypes.XLRL,
-                        RecordTypes.XLOD,
-                        RecordTypes.XSCL,
-                        RecordTypes.DATA,
-                        RecordTypes.PARW,
-                        RecordTypes.PBEA,
-                        RecordTypes.PFLA,
-                        RecordTypes.PCON,
-                        RecordTypes.PBAR,
-                        RecordTypes.PGRE,
-                        RecordTypes.PHZD,
-                        RecordTypes.PMIS
-                    })
-            );
+            return new TriggeringRecordCollection(
+                RecordTypes.VMAD,
+                RecordTypes.NAME,
+                RecordTypes.XEZN,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XHTW,
+                RecordTypes.XFVC,
+                RecordTypes.XPWR,
+                RecordTypes.XLKR,
+                RecordTypes.XAPD,
+                RecordTypes.XESP,
+                RecordTypes.XEMI,
+                RecordTypes.XMBR,
+                RecordTypes.XIS2,
+                RecordTypes.XLRT,
+                RecordTypes.XLRL,
+                RecordTypes.XLOD,
+                RecordTypes.XSCL,
+                RecordTypes.DATA,
+                RecordTypes.PARW,
+                RecordTypes.PBEA,
+                RecordTypes.PFLA,
+                RecordTypes.PCON,
+                RecordTypes.PBAR,
+                RecordTypes.PGRE,
+                RecordTypes.PHZD,
+                RecordTypes.PMIS);
         });
         public static readonly Type BinaryWriteTranslation = typeof(APlacedTrapBinaryWriteTranslation);
         #region Interface

@@ -462,7 +462,7 @@ public class OblivionProcessor : Processor
                     loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                     sub: new byte[] { 0, 0 });
                 this._instructions.SetRemove(
-                    section: RangeInt64.FactoryFromLength(
+                    section: RangeInt64.FromLength(
                         loc: fileOffset + dataLoc + dataRec.HeaderLength,
                         length: 2));
                 amount -= 2;
@@ -474,7 +474,7 @@ public class OblivionProcessor : Processor
                     loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                     sub: new byte[] { 0x54, 0 });
                 this._instructions.SetRemove(
-                    section: RangeInt64.FactoryFromLength(
+                    section: RangeInt64.FromLength(
                         loc: fileOffset + dataLoc + dataRec.HeaderLength + 0x54,
                         length: 2));
                 amount -= 2;
@@ -486,7 +486,7 @@ public class OblivionProcessor : Processor
                     loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                     sub: new byte[] { 0x28, 0 });
                 this._instructions.SetRemove(
-                    section: RangeInt64.FactoryFromLength(
+                    section: RangeInt64.FromLength(
                         loc: fileOffset + dataLoc + dataRec.HeaderLength + 0x28,
                         length: 2));
                 amount -= 2;
@@ -498,7 +498,7 @@ public class OblivionProcessor : Processor
                     loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                     sub: new byte[] { 0x3C, 0 });
                 this._instructions.SetRemove(
-                    section: RangeInt64.FactoryFromLength(
+                    section: RangeInt64.FromLength(
                         loc: fileOffset + dataLoc + dataRec.HeaderLength + 0x3C,
                         length: 2));
                 amount -= 2;

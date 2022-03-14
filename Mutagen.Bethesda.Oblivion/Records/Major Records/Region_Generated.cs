@@ -388,9 +388,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, RegionArea.Mask<R>?>>();
                         obj.Areas.Specific = l;
-                        foreach (var item in Areas.Specific.WithIndex())
+                        foreach (var item in Areas.Specific)
                         {
-                            MaskItemIndexed<R, RegionArea.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RegionArea.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, RegionArea.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RegionArea.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
@@ -36,6 +37,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                 hasAny: hasAny,
                 simple: simple,
                 listedOrder: _listedOrder,
+                metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 m => TryGet<FormKey>.Succeed(m.FormKey),
                 f => f.IsNull);
             this._editorIdCache = new ImmutableLoadOrderLinkCacheCategory<string>(
@@ -43,6 +45,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                 hasAny: hasAny,
                 simple: simple,
                 listedOrder: _listedOrder,
+                metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 m =>
                 {
                     var edid = m.EditorID;

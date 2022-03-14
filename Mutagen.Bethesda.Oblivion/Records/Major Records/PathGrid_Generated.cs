@@ -312,9 +312,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, PathGridPoint.Mask<R>?>>();
                         obj.PointToPointConnections.Specific = l;
-                        foreach (var item in PointToPointConnections.Specific.WithIndex())
+                        foreach (var item in PointToPointConnections.Specific)
                         {
-                            MaskItemIndexed<R, PathGridPoint.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PathGridPoint.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PathGridPoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PathGridPoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -328,9 +328,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, InterCellPoint.Mask<R>?>>();
                         obj.InterCellConnections.Specific = l;
-                        foreach (var item in InterCellConnections.Specific.WithIndex())
+                        foreach (var item in InterCellConnections.Specific)
                         {
-                            MaskItemIndexed<R, InterCellPoint.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, InterCellPoint.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, InterCellPoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, InterCellPoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -343,9 +343,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>>();
                         obj.PointToReferenceMappings.Specific = l;
-                        foreach (var item in PointToReferenceMappings.Specific.WithIndex())
+                        foreach (var item in PointToReferenceMappings.Specific)
                         {
-                            MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

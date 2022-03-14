@@ -15,12 +15,27 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers
             where TMajor : class, IMajorRecord, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter;
         
+        public abstract IModContext? ResolveContext<TMajorGetter, TScopedSetter, TScopedGetter>(
+            IFormLinkGetter<TMajorGetter> formLink,
+            ILinkCache<ISkyrimMod, ISkyrimModGetter> cache)
+            where TMajorGetter : class, IMajorRecordGetter
+            where TScopedSetter : class, TScopedGetter, IMajorRecord
+            where TScopedGetter : class, TMajorGetter;
+        
         public abstract bool TryResolveContext<TMajor, TMajorGetter>(
             IFormLinkGetter<TMajorGetter> formLink,
             ILinkCache<ISkyrimMod, ISkyrimModGetter> cache,
             [MaybeNullWhen(false)] out IModContext context)
             where TMajor : class, IMajorRecord, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter;
+        
+        public abstract bool TryResolveContext<TMajorGetter, TScopedSetter, TScopedGetter>(
+            IFormLinkGetter<TMajorGetter> formLink,
+            ILinkCache<ISkyrimMod, ISkyrimModGetter> cache,
+            [MaybeNullWhen(false)] out IModContext context)
+            where TMajorGetter : class, IMajorRecordGetter
+            where TScopedSetter : class, TScopedGetter, IMajorRecord
+            where TScopedGetter : class, TMajorGetter;
         
         public abstract IEnumerable<IModContext> ResolveAllContexts<TMajor, TMajorGetter>(
             IFormLinkGetter<TMajorGetter> formLink,
@@ -43,10 +58,28 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers
             return formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, TMajor, TMajorGetter>(cache);
         }
 
+        public override IModContext? ResolveContext<TMajorGetter, TScopedSetter, TScopedGetter>(IFormLinkGetter<TMajorGetter> formLink, ILinkCache<ISkyrimMod, ISkyrimModGetter> cache)
+        {
+            return formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, TMajorGetter, TScopedSetter, TScopedGetter>(cache);
+        }
+
         public override bool TryResolveContext<TMajor, TMajorGetter>(IFormLinkGetter<TMajorGetter> formLink, ILinkCache<ISkyrimMod, ISkyrimModGetter> cache,
             [MaybeNullWhen(false)] out IModContext context)
         {
             if (formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, TMajor, TMajorGetter>(cache, out var resolved))
+            {
+                context = resolved;
+                return true;
+            }
+
+            context = default;
+            return false;
+        }
+
+        public override bool TryResolveContext<TMajorGetter, TScopedSetter, TScopedGetter>(IFormLinkGetter<TMajorGetter> formLink, ILinkCache<ISkyrimMod, ISkyrimModGetter> cache,
+            [MaybeNullWhen(false)] out IModContext context)
+        {
+            if (formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, TMajorGetter, TScopedSetter, TScopedGetter>(cache, out var resolved))
             {
                 context = resolved;
                 return true;
@@ -74,6 +107,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers
             return formLink.ResolveSimpleContext<TMajorGetter>(cache);
         }
 
+        public override IModContext? ResolveContext<TMajorGetter, TScopedSetter, TScopedGetter>(IFormLinkGetter<TMajorGetter> formLink, ILinkCache<ISkyrimMod, ISkyrimModGetter> cache)
+        {
+            return formLink.ResolveSimpleContext<TMajorGetter, TScopedGetter>(cache);
+        }
+
         public override bool TryResolveContext<TMajor, TMajorGetter>(IFormLinkGetter<TMajorGetter> formLink, ILinkCache<ISkyrimMod, ISkyrimModGetter> cache,
             [MaybeNullWhen(false)] out IModContext context)
         {
@@ -87,6 +125,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers
             return false;
         }
 
+        public override bool TryResolveContext<TMajorGetter, TScopedSetter, TScopedGetter>(IFormLinkGetter<TMajorGetter> formLink, ILinkCache<ISkyrimMod, ISkyrimModGetter> cache,
+            [MaybeNullWhen(false)] out IModContext context)
+        {
+            if (formLink.TryResolveSimpleContext<TMajorGetter, TScopedGetter>(cache, out var resolved))
+            {
+                context = resolved;
+                return true;
+            }
+
+            context = default;
+            return false;
+        }
+        
         public override IEnumerable<IModContext> ResolveAllContexts<TMajor, TMajorGetter>(IFormLinkGetter<TMajorGetter> formLink, ILinkCache<ISkyrimMod, ISkyrimModGetter> cache)
         {
             return formLink.ResolveAllSimpleContexts<TMajorGetter>(cache);

@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
@@ -9,9 +10,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
     public partial class ALinkingTests
     {
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void EDIDLink_TryResolve_NoLink(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void EDIDLink_TryResolve_NoLink(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var effect = mod.MagicEffects.AddNew();
@@ -22,9 +23,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void EDIDLink_TryResolve_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void EDIDLink_TryResolve_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var effect = mod.MagicEffects.AddNew();
@@ -36,9 +37,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void EDIDLink_Resolve_NoLink(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void EDIDLink_Resolve_NoLink(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var effect = mod.MagicEffects.AddNew();
@@ -49,9 +50,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void EDIDLink_Resolve_Linked(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void EDIDLink_Resolve_Linked(LinkCachePreferences.RetentionType cacheType)
         {
             var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var effect = mod.MagicEffects.AddNew();

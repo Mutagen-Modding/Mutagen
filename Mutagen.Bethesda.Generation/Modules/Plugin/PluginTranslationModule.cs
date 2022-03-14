@@ -67,6 +67,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             this._typeGenerations[typeof(Int16Type)] = new PrimitiveBinaryTranslationGeneration<short>(expectedLen: 2);
             this._typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>(expectedLen: 4);
             this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>(expectedLen: 8);
+            this._typeGenerations[typeof(P3UInt8Type)] = new PointBinaryTranslationGeneration<P3UInt8>(expectedLen: 3);
             this._typeGenerations[typeof(P3UInt16Type)] = new PointBinaryTranslationGeneration<P3UInt16>(expectedLen: 6);
             this._typeGenerations[typeof(P2FloatType)] = new PointBinaryTranslationGeneration<P2Float>(expectedLen: 8);
             this._typeGenerations[typeof(P3FloatType)] = new PointBinaryTranslationGeneration<P3Float>(expectedLen: 12);
@@ -93,6 +94,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             this._typeGenerations[typeof(RecordTypeType)] = new RecordTypeBinaryTranslationGeneration();
             this._typeGenerations[typeof(FormLinkType)] = new FormLinkBinaryTranslationGeneration();
             this._typeGenerations[typeof(ListType)] = new PluginListBinaryTranslationGeneration();
+            this._typeGenerations[typeof(Array2dType)] = new Array2dBinaryTranslationGeneration();
             this._typeGenerations[typeof(ArrayType)] = new PluginArrayBinaryTranslationGeneration();
             this._typeGenerations[typeof(DictType)] = new DictBinaryTranslationGeneration();
             this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayBinaryTranslationGeneration();
@@ -2052,7 +2054,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         nonIntegrated: true))
                     {
                         if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
-                        typeGen.GenerateWrapperCtor(
+                        await typeGen.GenerateWrapperCtor(
                             fg: fg,
                             objGen: obj,
                             typeGen: field);
@@ -2097,7 +2099,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(path.ModKey))");
+                            fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceCollection)}(path.ModKey))");
                             using (new BraceWrapper(fg) { AppendSemicolon = true })
                             {
                                 fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");

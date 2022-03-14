@@ -2,6 +2,7 @@ using Loqui.Generation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {
@@ -25,6 +26,15 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
         public AspectInterfaceDefinition(string name)
         {
             Name = name;
+        }
+
+        public virtual IEnumerable<(string Name, bool Setter)> Registrations
+        {
+            get
+            {
+                yield return ($"typeof({Name})", true);
+                yield return ($"typeof({Name}Getter)", false);
+            }
         }
 
         public abstract bool Test(ObjectGeneration obj, Dictionary<string, TypeGeneration> allFields );

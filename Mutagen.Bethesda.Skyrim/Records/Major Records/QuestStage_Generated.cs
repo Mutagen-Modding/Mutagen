@@ -247,9 +247,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, QuestLogEntry.Mask<R>?>>();
                         obj.LogEntries.Specific = l;
-                        foreach (var item in LogEntries.Specific.WithIndex())
+                        foreach (var item in LogEntries.Specific)
                         {
-                            MaskItemIndexed<R, QuestLogEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, QuestLogEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, QuestLogEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, QuestLogEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

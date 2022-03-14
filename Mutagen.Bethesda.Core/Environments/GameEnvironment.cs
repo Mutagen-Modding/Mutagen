@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Installs;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order;
@@ -17,6 +18,20 @@ namespace Mutagen.Bethesda.Environments
 
         private GameEnvironment()
         {
+        }
+        
+        public IGameEnvironmentState<TModSetter, TModGetter> Construct<TModSetter, TModGetter>(
+            GameRelease release,
+            LinkCachePreferences? linkCachePrefs = null)
+            where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
+        {
+            if (!GameLocations.TryGetGameFolder(release, out var gameFolderPath))
+            {
+                throw new ArgumentException($"Could not find game folder automatically.");
+            }
+
+            return GameEnvironmentState<TModSetter, TModGetter>.Construct(release, gameFolderPath, linkCachePrefs);
         }
     }
 

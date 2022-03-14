@@ -259,9 +259,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.PotentialGrass.Specific = l;
-                        foreach (var item in PotentialGrass.Specific.WithIndex())
+                        foreach (var item in PotentialGrass.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         where TKey : notnull
     {
         private readonly ImmutableModLinkCache<TMod, TModGetter> _parent;
+        private readonly IMetaInterfaceMapGetter _metaInterfaceMapGetter;
         private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
         private readonly Lazy<IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>> _untypedContexts;
@@ -35,10 +36,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 
         public ImmutableModLinkCacheContextCategory(
             ImmutableModLinkCache<TMod, TModGetter> parent,
+            IMetaInterfaceMapGetter metaInterfaceMapGetter,
             Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
         {
             _parent = parent;
+            _metaInterfaceMapGetter = metaInterfaceMapGetter;
             _keyGetter = keyGetter;
             _shortCircuit = shortCircuit;
             _untypedContexts = new Lazy<IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>>(
@@ -172,17 +175,15 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                     }
                     else
                     {
-                        var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(_parent._sourceMod.GameRelease.ToCategory());
-                        if (!interfaceMappings.TryGetValue(type, out var objs))
+                        if (!_metaInterfaceMapGetter.TryGetRegistrationsForInterface(_parent._sourceMod.GameRelease.ToCategory(), type, out var objs))
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
                         var majorRecords = new Cache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
-                        foreach (var objType in objs)
+                        foreach (var regis in objs.Registrations)
                         {
                             majorRecords.Set(
-                                GetContextCache(
-                                    LoquiRegistration.GetRegister(objType).GetterType).Items);
+                                GetContextCache(regis.GetterType).Items);
                         }
                         _contexts[type] = majorRecords;
                         cache = majorRecords;

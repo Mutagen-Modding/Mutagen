@@ -198,9 +198,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectNamedFunction.Mask<R>?>>();
                         obj.Functions.Specific = l;
-                        foreach (var item in Functions.Specific.WithIndex())
+                        foreach (var item in Functions.Specific)
                         {
-                            MaskItemIndexed<R, PexObjectNamedFunction.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PexObjectNamedFunction.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PexObjectNamedFunction.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PexObjectNamedFunction.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

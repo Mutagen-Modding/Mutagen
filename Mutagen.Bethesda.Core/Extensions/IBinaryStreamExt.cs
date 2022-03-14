@@ -19,7 +19,8 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="stream">Stream to read from</param>
         /// <param name="binaryType">Format to read the color as</param>
         /// <returns>Bytes converted to a Color object</returns>
-        public static Color ReadColor(this IBinaryReadStream stream, ColorBinaryType binaryType)
+        public static Color ReadColor<TStream>(this TStream stream, ColorBinaryType binaryType)
+            where TStream : IBinaryReadStream
         {
             switch (binaryType)
             {

@@ -259,9 +259,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Tracks.Specific = l;
-                        foreach (var item in Tracks.Specific.WithIndex())
+                        foreach (var item in Tracks.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

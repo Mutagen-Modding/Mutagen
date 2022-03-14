@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
@@ -13,9 +14,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
     public partial class ALinkingTests
     {
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void ResolveLinkIdentifiers(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void ResolveLinkIdentifiers(LinkCachePreferences.RetentionType cacheType)
         {
             var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var armor = prototype.Armors.AddNew();

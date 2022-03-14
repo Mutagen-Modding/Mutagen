@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
@@ -38,9 +39,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void LoadOrderNoMatch(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void LoadOrderNoMatch(LinkCachePreferences.RetentionType cacheType)
         {
             var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             prototype.Npcs.AddNew();
@@ -67,9 +68,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void LoadOrderSingle(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void LoadOrderSingle(LinkCachePreferences.RetentionType cacheType)
         {
             var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var objEffect1 = prototype.ObjectEffects.AddNew("EditorID1");
@@ -100,6 +101,26 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(objEffect1.FormKey, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(objEffect1.EditorID, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(objEffect2.FormKey, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(objEffect2.EditorID, typeof(IObjectBoundedGetter), out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
 
@@ -301,9 +322,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void LoadOrderOneInEach(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void LoadOrderOneInEach(LinkCachePreferences.RetentionType cacheType)
         {
             var prototype1 = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var prototype2 = new SkyrimMod(new ModKey("Dummy2", ModType.Master), SkyrimRelease.SkyrimLE);
@@ -341,6 +362,26 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
+                Assert.True(package.TryResolve(objEffect1.FormKey, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(objEffect1.EditorID, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(objEffect2.FormKey, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(objEffect2.EditorID, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
                 Assert.True(package.TryResolve(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
@@ -536,9 +577,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void LoadOrderOverridden(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void LoadOrderOverridden(LinkCachePreferences.RetentionType cacheType)
         {
             var prototype1 = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var prototype2 = new SkyrimMod(new ModKey("Dummy2", ModType.Master), SkyrimRelease.SkyrimLE);
@@ -587,6 +628,37 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(topModRec.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, topModRec.FormKey);
+            });
+            
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(overriddenRec.FormKey, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, overrideRec.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(unoverriddenRec.FormKey, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(topModRec.FormKey, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, topModRec.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(overriddenRec.EditorID, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, overrideRec.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(unoverriddenRec.EditorID, typeof(IObjectBoundedGetter), out var rec));
+                Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(topModRec.EditorID, typeof(IObjectBoundedGetter), out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             });
 
@@ -884,9 +956,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void LoadOrderOriginatingTarget(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void LoadOrderOriginatingTarget(LinkCachePreferences.RetentionType cacheType)
         {
             var prototype1 = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var prototype2 = new SkyrimMod(new ModKey("Dummy2", ModType.Master), SkyrimRelease.SkyrimLE);
@@ -909,6 +981,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
+                rec.EditorID.Should().Be(overriddenRec.EditorID);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(overriddenRec.FormKey, typeof(IObjectBoundedGetter), out var rec, ResolveTarget.Origin));
                 rec.EditorID.Should().Be(overriddenRec.EditorID);
             });
 
@@ -971,9 +1048,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void LoadOrderReadOnlyMechanics(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void LoadOrderReadOnlyMechanics(LinkCachePreferences.RetentionType cacheType)
         {
             var wrapper = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
             var overrideWrapper = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimOverrideMod, SkyrimRelease.SkyrimSE);

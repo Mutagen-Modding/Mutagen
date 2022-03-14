@@ -6,234 +6,235 @@
 using System;
 using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Loqui;
 
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public class LinkInterfaceMapping : ILinkInterfaceMapping
     {
-        public IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes { get; }
+        public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Skyrim;
 
         public LinkInterfaceMapping()
         {
-            var dict = new Dictionary<Type, Type[]>();
-            dict[typeof(IIdleRelation)] = new Type[]
+            var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IIdleRelation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(ActionRecord),
-                typeof(IdleAnimation),
-            };
-            dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)];
-            dict[typeof(IObjectId)] = new Type[]
+                ActionRecord_Registration.Instance,
+                IdleAnimation_Registration.Instance,
+            });
+            dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)] with { Setter = false };
+            dict[typeof(IObjectId)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Activator),
-                typeof(Ammunition),
-                typeof(Armor),
-                typeof(Book),
-                typeof(Container),
-                typeof(Door),
-                typeof(Faction),
-                typeof(FormList),
-                typeof(Furniture),
-                typeof(IdleMarker),
-                typeof(Ingestible),
-                typeof(Key),
-                typeof(Light),
-                typeof(MiscItem),
-                typeof(MoveableStatic),
-                typeof(Npc),
-                typeof(Projectile),
-                typeof(Scroll),
-                typeof(Shout),
-                typeof(SoundMarker),
-                typeof(Spell),
-                typeof(Static),
-                typeof(TextureSet),
-                typeof(Weapon),
-            };
-            dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)];
-            dict[typeof(IItem)] = new Type[]
+                Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                Container_Registration.Instance,
+                Door_Registration.Instance,
+                Faction_Registration.Instance,
+                FormList_Registration.Instance,
+                Furniture_Registration.Instance,
+                IdleMarker_Registration.Instance,
+                Ingestible_Registration.Instance,
+                Key_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                MoveableStatic_Registration.Instance,
+                Npc_Registration.Instance,
+                Projectile_Registration.Instance,
+                Scroll_Registration.Instance,
+                Shout_Registration.Instance,
+                SoundMarker_Registration.Instance,
+                Spell_Registration.Instance,
+                Static_Registration.Instance,
+                TextureSet_Registration.Instance,
+                Weapon_Registration.Instance,
+            });
+            dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)] with { Setter = false };
+            dict[typeof(IItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(AlchemicalApparatus),
-                typeof(Ammunition),
-                typeof(Armor),
-                typeof(Book),
-                typeof(Ingestible),
-                typeof(Ingredient),
-                typeof(Key),
-                typeof(LeveledItem),
-                typeof(Light),
-                typeof(MiscItem),
-                typeof(Scroll),
-                typeof(SoulGem),
-                typeof(Weapon),
-            };
-            dict[typeof(IItemGetter)] = dict[typeof(IItem)];
-            dict[typeof(IConstructible)] = new Type[]
+                AlchemicalApparatus_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                Ingestible_Registration.Instance,
+                Ingredient_Registration.Instance,
+                Key_Registration.Instance,
+                LeveledItem_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                Scroll_Registration.Instance,
+                SoulGem_Registration.Instance,
+                Weapon_Registration.Instance,
+            });
+            dict[typeof(IItemGetter)] = dict[typeof(IItem)] with { Setter = false };
+            dict[typeof(IConstructible)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(AlchemicalApparatus),
-                typeof(Ammunition),
-                typeof(Armor),
-                typeof(Book),
-                typeof(Ingestible),
-                typeof(Ingredient),
-                typeof(Key),
-                typeof(Light),
-                typeof(MiscItem),
-                typeof(Scroll),
-                typeof(SoulGem),
-                typeof(Weapon),
-            };
-            dict[typeof(IConstructibleGetter)] = dict[typeof(IConstructible)];
-            dict[typeof(IOutfitTarget)] = new Type[]
+                AlchemicalApparatus_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                Ingestible_Registration.Instance,
+                Ingredient_Registration.Instance,
+                Key_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                Scroll_Registration.Instance,
+                SoulGem_Registration.Instance,
+                Weapon_Registration.Instance,
+            });
+            dict[typeof(IConstructibleGetter)] = dict[typeof(IConstructible)] with { Setter = false };
+            dict[typeof(IOutfitTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Armor),
-                typeof(LeveledItem),
-            };
-            dict[typeof(IOutfitTargetGetter)] = dict[typeof(IOutfitTarget)];
-            dict[typeof(IBindableEquipment)] = new Type[]
+                Armor_Registration.Instance,
+                LeveledItem_Registration.Instance,
+            });
+            dict[typeof(IOutfitTargetGetter)] = dict[typeof(IOutfitTarget)] with { Setter = false };
+            dict[typeof(IBindableEquipment)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Armor),
-                typeof(Weapon),
-            };
-            dict[typeof(IBindableEquipmentGetter)] = dict[typeof(IBindableEquipment)];
-            dict[typeof(IComplexLocation)] = new Type[]
+                Armor_Registration.Instance,
+                Weapon_Registration.Instance,
+            });
+            dict[typeof(IBindableEquipmentGetter)] = dict[typeof(IBindableEquipment)] with { Setter = false };
+            dict[typeof(IComplexLocation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Cell),
-                typeof(Worldspace),
-            };
-            dict[typeof(IComplexLocationGetter)] = dict[typeof(IComplexLocation)];
-            dict[typeof(IDialog)] = new Type[]
+                Cell_Registration.Instance,
+                Worldspace_Registration.Instance,
+            });
+            dict[typeof(IComplexLocationGetter)] = dict[typeof(IComplexLocation)] with { Setter = false };
+            dict[typeof(IDialog)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(DialogResponses),
-                typeof(DialogTopic),
-            };
-            dict[typeof(IDialogGetter)] = dict[typeof(IDialog)];
-            dict[typeof(ILocationTargetable)] = new Type[]
+                DialogResponses_Registration.Instance,
+                DialogTopic_Registration.Instance,
+            });
+            dict[typeof(IDialogGetter)] = dict[typeof(IDialog)] with { Setter = false };
+            dict[typeof(ILocationTargetable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Door),
-                typeof(PlacedNpc),
-                typeof(PlacedObject),
-            };
-            dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)];
-            dict[typeof(IOwner)] = new Type[]
+                Door_Registration.Instance,
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
+            });
+            dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)] with { Setter = false };
+            dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Faction),
-                typeof(PlacedNpc),
-            };
-            dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)];
-            dict[typeof(IRelatable)] = new Type[]
+                Faction_Registration.Instance,
+                PlacedNpc_Registration.Instance,
+            });
+            dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
+            dict[typeof(IRelatable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Faction),
-                typeof(Race),
-            };
-            dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)];
-            dict[typeof(IRegionTarget)] = new Type[]
+                Faction_Registration.Instance,
+                Race_Registration.Instance,
+            });
+            dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)] with { Setter = false };
+            dict[typeof(IRegionTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Flora),
-                typeof(LandscapeTexture),
-                typeof(MoveableStatic),
-                typeof(Static),
-                typeof(Tree),
-            };
-            dict[typeof(IRegionTargetGetter)] = dict[typeof(IRegionTarget)];
-            dict[typeof(IAliasVoiceType)] = new Type[]
+                Flora_Registration.Instance,
+                LandscapeTexture_Registration.Instance,
+                MoveableStatic_Registration.Instance,
+                Static_Registration.Instance,
+                Tree_Registration.Instance,
+            });
+            dict[typeof(IRegionTargetGetter)] = dict[typeof(IRegionTarget)] with { Setter = false };
+            dict[typeof(IAliasVoiceType)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(FormList),
-                typeof(Npc),
-            };
-            dict[typeof(IAliasVoiceTypeGetter)] = dict[typeof(IAliasVoiceType)];
-            dict[typeof(ILockList)] = new Type[]
+                FormList_Registration.Instance,
+                Npc_Registration.Instance,
+            });
+            dict[typeof(IAliasVoiceTypeGetter)] = dict[typeof(IAliasVoiceType)] with { Setter = false };
+            dict[typeof(ILockList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(FormList),
-                typeof(Npc),
-            };
-            dict[typeof(ILockListGetter)] = dict[typeof(ILockList)];
-            dict[typeof(IPlacedTrapTarget)] = new Type[]
+                FormList_Registration.Instance,
+                Npc_Registration.Instance,
+            });
+            dict[typeof(ILockListGetter)] = dict[typeof(ILockList)] with { Setter = false };
+            dict[typeof(IPlacedTrapTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Hazard),
-                typeof(Projectile),
-            };
-            dict[typeof(IPlacedTrapTargetGetter)] = dict[typeof(IPlacedTrapTarget)];
-            dict[typeof(IHarvestTarget)] = new Type[]
+                Hazard_Registration.Instance,
+                Projectile_Registration.Instance,
+            });
+            dict[typeof(IPlacedTrapTargetGetter)] = dict[typeof(IPlacedTrapTarget)] with { Setter = false };
+            dict[typeof(IHarvestTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Ingestible),
-                typeof(Ingredient),
-                typeof(LeveledItem),
-                typeof(MiscItem),
-            };
-            dict[typeof(IHarvestTargetGetter)] = dict[typeof(IHarvestTarget)];
-            dict[typeof(IKeywordLinkedReference)] = new Type[]
+                Ingestible_Registration.Instance,
+                Ingredient_Registration.Instance,
+                LeveledItem_Registration.Instance,
+                MiscItem_Registration.Instance,
+            });
+            dict[typeof(IHarvestTargetGetter)] = dict[typeof(IHarvestTarget)] with { Setter = false };
+            dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Keyword),
-                typeof(PlacedNpc),
-                typeof(PlacedObject),
-                typeof(APlacedTrap),
-            };
-            dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)];
-            dict[typeof(INpcSpawn)] = new Type[]
+                Keyword_Registration.Instance,
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
+                APlacedTrap_Registration.Instance,
+            });
+            dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)] with { Setter = false };
+            dict[typeof(INpcSpawn)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(LeveledNpc),
-                typeof(Npc),
-            };
-            dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)];
-            dict[typeof(ISpellRecord)] = new Type[]
+                LeveledNpc_Registration.Instance,
+                Npc_Registration.Instance,
+            });
+            dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)] with { Setter = false };
+            dict[typeof(ISpellRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(LeveledSpell),
-                typeof(Shout),
-                typeof(Spell),
-            };
-            dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)];
-            dict[typeof(IEmittance)] = new Type[]
+                LeveledSpell_Registration.Instance,
+                Shout_Registration.Instance,
+                Spell_Registration.Instance,
+            });
+            dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)] with { Setter = false };
+            dict[typeof(IEmittance)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Light),
-                typeof(Region),
-            };
-            dict[typeof(IEmittanceGetter)] = dict[typeof(IEmittance)];
-            dict[typeof(ILocationRecord)] = new Type[]
+                Light_Registration.Instance,
+                Region_Registration.Instance,
+            });
+            dict[typeof(IEmittanceGetter)] = dict[typeof(IEmittance)] with { Setter = false };
+            dict[typeof(ILocationRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(Location),
-                typeof(LocationReferenceType),
-            };
-            dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)];
-            dict[typeof(IEffectRecord)] = new Type[]
+                Location_Registration.Instance,
+                LocationReferenceType_Registration.Instance,
+            });
+            dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)] with { Setter = false };
+            dict[typeof(IEffectRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(ObjectEffect),
-                typeof(Spell),
-            };
-            dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)];
-            dict[typeof(ILinkedReference)] = new Type[]
+                ObjectEffect_Registration.Instance,
+                Spell_Registration.Instance,
+            });
+            dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)] with { Setter = false };
+            dict[typeof(ILinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(PlacedNpc),
-                typeof(PlacedObject),
-                typeof(APlacedTrap),
-            };
-            dict[typeof(ILinkedReferenceGetter)] = dict[typeof(ILinkedReference)];
-            dict[typeof(IPlaced)] = new Type[]
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
+                APlacedTrap_Registration.Instance,
+            });
+            dict[typeof(ILinkedReferenceGetter)] = dict[typeof(ILinkedReference)] with { Setter = false };
+            dict[typeof(IPlaced)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(PlacedNpc),
-                typeof(PlacedObject),
-                typeof(APlacedTrap),
-            };
-            dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)];
-            dict[typeof(IPlacedSimple)] = new Type[]
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
+                APlacedTrap_Registration.Instance,
+            });
+            dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)] with { Setter = false };
+            dict[typeof(IPlacedSimple)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(PlacedNpc),
-                typeof(PlacedObject),
-            };
-            dict[typeof(IPlacedSimpleGetter)] = dict[typeof(IPlacedSimple)];
-            dict[typeof(IPlacedThing)] = new Type[]
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
+            });
+            dict[typeof(IPlacedSimpleGetter)] = dict[typeof(IPlacedSimple)] with { Setter = false };
+            dict[typeof(IPlacedThing)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(PlacedObject),
-                typeof(APlacedTrap),
-            };
-            dict[typeof(IPlacedThingGetter)] = dict[typeof(IPlacedThing)];
-            dict[typeof(ISound)] = new Type[]
+                PlacedObject_Registration.Instance,
+                APlacedTrap_Registration.Instance,
+            });
+            dict[typeof(IPlacedThingGetter)] = dict[typeof(IPlacedThing)] with { Setter = false };
+            dict[typeof(ISound)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                typeof(SoundDescriptor),
-                typeof(SoundMarker),
-            };
-            dict[typeof(ISoundGetter)] = dict[typeof(ISound)];
+                SoundDescriptor_Registration.Instance,
+                SoundMarker_Registration.Instance,
+            });
+            dict[typeof(ISoundGetter)] = dict[typeof(ISound)] with { Setter = false };
             InterfaceToObjectTypes = dict;
         }
     }

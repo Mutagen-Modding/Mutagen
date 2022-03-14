@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
             worldspace.OffsetData = new byte[ushort.MaxValue + 1];
             using (var writer = new MutagenWriter(mockFileSystem.File.OpenWrite(path), GameConstants.SkyrimSE))
             {
-                writer.MetaData.MasterReferences = new MasterReferenceReader(ModKey.Null, Enumerable.Empty<IMasterReferenceGetter>());
+                writer.MetaData.MasterReferences = new MasterReferenceCollection(ModKey.Null, Enumerable.Empty<IMasterReferenceGetter>());
                 worldspace.WriteToBinary(writer);
             }
 
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
             };
             using (var writer = new MutagenWriter(mockFileSystem.File.OpenWrite(path), GameConstants.SkyrimSE))
             {
-                writer.MetaData.MasterReferences = new MasterReferenceReader(ModKey.Null, Enumerable.Empty<IMasterReferenceGetter>());
+                writer.MetaData.MasterReferences = new MasterReferenceCollection(ModKey.Null, Enumerable.Empty<IMasterReferenceGetter>());
                 worldspace.WriteToBinary(writer);
             }
 

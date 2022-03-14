@@ -2653,9 +2653,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.BlurRadius.Specific = l;
-                        foreach (var item in BlurRadius.Specific.WithIndex())
+                        foreach (var item in BlurRadius.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2668,9 +2668,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.DoubleVisionStrength.Specific = l;
-                        foreach (var item in DoubleVisionStrength.Specific.WithIndex())
+                        foreach (var item in DoubleVisionStrength.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2683,9 +2683,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ColorFrame.Mask<R>?>>();
                         obj.TintColor.Specific = l;
-                        foreach (var item in TintColor.Specific.WithIndex())
+                        foreach (var item in TintColor.Specific)
                         {
-                            MaskItemIndexed<R, ColorFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ColorFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ColorFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ColorFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2698,9 +2698,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ColorFrame.Mask<R>?>>();
                         obj.FadeColor.Specific = l;
-                        foreach (var item in FadeColor.Specific.WithIndex())
+                        foreach (var item in FadeColor.Specific)
                         {
-                            MaskItemIndexed<R, ColorFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ColorFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ColorFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ColorFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2713,9 +2713,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.RadialBlurStrength.Specific = l;
-                        foreach (var item in RadialBlurStrength.Specific.WithIndex())
+                        foreach (var item in RadialBlurStrength.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2728,9 +2728,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.RadialBlurRampUp.Specific = l;
-                        foreach (var item in RadialBlurRampUp.Specific.WithIndex())
+                        foreach (var item in RadialBlurRampUp.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2743,9 +2743,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.RadialBlurStart.Specific = l;
-                        foreach (var item in RadialBlurStart.Specific.WithIndex())
+                        foreach (var item in RadialBlurStart.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2758,9 +2758,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.RadialBlurRampDown.Specific = l;
-                        foreach (var item in RadialBlurRampDown.Specific.WithIndex())
+                        foreach (var item in RadialBlurRampDown.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2773,9 +2773,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.RadialBlurDownStart.Specific = l;
-                        foreach (var item in RadialBlurDownStart.Specific.WithIndex())
+                        foreach (var item in RadialBlurDownStart.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2788,9 +2788,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.DepthOfFieldStrength.Specific = l;
-                        foreach (var item in DepthOfFieldStrength.Specific.WithIndex())
+                        foreach (var item in DepthOfFieldStrength.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2803,9 +2803,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.DepthOfFieldDistance.Specific = l;
-                        foreach (var item in DepthOfFieldDistance.Specific.WithIndex())
+                        foreach (var item in DepthOfFieldDistance.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2818,9 +2818,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.DepthOfFieldRange.Specific = l;
-                        foreach (var item in DepthOfFieldRange.Specific.WithIndex())
+                        foreach (var item in DepthOfFieldRange.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2833,9 +2833,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.MotionBlurStrength.Specific = l;
-                        foreach (var item in MotionBlurStrength.Specific.WithIndex())
+                        foreach (var item in MotionBlurStrength.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2848,9 +2848,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrEyeAdaptSpeedMult.Specific = l;
-                        foreach (var item in HdrEyeAdaptSpeedMult.Specific.WithIndex())
+                        foreach (var item in HdrEyeAdaptSpeedMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2863,9 +2863,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrEyeAdaptSpeedAdd.Specific = l;
-                        foreach (var item in HdrEyeAdaptSpeedAdd.Specific.WithIndex())
+                        foreach (var item in HdrEyeAdaptSpeedAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2878,9 +2878,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomBlurRadiusMult.Specific = l;
-                        foreach (var item in HdrBloomBlurRadiusMult.Specific.WithIndex())
+                        foreach (var item in HdrBloomBlurRadiusMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2893,9 +2893,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomBlurRadiusAdd.Specific = l;
-                        foreach (var item in HdrBloomBlurRadiusAdd.Specific.WithIndex())
+                        foreach (var item in HdrBloomBlurRadiusAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2908,9 +2908,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomThresholdMult.Specific = l;
-                        foreach (var item in HdrBloomThresholdMult.Specific.WithIndex())
+                        foreach (var item in HdrBloomThresholdMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2923,9 +2923,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomThresholdAdd.Specific = l;
-                        foreach (var item in HdrBloomThresholdAdd.Specific.WithIndex())
+                        foreach (var item in HdrBloomThresholdAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2938,9 +2938,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomScaleMult.Specific = l;
-                        foreach (var item in HdrBloomScaleMult.Specific.WithIndex())
+                        foreach (var item in HdrBloomScaleMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2953,9 +2953,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomScaleAdd.Specific = l;
-                        foreach (var item in HdrBloomScaleAdd.Specific.WithIndex())
+                        foreach (var item in HdrBloomScaleAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2968,9 +2968,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrTargetLumMinMult.Specific = l;
-                        foreach (var item in HdrTargetLumMinMult.Specific.WithIndex())
+                        foreach (var item in HdrTargetLumMinMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2983,9 +2983,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrTargetLumMinAdd.Specific = l;
-                        foreach (var item in HdrTargetLumMinAdd.Specific.WithIndex())
+                        foreach (var item in HdrTargetLumMinAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2998,9 +2998,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrTargetLumMaxMult.Specific = l;
-                        foreach (var item in HdrTargetLumMaxMult.Specific.WithIndex())
+                        foreach (var item in HdrTargetLumMaxMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3013,9 +3013,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrTargetLumMaxAdd.Specific = l;
-                        foreach (var item in HdrTargetLumMaxAdd.Specific.WithIndex())
+                        foreach (var item in HdrTargetLumMaxAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3028,9 +3028,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrSunlightScaleMult.Specific = l;
-                        foreach (var item in HdrSunlightScaleMult.Specific.WithIndex())
+                        foreach (var item in HdrSunlightScaleMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3043,9 +3043,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrSunlightScaleAdd.Specific = l;
-                        foreach (var item in HdrSunlightScaleAdd.Specific.WithIndex())
+                        foreach (var item in HdrSunlightScaleAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3058,9 +3058,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrSkyScaleMult.Specific = l;
-                        foreach (var item in HdrSkyScaleMult.Specific.WithIndex())
+                        foreach (var item in HdrSkyScaleMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3073,9 +3073,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrSkyScaleAdd.Specific = l;
-                        foreach (var item in HdrSkyScaleAdd.Specific.WithIndex())
+                        foreach (var item in HdrSkyScaleAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3088,9 +3088,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown08.Specific = l;
-                        foreach (var item in Unknown08.Specific.WithIndex())
+                        foreach (var item in Unknown08.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3103,9 +3103,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown48.Specific = l;
-                        foreach (var item in Unknown48.Specific.WithIndex())
+                        foreach (var item in Unknown48.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3118,9 +3118,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown09.Specific = l;
-                        foreach (var item in Unknown09.Specific.WithIndex())
+                        foreach (var item in Unknown09.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3133,9 +3133,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown49.Specific = l;
-                        foreach (var item in Unknown49.Specific.WithIndex())
+                        foreach (var item in Unknown49.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3148,9 +3148,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0A.Specific = l;
-                        foreach (var item in Unknown0A.Specific.WithIndex())
+                        foreach (var item in Unknown0A.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3163,9 +3163,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4A.Specific = l;
-                        foreach (var item in Unknown4A.Specific.WithIndex())
+                        foreach (var item in Unknown4A.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3178,9 +3178,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0B.Specific = l;
-                        foreach (var item in Unknown0B.Specific.WithIndex())
+                        foreach (var item in Unknown0B.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3193,9 +3193,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4B.Specific = l;
-                        foreach (var item in Unknown4B.Specific.WithIndex())
+                        foreach (var item in Unknown4B.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3208,9 +3208,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0C.Specific = l;
-                        foreach (var item in Unknown0C.Specific.WithIndex())
+                        foreach (var item in Unknown0C.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3223,9 +3223,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4C.Specific = l;
-                        foreach (var item in Unknown4C.Specific.WithIndex())
+                        foreach (var item in Unknown4C.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3238,9 +3238,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0D.Specific = l;
-                        foreach (var item in Unknown0D.Specific.WithIndex())
+                        foreach (var item in Unknown0D.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3253,9 +3253,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4D.Specific = l;
-                        foreach (var item in Unknown4D.Specific.WithIndex())
+                        foreach (var item in Unknown4D.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3268,9 +3268,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0E.Specific = l;
-                        foreach (var item in Unknown0E.Specific.WithIndex())
+                        foreach (var item in Unknown0E.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3283,9 +3283,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4E.Specific = l;
-                        foreach (var item in Unknown4E.Specific.WithIndex())
+                        foreach (var item in Unknown4E.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3298,9 +3298,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0F.Specific = l;
-                        foreach (var item in Unknown0F.Specific.WithIndex())
+                        foreach (var item in Unknown0F.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3313,9 +3313,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4F.Specific = l;
-                        foreach (var item in Unknown4F.Specific.WithIndex())
+                        foreach (var item in Unknown4F.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3328,9 +3328,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown10.Specific = l;
-                        foreach (var item in Unknown10.Specific.WithIndex())
+                        foreach (var item in Unknown10.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3343,9 +3343,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown50.Specific = l;
-                        foreach (var item in Unknown50.Specific.WithIndex())
+                        foreach (var item in Unknown50.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3358,9 +3358,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicSaturationMult.Specific = l;
-                        foreach (var item in CinematicSaturationMult.Specific.WithIndex())
+                        foreach (var item in CinematicSaturationMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3373,9 +3373,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicSaturationAdd.Specific = l;
-                        foreach (var item in CinematicSaturationAdd.Specific.WithIndex())
+                        foreach (var item in CinematicSaturationAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3388,9 +3388,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicBrightnessMult.Specific = l;
-                        foreach (var item in CinematicBrightnessMult.Specific.WithIndex())
+                        foreach (var item in CinematicBrightnessMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3403,9 +3403,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicBrightnessAdd.Specific = l;
-                        foreach (var item in CinematicBrightnessAdd.Specific.WithIndex())
+                        foreach (var item in CinematicBrightnessAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3418,9 +3418,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicContrastMult.Specific = l;
-                        foreach (var item in CinematicContrastMult.Specific.WithIndex())
+                        foreach (var item in CinematicContrastMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3433,9 +3433,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicContrastAdd.Specific = l;
-                        foreach (var item in CinematicContrastAdd.Specific.WithIndex())
+                        foreach (var item in CinematicContrastAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3448,9 +3448,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown14.Specific = l;
-                        foreach (var item in Unknown14.Specific.WithIndex())
+                        foreach (var item in Unknown14.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3463,9 +3463,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown54.Specific = l;
-                        foreach (var item in Unknown54.Specific.WithIndex())
+                        foreach (var item in Unknown54.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

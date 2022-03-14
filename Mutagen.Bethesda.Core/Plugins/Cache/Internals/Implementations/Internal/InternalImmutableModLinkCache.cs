@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
@@ -26,13 +27,15 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         {
             _sourceMod = sourceMod;
             Category = sourceMod.GameRelease.ToCategory();
-            _simple = prefs is LinkCachePreferenceOnlyIdentifiers;
+            _simple = (prefs ?? LinkCachePreferences.Default).Retention == LinkCachePreferences.RetentionType.OnlyIdentifiers;
             _formKeyCache = new ImmutableModLinkCacheCategory<FormKey>(
                 this, 
+                prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 x => TryGet<FormKey>.Succeed(x.FormKey),
                 x => x.IsNull);
             _editorIdCache = new ImmutableModLinkCacheCategory<string>(
                 this,
+                prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 m =>
                 {
                     var edid = m.EditorID;

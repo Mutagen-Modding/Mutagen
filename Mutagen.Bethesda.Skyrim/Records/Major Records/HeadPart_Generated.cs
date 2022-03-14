@@ -411,9 +411,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ExtraParts.Specific = l;
-                        foreach (var item in ExtraParts.Specific.WithIndex())
+                        foreach (var item in ExtraParts.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -425,9 +425,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, Part.Mask<R>?>>();
                         obj.Parts.Specific = l;
-                        foreach (var item in Parts.Specific.WithIndex())
+                        foreach (var item in Parts.Specific)
                         {
-                            MaskItemIndexed<R, Part.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Part.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Part.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Part.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

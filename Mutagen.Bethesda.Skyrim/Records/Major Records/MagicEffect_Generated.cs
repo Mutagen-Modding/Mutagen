@@ -154,9 +154,6 @@ namespace Mutagen.Bethesda.Skyrim
         public readonly static ActorValue _ResistValue_Default = ActorValue.None;
         public ActorValue ResistValue { get; set; } = _ResistValue_Default;
         #endregion
-        #region CounterEffectCount
-        public UInt16 CounterEffectCount { get; set; } = default;
-        #endregion
         #region Unknown1
         public UInt16 Unknown1 { get; set; } = default;
         #endregion
@@ -302,25 +299,25 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.EnchantArt => this.EnchantArt;
         #endregion
-        #region Unknown2
-        private readonly IFormLink<ISkyrimMajorRecordGetter> _Unknown2 = new FormLink<ISkyrimMajorRecordGetter>();
-        public IFormLink<ISkyrimMajorRecordGetter> Unknown2
+        #region HitVisuals
+        private readonly IFormLink<IVisualEffectGetter> _HitVisuals = new FormLink<IVisualEffectGetter>();
+        public IFormLink<IVisualEffectGetter> HitVisuals
         {
-            get => _Unknown2;
-            set => _Unknown2.SetTo(value);
+            get => _HitVisuals;
+            set => _HitVisuals.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown2 => this.Unknown2;
+        IFormLinkGetter<IVisualEffectGetter> IMagicEffectGetter.HitVisuals => this.HitVisuals;
         #endregion
-        #region Unknown3
-        private readonly IFormLink<ISkyrimMajorRecordGetter> _Unknown3 = new FormLink<ISkyrimMajorRecordGetter>();
-        public IFormLink<ISkyrimMajorRecordGetter> Unknown3
+        #region EnchantVisuals
+        private readonly IFormLink<IVisualEffectGetter> _EnchantVisuals = new FormLink<IVisualEffectGetter>();
+        public IFormLink<IVisualEffectGetter> EnchantVisuals
         {
-            get => _Unknown3;
-            set => _Unknown3.SetTo(value);
+            get => _EnchantVisuals;
+            set => _EnchantVisuals.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown3 => this.Unknown3;
+        IFormLinkGetter<IVisualEffectGetter> IMagicEffectGetter.EnchantVisuals => this.EnchantVisuals;
         #endregion
         #region EquipAbility
         private readonly IFormLink<ISpellGetter> _EquipAbility = new FormLink<ISpellGetter>();
@@ -443,7 +440,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseCost = initialValue;
                 this.MagicSkill = initialValue;
                 this.ResistValue = initialValue;
-                this.CounterEffectCount = initialValue;
                 this.Unknown1 = initialValue;
                 this.CastingLight = initialValue;
                 this.TaperWeight = initialValue;
@@ -468,8 +464,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DualCastArt = initialValue;
                 this.DualCastScale = initialValue;
                 this.EnchantArt = initialValue;
-                this.Unknown2 = initialValue;
-                this.Unknown3 = initialValue;
+                this.HitVisuals = initialValue;
+                this.EnchantVisuals = initialValue;
                 this.EquipAbility = initialValue;
                 this.ImageSpaceModifier = initialValue;
                 this.PerkToApply = initialValue;
@@ -498,7 +494,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem BaseCost,
                 TItem MagicSkill,
                 TItem ResistValue,
-                TItem CounterEffectCount,
                 TItem Unknown1,
                 TItem CastingLight,
                 TItem TaperWeight,
@@ -523,8 +518,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem DualCastArt,
                 TItem DualCastScale,
                 TItem EnchantArt,
-                TItem Unknown2,
-                TItem Unknown3,
+                TItem HitVisuals,
+                TItem EnchantVisuals,
                 TItem EquipAbility,
                 TItem ImageSpaceModifier,
                 TItem PerkToApply,
@@ -552,7 +547,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseCost = BaseCost;
                 this.MagicSkill = MagicSkill;
                 this.ResistValue = ResistValue;
-                this.CounterEffectCount = CounterEffectCount;
                 this.Unknown1 = Unknown1;
                 this.CastingLight = CastingLight;
                 this.TaperWeight = TaperWeight;
@@ -577,8 +571,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DualCastArt = DualCastArt;
                 this.DualCastScale = DualCastScale;
                 this.EnchantArt = EnchantArt;
-                this.Unknown2 = Unknown2;
-                this.Unknown3 = Unknown3;
+                this.HitVisuals = HitVisuals;
+                this.EnchantVisuals = EnchantVisuals;
                 this.EquipAbility = EquipAbility;
                 this.ImageSpaceModifier = ImageSpaceModifier;
                 this.PerkToApply = PerkToApply;
@@ -609,7 +603,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem BaseCost;
             public TItem MagicSkill;
             public TItem ResistValue;
-            public TItem CounterEffectCount;
             public TItem Unknown1;
             public TItem CastingLight;
             public TItem TaperWeight;
@@ -634,8 +627,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem DualCastArt;
             public TItem DualCastScale;
             public TItem EnchantArt;
-            public TItem Unknown2;
-            public TItem Unknown3;
+            public TItem HitVisuals;
+            public TItem EnchantVisuals;
             public TItem EquipAbility;
             public TItem ImageSpaceModifier;
             public TItem PerkToApply;
@@ -668,7 +661,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.BaseCost, rhs.BaseCost)) return false;
                 if (!object.Equals(this.MagicSkill, rhs.MagicSkill)) return false;
                 if (!object.Equals(this.ResistValue, rhs.ResistValue)) return false;
-                if (!object.Equals(this.CounterEffectCount, rhs.CounterEffectCount)) return false;
                 if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
                 if (!object.Equals(this.CastingLight, rhs.CastingLight)) return false;
                 if (!object.Equals(this.TaperWeight, rhs.TaperWeight)) return false;
@@ -693,8 +685,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.DualCastArt, rhs.DualCastArt)) return false;
                 if (!object.Equals(this.DualCastScale, rhs.DualCastScale)) return false;
                 if (!object.Equals(this.EnchantArt, rhs.EnchantArt)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.HitVisuals, rhs.HitVisuals)) return false;
+                if (!object.Equals(this.EnchantVisuals, rhs.EnchantVisuals)) return false;
                 if (!object.Equals(this.EquipAbility, rhs.EquipAbility)) return false;
                 if (!object.Equals(this.ImageSpaceModifier, rhs.ImageSpaceModifier)) return false;
                 if (!object.Equals(this.PerkToApply, rhs.PerkToApply)) return false;
@@ -719,7 +711,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.BaseCost);
                 hash.Add(this.MagicSkill);
                 hash.Add(this.ResistValue);
-                hash.Add(this.CounterEffectCount);
                 hash.Add(this.Unknown1);
                 hash.Add(this.CastingLight);
                 hash.Add(this.TaperWeight);
@@ -744,8 +735,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.DualCastArt);
                 hash.Add(this.DualCastScale);
                 hash.Add(this.EnchantArt);
-                hash.Add(this.Unknown2);
-                hash.Add(this.Unknown3);
+                hash.Add(this.HitVisuals);
+                hash.Add(this.EnchantVisuals);
                 hash.Add(this.EquipAbility);
                 hash.Add(this.ImageSpaceModifier);
                 hash.Add(this.PerkToApply);
@@ -789,7 +780,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.BaseCost)) return false;
                 if (!eval(this.MagicSkill)) return false;
                 if (!eval(this.ResistValue)) return false;
-                if (!eval(this.CounterEffectCount)) return false;
                 if (!eval(this.Unknown1)) return false;
                 if (!eval(this.CastingLight)) return false;
                 if (!eval(this.TaperWeight)) return false;
@@ -818,8 +808,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.DualCastArt)) return false;
                 if (!eval(this.DualCastScale)) return false;
                 if (!eval(this.EnchantArt)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.HitVisuals)) return false;
+                if (!eval(this.EnchantVisuals)) return false;
                 if (!eval(this.EquipAbility)) return false;
                 if (!eval(this.ImageSpaceModifier)) return false;
                 if (!eval(this.PerkToApply)) return false;
@@ -893,7 +883,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.BaseCost)) return true;
                 if (eval(this.MagicSkill)) return true;
                 if (eval(this.ResistValue)) return true;
-                if (eval(this.CounterEffectCount)) return true;
                 if (eval(this.Unknown1)) return true;
                 if (eval(this.CastingLight)) return true;
                 if (eval(this.TaperWeight)) return true;
@@ -922,8 +911,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.DualCastArt)) return true;
                 if (eval(this.DualCastScale)) return true;
                 if (eval(this.EnchantArt)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.Unknown3)) return true;
+                if (eval(this.HitVisuals)) return true;
+                if (eval(this.EnchantVisuals)) return true;
                 if (eval(this.EquipAbility)) return true;
                 if (eval(this.ImageSpaceModifier)) return true;
                 if (eval(this.PerkToApply)) return true;
@@ -992,9 +981,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Keywords.Specific = l;
-                        foreach (var item in Keywords.Specific.WithIndex())
+                        foreach (var item in Keywords.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1003,7 +992,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.BaseCost = eval(this.BaseCost);
                 obj.MagicSkill = eval(this.MagicSkill);
                 obj.ResistValue = eval(this.ResistValue);
-                obj.CounterEffectCount = eval(this.CounterEffectCount);
                 obj.Unknown1 = eval(this.Unknown1);
                 obj.CastingLight = eval(this.CastingLight);
                 obj.TaperWeight = eval(this.TaperWeight);
@@ -1028,8 +1016,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.DualCastArt = eval(this.DualCastArt);
                 obj.DualCastScale = eval(this.DualCastScale);
                 obj.EnchantArt = eval(this.EnchantArt);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.Unknown3 = eval(this.Unknown3);
+                obj.HitVisuals = eval(this.HitVisuals);
+                obj.EnchantVisuals = eval(this.EnchantVisuals);
                 obj.EquipAbility = eval(this.EquipAbility);
                 obj.ImageSpaceModifier = eval(this.ImageSpaceModifier);
                 obj.PerkToApply = eval(this.PerkToApply);
@@ -1043,9 +1031,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.CounterEffects.Specific = l;
-                        foreach (var item in CounterEffects.Specific.WithIndex())
+                        foreach (var item in CounterEffects.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1057,9 +1045,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, MagicEffectSound.Mask<R>?>>();
                         obj.Sounds.Specific = l;
-                        foreach (var item in Sounds.Specific.WithIndex())
+                        foreach (var item in Sounds.Specific)
                         {
-                            MaskItemIndexed<R, MagicEffectSound.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, MagicEffectSound.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, MagicEffectSound.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MagicEffectSound.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1073,9 +1061,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1154,10 +1142,6 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.ResistValue ?? true)
                     {
                         fg.AppendItem(ResistValue, "ResistValue");
-                    }
-                    if (printMask?.CounterEffectCount ?? true)
-                    {
-                        fg.AppendItem(CounterEffectCount, "CounterEffectCount");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
@@ -1255,13 +1239,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(EnchantArt, "EnchantArt");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.HitVisuals ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        fg.AppendItem(HitVisuals, "HitVisuals");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.EnchantVisuals ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        fg.AppendItem(EnchantVisuals, "EnchantVisuals");
                     }
                     if (printMask?.EquipAbility ?? true)
                     {
@@ -1384,7 +1368,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? BaseCost;
             public Exception? MagicSkill;
             public Exception? ResistValue;
-            public Exception? CounterEffectCount;
             public Exception? Unknown1;
             public Exception? CastingLight;
             public Exception? TaperWeight;
@@ -1409,8 +1392,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? DualCastArt;
             public Exception? DualCastScale;
             public Exception? EnchantArt;
-            public Exception? Unknown2;
-            public Exception? Unknown3;
+            public Exception? HitVisuals;
+            public Exception? EnchantVisuals;
             public Exception? EquipAbility;
             public Exception? ImageSpaceModifier;
             public Exception? PerkToApply;
@@ -1446,8 +1429,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return MagicSkill;
                     case MagicEffect_FieldIndex.ResistValue:
                         return ResistValue;
-                    case MagicEffect_FieldIndex.CounterEffectCount:
-                        return CounterEffectCount;
                     case MagicEffect_FieldIndex.Unknown1:
                         return Unknown1;
                     case MagicEffect_FieldIndex.CastingLight:
@@ -1496,10 +1477,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return DualCastScale;
                     case MagicEffect_FieldIndex.EnchantArt:
                         return EnchantArt;
-                    case MagicEffect_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case MagicEffect_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case MagicEffect_FieldIndex.HitVisuals:
+                        return HitVisuals;
+                    case MagicEffect_FieldIndex.EnchantVisuals:
+                        return EnchantVisuals;
                     case MagicEffect_FieldIndex.EquipAbility:
                         return EquipAbility;
                     case MagicEffect_FieldIndex.ImageSpaceModifier:
@@ -1555,9 +1536,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case MagicEffect_FieldIndex.ResistValue:
                         this.ResistValue = ex;
-                        break;
-                    case MagicEffect_FieldIndex.CounterEffectCount:
-                        this.CounterEffectCount = ex;
                         break;
                     case MagicEffect_FieldIndex.Unknown1:
                         this.Unknown1 = ex;
@@ -1631,11 +1609,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffect_FieldIndex.EnchantArt:
                         this.EnchantArt = ex;
                         break;
-                    case MagicEffect_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case MagicEffect_FieldIndex.HitVisuals:
+                        this.HitVisuals = ex;
                         break;
-                    case MagicEffect_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case MagicEffect_FieldIndex.EnchantVisuals:
+                        this.EnchantVisuals = ex;
                         break;
                     case MagicEffect_FieldIndex.EquipAbility:
                         this.EquipAbility = ex;
@@ -1704,9 +1682,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case MagicEffect_FieldIndex.ResistValue:
                         this.ResistValue = (Exception?)obj;
-                        break;
-                    case MagicEffect_FieldIndex.CounterEffectCount:
-                        this.CounterEffectCount = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.Unknown1:
                         this.Unknown1 = (Exception?)obj;
@@ -1780,11 +1755,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffect_FieldIndex.EnchantArt:
                         this.EnchantArt = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.HitVisuals:
+                        this.HitVisuals = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.EnchantVisuals:
+                        this.EnchantVisuals = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.EquipAbility:
                         this.EquipAbility = (Exception?)obj;
@@ -1836,7 +1811,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (BaseCost != null) return true;
                 if (MagicSkill != null) return true;
                 if (ResistValue != null) return true;
-                if (CounterEffectCount != null) return true;
                 if (Unknown1 != null) return true;
                 if (CastingLight != null) return true;
                 if (TaperWeight != null) return true;
@@ -1861,8 +1835,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (DualCastArt != null) return true;
                 if (DualCastScale != null) return true;
                 if (EnchantArt != null) return true;
-                if (Unknown2 != null) return true;
-                if (Unknown3 != null) return true;
+                if (HitVisuals != null) return true;
+                if (EnchantVisuals != null) return true;
                 if (EquipAbility != null) return true;
                 if (ImageSpaceModifier != null) return true;
                 if (PerkToApply != null) return true;
@@ -1938,7 +1912,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(BaseCost, "BaseCost");
                 fg.AppendItem(MagicSkill, "MagicSkill");
                 fg.AppendItem(ResistValue, "ResistValue");
-                fg.AppendItem(CounterEffectCount, "CounterEffectCount");
                 fg.AppendItem(Unknown1, "Unknown1");
                 fg.AppendItem(CastingLight, "CastingLight");
                 fg.AppendItem(TaperWeight, "TaperWeight");
@@ -1963,8 +1936,8 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(DualCastArt, "DualCastArt");
                 fg.AppendItem(DualCastScale, "DualCastScale");
                 fg.AppendItem(EnchantArt, "EnchantArt");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(Unknown3, "Unknown3");
+                fg.AppendItem(HitVisuals, "HitVisuals");
+                fg.AppendItem(EnchantVisuals, "EnchantVisuals");
                 fg.AppendItem(EquipAbility, "EquipAbility");
                 fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
                 fg.AppendItem(PerkToApply, "PerkToApply");
@@ -2055,7 +2028,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
                 ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);
                 ret.ResistValue = this.ResistValue.Combine(rhs.ResistValue);
-                ret.CounterEffectCount = this.CounterEffectCount.Combine(rhs.CounterEffectCount);
                 ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
                 ret.CastingLight = this.CastingLight.Combine(rhs.CastingLight);
                 ret.TaperWeight = this.TaperWeight.Combine(rhs.TaperWeight);
@@ -2080,8 +2052,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.DualCastArt = this.DualCastArt.Combine(rhs.DualCastArt);
                 ret.DualCastScale = this.DualCastScale.Combine(rhs.DualCastScale);
                 ret.EnchantArt = this.EnchantArt.Combine(rhs.EnchantArt);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.HitVisuals = this.HitVisuals.Combine(rhs.HitVisuals);
+                ret.EnchantVisuals = this.EnchantVisuals.Combine(rhs.EnchantVisuals);
                 ret.EquipAbility = this.EquipAbility.Combine(rhs.EquipAbility);
                 ret.ImageSpaceModifier = this.ImageSpaceModifier.Combine(rhs.ImageSpaceModifier);
                 ret.PerkToApply = this.PerkToApply.Combine(rhs.PerkToApply);
@@ -2123,7 +2095,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool BaseCost;
             public bool MagicSkill;
             public bool ResistValue;
-            public bool CounterEffectCount;
             public bool Unknown1;
             public bool CastingLight;
             public bool TaperWeight;
@@ -2148,8 +2119,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool DualCastArt;
             public bool DualCastScale;
             public bool EnchantArt;
-            public bool Unknown2;
-            public bool Unknown3;
+            public bool HitVisuals;
+            public bool EnchantVisuals;
             public bool EquipAbility;
             public bool ImageSpaceModifier;
             public bool PerkToApply;
@@ -2176,7 +2147,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseCost = defaultOn;
                 this.MagicSkill = defaultOn;
                 this.ResistValue = defaultOn;
-                this.CounterEffectCount = defaultOn;
                 this.Unknown1 = defaultOn;
                 this.CastingLight = defaultOn;
                 this.TaperWeight = defaultOn;
@@ -2200,8 +2170,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DualCastArt = defaultOn;
                 this.DualCastScale = defaultOn;
                 this.EnchantArt = defaultOn;
-                this.Unknown2 = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.HitVisuals = defaultOn;
+                this.EnchantVisuals = defaultOn;
                 this.EquipAbility = defaultOn;
                 this.ImageSpaceModifier = defaultOn;
                 this.PerkToApply = defaultOn;
@@ -2226,7 +2196,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((BaseCost, null));
                 ret.Add((MagicSkill, null));
                 ret.Add((ResistValue, null));
-                ret.Add((CounterEffectCount, null));
                 ret.Add((Unknown1, null));
                 ret.Add((CastingLight, null));
                 ret.Add((TaperWeight, null));
@@ -2251,8 +2220,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DualCastArt, null));
                 ret.Add((DualCastScale, null));
                 ret.Add((EnchantArt, null));
-                ret.Add((Unknown2, null));
-                ret.Add((Unknown3, null));
+                ret.Add((HitVisuals, null));
+                ret.Add((EnchantVisuals, null));
                 ret.Add((EquipAbility, null));
                 ret.Add((ImageSpaceModifier, null));
                 ret.Add((PerkToApply, null));
@@ -2438,7 +2407,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single BaseCost { get; set; }
         new ActorValue MagicSkill { get; set; }
         new ActorValue ResistValue { get; set; }
-        new UInt16 CounterEffectCount { get; set; }
         new UInt16 Unknown1 { get; set; }
         new IFormLink<ILightGetter> CastingLight { get; set; }
         new Single TaperWeight { get; set; }
@@ -2463,8 +2431,8 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLink<IDualCastDataGetter> DualCastArt { get; set; }
         new Single DualCastScale { get; set; }
         new IFormLink<IArtObjectGetter> EnchantArt { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> Unknown2 { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> Unknown3 { get; set; }
+        new IFormLink<IVisualEffectGetter> HitVisuals { get; set; }
+        new IFormLink<IVisualEffectGetter> EnchantVisuals { get; set; }
         new IFormLink<ISpellGetter> EquipAbility { get; set; }
         new IFormLink<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
         new IFormLink<IPerkGetter> PerkToApply { get; set; }
@@ -2523,7 +2491,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single BaseCost { get; }
         ActorValue MagicSkill { get; }
         ActorValue ResistValue { get; }
-        UInt16 CounterEffectCount { get; }
         UInt16 Unknown1 { get; }
         IFormLinkGetter<ILightGetter> CastingLight { get; }
         Single TaperWeight { get; }
@@ -2548,8 +2515,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IDualCastDataGetter> DualCastArt { get; }
         Single DualCastScale { get; }
         IFormLinkGetter<IArtObjectGetter> EnchantArt { get; }
-        IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown2 { get; }
-        IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown3 { get; }
+        IFormLinkGetter<IVisualEffectGetter> HitVisuals { get; }
+        IFormLinkGetter<IVisualEffectGetter> EnchantVisuals { get; }
         IFormLinkGetter<ISpellGetter> EquipAbility { get; }
         IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
         IFormLinkGetter<IPerkGetter> PerkToApply { get; }
@@ -2733,44 +2700,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         BaseCost = 11,
         MagicSkill = 12,
         ResistValue = 13,
-        CounterEffectCount = 14,
-        Unknown1 = 15,
-        CastingLight = 16,
-        TaperWeight = 17,
-        HitShader = 18,
-        EnchantShader = 19,
-        MinimumSkillLevel = 20,
-        SpellmakingArea = 21,
-        SpellmakingCastingTime = 22,
-        TaperCurve = 23,
-        TaperDuration = 24,
-        SecondActorValueWeight = 25,
-        Archetype = 26,
-        Projectile = 27,
-        Explosion = 28,
-        CastType = 29,
-        TargetType = 30,
-        SecondActorValue = 31,
-        CastingArt = 32,
-        HitEffectArt = 33,
-        ImpactData = 34,
-        SkillUsageMultiplier = 35,
-        DualCastArt = 36,
-        DualCastScale = 37,
-        EnchantArt = 38,
-        Unknown2 = 39,
-        Unknown3 = 40,
-        EquipAbility = 41,
-        ImageSpaceModifier = 42,
-        PerkToApply = 43,
-        CastingSoundLevel = 44,
-        ScriptEffectAIScore = 45,
-        ScriptEffectAIDelayTime = 46,
-        CounterEffects = 47,
-        Sounds = 48,
-        Description = 49,
-        Conditions = 50,
-        DATADataTypeState = 51,
+        Unknown1 = 14,
+        CastingLight = 15,
+        TaperWeight = 16,
+        HitShader = 17,
+        EnchantShader = 18,
+        MinimumSkillLevel = 19,
+        SpellmakingArea = 20,
+        SpellmakingCastingTime = 21,
+        TaperCurve = 22,
+        TaperDuration = 23,
+        SecondActorValueWeight = 24,
+        Archetype = 25,
+        Projectile = 26,
+        Explosion = 27,
+        CastType = 28,
+        TargetType = 29,
+        SecondActorValue = 30,
+        CastingArt = 31,
+        HitEffectArt = 32,
+        ImpactData = 33,
+        SkillUsageMultiplier = 34,
+        DualCastArt = 35,
+        DualCastScale = 36,
+        EnchantArt = 37,
+        HitVisuals = 38,
+        EnchantVisuals = 39,
+        EquipAbility = 40,
+        ImageSpaceModifier = 41,
+        PerkToApply = 42,
+        CastingSoundLevel = 43,
+        ScriptEffectAIScore = 44,
+        ScriptEffectAIDelayTime = 45,
+        CounterEffects = 46,
+        Sounds = 47,
+        Description = 48,
+        Conditions = 49,
+        DATADataTypeState = 50,
     }
     #endregion
 
@@ -2788,9 +2754,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "6f4b3983-51e3-47e9-894e-9c442948e6d1";
 
-        public const ushort AdditionalFieldCount = 46;
+        public const ushort AdditionalFieldCount = 45;
 
-        public const ushort FieldCount = 52;
+        public const ushort FieldCount = 51;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -2867,7 +2833,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BaseCost = default;
             item.MagicSkill = MagicEffect._MagicSkill_Default;
             item.ResistValue = MagicEffect._ResistValue_Default;
-            item.CounterEffectCount = default;
             item.Unknown1 = default;
             item.CastingLight.Clear();
             item.TaperWeight = default;
@@ -2892,8 +2857,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DualCastArt.Clear();
             item.DualCastScale = default;
             item.EnchantArt.Clear();
-            item.Unknown2.Clear();
-            item.Unknown3.Clear();
+            item.HitVisuals.Clear();
+            item.EnchantVisuals.Clear();
             item.EquipAbility.Clear();
             item.ImageSpaceModifier.Clear();
             item.PerkToApply.Clear();
@@ -2935,8 +2900,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.ImpactData.Relink(mapping);
             obj.DualCastArt.Relink(mapping);
             obj.EnchantArt.Relink(mapping);
-            obj.Unknown2.Relink(mapping);
-            obj.Unknown3.Relink(mapping);
+            obj.HitVisuals.Relink(mapping);
+            obj.EnchantVisuals.Relink(mapping);
             obj.EquipAbility.Relink(mapping);
             obj.ImageSpaceModifier.Relink(mapping);
             obj.PerkToApply.Relink(mapping);
@@ -3026,7 +2991,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
             ret.MagicSkill = item.MagicSkill == rhs.MagicSkill;
             ret.ResistValue = item.ResistValue == rhs.ResistValue;
-            ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
             ret.Unknown1 = item.Unknown1 == rhs.Unknown1;
             ret.CastingLight = item.CastingLight.Equals(rhs.CastingLight);
             ret.TaperWeight = item.TaperWeight.EqualsWithin(rhs.TaperWeight);
@@ -3051,8 +3015,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.DualCastArt = item.DualCastArt.Equals(rhs.DualCastArt);
             ret.DualCastScale = item.DualCastScale.EqualsWithin(rhs.DualCastScale);
             ret.EnchantArt = item.EnchantArt.Equals(rhs.EnchantArt);
-            ret.Unknown2 = item.Unknown2.Equals(rhs.Unknown2);
-            ret.Unknown3 = item.Unknown3.Equals(rhs.Unknown3);
+            ret.HitVisuals = item.HitVisuals.Equals(rhs.HitVisuals);
+            ret.EnchantVisuals = item.EnchantVisuals.Equals(rhs.EnchantVisuals);
             ret.EquipAbility = item.EquipAbility.Equals(rhs.EquipAbility);
             ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
             ret.PerkToApply = item.PerkToApply.Equals(rhs.PerkToApply);
@@ -3173,10 +3137,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.ResistValue, "ResistValue");
             }
-            if (printMask?.CounterEffectCount ?? true)
-            {
-                fg.AppendItem(item.CounterEffectCount, "CounterEffectCount");
-            }
             if (printMask?.Unknown1 ?? true)
             {
                 fg.AppendItem(item.Unknown1, "Unknown1");
@@ -3273,13 +3233,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.EnchantArt.FormKey, "EnchantArt");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.HitVisuals ?? true)
             {
-                fg.AppendItem(item.Unknown2.FormKey, "Unknown2");
+                fg.AppendItem(item.HitVisuals.FormKey, "HitVisuals");
             }
-            if (printMask?.Unknown3 ?? true)
+            if (printMask?.EnchantVisuals ?? true)
             {
-                fg.AppendItem(item.Unknown3.FormKey, "Unknown3");
+                fg.AppendItem(item.EnchantVisuals.FormKey, "EnchantVisuals");
             }
             if (printMask?.EquipAbility ?? true)
             {
@@ -3453,10 +3413,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (lhs.ResistValue != rhs.ResistValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
-            {
-                if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
-            }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
             {
                 if (lhs.Unknown1 != rhs.Unknown1) return false;
@@ -3557,13 +3513,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!lhs.EnchantArt.Equals(rhs.EnchantArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitVisuals) ?? true))
             {
-                if (!lhs.Unknown2.Equals(rhs.Unknown2)) return false;
+                if (!lhs.HitVisuals.Equals(rhs.HitVisuals)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown3) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantVisuals) ?? true))
             {
-                if (!lhs.Unknown3.Equals(rhs.Unknown3)) return false;
+                if (!lhs.EnchantVisuals.Equals(rhs.EnchantVisuals)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
             {
@@ -3651,7 +3607,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.BaseCost);
             hash.Add(item.MagicSkill);
             hash.Add(item.ResistValue);
-            hash.Add(item.CounterEffectCount);
             hash.Add(item.Unknown1);
             hash.Add(item.CastingLight);
             hash.Add(item.TaperWeight);
@@ -3676,8 +3631,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.DualCastArt);
             hash.Add(item.DualCastScale);
             hash.Add(item.EnchantArt);
-            hash.Add(item.Unknown2);
-            hash.Add(item.Unknown3);
+            hash.Add(item.HitVisuals);
+            hash.Add(item.EnchantVisuals);
             hash.Add(item.EquipAbility);
             hash.Add(item.ImageSpaceModifier);
             hash.Add(item.PerkToApply);
@@ -3749,8 +3704,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield return FormLinkInformation.Factory(obj.ImpactData);
             yield return FormLinkInformation.Factory(obj.DualCastArt);
             yield return FormLinkInformation.Factory(obj.EnchantArt);
-            yield return FormLinkInformation.Factory(obj.Unknown2);
-            yield return FormLinkInformation.Factory(obj.Unknown3);
+            yield return FormLinkInformation.Factory(obj.HitVisuals);
+            yield return FormLinkInformation.Factory(obj.EnchantVisuals);
             yield return FormLinkInformation.Factory(obj.EquipAbility);
             yield return FormLinkInformation.Factory(obj.ImageSpaceModifier);
             yield return FormLinkInformation.Factory(obj.PerkToApply);
@@ -3921,10 +3876,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.ResistValue = rhs.ResistValue;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
-            {
-                item.CounterEffectCount = rhs.CounterEffectCount;
-            }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
             {
                 item.Unknown1 = rhs.Unknown1;
@@ -4039,13 +3990,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.EnchantArt.SetTo(rhs.EnchantArt.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitVisuals) ?? true))
             {
-                item.Unknown2.SetTo(rhs.Unknown2.FormKey);
+                item.HitVisuals.SetTo(rhs.HitVisuals.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantVisuals) ?? true))
             {
-                item.Unknown3.SetTo(rhs.Unknown3.FormKey);
+                item.EnchantVisuals.SetTo(rhs.EnchantVisuals.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
             {
@@ -4369,7 +4320,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.ResistValue,
                     length: 4);
-                writer.Write(item.CounterEffectCount);
+                MagicEffectBinaryWriteTranslation.WriteBinaryCounterEffectLogic(
+                    writer: writer,
+                    item: item);
                 writer.Write(item.Unknown1);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -4441,10 +4394,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.EnchantArt);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Unknown2);
+                    item: item.HitVisuals);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Unknown3);
+                    item: item.EnchantVisuals);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.EquipAbility);
@@ -4507,6 +4460,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMagicEffectGetter item)
         {
             WriteBinaryAssociatedItemCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCounterEffectLogicCustom(
+            MutagenWriter writer,
+            IMagicEffectGetter item);
+
+        public static void WriteBinaryCounterEffectLogic(
+            MutagenWriter writer,
+            IMagicEffectGetter item)
+        {
+            WriteBinaryCounterEffectLogicCustom(
                 writer: writer,
                 item: item);
         }
@@ -4676,7 +4642,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ResistValue = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
-                    item.CounterEffectCount = dataFrame.ReadUInt16();
+                    MagicEffectBinaryCreateTranslation.FillBinaryCounterEffectLogicCustom(
+                        frame: dataFrame,
+                        item: item);
                     item.Unknown1 = dataFrame.ReadUInt16();
                     item.CastingLight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.TaperWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
@@ -4709,8 +4677,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DualCastArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.DualCastScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.EnchantArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Unknown2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Unknown3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.HitVisuals.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.EnchantVisuals.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.EquipAbility.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.ImageSpaceModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.PerkToApply.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -4768,6 +4736,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static partial void FillBinaryAssociatedItemCustom(
+            MutagenFrame frame,
+            IMagicEffectInternal item);
+
+        public static partial void FillBinaryCounterEffectLogicCustom(
             MutagenFrame frame,
             IMagicEffectInternal item);
 
@@ -4877,10 +4849,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool _ResistValue_IsSet => _DATALocation.HasValue;
         public ActorValue ResistValue => _ResistValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ResistValueLocation, 0x4)) : default;
         #endregion
-        #region CounterEffectCount
-        private int _CounterEffectCountLocation => _DATALocation!.Value + 0x14;
-        private bool _CounterEffectCount_IsSet => _DATALocation.HasValue;
-        public UInt16 CounterEffectCount => _CounterEffectCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_CounterEffectCountLocation, 2)) : default;
+        #region CounterEffectLogic
+         partial void CounterEffectLogicCustomParse(
+            OverlayStream stream,
+            int offset);
         #endregion
         #region Unknown1
         private int _Unknown1Location => _DATALocation!.Value + 0x16;
@@ -5001,15 +4973,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool _EnchantArt_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IArtObjectGetter> EnchantArt => _EnchantArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
-        #region Unknown2
-        private int _Unknown2Location => _DATALocation!.Value + 0x78;
-        private bool _Unknown2_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown2 => _Unknown2_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Unknown2Location, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        #region HitVisuals
+        private int _HitVisualsLocation => _DATALocation!.Value + 0x78;
+        private bool _HitVisuals_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IVisualEffectGetter> HitVisuals => _HitVisuals_IsSet ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitVisualsLocation, 0x4)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
-        #region Unknown3
-        private int _Unknown3Location => _DATALocation!.Value + 0x7C;
-        private bool _Unknown3_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown3 => _Unknown3_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Unknown3Location, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        #region EnchantVisuals
+        private int _EnchantVisualsLocation => _DATALocation!.Value + 0x7C;
+        private bool _EnchantVisuals_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IVisualEffectGetter> EnchantVisuals => _EnchantVisuals_IsSet ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantVisualsLocation, 0x4)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region EquipAbility
         private int _EquipAbilityLocation => _DATALocation!.Value + 0x80;

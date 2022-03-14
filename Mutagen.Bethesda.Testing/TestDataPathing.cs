@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Testing
                     File.OpenRead(path),
                     new ParsingBundle(
                         release,
-                        new MasterReferenceReader(modKey ?? path.ModKey))));
+                        new MasterReferenceCollection(modKey ?? path.ModKey))));
         }
 
         public static OverlayStream GetOverlayStream(ModPath path, GameRelease release, ModKey? modKey = null)
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Testing
                 File.ReadAllBytes(path),
                 new ParsingBundle(
                     GameConstants.Get(release),
-                    new MasterReferenceReader(
+                    new MasterReferenceCollection(
                         modKey ?? path.ModKey)));
         }
     }

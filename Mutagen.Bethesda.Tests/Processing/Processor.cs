@@ -72,7 +72,7 @@ public abstract class Processor
         Logging = logging;
         TempFolder = tmpFolder;
         SourcePath = sourcePath;
-        Masters = MasterReferenceReader.FromPath(SourcePath, GameRelease);
+        Masters = MasterReferenceCollection.FromPath(SourcePath, GameRelease);
         Bundle = new ParsingBundle(GameRelease, Masters);
         _numMasters = GetNumMasters();
         _alignedFileLocs = RecordLocator.GetLocations(new ModPath(ModKey, preprocessedPath), GameRelease);
@@ -284,7 +284,7 @@ public abstract class Processor
         if (nullIndex == subFrame.Content.Length - 1) return;
         // Extra content pass null terminator.  Trim 
         _instructions.SetRemove(
-            section: RangeInt64.FactoryFromLength(
+            section: RangeInt64.FromLength(
                 refLoc + subFrame.HeaderLength + nullIndex + 1,
                 subFrame.Content.Length - nullIndex));
         ProcessLengths(
@@ -473,7 +473,7 @@ public abstract class Processor
             stream.Position = loc;
             var groupMeta = stream.ReadGroup();
             if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue;
-            _instructions.SetRemove(RangeInt64.FactoryFromLength(loc, groupMeta.HeaderLength));
+            _instructions.SetRemove(RangeInt64.FromLength(loc, groupMeta.HeaderLength));
         }
     }
 
@@ -750,7 +750,7 @@ public abstract class Processor
         if (blockGrupType != stream.MetaData.Constants.GroupConstants.Cell.TopGroupType) return;
         if (blockGroup.ContentLength == 0)
         {
-            removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
+            removes.Add(RangeInt64.FromLength(blockGroupPos, blockGroup.HeaderLength));
         }
         else if (numSubGroups > 0)
         {
@@ -766,7 +766,7 @@ public abstract class Processor
                 if (subBlockGroup.ContentLength == 0)
                 { // Empty group
                     ModifyLengthTracking(blockGroupPos, -subBlockGroup.HeaderLength);
-                    removes.Add(RangeInt64.FactoryFromLength(subBlockGroupPos, subBlockGroup.HeaderLength));
+                    removes.Add(RangeInt64.FromLength(subBlockGroupPos, subBlockGroup.HeaderLength));
                     amountRemoved++;
                 }
                 stream.Position = subBlockGroupPos + subBlockGroup.TotalLength;
@@ -777,7 +777,7 @@ public abstract class Processor
             if (amountRemoved > 0
                 && blockGroup.ContentLength - (blockGroup.HeaderLength * amountRemoved) == 0)
             {
-                removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
+                removes.Add(RangeInt64.FromLength(blockGroupPos, blockGroup.HeaderLength));
             }
         }
 
@@ -809,7 +809,7 @@ public abstract class Processor
         if (blockGrupType != stream.MetaData.Constants.GroupConstants.Topic.TopGroupType) return;
         if (blockGroup.ContentLength == 0)
         {
-            removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
+            removes.Add(RangeInt64.FromLength(blockGroupPos, blockGroup.HeaderLength));
         }
 
         if (removes.Count == 0) return;
