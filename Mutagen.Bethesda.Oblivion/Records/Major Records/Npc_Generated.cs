@@ -3785,7 +3785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Animations = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out String listSubItem) =>
+                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
                             {
                                 return StringBinaryTranslation.Instance.Parse(
                                     r,

@@ -1,6 +1,7 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -37,7 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Reader.Position += groupMeta.HeaderLength;
                     obj.Items.SetTo(ListBinaryTranslation<DialogItem>.Instance.Parse(
                         reader: frame.SpawnWithLength(groupMeta.ContentLength),
-                        transl: (MutagenFrame r, RecordType header, out DialogItem listItem) =>
+                        transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out DialogItem listItem) =>
                         {
                             return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
                                 frame: r,

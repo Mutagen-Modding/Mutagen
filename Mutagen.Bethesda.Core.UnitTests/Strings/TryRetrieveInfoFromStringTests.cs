@@ -1,7 +1,7 @@
 using Mutagen.Bethesda.Strings;
 using Xunit;
 
-namespace Mutagen.Bethesda.Core.UnitTests.Strings
+namespace Mutagen.Bethesda.UnitTests.Strings
 {
     public class TryRetrieveInfoFromStringTests
     {

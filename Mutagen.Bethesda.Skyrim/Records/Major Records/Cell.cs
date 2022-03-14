@@ -10,6 +10,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -116,7 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Persistent.AddRange(
                     ListBinaryTranslation<IPlaced>.Instance.Parse(
                         reader: frame,
-                        transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
+                        transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out IPlaced placed) =>
                         {
                             switch (header.TypeInt)
                             {
@@ -204,7 +205,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.TemporaryUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
                 var items = ListBinaryTranslation<IPlaced>.Instance.Parse(
                     reader: frame,
-                    transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
+                    transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out IPlaced placed) =>
                     {
                         switch (header.TypeInt)
                         {

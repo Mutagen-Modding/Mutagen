@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     args.Add(gen =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r, out {gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} genSubItem{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                        gen.AppendLine($"transl: (MutagenFrame r, [MaybeNullWhen(false)] out {gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} genSubItem{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateCopyInRet(

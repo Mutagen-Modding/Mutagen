@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda.Testing.AutoData
         {
             fixture.Customizations.Add(new BaseEnvironmentBuilder(_release));
             fixture.Customizations.Add(new ModBuilder(_release));
+            fixture.Customizations.Add(new GameReleaseBuilder(_release));
         }
     }
 }

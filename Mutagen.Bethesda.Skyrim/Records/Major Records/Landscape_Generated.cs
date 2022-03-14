@@ -1988,7 +1988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
                             translationParams: translationParams,
-                            transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, TypedParseParams? translationParams) =>
+                            transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out BaseLayer listSubItem, TypedParseParams? translationParams) =>
                             {
                                 switch (header.TypeInt)
                                 {

@@ -29,7 +29,8 @@ namespace Mutagen.Bethesda.WPF.Plugins
     [TemplatePart(Name = "PART_FormKeyBox", Type = typeof(TextBox))]
     public class AFormKeyPicker : NoggogControl
     {
-        private bool _updating;
+        private enum UpdatingEnum { None, FormKey, EditorID, FormStr }
+        private UpdatingEnum _updating;
 
         public ILinkCache? LinkCache
         {
@@ -251,14 +252,15 @@ namespace Mutagen.Bethesda.WPF.Plugins
             base.OnLoaded();
             this.WhenAnyValue(x => x.FormKey)
                 .DistinctUntilChanged()
-                .Where(x => !_updating)
                 .CombineLatest(
                     this.WhenAnyValue(
                         x => x.LinkCache,
                         x => x.ScopedTypes),
                     (form, sources) => (FormKey: form, LinkCache: sources.Item1, Types: sources.Item2))
+                .Where(x => _updating == UpdatingEnum.None || _updating == UpdatingEnum.FormKey)
                 .Do(_ =>
                 {
+                    _updating = UpdatingEnum.FormKey;
                     if (!Processing)
                     {
                         Processing = true;
@@ -295,7 +297,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
                 })
                 .StartWith(new State(StatusIndicatorState.Passive, "FormKey is null.  No lookup required", FormKey.Null, string.Empty))
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(rec =>
+                .Do(rec =>
                 {
                     if (Processing)
                     {
@@ -316,17 +318,13 @@ namespace Mutagen.Bethesda.WPF.Plugins
                     {
                         if (EditorID != rec.Edid)
                         {
-                            _updating = true;
                             EditorID = rec.Edid;
-                            _updating = false;
                         }
 
                         var formKeyStr = rec.FormKey.ToString();
                         if (formKeyStr != FormKeyStr)
                         {
-                            _updating = true;
                             FormKeyStr = formKeyStr;
-                            _updating = false;
                         }
 
                         if (!Found)
@@ -338,17 +336,13 @@ namespace Mutagen.Bethesda.WPF.Plugins
                     {
                         if (EditorID != string.Empty)
                         {
-                            _updating = true;
                             EditorID = string.Empty;
-                            _updating = false;
                         }
 
                         var formKeyStr = rec.FormKey.IsNull ? string.Empty : rec.FormKey.ToString();
                         if (FormKeyStr != formKeyStr)
                         {
-                            _updating = true;
                             FormKeyStr = formKeyStr;
-                            _updating = false;
                         }
 
                         if (Found)
@@ -357,19 +351,22 @@ namespace Mutagen.Bethesda.WPF.Plugins
                         }
                     }
                 })
+                .Do(x => _updating = UpdatingEnum.None)
+                .Subscribe()
                 .DisposeWith(_unloadDisposable);
 
             this.WhenAnyValue(x => x.EditorID)
                 .Skip(1)
                 .DistinctUntilChanged()
-                .Where(x => !_updating)
                 .CombineLatest(
                     this.WhenAnyValue(
                         x => x.LinkCache,
                         x => x.ScopedTypes),
                     (edid, sources) => (EditorID: edid, LinkCache: sources.Item1, Types: sources.Item2))
+                .Where(x => _updating == UpdatingEnum.None || _updating == UpdatingEnum.EditorID)
                 .Do(_ =>
                 {
+                    _updating = UpdatingEnum.EditorID;
                     if (!Processing)
                     {
                         Processing = true;
@@ -405,7 +402,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
                     }
                 })
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(rec =>
+                .Do(rec =>
                 {
                     if (Processing)
                     {
@@ -426,9 +423,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
                     {
                         if (FormKey != rec.FormKey)
                         {
-                            _updating = true;
                             FormKey = rec.FormKey;
-                            _updating = false;
                         }
 
                         if (!Found)
@@ -440,16 +435,12 @@ namespace Mutagen.Bethesda.WPF.Plugins
                     {
                         if (!FormKey.IsNull)
                         {
-                            _updating = true;
                             FormKey = FormKey.Null;
-                            _updating = false;
                         }
 
                         if (FormKeyStr != string.Empty)
                         {
-                            _updating = true;
                             FormKeyStr = string.Empty;
-                            _updating = false;
                         }
 
                         if (Found)
@@ -458,13 +449,14 @@ namespace Mutagen.Bethesda.WPF.Plugins
                         }
                     }
                 })
+                .Do(x => _updating = UpdatingEnum.None)
+                .Subscribe()
                 .DisposeWith(_unloadDisposable);
 
             this.WhenAnyValue(x => x.FormKeyStr)
                 .Skip(1)
                 .Select(x => x.Trim())
                 .DistinctUntilChanged()
-                .Where(_ => !_updating)
                 .CombineLatest(
                     this.WhenAnyValue(
                         x => x.LinkCache,
@@ -472,8 +464,10 @@ namespace Mutagen.Bethesda.WPF.Plugins
                         x => x.MissingMeansError,
                         x => x.MissingMeansNull),
                     (str, sources) => (Raw: str, LinkCache: sources.Item1, Types: sources.Item2, MissingMeansError: sources.Item3, MissingMeansNull: sources.Item4))
+                .Where(x => _updating == UpdatingEnum.None || _updating == UpdatingEnum.FormStr)
                 .Do(_ =>
                 {
+                    _updating = UpdatingEnum.FormStr;
                     if (!Processing)
                     {
                         Processing = true;
@@ -551,7 +545,7 @@ namespace Mutagen.Bethesda.WPF.Plugins
                     }
                 })
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(rec =>
+                .Do(rec =>
                 {
                     if (Processing)
                     {
@@ -572,24 +566,18 @@ namespace Mutagen.Bethesda.WPF.Plugins
                     {
                         if (FormKey != rec.FormKey)
                         {
-                            _updating = true;
                             FormKey = rec.FormKey;
-                            _updating = false;
                         }
 
                         var formKeyStr = rec.FormKey.ToString();
                         if (FormKeyStr != formKeyStr)
                         {
-                            _updating = true;
                             FormKeyStr = formKeyStr;
-                            _updating = false;
                         }
 
                         if (EditorID != rec.Edid)
                         {
-                            _updating = true;
                             EditorID = rec.Edid;
-                            _updating = false;
                         }
 
                         if (!Found)
@@ -601,16 +589,12 @@ namespace Mutagen.Bethesda.WPF.Plugins
                     {
                         if (FormKey != rec.FormKey)
                         {
-                            _updating = true;
                             FormKey = rec.FormKey;
-                            _updating = false;
                         }
 
                         if (EditorID != string.Empty)
                         {
-                            _updating = true;
                             EditorID = string.Empty;
-                            _updating = false;
                         }
 
                         if (Found)
@@ -619,6 +603,8 @@ namespace Mutagen.Bethesda.WPF.Plugins
                         }
                     }
                 })
+                .Do(x => _updating = UpdatingEnum.None)
+                .Subscribe()
                 .DisposeWith(_unloadDisposable);
 
             ApplicableEditorIDs = Observable.CombineLatest(

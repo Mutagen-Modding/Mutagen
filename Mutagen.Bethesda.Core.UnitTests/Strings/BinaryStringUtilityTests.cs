@@ -7,7 +7,7 @@ using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Testing;
 using Xunit;
 
-namespace Mutagen.Bethesda.Core.UnitTests.Strings
+namespace Mutagen.Bethesda.UnitTests.Strings
 {
     public class BinaryStringUtilityTests
     {

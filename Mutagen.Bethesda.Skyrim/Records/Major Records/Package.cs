@@ -6,6 +6,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -325,7 +326,7 @@ namespace Mutagen.Bethesda.Skyrim
                     ListBinaryTranslation<PackageBranch>.Instance.Parse(
                         reader: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.ANAM,
-                        transl: (MutagenFrame r, out PackageBranch listSubItem, TypedParseParams? translationParams) =>
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out PackageBranch listSubItem, TypedParseParams? translationParams) =>
                         {
                             listSubItem = PackageBranch.CreateFromBinary(r);
                             return true;
