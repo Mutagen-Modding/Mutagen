@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
                 prefs);
             _formKeyContexts = new ImmutableLoadOrderLinkCacheSimpleContextCategory<FormKey>(
                 gameCategory.Value,
-                linkInterfaceMapGetter: prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 simple: simple,
                 hasAny: _hasAny,
                 this,
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
                 f => f.IsNull);
             _editorIdContexts = new ImmutableLoadOrderLinkCacheSimpleContextCategory<string>(
                 gameCategory.Value,
-                linkInterfaceMapGetter: prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 simple: simple,
                 hasAny: _hasAny,
                 this,
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             
             _formKeyContextCache = new ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, FormKey>(
                 category: gameCategory,
-                linkInterfaceMapGetter: prefs.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                metaInterfaceMapGetter: prefs.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 simple: simple,
                 hasAny: _hasAny,
                 linkCache: this,
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
                 f => f.IsNull);
             _editorIdContextCache = new ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, string>(
                 category: gameCategory,
-                linkInterfaceMapGetter: prefs.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                metaInterfaceMapGetter: prefs.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 simple: simple,
                 hasAny: _hasAny,
                 linkCache: this,

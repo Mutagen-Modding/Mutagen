@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             return new LinkCachePreferences
             {
                 Retention = type,
-                LinkInterfaceMapGetterOverride = _testInit.LinkInterfaceMapping
+                MetaInterfaceMapGetterOverride = _testInit.LinkInterfaceMapping
             };
         }
 

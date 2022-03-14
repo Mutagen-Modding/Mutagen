@@ -30,3 +30,17 @@ public class MetaInterfaceMapper : IMetaInterfaceMapGetter
         return false;
     }
 }
+
+public static class MetaInterfaceMapping
+{
+    private static Lazy<MetaInterfaceMapper> _mapper = new(() =>
+    {
+        return new MetaInterfaceMapper(
+            AspectInterfaceMapping.InternalInstance,
+            LinkInterfaceMapping.InternalInstance);
+    });
+
+    public static IMetaInterfaceMapGetter Instance => _mapper.Value;
+
+    public static MetaInterfaceMapper InternalInstance => _mapper.Value;
+}

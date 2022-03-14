@@ -30,12 +30,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             _simple = (prefs ?? LinkCachePreferences.Default).Retention == LinkCachePreferences.RetentionType.OnlyIdentifiers;
             _formKeyCache = new ImmutableModLinkCacheCategory<FormKey>(
                 this, 
-                prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 x => TryGet<FormKey>.Succeed(x.FormKey),
                 x => x.IsNull);
             _editorIdCache = new ImmutableModLinkCacheCategory<string>(
                 this,
-                prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 m =>
                 {
                     var edid = m.EditorID;

@@ -31,6 +31,30 @@ public static class InterfaceEnumerationHelper
         return true;
     }
     
+    public static bool TryEnumerateAspectRecordsFor<T>(
+        GameCategory category,
+        T obj, 
+        Type linkInterface,
+        out IEnumerable<IMajorRecordGetter> interfaces)
+        where T : IMajorRecordGetterEnumerable, ILoquiObjectGetter
+    {
+        var mapping = AspectInterfaceMapping.Instance.InterfaceToObjectTypes(category);
+        if (!mapping.TryGetValue(linkInterface, out var inheritingTypes))
+        {
+            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            return false;
+        }
+
+        if (inheritingTypes.Setter && !obj.Registration.SetterType.IsAssignableFrom(obj.GetType()))
+        {
+            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            return true;
+        }
+        
+        interfaces = inheritingTypes.Registrations.SelectMany(t => obj.EnumerateMajorRecords(inheritingTypes.Setter ? t.SetterType : t.GetterType));
+        return true;
+    }
+    
     public static bool TryEnumerateInterfaceRecordsFor<T>(
         GameCategory category,
         T obj, 
@@ -38,6 +62,7 @@ public static class InterfaceEnumerationHelper
         out IEnumerable<IMajorRecordGetter> interfaces)
         where T : IMajorRecordGetterEnumerable, ILoquiObjectGetter
     {
-        return TryEnumerateLinkRecordsFor(category, obj, linkInterface, out interfaces);
+        return TryEnumerateLinkRecordsFor(category, obj, linkInterface, out interfaces)
+            || TryEnumerateAspectRecordsFor(category, obj, linkInterface, out interfaces);
     }
 }

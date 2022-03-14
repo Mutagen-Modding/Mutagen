@@ -27,11 +27,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
     internal class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : IImmutableLoadOrderLinkCacheSimpleContextCategory<TKey>
         where TKey : notnull
     {
+        private readonly GameCategory _category;
+        private readonly IMetaInterfaceMapGetter _metaInterfaceMapGetter;
         private readonly bool _simple;
         private readonly bool _hasAny;
         private readonly ILinkCache _linkCache;
         private readonly IReadOnlyList<IModGetter> _listedOrder;
-        private readonly IReadOnlyDictionary<Type, InterfaceMappingResult> _linkInterfaces;
         private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
         private readonly Dictionary<Type, DepthCache<TKey, IModContext<IMajorRecordGetter>>> _winningContexts = new();
@@ -39,7 +40,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 
         public ImmutableLoadOrderLinkCacheSimpleContextCategory(
             GameCategory category,
-            ILinkInterfaceMapGetter linkInterfaceMapGetter,
+            IMetaInterfaceMapGetter metaInterfaceMapGetter,
             bool simple,
             bool hasAny,
             ILinkCache linkCache,
@@ -47,12 +48,13 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
         {
+            _category = category;
+            _metaInterfaceMapGetter = metaInterfaceMapGetter;
             _simple = simple;
             _hasAny = hasAny;
             _linkCache = linkCache;
             _listedOrder = listedOrder;
             _keyGetter = keyGetter;
-            _linkInterfaces = linkInterfaceMapGetter.InterfaceToObjectTypes(category);
             _shortCircuit = shortCircuit;
         }
 
@@ -98,7 +100,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                     }
                     else
                     {
-                        if (!_linkInterfaces.TryGetValue(type, out var objs))
+                        if (!_metaInterfaceMapGetter.TryGetRegistrationsForInterface(_category, type, out var objs))
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
@@ -146,7 +148,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                     }
 
                     // Add records from that mod that aren't already cached
-                    if (_linkInterfaces.TryGetValue(type, out var objs))
+                    if (_metaInterfaceMapGetter.TryGetRegistrationsForInterface(_category, type, out var objs))
                     {
                         foreach (var regis in objs.Registrations)
                         {
@@ -239,7 +241,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                         }
 
                         // Add records from that mod that aren't already cached
-                        if (_linkInterfaces.TryGetValue(type, out var objs))
+                        if (_metaInterfaceMapGetter.TryGetRegistrationsForInterface(_category, type, out var objs))
                         {
                             foreach (var regis in objs.Registrations)
                             {

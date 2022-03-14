@@ -388,7 +388,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Plugins\Records\Internals\IMetaInterfaceMapGetter.cs" />
+    <Compile Include="Plugins\Records\Internals\MetaInterfaceMapping.cs" />
     <Compile Include="Plugins\Records\Internals\IModRegistration.cs" />
     <Compile Include="Plugins\Records\Internals\InterfaceEnumerationHelper.cs" />
     <Compile Include="Plugins\Records\Internals\InterfaceMappingResult.cs" />

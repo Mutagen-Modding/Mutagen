@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                 hasAny: hasAny,
                 simple: simple,
                 listedOrder: _listedOrder,
-                linkInterfaceMapGetter: prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 m => TryGet<FormKey>.Succeed(m.FormKey),
                 f => f.IsNull);
             this._editorIdCache = new ImmutableLoadOrderLinkCacheCategory<string>(
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                 hasAny: hasAny,
                 simple: simple,
                 listedOrder: _listedOrder,
-                linkInterfaceMapGetter: prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 m =>
                 {
                     var edid = m.EditorID;

@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         private readonly bool _simple;
         private readonly ILinkCache _linkCache;
         private readonly GameCategory _category;
-        private readonly ILinkInterfaceMapGetter _linkInterfaceMapGetter;
+        private readonly IMetaInterfaceMapGetter _metaInterfaceMapGetter;
         private readonly IMajorRecordSimpleContextEnumerable _contextEnumerable;
         private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             bool simple,
             ILinkCache linkCache,
             GameCategory category,
-            ILinkInterfaceMapGetter linkInterfaceMapGetter,
+            IMetaInterfaceMapGetter metaInterfaceMapGetter,
             IMajorRecordSimpleContextEnumerable contextEnumerable,
             Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             _simple = simple;
             _linkCache = linkCache;
             _category = category;
-            _linkInterfaceMapGetter = linkInterfaceMapGetter;
+            _metaInterfaceMapGetter = metaInterfaceMapGetter;
             _contextEnumerable = contextEnumerable;
             _keyGetter = keyGetter;
             _shortCircuit = shortCircuit;
@@ -139,8 +139,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                     }
                     else
                     {
-                        var interfaceMappings = _linkInterfaceMapGetter.InterfaceToObjectTypes(_category);
-                        if (!interfaceMappings.TryGetValue(type, out var objs))
+                        if (!_metaInterfaceMapGetter.TryGetRegistrationsForInterface(_category, type, out var objs))
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }

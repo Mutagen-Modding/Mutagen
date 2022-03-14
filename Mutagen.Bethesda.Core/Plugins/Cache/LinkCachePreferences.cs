@@ -29,5 +29,5 @@ public class LinkCachePreferences
 
     public RetentionType Retention { get; init; } = RetentionType.WholeRecord;
     
-    public ILinkInterfaceMapGetter? LinkInterfaceMapGetterOverride { get; set; }
+    public IMetaInterfaceMapGetter? MetaInterfaceMapGetterOverride { get; set; }
 }

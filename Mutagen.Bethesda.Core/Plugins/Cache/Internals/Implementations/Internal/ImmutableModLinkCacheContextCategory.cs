@@ -27,8 +27,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         where TKey : notnull
     {
-        private readonly ILinkInterfaceMapGetter _linkInterfaceMapGetter;
         private readonly ImmutableModLinkCache<TMod, TModGetter> _parent;
+        private readonly IMetaInterfaceMapGetter _metaInterfaceMapGetter;
         private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
         private readonly Lazy<IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>> _untypedContexts;
@@ -36,12 +36,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 
         public ImmutableModLinkCacheContextCategory(
             ImmutableModLinkCache<TMod, TModGetter> parent,
-            ILinkInterfaceMapGetter linkInterfaceMapGetter,
+            IMetaInterfaceMapGetter metaInterfaceMapGetter,
             Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
         {
-            _linkInterfaceMapGetter = linkInterfaceMapGetter;
             _parent = parent;
+            _metaInterfaceMapGetter = metaInterfaceMapGetter;
             _keyGetter = keyGetter;
             _shortCircuit = shortCircuit;
             _untypedContexts = new Lazy<IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>>(
@@ -175,8 +175,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                     }
                     else
                     {
-                        var interfaceMappings = _linkInterfaceMapGetter.InterfaceToObjectTypes(_parent._sourceMod.GameRelease.ToCategory());
-                        if (!interfaceMappings.TryGetValue(type, out var objs))
+                        if (!_metaInterfaceMapGetter.TryGetRegistrationsForInterface(_parent._sourceMod.GameRelease.ToCategory(), type, out var objs))
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }

@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
                 simple: simple,
                 linkCache: this,
                 category: category,
-                linkInterfaceMapGetter: prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 contextEnumerable: sourceMod,
                 keyGetter: m => TryGet<FormKey>.Succeed(m.FormKey),
                 shortCircuit: f => f.IsNull);
@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
                 simple: simple,
                 linkCache: this,
                 category: category,
-                linkInterfaceMapGetter: prefs?.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 contextEnumerable: sourceMod,
                 keyGetter: m =>
                 {
@@ -565,12 +565,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
             _simple = prefs.Retention == LinkCachePreferences.RetentionType.OnlyIdentifiers;
             _formKeyContexts = new ImmutableModLinkCacheContextCategory<TMod, TModGetter, FormKey>(
                 parent: this,
-                linkInterfaceMapGetter: prefs.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                metaInterfaceMapGetter: prefs.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 keyGetter: m => TryGet<FormKey>.Succeed(m.FormKey),
                 shortCircuit: f => f.IsNull);
             _editorIdContexts = new ImmutableModLinkCacheContextCategory<TMod, TModGetter, string>(
                 parent: this,
-                linkInterfaceMapGetter: prefs.LinkInterfaceMapGetterOverride ?? LinkInterfaceMapping.Instance,
+                metaInterfaceMapGetter: prefs.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
                 keyGetter: m =>
                 {
                     var edid = m.EditorID;
