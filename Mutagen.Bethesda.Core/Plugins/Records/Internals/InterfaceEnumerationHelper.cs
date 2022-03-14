@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Loqui;
+using Mutagen.Bethesda.Plugins.Aspects;
 
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
 

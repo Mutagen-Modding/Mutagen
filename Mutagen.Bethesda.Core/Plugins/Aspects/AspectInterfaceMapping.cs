@@ -1,11 +1,10 @@
-using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Loqui;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Records.Internals;
+namespace Mutagen.Bethesda.Plugins.Aspects;
 
 public interface IAspectInterfaceMapGetter
 {
