@@ -1,22 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+/// <summary>
+/// Common interface for records that have icons
+/// </summary>
+public interface IHasIcons : IHasIconsGetter, IMajorRecordQueryable
 {
-    /// <summary>
-    /// Common interface for records that have icons
-    /// </summary>
-    public interface IHasIcons : IHasIconsGetter
-    {
-        new Icons? Icons { get; set; }
-    }
+    new Icons? Icons { get; set; }
+}
 
-    /// <summary>
-    /// Common interface for records that have icons
-    /// </summary>
-    public interface IHasIconsGetter
-    {
-        IIconsGetter? Icons { get; }
-    }
+/// <summary>
+/// Common interface for records that have icons
+/// </summary>
+public interface IHasIconsGetter : IMajorRecordQueryableGetter
+{
+    IIconsGetter? Icons { get; }
 }

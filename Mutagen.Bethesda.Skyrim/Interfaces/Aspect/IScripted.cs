@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Skyrim
 {
     /// <summary>
     /// An interface implemented by Major Records that have scripts
     /// </summary>
-    public interface IScripted : IScriptedGetter
+    public interface IScripted : IScriptedGetter, IMajorRecordQueryable
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
     }
@@ -15,7 +16,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// <summary>
     /// An interface implemented by Major Records that have scripts
     /// </summary>
-    public interface IScriptedGetter
+    public interface IScriptedGetter : IMajorRecordQueryableGetter
     {
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
     }

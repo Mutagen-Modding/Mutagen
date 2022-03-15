@@ -105,23 +105,23 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(objEffect1.FormKey, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(objEffect1.FormKey, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect1.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(objEffect1.EditorID, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect1.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(objEffect2.FormKey, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect2.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(objEffect2.EditorID, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(objEffect2.EditorID, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect2.FormKey);
             });
 
             WrapPotentialThrow(cacheType, style, () =>
@@ -362,23 +362,23 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(objEffect1.FormKey, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(objEffect1.FormKey, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect1.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(objEffect1.EditorID, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect1.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(objEffect2.FormKey, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect2.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(objEffect2.EditorID, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(objEffect2.EditorID, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect2.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
@@ -633,33 +633,33 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(overriddenRec.FormKey, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, overrideRec.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(overriddenRec.FormKey, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, overrideRec.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(unoverriddenRec.FormKey, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(unoverriddenRec.FormKey, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, unoverriddenRec.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(topModRec.FormKey, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, topModRec.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(topModRec.FormKey, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, topModRec.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(overriddenRec.EditorID, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, overrideRec.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(overriddenRec.EditorID, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, overrideRec.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(unoverriddenRec.EditorID, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(unoverriddenRec.EditorID, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, unoverriddenRec.FormKey);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(topModRec.EditorID, typeof(IObjectBoundedGetter), out var rec));
-                Assert.Equal(rec.FormKey, topModRec.FormKey);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(topModRec.EditorID, out var rec));
+                Assert.Equal((rec as IMajorRecordGetter).FormKey, topModRec.FormKey);
             });
 
             WrapPotentialThrow(cacheType, style, () =>
@@ -985,8 +985,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.True(package.TryResolve(overriddenRec.FormKey, typeof(IObjectBoundedGetter), out var rec, ResolveTarget.Origin));
-                rec.EditorID.Should().Be(overriddenRec.EditorID);
+                Assert.True(package.TryResolve<IObjectBoundedGetter>(overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
+                (rec as IMajorRecordGetter).EditorID.Should().Be(overriddenRec.EditorID);
             });
 
             WrapPotentialThrow(cacheType, style, () =>
