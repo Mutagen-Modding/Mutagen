@@ -61,13 +61,41 @@
     <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\IPlacedExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
-    <Compile Include="Interfaces\IAmbientColorsCommon.cs" />
-    <Compile Include="Interfaces\IHarvestable.cs" />
-    <Compile Include="Interfaces\IHasIcons.cs" />
-    <Compile Include="Interfaces\IModeled.cs" />
-    <Compile Include="Interfaces\IObjectBounded.cs" />
-    <Compile Include="Interfaces\IPositionRotation.cs" />
-    <Compile Include="Interfaces\IScripted.cs" />
+    <Compile Include="Interfaces\Aspect\IAmbientColorsCommon.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IHarvestable.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IHasIcons.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IModeled.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IObjectBounded.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IPositionRotation.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IScripted.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Interfaces\Link\IConstructible.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -2071,7 +2099,6 @@
     <Compile Include="Records\Major Records\LandscapeVertexHeightMap_Generated.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\AspectInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
     <Compile Include="Interfaces\Link\IObjectId_Generated.cs" />
     <Compile Include="Interfaces\Link\IItem_Generated.cs" />
@@ -2100,6 +2127,7 @@
     <Compile Include="Interfaces\Link\IPlacedThing_Generated.cs" />
     <Compile Include="Interfaces\Link\ISound_Generated.cs" />
     <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
+    <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

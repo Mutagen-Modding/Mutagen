@@ -31,9 +31,21 @@
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\Size.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
-    <Compile Include="Interfaces\IModeled.cs" />
-    <Compile Include="Interfaces\IObjectBounded.cs" />
-    <Compile Include="Interfaces\IPositionRotation.cs" />
+    <Compile Include="Interfaces\Aspect\IModeled.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IObjectBounded.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IPositionRotation.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -372,7 +384,6 @@
       <DependentUpon>MaterialType.xml</DependentUpon>
     </Compile>
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
-    <Compile Include="Interfaces\AspectInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
     <Compile Include="Interfaces\Link\IDamageTypeTarget_Generated.cs" />
     <Compile Include="Interfaces\Link\IObjectId_Generated.cs" />
@@ -384,6 +395,7 @@
     <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
     <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
     <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
+    <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
