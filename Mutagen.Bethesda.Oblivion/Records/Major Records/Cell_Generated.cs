@@ -1773,7 +1773,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this ICellGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((CellCommon)((ICellGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1803,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellInternal obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,

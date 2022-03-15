@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IMajorRecordGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((MajorRecordCommon)((IMajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IMajorRecordInternal obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,

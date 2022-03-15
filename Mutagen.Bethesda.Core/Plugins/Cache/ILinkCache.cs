@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         bool TryResolve<TMajor>(string editorId, [MaybeNullWhen(false)] out TMajor majorRec)
-            where TMajor : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         TMajor Resolve<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         TMajor Resolve<TMajor>(string editorId)
-            where TMajor : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Iterates all records that match the FormKey relative to the source the package was attached to.<br />
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </exception>
         /// <returns>Enumerable of all located records that match the FormKey in the cache</returns>
         IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Iterates all records that match the FormKey relative to the source the package was attached to.<br />
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         bool TryResolveSimpleContext<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         bool TryResolveSimpleContext<TMajor>(string editorId, [MaybeNullWhen(false)] out IModContext<TMajor> majorRec)
-            where TMajor : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IModContext<TMajor> ResolveSimpleContext<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IModContext<TMajor> ResolveSimpleContext<TMajor>(string editorId)
-            where TMajor : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </exception>
         /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
         IEnumerable<IModContext<TMajor>> ResolveAllSimpleContexts<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
@@ -794,8 +794,8 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         bool TryResolveContext<TMajor, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecord, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryable, TMajorGetter
+            where TMajorGetter : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
@@ -813,8 +813,8 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         bool TryResolveContext<TMajor, TMajorGetter>(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec)
-            where TMajor : class, IMajorRecord, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryable, TMajorGetter
+            where TMajorGetter : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
@@ -947,8 +947,8 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecord, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryable, TMajorGetter
+            where TMajorGetter : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.
@@ -969,8 +969,8 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(string editorId)
-            where TMajor : class, IMajorRecord, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryable, TMajorGetter
+            where TMajorGetter : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
@@ -989,8 +989,8 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </exception>
         /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
         IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
-            where TMajor : class, IMajorRecord, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryable, TMajorGetter
+            where TMajorGetter : class, IMajorRecordQueryableGetter;
 
         /// <summary>
         /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />

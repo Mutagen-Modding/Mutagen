@@ -2,11 +2,12 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
-    public partial interface IMajorRecord : IFormLinkContainer
+    public partial interface IMajorRecord : IFormLinkContainer, IMajorRecordQueryable
     {
         new FormKey FormKey { get; }
         
@@ -37,7 +38,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         IMajorRecordIdentifier,
         IFormLinkContainerGetter,
         IFormLinkIdentifier,
-        IEquatable<IFormLinkGetter>
+        IEquatable<IFormLinkGetter>,
+        IMajorRecordQueryableGetter
     {
         /// <summary>
         /// Marker of whether the content is compressed

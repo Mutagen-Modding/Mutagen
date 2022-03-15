@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>
         /// <returns>Enumerable of all applicable major records</returns>  
         IEnumerable<IModContext<TMajor>> EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryableGetter;
 
         /// <summary>  
         /// Enumerates all contained Major Record Getters of the specified type  
@@ -40,8 +40,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>
         /// <returns>Enumerable of all applicable major records</returns>  
         IEnumerable<IModContext<TMod, TModGetter, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown = true)
-            where TSetter : class, IMajorRecord, TGetter
-            where TGetter : class, IMajorRecordGetter;
+            where TSetter : class, IMajorRecordQueryable, TGetter
+            where TGetter : class, IMajorRecordQueryableGetter;
 
         /// <summary>  
         /// Enumerates all contained Major Record Getters of the specified type  

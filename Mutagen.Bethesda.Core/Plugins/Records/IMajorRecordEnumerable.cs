@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
@@ -23,7 +22,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         /// <returns>Enumerable of all contained Major Records</returns>  
         new IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecord;
+            where TMajor : class, IMajorRecordQueryable;
 
         /// <summary>  
         /// Enumerates all contained Major Record of the specified type  
@@ -158,7 +157,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         /// <returns>Enumerable of all applicable major records</returns>  
         IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true)
-            where T : class, IMajorRecordGetter;
+            where T : class, IMajorRecordQueryableGetter;
 
         /// <summary>  
         /// Enumerates all contained Major Record Getters of the specified type  

@@ -6022,7 +6022,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordQueryableGetter, TMajor>());
         [DebuggerStepThrough]
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
@@ -6724,7 +6724,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this ISkyrimModGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -6756,7 +6756,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ISkyrimMod obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -6935,15 +6935,15 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
-            where TSetter : class, IMajorRecord, TGetter
-            where TGetter : class, IMajorRecordGetter
+            where TSetter : class, IMajorRecordQueryable, TGetter
+            where TGetter : class, IMajorRecordQueryableGetter
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).EnumerateMajorRecordContexts(
                 obj: obj,
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter, TSetter, TGetter>())
+                .Select(m => m.AsType<ISkyrimMod, ISkyrimModGetter, IMajorRecordQueryable, IMajorRecordQueryableGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
@@ -23165,7 +23165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordQueryableGetter, TMajor>());
         [DebuggerStepThrough]
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]

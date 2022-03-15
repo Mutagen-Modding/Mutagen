@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IPlaceGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((PlaceCommon)((IPlaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IPlaceInternal obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,

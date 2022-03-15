@@ -429,7 +429,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionListGroupGetter<T> obj,
             bool throwIfUnknown = true)
             where T : class, ICellBlockGetter, IBinaryItem
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IOblivionListGroup<T> obj)
             where T : class, ICellBlock, IBinaryItem
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((OblivionListGroupSetterCommon<T>)((IOblivionListGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,

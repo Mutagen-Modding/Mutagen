@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 $"public static IEnumerable<TMajor> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
-                args.Wheres.Add($"where TMajor : class, IMajorRecordGetter");
+                args.Wheres.Add($"where TMajor : class, IMajorRecordQueryableGetter");
                 args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
                 args.Add($"bool throwIfUnknown = true");
             }
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 $"public static IEnumerable<TMajor> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
-                args.Wheres.Add($"where TMajor : class, IMajorRecord");
+                args.Wheres.Add($"where TMajor : class, IMajorRecordQueryable");
                 args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
             }
             using (new BraceWrapper(fg))
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         $"public override IEnumerable<TMajor> EnumerateMajorRecords<TMajor>"))
                     {
                         args.Add($"{baseClass.Interface(getter: getter)} obj");
-                        args.Wheres.Add($"where TMajor : {nameof(IMajorRecord)}{(getter ? "Getter" : null)}");
+                        args.Wheres.Add($"where TMajor : IMajorRecordQueryable{(getter ? "Getter" : null)}");
                     }
                     using (new BraceWrapper(fg))
                     {

@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IWorldspaceSubBlockGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceSubBlock obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,

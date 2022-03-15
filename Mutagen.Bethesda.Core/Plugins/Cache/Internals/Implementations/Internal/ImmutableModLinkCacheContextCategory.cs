@@ -14,8 +14,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         where TKey : notnull
     {
         bool TryResolveContext<TMajor, TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec)
-            where TMajor : class, IMajorRecord, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter;
+            where TMajor : class, IMajorRecordQueryable, TMajorGetter
+            where TMajorGetter : class, IMajorRecordQueryableGetter;
         
         bool TryResolveContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec);
         
@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         }
 
         public bool TryResolveContext<TMajor, TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec)
-            where TMajor : class, IMajorRecord, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryable, TMajorGetter
+            where TMajorGetter : class, IMajorRecordQueryableGetter
         {
             if (_shortCircuit(key))
             {
@@ -77,11 +77,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                 majorRec = default;
                 return false;
             }
-            majorRec = majorRecObj.AsType<TMod, TModGetter, IMajorRecord, IMajorRecordGetter, TMajor, TMajorGetter>();
+            majorRec = majorRecObj.AsType<TMod, TModGetter, IMajorRecordQueryable, IMajorRecordQueryableGetter, TMajor, TMajorGetter>();
             return true;
         }
 
-        public bool TryResolveSimpleContext<TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMajorGetter> majorRec) where TMajorGetter : class, IMajorRecordGetter
+        public bool TryResolveSimpleContext<TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMajorGetter> majorRec) 
+            where TMajorGetter : IMajorRecordQueryableGetter
         {
             if (_shortCircuit(key))
             {
@@ -95,7 +96,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                 majorRec = default;
                 return false;
             }
-            majorRec = majorRecObj.AsType<IMajorRecordGetter, TMajorGetter>();
+            majorRec = majorRecObj.AsType<IMajorRecordQueryableGetter, TMajorGetter>();
             return true;
         }
 

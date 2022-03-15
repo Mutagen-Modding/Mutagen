@@ -31,17 +31,17 @@ namespace Mutagen.Bethesda
         public static IModContext<TMod, TModGetter, RMajorSetter, RMajorGetter> AsType<TMod, TModGetter, TMajor, TMajorGetter, RMajorSetter, RMajorGetter>(this IModContext<TMod, TModGetter, TMajor, TMajorGetter> context)
             where TModGetter : IModGetter
             where TMod : TModGetter, IMod
-            where TMajor : class, IMajorRecord, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter
-            where RMajorSetter : class, TMajor, RMajorGetter
-            where RMajorGetter : class, TMajorGetter
+            where TMajor : IMajorRecordQueryable, TMajorGetter
+            where TMajorGetter : IMajorRecordQueryableGetter
+            where RMajorSetter : TMajor, RMajorGetter
+            where RMajorGetter : TMajorGetter
         {
             return new ModContextCaster<TMod, TModGetter, TMajor, TMajorGetter, RMajorSetter, RMajorGetter>(context);
         }
 
         public static IModContext<RMajorGetter> AsType<TMajorGetter, RMajorGetter>(this IModContext<TMajorGetter> context)
-            where TMajorGetter : class, IMajorRecordGetter
-            where RMajorGetter : class, TMajorGetter
+            where TMajorGetter : IMajorRecordQueryableGetter
+            where RMajorGetter : TMajorGetter
         {
             return new SimpleModContextCaster<TMajorGetter, RMajorGetter>(context);
         }

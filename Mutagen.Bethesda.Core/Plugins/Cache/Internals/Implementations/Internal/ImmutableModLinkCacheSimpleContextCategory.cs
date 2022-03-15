@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         where TKey : notnull
     {
         bool TryResolveSimpleContext<TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMajorGetter> majorRec)
-            where TMajorGetter : class, IMajorRecordGetter;
+            where TMajorGetter : IMajorRecordQueryableGetter;
 
         bool TryResolveSimpleContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec);
 
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         }
 
         public bool TryResolveSimpleContext<TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMajorGetter> majorRec)
-            where TMajorGetter : class, IMajorRecordGetter
+            where TMajorGetter : IMajorRecordQueryableGetter
         {
             if (_shortCircuit(key))
             {
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                 majorRec = default;
                 return false;
             }
-            majorRec = majorRecObj.AsType<IMajorRecordGetter, TMajorGetter>();
+            majorRec = majorRecObj.AsType<IMajorRecordQueryableGetter, TMajorGetter>();
             return true;
         }
 

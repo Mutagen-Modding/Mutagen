@@ -37,7 +37,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
                 
             fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<{typeof(IMajorRecordGetter)}, TMajor>());");
+            fg.AppendLine($"IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<{typeof(IMajorRecordQueryableGetter)}, TMajor>());");
             fg.AppendLine("[DebuggerStepThrough]");
             fg.AppendLine($"IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
         }
@@ -57,8 +57,8 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                    $"public static IEnumerable<IModContext<{modSetter}, {modGetter}, TSetter, TGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, new string[] { "TSetter", "TGetter" })}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
-            args.Wheres.Add($"where TSetter : class, IMajorRecord, TGetter");
-            args.Wheres.Add($"where TGetter : class, IMajorRecordGetter");
+            args.Wheres.Add($"where TSetter : class, IMajorRecordQueryable, TGetter");
+            args.Wheres.Add($"where TGetter : class, IMajorRecordQueryableGetter");
             args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
             args.Add($"{nameof(ILinkCache)} linkCache");
             args.Add($"bool throwIfUnknown = true");
@@ -75,7 +75,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             }
             using (new DepthWrapper(fg))
             {
-                fg.AppendLine($".Select(m => m.AsType<{modSetter}, {modGetter}, {nameof(IMajorRecord)}, {nameof(IMajorRecordGetter)}, TSetter, TGetter>()){enderSemi}");
+                fg.AppendLine($".Select(m => m.AsType<{modSetter}, {modGetter}, {nameof(IMajorRecordQueryable)}, {nameof(IMajorRecordQueryableGetter)}, TSetter, TGetter>()){enderSemi}");
                 if (needsCatch)
                 {
                     fg.AppendLine($"{catchLine};");

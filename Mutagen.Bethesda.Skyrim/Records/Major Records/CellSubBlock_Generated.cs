@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this ICellSubBlockGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((CellSubBlockCommon)((ICellSubBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellSubBlock obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,

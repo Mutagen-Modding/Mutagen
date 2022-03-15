@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimListGroupGetter<T> obj,
             bool throwIfUnknown = true)
             where T : class, ICellBlockGetter, IBinaryItem
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this ISkyrimListGroup<T> obj)
             where T : class, ICellBlock, IBinaryItem
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((SkyrimListGroupSetterCommon<T>)((ISkyrimListGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
