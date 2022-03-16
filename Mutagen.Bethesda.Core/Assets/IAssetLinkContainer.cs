@@ -11,7 +11,7 @@ public interface IAssetLinkContainer : IAssetLinkContainerGetter
     /// <summary>
     /// Swaps out all links to point to new assets
     /// </summary>
-    void RemapListedLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping);
+    void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping);
 
     /// <summary>
     /// Enumerates only AssetLinks that are explicitly listed in the record and can be modified directly.
