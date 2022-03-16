@@ -733,13 +733,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Max = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IInt16MinMax obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IInt16MinMax item,
@@ -872,14 +865,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return Int16MinMax.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IInt16MinMaxGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class Int16MinMaxSetterTranslationCommon

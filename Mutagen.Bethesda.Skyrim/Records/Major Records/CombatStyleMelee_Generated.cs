@@ -988,13 +988,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SpecialAttackMult = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ICombatStyleMelee obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICombatStyleMelee item,
@@ -1201,14 +1194,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return CombatStyleMelee.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICombatStyleMeleeGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class CombatStyleMeleeSetterTranslationCommon

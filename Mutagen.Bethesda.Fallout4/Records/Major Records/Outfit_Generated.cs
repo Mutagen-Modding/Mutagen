@@ -712,14 +712,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Clear(item: (IOutfitInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IOutfit obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IOutfitInternal item,
@@ -934,15 +926,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IOutfitGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public Outfit Duplicate(
             IOutfitGetter item,

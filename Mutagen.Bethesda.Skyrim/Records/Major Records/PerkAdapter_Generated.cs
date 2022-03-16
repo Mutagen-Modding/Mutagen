@@ -691,14 +691,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPerkAdapter)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IPerkAdapter obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkAdapter item,
@@ -886,18 +878,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return PerkAdapter.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkAdapterGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class PerkAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon

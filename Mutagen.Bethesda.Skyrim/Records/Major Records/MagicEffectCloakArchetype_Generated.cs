@@ -621,13 +621,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IMagicEffectCloakArchetypeInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IMagicEffectCloakArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectCloakArchetypeInternal item,
@@ -789,14 +782,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return MagicEffectCloakArchetype.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectCloakArchetypeGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class MagicEffectCloakArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon

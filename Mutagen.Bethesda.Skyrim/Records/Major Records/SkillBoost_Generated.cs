@@ -734,13 +734,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Boost = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ISkillBoost obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISkillBoost item,
@@ -873,14 +866,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return SkillBoost.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISkillBoostGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class SkillBoostSetterTranslationCommon

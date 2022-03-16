@@ -913,13 +913,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown2 = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IVendorValues obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IVendorValues item,
@@ -1106,14 +1099,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return VendorValues.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IVendorValuesGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class VendorValuesSetterTranslationCommon

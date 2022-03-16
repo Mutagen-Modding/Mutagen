@@ -774,13 +774,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.NextFormID = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IModStats obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IModStats item,
@@ -927,14 +920,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             return ModStats.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IModStatsGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class ModStatsSetterTranslationCommon

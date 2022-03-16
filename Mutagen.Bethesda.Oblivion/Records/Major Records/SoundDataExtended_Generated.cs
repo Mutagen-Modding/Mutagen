@@ -765,13 +765,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoundDataExtendedInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(ISoundDataExtended obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundDataExtendedInternal item,
@@ -969,14 +962,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return SoundDataExtended.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundDataExtendedGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class SoundDataExtendedSetterTranslationCommon : SoundDataSetterTranslationCommon

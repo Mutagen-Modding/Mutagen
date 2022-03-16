@@ -714,14 +714,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Clear(item: (IActorValueInformationInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IActorValueInformation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IActorValueInformationInternal item,
@@ -936,15 +928,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IActorValueInformationGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public ActorValueInformation Duplicate(
             IActorValueInformationGetter item,

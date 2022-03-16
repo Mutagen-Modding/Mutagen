@@ -866,13 +866,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DATADataTypeState = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IDebrisModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDebrisModel item,
@@ -1040,14 +1033,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return DebrisModel.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDebrisModelGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class DebrisModelSetterTranslationCommon

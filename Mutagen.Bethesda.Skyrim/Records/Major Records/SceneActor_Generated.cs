@@ -777,13 +777,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BehaviorFlags = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ISceneActor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISceneActor item,
@@ -935,14 +928,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return SceneActor.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISceneActorGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class SceneActorSetterTranslationCommon

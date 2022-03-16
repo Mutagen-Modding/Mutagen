@@ -738,13 +738,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IAIPackageData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAIPackageData item,
@@ -881,14 +874,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return AIPackageData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAIPackageDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class AIPackageDataSetterTranslationCommon

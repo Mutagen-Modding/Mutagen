@@ -943,13 +943,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Luck = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IRaceStats obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRaceStats item,
@@ -1142,14 +1135,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return RaceStats.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRaceStatsGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class RaceStatsSetterTranslationCommon

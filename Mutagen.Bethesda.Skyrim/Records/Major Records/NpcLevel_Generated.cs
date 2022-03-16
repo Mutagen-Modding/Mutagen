@@ -655,13 +655,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (INpcLevel)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(INpcLevel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INpcLevel item,
@@ -827,14 +820,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return NpcLevel.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcLevelGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class NpcLevelSetterTranslationCommon : ANpcLevelSetterTranslationCommon

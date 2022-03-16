@@ -7602,14 +7602,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IImageSpaceAdapterInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IImageSpaceAdapter obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IImageSpaceAdapterInternal item,
@@ -9424,15 +9416,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IImageSpaceAdapterGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public ImageSpaceAdapter Duplicate(
             IImageSpaceAdapterGetter item,

@@ -808,13 +808,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Winter = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ISeasonalIngredientProduction obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISeasonalIngredientProduction item,
@@ -971,14 +964,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return SeasonalIngredientProduction.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISeasonalIngredientProductionGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class SeasonalIngredientProductionSetterTranslationCommon

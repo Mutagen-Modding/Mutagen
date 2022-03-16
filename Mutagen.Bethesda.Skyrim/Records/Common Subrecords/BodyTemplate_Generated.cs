@@ -823,13 +823,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ActsLike44 = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IBodyTemplate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBodyTemplate item,
@@ -986,14 +979,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return BodyTemplate.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBodyTemplateGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class BodyTemplateSetterTranslationCommon

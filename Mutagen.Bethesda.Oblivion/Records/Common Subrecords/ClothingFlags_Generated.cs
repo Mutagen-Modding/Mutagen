@@ -738,13 +738,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GeneralFlags = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IClothingFlags obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IClothingFlags item,
@@ -881,14 +874,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return ClothingFlags.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IClothingFlagsGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class ClothingFlagsSetterTranslationCommon

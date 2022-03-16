@@ -908,13 +908,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RotationQ4 = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IBounding obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBounding item,
@@ -1097,14 +1090,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return Bounding.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBoundingGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class BoundingSetterTranslationCommon

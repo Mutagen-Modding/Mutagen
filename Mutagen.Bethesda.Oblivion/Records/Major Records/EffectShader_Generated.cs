@@ -837,14 +837,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEffectShaderInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IEffectShader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEffectShaderInternal item,
@@ -1107,15 +1099,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IEffectShaderGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public EffectShader Duplicate(
             IEffectShaderGetter item,

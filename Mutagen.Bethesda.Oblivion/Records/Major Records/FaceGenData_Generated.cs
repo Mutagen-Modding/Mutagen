@@ -800,13 +800,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SymmetricTexture = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IFaceGenData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IFaceGenData item,
@@ -962,14 +955,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return FaceGenData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFaceGenDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class FaceGenDataSetterTranslationCommon

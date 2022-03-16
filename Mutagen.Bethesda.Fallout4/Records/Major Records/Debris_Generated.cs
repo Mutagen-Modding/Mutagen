@@ -712,14 +712,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Clear(item: (IDebrisInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IDebris obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDebrisInternal item,
@@ -934,15 +926,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDebrisGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public Debris Duplicate(
             IDebrisGetter item,

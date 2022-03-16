@@ -850,14 +850,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Clear(item: (IDamageTypeIndexedInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IDamageTypeIndexed obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDamageTypeIndexedInternal item,
@@ -1148,15 +1140,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDamageTypeIndexedGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public DamageTypeIndexed Duplicate(
             IDamageTypeIndexedGetter item,

@@ -1192,14 +1192,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IReverbParametersInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IReverbParameters obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IReverbParametersInternal item,
@@ -1544,15 +1536,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IReverbParametersGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public ReverbParameters Duplicate(
             IReverbParametersGetter item,

@@ -1059,13 +1059,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.WerewolfUnused = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ICrimeValues obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICrimeValues item,
@@ -1292,14 +1285,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             return CrimeValues.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICrimeValuesGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class CrimeValuesSetterTranslationCommon

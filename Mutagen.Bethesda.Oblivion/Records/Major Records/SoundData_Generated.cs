@@ -824,13 +824,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ISoundData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundDataInternal item,
@@ -987,14 +980,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return SoundData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class SoundDataSetterTranslationCommon

@@ -627,14 +627,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IVirtualMachineAdapter)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IVirtualMachineAdapter obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IVirtualMachineAdapter item,
@@ -800,18 +792,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return VirtualMachineAdapter.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IVirtualMachineAdapterGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class VirtualMachineAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon

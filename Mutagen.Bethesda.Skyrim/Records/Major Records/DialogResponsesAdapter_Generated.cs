@@ -691,14 +691,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IDialogResponsesAdapter)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IDialogResponsesAdapter obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDialogResponsesAdapter item,
@@ -886,18 +878,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return DialogResponsesAdapter.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDialogResponsesAdapterGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class DialogResponsesAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon

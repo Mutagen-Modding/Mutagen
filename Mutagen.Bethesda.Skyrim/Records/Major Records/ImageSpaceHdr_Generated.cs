@@ -983,13 +983,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.EyeAdaptStrength = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IImageSpaceHdr obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IImageSpaceHdr item,
@@ -1196,14 +1189,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return ImageSpaceHdr.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IImageSpaceHdrGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class ImageSpaceHdrSetterTranslationCommon

@@ -843,13 +843,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.OnEnd = null;
         }
         
-        #region Mutagen
-        public void RemapLinks(IScriptFragments obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScriptFragments item,
@@ -1026,14 +1019,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return ScriptFragments.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptFragmentsGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class ScriptFragmentsSetterTranslationCommon

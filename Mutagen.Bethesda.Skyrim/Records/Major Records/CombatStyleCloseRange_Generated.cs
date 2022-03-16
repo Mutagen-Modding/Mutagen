@@ -848,13 +848,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.StalkTime = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ICombatStyleCloseRange obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICombatStyleCloseRange item,
@@ -1021,14 +1014,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return CombatStyleCloseRange.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICombatStyleCloseRangeGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class CombatStyleCloseRangeSetterTranslationCommon

@@ -860,14 +860,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IAssociationTypeInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IAssociationType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAssociationTypeInternal item,
@@ -1128,15 +1120,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAssociationTypeGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public AssociationType Duplicate(
             IAssociationTypeGetter item,

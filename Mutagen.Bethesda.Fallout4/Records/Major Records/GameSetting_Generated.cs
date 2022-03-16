@@ -691,14 +691,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Clear(item: (IGameSettingInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IGameSetting obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IGameSettingInternal item,
@@ -907,15 +899,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGameSettingGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public virtual GameSetting Duplicate(
             IGameSettingGetter item,

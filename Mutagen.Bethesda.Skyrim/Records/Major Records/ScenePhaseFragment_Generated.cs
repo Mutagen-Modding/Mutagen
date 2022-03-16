@@ -838,13 +838,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FragmentName = string.Empty;
         }
         
-        #region Mutagen
-        public void RemapLinks(IScenePhaseFragment obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScenePhaseFragment item,
@@ -1007,14 +1000,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return ScenePhaseFragment.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScenePhaseFragmentGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class ScenePhaseFragmentSetterTranslationCommon

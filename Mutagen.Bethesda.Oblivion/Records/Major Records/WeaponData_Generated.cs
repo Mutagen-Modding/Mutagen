@@ -951,13 +951,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Damage = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IWeaponData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeaponData item,
@@ -1154,14 +1147,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return WeaponData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeaponDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class WeaponDataSetterTranslationCommon

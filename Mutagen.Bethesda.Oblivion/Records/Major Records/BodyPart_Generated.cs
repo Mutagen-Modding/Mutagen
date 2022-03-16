@@ -744,13 +744,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IBodyPart obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBodyPart item,
@@ -892,14 +885,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return BodyPart.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBodyPartGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class BodyPartSetterTranslationCommon

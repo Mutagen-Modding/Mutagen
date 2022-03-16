@@ -841,13 +841,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IScriptMetaSummary obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScriptMetaSummary item,
@@ -1014,14 +1007,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return ScriptMetaSummary.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptMetaSummaryGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class ScriptMetaSummarySetterTranslationCommon

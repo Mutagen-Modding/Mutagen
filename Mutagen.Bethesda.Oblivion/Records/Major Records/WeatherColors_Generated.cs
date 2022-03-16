@@ -804,13 +804,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Night = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IWeatherColors obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeatherColors item,
@@ -963,14 +956,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return WeatherColors.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherColorsGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class WeatherColorsSetterTranslationCommon

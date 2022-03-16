@@ -775,14 +775,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ActorValue = MagicEffectArchetype._ActorValue_Default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IMagicEffectArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            obj.AssociationKey = RemappingMixIn.Remap(obj.AssociationKey, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectArchetypeInternal item,
@@ -925,15 +917,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return MagicEffectArchetype.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectArchetypeGetter obj)
-        {
-            yield return FormLinkInformation.Factory(obj.AssociationKey.AsLink<ISkyrimMajorRecordGetter>());
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class MagicEffectArchetypeSetterTranslationCommon

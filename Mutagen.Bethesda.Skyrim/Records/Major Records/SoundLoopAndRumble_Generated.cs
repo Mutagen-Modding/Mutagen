@@ -808,13 +808,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RumbleValues = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ISoundLoopAndRumble obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundLoopAndRumble item,
@@ -971,14 +964,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return SoundLoopAndRumble.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundLoopAndRumbleGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class SoundLoopAndRumbleSetterTranslationCommon

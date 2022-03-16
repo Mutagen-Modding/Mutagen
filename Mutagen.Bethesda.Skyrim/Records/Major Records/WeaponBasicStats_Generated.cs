@@ -776,13 +776,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Damage = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IWeaponBasicStats obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeaponBasicStats item,
@@ -929,14 +922,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return WeaponBasicStats.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeaponBasicStatsGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class WeaponBasicStatsSetterTranslationCommon

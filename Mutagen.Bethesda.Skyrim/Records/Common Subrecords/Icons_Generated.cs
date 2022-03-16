@@ -740,13 +740,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SmallIconFilename = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IIcons obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IIcons item,
@@ -884,14 +877,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return Icons.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IIconsGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class IconsSetterTranslationCommon

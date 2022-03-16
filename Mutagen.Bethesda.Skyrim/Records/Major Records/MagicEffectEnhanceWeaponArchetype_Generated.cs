@@ -621,13 +621,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IMagicEffectEnhanceWeaponArchetypeInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IMagicEffectEnhanceWeaponArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectEnhanceWeaponArchetypeInternal item,
@@ -789,14 +782,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return MagicEffectEnhanceWeaponArchetype.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectEnhanceWeaponArchetypeGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon

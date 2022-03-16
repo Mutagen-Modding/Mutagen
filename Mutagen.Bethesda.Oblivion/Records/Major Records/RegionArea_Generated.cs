@@ -826,13 +826,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RegionPoints = null;
         }
         
-        #region Mutagen
-        public void RemapLinks(IRegionArea obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRegionArea item,
@@ -988,14 +981,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return RegionArea.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionAreaGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class RegionAreaSetterTranslationCommon

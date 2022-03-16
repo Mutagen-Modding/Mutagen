@@ -859,13 +859,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown2 = new byte[3];
         }
         
-        #region Mutagen
-        public void RemapLinks(ISoundOutputAttenuation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundOutputAttenuation item,
@@ -1032,14 +1025,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return SoundOutputAttenuation.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundOutputAttenuationGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class SoundOutputAttenuationSetterTranslationCommon

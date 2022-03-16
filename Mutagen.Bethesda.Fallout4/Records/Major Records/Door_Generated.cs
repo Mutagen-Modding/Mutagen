@@ -716,14 +716,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Clear(item: (IDoorInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IDoor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDoorInternal item,
@@ -938,15 +930,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDoorGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public Door Duplicate(
             IDoorGetter item,

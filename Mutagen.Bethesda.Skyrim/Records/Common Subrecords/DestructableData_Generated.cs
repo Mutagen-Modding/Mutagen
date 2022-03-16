@@ -808,13 +808,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IDestructableData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDestructableData item,
@@ -971,14 +964,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return DestructableData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDestructableDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class DestructableDataSetterTranslationCommon

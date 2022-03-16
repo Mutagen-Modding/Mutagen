@@ -671,14 +671,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IScriptIntProperty)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IScriptIntProperty obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScriptIntProperty item,
@@ -848,18 +840,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return ScriptIntProperty.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptIntPropertyGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class ScriptIntPropertySetterTranslationCommon : ScriptPropertySetterTranslationCommon

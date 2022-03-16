@@ -804,13 +804,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Night = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IWeatherColor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeatherColor item,
@@ -963,14 +956,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return WeatherColor.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherColorGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class WeatherColorSetterTranslationCommon

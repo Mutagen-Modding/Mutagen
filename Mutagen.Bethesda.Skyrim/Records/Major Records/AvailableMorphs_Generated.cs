@@ -869,13 +869,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Lip = null;
         }
         
-        #region Mutagen
-        public void RemapLinks(IAvailableMorphs obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAvailableMorphs item,
@@ -1077,14 +1070,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return AvailableMorphs.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAvailableMorphsGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class AvailableMorphsSetterTranslationCommon

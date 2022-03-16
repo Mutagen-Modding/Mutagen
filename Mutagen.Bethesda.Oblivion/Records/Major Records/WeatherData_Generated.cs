@@ -1124,13 +1124,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LightningColor = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IWeatherData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeatherData item,
@@ -1377,14 +1370,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return WeatherData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class WeatherDataSetterTranslationCommon

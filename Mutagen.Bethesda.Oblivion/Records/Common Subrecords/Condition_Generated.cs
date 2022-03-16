@@ -972,13 +972,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThirdParameter = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ICondition obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICondition item,
@@ -1175,14 +1168,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return Condition.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IConditionGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class ConditionSetterTranslationCommon

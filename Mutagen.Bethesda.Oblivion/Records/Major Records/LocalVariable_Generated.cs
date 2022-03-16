@@ -784,13 +784,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ILocalVariable obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocalVariable item,
@@ -940,14 +933,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return LocalVariable.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocalVariableGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class LocalVariableSetterTranslationCommon

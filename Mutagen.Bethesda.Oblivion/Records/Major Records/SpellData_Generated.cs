@@ -808,13 +808,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flag = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ISpellData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISpellData item,
@@ -971,14 +964,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return SpellData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISpellDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class SpellDataSetterTranslationCommon

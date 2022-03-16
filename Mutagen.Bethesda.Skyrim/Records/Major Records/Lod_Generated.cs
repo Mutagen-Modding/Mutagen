@@ -980,13 +980,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Level3Extra = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ILod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILod item,
@@ -1199,14 +1192,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return Lod.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILodGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class LodSetterTranslationCommon

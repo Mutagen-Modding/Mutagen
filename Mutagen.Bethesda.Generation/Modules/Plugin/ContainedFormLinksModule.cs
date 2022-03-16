@@ -22,6 +22,7 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
 
     public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
     {
+        if (await HasLinks(obj, includeBaseClass: false) == Case.No) return;
         if (maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class))
         {
             fg.AppendLine($"public IEnumerable<{nameof(IFormLinkGetter)}> GetContainedFormLinks({obj.Interface(getter: true)} obj)");

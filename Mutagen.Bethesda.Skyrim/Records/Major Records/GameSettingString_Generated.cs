@@ -776,14 +776,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGameSettingStringInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IGameSettingString obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IGameSettingStringInternal item,
@@ -1060,15 +1052,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGameSettingStringGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public GameSettingString Duplicate(
             IGameSettingStringGetter item,

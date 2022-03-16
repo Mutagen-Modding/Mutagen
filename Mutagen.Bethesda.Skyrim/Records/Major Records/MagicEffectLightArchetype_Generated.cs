@@ -621,13 +621,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IMagicEffectLightArchetypeInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IMagicEffectLightArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectLightArchetypeInternal item,
@@ -789,14 +782,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return MagicEffectLightArchetype.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectLightArchetypeGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class MagicEffectLightArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon

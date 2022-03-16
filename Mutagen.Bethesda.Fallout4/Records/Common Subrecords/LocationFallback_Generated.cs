@@ -697,14 +697,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Clear(item: (ILocationFallback)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(ILocationFallback obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationFallback item,
@@ -880,18 +872,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             return LocationFallback.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationFallbackGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class LocationFallbackSetterTranslationCommon : ALocationTargetSetterTranslationCommon

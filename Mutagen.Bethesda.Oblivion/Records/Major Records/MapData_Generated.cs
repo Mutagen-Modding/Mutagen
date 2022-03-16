@@ -773,13 +773,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CellCoordinatesSECell = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IMapData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMapData item,
@@ -926,14 +919,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return MapData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMapDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class MapDataSetterTranslationCommon

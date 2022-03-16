@@ -1403,13 +1403,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.PowerAttackFatigueModMult = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ICombatStyleAdvanced obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICombatStyleAdvanced item,
@@ -1736,14 +1729,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return CombatStyleAdvanced.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICombatStyleAdvancedGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class CombatStyleAdvancedSetterTranslationCommon

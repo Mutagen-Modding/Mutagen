@@ -664,14 +664,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPackageTargetAlias)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IPackageTargetAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPackageTargetAlias item,
@@ -839,18 +831,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return PackageTargetAlias.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPackageTargetAliasGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class PackageTargetAliasSetterTranslationCommon : APackageTargetSetterTranslationCommon

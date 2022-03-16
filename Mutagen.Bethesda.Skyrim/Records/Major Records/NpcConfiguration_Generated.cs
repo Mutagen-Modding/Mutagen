@@ -1058,13 +1058,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BleedoutOverride = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(INpcConfiguration obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INpcConfiguration item,
@@ -1295,14 +1288,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return NpcConfiguration.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcConfigurationGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class NpcConfigurationSetterTranslationCommon

@@ -768,13 +768,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MountCameraOffset = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IMountData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMountData item,
@@ -917,14 +910,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return MountData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMountDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class MountDataSetterTranslationCommon

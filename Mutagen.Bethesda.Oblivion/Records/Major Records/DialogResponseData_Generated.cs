@@ -851,13 +851,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = new byte[3];
         }
         
-        #region Mutagen
-        public void RemapLinks(IDialogResponseData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDialogResponseData item,
@@ -1024,14 +1017,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return DialogResponseData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDialogResponseDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class DialogResponseDataSetterTranslationCommon

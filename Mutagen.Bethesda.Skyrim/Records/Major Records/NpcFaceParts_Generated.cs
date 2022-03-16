@@ -808,13 +808,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Mouth = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(INpcFaceParts obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INpcFaceParts item,
@@ -971,14 +964,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return NpcFaceParts.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcFacePartsGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class NpcFacePartsSetterTranslationCommon

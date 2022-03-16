@@ -778,13 +778,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IDialogItemData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDialogItemData item,
@@ -931,14 +924,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return DialogItemData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDialogItemDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class DialogItemDataSetterTranslationCommon

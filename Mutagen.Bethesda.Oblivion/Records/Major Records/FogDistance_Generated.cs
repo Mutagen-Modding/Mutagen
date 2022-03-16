@@ -808,13 +808,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.NightFar = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IFogDistance obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IFogDistance item,
@@ -971,14 +964,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return FogDistance.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFogDistanceGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class FogDistanceSetterTranslationCommon

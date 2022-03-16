@@ -781,13 +781,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.PropertyList.Clear();
         }
         
-        #region Mutagen
-        public void RemapLinks(IProperties obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IProperties item,
@@ -931,14 +924,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             return Properties.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPropertiesGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class PropertiesSetterTranslationCommon

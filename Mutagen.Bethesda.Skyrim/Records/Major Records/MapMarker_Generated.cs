@@ -824,13 +824,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Type = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IMapMarker obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMapMarker item,
@@ -978,14 +971,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return MapMarker.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMapMarkerGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class MapMarkerSetterTranslationCommon

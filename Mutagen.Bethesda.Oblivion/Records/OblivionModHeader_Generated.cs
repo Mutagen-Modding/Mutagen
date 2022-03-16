@@ -1099,13 +1099,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MasterReferences.Clear();
         }
         
-        #region Mutagen
-        public void RemapLinks(IOblivionModHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IOblivionModHeader item,
@@ -1349,14 +1342,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return OblivionModHeader.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IOblivionModHeaderGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class OblivionModHeaderSetterTranslationCommon

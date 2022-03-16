@@ -827,14 +827,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IStoryManagerBranchNodeInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IStoryManagerBranchNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IStoryManagerBranchNodeInternal item,
@@ -1131,15 +1123,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IStoryManagerBranchNodeGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public StoryManagerBranchNode Duplicate(
             IStoryManagerBranchNodeGetter item,

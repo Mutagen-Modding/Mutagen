@@ -755,14 +755,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGameSettingIntInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IGameSettingInt obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IGameSettingIntInternal item,
@@ -1035,15 +1027,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGameSettingIntGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public GameSettingInt Duplicate(
             IGameSettingIntGetter item,

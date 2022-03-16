@@ -781,13 +781,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.CellData = new byte[0];
         }
         
-        #region Mutagen
-        public void RemapLinks(IWorldspaceMaxHeight obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWorldspaceMaxHeight item,
@@ -934,14 +927,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return WorldspaceMaxHeight.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceMaxHeightGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class WorldspaceMaxHeightSetterTranslationCommon

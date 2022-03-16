@@ -734,13 +734,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Color = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IColorFrame obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IColorFrame item,
@@ -873,14 +866,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return ColorFrame.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IColorFrameGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class ColorFrameSetterTranslationCommon

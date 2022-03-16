@@ -791,13 +791,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Insignia = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IRank obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRank item,
@@ -957,14 +950,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return Rank.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRankGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class RankSetterTranslationCommon

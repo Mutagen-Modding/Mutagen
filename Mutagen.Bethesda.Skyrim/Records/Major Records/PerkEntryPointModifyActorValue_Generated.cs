@@ -760,14 +760,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPerkEntryPointModifyActorValue)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IPerkEntryPointModifyActorValue obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkEntryPointModifyActorValue item,
@@ -1010,18 +1002,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return PerkEntryPointModifyActorValue.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkEntryPointModifyActorValueGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class PerkEntryPointModifyActorValueSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon

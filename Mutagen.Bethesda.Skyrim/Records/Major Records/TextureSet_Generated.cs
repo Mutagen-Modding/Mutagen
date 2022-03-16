@@ -1190,14 +1190,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ITextureSetInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(ITextureSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITextureSetInternal item,
@@ -1574,15 +1566,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITextureSetGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public TextureSet Duplicate(
             ITextureSetGetter item,

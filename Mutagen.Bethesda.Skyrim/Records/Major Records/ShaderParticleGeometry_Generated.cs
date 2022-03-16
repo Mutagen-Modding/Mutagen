@@ -1250,14 +1250,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IShaderParticleGeometryInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IShaderParticleGeometry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IShaderParticleGeometryInternal item,
@@ -1616,15 +1608,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IShaderParticleGeometryGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public ShaderParticleGeometry Duplicate(
             IShaderParticleGeometryGetter item,

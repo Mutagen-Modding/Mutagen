@@ -1333,13 +1333,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(INpcFaceMorph obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INpcFaceMorph item,
@@ -1646,14 +1639,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return NpcFaceMorph.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcFaceMorphGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class NpcFaceMorphSetterTranslationCommon

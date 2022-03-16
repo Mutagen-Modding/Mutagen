@@ -655,13 +655,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPcLevelMult)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IPcLevelMult obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPcLevelMult item,
@@ -827,14 +820,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return PcLevelMult.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPcLevelMultGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class PcLevelMultSetterTranslationCommon : ANpcLevelSetterTranslationCommon

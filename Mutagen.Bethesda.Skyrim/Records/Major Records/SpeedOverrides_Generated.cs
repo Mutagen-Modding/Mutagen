@@ -1053,13 +1053,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ISpeedOverrides obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISpeedOverrides item,
@@ -1286,14 +1279,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return SpeedOverrides.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISpeedOverridesGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class SpeedOverridesSetterTranslationCommon

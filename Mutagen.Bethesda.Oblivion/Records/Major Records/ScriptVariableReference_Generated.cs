@@ -660,14 +660,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptVariableReference)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IScriptVariableReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScriptVariableReference item,
@@ -834,18 +826,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return ScriptVariableReference.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptVariableReferenceGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class ScriptVariableReferenceSetterTranslationCommon : AScriptReferenceSetterTranslationCommon

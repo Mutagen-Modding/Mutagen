@@ -883,13 +883,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ILightData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILightData item,
@@ -1066,14 +1059,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return LightData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILightDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class LightDataSetterTranslationCommon

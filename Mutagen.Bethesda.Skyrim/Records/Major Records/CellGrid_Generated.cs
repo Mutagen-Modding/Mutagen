@@ -738,13 +738,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Flags = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ICellGrid obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICellGrid item,
@@ -881,14 +874,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return CellGrid.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICellGridGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class CellGridSetterTranslationCommon

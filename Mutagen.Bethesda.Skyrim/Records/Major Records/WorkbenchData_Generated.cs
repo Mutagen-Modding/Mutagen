@@ -740,13 +740,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.UsesSkill = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IWorkbenchData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWorkbenchData item,
@@ -887,14 +880,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return WorkbenchData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorkbenchDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class WorkbenchDataSetterTranslationCommon

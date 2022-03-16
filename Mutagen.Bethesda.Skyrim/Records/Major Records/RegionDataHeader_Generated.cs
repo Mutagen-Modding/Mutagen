@@ -784,13 +784,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Priority = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IRegionDataHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRegionDataHeaderInternal item,
@@ -937,14 +930,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return RegionDataHeader.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionDataHeaderGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class RegionDataHeaderSetterTranslationCommon

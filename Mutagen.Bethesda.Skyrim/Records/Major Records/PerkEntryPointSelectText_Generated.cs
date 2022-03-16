@@ -690,14 +690,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPerkEntryPointSelectText)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IPerkEntryPointSelectText obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkEntryPointSelectText item,
@@ -920,18 +912,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return PerkEntryPointSelectText.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkEntryPointSelectTextGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class PerkEntryPointSelectTextSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon

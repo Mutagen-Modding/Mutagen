@@ -813,13 +813,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Stackable = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ISoundRepeat obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundRepeat item,
@@ -976,14 +969,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             return SoundRepeat.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundRepeatGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class SoundRepeatSetterTranslationCommon

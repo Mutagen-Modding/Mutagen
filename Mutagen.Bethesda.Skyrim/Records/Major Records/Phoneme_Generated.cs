@@ -2217,13 +2217,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FLAP = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IPhoneme obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPhoneme item,
@@ -2776,14 +2769,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return Phoneme.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPhonemeGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class PhonemeSetterTranslationCommon

@@ -775,14 +775,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalFloatInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IGlobalFloat obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IGlobalFloatInternal item,
@@ -1059,15 +1051,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGlobalFloatGetter obj)
-        {
-            foreach (var item in base.GetContainedFormLinks(obj))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
         #region Duplicate
         public GlobalFloat Duplicate(
             IGlobalFloatGetter item,

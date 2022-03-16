@@ -948,13 +948,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RustleSpeed = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ITreeData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITreeData item,
@@ -1151,14 +1144,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return TreeData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITreeDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class TreeDataSetterTranslationCommon

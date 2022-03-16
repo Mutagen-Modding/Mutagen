@@ -1158,13 +1158,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.TreeDimmer = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IHDRData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IHDRData item,
@@ -1421,14 +1414,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return HDRData.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IHDRDataGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class HDRDataSetterTranslationCommon

@@ -895,13 +895,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Connections.Clear();
         }
         
-        #region Mutagen
-        public void RemapLinks(IPathGridPoint obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPathGridPoint item,
@@ -1071,14 +1064,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return PathGridPoint.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPathGridPointGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class PathGridPointSetterTranslationCommon

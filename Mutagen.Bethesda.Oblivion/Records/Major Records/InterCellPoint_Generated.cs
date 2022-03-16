@@ -733,13 +733,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Point = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IInterCellPoint obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IInterCellPoint item,
@@ -872,14 +865,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return InterCellPoint.GetNew();
         }
-        
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IInterCellPointGetter obj)
-        {
-            yield break;
-        }
-        
-        #endregion
         
     }
     public partial class InterCellPointSetterTranslationCommon
