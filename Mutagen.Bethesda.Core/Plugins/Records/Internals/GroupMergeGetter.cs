@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Loqui;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Cache;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
@@ -42,6 +44,11 @@ public class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyC
     IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => this;
 
     public IEnumerable<IFormLinkGetter> ContainedFormLinks => SubGroups.SelectMany(x => x.ContainedFormLinks);
+    
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache = null, bool includeImplicit = true)
+    {
+        return SubGroups.SelectMany(x => x.EnumerateAssetLinks(linkCache, includeImplicit));
+    }
 
     private TMajor Get(FormKey key)
     {

@@ -1862,6 +1862,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     await ContainedFormLinksModule.GenerateInterfaceImplementation(obj, fg, getter: true);
                 }
 
+                if (obj.GetObjectType() == ObjectType.Mod
+                    || (await ContainedAssetLinksModule.HasLinks(obj, includeBaseClass: false) != Case.No))
+                {
+                    await ContainedAssetLinksModule.GenerateInterfaceImplementation(obj, fg, getter: true);
+                }
+
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     MajorRecordContextEnumerationModule.GenerateClassImplementation(obj, fg, onlyGetter: true);

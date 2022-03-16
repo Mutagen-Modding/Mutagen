@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Cache;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
@@ -156,6 +158,9 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         /// <inheritdoc />
         public abstract IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
+        
+        /// <inheritdoc />
+        public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit);
     }
 
     namespace Internals
@@ -349,8 +354,8 @@ namespace Mutagen.Bethesda.Plugins.Records
             IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => _recordCache;
             IEnumerable<IMajorRecordGetter> IGroupGetter.Records => _recordCache.Items;
             public ILoquiRegistration ContainedRecordRegistration => _registration;
-
             public abstract IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
+            public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit);
 
             public bool ContainsKey(FormKey key)
             {

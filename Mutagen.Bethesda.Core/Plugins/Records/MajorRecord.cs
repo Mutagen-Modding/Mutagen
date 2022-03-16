@@ -2,12 +2,12 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
-    public partial interface IMajorRecord : IFormLinkContainer, IMajorRecordQueryable
+    public partial interface IMajorRecord : IFormLinkContainer, IAssetLinkContainer, IMajorRecordQueryable
     {
         new FormKey FormKey { get; }
         
@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         IFormVersionGetter, 
         IMajorRecordIdentifier,
         IFormLinkContainerGetter,
+        IAssetLinkContainerGetter,
         IFormLinkIdentifier,
         IEquatable<IFormLinkGetter>,
         IMajorRecordQueryableGetter

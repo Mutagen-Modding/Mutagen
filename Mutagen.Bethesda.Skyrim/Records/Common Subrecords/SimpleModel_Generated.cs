@@ -410,6 +410,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SimpleModel_Registration.TriggeringRecordType;
         public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => SimpleModelCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SimpleModelSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SimpleModelSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -474,6 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Model]
     /// </summary>
     public partial interface ISimpleModel :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<ISimpleModel>,
         ISimpleModelGetter
@@ -487,6 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface ISimpleModelGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ISimpleModelGetter>
@@ -768,6 +773,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISimpleModel obj)
+        {
+            yield return obj.File;
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(ISimpleModel obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.File.Relink(mapping);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -911,6 +927,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISimpleModelGetter obj)
         {
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISimpleModelGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            yield return obj.File;
             yield break;
         }
         
@@ -1165,6 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => SimpleModelCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => SimpleModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

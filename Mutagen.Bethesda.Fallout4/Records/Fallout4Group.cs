@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
@@ -20,6 +23,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
+        
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
     public partial interface IFallout4Group<T> : IGroup<T>
@@ -69,6 +77,11 @@ namespace Mutagen.Bethesda.Fallout4
                     _data,
                     _package,
                     offset);
+            }
+
+            public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

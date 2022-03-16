@@ -38,6 +38,7 @@ public class PluginModule : GenerationModule
         SubModules.Add(new MajorRecordContextEnumerationModule());
         SubModules.Add(new AspectInterfaceModule());
         SubModules.Add(new TypeOptionSolidifier());
+        SubModules.Add(new ContainedAssetLinksModule());
         SubModules.Add(new LinkCacheExtensionsModule());
         SubModules.Add(new DuplicateModule());
         SubModules.Add(new GameCategoryExtensionsModule());

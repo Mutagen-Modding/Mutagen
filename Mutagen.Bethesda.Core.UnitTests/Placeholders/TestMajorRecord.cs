@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Loqui;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
@@ -166,5 +168,19 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
         }
 
         public Type Type => throw new NotImplementedException();
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache = null, bool includeImplicit = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

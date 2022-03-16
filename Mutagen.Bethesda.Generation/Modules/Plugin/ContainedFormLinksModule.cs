@@ -253,7 +253,7 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
                     else if (field is FormKeyType formKey
                              && obj.Name != "MajorRecord")
                     {
-                        fg.AppendLine($"obj.{field.Name} = {nameof(RemappingMixIn)}.Remap(obj.{field.Name}, mapping);");
+                        fg.AppendLine($"obj.{field.Name} = {nameof(FormLinkRemappingMixIn)}.Remap(obj.{field.Name}, mapping);");
                     }
                     else if (field is LoquiType loqui)
                     {

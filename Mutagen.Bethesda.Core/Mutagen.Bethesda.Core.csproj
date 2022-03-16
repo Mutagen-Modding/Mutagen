@@ -145,6 +145,11 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Extensions\AssetLinkRemappingMixIn.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Installs\DI\GameLocator.cs" />
     <Compile Include="Installs\GameLocations.cs" />
     <Compile Include="Installs\GameMetaData.cs" />
@@ -441,7 +446,7 @@
     <Compile Include="Extensions\GameCategoryExt.cs" />
     <Compile Include="Extensions\HasModsMixIn.cs" />
     <Compile Include="Extensions\ModKeyExt.cs" />
-    <Compile Include="Extensions\RemappingMixIn.cs" />
+    <Compile Include="Extensions\FormLinkRemappingMixIn.cs" />
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\GameReleaseExt.cs" />

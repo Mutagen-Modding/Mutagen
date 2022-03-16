@@ -57,12 +57,17 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
     }
     
     public bool IsNull => RawPath == IAssetPath.NullPath;
+    IAssetType IAssetLinkGetter.AssetType => AssetType;
 }
 
 /// <summary>
 /// Asset referenced by a record
 /// </summary>
-public class AssetLink<TAssetType> : AssetLinkGetter<TAssetType>, IComparable<AssetLink<TAssetType>>, IAssetLink<TAssetType>
+public class AssetLink<TAssetType> : 
+    AssetLinkGetter<TAssetType>, 
+    IComparable<AssetLink<TAssetType>>,
+    IAssetLink<AssetLink<TAssetType>, TAssetType>,
+    IAssetLink<TAssetType>
     where TAssetType : IAssetType
 {
     public AssetLink(TAssetType assetType, string rawPath)
@@ -96,6 +101,16 @@ public class AssetLink<TAssetType> : AssetLinkGetter<TAssetType>, IComparable<As
     {
         get => _rawPath;
         set => _rawPath = value;
+    }
+
+    IAssetLink<TAssetType> IAssetLink<IAssetLink<TAssetType>, TAssetType>.ShallowClone()
+    {
+        return ShallowClone();
+    }
+
+    public AssetLink<TAssetType> ShallowClone()
+    {
+        return new AssetLink<TAssetType>(AssetType, RawPath);
     }
 
     public void SetToNull()
