@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
         <LangVersion>Latest</LangVersion>
     </PropertyGroup>
     
@@ -23,11 +23,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Loqui" Version="2.38.3" GeneratePathProperty="true" />
-      <PackageReference Include="Loqui.Generation" Version="2.38.3" GeneratePathProperty="true" />
+      <PackageReference Include="Loqui" Version="2.40.0" GeneratePathProperty="true" />
+      <PackageReference Include="Loqui.Generation" Version="2.40.0" GeneratePathProperty="true" />
       <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" />
-      <PackageReference Include="Noggog.CSharpExt" Version="2.38.1" GeneratePathProperty="true" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" PrivateAssets="all" />
+      <PackageReference Include="Noggog.CSharpExt" Version="2.40.0" GeneratePathProperty="true" />
         <PackageReference Include="GitInfo" Version="2.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -36,8 +36,7 @@
 
   <ItemGroup>
     <!-- Package the generator in the analyzer directory of the nuget package -->
-	  <None Include="$(OutputPath)\net5.0\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-	  <None Include="$(OutputPath)\net6.0\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	  <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 
     <!-- Package the dependencies alongside the generator assembly -->
     <None Include="$(PkgNoggog_CSharpExt)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />

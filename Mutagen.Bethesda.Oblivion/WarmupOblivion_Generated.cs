@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
                 new ProtocolDefinition_Bethesda(),
                 new ProtocolDefinition_Oblivion());
             LinkInterfaceMapping.AutomaticRegistration = false;
-            LinkInterfaceMapping.Register(new Mutagen.Bethesda.Oblivion.Internals.LinkInterfaceMapping());
+            LinkInterfaceMapping.InternalInstance.Register(new Mutagen.Bethesda.Oblivion.Internals.LinkInterfaceMapping());
             InitCustom();
         }
         static partial void InitCustom();

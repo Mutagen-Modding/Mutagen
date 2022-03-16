@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -829,15 +830,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static readonly RecordType CIS1 = new RecordType("CIS1");
             public static readonly RecordType CIS2 = new RecordType("CIS2");
-            public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-            private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+            public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+            private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
             {
-                return new CollectionGetterWrapper<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.CTDA,
-                    }
-                );
+                return new TriggeringRecordCollection(
+                    RecordTypes.CTDA);
             });
         }
 
@@ -884,15 +881,21 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void CustomStringImports(MutagenFrame frame, IConditionData item)
             {
+                if (item is not IFunctionConditionData funcData) return;
+                ParseString(frame, funcData);
+                ParseString(frame, funcData);
+            }
+
+            private static void ParseString(MutagenFrame frame, IFunctionConditionData funcData)
+            {
                 if (!frame.Reader.TryGetSubrecordFrame(out var subMeta)) return;
-                if (!(item is IFunctionConditionData funcData)) return;
                 switch (subMeta.RecordType.TypeInt)
                 {
                     case 0x31534943: // CIS1
-                        funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content);
+                        funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                         break;
                     case 0x32534943: // CIS2
-                        funcData.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content);
+                        funcData.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                         break;
                     default:
                         return;
@@ -949,12 +952,9 @@ namespace Mutagen.Bethesda.Skyrim
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             IConditionDataGetter IConditionGetter.Data => this.Data;
 
-            private static ICollectionGetter<RecordType> IncludeTriggers = new CollectionGetterWrapper<RecordType>(
-                new RecordType[]
-                {
-                    new RecordType("CIS1"),
-                    new RecordType("CIS2"),
-                });
+            private static TriggeringRecordCollection IncludeTriggers = new TriggeringRecordCollection(
+                new RecordType("CIS1"),
+                new RecordType("CIS2"));
 
             private Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_data.Span[location]);
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
@@ -1249,28 +1249,36 @@ namespace Mutagen.Bethesda.Skyrim
             public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
 
             private ReadOnlyMemorySlice<byte> _stringParamData1;
-            public bool ParameterOneString_IsSet { get; private set; }
-            public string? ParameterOneString => ParameterOneString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1) : null;
+            public bool ParameterOneStringIsSet { get; private set; }
+            public string? ParameterOneString => ParameterOneStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1, _package.MetaData.Encodings.NonTranslated) : null;
 
             private ReadOnlyMemorySlice<byte> _stringParamData2;
-            public bool ParameterTwoString_IsSet { get; private set; }
-            public string? ParameterTwoString => ParameterTwoString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2) : null;
+            public bool ParameterTwoStringIsSet { get; private set; }
+            public string? ParameterTwoString => ParameterTwoStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2, _package.MetaData.Encodings.NonTranslated) : null;
 
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 stream.Position -= 0x4;
                 _data2 = stream.RemainingMemory.Slice(4, 0x14);
                 stream.Position += 0x18;
+                ParseStringParameter(stream);
+                ParseStringParameter(stream);
+            }
+
+            private void ParseStringParameter(OverlayStream stream)
+            {
                 if (stream.Complete || !stream.TryGetSubrecord(out var subFrame)) return;
                 switch (subFrame.RecordTypeInt)
                 {
                     case 0x31534943: // CIS1
                         _stringParamData1 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
-                        ParameterOneString_IsSet = true;
+                        ParameterOneStringIsSet = true;
+                        stream.Position += subFrame.TotalLength;
                         break;
                     case 0x32534943: // CIS2
                         _stringParamData2 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
-                        ParameterTwoString_IsSet = true;
+                        ParameterTwoStringIsSet = true;
+                        stream.Position += subFrame.TotalLength;
                         break;
                     default:
                         break;

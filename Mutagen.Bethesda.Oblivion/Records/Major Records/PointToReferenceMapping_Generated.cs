@@ -216,9 +216,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Points.Specific = l;
-                        foreach (var item in Points.Specific.WithIndex())
+                        foreach (var item in Points.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

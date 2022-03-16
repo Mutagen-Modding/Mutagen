@@ -7,6 +7,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -58,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 effect.Conditions.SetTo(
                                     ListBinaryTranslation<PerkCondition>.Instance.Parse(
                                         reader: new MutagenFrame(stream),
-                                        transl: (MutagenFrame r, out PerkCondition listSubItem) =>
+                                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out PerkCondition listSubItem) =>
                                         {
                                             return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
                                                 frame: r,
@@ -73,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 effect.Conditions.SetTo(
                                     ListBinaryTranslation<PerkCondition>.Instance.Parse(
                                         reader: new MutagenFrame(stream),
-                                        transl: (MutagenFrame r, out PerkCondition listSubItem) =>
+                                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out PerkCondition listSubItem) =>
                                         {
                                             return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
                                                 frame: r,
@@ -86,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 var tabCount = dataFrame.Content[2];
                                 var conditions = ListBinaryTranslation<PerkCondition>.Instance.Parse(
                                     reader: new MutagenFrame(stream),
-                                    transl: (MutagenFrame r, out PerkCondition listSubItem) =>
+                                    transl: (MutagenFrame r, [MaybeNullWhen(false)] out PerkCondition listSubItem) =>
                                     {
                                         return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
                                             frame: r,
@@ -232,7 +233,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         entryPointEffect = new PerkEntryPointAddActivateChoice()
                                         {
                                             Spell = new FormLinkNullable<ISpellGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : default(FormKey?)),
-                                            ButtonLabel = epf2.HasValue ? StringBinaryTranslation.Instance.Parse(epf2.Value, StringsSource.Normal, stream.MetaData.StringsLookup!) : null,
+                                            ButtonLabel = epf2.HasValue ? StringBinaryTranslation.Instance.Parse(epf2.Value, StringsSource.Normal, stream.MetaData) : null,
                                             Flags = new PerkScriptFlag()
                                             {
                                                 Flags = (PerkScriptFlag.Flag)BinaryPrimitives.ReadInt16LittleEndian(epf3.Value),
@@ -263,7 +264,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         }
                                         entryPointEffect = new PerkEntryPointSelectText()
                                         {
-                                            Text = epfd.HasValue ? BinaryStringUtility.ProcessWholeToZString(epfd.Value) : string.Empty
+                                            Text = epfd.HasValue ? BinaryStringUtility.ProcessWholeToZString(epfd.Value, stream.MetaData.Encodings.NonTranslated) : string.Empty
                                         };
                                         break;
                                     case APerkEntryPointEffect.FunctionType.SetText:
@@ -276,7 +277,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         }
                                         entryPointEffect = new PerkEntryPointSetText()
                                         {
-                                            Text = epfd.HasValue ? StringBinaryTranslation.Instance.Parse(epfd.Value, StringsSource.Normal, stream.MetaData.StringsLookup!) : (TranslatedString)string.Empty,
+                                            Text = epfd.HasValue ? StringBinaryTranslation.Instance.Parse(epfd.Value, StringsSource.Normal, stream.MetaData) : (TranslatedString)string.Empty,
                                         };
                                         break;
                                     default:
@@ -476,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
                             case PerkEntryPointSelectText text:
                                 using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                                 {
-                                    writer.Write(text.Text, StringBinaryType.NullTerminate);
+                                    writer.Write(text.Text, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
                                 }
                                 break;
                             case PerkEntryPointSetText ltext:

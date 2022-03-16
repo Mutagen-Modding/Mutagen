@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda
 {
@@ -14,7 +15,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// An interface implemented by Major Records that have keywords
         /// </summary>
-        public interface IKeyworded<TKeyword> : IKeywordedGetter<TKeyword>
+        public interface IKeyworded<TKeyword> : IKeywordedGetter<TKeyword>, IMajorRecordQueryable
             where TKeyword : class, IKeywordCommonGetter
         {
             new ExtendedList<IFormLinkGetter<TKeyword>>? Keywords { get; set; }
@@ -23,7 +24,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// An interface implemented by Major Records that have keywords
         /// </summary>
-        public interface IKeywordedGetter
+        public interface IKeywordedGetter : IMajorRecordQueryableGetter
         {
             IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? Keywords { get; }
         }

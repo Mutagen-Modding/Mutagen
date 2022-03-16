@@ -6,6 +6,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -133,14 +134,14 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     switch (subRecord.RecordTypeInt)
                     {
-                        case 0x4D414E41: // ANAM
-                            types.Add(BinaryStringUtility.ProcessWholeToZString(subRecord.Content));
+                        case RecordTypeInts.ANAM:
+                            types.Add(BinaryStringUtility.ProcessWholeToZString(subRecord.Content, stream.MetaData.Encodings.NonTranslated));
                             break;
-                        case 0x4D414E43: // CNAM
-                        case 0x4D414E42: // BNAM
-                        case 0x43495054: // TPIC
-                        case 0x41445450: // PTDA
-                        case 0x4F544450: // PDTO
+                        case RecordTypeInts.CNAM:
+                        case RecordTypeInts.BNAM:
+                        case RecordTypeInts.TPIC:
+                        case RecordTypeInts.PTDA:
+                        case RecordTypeInts.PDTO:
                         case 0x54444C50: // PLDT
                             // Skip
                             break;
@@ -159,7 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     switch (subRecord.RecordTypeInt)
                     {
-                        case 0x4D414E55: // UNAM
+                        case RecordTypeInts.UNAM:
                             var index = (sbyte)subRecord.Content[0];
                             lastPackage = data.GetOrAdd<sbyte, APackageData>(
                                 index,
@@ -187,14 +188,14 @@ namespace Mutagen.Bethesda.Skyrim
                                 });
                             packages.Add(lastPackage);
                             break;
-                        case 0x4D414E42: // BNAM
+                        case RecordTypeInts.BNAM:
                             if (lastPackage == null)
                             {
                                 throw new ArgumentException("Package name came before index");
                             }
-                            lastPackage.Name = BinaryStringUtility.ProcessWholeToZString(subRecord.Content);
+                            lastPackage.Name = BinaryStringUtility.ProcessWholeToZString(subRecord.Content, stream.MetaData.Encodings.NonTranslated);
                             break;
-                        case 0x4D414E50: // PNAM
+                        case RecordTypeInts.PNAM:
                             if (lastPackage == null)
                             {
                                 throw new ArgumentException("Package flags came before index");
@@ -224,11 +225,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!stream.TryGetSubrecordFrame(out var subRecord)) break;
                     switch (subRecord.RecordTypeInt)
                     {
-                        case 0x4D414E41: // ANAM
+                        case RecordTypeInts.ANAM:
                             lastPackage = packages[++itemIndex];
                             stream.Position += subRecord.TotalLength;
                             break;
-                        case 0x4D414E43: // CNAM
+                        case RecordTypeInts.CNAM:
                             switch (lastPackage)
                             {
                                 case PackageDataBool b:
@@ -248,7 +249,7 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                             stream.Position += subRecord.TotalLength;
                             break;
-                        case 0x43495054: // TPIC
+                        case RecordTypeInts.TPIC:
                             if (lastPackage == null)
                             {
                                 throw new ArgumentException("Package data came before index");
@@ -263,7 +264,7 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                             stream.Position += subRecord.TotalLength;
                             break;
-                        case 0x41445450: // PTDA
+                        case RecordTypeInts.PTDA:
                             if (lastPackage == null)
                             {
                                 throw new ArgumentException("Package data came before index");
@@ -278,7 +279,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 throw new ArgumentException("Encountered target for a non-target data package");
                             }
                             break;
-                        case 0x4F544450: // PDTO
+                        case RecordTypeInts.PDTO:
                             if (lastPackage == null)
                             {
                                 throw new ArgumentException("Package data came before index");
@@ -325,7 +326,7 @@ namespace Mutagen.Bethesda.Skyrim
                     ListBinaryTranslation<PackageBranch>.Instance.Parse(
                         reader: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.ANAM,
-                        transl: (MutagenFrame r, out PackageBranch listSubItem, TypedParseParams? translationParams) =>
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out PackageBranch listSubItem, TypedParseParams? translationParams) =>
                         {
                             listSubItem = PackageBranch.CreateFromBinary(r);
                             return true;
@@ -340,13 +341,13 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     switch (subRecord.RecordTypeInt)
                     {
-                        case 0x4D414E55: // UNAM
+                        case RecordTypeInts.UNAM:
                             lastPackage = dict.GetOrAdd((sbyte)subRecord.Content[0]);
                             break;
-                        case 0x4D414E42: // BNAM
-                            lastPackage!.Name = BinaryStringUtility.ProcessWholeToZString(subRecord.Content);
+                        case RecordTypeInts.BNAM:
+                            lastPackage!.Name = BinaryStringUtility.ProcessWholeToZString(subRecord.Content, stream.MetaData.Encodings.NonTranslated);
                             break;
-                        case 0x4D414E50: // PNAM
+                        case RecordTypeInts.PNAM:
                             lastPackage!.Flags = (APackageData.Flag)BinaryPrimitives.ReadInt32LittleEndian(subRecord.Content);
                             break;
                         default:
@@ -359,11 +360,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PackageBinaryWriteTranslation
         {
-            public static readonly RecordType UNAM = new RecordType("UNAM");
-            public static readonly RecordType PLDT = new RecordType("PLDT");
-            public static readonly RecordType BNAM = new RecordType("BNAM");
-            public static readonly RecordType PNAM = new RecordType("PNAM");
-            public static readonly RecordType TPIC = new RecordType("TPIC");
+            public static readonly RecordType PLDT = new("PLDT");
 
             public static partial void WriteBinaryPackageTemplateCustom(MutagenWriter writer, IPackageGetter item)
             {
@@ -383,21 +380,21 @@ namespace Mutagen.Bethesda.Skyrim
                     var val = kv.Value;
                     var typeStr = val switch
                     {
-                        PackageDataBool b => PackageBinaryCreateTranslation.BoolKey,
-                        PackageDataInt i => PackageBinaryCreateTranslation.IntKey,
-                        PackageDataTarget { Type: PackageDataTarget.Types.Target } t => PackageBinaryCreateTranslation.TargetSelectorKey,
-                        PackageDataTarget { Type: PackageDataTarget.Types.SingleRef } t => PackageBinaryCreateTranslation.SingleRefKey,
-                        PackageDataFloat f => PackageBinaryCreateTranslation.FloatKey,
-                        PackageDataObjectList ol => PackageBinaryCreateTranslation.ObjectListKey,
-                        PackageDataTopic ol => PackageBinaryCreateTranslation.TopicKey,
-                        PackageDataLocation loc => PackageBinaryCreateTranslation.LocationKey,
+                        PackageDataBool => PackageBinaryCreateTranslation.BoolKey,
+                        PackageDataInt => PackageBinaryCreateTranslation.IntKey,
+                        PackageDataTarget { Type: PackageDataTarget.Types.Target } => PackageBinaryCreateTranslation.TargetSelectorKey,
+                        PackageDataTarget { Type: PackageDataTarget.Types.SingleRef } => PackageBinaryCreateTranslation.SingleRefKey,
+                        PackageDataFloat => PackageBinaryCreateTranslation.FloatKey,
+                        PackageDataObjectList => PackageBinaryCreateTranslation.ObjectListKey,
+                        PackageDataTopic => PackageBinaryCreateTranslation.TopicKey,
+                        PackageDataLocation => PackageBinaryCreateTranslation.LocationKey,
                         _ => null,
                     };
                     if (typeStr == null) continue;
                     addedKeys.Add(kv.Key);
                     using (HeaderExport.Subrecord(writer, RecordTypes.ANAM))
                     {
-                        writer.Write(typeStr, StringBinaryType.NullTerminate);
+                        writer.Write(typeStr, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
                     }
                     switch (val)
                     {
@@ -432,7 +429,7 @@ namespace Mutagen.Bethesda.Skyrim
                             ATopicReferenceBinaryWriteTranslation.Write(writer, topic.Topics);
                             if (topic.TPIC is {} tpic)
                             {
-                                using (HeaderExport.Subrecord(writer, TPIC))
+                                using (HeaderExport.Subrecord(writer, RecordTypes.TPIC))
                                 {
                                     writer.Write(tpic);
                                 }
@@ -462,7 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
 
                 foreach (var k in addedKeys.OrderBy(k => k))
                 {
-                    using (HeaderExport.Subrecord(writer, UNAM))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.UNAM))
                     {
                         writer.Write(k);
                     }
@@ -487,20 +484,20 @@ namespace Mutagen.Bethesda.Skyrim
                     var name = val.Value.Name;
                     var flags = val.Value.Flags;
                     if (name == null && flags == null) continue;
-                    using (HeaderExport.Subrecord(writer, UNAM))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.UNAM))
                     {
                         writer.Write(val.Key);
                     }
                     if (name != null)
                     {
-                        using (HeaderExport.Subrecord(writer, BNAM))
+                        using (HeaderExport.Subrecord(writer, RecordTypes.BNAM))
                         {
-                            writer.Write(name, StringBinaryType.NullTerminate);
+                            writer.Write(name, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
                         }
                     }
                     if (flags != null)
                     {
-                        using (HeaderExport.Subrecord(writer, PNAM))
+                        using (HeaderExport.Subrecord(writer, RecordTypes.PNAM))
                         {
                             writer.Write((int)flags);
                         }

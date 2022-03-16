@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Noggog</Authors>
@@ -62,15 +62,51 @@
     <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\IPlacedExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
-    <Compile Include="Interfaces\IAmbientColorsCommon.cs" />
-    <Compile Include="Interfaces\IConstructible.cs" />
-    <Compile Include="Interfaces\IHarvestable.cs" />
-    <Compile Include="Interfaces\IHasIcons.cs" />
-    <Compile Include="Interfaces\IModeled.cs" />
-    <Compile Include="Interfaces\IObjectBounded.cs" />
-    <Compile Include="Interfaces\IPlaced.cs" />
-    <Compile Include="Interfaces\IPositionRotation.cs" />
-    <Compile Include="Interfaces\IScripted.cs" />
+    <Compile Include="Interfaces\Aspect\IAmbientColorsCommon.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IHarvestable.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IHasIcons.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IModeled.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IObjectBounded.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IPositionRotation.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IScripted.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Link\IConstructible.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Link\IPlaced.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistration.cs" />
     <Compile Include="Records\Common Subrecords\ActivateParents.cs">
       <DependentUpon>ActivateParents.xml</DependentUpon>
@@ -128,6 +164,9 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\WaterReflection.cs">
       <DependentUpon>WaterReflection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Landscape.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\SkyrimGroupWrapper.cs">
       <DependentUpon>SkyrimGroup.xml</DependentUpon>
@@ -393,25 +432,25 @@
     <Compile Include="Records\Major Records\MagicEffectBoundArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MagicEffectEnchantmentArchetype.cs">
+    <Compile Include="Records\Major Records\MagicEffectEnhanceWeaponArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MagicEffectGuideArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MagicEffectKeywordArchetype.cs">
+    <Compile Include="Records\Major Records\MagicEffectPeakValueMod.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MagicEffectLightArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MagicEffectNpcArchetype.cs">
+    <Compile Include="Records\Major Records\MagicEffectSummonCreatureArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MagicEffectSpawnHazardArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MagicEffectSpellArchetype.cs">
+    <Compile Include="Records\Major Records\MagicEffectCloakArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MagicEffectVampireArchetype.cs">
@@ -1336,42 +1375,6 @@
     <Compile Include="Records\Major Records\MagicEffect_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MagicEffectSound_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectLightArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectBoundArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectNpcArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectGuideArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectSpawnHazardArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectSpellArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectWerewolfArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectVampireArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectEnchantmentArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectKeywordArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MaterialObject_Generated.cs">
       <DependentUpon>MaterialObject.xml</DependentUpon>
     </Compile>
@@ -1909,29 +1912,6 @@
     <Compile Include="Records\Major Records\WorldspaceObjectBounds_Generated.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IIdleRelation_Generated.cs" />
-    <Compile Include="Interfaces\IObjectId_Generated.cs" />
-    <Compile Include="Interfaces\IItem_Generated.cs" />
-    <Compile Include="Interfaces\IComplexLocation_Generated.cs" />
-    <Compile Include="Interfaces\IDialog_Generated.cs" />
-    <Compile Include="Interfaces\ILocationTargetable_Generated.cs" />
-    <Compile Include="Interfaces\IOwner_Generated.cs" />
-    <Compile Include="Interfaces\IRelatable_Generated.cs" />
-    <Compile Include="Interfaces\IRegionTarget_Generated.cs" />
-    <Compile Include="Interfaces\IAliasVoiceType_Generated.cs" />
-    <Compile Include="Interfaces\ILockList_Generated.cs" />
-    <Compile Include="Interfaces\IPlacedTrapTarget_Generated.cs" />
-    <Compile Include="Interfaces\IHarvestTarget_Generated.cs" />
-    <Compile Include="Interfaces\IKeywordLinkedReference_Generated.cs" />
-    <Compile Include="Interfaces\INpcSpawn_Generated.cs" />
-    <Compile Include="Interfaces\IEmittance_Generated.cs" />
-    <Compile Include="Interfaces\ILocationRecord_Generated.cs" />
-    <Compile Include="Interfaces\IEffectRecord_Generated.cs" />
-    <Compile Include="Interfaces\ILinkedReference_Generated.cs" />
-    <Compile Include="Interfaces\IPlaced_Generated.cs" />
-    <Compile Include="Interfaces\IPlacedSimple_Generated.cs" />
-    <Compile Include="Interfaces\IPlacedThing_Generated.cs" />
-    <Compile Include="Interfaces\ISound_Generated.cs" />
     <Compile Include="WarmupSkyrim.cs" />
     <Compile Include="WarmupSkyrim_Generated.cs" />
     <Compile Include="Records\Major Records\AssociationType_Generated.cs">
@@ -1979,7 +1959,6 @@
     <Compile Include="Records\Major Records\SceneScriptFragments_Generated.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IOutfitTarget_Generated.cs" />
     <Compile Include="Records\Major Records\AnimationChangeThresholds_Generated.cs">
       <DependentUpon>MovementType.xml</DependentUpon>
     </Compile>
@@ -2001,7 +1980,6 @@
     <Compile Include="Records\Major Records\SoundOutputData_Generated.cs">
       <DependentUpon>SoundOutputModel.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Records\RecordTypes_Generated.cs" />
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Records\Common Subrecords\Placement_Generated.cs">
@@ -2072,24 +2050,93 @@
     </Compile>
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
     <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
-    <Compile Include="Interfaces\IConstructible_Generated.cs" />
-    <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
-    <Compile Include="Interfaces\IBindableEquipment_Generated.cs" />
     <Compile Include="Records\SkyrimGroup_Generated.cs">
       <DependentUpon>SkyrimGroup.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\SkyrimListGroup_Generated.cs">
       <DependentUpon>SkyrimGroup.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\MagicEffectSound_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectLightArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectSummonCreatureArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectGuideArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectSpawnHazardArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectCloakArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectWerewolfArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectVampireArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectEnhanceWeaponArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectPeakValueModArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectBoundArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="GameEnvironmentMixIn_Generated.cs" />
+    <Compile Include="Records\Major Records\CellMaxHeightData_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LandscapeVertexHeightMap_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
+    <Compile Include="Interfaces\Link\IObjectId_Generated.cs" />
+    <Compile Include="Interfaces\Link\IItem_Generated.cs" />
+    <Compile Include="Interfaces\Link\IConstructible_Generated.cs" />
+    <Compile Include="Interfaces\Link\IOutfitTarget_Generated.cs" />
+    <Compile Include="Interfaces\Link\IBindableEquipment_Generated.cs" />
+    <Compile Include="Interfaces\Link\IComplexLocation_Generated.cs" />
+    <Compile Include="Interfaces\Link\IDialog_Generated.cs" />
+    <Compile Include="Interfaces\Link\ILocationTargetable_Generated.cs" />
+    <Compile Include="Interfaces\Link\IOwner_Generated.cs" />
+    <Compile Include="Interfaces\Link\IRelatable_Generated.cs" />
+    <Compile Include="Interfaces\Link\IRegionTarget_Generated.cs" />
+    <Compile Include="Interfaces\Link\IAliasVoiceType_Generated.cs" />
+    <Compile Include="Interfaces\Link\ILockList_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlacedTrapTarget_Generated.cs" />
+    <Compile Include="Interfaces\Link\IHarvestTarget_Generated.cs" />
+    <Compile Include="Interfaces\Link\IKeywordLinkedReference_Generated.cs" />
+    <Compile Include="Interfaces\Link\INpcSpawn_Generated.cs" />
+    <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
+    <Compile Include="Interfaces\Link\IEmittance_Generated.cs" />
+    <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
+    <Compile Include="Interfaces\Link\IEffectRecord_Generated.cs" />
+    <Compile Include="Interfaces\Link\ILinkedReference_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlaced_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlacedSimple_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlacedThing_Generated.cs" />
+    <Compile Include="Interfaces\Link\ISound_Generated.cs" />
+    <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
+    <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.38.3" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.38.1" />
+    <PackageReference Include="Loqui" Version="2.40.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.40.0" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

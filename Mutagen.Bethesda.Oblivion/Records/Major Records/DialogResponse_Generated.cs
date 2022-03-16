@@ -741,18 +741,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.TRDT,
-                        RecordTypes.NAM1,
-                        RecordTypes.NAM2
-                    })
-            );
+            return new TriggeringRecordCollection(
+                RecordTypes.TRDT,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseBinaryWriteTranslation);
         #region Interface
@@ -1287,11 +1282,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region ResponseText
         private int? _ResponseTextLocation;
-        public String? ResponseText => _ResponseTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ResponseTextLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? ResponseText => _ResponseTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ResponseTextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region ActorNotes
         private int? _ActorNotesLocation;
-        public String? ActorNotes => _ActorNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ActorNotesLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? ActorNotes => _ActorNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ActorNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

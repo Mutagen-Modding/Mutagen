@@ -60,6 +60,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Parameters
         /// Optional StringsWriter override, for mods that are able to localize.
         /// </summary>
         public StringsWriter? StringsWriter { get; set; }
+        
+        /// <summary>
+        /// If not localizable mod that has localization off, which language to output as the embedded strings.
+        /// If left null, each individual TranslatedString" will use its current TargetLanguage
+        /// </summary>
+        public Language? TargetLanguageOverride { get; set; }
 
         /// <summary>
         /// If a FormID has all zeros for the ID, but a non-zero mod index, then set mod index to zero as well.

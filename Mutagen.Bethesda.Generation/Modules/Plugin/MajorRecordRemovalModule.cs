@@ -682,16 +682,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     }
                                     break;
                                 case ObjectGeneration targetObj:
-                                    fg.AppendLine($"case \"{targetObj.ObjectName}\":");
-                                    fg.AppendLine($"case \"{targetObj.Interface(getter: true)}\":");
-                                    fg.AppendLine($"case \"{targetObj.Interface(getter: false)}\":");
-                                    if (targetObj.HasInternalGetInterface)
+                                    targetObj.AppendSwitchCases(fg);
+                                    if (targetObj.Abstract)
                                     {
-                                        fg.AppendLine($"case \"{targetObj.Interface(getter: true, internalInterface: true)}\":");
-                                    }
-                                    if (targetObj.HasInternalSetInterface)
-                                    {
-                                        fg.AppendLine($"case \"{targetObj.Interface(getter: false, internalInterface: true)}\":");
+                                        foreach (var subObj in await targetObj.InheritingObjects())
+                                        {
+                                            subObj.AppendSwitchCases(fg);
+                                        }
                                     }
                                     break;
                                 case InterfInstr interf:

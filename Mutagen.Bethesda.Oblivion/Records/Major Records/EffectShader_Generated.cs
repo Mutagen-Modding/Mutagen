@@ -1566,11 +1566,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region FillTexture
         private int? _FillTextureLocation;
-        public String? FillTexture => _FillTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FillTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? FillTexture => _FillTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FillTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region ParticleShaderTexture
         private int? _ParticleShaderTextureLocation;
-        public String? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticleShaderTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticleShaderTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;

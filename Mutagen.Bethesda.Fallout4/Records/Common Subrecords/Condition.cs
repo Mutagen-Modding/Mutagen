@@ -8,6 +8,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using static Mutagen.Bethesda.Fallout4.Condition;
+using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Fallout4
 {
@@ -929,16 +930,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             public static readonly RecordType CIS1 = new RecordType("CIS1");
             public static readonly RecordType CIS2 = new RecordType("CIS2");
-
-            public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-            private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+            public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+            private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
             {
-                return new CollectionGetterWrapper<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.CTDA,
-                    }
-                );
+                return new TriggeringRecordCollection(RecordTypes.CTDA);
             });
         }
 
@@ -988,10 +983,10 @@ namespace Mutagen.Bethesda.Fallout4
                 switch (subMeta.RecordType.TypeInt)
                 {
                     case 0x31534943: // CIS1
-                        item.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content);
+                        item.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                         break;
                     case 0x32534943: // CIS2
-                        item.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content);
+                        item.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                         break;
                     default:
                         return;
@@ -1043,12 +1038,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionBinaryOverlay
         {
-            private static ICollectionGetter<RecordType> IncludeTriggers = new CollectionGetterWrapper<RecordType>(
-                new RecordType[]
-                {
-                    new RecordType("CIS1"),
-                    new RecordType("CIS2"),
-                });
+            private static TriggeringRecordCollection IncludeTriggers = new TriggeringRecordCollection(
+                new RecordType("CIS1"),
+                new RecordType("CIS2"));
 
             private Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_data.Span[location]);
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
@@ -1169,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
                         FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterOneRecord.FormKey);
                         break;
                     case Condition.ParameterCategory.String:
-                        writer.Write(item.ParameterOneString);
+                        BinaryStringUtility.Write(writer, item.ParameterOneString, writer.MetaData.Encodings.NonTranslated);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -1184,7 +1176,7 @@ namespace Mutagen.Bethesda.Fallout4
                         FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterTwoRecord.FormKey);
                         break;
                     case Condition.ParameterCategory.String:
-                        writer.Write(item.ParameterTwoString);
+                        BinaryStringUtility.Write(writer, item.ParameterTwoString, writer.MetaData.Encodings.NonTranslated);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -1225,11 +1217,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             private ReadOnlyMemorySlice<byte> _stringParamData1;
             public bool ParameterOneString_IsSet { get; private set; }
-            public string? ParameterOneString => ParameterOneString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1) : null;
+            public string? ParameterOneString => ParameterOneString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1, _package.MetaData.Encodings.NonTranslated) : null;
 
             private ReadOnlyMemorySlice<byte> _stringParamData2;
             public bool ParameterTwoString_IsSet { get; private set; }
-            public string? ParameterTwoString => ParameterTwoString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2) : null;
+            public string? ParameterTwoString => ParameterTwoString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2, _package.MetaData.Encodings.NonTranslated) : null;
 
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {

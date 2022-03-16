@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -16,14 +16,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.38.1" />
-    <PackageReference Include="Noggog.WPF" Version="2.38.1" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.40.0" />
+    <PackageReference Include="Noggog.WPF" Version="2.40.0" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI" Version="17.1.17" />
-    <PackageReference Include="ReactiveUI.Fody" Version="17.1.17" />
+    <PackageReference Include="ReactiveUI" Version="17.1.50" />
+    <PackageReference Include="ReactiveUI.Fody" Version="17.1.50" />
     <PackageReference Include="Simple.Wpf.Terminal" Version="2.3.39" />
   </ItemGroup>
 
@@ -31,10 +31,7 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Fallout4\Mutagen.Bethesda.Fallout4.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Tests\Mutagen.Bethesda.Tests.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
 
   <Target Name="SetVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" Condition="'$(ExcludeRestorePackageImports)' != 'true'">

@@ -735,19 +735,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.RNAM,
-                        RecordTypes.MNAM,
-                        RecordTypes.FNAM,
-                        RecordTypes.INAM
-                    })
-            );
+            return new TriggeringRecordCollection(
+                RecordTypes.RNAM,
+                RecordTypes.MNAM,
+                RecordTypes.FNAM,
+                RecordTypes.INAM);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RankBinaryWriteTranslation);
         #region Interface
@@ -1268,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Insignia
         private int? _InsigniaLocation;
-        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1342,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)));
+                        creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
                     return (int)Rank_FieldIndex.Name;
                 }
                 case RecordTypeInts.INAM:

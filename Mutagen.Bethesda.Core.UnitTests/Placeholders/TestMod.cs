@@ -126,7 +126,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
             return EnumerateMajorRecords(type, throwIfUnknown);
         }
 
-        public IEnumerable<IModContext<TMajor>> EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown = true) where TMajor : class, IMajorRecordGetter
+        public IEnumerable<IModContext<TMajor>> EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown = true) 
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             throw new NotImplementedException();
         }
@@ -161,7 +162,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
             throw new NotImplementedException();
         }
 
-        public void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null)
+        public void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null, ParallelWriteParameters? parallelWriteParameters = null)
         {
             throw new NotImplementedException();
         }

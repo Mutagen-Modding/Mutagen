@@ -20,22 +20,22 @@ namespace Mutagen.Bethesda.Strings
 
         class DictionaryBundle
         {
-            public readonly Dictionary<Language, Lazy<IStringsLookup>> Strings = new Dictionary<Language, Lazy<IStringsLookup>>();
-            public readonly Dictionary<Language, Lazy<IStringsLookup>> DlStrings = new Dictionary<Language, Lazy<IStringsLookup>>();
-            public readonly Dictionary<Language, Lazy<IStringsLookup>> IlStrings = new Dictionary<Language, Lazy<IStringsLookup>>();
+            private readonly Dictionary<Language, Lazy<IStringsLookup>> _strings = new();
+            private readonly Dictionary<Language, Lazy<IStringsLookup>> _dlStrings = new();
+            private readonly Dictionary<Language, Lazy<IStringsLookup>> _ilStrings = new();
 
             public bool Empty =>
-                Strings.Count == 0
-                && DlStrings.Count == 0
-                && IlStrings.Count == 0;
+                _strings.Count == 0
+                && _dlStrings.Count == 0
+                && _ilStrings.Count == 0;
 
             public Dictionary<Language, Lazy<IStringsLookup>> Get(StringsSource source)
             {
                 return source switch
                 {
-                    StringsSource.Normal => Strings,
-                    StringsSource.IL => IlStrings,
-                    StringsSource.DL => DlStrings,
+                    StringsSource.Normal => _strings,
+                    StringsSource.IL => _ilStrings,
+                    StringsSource.DL => _dlStrings,
                     _ => throw new NotImplementedException(),
                 };
             }
@@ -56,6 +56,7 @@ namespace Mutagen.Bethesda.Strings
             DirectoryPath dataPath,
             StringsReadParameters? instructions)
         {
+            var languageFormat = release.GetLanguageFormat();
             var encodings = instructions?.EncodingProvider ?? new MutagenEncodingProvider();
             var stringsFolderPath = instructions?.StringsFolderOverride;
             if (stringsFolderPath == null)
@@ -73,7 +74,7 @@ namespace Mutagen.Bethesda.Strings
                         foreach (var file in bsaEnumer)
                         {
                             if (!StringsUtility.TryRetrieveInfoFromString(
-                                release.GetLanguageFormat(),
+                                languageFormat,
                                 file.Name.String, 
                                 out var type,
                                 out var lang, 
@@ -151,9 +152,9 @@ namespace Mutagen.Bethesda.Strings
 
         public Dictionary<Language, Lazy<IStringsLookup>> Get(StringsSource source) => _dictionaries.Value.Get(source);
 
-        public TranslatedString CreateString(StringsSource source, uint key)
+        public TranslatedString CreateString(StringsSource source, uint key, Language defaultLanguage)
         {
-            return new TranslatedString()
+            return new TranslatedString(defaultLanguage)
             {
                 StringsLookup = this,
                 StringsKey = key,

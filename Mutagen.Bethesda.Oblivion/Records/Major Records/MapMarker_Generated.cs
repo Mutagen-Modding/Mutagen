@@ -238,9 +238,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Types.Specific = l;
-                        foreach (var item in Types.Specific.WithIndex())
+                        foreach (var item in Types.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -835,18 +835,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.FNAM,
-                        RecordTypes.FULL,
-                        RecordTypes.TNAM
-                    })
-            );
+            return new TriggeringRecordCollection(
+                RecordTypes.FNAM,
+                RecordTypes.FULL,
+                RecordTypes.TNAM);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MapMarkerBinaryWriteTranslation);
         #region Interface
@@ -1318,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Types = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MapMarker.Type>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
+                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out MapMarker.Type listSubItem) =>
                             {
                                 return EnumBinaryTranslation<MapMarker.Type, MutagenFrame, MutagenWriter>.Instance.Parse(
                                     reader: r.SpawnWithLength(2),
@@ -1401,7 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;

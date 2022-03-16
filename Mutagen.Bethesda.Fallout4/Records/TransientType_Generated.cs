@@ -209,9 +209,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Links.Specific = l;
-                        foreach (var item in Links.Specific.WithIndex())
+                        foreach (var item in Links.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

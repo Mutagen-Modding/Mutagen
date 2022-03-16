@@ -691,17 +691,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.NAM0,
-                        RecordTypes.NAM1
-                    })
-            );
+            return new TriggeringRecordCollection(
+                RecordTypes.NAM0,
+                RecordTypes.NAM1);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PartBinaryWriteTranslation);
         #region Interface
@@ -1174,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region FileName
         private int? _FileNameLocation;
-        public String? FileName => _FileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileNameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? FileName => _FileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

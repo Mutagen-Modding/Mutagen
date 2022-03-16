@@ -1124,7 +1124,7 @@ namespace Mutagen.Bethesda.Fallout4
         IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         IGroup IMod.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => Fallout4ModMixIn.GetEqualsMask(this, (IFallout4ModGetter)rhs, include);
         public override bool CanUseLocalization => true;
         public override bool UsingLocalization
@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerStepThrough]
         IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordQueryableGetter, TMajor>());
         [DebuggerStepThrough]
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
@@ -1335,6 +1335,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
+                    frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -1371,6 +1372,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
+                    frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -1749,11 +1751,13 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinaryParallel(
             this IFallout4ModGetter item,
             Stream stream,
-            BinaryWriteParameters? param = null)
+            BinaryWriteParameters? param = null,
+            ParallelWriteParameters? parallelParam = null)
         {
             Fallout4ModCommon.WriteParallel(
                 item: item,
                 stream: stream,
+                parallelParam: parallelParam ?? ParallelWriteParameters.Default,
                 param: param ?? BinaryWriteParameters.Default,
                 modKey: item.ModKey);
         }
@@ -1762,9 +1766,11 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4ModGetter item,
             string path,
             BinaryWriteParameters? param = null,
+            ParallelWriteParameters? parallelParam = null,
             IFileSystem? fileSystem = null)
         {
             param ??= BinaryWriteParameters.Default;
+            parallelParam ??= ParallelWriteParameters.Default;
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
@@ -1775,6 +1781,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Fallout4ModCommon.WriteParallel(
                     item: item,
                     stream: stream,
+                    parallelParam: parallelParam,
                     param: param,
                     modKey: modKey);
             }
@@ -1794,7 +1801,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IFallout4ModGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1826,7 +1833,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IFallout4Mod obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((Fallout4ModSetterCommon)((IFallout4ModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -2005,15 +2012,15 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4ModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
-            where TSetter : class, IMajorRecord, TGetter
-            where TGetter : class, IMajorRecordGetter
+            where TSetter : class, IMajorRecordQueryable, TGetter
+            where TGetter : class, IMajorRecordQueryableGetter
         {
             return ((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).EnumerateMajorRecordContexts(
                 obj: obj,
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter, TSetter, TGetter>())
+                .Select(m => m.AsType<IFallout4Mod, IFallout4ModGetter, IMajorRecordQueryable, IMajorRecordQueryableGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
@@ -2061,6 +2068,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
+                    frame.MetaData.Absorb(stringsParam);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -2342,6 +2350,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
+                case "GameSettingInt":
+                case "IGameSettingIntGetter":
+                case "IGameSettingInt":
+                case "IGameSettingIntInternal":
+                case "GameSettingFloat":
+                case "IGameSettingFloatGetter":
+                case "IGameSettingFloat":
+                case "IGameSettingFloatInternal":
+                case "GameSettingString":
+                case "IGameSettingStringGetter":
+                case "IGameSettingString":
+                case "IGameSettingStringInternal":
+                case "GameSettingBool":
+                case "IGameSettingBoolGetter":
+                case "IGameSettingBool":
+                case "IGameSettingBoolInternal":
+                case "GameSettingUInt":
+                case "IGameSettingUIntGetter":
+                case "IGameSettingUInt":
+                case "IGameSettingUIntInternal":
                     obj.GameSettings.Remove(
                         type: type,
                         keys: keys);
@@ -2398,6 +2426,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
+                case "GlobalInt":
+                case "IGlobalIntGetter":
+                case "IGlobalInt":
+                case "IGlobalIntInternal":
+                case "GlobalShort":
+                case "IGlobalShortGetter":
+                case "IGlobalShort":
+                case "IGlobalShortInternal":
+                case "GlobalFloat":
+                case "IGlobalFloatGetter":
+                case "IGlobalFloat":
+                case "IGlobalFloatInternal":
+                case "GlobalBool":
+                case "IGlobalBoolGetter":
+                case "IGlobalBool":
+                case "IGlobalBoolInternal":
                     obj.Globals.Remove(
                         type: type,
                         keys: keys);
@@ -2406,6 +2450,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IADamageTypeGetter":
                 case "IADamageType":
                 case "IADamageTypeInternal":
+                case "DamageType":
+                case "IDamageTypeGetter":
+                case "IDamageType":
+                case "IDamageTypeInternal":
+                case "DamageTypeIndexed":
+                case "IDamageTypeIndexedGetter":
+                case "IDamageTypeIndexed":
+                case "IDamageTypeIndexedInternal":
                     obj.DamageTypes.Remove(
                         type: type,
                         keys: keys);
@@ -2980,14 +3032,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
         
-        const int CutCount = 100;
         public static void WriteParallel(
             IFallout4ModGetter item,
             Stream stream,
             BinaryWriteParameters param,
+            ParallelWriteParameters parallelParam,
             ModKey modKey)
         {
-            var bundle = new WritingBundle(GameConstants.Fallout4);
+            var bundle = new WritingBundle(GameConstants.Fallout4)
+            {
+                StringsWriter = param.StringsWriter,
+                TargetLanguageOverride = param.TargetLanguageOverride,
+            };
             var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
@@ -2997,24 +3053,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 modKey: modKey);
             Stream[] outputStreams = new Stream[17];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, writer.MetaData.MasterReferences!, 2, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Actions, writer.MetaData.MasterReferences!, 3, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Transforms, writer.MetaData.MasterReferences!, 4, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Components, writer.MetaData.MasterReferences!, 5, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.TextureSets, writer.MetaData.MasterReferences!, 6, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Globals, writer.MetaData.MasterReferences!, 7, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DamageTypes, writer.MetaData.MasterReferences!, 8, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Classes, writer.MetaData.MasterReferences!, 9, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Factions, writer.MetaData.MasterReferences!, 10, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.HeadParts, writer.MetaData.MasterReferences!, 11, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, writer.MetaData.MasterReferences!, 12, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, writer.MetaData.MasterReferences!, 13, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, writer.MetaData.MasterReferences!, 14, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Grasses, writer.MetaData.MasterReferences!, 15, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, writer.MetaData.MasterReferences!, 16, outputStreams, param.StringsWriter));
-            Parallel.Invoke(toDo.ToArray());
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, 2, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Actions, 3, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Transforms, 4, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Components, 5, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TextureSets, 6, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Globals, 7, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DamageTypes, 8, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Classes, 9, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Factions, 10, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.HeadParts, 11, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, 12, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, 13, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, 14, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, 15, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, 16, outputStreams, bundle, parallelParam));
+            Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
                 stream);
@@ -3022,33 +3078,28 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public static void WriteGroupParallel<T>(
             IFallout4GroupGetter<T> group,
-            IMasterReferenceReader masters,
             int targetIndex,
             Stream[] streamDepositArray,
-            StringsWriter? stringsWriter)
+            WritingBundle bundle,
+            ParallelWriteParameters parallelParam)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
             if (group.RecordCache.Count == 0) return;
-            var cuts = group.Cut(CutCount).ToArray();
+            var cuts = group.Cut(parallelParam.CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
-            byte[] groupBytes = new byte[GameConstants.Fallout4.GroupConstants.HeaderLength];
+            byte[] groupBytes = new byte[bundle.Constants.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
-            using (var stream = new MutagenWriter(groupByteStream, GameConstants.Fallout4, dispose: false))
+            using (var stream = new MutagenWriter(groupByteStream, bundle.Constants, dispose: false))
             {
                 stream.Position += 8;
                 Fallout4GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
             }
             subStreams[0] = groupByteStream;
-            Parallel.ForEach(cuts, (cutItems, state, counter) =>
+            Parallel.ForEach(cuts, parallelParam.ParallelOptions, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
-                var bundle = new WritingBundle(GameConstants.Fallout4)
-                {
-                    MasterReferences = masters,
-                    StringsWriter = stringsWriter
-                };
-                using (var stream = new MutagenWriter(trib, bundle, dispose: false))
+                using (var stream = new MutagenWriter(trib, bundle with {}, dispose: false))
                 {
                     foreach (var item in cutItems)
                     {
@@ -3447,134 +3498,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
-                case "IIdleRelation":
-                {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IIdleRelationGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IObjectId":
-                {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IObjectIdGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IOwner":
-                {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IOwnerGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IRelatable":
-                {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IRelatableGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReference":
-                {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReferenceGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IRegionTarget":
-                {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IRegionTargetGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILocationRecord":
-                {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILocationRecordGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -5160,7 +5092,8 @@ namespace Mutagen.Bethesda.Fallout4
             var bundle = new WritingBundle(GameRelease.Fallout4)
             {
                 StringsWriter = param.StringsWriter,
-                CleanNulls = param.CleanNulls
+                CleanNulls = param.CleanNulls,
+                TargetLanguageOverride = param.TargetLanguageOverride
             };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(
@@ -5240,7 +5173,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Localized);
@@ -5250,7 +5183,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         [DebuggerStepThrough]
         IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordQueryableGetter, TMajor>());
         [DebuggerStepThrough]
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
@@ -5376,7 +5309,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             StringsReadParameters? stringsParam = null,
             IFileSystem? fileSystem = null)
         {
-            var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(path.ModKey))
+            var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceCollection(path.ModKey))
             {
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4))
             };
@@ -5386,6 +5319,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 fileSystem: fileSystem);
             try
             {
+                meta.Absorb(stringsParam);
                 if (stream.Remaining < 12)
                 {
                     throw new ArgumentException("File stream was too short to parse flags");

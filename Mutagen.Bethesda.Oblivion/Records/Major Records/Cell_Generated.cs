@@ -628,9 +628,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Regions.Specific = l;
-                        foreach (var item in Regions.Specific.WithIndex())
+                        foreach (var item in Regions.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
                         obj.Persistent.Specific = l;
-                        foreach (var item in Persistent.Specific.WithIndex())
+                        foreach (var item in Persistent.Specific)
                         {
                             MaskItemIndexed<R, IMask<R>?>? mask;
                             throw new NotImplementedException();
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
                         obj.Temporary.Specific = l;
-                        foreach (var item in Temporary.Specific.WithIndex())
+                        foreach (var item in Temporary.Specific)
                         {
                             MaskItemIndexed<R, IMask<R>?>? mask;
                             throw new NotImplementedException();
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
                         obj.VisibleWhenDistant.Specific = l;
-                        foreach (var item in VisibleWhenDistant.Specific.WithIndex())
+                        foreach (var item in VisibleWhenDistant.Specific)
                         {
                             MaskItemIndexed<R, IMask<R>?>? mask;
                             throw new NotImplementedException();
@@ -1773,7 +1773,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this ICellGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((CellCommon)((ICellGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1803,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellInternal obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -3198,6 +3198,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Oblivion, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -4688,7 +4696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;

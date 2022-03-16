@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         where TKey : notnull
     {
         bool TryResolveSimpleContext<TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMajorGetter> majorRec)
-            where TMajorGetter : class, IMajorRecordGetter;
+            where TMajorGetter : IMajorRecordQueryableGetter;
 
         bool TryResolveSimpleContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec);
 
@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         private readonly bool _simple;
         private readonly ILinkCache _linkCache;
         private readonly GameCategory _category;
+        private readonly IMetaInterfaceMapGetter _metaInterfaceMapGetter;
         private readonly IMajorRecordSimpleContextEnumerable _contextEnumerable;
         private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
         private readonly Func<TKey, bool> _shortCircuit;
@@ -35,6 +36,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             bool simple,
             ILinkCache linkCache,
             GameCategory category,
+            IMetaInterfaceMapGetter metaInterfaceMapGetter,
             IMajorRecordSimpleContextEnumerable contextEnumerable,
             Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
             Func<TKey, bool> shortCircuit)
@@ -42,6 +44,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             _simple = simple;
             _linkCache = linkCache;
             _category = category;
+            _metaInterfaceMapGetter = metaInterfaceMapGetter;
             _contextEnumerable = contextEnumerable;
             _keyGetter = keyGetter;
             _shortCircuit = shortCircuit;
@@ -63,7 +66,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
         }
 
         public bool TryResolveSimpleContext<TMajorGetter>(TKey key, [MaybeNullWhen(false)] out IModContext<TMajorGetter> majorRec)
-            where TMajorGetter : class, IMajorRecordGetter
+            where TMajorGetter : IMajorRecordQueryableGetter
         {
             if (_shortCircuit(key))
             {
@@ -77,7 +80,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                 majorRec = default;
                 return false;
             }
-            majorRec = majorRecObj.AsType<IMajorRecordGetter, TMajorGetter>();
+            majorRec = majorRecObj.AsType<IMajorRecordQueryableGetter, TMajorGetter>();
             return true;
         }
 
@@ -136,17 +139,15 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                     }
                     else
                     {
-                        var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(_category);
-                        if (!interfaceMappings.TryGetValue(type, out var objs))
+                        if (!_metaInterfaceMapGetter.TryGetRegistrationsForInterface(_category, type, out var objs))
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
                         var majorRecords = new Cache<IModContext<IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
-                        foreach (var objType in objs)
+                        foreach (var regis in objs.Registrations)
                         {
                             majorRecords.Set(
-                                GetContextCache(
-                                    LoquiRegistration.GetRegister(objType).GetterType).Items);
+                                GetContextCache(regis.GetterType).Items);
                         }
                         _contexts[type] = majorRecords;
                         cache = majorRecords;

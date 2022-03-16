@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -45,6 +47,11 @@ public class OblivionProcessor : Processor
         AddDynamicProcessing(RecordTypes.BOOK, ProcessBooks);
         AddDynamicProcessing(RecordTypes.LIGH, ProcessLights);
         AddDynamicProcessing(RecordTypes.SPEL, ProcessSpell);
+    }
+
+    protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
+    {
+        return Array.Empty<AStringsAlignment>();
     }
 
     private void ProcessNPC(
@@ -160,7 +167,7 @@ public class OblivionProcessor : Processor
             // Get icon string
             var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
             stream.Position = iconLoc.Min + 20;
-            var iconStr = BinaryStringUtility.ToZString(stream.ReadMemory((int)(iconLoc.Max - stream.Position)));
+            var iconStr = BinaryStringUtility.ToZString(stream.ReadMemory((int)(iconLoc.Max - stream.Position)), MutagenEncodingProvider._1252);
 
             // Get icon bytes
             MemoryStream memStream = new MemoryStream();
@@ -171,8 +178,7 @@ public class OblivionProcessor : Processor
                            new RecordType("ICON"),
                            ObjectType.Subrecord))
                 {
-                    writer.Write(iconStr);
-                    writer.Write(default(byte));
+                    StringBinaryTranslation.Instance.Write(writer, iconStr, StringBinaryType.NullTerminate);
                 }
             }
 
@@ -456,7 +462,7 @@ public class OblivionProcessor : Processor
                     loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                     sub: new byte[] { 0, 0 });
                 this._instructions.SetRemove(
-                    section: RangeInt64.FactoryFromLength(
+                    section: RangeInt64.FromLength(
                         loc: fileOffset + dataLoc + dataRec.HeaderLength,
                         length: 2));
                 amount -= 2;
@@ -468,7 +474,7 @@ public class OblivionProcessor : Processor
                     loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                     sub: new byte[] { 0x54, 0 });
                 this._instructions.SetRemove(
-                    section: RangeInt64.FactoryFromLength(
+                    section: RangeInt64.FromLength(
                         loc: fileOffset + dataLoc + dataRec.HeaderLength + 0x54,
                         length: 2));
                 amount -= 2;
@@ -480,7 +486,7 @@ public class OblivionProcessor : Processor
                     loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                     sub: new byte[] { 0x28, 0 });
                 this._instructions.SetRemove(
-                    section: RangeInt64.FactoryFromLength(
+                    section: RangeInt64.FromLength(
                         loc: fileOffset + dataLoc + dataRec.HeaderLength + 0x28,
                         length: 2));
                 amount -= 2;
@@ -492,7 +498,7 @@ public class OblivionProcessor : Processor
                     loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                     sub: new byte[] { 0x3C, 0 });
                 this._instructions.SetRemove(
-                    section: RangeInt64.FactoryFromLength(
+                    section: RangeInt64.FromLength(
                         loc: fileOffset + dataLoc + dataRec.HeaderLength + 0x3C,
                         length: 2));
                 amount -= 2;

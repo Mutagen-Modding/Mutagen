@@ -216,9 +216,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Coordinates.Specific = l;
-                        foreach (var item in Coordinates.Specific.WithIndex())
+                        foreach (var item in Coordinates.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Coordinates.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Parse(
                     reader: frame,
-                    transl: (MutagenFrame r, out P2Int16 listSubItem) =>
+                    transl: (MutagenFrame r, [MaybeNullWhen(false)] out P2Int16 listSubItem) =>
                     {
                         listSubItem = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                             r,

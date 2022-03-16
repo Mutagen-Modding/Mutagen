@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Mutagen.Bethesda.Plugins
@@ -12,6 +13,7 @@ namespace Mutagen.Bethesda.Plugins
     /// This provides type safety concepts on top of a basic FormKey.
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
+    [DebuggerDisplay("{this.FormKey}")]
     public class FormLinkGetter<TMajorGetter> : IFormLinkGetter<TMajorGetter>,
         IEquatable<FormLink<TMajorGetter>>,
         IEquatable<FormLinkNullable<TMajorGetter>>,
@@ -148,6 +150,7 @@ namespace Mutagen.Bethesda.Plugins
     /// This provides type safety concepts on top of a basic FormKey.
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
+    [DebuggerDisplay("{this.FormKey}")]
     public class FormLink<TMajorGetter> : FormLinkGetter<TMajorGetter>, IFormLink<TMajorGetter>
         where TMajorGetter : class, IMajorRecordGetter
     {
@@ -234,7 +237,8 @@ namespace Mutagen.Bethesda.Plugins
             return new FormLink<TMajorGetter>(formKey);
         }
     }
-
+    
+    [DebuggerDisplay("{this.FormKey}")]
     public struct FormLink<TMajor, TMajorGetter>
         where TMajor : class, IMajorRecord, TMajorGetter
         where TMajorGetter : class, IMajorRecordGetter

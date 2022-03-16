@@ -293,9 +293,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, WeatherType.Mask<R>?>>();
                         obj.Weathers.Specific = l;
-                        foreach (var item in Weathers.Specific.WithIndex())
+                        foreach (var item in Weathers.Specific)
                         {
-                            MaskItemIndexed<R, WeatherType.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherType.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WeatherType.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WeatherType.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1914,11 +1914,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IWeatherTypeGetter>? Weathers { get; private set; }
         #region SunTexture
         private int? _SunTextureLocation;
-        public String? SunTexture => _SunTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? SunTexture => _SunTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region SunGlareTexture
         private int? _SunGlareTextureLocation;
-        public String? SunGlareTexture => _SunGlareTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? SunGlareTexture => _SunGlareTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
         #region Data

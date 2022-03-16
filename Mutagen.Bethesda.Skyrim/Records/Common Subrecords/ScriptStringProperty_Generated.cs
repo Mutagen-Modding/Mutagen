@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
@@ -1095,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Data
-        public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 2);
+        public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
         protected int DataEndingPos;
         #endregion
         partial void CustomFactoryEnd(

@@ -1,6 +1,7 @@
 using Loqui.Generation;
 using System.Collections.Generic;
 using Mutagen.Bethesda.Generation.Fields;
+using Noggog.Autofac.Validation;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {
@@ -23,10 +24,19 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             };
         }
 
+        public override IEnumerable<(string Name, bool Setter)> Registrations
+        {
+            get
+            {
+                yield return ($"typeof(IKeyworded<IKeywordGetter>)", true);
+                yield return ($"typeof(IKeywordedGetter<IKeywordGetter>)", false);
+            }
+        }
+
         public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) => allFields
-            .TryGetValue("Keywords", out var field)
-            && field is ContainerType cont
-            && typeof(FormLinkType).Equals(cont.SubTypeGeneration.GetType());
+                                                                                                           .TryGetValue("Keywords", out var field)
+                                                                                                       && field is ContainerType cont
+                                                                                                       && typeof(FormLinkType).Equals(cont.SubTypeGeneration.GetType());
 
         public override List<AspectInterfaceData> Interfaces(ObjectGeneration obj)
         {

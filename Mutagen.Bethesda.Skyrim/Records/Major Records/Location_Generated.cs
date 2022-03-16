@@ -1069,9 +1069,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
                         obj.ActorCellPersistentReferences.Specific = l;
-                        foreach (var item in ActorCellPersistentReferences.Specific.WithIndex())
+                        foreach (var item in ActorCellPersistentReferences.Specific)
                         {
-                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1084,9 +1084,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
                         obj.LocationCellPersistentReferences.Specific = l;
-                        foreach (var item in LocationCellPersistentReferences.Specific.WithIndex())
+                        foreach (var item in LocationCellPersistentReferences.Specific)
                         {
-                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1099,9 +1099,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ReferenceCellPersistentReferences.Specific = l;
-                        foreach (var item in ReferenceCellPersistentReferences.Specific.WithIndex())
+                        foreach (var item in ReferenceCellPersistentReferences.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1113,9 +1113,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>();
                         obj.ActorCellUniques.Specific = l;
-                        foreach (var item in ActorCellUniques.Specific.WithIndex())
+                        foreach (var item in ActorCellUniques.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1128,9 +1128,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>();
                         obj.LocationCellUniques.Specific = l;
-                        foreach (var item in LocationCellUniques.Specific.WithIndex())
+                        foreach (var item in LocationCellUniques.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1143,9 +1143,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ReferenceCellUnique.Specific = l;
-                        foreach (var item in ReferenceCellUnique.Specific.WithIndex())
+                        foreach (var item in ReferenceCellUnique.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1157,9 +1157,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>();
                         obj.ActorCellStaticReferences.Specific = l;
-                        foreach (var item in ActorCellStaticReferences.Specific.WithIndex())
+                        foreach (var item in ActorCellStaticReferences.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1172,9 +1172,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>();
                         obj.LocationCellStaticReferences.Specific = l;
-                        foreach (var item in LocationCellStaticReferences.Specific.WithIndex())
+                        foreach (var item in LocationCellStaticReferences.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1187,9 +1187,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ReferenceCellStaticReferences.Specific = l;
-                        foreach (var item in ReferenceCellStaticReferences.Specific.WithIndex())
+                        foreach (var item in ReferenceCellStaticReferences.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1201,9 +1201,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
                         obj.ActorCellEncounterCell.Specific = l;
-                        foreach (var item in ActorCellEncounterCell.Specific.WithIndex())
+                        foreach (var item in ActorCellEncounterCell.Specific)
                         {
-                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1216,9 +1216,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
                         obj.LocationCellEncounterCell.Specific = l;
-                        foreach (var item in LocationCellEncounterCell.Specific.WithIndex())
+                        foreach (var item in LocationCellEncounterCell.Specific)
                         {
-                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1231,9 +1231,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
                         obj.ReferenceCellEncounterCell.Specific = l;
-                        foreach (var item in ReferenceCellEncounterCell.Specific.WithIndex())
+                        foreach (var item in ReferenceCellEncounterCell.Specific)
                         {
-                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1246,9 +1246,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ActorCellMarkerReference.Specific = l;
-                        foreach (var item in ActorCellMarkerReference.Specific.WithIndex())
+                        foreach (var item in ActorCellMarkerReference.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1260,9 +1260,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.LocationCellMarkerReference.Specific = l;
-                        foreach (var item in LocationCellMarkerReference.Specific.WithIndex())
+                        foreach (var item in LocationCellMarkerReference.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1274,9 +1274,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>();
                         obj.ActorCellEnablePoint.Specific = l;
-                        foreach (var item in ActorCellEnablePoint.Specific.WithIndex())
+                        foreach (var item in ActorCellEnablePoint.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1289,9 +1289,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>();
                         obj.LocationCellEnablePoint.Specific = l;
-                        foreach (var item in LocationCellEnablePoint.Specific.WithIndex())
+                        foreach (var item in LocationCellEnablePoint.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1305,9 +1305,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Keywords.Specific = l;
-                        foreach (var item in Keywords.Specific.WithIndex())
+                        foreach (var item in Keywords.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -5499,7 +5499,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; private set; }
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;

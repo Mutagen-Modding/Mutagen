@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using Mutagen.Bethesda.Pex;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Strings.DI;
 using Noggog;
 using Xunit;
 using MemoryStream = System.IO.MemoryStream;
@@ -18,7 +19,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Pex
             var bytes = Encoding.UTF8.GetBytes(expected);
             DoTest(bytes.Length + sizeof(uint), expected,
                 bw => bw.WriteWStringBE(expected),
-                br => br.ReadPrependedString(2));
+                br => br.ReadPrependedString(2, MutagenEncodingProvider._1252));
         }
 
         [Theory]

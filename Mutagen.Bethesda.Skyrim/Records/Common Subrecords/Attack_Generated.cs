@@ -713,17 +713,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.ATKD,
-                        RecordTypes.ATKE
-                    })
-            );
+            return new TriggeringRecordCollection(
+                RecordTypes.ATKD,
+                RecordTypes.ATKE);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AttackBinaryWriteTranslation);
         #region Interface
@@ -1234,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region AttackEvent
         private int? _AttackEventLocation;
-        public String? AttackEvent => _AttackEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackEventLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? AttackEvent => _AttackEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackEventLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -2205,7 +2205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ParticleTexture
         private int? _ParticleTextureLocation;
-        public String? ParticleTexture => _ParticleTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticleTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? ParticleTexture => _ParticleTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1,6 +1,7 @@
 using System;
 using Noggog;
 using System.Collections.Generic;
+using Loqui;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
@@ -48,6 +49,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <param name="key">Key to search for</param>
         /// <returns>True if record found with given key</returns>
         bool ContainsKey(FormKey key);
+        
+        ILoquiRegistration ContainedRecordRegistration { get; }
     }
     
     /// <summary>

@@ -233,9 +233,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>>();
                         obj.Locations.Specific = l;
-                        foreach (var item in Locations.Specific.WithIndex())
+                        foreach (var item in Locations.Specific)
                         {
-                            MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1660,11 +1660,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Icon
         private int? _IconLocation;
-        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<ILoadScreenLocationGetter> Locations { get; private set; } = ListExt.Empty<LoadScreenLocationBinaryOverlay>();
         partial void CustomFactoryEnd(

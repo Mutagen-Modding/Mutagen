@@ -802,9 +802,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>();
                         obj.LargeReferences.Specific = l;
-                        foreach (var item in LargeReferences.Specific.WithIndex())
+                        foreach (var item in LargeReferences.Specific)
                         {
-                            MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -846,9 +846,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>();
                         obj.SubCells.Specific = l;
-                        foreach (var item in SubCells.Specific.WithIndex())
+                        foreach (var item in SubCells.Specific)
                         {
-                            MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2090,7 +2090,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IWorldspaceGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((WorldspaceCommon)((IWorldspaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -2120,7 +2120,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceInternal obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -2620,6 +2620,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMeshGetter":
                 case "IANavigationMesh":
                 case "IANavigationMeshInternal":
+                case "WorldspaceNavigationMesh":
+                case "IWorldspaceNavigationMeshGetter":
+                case "IWorldspaceNavigationMesh":
+                case "IWorldspaceNavigationMeshInternal":
+                case "CellNavigationMesh":
+                case "ICellNavigationMeshGetter":
+                case "ICellNavigationMesh":
+                case "ICellNavigationMeshInternal":
                     {
                         if (obj.TopCell is {} ANavigationMeshTopCellitem)
                         {
@@ -2665,6 +2673,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
+                case "PlacedArrow":
+                case "IPlacedArrowGetter":
+                case "IPlacedArrow":
+                case "IPlacedArrowInternal":
+                case "PlacedBeam":
+                case "IPlacedBeamGetter":
+                case "IPlacedBeam":
+                case "IPlacedBeamInternal":
+                case "PlacedFlame":
+                case "IPlacedFlameGetter":
+                case "IPlacedFlame":
+                case "IPlacedFlameInternal":
+                case "PlacedCone":
+                case "IPlacedConeGetter":
+                case "IPlacedCone":
+                case "IPlacedConeInternal":
+                case "PlacedBarrier":
+                case "IPlacedBarrierGetter":
+                case "IPlacedBarrier":
+                case "IPlacedBarrierInternal":
+                case "PlacedTrap":
+                case "IPlacedTrapGetter":
+                case "IPlacedTrap":
+                case "IPlacedTrapInternal":
+                case "PlacedHazard":
+                case "IPlacedHazardGetter":
+                case "IPlacedHazard":
+                case "IPlacedHazardInternal":
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
                     {
                         if (obj.TopCell is {} APlacedTrapTopCellitem)
                         {
@@ -3744,331 +3784,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
-                case "IComplexLocation":
-                {
-                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IComplexLocationGetter":
-                {
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "ILocationTargetable":
-                {
-                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "ILocationTargetableGetter":
-                {
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IOwner":
-                {
-                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IOwnerGetter":
-                {
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReference":
-                {
-                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReferenceGetter":
-                {
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "ILinkedReference":
-                {
-                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "ILinkedReferenceGetter":
-                {
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlaced":
-                {
-                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedGetter":
-                {
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedSimple":
-                {
-                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedSimpleGetter":
-                {
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedThing":
-                {
-                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedThingGetter":
-                {
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Skyrim, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -5968,7 +5692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -6017,7 +5741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region MapImage
         private int? _MapImageLocation;
-        public String? MapImage => _MapImageLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MapImageLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? MapImage => _MapImageLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MapImageLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IModelGetter? CloudModel { get; private set; }
         #region MapData
@@ -6044,23 +5768,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region CanopyShadow
         private int? _CanopyShadowLocation;
-        public String? CanopyShadow => _CanopyShadowLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _CanopyShadowLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? CanopyShadow => _CanopyShadowLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _CanopyShadowLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region WaterNoiseTexture
         private int? _WaterNoiseTextureLocation;
-        public String? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region HdLodDiffuseTexture
         private int? _HdLodDiffuseTextureLocation;
-        public String? HdLodDiffuseTexture => _HdLodDiffuseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HdLodDiffuseTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? HdLodDiffuseTexture => _HdLodDiffuseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HdLodDiffuseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region HdLodNormalTexture
         private int? _HdLodNormalTextureLocation;
-        public String? HdLodNormalTexture => _HdLodNormalTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HdLodNormalTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? HdLodNormalTexture => _HdLodNormalTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HdLodNormalTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region WaterEnvironmentMap
         private int? _WaterEnvironmentMapLocation;
-        public String? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region OffsetData
         private int? _OffsetDataLocation;

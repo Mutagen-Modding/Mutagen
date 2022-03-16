@@ -4,6 +4,7 @@ using Noggog;
 using System;
 using System.Buffers;
 using System.Linq;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -27,13 +28,13 @@ namespace Mutagen.Bethesda.Tests
         [Benchmark]
         public string ReadSpan()
         {
-            return BinaryStringUtility.ToZString(stream.GetSpan(data.Length));
+            return BinaryStringUtility.ToZString(stream.GetSpan(data.Length), MutagenEncodingProvider._1252);
         }
 
         [Benchmark]
         public string ReadMemory()
         {
-            return BinaryStringUtility.ToZString(stream.GetMemory(data.Length));
+            return BinaryStringUtility.ToZString(stream.GetMemory(data.Length), MutagenEncodingProvider._1252);
         }
     }
 }

@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException();
                 }
                 var subRec = stream.ReadSubrecordFrame();
-                textures[layer] = BinaryStringUtility.ProcessWholeToZString(subRec.Content);
+                textures[layer] = BinaryStringUtility.ProcessWholeToZString(subRec.Content, stream.MetaData.Encodings.NonTranslated);
             }
 
             public static partial ParseResult FillBinaryCloudAlphasCustom(MutagenFrame frame, IWeatherInternal item)
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (cloudTex[i] is not {} tex) continue;
                     using (HeaderExport.Subrecord(writer, new RecordType(WeatherBinaryCreateTranslation.TextureIntBase + i)))
                     {
-                        writer.Write(tex, StringBinaryType.NullTerminate);
+                        writer.Write(tex, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
                     }
                 }
             }

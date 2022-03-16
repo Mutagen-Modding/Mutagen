@@ -228,9 +228,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>();
                         obj.Properties.Specific = l;
-                        foreach (var item in Properties.Specific.WithIndex())
+                        foreach (var item in Properties.Specific)
                         {
-                            MaskItemIndexed<R, ScriptProperty.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ScriptProperty.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ScriptProperty.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ScriptProperty.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

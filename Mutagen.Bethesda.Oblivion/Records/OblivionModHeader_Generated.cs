@@ -325,9 +325,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, MasterReference.Mask<R>?>>();
                         obj.MasterReferences.Specific = l;
-                        foreach (var item in MasterReferences.Specific.WithIndex())
+                        foreach (var item in MasterReferences.Specific)
                         {
-                            MaskItemIndexed<R, MasterReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, MasterReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, MasterReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MasterReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1799,11 +1799,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Author
         private int? _AuthorLocation;
-        public String? Author => _AuthorLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AuthorLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Author => _AuthorLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AuthorLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = ListExt.Empty<MasterReferenceBinaryOverlay>();
         partial void CustomFactoryEnd(

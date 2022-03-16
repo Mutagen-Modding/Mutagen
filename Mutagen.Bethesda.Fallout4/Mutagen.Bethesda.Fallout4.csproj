@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Noggog</Authors>
@@ -31,9 +31,21 @@
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\Size.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
-    <Compile Include="Interfaces\IModeled.cs" />
-    <Compile Include="Interfaces\IObjectBounded.cs" />
-    <Compile Include="Interfaces\IPositionRotation.cs" />
+    <Compile Include="Interfaces\Aspect\IModeled.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IObjectBounded.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IPositionRotation.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -166,8 +178,6 @@
     <Compile Include="Records\Major Records\Keyword_Generated.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IKeywordLinkedReference_Generated.cs" />
-    <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Records\Major Records\GameSettingUInt_Generated.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
@@ -216,9 +226,6 @@
     <Compile Include="Records\Major Records\Transform_Generated.cs">
       <DependentUpon>Transform.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IIdleRelation_Generated.cs" />
-    <Compile Include="Interfaces\ILocationRecord_Generated.cs" />
-    <Compile Include="Interfaces\IObjectId_Generated.cs" />
     <Compile Include="Records\Major Records\GlobalBool_Generated.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
@@ -231,7 +238,6 @@
     <Compile Include="Records\Major Records\DamageTypeIndexed_Generated.cs">
       <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IDamageTypeTarget_Generated.cs" />
     <Compile Include="Records\Major Records\DamageType_Generated.cs">
       <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>
@@ -350,10 +356,6 @@
     <Compile Include="Records\Major Records\Race_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\ILocationTargetable_Generated.cs" />
-    <Compile Include="Interfaces\IOwner_Generated.cs" />
-    <Compile Include="Interfaces\IRelatable_Generated.cs" />
-    <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
     <Compile Include="Records\Fallout4Group_Generated.cs">
       <DependentUpon>Fallout4Group.xml</DependentUpon>
     </Compile>
@@ -381,15 +383,27 @@
     <Compile Include="Records\Major Records\MaterialType_Generated.cs">
       <DependentUpon>MaterialType.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IRegionTarget_Generated.cs" />
+    <Compile Include="GameEnvironmentMixIn_Generated.cs" />
+    <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
+    <Compile Include="Interfaces\Link\IDamageTypeTarget_Generated.cs" />
+    <Compile Include="Interfaces\Link\IObjectId_Generated.cs" />
+    <Compile Include="Interfaces\Link\ILocationTargetable_Generated.cs" />
+    <Compile Include="Interfaces\Link\IOwner_Generated.cs" />
+    <Compile Include="Interfaces\Link\IRelatable_Generated.cs" />
+    <Compile Include="Interfaces\Link\IKeywordLinkedReference_Generated.cs" />
+    <Compile Include="Interfaces\Link\IRegionTarget_Generated.cs" />
+    <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
+    <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
+    <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
+    <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.38.3" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.38.1" />
+    <PackageReference Include="Loqui" Version="2.40.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.40.0" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

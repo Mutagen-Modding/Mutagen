@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             }
                             fg.AppendLine($"LinkInterfaceMapping.AutomaticRegistration = false;");
                             using (var args = new ArgsWrapper(fg,
-                                $"LinkInterfaceMapping.Register"))
+                                $"LinkInterfaceMapping.InternalInstance.Register"))
                             {
                                 args.Add($"new {proto.DefaultNamespace}.Internals.LinkInterfaceMapping()");
                             }

@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IMajorRecordGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((MajorRecordCommon)((IMajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IMajorRecordInternal obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1692,7 +1692,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         public UInt32 VersionControl => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         #region EditorID
         private int? _EditorIDLocation;
-        public String? EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EditorIDLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EditorIDLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

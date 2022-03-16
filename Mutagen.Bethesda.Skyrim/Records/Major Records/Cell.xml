@@ -25,7 +25,7 @@
       <RefDirect name="Grid" refName="CellGrid" />
       <RefDirect name="Lighting" refName="CellLighting" />
       <ByteArray name="OcclusionData" recordType="TVDT" />
-      <ByteArray name="MaxHeightData" recordType="MHDT" />
+      <RefDirect name="MaxHeightData" refName="CellMaxHeightData" />
       <FormLink name="LightingTemplate" refName="LightingTemplate" nullable="False" recordType="LTMP" />
       <ByteArray name="LNAM" recordType="LNAM" />
       <Float name="WaterHeight" recordType="XCLW" />
@@ -54,12 +54,12 @@
       <Int32 name="UnknownGroupData" binary="NoGeneration" />
       <Int32 name="PersistentTimestamp" binary="NoGeneration" />
       <Int32 name="PersistentUnknownGroupData" binary="NoGeneration" />
-      <RefList name="Persistent" binary="NoGeneration" objType="Record" >
+      <RefList name="Persistent" binary="NoGeneration" objType="Record">
         <Interface>IPlaced</Interface>
       </RefList>
       <Int32 name="TemporaryTimestamp" binary="NoGeneration" />
       <Int32 name="TemporaryUnknownGroupData" binary="NoGeneration" />
-      <RefList name="Temporary" binary="NoGeneration" objType="Record" >
+      <RefList name="Temporary" binary="NoGeneration" objType="Record">
         <Interface>IPlaced</Interface>
       </RefList>
     </Fields>
@@ -106,6 +106,14 @@
       <Int32 name="Unknown" />
       <P3Float name="Angle" />
       <ByteArray name="Unknown2" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="CellMaxHeightData" recordType="MHDT" objType="Subrecord" GUID="1805172c-baaf-4ee9-9bc6-d850a5e68bdf" ID="481">
+    <Fields>
+      <Float name="Offset" />
+      <Array2d name="HeightMap" fixedWidth="32" fixedHeight="32">
+        <UInt8 />
+      </Array2d>
     </Fields>
   </Object>
 </Loqui>

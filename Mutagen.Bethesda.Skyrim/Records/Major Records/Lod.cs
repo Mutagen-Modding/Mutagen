@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string ReadString(MutagenFrame frame, out byte[] extraBytes)
         {
-            var str = StringBinaryTranslation.Instance.Parse(frame, parseWhole: false, stringBinaryType: StringBinaryType.NullTerminate);
+            var str = StringBinaryTranslation.Instance.Parse(frame, parseWhole: false, stringBinaryType: StringBinaryType.NullTerminate, encoding: frame.MetaData.Encodings.NonTranslated);
             extraBytes = frame.ReadBytes(TotalLen - str.Length - 1);
             return str;
         }
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 throw new ArgumentException($"String was too long to fit. {str.Length} > {LodBinaryCreateTranslation.TotalLen - 1}");
             }
-            writer.Write(str, StringBinaryType.NullTerminate);
+            writer.Write(str, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
             if (bytes == null)
             {
                 writer.WriteZeros((uint)(LodBinaryCreateTranslation.TotalLen - str.Length - 1));

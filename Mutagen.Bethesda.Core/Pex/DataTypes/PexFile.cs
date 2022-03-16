@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Pex
 {
@@ -29,9 +30,9 @@ namespace Mutagen.Bethesda.Pex
             file.MinorVersion = br.ReadUInt8();
             file.GameId = br.ReadUInt16();
             file.CompilationTime = br.ReadUInt64().ToDateTime();
-            file.SourceFileName = br.ReadPrependedString(2);
-            file.Username = br.ReadPrependedString(2);
-            file.MachineName = br.ReadPrependedString(2);
+            file.SourceFileName = br.ReadPrependedString(2, MutagenEncodingProvider._1252);
+            file.Username = br.ReadPrependedString(2, MutagenEncodingProvider._1252);
+            file.MachineName = br.ReadPrependedString(2, MutagenEncodingProvider._1252);
 
             var stringsCount = br.ReadUInt16();
 
@@ -41,7 +42,7 @@ namespace Mutagen.Bethesda.Pex
                 new Dictionary<ushort, string>());
             for (var i = 0; i < stringsCount; i++)
             {
-                bundle.Strings.Add((ushort)i, br.ReadPrependedString(2));
+                bundle.Strings.Add((ushort)i, br.ReadPrependedString(2, MutagenEncodingProvider._1252));
             }
 
             var hasDebugInfo = bundle.Reader.ReadUInt8() == 1;

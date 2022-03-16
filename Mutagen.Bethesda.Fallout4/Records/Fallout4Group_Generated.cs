@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4GroupGetter<T> obj,
             bool throwIfUnknown = true)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IFallout4Group<T> obj)
             where T : class, IFallout4MajorRecordInternal, IBinaryItem
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((Fallout4GroupSetterCommon<T>)((IFallout4GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
@@ -1104,6 +1104,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     var assignable = type.IsAssignableFrom(typeof(T));
                     foreach (var item in obj.RecordCache.Items)
                     {

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Generation.Fields;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
+using Loqui;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -250,6 +251,21 @@ namespace Mutagen.Bethesda.Generation
         {
             if (objGen.GetObjectType() != ObjectType.Record) return false;
             return objGen.Fields.Any(f => f.GetFieldData().CustomVersion != null);
+        }
+
+        public static void AppendSwitchCases(this ObjectGeneration obj, FileGeneration fg)
+        {
+            fg.AppendLine($"case \"{obj.ObjectName}\":");
+            fg.AppendLine($"case \"{obj.Interface(getter: true)}\":");
+            fg.AppendLine($"case \"{obj.Interface(getter: false)}\":");
+            if (obj.HasInternalGetInterface)
+            {
+                fg.AppendLine($"case \"{obj.Interface(getter: true, internalInterface: true)}\":");
+            }
+            if (obj.HasInternalSetInterface)
+            {
+                fg.AppendLine($"case \"{obj.Interface(getter: false, internalInterface: true)}\":");
+            }
         }
     }
 }

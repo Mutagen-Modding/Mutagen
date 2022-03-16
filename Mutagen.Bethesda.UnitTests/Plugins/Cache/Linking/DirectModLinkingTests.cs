@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -13,9 +14,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
     public partial class ALinkingTests
     {
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void DirectEmpty(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void DirectEmpty(LinkCachePreferences.RetentionType cacheType)
         {
             using var disp = ConvertMod(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), out var mod);
             var (style, package) = GetLinkCache(mod, cacheType);
@@ -58,9 +59,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void DirectNoMatch(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void DirectNoMatch(LinkCachePreferences.RetentionType cacheType)
         {
             var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             prototype.ObjectEffects.AddNew();
@@ -105,9 +106,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void DirectTypical(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void DirectTypical(LinkCachePreferences.RetentionType cacheType)
         {
             var prototype = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var objEffect1 = prototype.ObjectEffects.AddNew("EDID1");
@@ -340,9 +341,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Identifiers)]
-        [InlineData(LinkCacheTestTypes.WholeRecord)]
-        public void DirectReadOnlyMechanics(LinkCacheTestTypes cacheType)
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void DirectReadOnlyMechanics(LinkCachePreferences.RetentionType cacheType)
         {
             var wrapper = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
             var (style, package) = GetLinkCache(wrapper, cacheType);

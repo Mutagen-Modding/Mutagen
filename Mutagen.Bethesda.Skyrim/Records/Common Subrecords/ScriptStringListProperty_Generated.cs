@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
@@ -210,9 +211,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Data.Specific = l;
-                        foreach (var item in Data.Specific.WithIndex())
+                        foreach (var item in Data.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1170,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
-                    transl: (MutagenFrame r, out String listSubItem) =>
+                    transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
                     {
                         return StringBinaryTranslation.Instance.Parse(
                             r,
@@ -1225,7 +1226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Data
-        public IReadOnlyList<String> Data => BinaryOverlayList.FactoryByCountLength<String>(_data, _package, countLength: 4, (s, p) => BinaryStringUtility.ParsePrependedString(s, lengthLength: 2));
+        public IReadOnlyList<String> Data => BinaryOverlayList.FactoryByCountLength<String>(_data, _package, countLength: 4, (s, p) => BinaryStringUtility.ParsePrependedString(s, lengthLength: 2, encoding: p.MetaData.Encodings.NonTranslated));
         protected int DataEndingPos;
         #endregion
         partial void CustomFactoryEnd(

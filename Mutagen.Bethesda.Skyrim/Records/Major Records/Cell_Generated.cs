@@ -129,14 +129,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MaxHeightData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _MaxHeightData;
-        public MemorySlice<Byte>? MaxHeightData
+        private CellMaxHeightData? _MaxHeightData;
+        public CellMaxHeightData? MaxHeightData
         {
-            get => this._MaxHeightData;
-            set => this._MaxHeightData = value;
+            get => _MaxHeightData;
+            set => _MaxHeightData = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ICellGetter.MaxHeightData => this.MaxHeightData;
+        ICellMaxHeightDataGetter? ICellGetter.MaxHeightData => this.MaxHeightData;
         #endregion
         #region LightingTemplate
         private readonly IFormLink<ILightingTemplateGetter> _LightingTemplate = new FormLink<ILightingTemplateGetter>();
@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Grid = new MaskItem<TItem, CellGrid.Mask<TItem>?>(initialValue, new CellGrid.Mask<TItem>(initialValue));
                 this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(initialValue, new CellLighting.Mask<TItem>(initialValue));
                 this.OcclusionData = initialValue;
-                this.MaxHeightData = initialValue;
+                this.MaxHeightData = new MaskItem<TItem, CellMaxHeightData.Mask<TItem>?>(initialValue, new CellMaxHeightData.Mask<TItem>(initialValue));
                 this.LightingTemplate = initialValue;
                 this.LNAM = initialValue;
                 this.WaterHeight = initialValue;
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Grid = new MaskItem<TItem, CellGrid.Mask<TItem>?>(Grid, new CellGrid.Mask<TItem>(Grid));
                 this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(Lighting, new CellLighting.Mask<TItem>(Lighting));
                 this.OcclusionData = OcclusionData;
-                this.MaxHeightData = MaxHeightData;
+                this.MaxHeightData = new MaskItem<TItem, CellMaxHeightData.Mask<TItem>?>(MaxHeightData, new CellMaxHeightData.Mask<TItem>(MaxHeightData));
                 this.LightingTemplate = LightingTemplate;
                 this.LNAM = LNAM;
                 this.WaterHeight = WaterHeight;
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, CellGrid.Mask<TItem>?>? Grid { get; set; }
             public MaskItem<TItem, CellLighting.Mask<TItem>?>? Lighting { get; set; }
             public TItem OcclusionData;
-            public TItem MaxHeightData;
+            public MaskItem<TItem, CellMaxHeightData.Mask<TItem>?>? MaxHeightData { get; set; }
             public TItem LightingTemplate;
             public TItem LNAM;
             public TItem WaterHeight;
@@ -680,7 +680,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.Lighting.Specific != null && !this.Lighting.Specific.All(eval)) return false;
                 }
                 if (!eval(this.OcclusionData)) return false;
-                if (!eval(this.MaxHeightData)) return false;
+                if (MaxHeightData != null)
+                {
+                    if (!eval(this.MaxHeightData.Overall)) return false;
+                    if (this.MaxHeightData.Specific != null && !this.MaxHeightData.Specific.All(eval)) return false;
+                }
                 if (!eval(this.LightingTemplate)) return false;
                 if (!eval(this.LNAM)) return false;
                 if (!eval(this.WaterHeight)) return false;
@@ -785,7 +789,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.Lighting.Specific != null && this.Lighting.Specific.Any(eval)) return true;
                 }
                 if (eval(this.OcclusionData)) return true;
-                if (eval(this.MaxHeightData)) return true;
+                if (MaxHeightData != null)
+                {
+                    if (eval(this.MaxHeightData.Overall)) return true;
+                    if (this.MaxHeightData.Specific != null && this.MaxHeightData.Specific.Any(eval)) return true;
+                }
                 if (eval(this.LightingTemplate)) return true;
                 if (eval(this.LNAM)) return true;
                 if (eval(this.WaterHeight)) return true;
@@ -889,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Grid = this.Grid == null ? null : new MaskItem<R, CellGrid.Mask<R>?>(eval(this.Grid.Overall), this.Grid.Specific?.Translate(eval));
                 obj.Lighting = this.Lighting == null ? null : new MaskItem<R, CellLighting.Mask<R>?>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
                 obj.OcclusionData = eval(this.OcclusionData);
-                obj.MaxHeightData = eval(this.MaxHeightData);
+                obj.MaxHeightData = this.MaxHeightData == null ? null : new MaskItem<R, CellMaxHeightData.Mask<R>?>(eval(this.MaxHeightData.Overall), this.MaxHeightData.Specific?.Translate(eval));
                 obj.LightingTemplate = eval(this.LightingTemplate);
                 obj.LNAM = eval(this.LNAM);
                 obj.WaterHeight = eval(this.WaterHeight);
@@ -901,9 +909,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Regions.Specific = l;
-                        foreach (var item in Regions.Specific.WithIndex())
+                        foreach (var item in Regions.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -929,9 +937,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ANavigationMesh.Mask<R>?>>();
                         obj.NavigationMeshes.Specific = l;
-                        foreach (var item in NavigationMeshes.Specific.WithIndex())
+                        foreach (var item in NavigationMeshes.Specific)
                         {
-                            MaskItemIndexed<R, ANavigationMesh.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ANavigationMesh.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ANavigationMesh.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ANavigationMesh.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -948,7 +956,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
                         obj.Persistent.Specific = l;
-                        foreach (var item in Persistent.Specific.WithIndex())
+                        foreach (var item in Persistent.Specific)
                         {
                             MaskItemIndexed<R, IMask<R>?>? mask;
                             throw new NotImplementedException();
@@ -966,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
                         obj.Temporary.Specific = l;
-                        foreach (var item in Temporary.Specific.WithIndex())
+                        foreach (var item in Temporary.Specific)
                         {
                             MaskItemIndexed<R, IMask<R>?>? mask;
                             throw new NotImplementedException();
@@ -1017,9 +1025,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(OcclusionData, "OcclusionData");
                     }
-                    if (printMask?.MaxHeightData ?? true)
+                    if (printMask?.MaxHeightData?.Overall ?? true)
                     {
-                        fg.AppendItem(MaxHeightData, "MaxHeightData");
+                        MaxHeightData?.ToString(fg);
                     }
                     if (printMask?.LightingTemplate ?? true)
                     {
@@ -1226,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, CellGrid.ErrorMask?>? Grid;
             public MaskItem<Exception?, CellLighting.ErrorMask?>? Lighting;
             public Exception? OcclusionData;
-            public Exception? MaxHeightData;
+            public MaskItem<Exception?, CellMaxHeightData.ErrorMask?>? MaxHeightData;
             public Exception? LightingTemplate;
             public Exception? LNAM;
             public Exception? WaterHeight;
@@ -1357,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.OcclusionData = ex;
                         break;
                     case Cell_FieldIndex.MaxHeightData:
-                        this.MaxHeightData = ex;
+                        this.MaxHeightData = new MaskItem<Exception?, CellMaxHeightData.ErrorMask?>(ex, null);
                         break;
                     case Cell_FieldIndex.LightingTemplate:
                         this.LightingTemplate = ex;
@@ -1470,7 +1478,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.OcclusionData = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.MaxHeightData:
-                        this.MaxHeightData = (Exception?)obj;
+                        this.MaxHeightData = (MaskItem<Exception?, CellMaxHeightData.ErrorMask?>?)obj;
                         break;
                     case Cell_FieldIndex.LightingTemplate:
                         this.LightingTemplate = (Exception?)obj;
@@ -1639,7 +1647,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Grid?.ToString(fg);
                 Lighting?.ToString(fg);
                 fg.AppendItem(OcclusionData, "OcclusionData");
-                fg.AppendItem(MaxHeightData, "MaxHeightData");
+                MaxHeightData?.ToString(fg);
                 fg.AppendItem(LightingTemplate, "LightingTemplate");
                 fg.AppendItem(LNAM, "LNAM");
                 fg.AppendItem(WaterHeight, "WaterHeight");
@@ -1765,7 +1773,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Grid = this.Grid.Combine(rhs.Grid, (l, r) => l.Combine(r));
                 ret.Lighting = this.Lighting.Combine(rhs.Lighting, (l, r) => l.Combine(r));
                 ret.OcclusionData = this.OcclusionData.Combine(rhs.OcclusionData);
-                ret.MaxHeightData = this.MaxHeightData.Combine(rhs.MaxHeightData);
+                ret.MaxHeightData = this.MaxHeightData.Combine(rhs.MaxHeightData, (l, r) => l.Combine(r));
                 ret.LightingTemplate = this.LightingTemplate.Combine(rhs.LightingTemplate);
                 ret.LNAM = this.LNAM.Combine(rhs.LNAM);
                 ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
@@ -1821,7 +1829,7 @@ namespace Mutagen.Bethesda.Skyrim
             public CellGrid.TranslationMask? Grid;
             public CellLighting.TranslationMask? Lighting;
             public bool OcclusionData;
-            public bool MaxHeightData;
+            public CellMaxHeightData.TranslationMask? MaxHeightData;
             public bool LightingTemplate;
             public bool LNAM;
             public bool WaterHeight;
@@ -1861,7 +1869,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = defaultOn;
                 this.Flags = defaultOn;
                 this.OcclusionData = defaultOn;
-                this.MaxHeightData = defaultOn;
                 this.LightingTemplate = defaultOn;
                 this.LNAM = defaultOn;
                 this.WaterHeight = defaultOn;
@@ -1898,7 +1905,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Grid != null ? Grid.OnOverall : DefaultOn, Grid?.GetCrystal()));
                 ret.Add((Lighting != null ? Lighting.OnOverall : DefaultOn, Lighting?.GetCrystal()));
                 ret.Add((OcclusionData, null));
-                ret.Add((MaxHeightData, null));
+                ret.Add((MaxHeightData != null ? MaxHeightData.OnOverall : DefaultOn, MaxHeightData?.GetCrystal()));
                 ret.Add((LightingTemplate, null));
                 ret.Add((LNAM, null));
                 ret.Add((WaterHeight, null));
@@ -2127,7 +2134,7 @@ namespace Mutagen.Bethesda.Skyrim
         new CellGrid? Grid { get; set; }
         new CellLighting? Lighting { get; set; }
         new MemorySlice<Byte>? OcclusionData { get; set; }
-        new MemorySlice<Byte>? MaxHeightData { get; set; }
+        new CellMaxHeightData? MaxHeightData { get; set; }
         new IFormLink<ILightingTemplateGetter> LightingTemplate { get; set; }
         new MemorySlice<Byte>? LNAM { get; set; }
         new Single? WaterHeight { get; set; }
@@ -2194,7 +2201,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICellGridGetter? Grid { get; }
         ICellLightingGetter? Lighting { get; }
         ReadOnlyMemorySlice<Byte>? OcclusionData { get; }
-        ReadOnlyMemorySlice<Byte>? MaxHeightData { get; }
+        ICellMaxHeightDataGetter? MaxHeightData { get; }
         IFormLinkGetter<ILightingTemplateGetter> LightingTemplate { get; }
         ReadOnlyMemorySlice<Byte>? LNAM { get; }
         Single? WaterHeight { get; }
@@ -2358,7 +2365,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this ICellGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((CellCommon)((ICellGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -2388,7 +2395,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellInternal obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -2730,7 +2737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Grid = null;
             item.Lighting = null;
             item.OcclusionData = default;
-            item.MaxHeightData = default;
+            item.MaxHeightData = null;
             item.LightingTemplate.Clear();
             item.LNAM = default;
             item.WaterHeight = default;
@@ -2866,6 +2873,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMeshGetter":
                 case "IANavigationMesh":
                 case "IANavigationMeshInternal":
+                case "WorldspaceNavigationMesh":
+                case "IWorldspaceNavigationMeshGetter":
+                case "IWorldspaceNavigationMesh":
+                case "IWorldspaceNavigationMeshInternal":
+                case "CellNavigationMesh":
+                case "ICellNavigationMeshGetter":
+                case "ICellNavigationMesh":
+                case "ICellNavigationMeshInternal":
                     obj.NavigationMeshes.RemoveWhere(i => keys.Contains(i.FormKey));
                     break;
                 case "PlacedNpc":
@@ -2886,6 +2901,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
+                case "PlacedArrow":
+                case "IPlacedArrowGetter":
+                case "IPlacedArrow":
+                case "IPlacedArrowInternal":
+                case "PlacedBeam":
+                case "IPlacedBeamGetter":
+                case "IPlacedBeam":
+                case "IPlacedBeamInternal":
+                case "PlacedFlame":
+                case "IPlacedFlameGetter":
+                case "IPlacedFlame":
+                case "IPlacedFlameInternal":
+                case "PlacedCone":
+                case "IPlacedConeGetter":
+                case "IPlacedCone":
+                case "IPlacedConeInternal":
+                case "PlacedBarrier":
+                case "IPlacedBarrierGetter":
+                case "IPlacedBarrier":
+                case "IPlacedBarrierInternal":
+                case "PlacedTrap":
+                case "IPlacedTrapGetter":
+                case "IPlacedTrap":
+                case "IPlacedTrapInternal":
+                case "PlacedHazard":
+                case "IPlacedHazardGetter":
+                case "IPlacedHazard":
+                case "IPlacedHazardInternal":
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
                     obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
                     obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
                     break;
@@ -2988,7 +3035,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.OcclusionData = MemorySliceExt.Equal(item.OcclusionData, rhs.OcclusionData);
-            ret.MaxHeightData = MemorySliceExt.Equal(item.MaxHeightData, rhs.MaxHeightData);
+            ret.MaxHeightData = EqualsMaskHelper.EqualsHelper(
+                item.MaxHeightData,
+                rhs.MaxHeightData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.LightingTemplate = item.LightingTemplate.Equals(rhs.LightingTemplate);
             ret.LNAM = MemorySliceExt.Equal(item.LNAM, rhs.LNAM);
             ret.WaterHeight = item.WaterHeight.EqualsWithin(rhs.WaterHeight);
@@ -3116,10 +3167,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"OcclusionData => {SpanExt.ToHexString(OcclusionDataItem)}");
             }
-            if ((printMask?.MaxHeightData ?? true)
+            if ((printMask?.MaxHeightData?.Overall ?? true)
                 && item.MaxHeightData is {} MaxHeightDataItem)
             {
-                fg.AppendLine($"MaxHeightData => {SpanExt.ToHexString(MaxHeightDataItem)}");
+                MaxHeightDataItem?.ToString(fg, "MaxHeightData");
             }
             if (printMask?.LightingTemplate ?? true)
             {
@@ -3377,7 +3428,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.MaxHeightData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.MaxHeightData, rhs.MaxHeightData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.MaxHeightData, rhs.MaxHeightData, out var lhsMaxHeightData, out var rhsMaxHeightData, out var isMaxHeightDataEqual))
+                {
+                    if (!((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)lhsMaxHeightData).CommonInstance()!).Equals(lhsMaxHeightData, rhsMaxHeightData, crystal?.GetSubCrystal((int)Cell_FieldIndex.MaxHeightData))) return false;
+                }
+                else if (!isMaxHeightDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.LightingTemplate) ?? true))
             {
@@ -3548,9 +3603,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(OcclusionDataItem);
             }
-            if (item.MaxHeightData is {} MaxHeightDataItem)
+            if (item.MaxHeightData is {} MaxHeightDataitem)
             {
-                hash.Add(MaxHeightDataItem);
+                hash.Add(MaxHeightDataitem);
             }
             hash.Add(item.LightingTemplate);
             if (item.LNAM is {} LNAMItem)
@@ -3877,229 +3932,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
-                case "ILocationTargetable":
-                {
-                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
-                case "ILocationTargetableGetter":
-                {
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
-                case "IOwner":
-                {
-                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
-                case "IOwnerGetter":
-                {
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReference":
-                {
-                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReferenceGetter":
-                {
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
-                case "ILinkedReference":
-                {
-                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
-                case "ILinkedReferenceGetter":
-                {
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedSimple":
-                {
-                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedSimpleGetter":
-                {
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedThing":
-                {
-                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedThingGetter":
-                {
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Skyrim, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -5027,13 +4868,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.MaxHeightData) ?? true))
             {
-                if(rhs.MaxHeightData is {} MaxHeightDatarhs)
+                errorMask?.PushIndex((int)Cell_FieldIndex.MaxHeightData);
+                try
                 {
-                    item.MaxHeightData = MaxHeightDatarhs.ToArray();
+                    if(rhs.MaxHeightData is {} rhsMaxHeightData)
+                    {
+                        item.MaxHeightData = rhsMaxHeightData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Cell_FieldIndex.MaxHeightData));
+                    }
+                    else
+                    {
+                        item.MaxHeightData = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.MaxHeightData = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LightingTemplate) ?? true))
@@ -5509,10 +5365,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.OcclusionData,
                 header: translationParams.ConvertToCustom(RecordTypes.TVDT));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.MaxHeightData,
-                header: translationParams.ConvertToCustom(RecordTypes.MHDT));
+            if (item.MaxHeightData is {} MaxHeightDataItem)
+            {
+                ((CellMaxHeightDataBinaryWriteTranslation)((IBinaryItem)MaxHeightDataItem).BinaryWriteTranslator).Write(
+                    item: MaxHeightDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LightingTemplate,
@@ -5739,8 +5598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MHDT:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxHeightData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.MaxHeightData = Mutagen.Bethesda.Skyrim.CellMaxHeightData.CreateFromBinary(frame: frame);
                     return (int)Cell_FieldIndex.MaxHeightData;
                 }
                 case RecordTypeInts.LTMP:
@@ -5938,7 +5796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -5968,8 +5826,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ReadOnlyMemorySlice<Byte>? OcclusionData => _OcclusionDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OcclusionDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region MaxHeightData
-        private int? _MaxHeightDataLocation;
-        public ReadOnlyMemorySlice<Byte>? MaxHeightData => _MaxHeightDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MaxHeightDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        private RangeInt32? _MaxHeightDataLocation;
+        public ICellMaxHeightDataGetter? MaxHeightData => _MaxHeightDataLocation.HasValue ? CellMaxHeightDataBinaryOverlay.CellMaxHeightDataFactory(new OverlayStream(_data.Slice(_MaxHeightDataLocation!.Value.Min), _package), _package) : default;
         #endregion
         #region LightingTemplate
         private int? _LightingTemplateLocation;
@@ -5985,7 +5843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region WaterNoiseTexture
         private int? _WaterNoiseTextureLocation;
-        public String? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; private set; }
         #region Location
@@ -6015,7 +5873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region WaterEnvironmentMap
         private int? _WaterEnvironmentMapLocation;
-        public String? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region SkyAndWeatherFromRegion
         private int? _SkyAndWeatherFromRegionLocation;
@@ -6142,7 +6000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MHDT:
                 {
-                    _MaxHeightDataLocation = (stream.Position - offset);
+                    _MaxHeightDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Cell_FieldIndex.MaxHeightData;
                 }
                 case RecordTypeInts.LTMP:

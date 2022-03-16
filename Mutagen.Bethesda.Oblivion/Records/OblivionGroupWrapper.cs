@@ -51,6 +51,8 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
         return _groupMerge.ContainsKey(key);
     }
 
+    public ILoquiRegistration ContainedRecordRegistration => _groupMerge.ContainedRecordRegistration;
+
     public IEnumerator<TMajor> GetEnumerator()
     {
         return _groupMerge.GetEnumerator();
@@ -90,8 +92,8 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
 
     public IReadOnlyCache<TMajor, FormKey> RecordCache => _groupMerge.RecordCache;
     
-    public GroupTypeEnum Type => _groupMerge.SubGroups[^1].Type;
     
+    public GroupTypeEnum Type => _groupMerge.SubGroups[^1].Type;
     public int LastModified => _groupMerge.SubGroups[^1].LastModified;
     
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

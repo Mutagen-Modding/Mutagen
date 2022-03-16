@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -19,7 +20,7 @@ namespace Mutagen.Bethesda.Skyrim
                     ListBinaryTranslation<QuestScriptFragment>.Instance.Parse(
                         frame,
                         amount: count,
-                        transl: (MutagenFrame r, out QuestScriptFragment listSubItem) =>
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out QuestScriptFragment listSubItem) =>
                         {
                             listSubItem = QuestScriptFragment.CreateFromBinary(frame);
                             return true;
@@ -29,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
                     ListBinaryTranslation<QuestFragmentAlias>.Instance.Parse(
                         frame,
                         amount: aliasCount,
-                        transl: (MutagenFrame r, out QuestFragmentAlias listSubItem) =>
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out QuestFragmentAlias listSubItem) =>
                         {
                             listSubItem = QuestFragmentAlias.CreateFromBinary(frame);
                             return true;
@@ -55,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var frags = item.Fragments;
                 writer.Write(checked((ushort)frags.Count));
-                writer.Write(item.FileName, StringBinaryType.PrependLengthUShort);
+                writer.Write(item.FileName, StringBinaryType.PrependLengthUShort, writer.MetaData.Encodings.NonTranslated);
                 ListBinaryTranslation<IQuestScriptFragmentGetter>.Instance.Write(
                     writer,
                     frags,
@@ -106,12 +107,12 @@ namespace Mutagen.Bethesda.Skyrim
                 // Skip unknown
                 frame.Position += 1;
                 var count = frame.ReadUInt16();
-                _filename = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
+                _filename = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort, encoding: _package.MetaData.Encodings.NonTranslated);
                 Fragments = 
                     ListBinaryTranslation<QuestScriptFragment>.Instance.Parse(
                         frame,
                         amount: count,
-                        transl: (MutagenFrame r, out QuestScriptFragment listSubItem) =>
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out QuestScriptFragment listSubItem) =>
                         {
                             listSubItem = QuestScriptFragment.CreateFromBinary(frame);
                             return true;
@@ -122,7 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
                     ListBinaryTranslation<QuestFragmentAlias>.Instance.Parse(
                         frame,
                         amount: aliasCount,
-                        transl: (MutagenFrame r, out QuestFragmentAlias listSubItem) =>
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out QuestFragmentAlias listSubItem) =>
                         {
                             listSubItem = QuestFragmentAlias.CreateFromBinary(frame);
                             return true;

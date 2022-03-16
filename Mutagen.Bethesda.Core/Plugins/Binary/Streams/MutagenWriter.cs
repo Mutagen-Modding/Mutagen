@@ -320,10 +320,5 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
                 this.Writer.Dispose();
             }
         }
-
-        public void Write(ReadOnlySpan<char> value)
-        {
-            BinaryStringUtility.Write(this, value);
-        }
     }
 }

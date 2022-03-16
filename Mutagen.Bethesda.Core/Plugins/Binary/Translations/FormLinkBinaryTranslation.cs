@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 {
     public class FormLinkBinaryTranslation
     {
-        public readonly static FormLinkBinaryTranslation Instance = new FormLinkBinaryTranslation();
+        public readonly static FormLinkBinaryTranslation Instance = new();
 
         public bool Parse(
             MutagenFrame reader,

@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             {
                 ScopedTypes = regis.GetterType.AsEnumerable();
             }
-            else if (LinkInterfaceMapping.TryGetByFullName(_typeName, out var interfType))
+            else if (LinkInterfaceMapping.InternalInstance.TryGetByFullName(_typeName, out var interfType))
             {
                 ScopedTypes = interfType.AsEnumerable();
             }

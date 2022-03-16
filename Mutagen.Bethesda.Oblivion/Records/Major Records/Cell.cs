@@ -1,11 +1,13 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
@@ -121,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
                 coll.AddRange(
                     ListBinaryTranslation<IPlaced>.Instance.Parse(
                         reader: frame,
-                        transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
+                        transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out IPlaced placed) =>
                         {
                             switch (header.TypeInt)
                             {
@@ -172,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 var items = ListBinaryTranslation<IPlaced>.Instance.Parse(
                     reader: frame,
-                    transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
+                    transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out IPlaced placed) =>
                     {
                         switch (header.TypeInt)
                         {
@@ -292,13 +294,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryOverlay
         {
-            static readonly ICollectionGetter<RecordType> TypicalPlacedTypes = new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>()
-                {
-                    RecordTypes.ACHR,
-                    RecordTypes.ACRE,
-                    RecordTypes.REFR
-                });
+            static readonly TriggeringRecordCollection TypicalPlacedTypes = new TriggeringRecordCollection(
+                RecordTypes.ACHR,
+                RecordTypes.ACRE,
+                RecordTypes.REFR);
 
             private ReadOnlyMemorySlice<byte>? _grupData;
 
@@ -402,7 +401,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         contentSpan,
                                         _package,
                                         getter: TypicalGetter,
-                                        locs: ParseRecordLocations(
+                                        locs: ParseLocationsRecordPerTrigger(
                                             stream: new OverlayStream(contentSpan, stream.MetaData),
                                             triggers: TypicalPlacedTypes,
                                             constants: GameConstants.Oblivion.MajorConstants,
@@ -455,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         contentSpan,
                                         _package,
                                         getter: TypicalGetter,
-                                        locs: ParseRecordLocations(
+                                        locs: ParseLocationsRecordPerTrigger(
                                             stream: new OverlayStream(contentSpan, stream.MetaData),
                                             triggers: TypicalPlacedTypes,
                                             constants: GameConstants.Oblivion.MajorConstants,

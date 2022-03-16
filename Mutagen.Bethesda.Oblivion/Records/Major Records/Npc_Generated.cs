@@ -773,9 +773,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, RankPlacement.Mask<R>?>>();
                         obj.Factions.Specific = l;
-                        foreach (var item in Factions.Specific.WithIndex())
+                        foreach (var item in Factions.Specific)
                         {
-                            MaskItemIndexed<R, RankPlacement.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RankPlacement.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, RankPlacement.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RankPlacement.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -790,9 +790,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Spells.Specific = l;
-                        foreach (var item in Spells.Specific.WithIndex())
+                        foreach (var item in Spells.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -805,9 +805,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, ItemEntry.Mask<R>?>>();
                         obj.Items.Specific = l;
-                        foreach (var item in Items.Specific.WithIndex())
+                        foreach (var item in Items.Specific)
                         {
-                            MaskItemIndexed<R, ItemEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ItemEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ItemEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ItemEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -821,9 +821,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.AIPackages.Specific = l;
-                        foreach (var item in AIPackages.Specific.WithIndex())
+                        foreach (var item in AIPackages.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -835,9 +835,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Animations.Specific = l;
-                        foreach (var item in Animations.Specific.WithIndex())
+                        foreach (var item in Animations.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -853,9 +853,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Eyes.Specific = l;
-                        foreach (var item in Eyes.Specific.WithIndex())
+                        foreach (var item in Eyes.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -3785,7 +3785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Animations = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out String listSubItem) =>
+                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
                             {
                                 return StringBinaryTranslation.Instance.Parse(
                                     r,
@@ -3925,7 +3925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -4165,7 +4165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Animations = BinaryOverlayList.FactoryByLazyParse<String>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s));
+                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated));
                     stream.Position += subLen;
                     return (int)Npc_FieldIndex.Animations;
                 }

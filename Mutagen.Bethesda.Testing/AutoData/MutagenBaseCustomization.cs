@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Mutagen.Bethesda.Strings.DI;
 using Noggog.Testing.AutoFixture;
 
 namespace Mutagen.Bethesda.Testing.AutoData
@@ -21,6 +22,7 @@ namespace Mutagen.Bethesda.Testing.AutoData
             fixture.Customizations.Add(new ModListingBuilder());
             fixture.Customizations.Add(new ModPathBuilder());
             fixture.Customizations.Add(new OrderBuilder());
+            fixture.Inject<IMutagenEncodingProvider>(MutagenEncodingProvider.Instance);
         }
     }
 }

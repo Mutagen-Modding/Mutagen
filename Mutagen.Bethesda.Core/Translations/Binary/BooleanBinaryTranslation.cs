@@ -1,12 +1,13 @@
 using Noggog;
 using System;
 using System.IO;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Translations.Binary
 {
     public class BooleanBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<bool, TReader, TWriter>
         where TReader : IBinaryReadStream
-        where TWriter : IBinaryWriteStream
+        where TWriter : MutagenWriter
     {
         public readonly static BooleanBinaryTranslation<TReader, TWriter> Instance = new();
         public override int ExpectedLength => 1;
@@ -19,6 +20,12 @@ namespace Mutagen.Bethesda.Translations.Binary
         public override void Write(TWriter writer, bool item)
         {
             writer.Write(item);
+        }
+
+        public void Write(TWriter writer, bool item, byte byteLength)
+        {
+            writer.Write(item);
+            writer.WriteZeros(byteLength);
         }
 
         public bool Parse(

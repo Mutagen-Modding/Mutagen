@@ -55,7 +55,8 @@ public record PassthroughSettings
     public bool TestImport { get; set; }
     public bool TestFolder { get; set; }
     public bool TestCopyIn { get; set; }
-    public bool Parallel { get; set; }
+    public bool ParallelWriting { get; set; }
+    public bool ParallelProccessingSteps { get; set; }
 
     public bool HasAnyToRun => TestNormal
                                || TestBinaryOverlay

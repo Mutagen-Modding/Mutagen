@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -1162,11 +1163,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public SByte Unknown => (sbyte)_data.Slice(0x0, 0x1)[0];
         #region ScriptName
-        public String ScriptName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x1), lengthLength: 2);
+        public String ScriptName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x1), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
         protected int ScriptNameEndingPos;
         #endregion
         #region FragmentName
-        public String FragmentName => BinaryStringUtility.ParsePrependedString(_data.Slice(ScriptNameEndingPos), lengthLength: 2);
+        public String FragmentName => BinaryStringUtility.ParsePrependedString(_data.Slice(ScriptNameEndingPos), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
         protected int FragmentNameEndingPos;
         #endregion
         partial void CustomFactoryEnd(

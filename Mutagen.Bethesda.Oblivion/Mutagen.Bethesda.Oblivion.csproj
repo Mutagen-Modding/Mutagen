@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Noggog</Authors>
@@ -51,7 +51,11 @@
     <Compile Include="Extensions\GameSettingGroupMixIn.cs" />
     <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
-    <Compile Include="Interfaces\IModeled.cs" />
+    <Compile Include="Interfaces\Aspect\IModeled.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistration.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
@@ -852,14 +856,11 @@
     <Compile Include="Records\Major Records\MapData_Generated.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IOwner_Generated.cs" />
-    <Compile Include="Interfaces\IPlaced_Generated.cs" />
     <Compile Include="Records\OblivionGroupWrapper.cs">
       <DependentUpon>OblivionGroup.xml</DependentUpon>
     </Compile>
     <Compile Include="WarmupOblivion.cs" />
     <Compile Include="WarmupOblivion_Generated.cs" />
-    <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Records\RecordTypes_Generated.cs" />
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Records\OblivionModHeader_Generated.cs">
@@ -876,10 +877,6 @@
     <Compile Include="Records\Major Records\LeveledSpellEntry_Generated.cs">
       <DependentUpon>LeveledSpell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
-    <Compile Include="Interfaces\IItem_Generated.cs" />
-    <Compile Include="Interfaces\INpcSpawn_Generated.cs" />
-    <Compile Include="Interfaces\INpcRecord_Generated.cs" />
     <Compile Include="Records\Common Subrecords\ClothingFlags_Generated.cs">
       <DependentUpon>ClothingFlags.xml</DependentUpon>
     </Compile>
@@ -890,14 +887,23 @@
     <Compile Include="Records\OblivionListGroup_Generated.cs">
       <DependentUpon>OblivionGroup.xml</DependentUpon>
     </Compile>
+    <Compile Include="GameEnvironmentMixIn_Generated.cs" />
+    <Compile Include="Interfaces\Link\IItem_Generated.cs" />
+    <Compile Include="Interfaces\Link\INpcSpawn_Generated.cs" />
+    <Compile Include="Interfaces\Link\INpcRecord_Generated.cs" />
+    <Compile Include="Interfaces\Link\IOwner_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlaced_Generated.cs" />
+    <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
+    <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
+    <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.38.3" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.38.1" />
+    <PackageReference Include="Loqui" Version="2.40.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.40.0" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -373,9 +373,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.WalkForwardFootsteps.Specific = l;
-                        foreach (var item in WalkForwardFootsteps.Specific.WithIndex())
+                        foreach (var item in WalkForwardFootsteps.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -387,9 +387,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.RunForwardFootsteps.Specific = l;
-                        foreach (var item in RunForwardFootsteps.Specific.WithIndex())
+                        foreach (var item in RunForwardFootsteps.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -401,9 +401,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.WalkForwardAlternateFootsteps.Specific = l;
-                        foreach (var item in WalkForwardAlternateFootsteps.Specific.WithIndex())
+                        foreach (var item in WalkForwardAlternateFootsteps.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -415,9 +415,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.RunForwardAlternateFootsteps.Specific = l;
-                        foreach (var item in RunForwardAlternateFootsteps.Specific.WithIndex())
+                        foreach (var item in RunForwardAlternateFootsteps.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -429,9 +429,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.WalkForwardAlternateFootsteps2.Specific = l;
-                        foreach (var item in WalkForwardAlternateFootsteps2.Specific.WithIndex())
+                        foreach (var item in WalkForwardAlternateFootsteps2.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

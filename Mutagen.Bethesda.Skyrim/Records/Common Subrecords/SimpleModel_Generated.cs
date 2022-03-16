@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region File
         private int? _FileLocation;
-        public IAssetLinkGetter<SkyrimModelAssetType> File => _FileLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileLocation.Value, _package.MetaData.Constants))) : new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        public IAssetLinkGetter<SkyrimModelAssetType> File => _FileLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
         #endregion
         #region Data
         private int? _DataLocation;

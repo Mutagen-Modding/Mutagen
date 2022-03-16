@@ -284,9 +284,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, DebugFunction.Mask<R>?>>();
                         obj.Functions.Specific = l;
-                        foreach (var item in Functions.Specific.WithIndex())
+                        foreach (var item in Functions.Specific)
                         {
-                            MaskItemIndexed<R, DebugFunction.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, DebugFunction.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, DebugFunction.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DebugFunction.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -299,9 +299,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>>();
                         obj.PropertyGroups.Specific = l;
-                        foreach (var item in PropertyGroups.Specific.WithIndex())
+                        foreach (var item in PropertyGroups.Specific)
                         {
-                            MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -314,9 +314,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, DebugStructOrder.Mask<R>?>>();
                         obj.StructOrders.Specific = l;
-                        foreach (var item in StructOrders.Specific.WithIndex())
+                        foreach (var item in StructOrders.Specific)
                         {
-                            MaskItemIndexed<R, DebugStructOrder.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, DebugStructOrder.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, DebugStructOrder.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DebugStructOrder.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

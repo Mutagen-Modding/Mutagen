@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimGroupGetter<T> obj,
             bool throwIfUnknown = true)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((SkyrimGroupCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this ISkyrimGroup<T> obj)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((SkyrimGroupSetterCommon<T>)((ISkyrimGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
@@ -1104,6 +1104,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Skyrim, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     var assignable = type.IsAssignableFrom(typeof(T));
                     foreach (var item in obj.RecordCache.Items)
                     {

@@ -2800,7 +2800,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         IGroup IMod.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
         public override bool CanUseLocalization => false;
         public override bool UsingLocalization
@@ -3225,7 +3225,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordQueryableGetter, TMajor>());
         [DebuggerStepThrough]
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
@@ -3717,11 +3717,13 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinaryParallel(
             this IOblivionModGetter item,
             Stream stream,
-            BinaryWriteParameters? param = null)
+            BinaryWriteParameters? param = null,
+            ParallelWriteParameters? parallelParam = null)
         {
             OblivionModCommon.WriteParallel(
                 item: item,
                 stream: stream,
+                parallelParam: parallelParam ?? ParallelWriteParameters.Default,
                 param: param ?? BinaryWriteParameters.Default,
                 modKey: item.ModKey);
         }
@@ -3730,9 +3732,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionModGetter item,
             string path,
             BinaryWriteParameters? param = null,
+            ParallelWriteParameters? parallelParam = null,
             IFileSystem? fileSystem = null)
         {
             param ??= BinaryWriteParameters.Default;
+            parallelParam ??= ParallelWriteParameters.Default;
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
@@ -3741,6 +3745,7 @@ namespace Mutagen.Bethesda.Oblivion
                 OblivionModCommon.WriteParallel(
                     item: item,
                     stream: stream,
+                    parallelParam: parallelParam,
                     param: param,
                     modKey: modKey);
             }
@@ -3756,7 +3761,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IOblivionModGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -3788,7 +3793,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IOblivionMod obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -3967,15 +3972,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
-            where TSetter : class, IMajorRecord, TGetter
-            where TGetter : class, IMajorRecordGetter
+            where TSetter : class, IMajorRecordQueryable, TGetter
+            where TGetter : class, IMajorRecordQueryableGetter
         {
             return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecordContexts(
                 obj: obj,
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter, TSetter, TGetter>())
+                .Select(m => m.AsType<IOblivionMod, IOblivionModGetter, IMajorRecordQueryable, IMajorRecordQueryableGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
@@ -4448,6 +4453,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
+                case "GameSettingInt":
+                case "IGameSettingIntGetter":
+                case "IGameSettingInt":
+                case "IGameSettingIntInternal":
+                case "GameSettingFloat":
+                case "IGameSettingFloatGetter":
+                case "IGameSettingFloat":
+                case "IGameSettingFloatInternal":
+                case "GameSettingString":
+                case "IGameSettingStringGetter":
+                case "IGameSettingString":
+                case "IGameSettingStringInternal":
                     obj.GameSettings.Remove(
                         type: type,
                         keys: keys);
@@ -4456,6 +4473,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
+                case "GlobalInt":
+                case "IGlobalIntGetter":
+                case "IGlobalInt":
+                case "IGlobalIntInternal":
+                case "GlobalShort":
+                case "IGlobalShortGetter":
+                case "IGlobalShort":
+                case "IGlobalShortInternal":
+                case "GlobalFloat":
+                case "IGlobalFloatGetter":
+                case "IGlobalFloat":
+                case "IGlobalFloatInternal":
                     obj.Globals.Remove(
                         type: type,
                         keys: keys);
@@ -6229,14 +6258,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        const int CutCount = 100;
         public static void WriteParallel(
             IOblivionModGetter item,
             Stream stream,
             BinaryWriteParameters param,
+            ParallelWriteParameters parallelParam,
             ModKey modKey)
         {
-            var bundle = new WritingBundle(GameConstants.Oblivion);
+            var bundle = new WritingBundle(GameConstants.Oblivion)
+            {
+                StringsWriter = param.StringsWriter,
+                TargetLanguageOverride = param.TargetLanguageOverride,
+            };
             var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
@@ -6246,63 +6279,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 modKey: modKey);
             Stream[] outputStreams = new Stream[56];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Globals, writer.MetaData.MasterReferences!, 1, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Classes, writer.MetaData.MasterReferences!, 2, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Factions, writer.MetaData.MasterReferences!, 3, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Hairs, writer.MetaData.MasterReferences!, 4, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Eyes, writer.MetaData.MasterReferences!, 5, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Races, writer.MetaData.MasterReferences!, 6, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Sounds, writer.MetaData.MasterReferences!, 7, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Skills, writer.MetaData.MasterReferences!, 8, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.MagicEffects, writer.MetaData.MasterReferences!, 9, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Scripts, writer.MetaData.MasterReferences!, 10, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.LandTextures, writer.MetaData.MasterReferences!, 11, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Enchantments, writer.MetaData.MasterReferences!, 12, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Spells, writer.MetaData.MasterReferences!, 13, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Birthsigns, writer.MetaData.MasterReferences!, 14, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Activators, writer.MetaData.MasterReferences!, 15, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatus, writer.MetaData.MasterReferences!, 16, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Armors, writer.MetaData.MasterReferences!, 17, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Books, writer.MetaData.MasterReferences!, 18, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Clothes, writer.MetaData.MasterReferences!, 19, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Containers, writer.MetaData.MasterReferences!, 20, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Doors, writer.MetaData.MasterReferences!, 21, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Ingredients, writer.MetaData.MasterReferences!, 22, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Lights, writer.MetaData.MasterReferences!, 23, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Miscellaneous, writer.MetaData.MasterReferences!, 24, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Statics, writer.MetaData.MasterReferences!, 25, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Grasses, writer.MetaData.MasterReferences!, 26, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Trees, writer.MetaData.MasterReferences!, 27, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Flora, writer.MetaData.MasterReferences!, 28, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Furniture, writer.MetaData.MasterReferences!, 29, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, writer.MetaData.MasterReferences!, 30, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Ammunitions, writer.MetaData.MasterReferences!, 31, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, writer.MetaData.MasterReferences!, 32, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Creatures, writer.MetaData.MasterReferences!, 33, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.LeveledCreatures, writer.MetaData.MasterReferences!, 34, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.SoulGems, writer.MetaData.MasterReferences!, 35, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Keys, writer.MetaData.MasterReferences!, 36, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Potions, writer.MetaData.MasterReferences!, 37, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Subspaces, writer.MetaData.MasterReferences!, 38, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.SigilStones, writer.MetaData.MasterReferences!, 39, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, writer.MetaData.MasterReferences!, 40, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, writer.MetaData.MasterReferences!, 41, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Climates, writer.MetaData.MasterReferences!, 42, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Regions, writer.MetaData.MasterReferences!, 43, outputStreams));
-            toDo.Add(() => WriteCellsParallel(item.Cells, writer.MetaData.MasterReferences!, 44, outputStreams));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, writer.MetaData.MasterReferences!, 45, outputStreams));
-            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, writer.MetaData.MasterReferences!, 46, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Quests, writer.MetaData.MasterReferences!, 47, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, writer.MetaData.MasterReferences!, 48, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.AIPackages, writer.MetaData.MasterReferences!, 49, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, writer.MetaData.MasterReferences!, 50, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, writer.MetaData.MasterReferences!, 51, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, writer.MetaData.MasterReferences!, 52, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, writer.MetaData.MasterReferences!, 53, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Waters, writer.MetaData.MasterReferences!, 54, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.EffectShaders, writer.MetaData.MasterReferences!, 55, outputStreams));
-            Parallel.Invoke(toDo.ToArray());
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Globals, 1, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Classes, 2, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Factions, 3, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Hairs, 4, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Eyes, 5, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Races, 6, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Sounds, 7, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Skills, 8, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MagicEffects, 9, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Scripts, 10, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LandTextures, 11, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Enchantments, 12, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Spells, 13, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Birthsigns, 14, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Activators, 15, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatus, 16, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Armors, 17, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Books, 18, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Clothes, 19, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Containers, 20, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Doors, 21, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Ingredients, 22, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Lights, 23, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Miscellaneous, 24, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Statics, 25, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, 26, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Trees, 27, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Flora, 28, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Furniture, 29, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, 30, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, 31, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, 32, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Creatures, 33, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledCreatures, 34, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SoulGems, 35, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Keys, 36, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Potions, 37, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Subspaces, 38, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SigilStones, 39, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 40, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 41, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Climates, 42, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Regions, 43, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteCellsParallel(item.Cells, 44, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 45, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, 46, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Quests, 47, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 48, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AIPackages, 49, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 50, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 51, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, 52, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 53, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Waters, 54, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, 55, outputStreams, bundle, parallelParam));
+            Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
                 stream);
@@ -6310,31 +6343,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public static void WriteGroupParallel<T>(
             IOblivionGroupGetter<T> group,
-            IMasterReferenceReader masters,
             int targetIndex,
-            Stream[] streamDepositArray)
+            Stream[] streamDepositArray,
+            WritingBundle bundle,
+            ParallelWriteParameters parallelParam)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
             if (group.RecordCache.Count == 0) return;
-            var cuts = group.Cut(CutCount).ToArray();
+            var cuts = group.Cut(parallelParam.CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
-            byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
+            byte[] groupBytes = new byte[bundle.Constants.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
-            using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
+            using (var stream = new MutagenWriter(groupByteStream, bundle.Constants, dispose: false))
             {
                 stream.Position += 8;
                 OblivionGroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
             }
             subStreams[0] = groupByteStream;
-            Parallel.ForEach(cuts, (cutItems, state, counter) =>
+            Parallel.ForEach(cuts, parallelParam.ParallelOptions, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
-                var bundle = new WritingBundle(GameConstants.Oblivion)
-                {
-                    MasterReferences = masters
-                };
-                using (var stream = new MutagenWriter(trib, bundle, dispose: false))
+                using (var stream = new MutagenWriter(trib, bundle with {}, dispose: false))
                 {
                     foreach (var item in cutItems)
                     {
@@ -7593,253 +7623,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return item;
                     }
                     yield break;
-                case "IItem":
-                {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAlchemicalApparatusGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IClothingGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscellaneousGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IPotionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISigilStoneGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoulGemGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IItemGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAlchemicalApparatusGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IClothingGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscellaneousGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IPotionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISigilStoneGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoulGemGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "INpcSpawn":
-                {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledCreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "INpcSpawnGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledCreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "INpcRecord":
-                {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "INpcRecordGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IOwner":
-                {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IOwnerGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IPlaced":
-                {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IPlacedGetter":
-                {
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ISpellRecord":
-                {
-                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ISpellRecordGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Oblivion, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -12431,7 +12223,8 @@ namespace Mutagen.Bethesda.Oblivion
                 path: path);
             var bundle = new WritingBundle(GameRelease.Oblivion)
             {
-                CleanNulls = param.CleanNulls
+                CleanNulls = param.CleanNulls,
+                TargetLanguageOverride = param.TargetLanguageOverride
             };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(
@@ -12507,7 +12300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => false;
         public bool UsingLocalization => false;
@@ -12517,7 +12310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordGetter, TMajor>());
+        IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordQueryableGetter, TMajor>());
         [DebuggerStepThrough]
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
@@ -12837,7 +12630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModPath path,
             IFileSystem? fileSystem = null)
         {
-            var meta = new ParsingBundle(GameRelease.Oblivion, new MasterReferenceReader(path.ModKey))
+            var meta = new ParsingBundle(GameRelease.Oblivion, new MasterReferenceCollection(path.ModKey))
             {
                 RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Oblivion))
             };

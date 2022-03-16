@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Skyrim
                 new ProtocolDefinition_Bethesda(),
                 new ProtocolDefinition_Skyrim());
             LinkInterfaceMapping.AutomaticRegistration = false;
-            LinkInterfaceMapping.Register(new Mutagen.Bethesda.Skyrim.Internals.LinkInterfaceMapping());
+            LinkInterfaceMapping.InternalInstance.Register(new Mutagen.Bethesda.Skyrim.Internals.LinkInterfaceMapping());
             InitCustom();
         }
         static partial void InitCustom();

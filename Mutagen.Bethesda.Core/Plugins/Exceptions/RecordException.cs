@@ -47,14 +47,14 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
         }
 
         #region Enrich
-        public static RecordException Enrich(Exception ex, IMajorRecordGetter majorRec)
+        public static RecordException Enrich(Exception ex, IMajorRecordGetter? majorRec)
         {
-            return Enrich(ex, majorRec.FormKey, majorRec.Registration.ClassType, majorRec.EditorID);
+            return Enrich(ex, majorRec?.FormKey, majorRec?.Registration.ClassType, majorRec?.EditorID);
         }
 
-        public static RecordException Enrich(Exception ex, ModKey? modKey, IMajorRecordGetter majorRec)
+        public static RecordException Enrich(Exception ex, ModKey? modKey, IMajorRecordGetter? majorRec)
         {
-            return Enrich(ex, majorRec.FormKey, majorRec.Registration.ClassType, majorRec.EditorID, modKey);
+            return Enrich(ex, majorRec?.FormKey, majorRec?.Registration.ClassType, majorRec?.EditorID, modKey);
         }
 
         public static RecordException Enrich(Exception ex, FormKey? formKey, Type? recordType, string? edid, ModKey? modKey = null)

@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         }
     }
 
-    public class AListGroupBinaryOverlay<T> : PluginBinaryOverlay
+    public abstract class AListGroupBinaryOverlay<T> : PluginBinaryOverlay
     {
         protected GroupListOverlay<T>? _Records;
         public IReadOnlyList<T> Records => _Records!;

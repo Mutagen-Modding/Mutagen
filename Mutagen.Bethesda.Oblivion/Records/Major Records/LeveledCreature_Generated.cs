@@ -269,9 +269,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, LeveledCreatureEntry.Mask<R>?>>();
                         obj.Entries.Specific = l;
-                        foreach (var item in Entries.Specific.WithIndex())
+                        foreach (var item in Entries.Specific)
                         {
-                            MaskItemIndexed<R, LeveledCreatureEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LeveledCreatureEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LeveledCreatureEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LeveledCreatureEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

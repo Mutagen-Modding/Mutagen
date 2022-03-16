@@ -304,9 +304,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Branches.Specific = l;
-                        foreach (var item in Branches.Specific.WithIndex())
+                        foreach (var item in Branches.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -318,9 +318,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.TNAMs.Specific = l;
-                        foreach (var item in TNAMs.Specific.WithIndex())
+                        foreach (var item in TNAMs.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }

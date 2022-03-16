@@ -204,9 +204,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, RoadPoint.Mask<R>?>>();
                         obj.Points.Specific = l;
-                        foreach (var item in Points.Specific.WithIndex())
+                        foreach (var item in Points.Specific)
                         {
-                            MaskItemIndexed<R, RoadPoint.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RoadPoint.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, RoadPoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RoadPoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

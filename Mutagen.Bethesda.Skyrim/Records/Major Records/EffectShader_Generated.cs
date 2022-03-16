@@ -7384,23 +7384,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region FillTexture
         private int? _FillTextureLocation;
-        public String? FillTexture => _FillTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FillTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? FillTexture => _FillTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FillTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region ParticleShaderTexture
         private int? _ParticleShaderTextureLocation;
-        public String? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticleShaderTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticleShaderTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region HolesTexture
         private int? _HolesTextureLocation;
-        public String? HolesTexture => _HolesTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HolesTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? HolesTexture => _HolesTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HolesTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region MembranePaletteTexture
         private int? _MembranePaletteTextureLocation;
-        public String? MembranePaletteTexture => _MembranePaletteTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MembranePaletteTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? MembranePaletteTexture => _MembranePaletteTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MembranePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region ParticlePaletteTexture
         private int? _ParticlePaletteTextureLocation;
-        public String? ParticlePaletteTexture => _ParticlePaletteTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticlePaletteTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public String? ParticlePaletteTexture => _ParticlePaletteTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticlePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         private int? _DATALocation;
         public EffectShader.DATADataType DATADataTypeState { get; private set; }

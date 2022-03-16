@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
                     File.OpenRead(TestDataPathing.RaceHeadPartDanglingMaster), 
                     new ParsingBundle(
                         GameRelease.SkyrimSE, 
-                        new MasterReferenceReader(Constants.Skyrim))));
+                        new MasterReferenceCollection(Constants.Skyrim))));
             var headData = GenderedItemBinaryTranslation.ParseMarkerPerItem<HeadData>(
                 frame: frame,
                 maleMarker: RecordTypes.MNAM,

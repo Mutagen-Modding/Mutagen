@@ -319,9 +319,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ATopicReference.Mask<R>?>>();
                         obj.Topics.Specific = l;
-                        foreach (var item in Topics.Specific.WithIndex())
+                        foreach (var item in Topics.Specific)
                         {
-                            MaskItemIndexed<R, ATopicReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ATopicReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ATopicReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ATopicReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -999,22 +999,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.INAM,
-                        RecordTypes.SCHR,
-                        RecordTypes.SCDA,
-                        RecordTypes.SCTX,
-                        RecordTypes.QNAM,
-                        RecordTypes.TNAM,
-                        RecordTypes.PDTO
-                    })
-            );
+            return new TriggeringRecordCollection(
+                RecordTypes.INAM,
+                RecordTypes.SCHR,
+                RecordTypes.SCDA,
+                RecordTypes.SCTX,
+                RecordTypes.QNAM,
+                RecordTypes.TNAM,
+                RecordTypes.PDTO);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageEventBinaryWriteTranslation);
         #region Interface

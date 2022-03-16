@@ -33,10 +33,12 @@ namespace Mutagen.Bethesda.Testing
         public static string SkyrimBodtEmptyFlagsOutput = "Files/Skyrim/BodyTemplate/BodtEmptyFlagsOutput";
         public static string SkyrimBod2TypicalOutput = "Files/Skyrim/BodyTemplate/Bod2TypicalOutput";
         public static string SkyrimSoundRegionDataWithNoSecondSubrecord = "Files/Skyrim/Region/SoundRegionDataWithNoSecondSubrecord.esp";
-        public static string FrenchString = "Files/Core/Strings/FrenchString";
+        public static string FrenchSeString = "Files/Core/Strings/FrenchSeString";
+        public static string RussianLeString = "Files/Core/Strings/RussianLeString";
         public static string PrependedString = "Files/Core/Strings/PrependedString";
         public static string ZeroContentPrependedString = "Files/Core/Strings/ZeroContentPrependedString";
         public static string SkyrimPlacedObjectReflectedWaterMissingData = "Files/Skyrim/PlacedObjectReflectedWaterMissingData.esp";
+        public static string SkyrimConditionWithTwoStrings= "Files/Skyrim/ConditionWithTwoStrings.esp";
 
         public static MutagenFrame GetReadFrame(ModPath path, GameRelease release, ModKey? modKey = null)
         {
@@ -45,7 +47,7 @@ namespace Mutagen.Bethesda.Testing
                     File.OpenRead(path),
                     new ParsingBundle(
                         release,
-                        new MasterReferenceReader(modKey ?? path.ModKey))));
+                        new MasterReferenceCollection(modKey ?? path.ModKey))));
         }
 
         public static OverlayStream GetOverlayStream(ModPath path, GameRelease release, ModKey? modKey = null)
@@ -54,7 +56,7 @@ namespace Mutagen.Bethesda.Testing
                 File.ReadAllBytes(path),
                 new ParsingBundle(
                     GameConstants.Get(release),
-                    new MasterReferenceReader(
+                    new MasterReferenceCollection(
                         modKey ?? path.ModKey)));
         }
     }

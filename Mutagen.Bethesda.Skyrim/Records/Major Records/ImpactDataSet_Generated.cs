@@ -207,9 +207,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ImpactData.Mask<R>?>>();
                         obj.Impacts.Specific = l;
-                        foreach (var item in Impacts.Specific.WithIndex())
+                        foreach (var item in Impacts.Specific)
                         {
-                            MaskItemIndexed<R, ImpactData.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ImpactData.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ImpactData.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ImpactData.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }

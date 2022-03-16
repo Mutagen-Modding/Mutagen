@@ -1482,7 +1482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Tag
         private int? _TagLocation;
-        public String Tag => _TagLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TagLocation.Value, _package.MetaData.Constants)) : string.Empty;
+        public String Tag => _TagLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TagLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

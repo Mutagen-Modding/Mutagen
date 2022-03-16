@@ -1,11 +1,12 @@
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations
 {
     public class FilePathBinaryTranslation
     {
-        public static readonly FilePathBinaryTranslation Instance = new FilePathBinaryTranslation();
+        public static readonly FilePathBinaryTranslation Instance = new();
 
         public bool Parse(MutagenFrame reader, out FilePath item)
         {
