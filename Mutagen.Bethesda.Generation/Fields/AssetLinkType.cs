@@ -59,4 +59,16 @@ public class AssetLinkType : StringType
     {
         fg.AppendLine($"{accessor}.{nameof(IAssetLink.RawPath)} = {rhs}{this.NullChar}.{nameof(IAssetLink.RawPath)};");
     }
+
+    public override void GenerateClear(FileGeneration fg, Accessor identifier)
+    {
+        if (this.Nullable)
+        {
+            fg.AppendLine($"{identifier.Access} = default;");
+        }
+        else
+        {
+            fg.AppendLine($"{identifier.Access}.SetToNull();");
+        }
+    }
 }

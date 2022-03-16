@@ -63,6 +63,8 @@ public interface IAssetLink<out TLinkType, out TAssetType> :
     new string RawPath { get; set; }
 
     TLinkType ShallowClone();
+    
+    void SetToNull();
 }
 
 public interface IAssetLink : IAssetLinkGetter

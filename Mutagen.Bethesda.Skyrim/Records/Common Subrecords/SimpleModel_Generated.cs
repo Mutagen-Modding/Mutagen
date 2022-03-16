@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Clear(ISimpleModel item)
         {
             ClearPartial();
-            item.File = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+            item.File.SetToNull();
             item.Data = default;
         }
         
