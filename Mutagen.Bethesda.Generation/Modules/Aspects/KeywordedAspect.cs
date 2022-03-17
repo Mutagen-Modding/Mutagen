@@ -40,8 +40,8 @@ public class KeywordedAspect : AspectFieldInterfaceDefinition
     {
         return new List<AspectInterfaceData>()
         {
-            (LoquiInterfaceDefinitionType.IGetter, $"IKeywordedGetter<IKeywordGetter>"),
-            (LoquiInterfaceDefinitionType.ISetter, $"IKeyworded<IKeywordGetter>"),
+            new (LoquiInterfaceDefinitionType.IGetter, $"IKeywordedGetter<IKeywordGetter>"),
+            new (LoquiInterfaceDefinitionType.ISetter, $"IKeyworded<IKeywordGetter>"),
         };
     }
 

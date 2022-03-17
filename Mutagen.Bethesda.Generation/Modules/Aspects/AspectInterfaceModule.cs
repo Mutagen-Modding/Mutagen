@@ -104,22 +104,23 @@ public class AspectInterfaceModule : GenerationModule
 
     private static void RecordAspects(Dictionary<LoquiInterfaceDefinitionType, HashSet<string>> aspects, IEnumerable<AspectInterfaceData> interfaces)
     {
-        foreach (var (type, _, escapedInterfaceName) in interfaces)
+        foreach (var (Type, Interface) in interfaces)
         {
-            switch (type)
+            var escapedInterface = @Interface.Replace("<", "&lt;").Replace(">", "&gt;");
+            switch (Type)
             {
                 case LoquiInterfaceDefinitionType.Direct:
                 case LoquiInterfaceDefinitionType.IGetter:
-                    aspects.GetOrAdd(type).Add(escapedInterfaceName);
+                    aspects.GetOrAdd(Type).Add(escapedInterface);
                     break;
                 case LoquiInterfaceDefinitionType.ISetter:
-                    aspects.GetOrAdd(type).Add(escapedInterfaceName);
-                    aspects.GetOrAdd(LoquiInterfaceDefinitionType.Direct).Add(escapedInterfaceName);
+                    aspects.GetOrAdd(Type).Add(escapedInterface);
+                    aspects.GetOrAdd(LoquiInterfaceDefinitionType.Direct).Add(escapedInterface);
                     break;
                 case LoquiInterfaceDefinitionType.Dual:
-                    aspects.GetOrAdd(LoquiInterfaceDefinitionType.Direct).Add(escapedInterfaceName);
-                    aspects.GetOrAdd(LoquiInterfaceDefinitionType.ISetter).Add(escapedInterfaceName);
-                    aspects.GetOrAdd(LoquiInterfaceDefinitionType.IGetter).Add(escapedInterfaceName);
+                    aspects.GetOrAdd(LoquiInterfaceDefinitionType.Direct).Add(escapedInterface);
+                    aspects.GetOrAdd(LoquiInterfaceDefinitionType.ISetter).Add(escapedInterface);
+                    aspects.GetOrAdd(LoquiInterfaceDefinitionType.IGetter).Add(escapedInterface);
                     break;
                 default:
                     break;
