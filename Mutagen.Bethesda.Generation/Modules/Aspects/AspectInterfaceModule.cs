@@ -69,27 +69,43 @@ public class AspectInterfaceModule : GenerationModule
         var allFields = obj.IterateFields(includeBaseClass: true).ToDictionary(x => x.Name);
 
         foreach (var def in Definitions)
+        {
             if (def.Test(obj, allFields))
             {
                 var interfaces = def.Interfaces(obj);
                 if (def is AspectFieldInterfaceDefinition fieldDef)
+                {
                     foreach (var f in fieldDef.IdentifyFields(obj))
+                    {
                         RecordAspects((fieldsToAspects ??= new()).GetOrAdd(f.Name, () => new(f, new())).aspects, interfaces);
+                    }
+                }
                 else
+                {
                     RecordAspects(aspects ??= new(), interfaces);
+                    RecordAspects(aspects ??= new(), interfaces);
+                }
             }
+        }
 
         if (aspects is not null)
+        {
             AddAspectComment(aspects, obj.Comments ??= new());
+        }
 
         if (fieldsToAspects is not null)
+        {
             foreach (var (type, typeAspects) in fieldsToAspects.Values)
+            {
                 AddAspectComment(typeAspects, type.Comments ??= new());
+            }
+        }
     }
 
     private static void RecordAspects(Dictionary<LoquiInterfaceDefinitionType, HashSet<string>> aspects, IEnumerable<AspectInterfaceData> interfaces)
     {
         foreach (var (type, _, escapedInterfaceName) in interfaces)
+        {
             switch (type)
             {
                 case LoquiInterfaceDefinitionType.Direct:
@@ -108,6 +124,7 @@ public class AspectInterfaceModule : GenerationModule
                 default:
                     break;
             }
+        }
     }
 
     private static void AddAspectComment(Dictionary<LoquiInterfaceDefinitionType, HashSet<string>> aspects, CommentCollection comments)
