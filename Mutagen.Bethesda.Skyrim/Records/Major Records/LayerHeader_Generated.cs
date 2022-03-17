@@ -62,6 +62,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Quadrant
         public Quadrant Quadrant { get; set; } = default;
         #endregion
+        #region Unused
+        public Byte Unused { get; set; } = default;
+        #endregion
         #region LayerNumber
         public UInt16 LayerNumber { get; set; } = default;
         #endregion
@@ -105,16 +108,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Texture = initialValue;
                 this.Quadrant = initialValue;
+                this.Unused = initialValue;
                 this.LayerNumber = initialValue;
             }
 
             public Mask(
                 TItem Texture,
                 TItem Quadrant,
+                TItem Unused,
                 TItem LayerNumber)
             {
                 this.Texture = Texture;
                 this.Quadrant = Quadrant;
+                this.Unused = Unused;
                 this.LayerNumber = LayerNumber;
             }
 
@@ -129,6 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public TItem Texture;
             public TItem Quadrant;
+            public TItem Unused;
             public TItem LayerNumber;
             #endregion
 
@@ -144,6 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!object.Equals(this.Texture, rhs.Texture)) return false;
                 if (!object.Equals(this.Quadrant, rhs.Quadrant)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.LayerNumber, rhs.LayerNumber)) return false;
                 return true;
             }
@@ -152,6 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.Texture);
                 hash.Add(this.Quadrant);
+                hash.Add(this.Unused);
                 hash.Add(this.LayerNumber);
                 return hash.ToHashCode();
             }
@@ -163,6 +172,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!eval(this.Texture)) return false;
                 if (!eval(this.Quadrant)) return false;
+                if (!eval(this.Unused)) return false;
                 if (!eval(this.LayerNumber)) return false;
                 return true;
             }
@@ -173,6 +183,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (eval(this.Texture)) return true;
                 if (eval(this.Quadrant)) return true;
+                if (eval(this.Unused)) return true;
                 if (eval(this.LayerNumber)) return true;
                 return false;
             }
@@ -190,6 +201,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 obj.Texture = eval(this.Texture);
                 obj.Quadrant = eval(this.Quadrant);
+                obj.Unused = eval(this.Unused);
                 obj.LayerNumber = eval(this.LayerNumber);
             }
             #endregion
@@ -220,6 +232,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.Quadrant ?? true)
                     {
                         fg.AppendItem(Quadrant, "Quadrant");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        fg.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.LayerNumber ?? true)
                     {
@@ -252,6 +268,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public Exception? Texture;
             public Exception? Quadrant;
+            public Exception? Unused;
             public Exception? LayerNumber;
             #endregion
 
@@ -265,6 +282,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Texture;
                     case LayerHeader_FieldIndex.Quadrant:
                         return Quadrant;
+                    case LayerHeader_FieldIndex.Unused:
+                        return Unused;
                     case LayerHeader_FieldIndex.LayerNumber:
                         return LayerNumber;
                     default:
@@ -282,6 +301,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case LayerHeader_FieldIndex.Quadrant:
                         this.Quadrant = ex;
+                        break;
+                    case LayerHeader_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     case LayerHeader_FieldIndex.LayerNumber:
                         this.LayerNumber = ex;
@@ -302,6 +324,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case LayerHeader_FieldIndex.Quadrant:
                         this.Quadrant = (Exception?)obj;
                         break;
+                    case LayerHeader_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
                     case LayerHeader_FieldIndex.LayerNumber:
                         this.LayerNumber = (Exception?)obj;
                         break;
@@ -315,6 +340,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (Texture != null) return true;
                 if (Quadrant != null) return true;
+                if (Unused != null) return true;
                 if (LayerNumber != null) return true;
                 return false;
             }
@@ -352,6 +378,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 fg.AppendItem(Texture, "Texture");
                 fg.AppendItem(Quadrant, "Quadrant");
+                fg.AppendItem(Unused, "Unused");
                 fg.AppendItem(LayerNumber, "LayerNumber");
             }
             #endregion
@@ -363,6 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.Texture = this.Texture.Combine(rhs.Texture);
                 ret.Quadrant = this.Quadrant.Combine(rhs.Quadrant);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.LayerNumber = this.LayerNumber.Combine(rhs.LayerNumber);
                 return ret;
             }
@@ -389,6 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool OnOverall;
             public bool Texture;
             public bool Quadrant;
+            public bool Unused;
             public bool LayerNumber;
             #endregion
 
@@ -401,6 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OnOverall = onOverall;
                 this.Texture = defaultOn;
                 this.Quadrant = defaultOn;
+                this.Unused = defaultOn;
                 this.LayerNumber = defaultOn;
             }
 
@@ -419,6 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((Texture, null));
                 ret.Add((Quadrant, null));
+                ret.Add((Unused, null));
                 ret.Add((LayerNumber, null));
             }
 
@@ -501,6 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new IFormLink<ILandscapeTextureGetter> Texture { get; set; }
         new Quadrant Quadrant { get; set; }
+        new Byte Unused { get; set; }
         new UInt16 LayerNumber { get; set; }
     }
 
@@ -519,6 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration StaticRegistration => LayerHeader_Registration.Instance;
         IFormLinkGetter<ILandscapeTextureGetter> Texture { get; }
         Quadrant Quadrant { get; }
+        Byte Unused { get; }
         UInt16 LayerNumber { get; }
 
     }
@@ -691,7 +724,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         Texture = 0,
         Quadrant = 1,
-        LayerNumber = 2,
+        Unused = 2,
+        LayerNumber = 3,
     }
     #endregion
 
@@ -709,9 +743,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "6d96352d-8353-4eb9-b1dd-658a76b55abf";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(LayerHeader.Mask<>);
 
@@ -782,6 +816,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Texture.Clear();
             item.Quadrant = default;
+            item.Unused = default;
             item.LayerNumber = default;
         }
         
@@ -840,6 +875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.Texture = item.Texture.Equals(rhs.Texture);
             ret.Quadrant = item.Quadrant == rhs.Quadrant;
+            ret.Unused = item.Unused == rhs.Unused;
             ret.LayerNumber = item.LayerNumber == rhs.LayerNumber;
         }
         
@@ -895,6 +931,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Quadrant, "Quadrant");
             }
+            if (printMask?.Unused ?? true)
+            {
+                fg.AppendItem(item.Unused, "Unused");
+            }
             if (printMask?.LayerNumber ?? true)
             {
                 fg.AppendItem(item.LayerNumber, "LayerNumber");
@@ -916,6 +956,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (lhs.Quadrant != rhs.Quadrant) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.LayerNumber) ?? true))
             {
                 if (lhs.LayerNumber != rhs.LayerNumber) return false;
@@ -928,6 +972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var hash = new HashCode();
             hash.Add(item.Texture);
             hash.Add(item.Quadrant);
+            hash.Add(item.Unused);
             hash.Add(item.LayerNumber);
             return hash.ToHashCode();
         }
@@ -969,6 +1014,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {
                 item.Quadrant = rhs.Quadrant;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused;
             }
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.LayerNumber) ?? true))
             {
@@ -1076,7 +1125,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EnumBinaryTranslation<Quadrant, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Quadrant,
-                length: 2);
+                length: 1);
+            writer.Write(item.Unused);
             writer.Write(item.LayerNumber);
         }
 
@@ -1121,7 +1171,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Quadrant = EnumBinaryTranslation<Quadrant, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
-                length: 2);
+                length: 1);
+            item.Unused = frame.ReadUInt8();
             item.LayerNumber = frame.ReadUInt16();
         }
 
@@ -1190,7 +1241,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public IFormLinkGetter<ILandscapeTextureGetter> Texture => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Quadrant Quadrant => (Quadrant)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
+        public Quadrant Quadrant => (Quadrant)_data.Span.Slice(0x4, 0x1)[0];
+        public Byte Unused => _data.Span[0x5];
         public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
