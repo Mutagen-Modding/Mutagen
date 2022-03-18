@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Plugins.Exceptions
                 {
                     rec.FormKey = formKey;
                 }
-                if (rec.RecordType != null && recordType != null)
+                if (rec.RecordType == null && recordType != null)
                 {
                     rec.RecordType = recordType;
                 }
