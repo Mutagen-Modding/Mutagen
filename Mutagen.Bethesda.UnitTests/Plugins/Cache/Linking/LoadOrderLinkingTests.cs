@@ -16,10 +16,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 {
     public partial class ALinkingTests
     {
-        [Fact]
-        public void LoadOrderEmpty()
+        [Theory]
+        [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+        [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+        public void LoadOrderEmpty(LinkCachePreferences.RetentionType cacheType)
         {
-            var package = new LoadOrder<ISkyrimModGetter>().ToImmutableLinkCache();
+            var loadOrder = new LoadOrder<ISkyrimModGetter>();
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
 
             // Test FormKey fails
             Assert.False(package.TryResolve(UnusedFormKey, out var _));
