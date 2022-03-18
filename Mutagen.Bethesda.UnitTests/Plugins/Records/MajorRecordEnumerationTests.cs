@@ -197,12 +197,55 @@ public abstract class AMajorRecordEnumerationTests
     public void EnumerateAspectInterface()
     {
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        var light = mod.Lights.AddNew();
+        light.Icons = new Icons()
+        {
+            LargeIconFilename = "Hello",
+            SmallIconFilename = "World"
+        };
+        var conv = ConvertMod(mod);
+        Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<IHasIcons>().Count());
+        Assert.Single(conv.EnumerateMajorRecords<IHasIconsGetter>());
+        var item = conv.EnumerateMajorRecords<IHasIconsGetter>().First();
+        item.Icons.Should().NotBeNull();
+        item.Icons!.LargeIconFilename.Should().Be("Hello");
+        item.Icons!.SmallIconFilename.Should().Be("World");
+    }
+
+    [Fact]
+    public void EnumerateNullableAspectInterface()
+    {
+        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var npc = mod.Npcs.AddNew();
         npc.Name = "Hello";
         var conv = ConvertMod(mod);
+        Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<ITranslatedNamed>().Count());
+        Assert.Single(conv.EnumerateMajorRecords<ITranslatedNamedGetter>());
+        Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<ITranslatedNamedRequired>().Count());
+        Assert.Single(conv.EnumerateMajorRecords<ITranslatedNamedRequiredGetter>());
         Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<INamed>().Count());
         Assert.Single(conv.EnumerateMajorRecords<INamedGetter>());
+        Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<INamedRequired>().Count());
+        Assert.Single(conv.EnumerateMajorRecords<INamedRequiredGetter>());
         conv.EnumerateMajorRecords<INamedGetter>().First().Name.Should().Be("Hello");
+    }
+
+    [Fact]
+    public void EnumerateAspectInterface2()
+    {
+        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        var npc = mod.Classes.AddNew();
+        npc.Name = "Hello";
+        var conv = ConvertMod(mod);
+        Assert.Empty(conv.EnumerateMajorRecords<INamed>());
+        Assert.Empty(conv.EnumerateMajorRecords<INamedGetter>());
+        Assert.Empty(conv.EnumerateMajorRecords<ITranslatedNamed>());
+        Assert.Empty(conv.EnumerateMajorRecords<ITranslatedNamedGetter>());
+        Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<INamedRequired>().Count());
+        Assert.Single(conv.EnumerateMajorRecords<INamedRequiredGetter>());
+        Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<ITranslatedNamedRequired>().Count());
+        Assert.Single(conv.EnumerateMajorRecords<ITranslatedNamedRequiredGetter>());
+        conv.EnumerateMajorRecords<INamedRequiredGetter>().First().Name.Should().Be("Hello");
     }
 }
 

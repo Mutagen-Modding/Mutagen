@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -587,11 +587,10 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<ISoundMarkerInternal>,
         IObjectBounded,
-        IObjectBoundedOptional,
         ISoundMarkerGetter
     {
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; set; }
@@ -612,13 +611,12 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<ISoundMarkerGetter>,
         IMapsToGetter<ISoundMarkerGetter>,
-        IObjectBoundedGetter,
-        IObjectBoundedOptionalGetter
+        IObjectBoundedGetter
     {
         static new ILoquiRegistration StaticRegistration => SoundMarker_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion

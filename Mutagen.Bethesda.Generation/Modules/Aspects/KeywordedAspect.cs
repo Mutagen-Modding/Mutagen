@@ -6,7 +6,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects;
 public class KeywordedAspect : AspectFieldInterfaceDefinition
 {
     public KeywordedAspect()
-        : base("IKeyworded")
+        : base(
+            "IKeyworded",
+            AspectSubInterfaceDefinition.Factory(
+                Registrations,
+                (_, f) => Test(f)))
     {
         FieldActions = new()
         {
@@ -22,27 +26,17 @@ public class KeywordedAspect : AspectFieldInterfaceDefinition
         };
     }
 
-    public override IEnumerable<(string Name, bool Setter)> Registrations
+    public static IEnumerable<(string Name, bool Setter)> Registrations
     {
         get
         {
-            yield return ($"typeof(IKeyworded<IKeywordGetter>)", true);
-            yield return ($"typeof(IKeywordedGetter<IKeywordGetter>)", false);
+            yield return ($"IKeyworded<IKeywordGetter>", true);
+            yield return ($"IKeywordedGetter<IKeywordGetter>", false);
         }
     }
 
-    public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields)=>
-        allFields.TryGetValue("Keywords", out var field)
-        && field is ContainerType cont
-        && typeof(FormLinkType).Equals(cont.SubTypeGeneration.GetType());
-
-    public override List<AspectInterfaceData> Interfaces(ObjectGeneration obj)
-    {
-        return new List<AspectInterfaceData>()
-        {
-            new (LoquiInterfaceDefinitionType.IGetter, $"IKeywordedGetter<IKeywordGetter>"),
-            new (LoquiInterfaceDefinitionType.ISetter, $"IKeyworded<IKeywordGetter>"),
-        };
-    }
-
+    public static bool Test(Dictionary<string, TypeGeneration> allFields)
+        => allFields.TryGetValue("Keywords", out var field)
+           && field is ContainerType cont
+           && typeof(FormLinkType).Equals(cont.SubTypeGeneration.GetType());
 }

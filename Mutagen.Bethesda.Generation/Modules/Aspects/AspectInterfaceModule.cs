@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects;
 public class AspectInterfaceModule : GenerationModule
 {
     public List<AspectInterfaceDefinition> Definitions = new();
-    public static readonly Dictionary<ProtocolKey, Dictionary<AspectInterfaceDefinition, List<ObjectGeneration>>> ObjectMappings = new();
+    public static readonly Dictionary<ProtocolKey, Dictionary<AspectInterfaceDefinition, Dictionary<IAspectSubInterfaceDefinition, List<ObjectGeneration>>>> ObjectMappings = new();
 
     public AspectInterfaceModule()
     {
@@ -31,18 +31,21 @@ public class AspectInterfaceModule : GenerationModule
         foreach (var def in Definitions)
         {
             if (!def.Test(obj, allFields)) continue;
-            def.Interfaces(obj).ForEach(x => obj.Interfaces.Add(x.Type, x.Interface));
-            lock (ObjectMappings)
+            foreach (var subDef in def.SubDefinitions)
             {
-                ObjectMappings.GetOrAdd(obj.ProtoGen.Protocol).GetOrAdd(def).Add(obj);
+                if (!subDef.Test(obj, allFields)) continue;
+                subDef.Registrations.ForEach(x => obj.Interfaces.Add(x.Setter ? LoquiInterfaceDefinitionType.ISetter : LoquiInterfaceDefinitionType.IGetter, x.Name));
+                lock (ObjectMappings)
+                {
+                    ObjectMappings.GetOrAdd(obj.ProtoGen.Protocol).GetOrAdd(def).GetOrAdd(subDef).Add(obj);
+                }
+                obj.RequiredNamespaces.Add("Mutagen.Bethesda.Plugins.Aspects");
             }
-            obj.RequiredNamespaces.Add("Mutagen.Bethesda.Plugins.Aspects");
         }
     }
 
     public override async Task GenerateInField(ObjectGeneration obj, TypeGeneration tg, FileGeneration fg, LoquiInterfaceType type)
     {
-        bool hasAspects = false;
         using (new RegionWrapper(fg, "Aspects")
                {
                    AppendExtraLine = false,
@@ -56,7 +59,6 @@ public class AspectInterfaceModule : GenerationModule
                 def.FieldActions
                     .Where(x => x.Type == type && tg.Name == x.Name)
                     .ForEach(x => x.Actions(obj, tg, fg));
-                hasAspects = true;
             }
         }
     }
@@ -70,9 +72,11 @@ public class AspectInterfaceModule : GenerationModule
 
         foreach (var def in Definitions)
         {
-            if (def.Test(obj, allFields))
+            if (!def.Test(obj, allFields)) continue;
+            foreach (var subDef in def.SubDefinitions)
             {
-                var interfaces = def.Interfaces(obj);
+                if (!subDef.Test(obj, allFields)) continue;
+                var interfaces = subDef.Registrations.Select(x => new AspectInterfaceData(x.Setter ? LoquiInterfaceDefinitionType.ISetter : LoquiInterfaceDefinitionType.IGetter, x.Name));
                 if (def is AspectFieldInterfaceDefinition fieldDef)
                 {
                     foreach (var f in fieldDef.IdentifyFields(obj))
@@ -102,7 +106,9 @@ public class AspectInterfaceModule : GenerationModule
         }
     }
 
-    private static void RecordAspects(Dictionary<LoquiInterfaceDefinitionType, HashSet<string>> aspects, IEnumerable<AspectInterfaceData> interfaces)
+    private static void RecordAspects(
+        Dictionary<LoquiInterfaceDefinitionType, HashSet<string>> aspects,
+        IEnumerable<AspectInterfaceData> interfaces)
     {
         foreach (var (Type, Interface) in interfaces)
         {
@@ -152,7 +158,7 @@ public class AspectInterfaceModule : GenerationModule
         GenerateAspectInterfaceMapping(proto, mappings);
     }
 
-    private static void GenerateAspectInterfaceMapping(ProtocolGeneration proto, Dictionary<AspectInterfaceDefinition, List<ObjectGeneration>> mappings)
+    private static void GenerateAspectInterfaceMapping(ProtocolGeneration proto, Dictionary<AspectInterfaceDefinition, Dictionary<IAspectSubInterfaceDefinition, List<ObjectGeneration>>> mappings)
     {
         // Generate interface to major record mapping registry
         FileGeneration mappingGen = new FileGeneration();
@@ -183,26 +189,29 @@ public class AspectInterfaceModule : GenerationModule
                 using (new BraceWrapper(mappingGen))
                 {
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
-                    foreach (var interf in mappings.OrderBy(x => x.Key.Name))
+                    foreach (var aspectDef in mappings.OrderBy(x => x.Key.Nickname))
                     {
-                        (string Name, bool Setter)? first = null;
-                        foreach (var reg in interf.Key.Registrations.OrderBy(x => x))
+                        foreach (var subDef in aspectDef.Value)
                         {
-                            if (first == null)
+                            (string Name, bool Setter)? first = null;
+                            foreach (var reg in subDef.Key.Registrations)
                             {
-                                first = reg;
-                                mappingGen.AppendLine($"dict[{first.Value.Name}] = new {nameof(InterfaceMappingResult)}({first.Value.Setter.ToString().ToLower()}, new {nameof(ILoquiRegistration)}[]");
-                                using (new BraceWrapper(mappingGen) { AppendSemicolon = true, AppendParenthesis = true })
+                                if (first == null)
                                 {
-                                    foreach (var obj in interf.Value.OrderBy(x => x.Name))
+                                    first = reg;
+                                    mappingGen.AppendLine($"dict[typeof({first.Value.Name})] = new {nameof(InterfaceMappingResult)}({first.Value.Setter.ToString().ToLower()}, new {nameof(ILoquiRegistration)}[]");
+                                    using (new BraceWrapper(mappingGen) { AppendSemicolon = true, AppendParenthesis = true })
                                     {
-                                        mappingGen.AppendLine($"{obj.RegistrationName}.Instance,");
+                                        foreach (var obj in subDef.Value.OrderBy(x => x.Name))
+                                        {
+                                            mappingGen.AppendLine($"{obj.RegistrationName}.Instance,");
+                                        }
                                     }
                                 }
-                            }
-                            else
-                            {
-                                mappingGen.AppendLine($"dict[{reg.Name}] = dict[{first.Value.Name}] with {{ Setter = {reg.Setter.ToString().ToLower()} }};");
+                                else
+                                {
+                                    mappingGen.AppendLine($"dict[typeof({reg.Name})] = dict[typeof({first.Value.Name})] with {{ Setter = {reg.Setter.ToString().ToLower()} }};");
+                                }
                             }
                         }
 

@@ -9,7 +9,20 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects;
 public class NamedAspect : AspectFieldInterfaceDefinition
 {
     public NamedAspect()
-        : base("INamed")
+        : base(
+            "INamed",
+            AspectSubInterfaceDefinition.Factory(
+                nameof(INamed),
+                (_, f) => Test(f, translated: null, nullable: true)),
+            AspectSubInterfaceDefinition.Factory(
+                nameof(INamedRequired),
+                (_, f) => Test(f, translated: null, nullable: null)),
+            AspectSubInterfaceDefinition.Factory(
+                nameof(ITranslatedNamed),
+                (_, f) => Test(f, translated: true, nullable: true)),
+            AspectSubInterfaceDefinition.Factory(
+                nameof(ITranslatedNamedRequired),
+                (_, f) => Test(f, translated: true, nullable: null)))
     {
         FieldActions = new()
         {
@@ -112,29 +125,9 @@ public class NamedAspect : AspectFieldInterfaceDefinition
         };
     }
 
-    public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) 
-        => allFields.TryGetValue("Name", out var field) && field is StringType;
-
-    public override List<AspectInterfaceData> Interfaces(ObjectGeneration obj)
-    {
-        var nameField = obj.IterateFields(includeBaseClass: true).OfType<StringType>().Single(x => x.Name == "Name");
-
-        var list = new List<AspectInterfaceData>();
-        AddInterfaces(list, nameof(INamedRequired), nameof(INamedRequiredGetter));
-
-        if (nameField.Nullable)
-        {
-            AddInterfaces(list, nameof(INamed), nameof(INamedGetter));
-        }
-
-        if (nameField.Translated.HasValue)
-        {
-            AddInterfaces(list, nameof(ITranslatedNamedRequired), nameof(ITranslatedNamedRequiredGetter));
-            if (nameField.Nullable)
-            {
-                AddInterfaces(list, nameof(ITranslatedNamed), nameof(ITranslatedNamedGetter));
-            }
-        }
-        return list;
-    }
+    public static bool Test(Dictionary<string, TypeGeneration> allFields, bool? translated, bool? nullable) => 
+        allFields.TryGetValue("Name", out var field) 
+        && field is StringType str
+        && (nullable == null || str.Nullable == nullable.Value)
+        && (translated == null || str.Translated.HasValue == translated.Value);
 }

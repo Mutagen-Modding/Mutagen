@@ -6,7 +6,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects;
 public class ObjectBoundedAspect : AspectFieldInterfaceDefinition
 {
     public ObjectBoundedAspect()
-        : base("IObjectBounded")
+        : base(
+            "IObjectBounded",
+            AspectSubInterfaceDefinition.Factory(
+                "IObjectBounded",
+                (o, f) => Test(f, nullable: false)),
+            AspectSubInterfaceDefinition.Factory(
+                "IObjectBoundedOptional",
+                (o, f) => Test(f, nullable: true)))
     {
         FieldActions = new()
         {
@@ -32,23 +39,9 @@ public class ObjectBoundedAspect : AspectFieldInterfaceDefinition
         };
     }
 
-    public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields)
+    public static bool Test(Dictionary<string, TypeGeneration> allFields, bool nullable)
         => allFields.TryGetValue("ObjectBounds", out var field)
            && field is LoquiType loqui
-           && loqui.TargetObjectGeneration.Name == "ObjectBounds";
-
-    public override List<AspectInterfaceData> Interfaces(ObjectGeneration obj)
-    {
-        var field = obj.IterateFields(includeBaseClass: true).OfType<LoquiType>().Single(x => x.Name == "ObjectBounds");
-
-        var list = new List<AspectInterfaceData>();
-        AddInterfaces(list, "IObjectBoundedOptional");
-
-        if (!field.Nullable)
-        {
-            AddInterfaces(list, "IObjectBounded");
-        }
-
-        return list;
-    }
+           && loqui.TargetObjectGeneration.Name == "ObjectBounds"
+           && loqui.Nullable == nullable;
 }

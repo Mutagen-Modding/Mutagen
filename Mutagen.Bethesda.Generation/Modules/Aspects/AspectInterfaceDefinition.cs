@@ -1,10 +1,18 @@
 using Loqui.Generation;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects;
 
 public abstract class AspectFieldInterfaceDefinition : AspectInterfaceDefinition
 {
-    public AspectFieldInterfaceDefinition(string name) : base(name) { }
+    public AspectFieldInterfaceDefinition(
+        string nickName,
+        IAspectSubInterfaceDefinition subInterfaceDefinition,
+        params IAspectSubInterfaceDefinition[] additionalSubInterfaceDefinitions)
+        : base(nickName, subInterfaceDefinition, additionalSubInterfaceDefinitions)
+    {
+        
+    }
 
     public List<FieldAction> FieldActions = new();
 
@@ -17,41 +25,26 @@ public abstract class AspectFieldInterfaceDefinition : AspectInterfaceDefinition
 
 public abstract class AspectInterfaceDefinition
 {
-    public string Name { get; }
+    public readonly IAspectSubInterfaceDefinition[] SubDefinitions;
+    public string Nickname { get; }
 
-    public AspectInterfaceDefinition(string name)
+    public AspectInterfaceDefinition(
+        string nickname, 
+        IAspectSubInterfaceDefinition subInterfaceDefinition,
+        params IAspectSubInterfaceDefinition[] additionalSubInterfaceDefinitions)
     {
-        Name = name;
+        SubDefinitions = subInterfaceDefinition.AsEnumerable().And(additionalSubInterfaceDefinitions).ToArray();
+        Nickname = nickname;
+    }
+    
+    public AspectInterfaceDefinition(string nickName)
+        : this(nickName, AspectSubInterfaceDefinition.Factory(nickName))
+    {
     }
 
-    public virtual IEnumerable<(string Name, bool Setter)> Registrations
+    public virtual bool Test(ObjectGeneration obj, Dictionary<string, TypeGeneration> allFields)
     {
-        get
-        {
-            yield return ($"typeof({Name})", true);
-            yield return ($"typeof({Name}Getter)", false);
-        }
-    }
-
-    public abstract bool Test(ObjectGeneration obj, Dictionary<string, TypeGeneration> allFields );
-
-    public virtual List<AspectInterfaceData> Interfaces(ObjectGeneration obj)
-    {
-        var interfaceData = new List<AspectInterfaceData>();
-        AddInterfaces(interfaceData, Name);
-        return interfaceData;
-    }
-
-    protected static void AddInterfaces(List<AspectInterfaceData> interfaceData, string setterInterfaceName)
-    {
-        interfaceData.Add(new(LoquiInterfaceDefinitionType.ISetter, setterInterfaceName));
-        interfaceData.Add(new(LoquiInterfaceDefinitionType.IGetter, $"{setterInterfaceName}Getter"));
-    }
-
-    protected static void AddInterfaces(List<AspectInterfaceData> interfaceData, string setterInterfaceName, string getterInterfaceName)
-    {
-        interfaceData.Add(new(LoquiInterfaceDefinitionType.ISetter, setterInterfaceName));
-        interfaceData.Add(new(LoquiInterfaceDefinitionType.IGetter, getterInterfaceName));
+        return SubDefinitions.Any(def => def.Test(obj, allFields));
     }
 }
 

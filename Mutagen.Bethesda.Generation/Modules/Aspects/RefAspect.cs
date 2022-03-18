@@ -4,17 +4,17 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects;
 
 public class RefAspect : AspectFieldInterfaceDefinition
 {
-    public string InterfaceName;
+    public string InterfaceNickName;
     public string MemberName;
     public string LoquiName;
 
     public RefAspect(
-        string interfaceName,
+        string interfaceNickName,
         string memberName,
         string loquiName)
-        : base(interfaceName)
+        : base(interfaceNickName, AspectSubInterfaceDefinition.Factory(interfaceNickName))
     {
-        InterfaceName = interfaceName;
+        InterfaceNickName = interfaceNickName;
         MemberName = memberName;
         LoquiName = loquiName;
 
@@ -23,7 +23,7 @@ public class RefAspect : AspectFieldInterfaceDefinition
             new (LoquiInterfaceType.Direct, memberName, (o, tg, fg) =>
             {
                 fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                fg.AppendLine($"I{loquiName}Getter? {interfaceName}Getter.{memberName} => this.{memberName};");
+                fg.AppendLine($"I{loquiName}Getter? {interfaceNickName}Getter.{memberName} => this.{memberName};");
             })
         };
     }

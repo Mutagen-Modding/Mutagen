@@ -7,7 +7,7 @@ public class FieldsAspect : AspectFieldInterfaceDefinition
     public (string FieldName, string TypeName)[] Fields;
 
     public FieldsAspect(string interfaceType, params (string FieldName, string TypeName)[] fields)
-        : base(interfaceType)
+        : base(interfaceType, AspectSubInterfaceDefinition.Factory(interfaceType))
     {
         Fields = fields;
     }

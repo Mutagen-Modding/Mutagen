@@ -95,6 +95,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Worldspace_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
+            dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Activator_Registration.Instance,
+                AlchemicalApparatus_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Birthsign_Registration.Instance,
+                Book_Registration.Instance,
+                Cell_Registration.Instance,
+                Class_Registration.Instance,
+                Clothing_Registration.Instance,
+                Container_Registration.Instance,
+                Creature_Registration.Instance,
+                DialogTopic_Registration.Instance,
+                Door_Registration.Instance,
+                Enchantment_Registration.Instance,
+                Eye_Registration.Instance,
+                Faction_Registration.Instance,
+                Flora_Registration.Instance,
+                Furniture_Registration.Instance,
+                Hair_Registration.Instance,
+                Ingredient_Registration.Instance,
+                Key_Registration.Instance,
+                Light_Registration.Instance,
+                LocalVariable_Registration.Instance,
+                MagicEffect_Registration.Instance,
+                MapMarker_Registration.Instance,
+                Miscellaneous_Registration.Instance,
+                Npc_Registration.Instance,
+                Potion_Registration.Instance,
+                Quest_Registration.Instance,
+                Race_Registration.Instance,
+                ScriptEffect_Registration.Instance,
+                SigilStone_Registration.Instance,
+                SoulGem_Registration.Instance,
+                Spell_Registration.Instance,
+                SpellLeveled_Registration.Instance,
+                SpellUnleveled_Registration.Instance,
+                Weapon_Registration.Instance,
+                Worldspace_Registration.Instance,
+            });
+            dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
             dict[typeof(IWeightValue)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AlchemicalApparatusData_Registration.Instance,
