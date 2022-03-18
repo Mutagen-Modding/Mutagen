@@ -213,7 +213,7 @@ public abstract class AMajorRecordEnumerationTests
     }
 
     [Fact]
-    public void EnumerateNullableAspectInterface()
+    public void EnumerateNullableAspectInterfaceWithNpc()
     {
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var npc = mod.Npcs.AddNew();
@@ -231,11 +231,11 @@ public abstract class AMajorRecordEnumerationTests
     }
 
     [Fact]
-    public void EnumerateAspectInterface2()
+    public void EnumerateNonNullableAspectInterfaceWithClass()
     {
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
-        var npc = mod.Classes.AddNew();
-        npc.Name = "Hello";
+        var classObj = mod.Classes.AddNew();
+        classObj.Name = "Hello";
         var conv = ConvertMod(mod);
         Assert.Empty(conv.EnumerateMajorRecords<INamed>());
         Assert.Empty(conv.EnumerateMajorRecords<INamedGetter>());
@@ -246,6 +246,27 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<ITranslatedNamedRequired>().Count());
         Assert.Single(conv.EnumerateMajorRecords<ITranslatedNamedRequiredGetter>());
         conv.EnumerateMajorRecords<INamedRequiredGetter>().First().Name.Should().Be("Hello");
+    }
+
+    [Fact]
+    public void EnumerateNonMajorAspectInterfaceWithPackage()
+    {
+        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        var package = mod.Packages.AddNew();
+
+        package.Data[4] = new PackageDataFloat()
+        {
+            Name = "Hello"
+        };
+        var conv = ConvertMod(mod);
+        Assert.Empty(conv.EnumerateMajorRecords<INamed>());
+        Assert.Empty(conv.EnumerateMajorRecords<INamedGetter>());
+        Assert.Empty(conv.EnumerateMajorRecords<ITranslatedNamed>());
+        Assert.Empty(conv.EnumerateMajorRecords<ITranslatedNamedGetter>());
+        Assert.Empty(conv.EnumerateMajorRecords<INamedRequired>());
+        Assert.Empty(conv.EnumerateMajorRecords<INamedRequiredGetter>());
+        Assert.Empty(conv.EnumerateMajorRecords<ITranslatedNamedRequired>());
+        Assert.Empty(conv.EnumerateMajorRecords<ITranslatedNamedRequiredGetter>());
     }
 }
 
