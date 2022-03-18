@@ -77,16 +77,16 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
 
         #region TryResolve
 
-        public virtual bool TryTest<TSetter, TTarget>(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out TTarget target)
+        public virtual bool TryTest<TSetter, TTarget>(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out TTarget target, ResolveTarget resolve = ResolveTarget.Winner)
             where TSetter : class, TTarget, IMajorRecordQueryable
             where TTarget : class, IMajorRecordQueryableGetter
         {
-            return linkCache.TryResolve<TTarget>(formKey, out target);
+            return linkCache.TryResolve<TTarget>(formKey, out target, resolve);
         }
         
-        public virtual bool TryTest(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out IMajorRecordGetter target)
+        public virtual bool TryTest(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out IMajorRecordGetter target, ResolveTarget resolve = ResolveTarget.Winner)
         {
-            return linkCache.TryResolve(formKey, out target);
+            return linkCache.TryResolve(formKey, out target, resolve);
         }
         
         public virtual bool TryTest<TSetter, TTarget>(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, string editorId, out TTarget target)
@@ -101,11 +101,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             return linkCache.TryResolve(editorId, out target);
         }
         
-        public bool TryTestContext<TSetter, TTarget>(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out TTarget target)
+        public bool TryTestContext<TSetter, TTarget>(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out TTarget target, ResolveTarget resolve)
             where TSetter : class, TTarget, IMajorRecordQueryable
             where TTarget : class, IMajorRecordQueryableGetter
         {
-            if (linkCache.TryResolveContext<TSetter, TTarget>(formKey, out var context))
+            if (linkCache.TryResolveContext<TSetter, TTarget>(formKey, out var context, resolve))
             {
                 target = context.Record;
                 return true;
@@ -115,9 +115,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             return false;
         }
         
-        public bool TryTestContext(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out IMajorRecordGetter target)
+        public bool TryTestContext(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out IMajorRecordGetter target, ResolveTarget resolve)
         {
-            if (linkCache.TryResolveContext(formKey, out var context))
+            if (linkCache.TryResolveContext(formKey, out var context, resolve))
             {
                 target = context.Record;
                 return true;
