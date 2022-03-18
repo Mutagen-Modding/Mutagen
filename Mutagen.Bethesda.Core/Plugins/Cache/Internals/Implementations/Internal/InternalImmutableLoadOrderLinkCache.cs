@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 {
     public class InternalImmutableLoadOrderLinkCache
     {
+        private readonly bool _simple;
         private readonly IReadOnlyList<IModGetter> _listedOrder;
         private readonly IReadOnlyList<IModGetter> _priorityOrder;
         private readonly ImmutableLoadOrderLinkCacheCategory<FormKey> _formKeyCache;
@@ -29,6 +30,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             bool simple,
             LinkCachePreferences? prefs)
         {
+            _simple = simple;
             prefs ??= LinkCachePreferences.Default;
             _listedOrder = loadOrder.ToList();
             _priorityOrder = _listedOrder.Reverse().ToList();
@@ -128,6 +130,17 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
+            if (formKey.IsNull)
+            {
+                majorRec = default;
+                return false;
+            }
+            
+            if (_simple)
+            {
+                throw new ArgumentException("Queried for record on a simple cache");
+            }
+            
             if (target == ResolveTarget.Origin)
             {
                 if (!_modsByKey.TryGetValue(formKey.ModKey, out var origMod))
@@ -151,6 +164,17 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
 
         public bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
         {
+            if (editorId.IsNullOrEmpty())
+            {
+                majorRec = default;
+                return false;
+            }
+            
+            if (_simple)
+            {
+                throw new ArgumentException("Queried for record on a simple cache");
+            }
+            
             if (_editorIdCache.TryResolve(editorId, default(ModKey?), type, out var item))
             {
                 majorRec = item.Record;

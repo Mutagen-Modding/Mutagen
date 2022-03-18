@@ -74,5 +74,85 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
                     break;
             }
         }
+
+        #region TryResolve
+
+        public virtual bool TryTest<TSetter, TTarget>(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out TTarget target)
+            where TSetter : class, TTarget, IMajorRecordQueryable
+            where TTarget : class, IMajorRecordQueryableGetter
+        {
+            return linkCache.TryResolve<TTarget>(formKey, out target);
+        }
+        
+        public virtual bool TryTest(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out IMajorRecordGetter target)
+        {
+            return linkCache.TryResolve(formKey, out target);
+        }
+        
+        public virtual bool TryTest<TSetter, TTarget>(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, string editorId, out TTarget target)
+            where TSetter : class, TTarget, IMajorRecordQueryable
+            where TTarget : class, IMajorRecordQueryableGetter
+        {
+            return linkCache.TryResolve<TTarget>(editorId, out target);
+        }
+        
+        public virtual bool TryTest(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, string editorId, out IMajorRecordGetter target)
+        {
+            return linkCache.TryResolve(editorId, out target);
+        }
+        
+        public bool TryTestContext<TSetter, TTarget>(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out TTarget target)
+            where TSetter : class, TTarget, IMajorRecordQueryable
+            where TTarget : class, IMajorRecordQueryableGetter
+        {
+            if (linkCache.TryResolveContext<TSetter, TTarget>(formKey, out var context))
+            {
+                target = context.Record;
+                return true;
+            }
+
+            target = default!;
+            return false;
+        }
+        
+        public bool TryTestContext(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, FormKey formKey, out IMajorRecordGetter target)
+        {
+            if (linkCache.TryResolveContext(formKey, out var context))
+            {
+                target = context.Record;
+                return true;
+            }
+
+            target = default!;
+            return false;
+        }
+        
+        public bool TryTestContext<TSetter, TTarget>(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, string editorId, out TTarget target)
+            where TSetter : class, TTarget, IMajorRecordQueryable
+            where TTarget : class, IMajorRecordQueryableGetter
+        {
+            if (linkCache.TryResolveContext<TSetter, TTarget>(editorId, out var context))
+            {
+                target = context.Record;
+                return true;
+            }
+
+            target = default!;
+            return false;
+        }
+        
+        public bool TryTestContext(ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache, string editorId, out IMajorRecordGetter target)
+        {
+            if (linkCache.TryResolveContext(editorId, out var context))
+            {
+                target = context.Record;
+                return true;
+            }
+
+            target = default!;
+            return false;
+        }
+
+        #endregion
     }
 }

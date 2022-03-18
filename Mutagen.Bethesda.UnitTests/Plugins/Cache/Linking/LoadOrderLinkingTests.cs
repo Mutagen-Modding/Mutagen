@@ -1,12 +1,10 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
-using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
 using Xunit;
 
 #nullable disable
@@ -22,23 +20,40 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
         public void LoadOrderEmpty(LinkCachePreferences.RetentionType cacheType)
         {
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
-            var (style, package) = GetLinkCache(loadOrder, cacheType);
+            var (style, linkCache) = GetLinkCache(loadOrder, cacheType);
 
             // Test FormKey fails
-            Assert.False(package.TryResolve(UnusedFormKey, out var _));
-            Assert.False(package.TryResolve(FormKey.Null, out var _));
-            Assert.False(package.TryResolve<IMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryResolve<IMajorRecordGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
-
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(TryTest(linkCache, UnusedFormKey, out var _));
+            });
+            Assert.False(TryTest(linkCache, FormKey.Null, out var _));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(linkCache, UnusedFormKey, out var _));
+            });
+            Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(linkCache, FormKey.Null, out var _));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(linkCache, UnusedFormKey, out var _));
+            });
+            Assert.False(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(linkCache, FormKey.Null, out var _));
             // Test EditorID fails
-            Assert.False(package.TryResolve(UnusedEditorID, out var _));
-            Assert.False(package.TryResolve(string.Empty, out var _));
-            Assert.False(package.TryResolve<IMajorRecordGetter>(UnusedEditorID, out var _));
-            Assert.False(package.TryResolve<IMajorRecordGetter>(string.Empty, out var _));
-            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedEditorID, out var _));
-            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(string.Empty, out var _));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(TryTest(linkCache, UnusedEditorID, out var _));
+            });
+            Assert.False(TryTest(linkCache, string.Empty, out var _));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(linkCache, UnusedEditorID, out var _));
+            });
+            Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(linkCache, string.Empty, out var _));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(linkCache, UnusedEditorID, out var _));
+            });
+            Assert.False(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(linkCache, string.Empty, out var _));
         }
 
         [Theory]
@@ -53,20 +68,38 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking
             loadOrder.Add(mod);
             var (style, package) = GetLinkCache(loadOrder, cacheType);
 
-            // Test FormKey fails
-            Assert.False(package.TryResolve(UnusedFormKey, out var _));
+            // Test FormKey fails 
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(package.TryResolve(UnusedFormKey, out var _));
+            });
             Assert.False(package.TryResolve(FormKey.Null, out var _));
-            Assert.False(package.TryResolve<IMajorRecordGetter>(UnusedFormKey, out var _));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(package.TryResolve<IMajorRecordGetter>(UnusedFormKey, out var _));
+            });
             Assert.False(package.TryResolve<IMajorRecordGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
+            });
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
 
             // Test EditorID fails
-            Assert.False(package.TryResolve(UnusedEditorID, out var _));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(package.TryResolve(UnusedEditorID, out var _));
+            });
             Assert.False(package.TryResolve(string.Empty, out var _));
-            Assert.False(package.TryResolve<IMajorRecordGetter>(UnusedEditorID, out var _));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(package.TryResolve<IMajorRecordGetter>(UnusedEditorID, out var _));
+            });
             Assert.False(package.TryResolve<IMajorRecordGetter>(string.Empty, out var _));
-            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedEditorID, out var _));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedEditorID, out var _));
+            });
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(string.Empty, out var _));
         }
 

@@ -1259,7 +1259,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         {
             CheckDisposal();
             
-            if (!_hasAny || string.IsNullOrWhiteSpace(editorId))
+            if (string.IsNullOrWhiteSpace(editorId))
             {
                 majorRec = default;
                 return false;
