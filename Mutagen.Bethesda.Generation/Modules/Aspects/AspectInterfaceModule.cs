@@ -194,7 +194,7 @@ public class AspectInterfaceModule : GenerationModule
                         foreach (var subDef in aspectDef.Value)
                         {
                             (string Name, bool Setter)? first = null;
-                            foreach (var reg in subDef.Key.Registrations)
+                            foreach (var reg in subDef.Key.Registrations.OrderBy(x => x.Name))
                             {
                                 if (first == null)
                                 {
