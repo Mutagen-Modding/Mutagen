@@ -3522,141 +3522,158 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4ModGetter obj,
             ILinkCache linkCache)
         {
-            foreach (var item in obj.GameSettings)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, GameSetting, IGameSettingGetter>(
+                srcGroup: obj.GameSettings,
+                type: typeof(IGameSettingGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.GameSettings,
+                groupGetter: (m) => m.GameSettings))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, GameSetting, IGameSettingGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.GameSettings,
-                    groupGetter: (m) => m.GameSettings);
+                yield return item;
             }
-            foreach (var item in obj.Keywords)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Keyword, IKeywordGetter>(
+                srcGroup: obj.Keywords,
+                type: typeof(IKeywordGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Keywords,
+                groupGetter: (m) => m.Keywords))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Keyword, IKeywordGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Keywords,
-                    groupGetter: (m) => m.Keywords);
+                yield return item;
             }
-            foreach (var item in obj.LocationReferenceTypes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
+                srcGroup: obj.LocationReferenceTypes,
+                type: typeof(ILocationReferenceTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LocationReferenceTypes,
+                groupGetter: (m) => m.LocationReferenceTypes))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LocationReferenceTypes,
-                    groupGetter: (m) => m.LocationReferenceTypes);
+                yield return item;
             }
-            foreach (var item in obj.Actions)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ActionRecord, IActionRecordGetter>(
+                srcGroup: obj.Actions,
+                type: typeof(IActionRecordGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Actions,
+                groupGetter: (m) => m.Actions))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, ActionRecord, IActionRecordGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Actions,
-                    groupGetter: (m) => m.Actions);
+                yield return item;
             }
-            foreach (var item in obj.Transforms)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Transform, ITransformGetter>(
+                srcGroup: obj.Transforms,
+                type: typeof(ITransformGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Transforms,
+                groupGetter: (m) => m.Transforms))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Transform, ITransformGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Transforms,
-                    groupGetter: (m) => m.Transforms);
+                yield return item;
             }
-            foreach (var item in obj.Components)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Component, IComponentGetter>(
+                srcGroup: obj.Components,
+                type: typeof(IComponentGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Components,
+                groupGetter: (m) => m.Components))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Component, IComponentGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Components,
-                    groupGetter: (m) => m.Components);
+                yield return item;
             }
-            foreach (var item in obj.TextureSets)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, TextureSet, ITextureSetGetter>(
+                srcGroup: obj.TextureSets,
+                type: typeof(ITextureSetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.TextureSets,
+                groupGetter: (m) => m.TextureSets))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, TextureSet, ITextureSetGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.TextureSets,
-                    groupGetter: (m) => m.TextureSets);
+                yield return item;
             }
-            foreach (var item in obj.Globals)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Global, IGlobalGetter>(
+                srcGroup: obj.Globals,
+                type: typeof(IGlobalGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Globals,
+                groupGetter: (m) => m.Globals))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Global, IGlobalGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Globals,
-                    groupGetter: (m) => m.Globals);
+                yield return item;
             }
-            foreach (var item in obj.DamageTypes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ADamageType, IADamageTypeGetter>(
+                srcGroup: obj.DamageTypes,
+                type: typeof(IADamageTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DamageTypes,
+                groupGetter: (m) => m.DamageTypes))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, ADamageType, IADamageTypeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.DamageTypes,
-                    groupGetter: (m) => m.DamageTypes);
+                yield return item;
             }
-            foreach (var item in obj.Classes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Class, IClassGetter>(
+                srcGroup: obj.Classes,
+                type: typeof(IClassGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Classes,
+                groupGetter: (m) => m.Classes))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Class, IClassGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Classes,
-                    groupGetter: (m) => m.Classes);
+                yield return item;
             }
-            foreach (var item in obj.Factions)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Faction, IFactionGetter>(
+                srcGroup: obj.Factions,
+                type: typeof(IFactionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Factions,
+                groupGetter: (m) => m.Factions))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Faction, IFactionGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Factions,
-                    groupGetter: (m) => m.Factions);
+                yield return item;
             }
-            foreach (var item in obj.HeadParts)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, HeadPart, IHeadPartGetter>(
+                srcGroup: obj.HeadParts,
+                type: typeof(IHeadPartGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.HeadParts,
+                groupGetter: (m) => m.HeadParts))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, HeadPart, IHeadPartGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.HeadParts,
-                    groupGetter: (m) => m.HeadParts);
+                yield return item;
             }
-            foreach (var item in obj.SoundMarkers)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, SoundMarker, ISoundMarkerGetter>(
+                srcGroup: obj.SoundMarkers,
+                type: typeof(ISoundMarkerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoundMarkers,
+                groupGetter: (m) => m.SoundMarkers))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, SoundMarker, ISoundMarkerGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.SoundMarkers,
-                    groupGetter: (m) => m.SoundMarkers);
+                yield return item;
             }
-            foreach (var item in obj.AcousticSpaces)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AcousticSpace, IAcousticSpaceGetter>(
+                srcGroup: obj.AcousticSpaces,
+                type: typeof(IAcousticSpaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AcousticSpaces,
+                groupGetter: (m) => m.AcousticSpaces))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, AcousticSpace, IAcousticSpaceGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.AcousticSpaces,
-                    groupGetter: (m) => m.AcousticSpaces);
+                yield return item;
             }
-            foreach (var item in obj.LandscapeTextures)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LandscapeTexture, ILandscapeTextureGetter>(
+                srcGroup: obj.LandscapeTextures,
+                type: typeof(ILandscapeTextureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LandscapeTextures,
+                groupGetter: (m) => m.LandscapeTextures))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, LandscapeTexture, ILandscapeTextureGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LandscapeTextures,
-                    groupGetter: (m) => m.LandscapeTextures);
+                yield return item;
             }
-            foreach (var item in obj.Grasses)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Grass, IGrassGetter>(
+                srcGroup: obj.Grasses,
+                type: typeof(IGrassGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Grasses,
+                groupGetter: (m) => m.Grasses))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Grass, IGrassGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Grasses,
-                    groupGetter: (m) => m.Grasses);
+                yield return item;
             }
-            foreach (var item in obj.MaterialTypes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MaterialType, IMaterialTypeGetter>(
+                srcGroup: obj.MaterialTypes,
+                type: typeof(IMaterialTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MaterialTypes,
+                groupGetter: (m) => m.MaterialTypes))
             {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, MaterialType, IMaterialTypeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.MaterialTypes,
-                    groupGetter: (m) => m.MaterialTypes);
+                yield return item;
             }
         }
         
@@ -3693,323 +3710,254 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    foreach (var item in obj.GameSettings)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, GameSetting, IGameSettingGetter>(
+                        srcGroup: obj.GameSettings,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.GameSettings,
+                        groupGetter: (m) => m.GameSettings))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, GameSetting, IGameSettingGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.GameSettings,
-                            groupGetter: (m) => m.GameSettings);
+                        yield return item;
                     }
                     yield break;
                 case "Keyword":
                 case "IKeywordGetter":
                 case "IKeyword":
                 case "IKeywordInternal":
-                    foreach (var item in obj.Keywords)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Keyword, IKeywordGetter>(
+                        srcGroup: obj.Keywords,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Keywords,
+                        groupGetter: (m) => m.Keywords))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Keyword, IKeywordGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Keywords,
-                            groupGetter: (m) => m.Keywords);
+                        yield return item;
                     }
                     yield break;
                 case "LocationReferenceType":
                 case "ILocationReferenceTypeGetter":
                 case "ILocationReferenceType":
                 case "ILocationReferenceTypeInternal":
-                    foreach (var item in obj.LocationReferenceTypes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
+                        srcGroup: obj.LocationReferenceTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LocationReferenceTypes,
+                        groupGetter: (m) => m.LocationReferenceTypes))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LocationReferenceTypes,
-                            groupGetter: (m) => m.LocationReferenceTypes);
+                        yield return item;
                     }
                     yield break;
                 case "ActionRecord":
                 case "IActionRecordGetter":
                 case "IActionRecord":
                 case "IActionRecordInternal":
-                    foreach (var item in obj.Actions)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ActionRecord, IActionRecordGetter>(
+                        srcGroup: obj.Actions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Actions,
+                        groupGetter: (m) => m.Actions))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, ActionRecord, IActionRecordGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Actions,
-                            groupGetter: (m) => m.Actions);
+                        yield return item;
                     }
                     yield break;
                 case "Transform":
                 case "ITransformGetter":
                 case "ITransform":
                 case "ITransformInternal":
-                    foreach (var item in obj.Transforms)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Transform, ITransformGetter>(
+                        srcGroup: obj.Transforms,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Transforms,
+                        groupGetter: (m) => m.Transforms))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Transform, ITransformGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Transforms,
-                            groupGetter: (m) => m.Transforms);
+                        yield return item;
                     }
                     yield break;
                 case "Component":
                 case "IComponentGetter":
                 case "IComponent":
                 case "IComponentInternal":
-                    foreach (var item in obj.Components)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Component, IComponentGetter>(
+                        srcGroup: obj.Components,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Components,
+                        groupGetter: (m) => m.Components))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Component, IComponentGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Components,
-                            groupGetter: (m) => m.Components);
+                        yield return item;
                     }
                     yield break;
                 case "TextureSet":
                 case "ITextureSetGetter":
                 case "ITextureSet":
                 case "ITextureSetInternal":
-                    foreach (var item in obj.TextureSets)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, TextureSet, ITextureSetGetter>(
+                        srcGroup: obj.TextureSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.TextureSets,
+                        groupGetter: (m) => m.TextureSets))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, TextureSet, ITextureSetGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.TextureSets,
-                            groupGetter: (m) => m.TextureSets);
+                        yield return item;
                     }
                     yield break;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    foreach (var item in obj.Globals)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Global, IGlobalGetter>(
+                        srcGroup: obj.Globals,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Globals,
+                        groupGetter: (m) => m.Globals))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Global, IGlobalGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Globals,
-                            groupGetter: (m) => m.Globals);
+                        yield return item;
                     }
                     yield break;
                 case "ADamageType":
                 case "IADamageTypeGetter":
                 case "IADamageType":
                 case "IADamageTypeInternal":
-                    foreach (var item in obj.DamageTypes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ADamageType, IADamageTypeGetter>(
+                        srcGroup: obj.DamageTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DamageTypes,
+                        groupGetter: (m) => m.DamageTypes))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, ADamageType, IADamageTypeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.DamageTypes,
-                            groupGetter: (m) => m.DamageTypes);
+                        yield return item;
                     }
                     yield break;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    foreach (var item in obj.Classes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Class, IClassGetter>(
+                        srcGroup: obj.Classes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Classes,
+                        groupGetter: (m) => m.Classes))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Class, IClassGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Classes,
-                            groupGetter: (m) => m.Classes);
+                        yield return item;
                     }
                     yield break;
                 case "Faction":
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    foreach (var item in obj.Factions)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Faction, IFactionGetter>(
+                        srcGroup: obj.Factions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Factions,
+                        groupGetter: (m) => m.Factions))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Faction, IFactionGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Factions,
-                            groupGetter: (m) => m.Factions);
+                        yield return item;
                     }
                     yield break;
                 case "HeadPart":
                 case "IHeadPartGetter":
                 case "IHeadPart":
                 case "IHeadPartInternal":
-                    foreach (var item in obj.HeadParts)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, HeadPart, IHeadPartGetter>(
+                        srcGroup: obj.HeadParts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.HeadParts,
+                        groupGetter: (m) => m.HeadParts))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, HeadPart, IHeadPartGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.HeadParts,
-                            groupGetter: (m) => m.HeadParts);
+                        yield return item;
                     }
                     yield break;
                 case "SoundMarker":
                 case "ISoundMarkerGetter":
                 case "ISoundMarker":
                 case "ISoundMarkerInternal":
-                    foreach (var item in obj.SoundMarkers)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, SoundMarker, ISoundMarkerGetter>(
+                        srcGroup: obj.SoundMarkers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoundMarkers,
+                        groupGetter: (m) => m.SoundMarkers))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, SoundMarker, ISoundMarkerGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.SoundMarkers,
-                            groupGetter: (m) => m.SoundMarkers);
+                        yield return item;
                     }
                     yield break;
                 case "AcousticSpace":
                 case "IAcousticSpaceGetter":
                 case "IAcousticSpace":
                 case "IAcousticSpaceInternal":
-                    foreach (var item in obj.AcousticSpaces)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AcousticSpace, IAcousticSpaceGetter>(
+                        srcGroup: obj.AcousticSpaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AcousticSpaces,
+                        groupGetter: (m) => m.AcousticSpaces))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, AcousticSpace, IAcousticSpaceGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.AcousticSpaces,
-                            groupGetter: (m) => m.AcousticSpaces);
+                        yield return item;
                     }
                     yield break;
                 case "LandscapeTexture":
                 case "ILandscapeTextureGetter":
                 case "ILandscapeTexture":
                 case "ILandscapeTextureInternal":
-                    foreach (var item in obj.LandscapeTextures)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LandscapeTexture, ILandscapeTextureGetter>(
+                        srcGroup: obj.LandscapeTextures,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LandscapeTextures,
+                        groupGetter: (m) => m.LandscapeTextures))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, LandscapeTexture, ILandscapeTextureGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LandscapeTextures,
-                            groupGetter: (m) => m.LandscapeTextures);
+                        yield return item;
                     }
                     yield break;
                 case "Grass":
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    foreach (var item in obj.Grasses)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Grass, IGrassGetter>(
+                        srcGroup: obj.Grasses,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Grasses,
+                        groupGetter: (m) => m.Grasses))
                     {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Grass, IGrassGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Grasses,
-                            groupGetter: (m) => m.Grasses);
+                        yield return item;
                     }
                     yield break;
                 case "MaterialType":
                 case "IMaterialTypeGetter":
                 case "IMaterialType":
                 case "IMaterialTypeInternal":
-                    foreach (var item in obj.MaterialTypes)
-                    {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, MaterialType, IMaterialTypeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.MaterialTypes,
-                            groupGetter: (m) => m.MaterialTypes);
-                    }
-                    yield break;
-                case "IIdleRelation":
-                case "IIdleRelationGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IActionRecordGetter),
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MaterialType, IMaterialTypeGetter>(
+                        srcGroup: obj.MaterialTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MaterialTypes,
+                        groupGetter: (m) => m.MaterialTypes))
                     {
                         yield return item;
                     }
                     yield break;
-                }
-                case "IObjectId":
-                case "IObjectIdGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFactionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ITextureSetGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IOwner":
-                case "IOwnerGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFactionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IRelatable":
-                case "IRelatableGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFactionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReference":
-                case "IKeywordLinkedReferenceGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IKeywordGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IRegionTarget":
-                case "IRegionTargetGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILandscapeTextureGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILocationRecord":
-                case "ILocationRecordGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILocationReferenceTypeGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IFallout4ModGetter, IFallout4Mod, IFallout4ModGetter>(
+                        GameCategory.Fallout4,
+                        obj,
+                        type,
+                        linkCache,
+                        out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");

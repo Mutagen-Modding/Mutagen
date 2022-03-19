@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Generation.Modules.Aspects;
 using Noggog;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
@@ -590,81 +591,42 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                             fg.AppendLine("yield break;");
                         }
                     }
-
-                    // Generate for major record marker interfaces 
-                    if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out var interfs))
-                    {
-                        foreach (var interf in interfs)
-                        {
-                            if (blackList.Contains(interf.Key)) continue;
-                            FileGeneration subFg = new FileGeneration();
-                            HashSet<ObjectGeneration> passedObjects = new HashSet<ObjectGeneration>();
-                            HashSet<TypeGeneration> deepObjects = new HashSet<TypeGeneration>();
-                            foreach (var subObj in interf.Value)
-                            {
-                                var grup = obj.Fields
-                                    .WhereCastable<TypeGeneration, GroupType>()
-                                    .Where(g => g.GetGroupTarget() == subObj)
-                                    .FirstOrDefault();
-
-                                if (grup != null)
-                                {
-                                    using (var args = new ArgsWrapper(subFg,
-                                               $"foreach (var item in EnumerateMajorRecordContexts",
-                                               suffixLine: ")")
-                                           {
-                                               SemiColon = false
-                                           })
-                                    {
-                                        args.Add(accessor.ToString());
-                                        args.AddPassArg("linkCache");
-                                        args.Add($"type: typeof({grup.GetGroupTarget().Interface(getter: true)})");
-                                        args.AddPassArg("throwIfUnknown");
-                                    }
-                                    using (new BraceWrapper(subFg))
-                                    {
-                                        subFg.AppendLine("yield return item;");
-                                    }
-                                    passedObjects.Add(grup.GetGroupTarget());
-                                }
-                                else if (deepRecordMapping.TryGetValue(subObj, out var deepRec))
-                                {
-                                    foreach (var field in deepRec)
-                                    {
-                                        deepObjects.Add(field);
-                                    }
-                                }
-                            }
-                            foreach (var deepObj in deepObjects)
-                            {
-                                await ApplyIterationLines(
-                                    obj: obj,
-                                    field: deepObj,
-                                    fieldGen: subFg,
-                                    accessor: accessor,
-                                    getter: getter,
-                                    blackList: passedObjects,
-                                    hasTarget: true,
-                                    includeSelf: false,
-                                    includeType: true);
-                            }
-                            if (!subFg.Empty)
-                            {
-                                fg.AppendLine($"case \"{interf.Key}\":");
-                                fg.AppendLine($"case \"{interf.Key}Getter\":");
-                                using (new BraceWrapper(fg))
-                                {
-                                    fg.AppendLines(subFg);
-                                    fg.AppendLine("yield break;");
-                                }
-                            }
-                        }
-                    }
                 }
 
                 fg.AppendLine("default:");
                 using (new DepthWrapper(fg))
                 {
+                    // Generate for major record marker interfaces 
+                    if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _)
+                        || AspectInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                                   $"if ({nameof(InterfaceEnumerationHelper)}.TryEnumerateInterfaceContextsFor<{obj.Interface(getter: getter, internalInterface: true)}, I{obj.ProtoGen.Protocol.Namespace}Mod, I{obj.ProtoGen.Protocol.Namespace}ModGetter>",
+                                   suffixLine: ")")
+                               {
+                                   SemiColon = false
+                               })
+                        {
+                            args.Add($"GameCategory.{obj.ProtoGen.Protocol.Namespace}");
+                            args.Add($"{accessor}");
+                            args.Add("type");
+                            args.Add("linkCache");
+                            if (obj.GetObjectType() != ObjectType.Mod)
+                            {
+                                args.Add($"(lk, t, b) => this.EnumerateMajorRecordContexts(obj, lk, t, modKey, parent, b, getOrAddAsOverride, duplicateInto)");
+                            }
+                            args.Add("out var linkInterfaces");
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine($"foreach (var item in linkInterfaces)");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine("yield return item;");
+                            }
+                            fg.AppendLine("yield break;");
+                        }
+                    }
                     if (generationDict.TryGetValue("default:", out var gen))
                     {
                         fg.AppendLines(gen);
@@ -708,17 +670,23 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             var groupTargetSetter = group.GetGroupTarget().GetTypeName(LoquiInterfaceType.Direct);
             if (includeSelf)
             {
-                fieldGen.AppendLine($"foreach (var item in obj.{field.Name})");
+                using (var args = new ArgsWrapper(fieldGen,
+                           $"foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<{obj.GetModName(getter: false)}, {obj.GetModName(getter: true)}, {groupTargetSetter}, {groupTargetGetter}>",
+                           suffixLine: ")")
+                       {
+                           SemiColon = false
+                       })
+                {
+                    args.Add($"srcGroup: obj.{field.Name}");
+                    args.Add($"type: {(includeType ? "type" : $"typeof({group.GetGroupTarget().Interface(getter: true)})")}");
+                    args.Add("modKey: obj.ModKey");
+                    args.Add($"group: (m) => m.{group.Name}");
+                    args.Add($"groupGetter: (m) => m.{group.Name}");
+                }
+
                 using (new BraceWrapper(fieldGen))
                 {
-                    using (var args = new ArgsWrapper(fieldGen,
-                               $"yield return new GroupModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, {groupTargetSetter}, {groupTargetGetter}>"))
-                    {
-                        args.Add("modKey: obj.ModKey");
-                        args.Add("record: item");
-                        args.Add($"group: (m) => m.{group.Name}");
-                        args.Add($"groupGetter: (m) => m.{group.Name}");
-                    }
+                    fieldGen.AppendLine($"yield return item;");
                 }
             }
             if (hasTarget)

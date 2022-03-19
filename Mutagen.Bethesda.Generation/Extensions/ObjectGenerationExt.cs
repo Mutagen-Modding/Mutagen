@@ -46,6 +46,11 @@ namespace Mutagen.Bethesda.Generation
             return TryGetRecordType(objGen, out var recType);
         }
 
+        public static string GetModName(this ObjectGeneration objGen, bool getter)
+        {
+            return objGen.GetObjectData().GameCategory.Value.ModInterface(getter: getter);
+        }
+
         public static async Task<IEnumerable<RecordType>> GetTriggeringRecordTypes(this ObjectGeneration objGen)
         {
             var data = await TryGetTriggeringRecordTypes(objGen);

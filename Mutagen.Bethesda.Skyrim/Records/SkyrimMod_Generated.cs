@@ -13796,429 +13796,482 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimModGetter obj,
             ILinkCache linkCache)
         {
-            foreach (var item in obj.GameSettings)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, GameSetting, IGameSettingGetter>(
+                srcGroup: obj.GameSettings,
+                type: typeof(IGameSettingGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.GameSettings,
+                groupGetter: (m) => m.GameSettings))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, GameSetting, IGameSettingGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.GameSettings,
-                    groupGetter: (m) => m.GameSettings);
+                yield return item;
             }
-            foreach (var item in obj.Keywords)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Keyword, IKeywordGetter>(
+                srcGroup: obj.Keywords,
+                type: typeof(IKeywordGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Keywords,
+                groupGetter: (m) => m.Keywords))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Keyword, IKeywordGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Keywords,
-                    groupGetter: (m) => m.Keywords);
+                yield return item;
             }
-            foreach (var item in obj.LocationReferenceTypes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
+                srcGroup: obj.LocationReferenceTypes,
+                type: typeof(ILocationReferenceTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LocationReferenceTypes,
+                groupGetter: (m) => m.LocationReferenceTypes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LocationReferenceTypes,
-                    groupGetter: (m) => m.LocationReferenceTypes);
+                yield return item;
             }
-            foreach (var item in obj.Actions)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ActionRecord, IActionRecordGetter>(
+                srcGroup: obj.Actions,
+                type: typeof(IActionRecordGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Actions,
+                groupGetter: (m) => m.Actions))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ActionRecord, IActionRecordGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Actions,
-                    groupGetter: (m) => m.Actions);
+                yield return item;
             }
-            foreach (var item in obj.TextureSets)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, TextureSet, ITextureSetGetter>(
+                srcGroup: obj.TextureSets,
+                type: typeof(ITextureSetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.TextureSets,
+                groupGetter: (m) => m.TextureSets))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, TextureSet, ITextureSetGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.TextureSets,
-                    groupGetter: (m) => m.TextureSets);
+                yield return item;
             }
-            foreach (var item in obj.Globals)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Global, IGlobalGetter>(
+                srcGroup: obj.Globals,
+                type: typeof(IGlobalGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Globals,
+                groupGetter: (m) => m.Globals))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Global, IGlobalGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Globals,
-                    groupGetter: (m) => m.Globals);
+                yield return item;
             }
-            foreach (var item in obj.Classes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Class, IClassGetter>(
+                srcGroup: obj.Classes,
+                type: typeof(IClassGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Classes,
+                groupGetter: (m) => m.Classes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Class, IClassGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Classes,
-                    groupGetter: (m) => m.Classes);
+                yield return item;
             }
-            foreach (var item in obj.Factions)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Faction, IFactionGetter>(
+                srcGroup: obj.Factions,
+                type: typeof(IFactionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Factions,
+                groupGetter: (m) => m.Factions))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Faction, IFactionGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Factions,
-                    groupGetter: (m) => m.Factions);
+                yield return item;
             }
-            foreach (var item in obj.HeadParts)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, HeadPart, IHeadPartGetter>(
+                srcGroup: obj.HeadParts,
+                type: typeof(IHeadPartGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.HeadParts,
+                groupGetter: (m) => m.HeadParts))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, HeadPart, IHeadPartGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.HeadParts,
-                    groupGetter: (m) => m.HeadParts);
+                yield return item;
             }
-            foreach (var item in obj.Hairs)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Hair, IHairGetter>(
+                srcGroup: obj.Hairs,
+                type: typeof(IHairGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Hairs,
+                groupGetter: (m) => m.Hairs))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Hair, IHairGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Hairs,
-                    groupGetter: (m) => m.Hairs);
+                yield return item;
             }
-            foreach (var item in obj.Eyes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Eyes, IEyesGetter>(
+                srcGroup: obj.Eyes,
+                type: typeof(IEyesGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Eyes,
+                groupGetter: (m) => m.Eyes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Eyes, IEyesGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Eyes,
-                    groupGetter: (m) => m.Eyes);
+                yield return item;
             }
-            foreach (var item in obj.Races)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Race, IRaceGetter>(
+                srcGroup: obj.Races,
+                type: typeof(IRaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Races,
+                groupGetter: (m) => m.Races))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Race, IRaceGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Races,
-                    groupGetter: (m) => m.Races);
+                yield return item;
             }
-            foreach (var item in obj.SoundMarkers)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, SoundMarker, ISoundMarkerGetter>(
+                srcGroup: obj.SoundMarkers,
+                type: typeof(ISoundMarkerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoundMarkers,
+                groupGetter: (m) => m.SoundMarkers))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundMarker, ISoundMarkerGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.SoundMarkers,
-                    groupGetter: (m) => m.SoundMarkers);
+                yield return item;
             }
-            foreach (var item in obj.AcousticSpaces)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, AcousticSpace, IAcousticSpaceGetter>(
+                srcGroup: obj.AcousticSpaces,
+                type: typeof(IAcousticSpaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AcousticSpaces,
+                groupGetter: (m) => m.AcousticSpaces))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AcousticSpace, IAcousticSpaceGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.AcousticSpaces,
-                    groupGetter: (m) => m.AcousticSpaces);
+                yield return item;
             }
-            foreach (var item in obj.MagicEffects)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MagicEffect, IMagicEffectGetter>(
+                srcGroup: obj.MagicEffects,
+                type: typeof(IMagicEffectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MagicEffects,
+                groupGetter: (m) => m.MagicEffects))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MagicEffect, IMagicEffectGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.MagicEffects,
-                    groupGetter: (m) => m.MagicEffects);
+                yield return item;
             }
-            foreach (var item in obj.LandscapeTextures)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LandscapeTexture, ILandscapeTextureGetter>(
+                srcGroup: obj.LandscapeTextures,
+                type: typeof(ILandscapeTextureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LandscapeTextures,
+                groupGetter: (m) => m.LandscapeTextures))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LandscapeTexture, ILandscapeTextureGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LandscapeTextures,
-                    groupGetter: (m) => m.LandscapeTextures);
+                yield return item;
             }
-            foreach (var item in obj.ObjectEffects)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ObjectEffect, IObjectEffectGetter>(
+                srcGroup: obj.ObjectEffects,
+                type: typeof(IObjectEffectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ObjectEffects,
+                groupGetter: (m) => m.ObjectEffects))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ObjectEffect, IObjectEffectGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.ObjectEffects,
-                    groupGetter: (m) => m.ObjectEffects);
+                yield return item;
             }
-            foreach (var item in obj.Spells)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Spell, ISpellGetter>(
+                srcGroup: obj.Spells,
+                type: typeof(ISpellGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Spells,
+                groupGetter: (m) => m.Spells))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Spell, ISpellGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Spells,
-                    groupGetter: (m) => m.Spells);
+                yield return item;
             }
-            foreach (var item in obj.Scrolls)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Scroll, IScrollGetter>(
+                srcGroup: obj.Scrolls,
+                type: typeof(IScrollGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Scrolls,
+                groupGetter: (m) => m.Scrolls))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Scroll, IScrollGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Scrolls,
-                    groupGetter: (m) => m.Scrolls);
+                yield return item;
             }
-            foreach (var item in obj.Activators)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Activator, IActivatorGetter>(
+                srcGroup: obj.Activators,
+                type: typeof(IActivatorGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Activators,
+                groupGetter: (m) => m.Activators))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Activator, IActivatorGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Activators,
-                    groupGetter: (m) => m.Activators);
+                yield return item;
             }
-            foreach (var item in obj.TalkingActivators)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, TalkingActivator, ITalkingActivatorGetter>(
+                srcGroup: obj.TalkingActivators,
+                type: typeof(ITalkingActivatorGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.TalkingActivators,
+                groupGetter: (m) => m.TalkingActivators))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, TalkingActivator, ITalkingActivatorGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.TalkingActivators,
-                    groupGetter: (m) => m.TalkingActivators);
+                yield return item;
             }
-            foreach (var item in obj.Armors)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Armor, IArmorGetter>(
+                srcGroup: obj.Armors,
+                type: typeof(IArmorGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Armors,
+                groupGetter: (m) => m.Armors))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Armor, IArmorGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Armors,
-                    groupGetter: (m) => m.Armors);
+                yield return item;
             }
-            foreach (var item in obj.Books)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Book, IBookGetter>(
+                srcGroup: obj.Books,
+                type: typeof(IBookGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Books,
+                groupGetter: (m) => m.Books))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Book, IBookGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Books,
-                    groupGetter: (m) => m.Books);
+                yield return item;
             }
-            foreach (var item in obj.Containers)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Container, IContainerGetter>(
+                srcGroup: obj.Containers,
+                type: typeof(IContainerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Containers,
+                groupGetter: (m) => m.Containers))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Container, IContainerGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Containers,
-                    groupGetter: (m) => m.Containers);
+                yield return item;
             }
-            foreach (var item in obj.Doors)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Door, IDoorGetter>(
+                srcGroup: obj.Doors,
+                type: typeof(IDoorGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Doors,
+                groupGetter: (m) => m.Doors))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Door, IDoorGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Doors,
-                    groupGetter: (m) => m.Doors);
+                yield return item;
             }
-            foreach (var item in obj.Ingredients)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Ingredient, IIngredientGetter>(
+                srcGroup: obj.Ingredients,
+                type: typeof(IIngredientGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Ingredients,
+                groupGetter: (m) => m.Ingredients))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ingredient, IIngredientGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Ingredients,
-                    groupGetter: (m) => m.Ingredients);
+                yield return item;
             }
-            foreach (var item in obj.Lights)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Light, ILightGetter>(
+                srcGroup: obj.Lights,
+                type: typeof(ILightGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Lights,
+                groupGetter: (m) => m.Lights))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Light, ILightGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Lights,
-                    groupGetter: (m) => m.Lights);
+                yield return item;
             }
-            foreach (var item in obj.MiscItems)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MiscItem, IMiscItemGetter>(
+                srcGroup: obj.MiscItems,
+                type: typeof(IMiscItemGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MiscItems,
+                groupGetter: (m) => m.MiscItems))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MiscItem, IMiscItemGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.MiscItems,
-                    groupGetter: (m) => m.MiscItems);
+                yield return item;
             }
-            foreach (var item in obj.AlchemicalApparatuses)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
+                srcGroup: obj.AlchemicalApparatuses,
+                type: typeof(IAlchemicalApparatusGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AlchemicalApparatuses,
+                groupGetter: (m) => m.AlchemicalApparatuses))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.AlchemicalApparatuses,
-                    groupGetter: (m) => m.AlchemicalApparatuses);
+                yield return item;
             }
-            foreach (var item in obj.Statics)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Static, IStaticGetter>(
+                srcGroup: obj.Statics,
+                type: typeof(IStaticGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Statics,
+                groupGetter: (m) => m.Statics))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Static, IStaticGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Statics,
-                    groupGetter: (m) => m.Statics);
+                yield return item;
             }
-            foreach (var item in obj.MoveableStatics)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MoveableStatic, IMoveableStaticGetter>(
+                srcGroup: obj.MoveableStatics,
+                type: typeof(IMoveableStaticGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MoveableStatics,
+                groupGetter: (m) => m.MoveableStatics))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MoveableStatic, IMoveableStaticGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.MoveableStatics,
-                    groupGetter: (m) => m.MoveableStatics);
+                yield return item;
             }
-            foreach (var item in obj.Grasses)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Grass, IGrassGetter>(
+                srcGroup: obj.Grasses,
+                type: typeof(IGrassGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Grasses,
+                groupGetter: (m) => m.Grasses))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Grass, IGrassGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Grasses,
-                    groupGetter: (m) => m.Grasses);
+                yield return item;
             }
-            foreach (var item in obj.Trees)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Tree, ITreeGetter>(
+                srcGroup: obj.Trees,
+                type: typeof(ITreeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Trees,
+                groupGetter: (m) => m.Trees))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Tree, ITreeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Trees,
-                    groupGetter: (m) => m.Trees);
+                yield return item;
             }
-            foreach (var item in obj.Florae)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Flora, IFloraGetter>(
+                srcGroup: obj.Florae,
+                type: typeof(IFloraGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Florae,
+                groupGetter: (m) => m.Florae))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Flora, IFloraGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Florae,
-                    groupGetter: (m) => m.Florae);
+                yield return item;
             }
-            foreach (var item in obj.Furniture)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Furniture, IFurnitureGetter>(
+                srcGroup: obj.Furniture,
+                type: typeof(IFurnitureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Furniture,
+                groupGetter: (m) => m.Furniture))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Furniture, IFurnitureGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Furniture,
-                    groupGetter: (m) => m.Furniture);
+                yield return item;
             }
-            foreach (var item in obj.Weapons)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Weapon, IWeaponGetter>(
+                srcGroup: obj.Weapons,
+                type: typeof(IWeaponGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Weapons,
+                groupGetter: (m) => m.Weapons))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Weapon, IWeaponGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Weapons,
-                    groupGetter: (m) => m.Weapons);
+                yield return item;
             }
-            foreach (var item in obj.Ammunitions)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Ammunition, IAmmunitionGetter>(
+                srcGroup: obj.Ammunitions,
+                type: typeof(IAmmunitionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Ammunitions,
+                groupGetter: (m) => m.Ammunitions))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ammunition, IAmmunitionGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Ammunitions,
-                    groupGetter: (m) => m.Ammunitions);
+                yield return item;
             }
-            foreach (var item in obj.Npcs)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Npc, INpcGetter>(
+                srcGroup: obj.Npcs,
+                type: typeof(INpcGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Npcs,
+                groupGetter: (m) => m.Npcs))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Npc, INpcGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Npcs,
-                    groupGetter: (m) => m.Npcs);
+                yield return item;
             }
-            foreach (var item in obj.LeveledNpcs)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LeveledNpc, ILeveledNpcGetter>(
+                srcGroup: obj.LeveledNpcs,
+                type: typeof(ILeveledNpcGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledNpcs,
+                groupGetter: (m) => m.LeveledNpcs))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledNpc, ILeveledNpcGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LeveledNpcs,
-                    groupGetter: (m) => m.LeveledNpcs);
+                yield return item;
             }
-            foreach (var item in obj.Keys)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Key, IKeyGetter>(
+                srcGroup: obj.Keys,
+                type: typeof(IKeyGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Keys,
+                groupGetter: (m) => m.Keys))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Key, IKeyGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Keys,
-                    groupGetter: (m) => m.Keys);
+                yield return item;
             }
-            foreach (var item in obj.Ingestibles)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Ingestible, IIngestibleGetter>(
+                srcGroup: obj.Ingestibles,
+                type: typeof(IIngestibleGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Ingestibles,
+                groupGetter: (m) => m.Ingestibles))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ingestible, IIngestibleGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Ingestibles,
-                    groupGetter: (m) => m.Ingestibles);
+                yield return item;
             }
-            foreach (var item in obj.IdleMarkers)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, IdleMarker, IIdleMarkerGetter>(
+                srcGroup: obj.IdleMarkers,
+                type: typeof(IIdleMarkerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.IdleMarkers,
+                groupGetter: (m) => m.IdleMarkers))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, IdleMarker, IIdleMarkerGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.IdleMarkers,
-                    groupGetter: (m) => m.IdleMarkers);
+                yield return item;
             }
-            foreach (var item in obj.ConstructibleObjects)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                srcGroup: obj.ConstructibleObjects,
+                type: typeof(IConstructibleObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ConstructibleObjects,
+                groupGetter: (m) => m.ConstructibleObjects))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ConstructibleObject, IConstructibleObjectGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.ConstructibleObjects,
-                    groupGetter: (m) => m.ConstructibleObjects);
+                yield return item;
             }
-            foreach (var item in obj.Projectiles)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Projectile, IProjectileGetter>(
+                srcGroup: obj.Projectiles,
+                type: typeof(IProjectileGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Projectiles,
+                groupGetter: (m) => m.Projectiles))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Projectile, IProjectileGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Projectiles,
-                    groupGetter: (m) => m.Projectiles);
+                yield return item;
             }
-            foreach (var item in obj.Hazards)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Hazard, IHazardGetter>(
+                srcGroup: obj.Hazards,
+                type: typeof(IHazardGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Hazards,
+                groupGetter: (m) => m.Hazards))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Hazard, IHazardGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Hazards,
-                    groupGetter: (m) => m.Hazards);
+                yield return item;
             }
-            foreach (var item in obj.SoulGems)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, SoulGem, ISoulGemGetter>(
+                srcGroup: obj.SoulGems,
+                type: typeof(ISoulGemGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoulGems,
+                groupGetter: (m) => m.SoulGems))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoulGem, ISoulGemGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.SoulGems,
-                    groupGetter: (m) => m.SoulGems);
+                yield return item;
             }
-            foreach (var item in obj.LeveledItems)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LeveledItem, ILeveledItemGetter>(
+                srcGroup: obj.LeveledItems,
+                type: typeof(ILeveledItemGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledItems,
+                groupGetter: (m) => m.LeveledItems))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledItem, ILeveledItemGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LeveledItems,
-                    groupGetter: (m) => m.LeveledItems);
+                yield return item;
             }
-            foreach (var item in obj.Weathers)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Weather, IWeatherGetter>(
+                srcGroup: obj.Weathers,
+                type: typeof(IWeatherGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Weathers,
+                groupGetter: (m) => m.Weathers))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Weather, IWeatherGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Weathers,
-                    groupGetter: (m) => m.Weathers);
+                yield return item;
             }
-            foreach (var item in obj.Climates)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Climate, IClimateGetter>(
+                srcGroup: obj.Climates,
+                type: typeof(IClimateGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Climates,
+                groupGetter: (m) => m.Climates))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Climate, IClimateGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Climates,
-                    groupGetter: (m) => m.Climates);
+                yield return item;
             }
-            foreach (var item in obj.ShaderParticleGeometries)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ShaderParticleGeometry, IShaderParticleGeometryGetter>(
+                srcGroup: obj.ShaderParticleGeometries,
+                type: typeof(IShaderParticleGeometryGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ShaderParticleGeometries,
+                groupGetter: (m) => m.ShaderParticleGeometries))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ShaderParticleGeometry, IShaderParticleGeometryGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.ShaderParticleGeometries,
-                    groupGetter: (m) => m.ShaderParticleGeometries);
+                yield return item;
             }
-            foreach (var item in obj.VisualEffects)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, VisualEffect, IVisualEffectGetter>(
+                srcGroup: obj.VisualEffects,
+                type: typeof(IVisualEffectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.VisualEffects,
+                groupGetter: (m) => m.VisualEffects))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VisualEffect, IVisualEffectGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.VisualEffects,
-                    groupGetter: (m) => m.VisualEffects);
+                yield return item;
             }
-            foreach (var item in obj.Regions)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Region, IRegionGetter>(
+                srcGroup: obj.Regions,
+                type: typeof(IRegionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Regions,
+                groupGetter: (m) => m.Regions))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Region, IRegionGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Regions,
-                    groupGetter: (m) => m.Regions);
+                yield return item;
             }
-            foreach (var item in obj.NavigationMeshInfoMaps)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
+                srcGroup: obj.NavigationMeshInfoMaps,
+                type: typeof(INavigationMeshInfoMapGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.NavigationMeshInfoMaps,
+                groupGetter: (m) => m.NavigationMeshInfoMaps))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.NavigationMeshInfoMaps,
-                    groupGetter: (m) => m.NavigationMeshInfoMaps);
+                yield return item;
             }
             foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
                 linkCache: linkCache,
@@ -14227,13 +14280,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Worldspaces)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Worldspace, IWorldspaceGetter>(
+                srcGroup: obj.Worldspaces,
+                type: typeof(IWorldspaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Worldspaces,
+                groupGetter: (m) => m.Worldspaces))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Worldspace, IWorldspaceGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Worldspaces,
-                    groupGetter: (m) => m.Worldspaces);
+                yield return item;
             }
             foreach (var groupItem in obj.Worldspaces)
             {
@@ -14248,13 +14302,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.DialogTopics)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, DialogTopic, IDialogTopicGetter>(
+                srcGroup: obj.DialogTopics,
+                type: typeof(IDialogTopicGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DialogTopics,
+                groupGetter: (m) => m.DialogTopics))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogTopic, IDialogTopicGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.DialogTopics,
-                    groupGetter: (m) => m.DialogTopics);
+                yield return item;
             }
             foreach (var groupItem in obj.DialogTopics)
             {
@@ -14269,461 +14324,518 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.Quests)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Quest, IQuestGetter>(
+                srcGroup: obj.Quests,
+                type: typeof(IQuestGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Quests,
+                groupGetter: (m) => m.Quests))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Quest, IQuestGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Quests,
-                    groupGetter: (m) => m.Quests);
+                yield return item;
             }
-            foreach (var item in obj.IdleAnimations)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, IdleAnimation, IIdleAnimationGetter>(
+                srcGroup: obj.IdleAnimations,
+                type: typeof(IIdleAnimationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.IdleAnimations,
+                groupGetter: (m) => m.IdleAnimations))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, IdleAnimation, IIdleAnimationGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.IdleAnimations,
-                    groupGetter: (m) => m.IdleAnimations);
+                yield return item;
             }
-            foreach (var item in obj.Packages)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Package, IPackageGetter>(
+                srcGroup: obj.Packages,
+                type: typeof(IPackageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Packages,
+                groupGetter: (m) => m.Packages))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Package, IPackageGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Packages,
-                    groupGetter: (m) => m.Packages);
+                yield return item;
             }
-            foreach (var item in obj.CombatStyles)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, CombatStyle, ICombatStyleGetter>(
+                srcGroup: obj.CombatStyles,
+                type: typeof(ICombatStyleGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CombatStyles,
+                groupGetter: (m) => m.CombatStyles))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CombatStyle, ICombatStyleGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.CombatStyles,
-                    groupGetter: (m) => m.CombatStyles);
+                yield return item;
             }
-            foreach (var item in obj.LoadScreens)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LoadScreen, ILoadScreenGetter>(
+                srcGroup: obj.LoadScreens,
+                type: typeof(ILoadScreenGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LoadScreens,
+                groupGetter: (m) => m.LoadScreens))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LoadScreen, ILoadScreenGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LoadScreens,
-                    groupGetter: (m) => m.LoadScreens);
+                yield return item;
             }
-            foreach (var item in obj.LeveledSpells)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LeveledSpell, ILeveledSpellGetter>(
+                srcGroup: obj.LeveledSpells,
+                type: typeof(ILeveledSpellGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledSpells,
+                groupGetter: (m) => m.LeveledSpells))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledSpell, ILeveledSpellGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LeveledSpells,
-                    groupGetter: (m) => m.LeveledSpells);
+                yield return item;
             }
-            foreach (var item in obj.AnimatedObjects)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                srcGroup: obj.AnimatedObjects,
+                type: typeof(IAnimatedObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AnimatedObjects,
+                groupGetter: (m) => m.AnimatedObjects))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AnimatedObject, IAnimatedObjectGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.AnimatedObjects,
-                    groupGetter: (m) => m.AnimatedObjects);
+                yield return item;
             }
-            foreach (var item in obj.Waters)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Water, IWaterGetter>(
+                srcGroup: obj.Waters,
+                type: typeof(IWaterGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Waters,
+                groupGetter: (m) => m.Waters))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Water, IWaterGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Waters,
-                    groupGetter: (m) => m.Waters);
+                yield return item;
             }
-            foreach (var item in obj.EffectShaders)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, EffectShader, IEffectShaderGetter>(
+                srcGroup: obj.EffectShaders,
+                type: typeof(IEffectShaderGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EffectShaders,
+                groupGetter: (m) => m.EffectShaders))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EffectShader, IEffectShaderGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.EffectShaders,
-                    groupGetter: (m) => m.EffectShaders);
+                yield return item;
             }
-            foreach (var item in obj.Explosions)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Explosion, IExplosionGetter>(
+                srcGroup: obj.Explosions,
+                type: typeof(IExplosionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Explosions,
+                groupGetter: (m) => m.Explosions))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Explosion, IExplosionGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Explosions,
-                    groupGetter: (m) => m.Explosions);
+                yield return item;
             }
-            foreach (var item in obj.Debris)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Debris, IDebrisGetter>(
+                srcGroup: obj.Debris,
+                type: typeof(IDebrisGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Debris,
+                groupGetter: (m) => m.Debris))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Debris, IDebrisGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Debris,
-                    groupGetter: (m) => m.Debris);
+                yield return item;
             }
-            foreach (var item in obj.ImageSpaces)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ImageSpace, IImageSpaceGetter>(
+                srcGroup: obj.ImageSpaces,
+                type: typeof(IImageSpaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ImageSpaces,
+                groupGetter: (m) => m.ImageSpaces))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImageSpace, IImageSpaceGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.ImageSpaces,
-                    groupGetter: (m) => m.ImageSpaces);
+                yield return item;
             }
-            foreach (var item in obj.ImageSpaceAdapters)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
+                srcGroup: obj.ImageSpaceAdapters,
+                type: typeof(IImageSpaceAdapterGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ImageSpaceAdapters,
+                groupGetter: (m) => m.ImageSpaceAdapters))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.ImageSpaceAdapters,
-                    groupGetter: (m) => m.ImageSpaceAdapters);
+                yield return item;
             }
-            foreach (var item in obj.FormLists)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, FormList, IFormListGetter>(
+                srcGroup: obj.FormLists,
+                type: typeof(IFormListGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.FormLists,
+                groupGetter: (m) => m.FormLists))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, FormList, IFormListGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.FormLists,
-                    groupGetter: (m) => m.FormLists);
+                yield return item;
             }
-            foreach (var item in obj.Perks)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Perk, IPerkGetter>(
+                srcGroup: obj.Perks,
+                type: typeof(IPerkGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Perks,
+                groupGetter: (m) => m.Perks))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Perk, IPerkGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Perks,
-                    groupGetter: (m) => m.Perks);
+                yield return item;
             }
-            foreach (var item in obj.BodyParts)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, BodyPartData, IBodyPartDataGetter>(
+                srcGroup: obj.BodyParts,
+                type: typeof(IBodyPartDataGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.BodyParts,
+                groupGetter: (m) => m.BodyParts))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, BodyPartData, IBodyPartDataGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.BodyParts,
-                    groupGetter: (m) => m.BodyParts);
+                yield return item;
             }
-            foreach (var item in obj.AddonNodes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, AddonNode, IAddonNodeGetter>(
+                srcGroup: obj.AddonNodes,
+                type: typeof(IAddonNodeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AddonNodes,
+                groupGetter: (m) => m.AddonNodes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AddonNode, IAddonNodeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.AddonNodes,
-                    groupGetter: (m) => m.AddonNodes);
+                yield return item;
             }
-            foreach (var item in obj.ActorValueInformation)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ActorValueInformation, IActorValueInformationGetter>(
+                srcGroup: obj.ActorValueInformation,
+                type: typeof(IActorValueInformationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ActorValueInformation,
+                groupGetter: (m) => m.ActorValueInformation))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ActorValueInformation, IActorValueInformationGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.ActorValueInformation,
-                    groupGetter: (m) => m.ActorValueInformation);
+                yield return item;
             }
-            foreach (var item in obj.CameraShots)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, CameraShot, ICameraShotGetter>(
+                srcGroup: obj.CameraShots,
+                type: typeof(ICameraShotGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CameraShots,
+                groupGetter: (m) => m.CameraShots))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CameraShot, ICameraShotGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.CameraShots,
-                    groupGetter: (m) => m.CameraShots);
+                yield return item;
             }
-            foreach (var item in obj.CameraPaths)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, CameraPath, ICameraPathGetter>(
+                srcGroup: obj.CameraPaths,
+                type: typeof(ICameraPathGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CameraPaths,
+                groupGetter: (m) => m.CameraPaths))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CameraPath, ICameraPathGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.CameraPaths,
-                    groupGetter: (m) => m.CameraPaths);
+                yield return item;
             }
-            foreach (var item in obj.VoiceTypes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, VoiceType, IVoiceTypeGetter>(
+                srcGroup: obj.VoiceTypes,
+                type: typeof(IVoiceTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.VoiceTypes,
+                groupGetter: (m) => m.VoiceTypes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VoiceType, IVoiceTypeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.VoiceTypes,
-                    groupGetter: (m) => m.VoiceTypes);
+                yield return item;
             }
-            foreach (var item in obj.MaterialTypes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MaterialType, IMaterialTypeGetter>(
+                srcGroup: obj.MaterialTypes,
+                type: typeof(IMaterialTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MaterialTypes,
+                groupGetter: (m) => m.MaterialTypes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MaterialType, IMaterialTypeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.MaterialTypes,
-                    groupGetter: (m) => m.MaterialTypes);
+                yield return item;
             }
-            foreach (var item in obj.Impacts)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Impact, IImpactGetter>(
+                srcGroup: obj.Impacts,
+                type: typeof(IImpactGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Impacts,
+                groupGetter: (m) => m.Impacts))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Impact, IImpactGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Impacts,
-                    groupGetter: (m) => m.Impacts);
+                yield return item;
             }
-            foreach (var item in obj.ImpactDataSets)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ImpactDataSet, IImpactDataSetGetter>(
+                srcGroup: obj.ImpactDataSets,
+                type: typeof(IImpactDataSetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ImpactDataSets,
+                groupGetter: (m) => m.ImpactDataSets))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImpactDataSet, IImpactDataSetGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.ImpactDataSets,
-                    groupGetter: (m) => m.ImpactDataSets);
+                yield return item;
             }
-            foreach (var item in obj.ArmorAddons)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ArmorAddon, IArmorAddonGetter>(
+                srcGroup: obj.ArmorAddons,
+                type: typeof(IArmorAddonGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ArmorAddons,
+                groupGetter: (m) => m.ArmorAddons))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ArmorAddon, IArmorAddonGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.ArmorAddons,
-                    groupGetter: (m) => m.ArmorAddons);
+                yield return item;
             }
-            foreach (var item in obj.EncounterZones)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, EncounterZone, IEncounterZoneGetter>(
+                srcGroup: obj.EncounterZones,
+                type: typeof(IEncounterZoneGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EncounterZones,
+                groupGetter: (m) => m.EncounterZones))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EncounterZone, IEncounterZoneGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.EncounterZones,
-                    groupGetter: (m) => m.EncounterZones);
+                yield return item;
             }
-            foreach (var item in obj.Locations)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Location, ILocationGetter>(
+                srcGroup: obj.Locations,
+                type: typeof(ILocationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Locations,
+                groupGetter: (m) => m.Locations))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Location, ILocationGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Locations,
-                    groupGetter: (m) => m.Locations);
+                yield return item;
             }
-            foreach (var item in obj.Messages)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Message, IMessageGetter>(
+                srcGroup: obj.Messages,
+                type: typeof(IMessageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Messages,
+                groupGetter: (m) => m.Messages))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Message, IMessageGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Messages,
-                    groupGetter: (m) => m.Messages);
+                yield return item;
             }
-            foreach (var item in obj.DefaultObjectManagers)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
+                srcGroup: obj.DefaultObjectManagers,
+                type: typeof(IDefaultObjectManagerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DefaultObjectManagers,
+                groupGetter: (m) => m.DefaultObjectManagers))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.DefaultObjectManagers,
-                    groupGetter: (m) => m.DefaultObjectManagers);
+                yield return item;
             }
-            foreach (var item in obj.LightingTemplates)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LightingTemplate, ILightingTemplateGetter>(
+                srcGroup: obj.LightingTemplates,
+                type: typeof(ILightingTemplateGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LightingTemplates,
+                groupGetter: (m) => m.LightingTemplates))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LightingTemplate, ILightingTemplateGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LightingTemplates,
-                    groupGetter: (m) => m.LightingTemplates);
+                yield return item;
             }
-            foreach (var item in obj.MusicTypes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MusicType, IMusicTypeGetter>(
+                srcGroup: obj.MusicTypes,
+                type: typeof(IMusicTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MusicTypes,
+                groupGetter: (m) => m.MusicTypes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MusicType, IMusicTypeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.MusicTypes,
-                    groupGetter: (m) => m.MusicTypes);
+                yield return item;
             }
-            foreach (var item in obj.Footsteps)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Footstep, IFootstepGetter>(
+                srcGroup: obj.Footsteps,
+                type: typeof(IFootstepGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Footsteps,
+                groupGetter: (m) => m.Footsteps))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Footstep, IFootstepGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Footsteps,
-                    groupGetter: (m) => m.Footsteps);
+                yield return item;
             }
-            foreach (var item in obj.FootstepSets)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, FootstepSet, IFootstepSetGetter>(
+                srcGroup: obj.FootstepSets,
+                type: typeof(IFootstepSetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.FootstepSets,
+                groupGetter: (m) => m.FootstepSets))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, FootstepSet, IFootstepSetGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.FootstepSets,
-                    groupGetter: (m) => m.FootstepSets);
+                yield return item;
             }
-            foreach (var item in obj.StoryManagerBranchNodes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, StoryManagerBranchNode, IStoryManagerBranchNodeGetter>(
+                srcGroup: obj.StoryManagerBranchNodes,
+                type: typeof(IStoryManagerBranchNodeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.StoryManagerBranchNodes,
+                groupGetter: (m) => m.StoryManagerBranchNodes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerBranchNode, IStoryManagerBranchNodeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.StoryManagerBranchNodes,
-                    groupGetter: (m) => m.StoryManagerBranchNodes);
+                yield return item;
             }
-            foreach (var item in obj.StoryManagerQuestNodes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, StoryManagerQuestNode, IStoryManagerQuestNodeGetter>(
+                srcGroup: obj.StoryManagerQuestNodes,
+                type: typeof(IStoryManagerQuestNodeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.StoryManagerQuestNodes,
+                groupGetter: (m) => m.StoryManagerQuestNodes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerQuestNode, IStoryManagerQuestNodeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.StoryManagerQuestNodes,
-                    groupGetter: (m) => m.StoryManagerQuestNodes);
+                yield return item;
             }
-            foreach (var item in obj.StoryManagerEventNodes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, StoryManagerEventNode, IStoryManagerEventNodeGetter>(
+                srcGroup: obj.StoryManagerEventNodes,
+                type: typeof(IStoryManagerEventNodeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.StoryManagerEventNodes,
+                groupGetter: (m) => m.StoryManagerEventNodes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerEventNode, IStoryManagerEventNodeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.StoryManagerEventNodes,
-                    groupGetter: (m) => m.StoryManagerEventNodes);
+                yield return item;
             }
-            foreach (var item in obj.DialogBranches)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, DialogBranch, IDialogBranchGetter>(
+                srcGroup: obj.DialogBranches,
+                type: typeof(IDialogBranchGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DialogBranches,
+                groupGetter: (m) => m.DialogBranches))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogBranch, IDialogBranchGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.DialogBranches,
-                    groupGetter: (m) => m.DialogBranches);
+                yield return item;
             }
-            foreach (var item in obj.MusicTracks)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MusicTrack, IMusicTrackGetter>(
+                srcGroup: obj.MusicTracks,
+                type: typeof(IMusicTrackGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MusicTracks,
+                groupGetter: (m) => m.MusicTracks))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MusicTrack, IMusicTrackGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.MusicTracks,
-                    groupGetter: (m) => m.MusicTracks);
+                yield return item;
             }
-            foreach (var item in obj.DialogViews)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, DialogView, IDialogViewGetter>(
+                srcGroup: obj.DialogViews,
+                type: typeof(IDialogViewGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DialogViews,
+                groupGetter: (m) => m.DialogViews))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogView, IDialogViewGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.DialogViews,
-                    groupGetter: (m) => m.DialogViews);
+                yield return item;
             }
-            foreach (var item in obj.WordsOfPower)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, WordOfPower, IWordOfPowerGetter>(
+                srcGroup: obj.WordsOfPower,
+                type: typeof(IWordOfPowerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.WordsOfPower,
+                groupGetter: (m) => m.WordsOfPower))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, WordOfPower, IWordOfPowerGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.WordsOfPower,
-                    groupGetter: (m) => m.WordsOfPower);
+                yield return item;
             }
-            foreach (var item in obj.Shouts)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Shout, IShoutGetter>(
+                srcGroup: obj.Shouts,
+                type: typeof(IShoutGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Shouts,
+                groupGetter: (m) => m.Shouts))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Shout, IShoutGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Shouts,
-                    groupGetter: (m) => m.Shouts);
+                yield return item;
             }
-            foreach (var item in obj.EquipTypes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, EquipType, IEquipTypeGetter>(
+                srcGroup: obj.EquipTypes,
+                type: typeof(IEquipTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EquipTypes,
+                groupGetter: (m) => m.EquipTypes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EquipType, IEquipTypeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.EquipTypes,
-                    groupGetter: (m) => m.EquipTypes);
+                yield return item;
             }
-            foreach (var item in obj.Relationships)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Relationship, IRelationshipGetter>(
+                srcGroup: obj.Relationships,
+                type: typeof(IRelationshipGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Relationships,
+                groupGetter: (m) => m.Relationships))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Relationship, IRelationshipGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Relationships,
-                    groupGetter: (m) => m.Relationships);
+                yield return item;
             }
-            foreach (var item in obj.Scenes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Scene, ISceneGetter>(
+                srcGroup: obj.Scenes,
+                type: typeof(ISceneGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Scenes,
+                groupGetter: (m) => m.Scenes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Scene, ISceneGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Scenes,
-                    groupGetter: (m) => m.Scenes);
+                yield return item;
             }
-            foreach (var item in obj.AssociationTypes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, AssociationType, IAssociationTypeGetter>(
+                srcGroup: obj.AssociationTypes,
+                type: typeof(IAssociationTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AssociationTypes,
+                groupGetter: (m) => m.AssociationTypes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AssociationType, IAssociationTypeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.AssociationTypes,
-                    groupGetter: (m) => m.AssociationTypes);
+                yield return item;
             }
-            foreach (var item in obj.Outfits)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Outfit, IOutfitGetter>(
+                srcGroup: obj.Outfits,
+                type: typeof(IOutfitGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Outfits,
+                groupGetter: (m) => m.Outfits))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Outfit, IOutfitGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Outfits,
-                    groupGetter: (m) => m.Outfits);
+                yield return item;
             }
-            foreach (var item in obj.ArtObjects)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ArtObject, IArtObjectGetter>(
+                srcGroup: obj.ArtObjects,
+                type: typeof(IArtObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ArtObjects,
+                groupGetter: (m) => m.ArtObjects))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ArtObject, IArtObjectGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.ArtObjects,
-                    groupGetter: (m) => m.ArtObjects);
+                yield return item;
             }
-            foreach (var item in obj.MaterialObjects)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MaterialObject, IMaterialObjectGetter>(
+                srcGroup: obj.MaterialObjects,
+                type: typeof(IMaterialObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MaterialObjects,
+                groupGetter: (m) => m.MaterialObjects))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MaterialObject, IMaterialObjectGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.MaterialObjects,
-                    groupGetter: (m) => m.MaterialObjects);
+                yield return item;
             }
-            foreach (var item in obj.MovementTypes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MovementType, IMovementTypeGetter>(
+                srcGroup: obj.MovementTypes,
+                type: typeof(IMovementTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MovementTypes,
+                groupGetter: (m) => m.MovementTypes))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MovementType, IMovementTypeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.MovementTypes,
-                    groupGetter: (m) => m.MovementTypes);
+                yield return item;
             }
-            foreach (var item in obj.SoundDescriptors)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, SoundDescriptor, ISoundDescriptorGetter>(
+                srcGroup: obj.SoundDescriptors,
+                type: typeof(ISoundDescriptorGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoundDescriptors,
+                groupGetter: (m) => m.SoundDescriptors))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundDescriptor, ISoundDescriptorGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.SoundDescriptors,
-                    groupGetter: (m) => m.SoundDescriptors);
+                yield return item;
             }
-            foreach (var item in obj.DualCastData)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, DualCastData, IDualCastDataGetter>(
+                srcGroup: obj.DualCastData,
+                type: typeof(IDualCastDataGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DualCastData,
+                groupGetter: (m) => m.DualCastData))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DualCastData, IDualCastDataGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.DualCastData,
-                    groupGetter: (m) => m.DualCastData);
+                yield return item;
             }
-            foreach (var item in obj.SoundCategories)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, SoundCategory, ISoundCategoryGetter>(
+                srcGroup: obj.SoundCategories,
+                type: typeof(ISoundCategoryGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoundCategories,
+                groupGetter: (m) => m.SoundCategories))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundCategory, ISoundCategoryGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.SoundCategories,
-                    groupGetter: (m) => m.SoundCategories);
+                yield return item;
             }
-            foreach (var item in obj.SoundOutputModels)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, SoundOutputModel, ISoundOutputModelGetter>(
+                srcGroup: obj.SoundOutputModels,
+                type: typeof(ISoundOutputModelGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoundOutputModels,
+                groupGetter: (m) => m.SoundOutputModels))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundOutputModel, ISoundOutputModelGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.SoundOutputModels,
-                    groupGetter: (m) => m.SoundOutputModels);
+                yield return item;
             }
-            foreach (var item in obj.CollisionLayers)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, CollisionLayer, ICollisionLayerGetter>(
+                srcGroup: obj.CollisionLayers,
+                type: typeof(ICollisionLayerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CollisionLayers,
+                groupGetter: (m) => m.CollisionLayers))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CollisionLayer, ICollisionLayerGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.CollisionLayers,
-                    groupGetter: (m) => m.CollisionLayers);
+                yield return item;
             }
-            foreach (var item in obj.Colors)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ColorRecord, IColorRecordGetter>(
+                srcGroup: obj.Colors,
+                type: typeof(IColorRecordGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Colors,
+                groupGetter: (m) => m.Colors))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ColorRecord, IColorRecordGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Colors,
-                    groupGetter: (m) => m.Colors);
+                yield return item;
             }
-            foreach (var item in obj.ReverbParameters)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ReverbParameters, IReverbParametersGetter>(
+                srcGroup: obj.ReverbParameters,
+                type: typeof(IReverbParametersGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ReverbParameters,
+                groupGetter: (m) => m.ReverbParameters))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ReverbParameters, IReverbParametersGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.ReverbParameters,
-                    groupGetter: (m) => m.ReverbParameters);
+                yield return item;
             }
-            foreach (var item in obj.VolumetricLightings)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, VolumetricLighting, IVolumetricLightingGetter>(
+                srcGroup: obj.VolumetricLightings,
+                type: typeof(IVolumetricLightingGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.VolumetricLightings,
+                groupGetter: (m) => m.VolumetricLightings))
             {
-                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VolumetricLighting, IVolumetricLightingGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.VolumetricLightings,
-                    groupGetter: (m) => m.VolumetricLightings);
+                yield return item;
             }
         }
         
@@ -14760,1456 +14872,1568 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    foreach (var item in obj.GameSettings)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, GameSetting, IGameSettingGetter>(
+                        srcGroup: obj.GameSettings,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.GameSettings,
+                        groupGetter: (m) => m.GameSettings))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, GameSetting, IGameSettingGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.GameSettings,
-                            groupGetter: (m) => m.GameSettings);
+                        yield return item;
                     }
                     yield break;
                 case "Keyword":
                 case "IKeywordGetter":
                 case "IKeyword":
                 case "IKeywordInternal":
-                    foreach (var item in obj.Keywords)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Keyword, IKeywordGetter>(
+                        srcGroup: obj.Keywords,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Keywords,
+                        groupGetter: (m) => m.Keywords))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Keyword, IKeywordGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Keywords,
-                            groupGetter: (m) => m.Keywords);
+                        yield return item;
                     }
                     yield break;
                 case "LocationReferenceType":
                 case "ILocationReferenceTypeGetter":
                 case "ILocationReferenceType":
                 case "ILocationReferenceTypeInternal":
-                    foreach (var item in obj.LocationReferenceTypes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
+                        srcGroup: obj.LocationReferenceTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LocationReferenceTypes,
+                        groupGetter: (m) => m.LocationReferenceTypes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LocationReferenceTypes,
-                            groupGetter: (m) => m.LocationReferenceTypes);
+                        yield return item;
                     }
                     yield break;
                 case "ActionRecord":
                 case "IActionRecordGetter":
                 case "IActionRecord":
                 case "IActionRecordInternal":
-                    foreach (var item in obj.Actions)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ActionRecord, IActionRecordGetter>(
+                        srcGroup: obj.Actions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Actions,
+                        groupGetter: (m) => m.Actions))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ActionRecord, IActionRecordGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Actions,
-                            groupGetter: (m) => m.Actions);
+                        yield return item;
                     }
                     yield break;
                 case "TextureSet":
                 case "ITextureSetGetter":
                 case "ITextureSet":
                 case "ITextureSetInternal":
-                    foreach (var item in obj.TextureSets)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, TextureSet, ITextureSetGetter>(
+                        srcGroup: obj.TextureSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.TextureSets,
+                        groupGetter: (m) => m.TextureSets))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, TextureSet, ITextureSetGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.TextureSets,
-                            groupGetter: (m) => m.TextureSets);
+                        yield return item;
                     }
                     yield break;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    foreach (var item in obj.Globals)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Global, IGlobalGetter>(
+                        srcGroup: obj.Globals,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Globals,
+                        groupGetter: (m) => m.Globals))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Global, IGlobalGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Globals,
-                            groupGetter: (m) => m.Globals);
+                        yield return item;
                     }
                     yield break;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    foreach (var item in obj.Classes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Class, IClassGetter>(
+                        srcGroup: obj.Classes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Classes,
+                        groupGetter: (m) => m.Classes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Class, IClassGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Classes,
-                            groupGetter: (m) => m.Classes);
+                        yield return item;
                     }
                     yield break;
                 case "Faction":
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    foreach (var item in obj.Factions)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Faction, IFactionGetter>(
+                        srcGroup: obj.Factions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Factions,
+                        groupGetter: (m) => m.Factions))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Faction, IFactionGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Factions,
-                            groupGetter: (m) => m.Factions);
+                        yield return item;
                     }
                     yield break;
                 case "HeadPart":
                 case "IHeadPartGetter":
                 case "IHeadPart":
                 case "IHeadPartInternal":
-                    foreach (var item in obj.HeadParts)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, HeadPart, IHeadPartGetter>(
+                        srcGroup: obj.HeadParts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.HeadParts,
+                        groupGetter: (m) => m.HeadParts))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, HeadPart, IHeadPartGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.HeadParts,
-                            groupGetter: (m) => m.HeadParts);
+                        yield return item;
                     }
                     yield break;
                 case "Hair":
                 case "IHairGetter":
                 case "IHair":
                 case "IHairInternal":
-                    foreach (var item in obj.Hairs)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Hair, IHairGetter>(
+                        srcGroup: obj.Hairs,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Hairs,
+                        groupGetter: (m) => m.Hairs))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Hair, IHairGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Hairs,
-                            groupGetter: (m) => m.Hairs);
+                        yield return item;
                     }
                     yield break;
                 case "Eyes":
                 case "IEyesGetter":
                 case "IEyes":
                 case "IEyesInternal":
-                    foreach (var item in obj.Eyes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Eyes, IEyesGetter>(
+                        srcGroup: obj.Eyes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Eyes,
+                        groupGetter: (m) => m.Eyes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Eyes, IEyesGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Eyes,
-                            groupGetter: (m) => m.Eyes);
+                        yield return item;
                     }
                     yield break;
                 case "Race":
                 case "IRaceGetter":
                 case "IRace":
                 case "IRaceInternal":
-                    foreach (var item in obj.Races)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Race, IRaceGetter>(
+                        srcGroup: obj.Races,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Races,
+                        groupGetter: (m) => m.Races))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Race, IRaceGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Races,
-                            groupGetter: (m) => m.Races);
+                        yield return item;
                     }
                     yield break;
                 case "SoundMarker":
                 case "ISoundMarkerGetter":
                 case "ISoundMarker":
                 case "ISoundMarkerInternal":
-                    foreach (var item in obj.SoundMarkers)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, SoundMarker, ISoundMarkerGetter>(
+                        srcGroup: obj.SoundMarkers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoundMarkers,
+                        groupGetter: (m) => m.SoundMarkers))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundMarker, ISoundMarkerGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.SoundMarkers,
-                            groupGetter: (m) => m.SoundMarkers);
+                        yield return item;
                     }
                     yield break;
                 case "AcousticSpace":
                 case "IAcousticSpaceGetter":
                 case "IAcousticSpace":
                 case "IAcousticSpaceInternal":
-                    foreach (var item in obj.AcousticSpaces)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, AcousticSpace, IAcousticSpaceGetter>(
+                        srcGroup: obj.AcousticSpaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AcousticSpaces,
+                        groupGetter: (m) => m.AcousticSpaces))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AcousticSpace, IAcousticSpaceGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.AcousticSpaces,
-                            groupGetter: (m) => m.AcousticSpaces);
+                        yield return item;
                     }
                     yield break;
                 case "MagicEffect":
                 case "IMagicEffectGetter":
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
-                    foreach (var item in obj.MagicEffects)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MagicEffect, IMagicEffectGetter>(
+                        srcGroup: obj.MagicEffects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MagicEffects,
+                        groupGetter: (m) => m.MagicEffects))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MagicEffect, IMagicEffectGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.MagicEffects,
-                            groupGetter: (m) => m.MagicEffects);
+                        yield return item;
                     }
                     yield break;
                 case "LandscapeTexture":
                 case "ILandscapeTextureGetter":
                 case "ILandscapeTexture":
                 case "ILandscapeTextureInternal":
-                    foreach (var item in obj.LandscapeTextures)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LandscapeTexture, ILandscapeTextureGetter>(
+                        srcGroup: obj.LandscapeTextures,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LandscapeTextures,
+                        groupGetter: (m) => m.LandscapeTextures))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LandscapeTexture, ILandscapeTextureGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LandscapeTextures,
-                            groupGetter: (m) => m.LandscapeTextures);
+                        yield return item;
                     }
                     yield break;
                 case "ObjectEffect":
                 case "IObjectEffectGetter":
                 case "IObjectEffect":
                 case "IObjectEffectInternal":
-                    foreach (var item in obj.ObjectEffects)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ObjectEffect, IObjectEffectGetter>(
+                        srcGroup: obj.ObjectEffects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ObjectEffects,
+                        groupGetter: (m) => m.ObjectEffects))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ObjectEffect, IObjectEffectGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.ObjectEffects,
-                            groupGetter: (m) => m.ObjectEffects);
+                        yield return item;
                     }
                     yield break;
                 case "Spell":
                 case "ISpellGetter":
                 case "ISpell":
                 case "ISpellInternal":
-                    foreach (var item in obj.Spells)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Spell, ISpellGetter>(
+                        srcGroup: obj.Spells,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Spells,
+                        groupGetter: (m) => m.Spells))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Spell, ISpellGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Spells,
-                            groupGetter: (m) => m.Spells);
+                        yield return item;
                     }
                     yield break;
                 case "Scroll":
                 case "IScrollGetter":
                 case "IScroll":
                 case "IScrollInternal":
-                    foreach (var item in obj.Scrolls)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Scroll, IScrollGetter>(
+                        srcGroup: obj.Scrolls,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Scrolls,
+                        groupGetter: (m) => m.Scrolls))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Scroll, IScrollGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Scrolls,
-                            groupGetter: (m) => m.Scrolls);
+                        yield return item;
                     }
                     yield break;
                 case "Activator":
                 case "IActivatorGetter":
                 case "IActivator":
                 case "IActivatorInternal":
-                    foreach (var item in obj.Activators)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Activator, IActivatorGetter>(
+                        srcGroup: obj.Activators,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Activators,
+                        groupGetter: (m) => m.Activators))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Activator, IActivatorGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Activators,
-                            groupGetter: (m) => m.Activators);
+                        yield return item;
                     }
                     yield break;
                 case "TalkingActivator":
                 case "ITalkingActivatorGetter":
                 case "ITalkingActivator":
                 case "ITalkingActivatorInternal":
-                    foreach (var item in obj.TalkingActivators)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, TalkingActivator, ITalkingActivatorGetter>(
+                        srcGroup: obj.TalkingActivators,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.TalkingActivators,
+                        groupGetter: (m) => m.TalkingActivators))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, TalkingActivator, ITalkingActivatorGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.TalkingActivators,
-                            groupGetter: (m) => m.TalkingActivators);
+                        yield return item;
                     }
                     yield break;
                 case "Armor":
                 case "IArmorGetter":
                 case "IArmor":
                 case "IArmorInternal":
-                    foreach (var item in obj.Armors)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Armor, IArmorGetter>(
+                        srcGroup: obj.Armors,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Armors,
+                        groupGetter: (m) => m.Armors))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Armor, IArmorGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Armors,
-                            groupGetter: (m) => m.Armors);
+                        yield return item;
                     }
                     yield break;
                 case "Book":
                 case "IBookGetter":
                 case "IBook":
                 case "IBookInternal":
-                    foreach (var item in obj.Books)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Book, IBookGetter>(
+                        srcGroup: obj.Books,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Books,
+                        groupGetter: (m) => m.Books))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Book, IBookGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Books,
-                            groupGetter: (m) => m.Books);
+                        yield return item;
                     }
                     yield break;
                 case "Container":
                 case "IContainerGetter":
                 case "IContainer":
                 case "IContainerInternal":
-                    foreach (var item in obj.Containers)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Container, IContainerGetter>(
+                        srcGroup: obj.Containers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Containers,
+                        groupGetter: (m) => m.Containers))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Container, IContainerGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Containers,
-                            groupGetter: (m) => m.Containers);
+                        yield return item;
                     }
                     yield break;
                 case "Door":
                 case "IDoorGetter":
                 case "IDoor":
                 case "IDoorInternal":
-                    foreach (var item in obj.Doors)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Door, IDoorGetter>(
+                        srcGroup: obj.Doors,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Doors,
+                        groupGetter: (m) => m.Doors))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Door, IDoorGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Doors,
-                            groupGetter: (m) => m.Doors);
+                        yield return item;
                     }
                     yield break;
                 case "Ingredient":
                 case "IIngredientGetter":
                 case "IIngredient":
                 case "IIngredientInternal":
-                    foreach (var item in obj.Ingredients)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Ingredient, IIngredientGetter>(
+                        srcGroup: obj.Ingredients,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Ingredients,
+                        groupGetter: (m) => m.Ingredients))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ingredient, IIngredientGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Ingredients,
-                            groupGetter: (m) => m.Ingredients);
+                        yield return item;
                     }
                     yield break;
                 case "Light":
                 case "ILightGetter":
                 case "ILight":
                 case "ILightInternal":
-                    foreach (var item in obj.Lights)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Light, ILightGetter>(
+                        srcGroup: obj.Lights,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Lights,
+                        groupGetter: (m) => m.Lights))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Light, ILightGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Lights,
-                            groupGetter: (m) => m.Lights);
+                        yield return item;
                     }
                     yield break;
                 case "MiscItem":
                 case "IMiscItemGetter":
                 case "IMiscItem":
                 case "IMiscItemInternal":
-                    foreach (var item in obj.MiscItems)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MiscItem, IMiscItemGetter>(
+                        srcGroup: obj.MiscItems,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MiscItems,
+                        groupGetter: (m) => m.MiscItems))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MiscItem, IMiscItemGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.MiscItems,
-                            groupGetter: (m) => m.MiscItems);
+                        yield return item;
                     }
                     yield break;
                 case "AlchemicalApparatus":
                 case "IAlchemicalApparatusGetter":
                 case "IAlchemicalApparatus":
                 case "IAlchemicalApparatusInternal":
-                    foreach (var item in obj.AlchemicalApparatuses)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
+                        srcGroup: obj.AlchemicalApparatuses,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AlchemicalApparatuses,
+                        groupGetter: (m) => m.AlchemicalApparatuses))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.AlchemicalApparatuses,
-                            groupGetter: (m) => m.AlchemicalApparatuses);
+                        yield return item;
                     }
                     yield break;
                 case "Static":
                 case "IStaticGetter":
                 case "IStatic":
                 case "IStaticInternal":
-                    foreach (var item in obj.Statics)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Static, IStaticGetter>(
+                        srcGroup: obj.Statics,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Statics,
+                        groupGetter: (m) => m.Statics))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Static, IStaticGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Statics,
-                            groupGetter: (m) => m.Statics);
+                        yield return item;
                     }
                     yield break;
                 case "MoveableStatic":
                 case "IMoveableStaticGetter":
                 case "IMoveableStatic":
                 case "IMoveableStaticInternal":
-                    foreach (var item in obj.MoveableStatics)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MoveableStatic, IMoveableStaticGetter>(
+                        srcGroup: obj.MoveableStatics,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MoveableStatics,
+                        groupGetter: (m) => m.MoveableStatics))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MoveableStatic, IMoveableStaticGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.MoveableStatics,
-                            groupGetter: (m) => m.MoveableStatics);
+                        yield return item;
                     }
                     yield break;
                 case "Grass":
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    foreach (var item in obj.Grasses)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Grass, IGrassGetter>(
+                        srcGroup: obj.Grasses,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Grasses,
+                        groupGetter: (m) => m.Grasses))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Grass, IGrassGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Grasses,
-                            groupGetter: (m) => m.Grasses);
+                        yield return item;
                     }
                     yield break;
                 case "Tree":
                 case "ITreeGetter":
                 case "ITree":
                 case "ITreeInternal":
-                    foreach (var item in obj.Trees)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Tree, ITreeGetter>(
+                        srcGroup: obj.Trees,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Trees,
+                        groupGetter: (m) => m.Trees))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Tree, ITreeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Trees,
-                            groupGetter: (m) => m.Trees);
+                        yield return item;
                     }
                     yield break;
                 case "Flora":
                 case "IFloraGetter":
                 case "IFlora":
                 case "IFloraInternal":
-                    foreach (var item in obj.Florae)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Flora, IFloraGetter>(
+                        srcGroup: obj.Florae,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Florae,
+                        groupGetter: (m) => m.Florae))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Flora, IFloraGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Florae,
-                            groupGetter: (m) => m.Florae);
+                        yield return item;
                     }
                     yield break;
                 case "Furniture":
                 case "IFurnitureGetter":
                 case "IFurniture":
                 case "IFurnitureInternal":
-                    foreach (var item in obj.Furniture)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Furniture, IFurnitureGetter>(
+                        srcGroup: obj.Furniture,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Furniture,
+                        groupGetter: (m) => m.Furniture))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Furniture, IFurnitureGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Furniture,
-                            groupGetter: (m) => m.Furniture);
+                        yield return item;
                     }
                     yield break;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
                 case "IWeaponInternal":
-                    foreach (var item in obj.Weapons)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Weapon, IWeaponGetter>(
+                        srcGroup: obj.Weapons,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Weapons,
+                        groupGetter: (m) => m.Weapons))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Weapon, IWeaponGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Weapons,
-                            groupGetter: (m) => m.Weapons);
+                        yield return item;
                     }
                     yield break;
                 case "Ammunition":
                 case "IAmmunitionGetter":
                 case "IAmmunition":
                 case "IAmmunitionInternal":
-                    foreach (var item in obj.Ammunitions)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Ammunition, IAmmunitionGetter>(
+                        srcGroup: obj.Ammunitions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Ammunitions,
+                        groupGetter: (m) => m.Ammunitions))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ammunition, IAmmunitionGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Ammunitions,
-                            groupGetter: (m) => m.Ammunitions);
+                        yield return item;
                     }
                     yield break;
                 case "Npc":
                 case "INpcGetter":
                 case "INpc":
                 case "INpcInternal":
-                    foreach (var item in obj.Npcs)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Npc, INpcGetter>(
+                        srcGroup: obj.Npcs,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Npcs,
+                        groupGetter: (m) => m.Npcs))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Npc, INpcGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Npcs,
-                            groupGetter: (m) => m.Npcs);
+                        yield return item;
                     }
                     yield break;
                 case "LeveledNpc":
                 case "ILeveledNpcGetter":
                 case "ILeveledNpc":
                 case "ILeveledNpcInternal":
-                    foreach (var item in obj.LeveledNpcs)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LeveledNpc, ILeveledNpcGetter>(
+                        srcGroup: obj.LeveledNpcs,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledNpcs,
+                        groupGetter: (m) => m.LeveledNpcs))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledNpc, ILeveledNpcGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LeveledNpcs,
-                            groupGetter: (m) => m.LeveledNpcs);
+                        yield return item;
                     }
                     yield break;
                 case "Key":
                 case "IKeyGetter":
                 case "IKey":
                 case "IKeyInternal":
-                    foreach (var item in obj.Keys)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Key, IKeyGetter>(
+                        srcGroup: obj.Keys,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Keys,
+                        groupGetter: (m) => m.Keys))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Key, IKeyGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Keys,
-                            groupGetter: (m) => m.Keys);
+                        yield return item;
                     }
                     yield break;
                 case "Ingestible":
                 case "IIngestibleGetter":
                 case "IIngestible":
                 case "IIngestibleInternal":
-                    foreach (var item in obj.Ingestibles)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Ingestible, IIngestibleGetter>(
+                        srcGroup: obj.Ingestibles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Ingestibles,
+                        groupGetter: (m) => m.Ingestibles))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ingestible, IIngestibleGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Ingestibles,
-                            groupGetter: (m) => m.Ingestibles);
+                        yield return item;
                     }
                     yield break;
                 case "IdleMarker":
                 case "IIdleMarkerGetter":
                 case "IIdleMarker":
                 case "IIdleMarkerInternal":
-                    foreach (var item in obj.IdleMarkers)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, IdleMarker, IIdleMarkerGetter>(
+                        srcGroup: obj.IdleMarkers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.IdleMarkers,
+                        groupGetter: (m) => m.IdleMarkers))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, IdleMarker, IIdleMarkerGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.IdleMarkers,
-                            groupGetter: (m) => m.IdleMarkers);
+                        yield return item;
                     }
                     yield break;
                 case "ConstructibleObject":
                 case "IConstructibleObjectGetter":
                 case "IConstructibleObject":
                 case "IConstructibleObjectInternal":
-                    foreach (var item in obj.ConstructibleObjects)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                        srcGroup: obj.ConstructibleObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ConstructibleObjects,
+                        groupGetter: (m) => m.ConstructibleObjects))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ConstructibleObject, IConstructibleObjectGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.ConstructibleObjects,
-                            groupGetter: (m) => m.ConstructibleObjects);
+                        yield return item;
                     }
                     yield break;
                 case "Projectile":
                 case "IProjectileGetter":
                 case "IProjectile":
                 case "IProjectileInternal":
-                    foreach (var item in obj.Projectiles)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Projectile, IProjectileGetter>(
+                        srcGroup: obj.Projectiles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Projectiles,
+                        groupGetter: (m) => m.Projectiles))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Projectile, IProjectileGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Projectiles,
-                            groupGetter: (m) => m.Projectiles);
+                        yield return item;
                     }
                     yield break;
                 case "Hazard":
                 case "IHazardGetter":
                 case "IHazard":
                 case "IHazardInternal":
-                    foreach (var item in obj.Hazards)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Hazard, IHazardGetter>(
+                        srcGroup: obj.Hazards,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Hazards,
+                        groupGetter: (m) => m.Hazards))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Hazard, IHazardGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Hazards,
-                            groupGetter: (m) => m.Hazards);
+                        yield return item;
                     }
                     yield break;
                 case "SoulGem":
                 case "ISoulGemGetter":
                 case "ISoulGem":
                 case "ISoulGemInternal":
-                    foreach (var item in obj.SoulGems)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, SoulGem, ISoulGemGetter>(
+                        srcGroup: obj.SoulGems,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoulGems,
+                        groupGetter: (m) => m.SoulGems))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoulGem, ISoulGemGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.SoulGems,
-                            groupGetter: (m) => m.SoulGems);
+                        yield return item;
                     }
                     yield break;
                 case "LeveledItem":
                 case "ILeveledItemGetter":
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
-                    foreach (var item in obj.LeveledItems)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LeveledItem, ILeveledItemGetter>(
+                        srcGroup: obj.LeveledItems,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledItems,
+                        groupGetter: (m) => m.LeveledItems))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledItem, ILeveledItemGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LeveledItems,
-                            groupGetter: (m) => m.LeveledItems);
+                        yield return item;
                     }
                     yield break;
                 case "Weather":
                 case "IWeatherGetter":
                 case "IWeather":
                 case "IWeatherInternal":
-                    foreach (var item in obj.Weathers)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Weather, IWeatherGetter>(
+                        srcGroup: obj.Weathers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Weathers,
+                        groupGetter: (m) => m.Weathers))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Weather, IWeatherGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Weathers,
-                            groupGetter: (m) => m.Weathers);
+                        yield return item;
                     }
                     yield break;
                 case "Climate":
                 case "IClimateGetter":
                 case "IClimate":
                 case "IClimateInternal":
-                    foreach (var item in obj.Climates)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Climate, IClimateGetter>(
+                        srcGroup: obj.Climates,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Climates,
+                        groupGetter: (m) => m.Climates))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Climate, IClimateGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Climates,
-                            groupGetter: (m) => m.Climates);
+                        yield return item;
                     }
                     yield break;
                 case "ShaderParticleGeometry":
                 case "IShaderParticleGeometryGetter":
                 case "IShaderParticleGeometry":
                 case "IShaderParticleGeometryInternal":
-                    foreach (var item in obj.ShaderParticleGeometries)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ShaderParticleGeometry, IShaderParticleGeometryGetter>(
+                        srcGroup: obj.ShaderParticleGeometries,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ShaderParticleGeometries,
+                        groupGetter: (m) => m.ShaderParticleGeometries))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ShaderParticleGeometry, IShaderParticleGeometryGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.ShaderParticleGeometries,
-                            groupGetter: (m) => m.ShaderParticleGeometries);
+                        yield return item;
                     }
                     yield break;
                 case "VisualEffect":
                 case "IVisualEffectGetter":
                 case "IVisualEffect":
                 case "IVisualEffectInternal":
-                    foreach (var item in obj.VisualEffects)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, VisualEffect, IVisualEffectGetter>(
+                        srcGroup: obj.VisualEffects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.VisualEffects,
+                        groupGetter: (m) => m.VisualEffects))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VisualEffect, IVisualEffectGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.VisualEffects,
-                            groupGetter: (m) => m.VisualEffects);
+                        yield return item;
                     }
                     yield break;
                 case "Region":
                 case "IRegionGetter":
                 case "IRegion":
                 case "IRegionInternal":
-                    foreach (var item in obj.Regions)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Region, IRegionGetter>(
+                        srcGroup: obj.Regions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Regions,
+                        groupGetter: (m) => m.Regions))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Region, IRegionGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Regions,
-                            groupGetter: (m) => m.Regions);
+                        yield return item;
                     }
                     yield break;
                 case "NavigationMeshInfoMap":
                 case "INavigationMeshInfoMapGetter":
                 case "INavigationMeshInfoMap":
                 case "INavigationMeshInfoMapInternal":
-                    foreach (var item in obj.NavigationMeshInfoMaps)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
+                        srcGroup: obj.NavigationMeshInfoMaps,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.NavigationMeshInfoMaps,
+                        groupGetter: (m) => m.NavigationMeshInfoMaps))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.NavigationMeshInfoMaps,
-                            groupGetter: (m) => m.NavigationMeshInfoMaps);
+                        yield return item;
                     }
                     yield break;
                 case "Worldspace":
                 case "IWorldspaceGetter":
                 case "IWorldspace":
                 case "IWorldspaceInternal":
-                    foreach (var item in obj.Worldspaces)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Worldspace, IWorldspaceGetter>(
+                        srcGroup: obj.Worldspaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Worldspaces,
+                        groupGetter: (m) => m.Worldspaces))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Worldspace, IWorldspaceGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Worldspaces,
-                            groupGetter: (m) => m.Worldspaces);
+                        yield return item;
                     }
                     yield break;
                 case "DialogTopic":
                 case "IDialogTopicGetter":
                 case "IDialogTopic":
                 case "IDialogTopicInternal":
-                    foreach (var item in obj.DialogTopics)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, DialogTopic, IDialogTopicGetter>(
+                        srcGroup: obj.DialogTopics,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DialogTopics,
+                        groupGetter: (m) => m.DialogTopics))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogTopic, IDialogTopicGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.DialogTopics,
-                            groupGetter: (m) => m.DialogTopics);
+                        yield return item;
                     }
                     yield break;
                 case "Quest":
                 case "IQuestGetter":
                 case "IQuest":
                 case "IQuestInternal":
-                    foreach (var item in obj.Quests)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Quest, IQuestGetter>(
+                        srcGroup: obj.Quests,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Quests,
+                        groupGetter: (m) => m.Quests))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Quest, IQuestGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Quests,
-                            groupGetter: (m) => m.Quests);
+                        yield return item;
                     }
                     yield break;
                 case "IdleAnimation":
                 case "IIdleAnimationGetter":
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
-                    foreach (var item in obj.IdleAnimations)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, IdleAnimation, IIdleAnimationGetter>(
+                        srcGroup: obj.IdleAnimations,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.IdleAnimations,
+                        groupGetter: (m) => m.IdleAnimations))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, IdleAnimation, IIdleAnimationGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.IdleAnimations,
-                            groupGetter: (m) => m.IdleAnimations);
+                        yield return item;
                     }
                     yield break;
                 case "Package":
                 case "IPackageGetter":
                 case "IPackage":
                 case "IPackageInternal":
-                    foreach (var item in obj.Packages)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Package, IPackageGetter>(
+                        srcGroup: obj.Packages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Packages,
+                        groupGetter: (m) => m.Packages))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Package, IPackageGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Packages,
-                            groupGetter: (m) => m.Packages);
+                        yield return item;
                     }
                     yield break;
                 case "CombatStyle":
                 case "ICombatStyleGetter":
                 case "ICombatStyle":
                 case "ICombatStyleInternal":
-                    foreach (var item in obj.CombatStyles)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, CombatStyle, ICombatStyleGetter>(
+                        srcGroup: obj.CombatStyles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CombatStyles,
+                        groupGetter: (m) => m.CombatStyles))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CombatStyle, ICombatStyleGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.CombatStyles,
-                            groupGetter: (m) => m.CombatStyles);
+                        yield return item;
                     }
                     yield break;
                 case "LoadScreen":
                 case "ILoadScreenGetter":
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
-                    foreach (var item in obj.LoadScreens)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LoadScreen, ILoadScreenGetter>(
+                        srcGroup: obj.LoadScreens,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LoadScreens,
+                        groupGetter: (m) => m.LoadScreens))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LoadScreen, ILoadScreenGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LoadScreens,
-                            groupGetter: (m) => m.LoadScreens);
+                        yield return item;
                     }
                     yield break;
                 case "LeveledSpell":
                 case "ILeveledSpellGetter":
                 case "ILeveledSpell":
                 case "ILeveledSpellInternal":
-                    foreach (var item in obj.LeveledSpells)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LeveledSpell, ILeveledSpellGetter>(
+                        srcGroup: obj.LeveledSpells,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledSpells,
+                        groupGetter: (m) => m.LeveledSpells))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledSpell, ILeveledSpellGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LeveledSpells,
-                            groupGetter: (m) => m.LeveledSpells);
+                        yield return item;
                     }
                     yield break;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
-                    foreach (var item in obj.AnimatedObjects)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                        srcGroup: obj.AnimatedObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AnimatedObjects,
+                        groupGetter: (m) => m.AnimatedObjects))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AnimatedObject, IAnimatedObjectGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.AnimatedObjects,
-                            groupGetter: (m) => m.AnimatedObjects);
+                        yield return item;
                     }
                     yield break;
                 case "Water":
                 case "IWaterGetter":
                 case "IWater":
                 case "IWaterInternal":
-                    foreach (var item in obj.Waters)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Water, IWaterGetter>(
+                        srcGroup: obj.Waters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Waters,
+                        groupGetter: (m) => m.Waters))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Water, IWaterGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Waters,
-                            groupGetter: (m) => m.Waters);
+                        yield return item;
                     }
                     yield break;
                 case "EffectShader":
                 case "IEffectShaderGetter":
                 case "IEffectShader":
                 case "IEffectShaderInternal":
-                    foreach (var item in obj.EffectShaders)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, EffectShader, IEffectShaderGetter>(
+                        srcGroup: obj.EffectShaders,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EffectShaders,
+                        groupGetter: (m) => m.EffectShaders))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EffectShader, IEffectShaderGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.EffectShaders,
-                            groupGetter: (m) => m.EffectShaders);
+                        yield return item;
                     }
                     yield break;
                 case "Explosion":
                 case "IExplosionGetter":
                 case "IExplosion":
                 case "IExplosionInternal":
-                    foreach (var item in obj.Explosions)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Explosion, IExplosionGetter>(
+                        srcGroup: obj.Explosions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Explosions,
+                        groupGetter: (m) => m.Explosions))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Explosion, IExplosionGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Explosions,
-                            groupGetter: (m) => m.Explosions);
+                        yield return item;
                     }
                     yield break;
                 case "Debris":
                 case "IDebrisGetter":
                 case "IDebris":
                 case "IDebrisInternal":
-                    foreach (var item in obj.Debris)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Debris, IDebrisGetter>(
+                        srcGroup: obj.Debris,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Debris,
+                        groupGetter: (m) => m.Debris))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Debris, IDebrisGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Debris,
-                            groupGetter: (m) => m.Debris);
+                        yield return item;
                     }
                     yield break;
                 case "ImageSpace":
                 case "IImageSpaceGetter":
                 case "IImageSpace":
                 case "IImageSpaceInternal":
-                    foreach (var item in obj.ImageSpaces)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ImageSpace, IImageSpaceGetter>(
+                        srcGroup: obj.ImageSpaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ImageSpaces,
+                        groupGetter: (m) => m.ImageSpaces))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImageSpace, IImageSpaceGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.ImageSpaces,
-                            groupGetter: (m) => m.ImageSpaces);
+                        yield return item;
                     }
                     yield break;
                 case "ImageSpaceAdapter":
                 case "IImageSpaceAdapterGetter":
                 case "IImageSpaceAdapter":
                 case "IImageSpaceAdapterInternal":
-                    foreach (var item in obj.ImageSpaceAdapters)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
+                        srcGroup: obj.ImageSpaceAdapters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ImageSpaceAdapters,
+                        groupGetter: (m) => m.ImageSpaceAdapters))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.ImageSpaceAdapters,
-                            groupGetter: (m) => m.ImageSpaceAdapters);
+                        yield return item;
                     }
                     yield break;
                 case "FormList":
                 case "IFormListGetter":
                 case "IFormList":
                 case "IFormListInternal":
-                    foreach (var item in obj.FormLists)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, FormList, IFormListGetter>(
+                        srcGroup: obj.FormLists,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.FormLists,
+                        groupGetter: (m) => m.FormLists))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, FormList, IFormListGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.FormLists,
-                            groupGetter: (m) => m.FormLists);
+                        yield return item;
                     }
                     yield break;
                 case "Perk":
                 case "IPerkGetter":
                 case "IPerk":
                 case "IPerkInternal":
-                    foreach (var item in obj.Perks)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Perk, IPerkGetter>(
+                        srcGroup: obj.Perks,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Perks,
+                        groupGetter: (m) => m.Perks))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Perk, IPerkGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Perks,
-                            groupGetter: (m) => m.Perks);
+                        yield return item;
                     }
                     yield break;
                 case "BodyPartData":
                 case "IBodyPartDataGetter":
                 case "IBodyPartData":
                 case "IBodyPartDataInternal":
-                    foreach (var item in obj.BodyParts)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, BodyPartData, IBodyPartDataGetter>(
+                        srcGroup: obj.BodyParts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.BodyParts,
+                        groupGetter: (m) => m.BodyParts))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, BodyPartData, IBodyPartDataGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.BodyParts,
-                            groupGetter: (m) => m.BodyParts);
+                        yield return item;
                     }
                     yield break;
                 case "AddonNode":
                 case "IAddonNodeGetter":
                 case "IAddonNode":
                 case "IAddonNodeInternal":
-                    foreach (var item in obj.AddonNodes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, AddonNode, IAddonNodeGetter>(
+                        srcGroup: obj.AddonNodes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AddonNodes,
+                        groupGetter: (m) => m.AddonNodes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AddonNode, IAddonNodeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.AddonNodes,
-                            groupGetter: (m) => m.AddonNodes);
+                        yield return item;
                     }
                     yield break;
                 case "ActorValueInformation":
                 case "IActorValueInformationGetter":
                 case "IActorValueInformation":
                 case "IActorValueInformationInternal":
-                    foreach (var item in obj.ActorValueInformation)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ActorValueInformation, IActorValueInformationGetter>(
+                        srcGroup: obj.ActorValueInformation,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ActorValueInformation,
+                        groupGetter: (m) => m.ActorValueInformation))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ActorValueInformation, IActorValueInformationGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.ActorValueInformation,
-                            groupGetter: (m) => m.ActorValueInformation);
+                        yield return item;
                     }
                     yield break;
                 case "CameraShot":
                 case "ICameraShotGetter":
                 case "ICameraShot":
                 case "ICameraShotInternal":
-                    foreach (var item in obj.CameraShots)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, CameraShot, ICameraShotGetter>(
+                        srcGroup: obj.CameraShots,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CameraShots,
+                        groupGetter: (m) => m.CameraShots))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CameraShot, ICameraShotGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.CameraShots,
-                            groupGetter: (m) => m.CameraShots);
+                        yield return item;
                     }
                     yield break;
                 case "CameraPath":
                 case "ICameraPathGetter":
                 case "ICameraPath":
                 case "ICameraPathInternal":
-                    foreach (var item in obj.CameraPaths)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, CameraPath, ICameraPathGetter>(
+                        srcGroup: obj.CameraPaths,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CameraPaths,
+                        groupGetter: (m) => m.CameraPaths))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CameraPath, ICameraPathGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.CameraPaths,
-                            groupGetter: (m) => m.CameraPaths);
+                        yield return item;
                     }
                     yield break;
                 case "VoiceType":
                 case "IVoiceTypeGetter":
                 case "IVoiceType":
                 case "IVoiceTypeInternal":
-                    foreach (var item in obj.VoiceTypes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, VoiceType, IVoiceTypeGetter>(
+                        srcGroup: obj.VoiceTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.VoiceTypes,
+                        groupGetter: (m) => m.VoiceTypes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VoiceType, IVoiceTypeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.VoiceTypes,
-                            groupGetter: (m) => m.VoiceTypes);
+                        yield return item;
                     }
                     yield break;
                 case "MaterialType":
                 case "IMaterialTypeGetter":
                 case "IMaterialType":
                 case "IMaterialTypeInternal":
-                    foreach (var item in obj.MaterialTypes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MaterialType, IMaterialTypeGetter>(
+                        srcGroup: obj.MaterialTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MaterialTypes,
+                        groupGetter: (m) => m.MaterialTypes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MaterialType, IMaterialTypeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.MaterialTypes,
-                            groupGetter: (m) => m.MaterialTypes);
+                        yield return item;
                     }
                     yield break;
                 case "Impact":
                 case "IImpactGetter":
                 case "IImpact":
                 case "IImpactInternal":
-                    foreach (var item in obj.Impacts)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Impact, IImpactGetter>(
+                        srcGroup: obj.Impacts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Impacts,
+                        groupGetter: (m) => m.Impacts))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Impact, IImpactGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Impacts,
-                            groupGetter: (m) => m.Impacts);
+                        yield return item;
                     }
                     yield break;
                 case "ImpactDataSet":
                 case "IImpactDataSetGetter":
                 case "IImpactDataSet":
                 case "IImpactDataSetInternal":
-                    foreach (var item in obj.ImpactDataSets)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ImpactDataSet, IImpactDataSetGetter>(
+                        srcGroup: obj.ImpactDataSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ImpactDataSets,
+                        groupGetter: (m) => m.ImpactDataSets))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImpactDataSet, IImpactDataSetGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.ImpactDataSets,
-                            groupGetter: (m) => m.ImpactDataSets);
+                        yield return item;
                     }
                     yield break;
                 case "ArmorAddon":
                 case "IArmorAddonGetter":
                 case "IArmorAddon":
                 case "IArmorAddonInternal":
-                    foreach (var item in obj.ArmorAddons)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ArmorAddon, IArmorAddonGetter>(
+                        srcGroup: obj.ArmorAddons,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ArmorAddons,
+                        groupGetter: (m) => m.ArmorAddons))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ArmorAddon, IArmorAddonGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.ArmorAddons,
-                            groupGetter: (m) => m.ArmorAddons);
+                        yield return item;
                     }
                     yield break;
                 case "EncounterZone":
                 case "IEncounterZoneGetter":
                 case "IEncounterZone":
                 case "IEncounterZoneInternal":
-                    foreach (var item in obj.EncounterZones)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, EncounterZone, IEncounterZoneGetter>(
+                        srcGroup: obj.EncounterZones,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EncounterZones,
+                        groupGetter: (m) => m.EncounterZones))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EncounterZone, IEncounterZoneGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.EncounterZones,
-                            groupGetter: (m) => m.EncounterZones);
+                        yield return item;
                     }
                     yield break;
                 case "Location":
                 case "ILocationGetter":
                 case "ILocation":
                 case "ILocationInternal":
-                    foreach (var item in obj.Locations)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Location, ILocationGetter>(
+                        srcGroup: obj.Locations,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Locations,
+                        groupGetter: (m) => m.Locations))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Location, ILocationGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Locations,
-                            groupGetter: (m) => m.Locations);
+                        yield return item;
                     }
                     yield break;
                 case "Message":
                 case "IMessageGetter":
                 case "IMessage":
                 case "IMessageInternal":
-                    foreach (var item in obj.Messages)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Message, IMessageGetter>(
+                        srcGroup: obj.Messages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Messages,
+                        groupGetter: (m) => m.Messages))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Message, IMessageGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Messages,
-                            groupGetter: (m) => m.Messages);
+                        yield return item;
                     }
                     yield break;
                 case "DefaultObjectManager":
                 case "IDefaultObjectManagerGetter":
                 case "IDefaultObjectManager":
                 case "IDefaultObjectManagerInternal":
-                    foreach (var item in obj.DefaultObjectManagers)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
+                        srcGroup: obj.DefaultObjectManagers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DefaultObjectManagers,
+                        groupGetter: (m) => m.DefaultObjectManagers))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.DefaultObjectManagers,
-                            groupGetter: (m) => m.DefaultObjectManagers);
+                        yield return item;
                     }
                     yield break;
                 case "LightingTemplate":
                 case "ILightingTemplateGetter":
                 case "ILightingTemplate":
                 case "ILightingTemplateInternal":
-                    foreach (var item in obj.LightingTemplates)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LightingTemplate, ILightingTemplateGetter>(
+                        srcGroup: obj.LightingTemplates,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LightingTemplates,
+                        groupGetter: (m) => m.LightingTemplates))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LightingTemplate, ILightingTemplateGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LightingTemplates,
-                            groupGetter: (m) => m.LightingTemplates);
+                        yield return item;
                     }
                     yield break;
                 case "MusicType":
                 case "IMusicTypeGetter":
                 case "IMusicType":
                 case "IMusicTypeInternal":
-                    foreach (var item in obj.MusicTypes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MusicType, IMusicTypeGetter>(
+                        srcGroup: obj.MusicTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MusicTypes,
+                        groupGetter: (m) => m.MusicTypes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MusicType, IMusicTypeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.MusicTypes,
-                            groupGetter: (m) => m.MusicTypes);
+                        yield return item;
                     }
                     yield break;
                 case "Footstep":
                 case "IFootstepGetter":
                 case "IFootstep":
                 case "IFootstepInternal":
-                    foreach (var item in obj.Footsteps)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Footstep, IFootstepGetter>(
+                        srcGroup: obj.Footsteps,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Footsteps,
+                        groupGetter: (m) => m.Footsteps))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Footstep, IFootstepGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Footsteps,
-                            groupGetter: (m) => m.Footsteps);
+                        yield return item;
                     }
                     yield break;
                 case "FootstepSet":
                 case "IFootstepSetGetter":
                 case "IFootstepSet":
                 case "IFootstepSetInternal":
-                    foreach (var item in obj.FootstepSets)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, FootstepSet, IFootstepSetGetter>(
+                        srcGroup: obj.FootstepSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.FootstepSets,
+                        groupGetter: (m) => m.FootstepSets))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, FootstepSet, IFootstepSetGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.FootstepSets,
-                            groupGetter: (m) => m.FootstepSets);
+                        yield return item;
                     }
                     yield break;
                 case "StoryManagerBranchNode":
                 case "IStoryManagerBranchNodeGetter":
                 case "IStoryManagerBranchNode":
                 case "IStoryManagerBranchNodeInternal":
-                    foreach (var item in obj.StoryManagerBranchNodes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, StoryManagerBranchNode, IStoryManagerBranchNodeGetter>(
+                        srcGroup: obj.StoryManagerBranchNodes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.StoryManagerBranchNodes,
+                        groupGetter: (m) => m.StoryManagerBranchNodes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerBranchNode, IStoryManagerBranchNodeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.StoryManagerBranchNodes,
-                            groupGetter: (m) => m.StoryManagerBranchNodes);
+                        yield return item;
                     }
                     yield break;
                 case "StoryManagerQuestNode":
                 case "IStoryManagerQuestNodeGetter":
                 case "IStoryManagerQuestNode":
                 case "IStoryManagerQuestNodeInternal":
-                    foreach (var item in obj.StoryManagerQuestNodes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, StoryManagerQuestNode, IStoryManagerQuestNodeGetter>(
+                        srcGroup: obj.StoryManagerQuestNodes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.StoryManagerQuestNodes,
+                        groupGetter: (m) => m.StoryManagerQuestNodes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerQuestNode, IStoryManagerQuestNodeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.StoryManagerQuestNodes,
-                            groupGetter: (m) => m.StoryManagerQuestNodes);
+                        yield return item;
                     }
                     yield break;
                 case "StoryManagerEventNode":
                 case "IStoryManagerEventNodeGetter":
                 case "IStoryManagerEventNode":
                 case "IStoryManagerEventNodeInternal":
-                    foreach (var item in obj.StoryManagerEventNodes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, StoryManagerEventNode, IStoryManagerEventNodeGetter>(
+                        srcGroup: obj.StoryManagerEventNodes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.StoryManagerEventNodes,
+                        groupGetter: (m) => m.StoryManagerEventNodes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerEventNode, IStoryManagerEventNodeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.StoryManagerEventNodes,
-                            groupGetter: (m) => m.StoryManagerEventNodes);
+                        yield return item;
                     }
                     yield break;
                 case "DialogBranch":
                 case "IDialogBranchGetter":
                 case "IDialogBranch":
                 case "IDialogBranchInternal":
-                    foreach (var item in obj.DialogBranches)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, DialogBranch, IDialogBranchGetter>(
+                        srcGroup: obj.DialogBranches,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DialogBranches,
+                        groupGetter: (m) => m.DialogBranches))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogBranch, IDialogBranchGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.DialogBranches,
-                            groupGetter: (m) => m.DialogBranches);
+                        yield return item;
                     }
                     yield break;
                 case "MusicTrack":
                 case "IMusicTrackGetter":
                 case "IMusicTrack":
                 case "IMusicTrackInternal":
-                    foreach (var item in obj.MusicTracks)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MusicTrack, IMusicTrackGetter>(
+                        srcGroup: obj.MusicTracks,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MusicTracks,
+                        groupGetter: (m) => m.MusicTracks))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MusicTrack, IMusicTrackGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.MusicTracks,
-                            groupGetter: (m) => m.MusicTracks);
+                        yield return item;
                     }
                     yield break;
                 case "DialogView":
                 case "IDialogViewGetter":
                 case "IDialogView":
                 case "IDialogViewInternal":
-                    foreach (var item in obj.DialogViews)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, DialogView, IDialogViewGetter>(
+                        srcGroup: obj.DialogViews,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DialogViews,
+                        groupGetter: (m) => m.DialogViews))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogView, IDialogViewGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.DialogViews,
-                            groupGetter: (m) => m.DialogViews);
+                        yield return item;
                     }
                     yield break;
                 case "WordOfPower":
                 case "IWordOfPowerGetter":
                 case "IWordOfPower":
                 case "IWordOfPowerInternal":
-                    foreach (var item in obj.WordsOfPower)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, WordOfPower, IWordOfPowerGetter>(
+                        srcGroup: obj.WordsOfPower,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.WordsOfPower,
+                        groupGetter: (m) => m.WordsOfPower))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, WordOfPower, IWordOfPowerGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.WordsOfPower,
-                            groupGetter: (m) => m.WordsOfPower);
+                        yield return item;
                     }
                     yield break;
                 case "Shout":
                 case "IShoutGetter":
                 case "IShout":
                 case "IShoutInternal":
-                    foreach (var item in obj.Shouts)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Shout, IShoutGetter>(
+                        srcGroup: obj.Shouts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Shouts,
+                        groupGetter: (m) => m.Shouts))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Shout, IShoutGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Shouts,
-                            groupGetter: (m) => m.Shouts);
+                        yield return item;
                     }
                     yield break;
                 case "EquipType":
                 case "IEquipTypeGetter":
                 case "IEquipType":
                 case "IEquipTypeInternal":
-                    foreach (var item in obj.EquipTypes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, EquipType, IEquipTypeGetter>(
+                        srcGroup: obj.EquipTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EquipTypes,
+                        groupGetter: (m) => m.EquipTypes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EquipType, IEquipTypeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.EquipTypes,
-                            groupGetter: (m) => m.EquipTypes);
+                        yield return item;
                     }
                     yield break;
                 case "Relationship":
                 case "IRelationshipGetter":
                 case "IRelationship":
                 case "IRelationshipInternal":
-                    foreach (var item in obj.Relationships)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Relationship, IRelationshipGetter>(
+                        srcGroup: obj.Relationships,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Relationships,
+                        groupGetter: (m) => m.Relationships))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Relationship, IRelationshipGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Relationships,
-                            groupGetter: (m) => m.Relationships);
+                        yield return item;
                     }
                     yield break;
                 case "Scene":
                 case "ISceneGetter":
                 case "IScene":
                 case "ISceneInternal":
-                    foreach (var item in obj.Scenes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Scene, ISceneGetter>(
+                        srcGroup: obj.Scenes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Scenes,
+                        groupGetter: (m) => m.Scenes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Scene, ISceneGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Scenes,
-                            groupGetter: (m) => m.Scenes);
+                        yield return item;
                     }
                     yield break;
                 case "AssociationType":
                 case "IAssociationTypeGetter":
                 case "IAssociationType":
                 case "IAssociationTypeInternal":
-                    foreach (var item in obj.AssociationTypes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, AssociationType, IAssociationTypeGetter>(
+                        srcGroup: obj.AssociationTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AssociationTypes,
+                        groupGetter: (m) => m.AssociationTypes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AssociationType, IAssociationTypeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.AssociationTypes,
-                            groupGetter: (m) => m.AssociationTypes);
+                        yield return item;
                     }
                     yield break;
                 case "Outfit":
                 case "IOutfitGetter":
                 case "IOutfit":
                 case "IOutfitInternal":
-                    foreach (var item in obj.Outfits)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, Outfit, IOutfitGetter>(
+                        srcGroup: obj.Outfits,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Outfits,
+                        groupGetter: (m) => m.Outfits))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Outfit, IOutfitGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Outfits,
-                            groupGetter: (m) => m.Outfits);
+                        yield return item;
                     }
                     yield break;
                 case "ArtObject":
                 case "IArtObjectGetter":
                 case "IArtObject":
                 case "IArtObjectInternal":
-                    foreach (var item in obj.ArtObjects)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ArtObject, IArtObjectGetter>(
+                        srcGroup: obj.ArtObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ArtObjects,
+                        groupGetter: (m) => m.ArtObjects))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ArtObject, IArtObjectGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.ArtObjects,
-                            groupGetter: (m) => m.ArtObjects);
+                        yield return item;
                     }
                     yield break;
                 case "MaterialObject":
                 case "IMaterialObjectGetter":
                 case "IMaterialObject":
                 case "IMaterialObjectInternal":
-                    foreach (var item in obj.MaterialObjects)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MaterialObject, IMaterialObjectGetter>(
+                        srcGroup: obj.MaterialObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MaterialObjects,
+                        groupGetter: (m) => m.MaterialObjects))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MaterialObject, IMaterialObjectGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.MaterialObjects,
-                            groupGetter: (m) => m.MaterialObjects);
+                        yield return item;
                     }
                     yield break;
                 case "MovementType":
                 case "IMovementTypeGetter":
                 case "IMovementType":
                 case "IMovementTypeInternal":
-                    foreach (var item in obj.MovementTypes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, MovementType, IMovementTypeGetter>(
+                        srcGroup: obj.MovementTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MovementTypes,
+                        groupGetter: (m) => m.MovementTypes))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MovementType, IMovementTypeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.MovementTypes,
-                            groupGetter: (m) => m.MovementTypes);
+                        yield return item;
                     }
                     yield break;
                 case "SoundDescriptor":
                 case "ISoundDescriptorGetter":
                 case "ISoundDescriptor":
                 case "ISoundDescriptorInternal":
-                    foreach (var item in obj.SoundDescriptors)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, SoundDescriptor, ISoundDescriptorGetter>(
+                        srcGroup: obj.SoundDescriptors,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoundDescriptors,
+                        groupGetter: (m) => m.SoundDescriptors))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundDescriptor, ISoundDescriptorGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.SoundDescriptors,
-                            groupGetter: (m) => m.SoundDescriptors);
+                        yield return item;
                     }
                     yield break;
                 case "DualCastData":
                 case "IDualCastDataGetter":
                 case "IDualCastData":
                 case "IDualCastDataInternal":
-                    foreach (var item in obj.DualCastData)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, DualCastData, IDualCastDataGetter>(
+                        srcGroup: obj.DualCastData,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DualCastData,
+                        groupGetter: (m) => m.DualCastData))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DualCastData, IDualCastDataGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.DualCastData,
-                            groupGetter: (m) => m.DualCastData);
+                        yield return item;
                     }
                     yield break;
                 case "SoundCategory":
                 case "ISoundCategoryGetter":
                 case "ISoundCategory":
                 case "ISoundCategoryInternal":
-                    foreach (var item in obj.SoundCategories)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, SoundCategory, ISoundCategoryGetter>(
+                        srcGroup: obj.SoundCategories,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoundCategories,
+                        groupGetter: (m) => m.SoundCategories))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundCategory, ISoundCategoryGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.SoundCategories,
-                            groupGetter: (m) => m.SoundCategories);
+                        yield return item;
                     }
                     yield break;
                 case "SoundOutputModel":
                 case "ISoundOutputModelGetter":
                 case "ISoundOutputModel":
                 case "ISoundOutputModelInternal":
-                    foreach (var item in obj.SoundOutputModels)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, SoundOutputModel, ISoundOutputModelGetter>(
+                        srcGroup: obj.SoundOutputModels,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoundOutputModels,
+                        groupGetter: (m) => m.SoundOutputModels))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundOutputModel, ISoundOutputModelGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.SoundOutputModels,
-                            groupGetter: (m) => m.SoundOutputModels);
+                        yield return item;
                     }
                     yield break;
                 case "CollisionLayer":
                 case "ICollisionLayerGetter":
                 case "ICollisionLayer":
                 case "ICollisionLayerInternal":
-                    foreach (var item in obj.CollisionLayers)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, CollisionLayer, ICollisionLayerGetter>(
+                        srcGroup: obj.CollisionLayers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CollisionLayers,
+                        groupGetter: (m) => m.CollisionLayers))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CollisionLayer, ICollisionLayerGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.CollisionLayers,
-                            groupGetter: (m) => m.CollisionLayers);
+                        yield return item;
                     }
                     yield break;
                 case "ColorRecord":
                 case "IColorRecordGetter":
                 case "IColorRecord":
                 case "IColorRecordInternal":
-                    foreach (var item in obj.Colors)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ColorRecord, IColorRecordGetter>(
+                        srcGroup: obj.Colors,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Colors,
+                        groupGetter: (m) => m.Colors))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ColorRecord, IColorRecordGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Colors,
-                            groupGetter: (m) => m.Colors);
+                        yield return item;
                     }
                     yield break;
                 case "ReverbParameters":
                 case "IReverbParametersGetter":
                 case "IReverbParameters":
                 case "IReverbParametersInternal":
-                    foreach (var item in obj.ReverbParameters)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, ReverbParameters, IReverbParametersGetter>(
+                        srcGroup: obj.ReverbParameters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ReverbParameters,
+                        groupGetter: (m) => m.ReverbParameters))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ReverbParameters, IReverbParametersGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.ReverbParameters,
-                            groupGetter: (m) => m.ReverbParameters);
+                        yield return item;
                     }
                     yield break;
                 case "VolumetricLighting":
                 case "IVolumetricLightingGetter":
                 case "IVolumetricLighting":
                 case "IVolumetricLightingInternal":
-                    foreach (var item in obj.VolumetricLightings)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, VolumetricLighting, IVolumetricLightingGetter>(
+                        srcGroup: obj.VolumetricLightings,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.VolumetricLightings,
+                        groupGetter: (m) => m.VolumetricLightings))
                     {
-                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VolumetricLighting, IVolumetricLightingGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.VolumetricLightings,
-                            groupGetter: (m) => m.VolumetricLightings);
+                        yield return item;
                     }
                     yield break;
                 case "Cell":
@@ -16406,1039 +16630,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
-                case "IIdleRelation":
-                case "IIdleRelationGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IActionRecordGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IIdleAnimationGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IObjectId":
-                case "IObjectIdGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IActivatorGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IAmmunitionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IArmorGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IBookGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IContainerGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IDoorGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFactionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFormListGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFurnitureGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IIdleMarkerGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IIngestibleGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IKeyGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILightGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IMiscItemGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IMoveableStaticGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(INpcGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IProjectileGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IScrollGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IShoutGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ISoundMarkerGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ISpellGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IStaticGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ITextureSetGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IWeaponGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IItem":
-                case "IItemGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IAlchemicalApparatusGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IAmmunitionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IArmorGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IBookGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IIngestibleGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IIngredientGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IKeyGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILeveledItemGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILightGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IMiscItemGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IScrollGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ISoulGemGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IWeaponGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IConstructible":
-                case "IConstructibleGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IAlchemicalApparatusGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IAmmunitionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IArmorGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IBookGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IIngestibleGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IIngredientGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IKeyGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILightGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IMiscItemGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IScrollGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ISoulGemGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IWeaponGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IOutfitTarget":
-                case "IOutfitTargetGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IArmorGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILeveledItemGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IBindableEquipment":
-                case "IBindableEquipmentGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IArmorGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IWeaponGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IComplexLocation":
-                case "IComplexLocationGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IWorldspaceGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                        linkCache: linkCache,
-                        type: type,
-                        throwIfUnknown: throwIfUnknown,
-                        modKey: obj.ModKey,
-                        parent: null))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IDialog":
-                case "IDialogGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IDialogTopicGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILocationTargetable":
-                case "ILocationTargetableGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IDoorGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                        linkCache: linkCache,
-                        type: type,
-                        throwIfUnknown: throwIfUnknown,
-                        modKey: obj.ModKey,
-                        parent: null))
-                    {
-                        yield return item;
-                    }
-                    foreach (var groupItem in obj.Worldspaces)
-                    {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                            groupItem,
-                            linkCache: linkCache,
-                            type: type,
-                            throwIfUnknown: throwIfUnknown,
-                            modKey: obj.ModKey,
-                            parent: null,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IOwner":
-                case "IOwnerGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFactionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                        linkCache: linkCache,
-                        type: type,
-                        throwIfUnknown: throwIfUnknown,
-                        modKey: obj.ModKey,
-                        parent: null))
-                    {
-                        yield return item;
-                    }
-                    foreach (var groupItem in obj.Worldspaces)
-                    {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                            groupItem,
-                            linkCache: linkCache,
-                            type: type,
-                            throwIfUnknown: throwIfUnknown,
-                            modKey: obj.ModKey,
-                            parent: null,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IRelatable":
-                case "IRelatableGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFactionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IRaceGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IRegionTarget":
-                case "IRegionTargetGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFloraGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILandscapeTextureGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IMoveableStaticGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IStaticGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ITreeGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IAliasVoiceType":
-                case "IAliasVoiceTypeGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFormListGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(INpcGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILockList":
-                case "ILockListGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFormListGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(INpcGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IPlacedTrapTarget":
-                case "IPlacedTrapTargetGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IHazardGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IProjectileGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IHarvestTarget":
-                case "IHarvestTargetGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IIngestibleGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IIngredientGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILeveledItemGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IMiscItemGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReference":
-                case "IKeywordLinkedReferenceGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IKeywordGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                        linkCache: linkCache,
-                        type: type,
-                        throwIfUnknown: throwIfUnknown,
-                        modKey: obj.ModKey,
-                        parent: null))
-                    {
-                        yield return item;
-                    }
-                    foreach (var groupItem in obj.Worldspaces)
-                    {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                            groupItem,
-                            linkCache: linkCache,
-                            type: type,
-                            throwIfUnknown: throwIfUnknown,
-                            modKey: obj.ModKey,
-                            parent: null,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "INpcSpawn":
-                case "INpcSpawnGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILeveledNpcGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(INpcGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ISpellRecord":
-                case "ISpellRecordGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILeveledSpellGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IShoutGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ISpellGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IEmittance":
-                case "IEmittanceGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILightGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IRegionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILocationRecord":
-                case "ILocationRecordGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILocationGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILocationReferenceTypeGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IEffectRecord":
-                case "IEffectRecordGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IObjectEffectGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ISpellGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "ILinkedReference":
-                case "ILinkedReferenceGetter":
-                {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                        linkCache: linkCache,
-                        type: type,
-                        throwIfUnknown: throwIfUnknown,
-                        modKey: obj.ModKey,
-                        parent: null))
-                    {
-                        yield return item;
-                    }
-                    foreach (var groupItem in obj.Worldspaces)
-                    {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                            groupItem,
-                            linkCache: linkCache,
-                            type: type,
-                            throwIfUnknown: throwIfUnknown,
-                            modKey: obj.ModKey,
-                            parent: null,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlaced":
-                case "IPlacedGetter":
-                {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                        linkCache: linkCache,
-                        type: type,
-                        throwIfUnknown: throwIfUnknown,
-                        modKey: obj.ModKey,
-                        parent: null))
-                    {
-                        yield return item;
-                    }
-                    foreach (var groupItem in obj.Worldspaces)
-                    {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                            groupItem,
-                            linkCache: linkCache,
-                            type: type,
-                            throwIfUnknown: throwIfUnknown,
-                            modKey: obj.ModKey,
-                            parent: null,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedSimple":
-                case "IPlacedSimpleGetter":
-                {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                        linkCache: linkCache,
-                        type: type,
-                        throwIfUnknown: throwIfUnknown,
-                        modKey: obj.ModKey,
-                        parent: null))
-                    {
-                        yield return item;
-                    }
-                    foreach (var groupItem in obj.Worldspaces)
-                    {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                            groupItem,
-                            linkCache: linkCache,
-                            type: type,
-                            throwIfUnknown: throwIfUnknown,
-                            modKey: obj.ModKey,
-                            parent: null,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedThing":
-                case "IPlacedThingGetter":
-                {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                        linkCache: linkCache,
-                        type: type,
-                        throwIfUnknown: throwIfUnknown,
-                        modKey: obj.ModKey,
-                        parent: null))
-                    {
-                        yield return item;
-                    }
-                    foreach (var groupItem in obj.Worldspaces)
-                    {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                            groupItem,
-                            linkCache: linkCache,
-                            type: type,
-                            throwIfUnknown: throwIfUnknown,
-                            modKey: obj.ModKey,
-                            parent: null,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "ISound":
-                case "ISoundGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ISoundDescriptorGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ISoundMarkerGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<ISkyrimModGetter, ISkyrimMod, ISkyrimModGetter>(
+                        GameCategory.Skyrim,
+                        obj,
+                        type,
+                        linkCache,
+                        out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
