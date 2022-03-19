@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         IMajorRecordGetter IGroupGetter.this[FormKey key] => this[key];
 
-        private readonly GameRelease _release;
+        public Type ContainedRecordType => typeof(TMajor);
 
         protected AGroup()
         {
@@ -73,7 +73,6 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         protected AGroup(IModGetter getter)
         {
-            this._release = getter.GameRelease;
             this.SourceMod = null!;
         }
 
@@ -82,7 +81,6 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// </summary>
         public AGroup(IMod mod)
         {
-            this._release = mod.GameRelease;
             this.SourceMod = mod;
         }
 
@@ -349,6 +347,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => _recordCache;
             IEnumerable<IMajorRecordGetter> IGroupGetter.Records => _recordCache.Items;
             public ILoquiRegistration ContainedRecordRegistration => _registration;
+            public Type ContainedRecordType => typeof(TMajor);
 
             public abstract IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
 
